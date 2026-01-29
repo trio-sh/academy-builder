@@ -5,9 +5,12 @@ import { Github, Twitter, Linkedin } from "lucide-react";
 const footerLinks = {
   platform: [
     { name: "Skill Passport", href: "/platform#skill-passport" },
+    { name: "Growth Log", href: "/platform#growth-log" },
     { name: "MentorLink", href: "/platform#mentorlink" },
     { name: "BridgeFast", href: "/platform#bridgefast" },
     { name: "LiveWorks Studio", href: "/platform#liveworks" },
+    { name: "Civic Access Lab", href: "/platform#civic-access" },
+    { name: "TalentVisa", href: "/platform#talentvisa" },
     { name: "T3X Exchange", href: "/platform#t3x" },
   ],
   company: [
