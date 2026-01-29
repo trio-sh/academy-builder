@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { GraduationCap, Linkedin, Sparkles } from "lucide-react";
+import { GraduationCap, Linkedin, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,6 +29,70 @@ const itemVariants = {
 
 const Login = () => {
   const [userType, setUserType] = useState("candidate");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { signIn, signInWithLinkedIn } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || getDashboardRoute(userType);
+
+  function getDashboardRoute(role: string) {
+    const routes: Record<string, string> = {
+      candidate: "/dashboard/candidate",
+      mentor: "/dashboard/mentor",
+      employer: "/dashboard/employer",
+    };
+    return routes[role] || "/dashboard/candidate";
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { error: signInError } = await signIn(email, password);
+
+      if (signInError) {
+        setError(signInError.message || "Invalid email or password");
+        return;
+      }
+
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
+      });
+
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLinkedInSignIn = async () => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { error: oauthError } = await signInWithLinkedIn();
+
+      if (oauthError) {
+        setError(oauthError.message || "Failed to sign in with LinkedIn");
+        setIsLoading(false);
+      }
+      // OAuth will redirect, so no need to handle success here
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -83,6 +149,14 @@ const Login = () => {
                     Sign in to continue your journey
                   </p>
 
+                  {/* Error Message */}
+                  {error && (
+                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-red-400">{error}</p>
+                    </div>
+                  )}
+
                   {/* User Type Tabs */}
                   <Tabs value={userType} onValueChange={setUserType} className="mb-6">
                     <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/10">
@@ -108,13 +182,17 @@ const Login = () => {
                   </Tabs>
 
                   {/* Form */}
-                  <form className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-300">Email</Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={isLoading}
                         className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
@@ -130,13 +208,28 @@ const Login = () => {
                         id="password"
                         type="password"
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        disabled={isLoading}
                         className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
 
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30">
-                        Sign In
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Signing In...
+                          </>
+                        ) : (
+                          "Sign In"
+                        )}
                       </Button>
                     </motion.div>
                   </form>
@@ -154,7 +247,13 @@ const Login = () => {
                   </div>
 
                   {/* Social Login */}
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isLoading}
+                    onClick={handleLinkedInSignIn}
+                    className="w-full border-white/20 text-white hover:bg-white/10"
+                  >
                     <Linkedin className="mr-2 h-4 w-4" />
                     LinkedIn
                   </Button>

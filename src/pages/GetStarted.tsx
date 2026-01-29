@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import {
@@ -9,12 +10,16 @@ import {
   ArrowRight,
   CheckCircle2,
   Linkedin,
-  Sparkles
+  Sparkles,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -68,6 +73,73 @@ const entryPaths = [
 const GetStarted = () => {
   const [selectedPath, setSelectedPath] = useState<string | null>("resume");
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Form state
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { signUp, signInWithLinkedIn } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSignUp = async () => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { error: signUpError } = await signUp(email, password, {
+        firstName,
+        lastName,
+        role: "candidate",
+      });
+
+      if (signUpError) {
+        setError(signUpError.message || "Failed to create account");
+        setIsLoading(false);
+        return;
+      }
+
+      toast({
+        title: "Account created!",
+        description: "Please check your email to verify your account.",
+      });
+
+      setStep(3);
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLinkedInSignUp = async () => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const { error: oauthError } = await signInWithLinkedIn();
+
+      if (oauthError) {
+        setError(oauthError.message || "Failed to sign up with LinkedIn");
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteSetup = () => {
+    toast({
+      title: "Setup complete!",
+      description: "Welcome to The 3rd Academy. Let's begin your journey.",
+    });
+    navigate("/dashboard/candidate");
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -243,24 +315,62 @@ const GetStarted = () => {
                     <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Create Your Account</h2>
 
+                      {/* Error Message */}
+                      {error && (
+                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-red-400">{error}</p>
+                        </div>
+                      )}
+
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="firstName" className="text-gray-300">First Name</Label>
-                            <Input id="firstName" placeholder="John" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                            <Input
+                              id="firstName"
+                              placeholder="John"
+                              value={firstName}
+                              onChange={(e) => setFirstName(e.target.value)}
+                              disabled={isLoading}
+                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="lastName" className="text-gray-300">Last Name</Label>
-                            <Input id="lastName" placeholder="Doe" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                            <Input
+                              id="lastName"
+                              placeholder="Doe"
+                              value={lastName}
+                              onChange={(e) => setLastName(e.target.value)}
+                              disabled={isLoading}
+                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                            />
                           </div>
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email" className="text-gray-300">Email</Label>
-                          <Input id="email" type="email" placeholder="john@example.com" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="john@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={isLoading}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="password" className="text-gray-300">Password</Label>
-                          <Input id="password" type="password" placeholder="Create a password" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input
+                            id="password"
+                            type="password"
+                            placeholder="Create a password (min. 6 characters)"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            disabled={isLoading}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                          />
                         </div>
                       </div>
 
@@ -269,16 +379,49 @@ const GetStarted = () => {
                         <div className="relative flex justify-center text-xs uppercase"><span className="bg-transparent px-2 text-gray-500">Or continue with</span></div>
                       </div>
 
-                      <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                        <Linkedin className="mr-2 h-4 w-4" />LinkedIn
+                      <Button
+                        variant="outline"
+                        onClick={handleLinkedInSignUp}
+                        disabled={isLoading}
+                        className="w-full border-white/20 text-white hover:bg-white/10"
+                      >
+                        <Linkedin className="mr-2 h-4 w-4" />
+                        LinkedIn
                       </Button>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(1)} className="flex-1 border-white/20 text-white hover:bg-white/10">Back</Button>
-                        <Button onClick={() => setStep(3)} className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-                          Continue<ArrowRight className="ml-2 h-4 w-4" />
+                        <Button
+                          variant="outline"
+                          onClick={() => setStep(1)}
+                          disabled={isLoading}
+                          className="flex-1 border-white/20 text-white hover:bg-white/10"
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          onClick={handleSignUp}
+                          disabled={isLoading || !firstName || !lastName || !email || !password}
+                          className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                        >
+                          {isLoading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Creating...
+                            </>
+                          ) : (
+                            <>
+                              Continue
+                              <ArrowRight className="ml-2 h-4 w-4" />
+                            </>
+                          )}
                         </Button>
                       </div>
+
+                      <p className="mt-4 text-center text-xs text-gray-500">
+                        By creating an account, you agree to our{" "}
+                        <a href="/terms" className="text-indigo-400 hover:text-indigo-300">Terms</a> and{" "}
+                        <a href="/privacy" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>.
+                      </p>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -309,7 +452,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-white/10">Back</Button>
-                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
+                        <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>
                   </motion.div>
@@ -349,7 +492,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-white/10">Back</Button>
-                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
+                        <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>
                   </motion.div>
