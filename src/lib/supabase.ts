@@ -1,23 +1,28 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database.types';
 
+// Supabase configuration using Vite environment variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!supabaseUrl || !supabasePublishableKey) {
   console.warn(
-    'Missing Supabase environment variables. Please create a .env.local file with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY'
+    'Missing Supabase environment variables. Please create a .env.local file with:\n' +
+    '- VITE_SUPABASE_URL\n' +
+    '- VITE_SUPABASE_PUBLISHABLE_KEY\n' +
+    '- VITE_SUPABASE_PROJECT_ID (optional)'
   );
 }
 
 export const supabase = createClient<Database>(
   supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key',
+  supabasePublishableKey || 'placeholder-key',
   {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true,
+      storageKey: 'the3rdacademy-auth',
     },
   }
 );
