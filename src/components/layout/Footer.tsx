@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Github, Twitter, Linkedin } from "lucide-react";
+import { Github, Twitter, Linkedin } from "lucide-react";
 
 const footerLinks = {
   platform: [
@@ -42,16 +42,17 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-6 group">
-              <motion.div
-                className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white"
-                whileHover={{ rotate: 5, scale: 1.05 }}
-              >
-                <GraduationCap className="w-5 h-5" />
+            <Link to="/" className="flex items-center mb-6">
+              <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
+                <img
+                  src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
+                  alt="The 3rd Academy Logo"
+                  className="h-10 w-10 mr-2 rounded-full shadow-lg"
+                />
+                <span className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  The 3rd Academy
+                </span>
               </motion.div>
-              <span className="text-sm font-bold tracking-tight text-white">
-                THE 3RD ACADEMY
-              </span>
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
               Bridging the gap between credentials and workplace readiness through
