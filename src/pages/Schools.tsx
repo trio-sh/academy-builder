@@ -1,11 +1,12 @@
+import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { 
-  GraduationCap, 
-  Users, 
-  BarChart3, 
-  Target, 
-  Shield, 
+import {
+  GraduationCap,
+  Users,
+  BarChart3,
+  Target,
+  Shield,
   ArrowRight,
   CheckCircle2,
   BookOpen,
@@ -13,6 +14,22 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
 
 const features = [
   {
@@ -58,207 +75,347 @@ const benefits = [
 
 const Schools = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <section className="py-16 md:py-24 gradient-hero text-white">
-          <div className="container px-4 md:px-6">
+        <motion.section
+          className="py-24 md:py-32 relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
+          <motion.div
+            className="absolute top-20 right-20 w-96 h-96 bg-cyan-900 rounded-full opacity-20 blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
+            animate={{ scale: [1.2, 1, 1.2] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/80 mb-6">
-                <GraduationCap className="w-4 h-4" />
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <GraduationCap className="w-4 h-4 text-cyan-400" />
                 Civic Access Lab
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Catch Them Young.
+              </motion.div>
+              <motion.h1
+                className="text-4xl md:text-6xl font-bold mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Catch Them Young.
+                </span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-academy-gold to-white">
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Build Career Awareness Early.
                 </span>
-              </h1>
-              <p className="text-lg text-white/70 mb-10">
-                Engage students in career exploration and behavioral documentation 
+              </motion.h1>
+              <motion.p
+                className="text-lg text-gray-400 mb-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Engage students in career exploration and behavioral documentation
                 that transitions seamlessly to the credential pathway after graduation.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-white text-primary hover:bg-white/90">
-                  Request Demo
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              </motion.p>
+              <motion.div
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-8">
+                    Request Demo
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10">
                   Download Overview
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Important Note */}
-        <section className="py-8 bg-academy-gold/10 border-y border-academy-gold/20">
-          <div className="container px-4 md:px-6">
+        <motion.section
+          className="py-8 relative"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 border-y border-amber-500/20" />
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto flex items-center gap-4 text-center md:text-left">
-              <Shield className="w-8 h-8 text-academy-gold flex-shrink-0 hidden md:block" />
-              <p className="text-foreground">
-                <strong className="text-academy-gold">Important:</strong> Civic Access Lab is a 
-                <strong> separate institutional track</strong>. It feeds system learning but 
-                <strong> does NOT directly produce credentials</strong>. Students must enter the 
+              <Shield className="w-8 h-8 text-amber-400 flex-shrink-0 hidden md:block" />
+              <p className="text-gray-300">
+                <strong className="text-amber-400">Important:</strong> Civic Access Lab is a
+                <strong className="text-white"> separate institutional track</strong>. It feeds system learning but
+                <strong className="text-white"> does NOT directly produce credentials</strong>. Students must enter the
                 main pathway after graduation for Skill Passport eligibility.
               </p>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Features */}
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-medium text-academy-royal uppercase tracking-wider mb-3">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
                 Platform Features
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Tools for Modern Career Education
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Tools for Modern Career Education
+                </span>
               </h2>
-              <p className="text-lg text-muted-foreground">
-                A complete platform for engaging students, empowering teachers, and 
+              <p className="text-lg text-gray-400">
+                A complete platform for engaging students, empowering teachers, and
                 informing school leadership.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {features.map((feature, index) => (
-                <div 
+            <motion.div
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {features.map((feature) => (
+                <motion.div
                   key={feature.title}
-                  className="p-6 rounded-2xl bg-card border border-border hover:border-academy-royal/30 hover:shadow-lg transition-all duration-300 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  variants={itemVariants}
+                  className="group relative"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-academy-emerald/10 flex items-center justify-center mb-4">
-                    <feature.icon className="w-6 h-6 text-academy-emerald" />
+                  {/* Glow effect */}
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-cyan-600 to-indigo-600" />
+
+                  <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-600/20 to-indigo-600/20 flex items-center justify-center mb-4">
+                      <feature.icon className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-400 leading-relaxed">
+                      {feature.description}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* User Types */}
-        <section className="py-16 md:py-24 bg-secondary/30">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Built for Everyone in the School
-              </h2>
-            </div>
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-900/30 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
 
-            <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="container px-4 md:px-6 relative z-10">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold">
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Built for Everyone in the School
+                </span>
+              </h2>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               {[
                 {
                   title: "Students",
                   desc: "Career exploration, activity logs, self-assessments, goal setting",
                   icon: Users,
-                  color: "bg-academy-royal",
+                  gradient: "from-indigo-600 to-indigo-700",
                 },
                 {
                   title: "Teachers",
                   desc: "Observation tools, activity assignment, behavioral logging",
                   icon: BookOpen,
-                  color: "bg-academy-emerald",
+                  gradient: "from-cyan-600 to-cyan-700",
                 },
                 {
                   title: "Administrators",
                   desc: "Aggregate analytics, account management, cohort insights",
                   icon: BarChart3,
-                  color: "bg-academy-gold",
+                  gradient: "from-purple-600 to-purple-700",
                 },
                 {
                   title: "Parents",
                   desc: "Optional read-only access to student progress (school-configured)",
                   icon: Shield,
-                  color: "bg-slate-600",
+                  gradient: "from-pink-600 to-pink-700",
                 },
               ].map((user) => (
-                <div key={user.title} className="text-center p-6">
-                  <div className={`w-16 h-16 rounded-2xl ${user.color} flex items-center justify-center mx-auto mb-4`}>
+                <motion.div key={user.title} variants={itemVariants} className="text-center p-6">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${user.gradient} flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                     <user.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">{user.title}</h3>
-                  <p className="text-sm text-muted-foreground">{user.desc}</p>
-                </div>
+                  <h3 className="font-semibold text-white mb-2">{user.title}</h3>
+                  <p className="text-sm text-gray-400">{user.desc}</p>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Benefits */}
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-              <div>
-                <span className="inline-block text-sm font-medium text-academy-royal uppercase tracking-wider mb-3">
+            <motion.div
+              className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
                   Why Civic Access Lab
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Preparing Students for Real-World Success
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                    Preparing Students for Real-World Success
+                  </span>
                 </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Early behavioral documentation creates a foundation that follows 
+                <p className="text-lg text-gray-400 mb-8">
+                  Early behavioral documentation creates a foundation that follows
                   students into the workforce. Build awareness now, validate later.
                 </p>
 
                 <ul className="space-y-4">
                   {benefits.map((benefit) => (
                     <li key={benefit} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-academy-emerald flex-shrink-0" />
-                      <span className="text-foreground">{benefit}</span>
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                      <span className="text-gray-300">{benefit}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
 
-              <div className="relative">
-                <div className="aspect-square rounded-3xl bg-gradient-to-br from-academy-emerald/20 to-academy-royal/20 p-8 flex items-center justify-center">
+              <motion.div
+                className="relative"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="absolute -inset-4 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-cyan-600 to-indigo-600" />
+                <div className="relative aspect-square rounded-3xl bg-gradient-to-br from-cyan-600/20 to-indigo-600/20 border border-white/10 p-8 flex items-center justify-center backdrop-blur-xl">
                   <div className="text-center">
-                    <GraduationCap className="w-24 h-24 text-academy-royal mx-auto mb-6" />
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
+                    <GraduationCap className="w-24 h-24 text-indigo-400 mx-auto mb-6" />
+                    <h3 className="text-2xl font-bold text-white mb-2">
                       Graduation Transition
                     </h3>
-                    <p className="text-muted-foreground">
-                      Student data ports seamlessly to the main credentialing 
+                    <p className="text-gray-400">
+                      Student data ports seamlessly to the main credentialing
                       pathway upon graduation.
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-          <div className="container px-4 md:px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Transform Career Education?
-            </h2>
-            <p className="text-lg text-primary-foreground/70 max-w-2xl mx-auto mb-8">
-              Join schools across the country using Civic Access Lab to prepare 
+        <motion.section
+          className="py-24 md:py-32 relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 text-center relative z-10">
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                Ready to Transform
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Career Education?
+              </span>
+            </motion.h2>
+            <motion.p
+              className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              Join schools across the country using Civic Access Lab to prepare
               students for workplace success.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-                Schedule a Demo
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl">
+                  Schedule a Demo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </motion.div>
               <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
                 Download Brochure
               </Button>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
       </main>
       <Footer />
     </div>

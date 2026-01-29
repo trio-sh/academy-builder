@@ -1,11 +1,12 @@
+import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { 
-  CheckCircle2, 
-  Users, 
-  Award, 
-  BarChart3, 
-  Shield, 
+import {
+  CheckCircle2,
+  Users,
+  Award,
+  BarChart3,
+  Shield,
   Building2,
   ArrowRight,
   Star,
@@ -14,6 +15,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
 
 const benefits = [
   {
@@ -103,92 +120,172 @@ const testimonials = [
 
 const Employers = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <section className="py-16 md:py-24 gradient-hero text-white">
-          <div className="container px-4 md:px-6">
+        <motion.section
+          className="py-24 md:py-32 relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
+          <motion.div
+            className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
+            animate={{ scale: [1.2, 1, 1.2] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-sm text-white/80 mb-6">
-                <Building2 className="w-4 h-4" />
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Building2 className="w-4 h-4 text-indigo-400" />
                 T3X Talent Exchange
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Hire with Confidence.
+              </motion.div>
+              <motion.h1
+                className="text-4xl md:text-6xl font-bold mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Hire with Confidence.
+                </span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-academy-gold to-white">
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Evidence, Not Guesswork.
                 </span>
-              </h1>
-              <p className="text-lg text-white/70 mb-10">
-                Access pre-validated candidates with proven behavioral readiness. 
+              </motion.h1>
+              <motion.p
+                className="text-lg text-gray-400 mb-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Access pre-validated candidates with proven behavioral readiness.
                 Every listing backed by mentor observations, not self-reported skills.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-white text-primary hover:bg-white/90">
-                  Start Hiring
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              </motion.p>
+              <motion.div
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-8">
+                    Start Hiring
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10">
                   See Demo
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Benefits */}
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-medium text-academy-royal uppercase tracking-wider mb-3">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
                 Why T3X
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Hiring That Actually Works
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Hiring That Actually Works
+                </span>
               </h2>
-              <p className="text-lg text-muted-foreground">
-                Traditional hiring relies on resumes and interviews. We provide 
+              <p className="text-lg text-gray-400">
+                Traditional hiring relies on resumes and interviews. We provide
                 sustained behavioral evidence from mentor observation.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {benefits.map((benefit, index) => (
-                <div 
+            <motion.div
+              className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {benefits.map((benefit) => (
+                <motion.div
                   key={benefit.title}
-                  className="p-8 rounded-2xl bg-card border border-border hover:border-academy-royal/30 hover:shadow-lg transition-all duration-300 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  variants={itemVariants}
+                  className="group relative"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-academy-royal/10 flex items-center justify-center mb-4">
-                    <benefit.icon className="w-6 h-6 text-academy-royal" />
+                  {/* Glow effect */}
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
+
+                  <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
+                      <benefit.icon className="w-6 h-6 text-indigo-400" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-gray-400 leading-relaxed">
+                      {benefit.description}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {benefit.description}
-                  </p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* How It Works */}
-        <section className="py-16 md:py-24 bg-secondary/30">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-medium text-academy-royal uppercase tracking-wider mb-3">
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-900/30 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 relative z-10">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
                 How It Works
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Your Hiring Process
+              <h2 className="text-3xl md:text-4xl font-bold">
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Your Hiring Process
+                </span>
               </h2>
-            </div>
+            </motion.div>
 
-            <div className="max-w-4xl mx-auto">
+            <motion.div
+              className="max-w-4xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               <div className="grid md:grid-cols-4 gap-6">
                 {[
                   { step: "1", title: "Search", desc: "Filter by skills, experience, and readiness tier" },
@@ -196,149 +293,232 @@ const Employers = () => {
                   { step: "3", title: "Connect", desc: "Send connection requests to candidates" },
                   { step: "4", title: "Hire", desc: "Confirm hire and provide 30/60/90-day feedback" },
                 ].map((item, index) => (
-                  <div key={item.step} className="relative text-center">
-                    <div className="w-12 h-12 rounded-full bg-academy-royal text-white flex items-center justify-center text-lg font-bold mx-auto mb-4">
+                  <motion.div key={item.step} variants={itemVariants} className="relative text-center">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center text-lg font-bold mx-auto mb-4 shadow-lg shadow-indigo-600/30">
                       {item.step}
                     </div>
-                    <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    <h3 className="font-semibold text-white mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-400">{item.desc}</p>
                     {index < 3 && (
-                      <div className="hidden md:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-border" />
+                      <div className="hidden md:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Pricing */}
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-medium text-academy-royal uppercase tracking-wider mb-3">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
                 Pricing
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Plans for Every Organization
+              <h2 className="text-3xl md:text-4xl font-bold">
+                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  Plans for Every Organization
+                </span>
               </h2>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <motion.div
+              className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               {tiers.map((tier) => (
-                <div 
+                <motion.div
                   key={tier.name}
-                  className={cn(
-                    "relative p-8 rounded-2xl border",
-                    tier.popular 
-                      ? "border-academy-royal bg-academy-royal/5 shadow-xl" 
-                      : "border-border bg-card"
-                  )}
+                  variants={itemVariants}
+                  className="group relative"
                 >
+                  {/* Glow effect */}
                   {tier.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="px-4 py-1 text-xs font-medium bg-academy-royal text-white rounded-full">
-                        Most Popular
-                      </span>
-                    </div>
+                    <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
                   )}
 
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {tier.name}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    {tier.description}
-                  </p>
-
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-foreground">{tier.price}</span>
-                    {tier.period && (
-                      <span className="text-muted-foreground">{tier.period}</span>
+                  <div className={cn(
+                    "relative p-8 rounded-2xl border transition-all duration-300",
+                    tier.popular
+                      ? "border-indigo-500/50 bg-white/10 backdrop-blur-xl"
+                      : "border-white/10 bg-white/5 backdrop-blur-xl hover:border-white/20"
+                  )}>
+                    {tier.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="px-4 py-1 text-xs font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
+                          Most Popular
+                        </span>
+                      </div>
                     )}
+
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {tier.name}
+                    </h3>
+                    <p className="text-gray-400 mb-6">
+                      {tier.description}
+                    </p>
+
+                    <div className="mb-6">
+                      <span className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{tier.price}</span>
+                      {tier.period && (
+                        <span className="text-gray-400">{tier.period}</span>
+                      )}
+                    </div>
+
+                    <ul className="space-y-3 mb-8">
+                      {tier.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-3 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                          <span className="text-gray-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button
+                      className={cn(
+                        "w-full",
+                        tier.popular
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                          : "border-white/20 text-white hover:bg-white/10"
+                      )}
+                      variant={tier.popular ? "default" : "outline"}
+                    >
+                      {tier.cta}
+                    </Button>
                   </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-3 text-sm">
-                        <CheckCircle2 className="w-4 h-4 text-academy-emerald flex-shrink-0" />
-                        <span className="text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button 
-                    className={cn(
-                      "w-full",
-                      tier.popular 
-                        ? "bg-academy-royal hover:bg-academy-royal/90 text-white" 
-                        : ""
-                    )}
-                    variant={tier.popular ? "default" : "outline"}
-                  >
-                    {tier.cta}
-                  </Button>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Testimonials */}
-        <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                What Employers Say
-              </h2>
-            </div>
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="container px-4 md:px-6 relative z-10">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold">
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  What Employers Say
+                </span>
+              </h2>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               {testimonials.map((testimonial) => (
-                <div 
+                <motion.div
                   key={testimonial.author}
-                  className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
+                  variants={itemVariants}
+                  className="group relative"
                 >
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-academy-gold text-academy-gold" />
-                    ))}
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
+
+                  <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <blockquote className="text-lg text-gray-300 mb-6 leading-relaxed">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <div>
+                      <p className="font-semibold text-white">{testimonial.author}</p>
+                      <p className="text-sm text-gray-400">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
+                    </div>
                   </div>
-                  <blockquote className="text-lg mb-6 leading-relaxed">
-                    "{testimonial.quote}"
-                  </blockquote>
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-primary-foreground/60">
-                      {testimonial.role}, {testimonial.company}
-                    </p>
-                  </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="py-16 md:py-24">
-          <div className="container px-4 md:px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Ready to Transform Your Hiring?
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+        <motion.section
+          className="py-24 md:py-32 relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 text-center relative z-10">
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                Ready to Transform
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Your Hiring?
+              </span>
+            </motion.h2>
+            <motion.p
+              className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
               Join leading companies who trust T3X for evidence-based hiring decisions.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                Start Free Trial
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline">
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </motion.div>
+              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
                 <Clock className="mr-2 h-4 w-4" />
                 Schedule Demo
               </Button>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
       </main>
       <Footer />
     </div>
