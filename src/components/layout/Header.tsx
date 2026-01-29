@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, GraduationCap } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -26,21 +26,17 @@ export function Header() {
     >
       <nav className="container flex items-center justify-between h-16 px-4 md:px-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <motion.div
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white transition-transform group-hover:scale-105"
-            whileHover={{ rotate: 5 }}
-          >
-            <GraduationCap className="w-5 h-5" />
+        <Link to="/" className="flex items-center">
+          <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
+            <img
+              src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
+              alt="The 3rd Academy Logo"
+              className="h-10 w-10 mr-2 rounded-full shadow-lg"
+            />
+            <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              The 3rd Academy
+            </h1>
           </motion.div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-white">
-              THE 3RD ACADEMY
-            </span>
-            <span className="text-[10px] text-gray-500 tracking-wider">
-              BEHAVIORAL READINESS
-            </span>
-          </div>
         </Link>
 
         {/* Desktop Navigation */}
