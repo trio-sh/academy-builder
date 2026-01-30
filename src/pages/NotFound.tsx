@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home, ArrowLeft, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -13,23 +14,7 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
-      <motion.div
-        className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
-        animate={{ scale: [1.2, 1, 1.2] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-900/50 rounded-full opacity-20 blur-3xl"
-        animate={{ scale: [1, 1.3, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
+      <BackgroundVideo />
 
       <div className="container px-4 md:px-6 relative z-10">
         <motion.div

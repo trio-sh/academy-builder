@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { Shield, Calendar, Mail } from "lucide-react";
 
@@ -149,6 +150,7 @@ For EU residents, you also have the right to lodge a complaint with your local d
 const Privacy = () => {
   return (
     <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
       <Header />
 
       {/* Hero Section */}

@@ -15,6 +15,7 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 
 type SkillPassport = Database["public"]["Tables"]["skill_passports"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -160,6 +161,7 @@ const VerifyPassport = () => {
 
   return (
     <div className="min-h-screen bg-black">
+      <BackgroundVideo />
       {/* Header */}
       <header className="border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">

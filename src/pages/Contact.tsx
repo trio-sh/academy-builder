@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,6 +93,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
       <Header />
 
       {/* Hero Section */}
