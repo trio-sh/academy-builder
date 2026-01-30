@@ -116,7 +116,7 @@ const Schools = () => {
                 transition={{ delay: 0.3 }}
               >
                 <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
-                  Catch Them Young.
+                  Shape Future Talent.
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">

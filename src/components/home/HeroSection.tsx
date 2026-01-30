@@ -22,6 +22,24 @@ const itemVariants = {
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover opacity-40"
+        >
+          <source
+            src="https://bloujipdkyjsgzwxnoej.supabase.co/storage/v1/object/public/storage/homelivebg.mp4"
+            type="video/mp4"
+          />
+        </video>
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
+
       {/* Animated Background Blobs */}
       <motion.div
         className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-900 rounded-full opacity-20 blur-3xl"

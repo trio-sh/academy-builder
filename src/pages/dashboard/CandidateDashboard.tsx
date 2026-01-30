@@ -2266,11 +2266,12 @@ const Training = () => {
       .eq("module_id", moduleId);
 
     // Create growth log entry
-    await supabase.from("growth_logs").insert({
+    await supabase.from("growth_log_entries").insert({
       candidate_id: user.id,
-      log_type: "training_completion",
+      event_type: "training",
       title: `Completed BridgeFast Module`,
       description: `Completed ${modules.find((m) => m.id === moduleId)?.title} with score ${score}%`,
+      source_component: "Training",
       metadata: { module_id: moduleId, score },
     });
 
@@ -6003,8 +6004,8 @@ const CandidateDashboard = () => {
             </button>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
+          {/* Navigation - scrollable */}
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
