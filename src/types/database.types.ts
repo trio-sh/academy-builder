@@ -75,7 +75,6 @@ export interface Database {
           experience_years: number | null;
           education: Json | null;
           work_history: Json | null;
-          entry_path: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier: ReadinessTier | null;
           mentor_loops: number;
           has_skill_passport: boolean;
@@ -92,7 +91,6 @@ export interface Database {
           experience_years?: number | null;
           education?: Json | null;
           work_history?: Json | null;
-          entry_path: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier?: ReadinessTier | null;
           mentor_loops?: number;
           has_skill_passport?: boolean;
@@ -109,7 +107,6 @@ export interface Database {
           experience_years?: number | null;
           education?: Json | null;
           work_history?: Json | null;
-          entry_path?: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier?: ReadinessTier | null;
           mentor_loops?: number;
           has_skill_passport?: boolean;

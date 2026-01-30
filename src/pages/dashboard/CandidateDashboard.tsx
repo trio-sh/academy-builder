@@ -968,7 +968,7 @@ const Profile = () => {
 
     try {
       // Update profiles table
-      await supabase
+      const { error: profileError } = await supabase
         .from("profiles")
         .update({
           first_name: formData.first_name,
@@ -980,16 +980,54 @@ const Profile = () => {
         })
         .eq("id", user.id);
 
-      // Upsert candidate_profiles (handles both insert and update)
-      await supabase
+      if (profileError) {
+        console.error("Error updating profile:", profileError);
+      }
+
+      // Check if candidate_profile exists
+      const { data: existingProfile } = await supabase
         .from("candidate_profiles")
-        .upsert({
-          profile_id: user.id,
-          skills: formData.skills,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'profile_id'
-        });
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+
+      if (existingProfile) {
+        // Update existing candidate_profile
+        const { error: updateError } = await supabase
+          .from("candidate_profiles")
+          .update({
+            skills: formData.skills,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("profile_id", user.id);
+
+        if (updateError) {
+          console.error("Error updating candidate profile:", updateError);
+        }
+      } else {
+        // Insert new candidate_profile
+        const { error: insertError } = await supabase
+          .from("candidate_profiles")
+          .insert({
+            profile_id: user.id,
+            skills: formData.skills,
+          });
+
+        if (insertError) {
+          console.error("Error creating candidate profile:", insertError);
+        }
+      }
+
+      // Refresh local state
+      const { data: updatedCandidateProfile } = await supabase
+        .from("candidate_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+
+      if (updatedCandidateProfile) {
+        setCandidateProfile(updatedCandidateProfile);
+      }
 
       await refreshProfile();
       setIsEditing(false);
