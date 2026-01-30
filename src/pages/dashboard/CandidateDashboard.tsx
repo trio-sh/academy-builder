@@ -31,6 +31,10 @@ import {
   Loader2,
   Save,
   Plus,
+  Copy,
+  QrCode,
+  Download,
+  Share2,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -39,6 +43,19 @@ type BridgeFastModule = Database["public"]["Tables"]["bridgefast_modules"]["Row"
 type BridgeFastProgress = Database["public"]["Tables"]["bridgefast_progress"]["Row"];
 type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
+type SkillPassportRecord = Database["public"]["Tables"]["skill_passports"]["Row"];
+
+// Behavioral dimensions for display
+const BEHAVIORAL_DIMENSIONS = [
+  { id: "communication", label: "Communication", color: "from-blue-500 to-cyan-500" },
+  { id: "problem_solving", label: "Problem Solving", color: "from-purple-500 to-pink-500" },
+  { id: "adaptability", label: "Adaptability", color: "from-amber-500 to-orange-500" },
+  { id: "collaboration", label: "Collaboration", color: "from-emerald-500 to-teal-500" },
+  { id: "initiative", label: "Initiative", color: "from-red-500 to-rose-500" },
+  { id: "time_management", label: "Time Management", color: "from-indigo-500 to-violet-500" },
+  { id: "professionalism", label: "Professionalism", color: "from-sky-500 to-blue-500" },
+  { id: "learning_agility", label: "Learning Agility", color: "from-lime-500 to-green-500" },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -334,25 +351,69 @@ const Overview = () => {
 
 // Skill Passport component
 const SkillPassport = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
+  const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return;
 
-      const { data } = await supabase
+      // Fetch candidate profile
+      const { data: cp } = await supabase
         .from("candidate_profiles")
         .select("*")
         .eq("profile_id", user.id)
         .single();
-      setCandidateProfile(data);
+      setCandidateProfile(cp);
+
+      // If has passport, fetch passport data
+      if (cp?.has_skill_passport) {
+        const { data: passport } = await supabase
+          .from("skill_passports")
+          .select("*")
+          .eq("candidate_id", user.id)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+        setPassportData(passport);
+      }
+
       setIsLoading(false);
     };
 
     fetchData();
   }, [user?.id]);
+
+  const copyVerificationCode = () => {
+    if (passportData?.verification_code) {
+      navigator.clipboard.writeText(passportData.verification_code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const sharePassport = () => {
+    const url = `${window.location.origin}/verify/${passportData?.verification_code}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const getTierLabel = (tier: string | null) => {
+    const labels: Record<string, { label: string; color: string }> = {
+      developing: { label: "Developing", color: "text-amber-400" },
+      emerging: { label: "Emerging", color: "text-blue-400" },
+      ready: { label: "Job Ready", color: "text-emerald-400" },
+      tier_1: { label: "Tier 1 - Developing", color: "text-amber-400" },
+      tier_2: { label: "Tier 2 - Emerging", color: "text-blue-400" },
+      tier_3: { label: "Tier 3 - Ready", color: "text-emerald-400" },
+    };
+    return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
+  };
 
   if (isLoading) {
     return (
@@ -449,7 +510,10 @@ const SkillPassport = () => {
     );
   }
 
-  // Has Skill Passport
+  // Has Skill Passport - Full Display
+  const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+  const tierInfo = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -457,36 +521,171 @@ const SkillPassport = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
-        <p className="text-gray-400">
-          Your verified behavioral credential.
-        </p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
+          <p className="text-gray-400">Your verified behavioral credential for employers.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+            onClick={sharePassport}
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            {copied ? "Copied!" : "Share Link"}
+          </Button>
+        </div>
       </motion.div>
 
+      {/* Passport Card */}
       <motion.div
         variants={itemVariants}
-        className="p-8 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/30"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10 border border-emerald-500/30"
       >
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-            <Award className="w-8 h-8 text-emerald-400" />
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-white rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-60 h-60 bg-gradient-to-tl from-white rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative p-8">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
+                {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  {profile?.first_name} {profile?.last_name}
+                </h2>
+                <p className="text-emerald-400 font-medium">{profile?.headline || "Candidate"}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-400 font-medium text-sm">Verified</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-emerald-400 font-medium">Verified</p>
-            <h2 className="text-2xl font-bold text-white">Skill Passport Active</h2>
+
+          {/* Tier & Stats */}
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
+              <p className={`text-xl font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Mentor Loops</p>
+              <p className="text-xl font-bold text-white">{candidateProfile?.mentor_loops || 3}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Valid Until</p>
+              <p className="text-xl font-bold text-white">
+                {passportData?.expires_at
+                  ? new Date(passportData.expires_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+
+          {/* Verification Code */}
+          <div className="p-4 rounded-xl bg-black/20 backdrop-blur mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <QrCode className="w-8 h-8 text-emerald-400" />
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">Verification Code</p>
+                  <p className="text-lg font-mono font-bold text-white tracking-wider">
+                    {passportData?.verification_code || "N/A"}
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={copyVerificationCode}
+                className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+              >
+                <Copy className="w-4 h-4 mr-1" />
+                {copied ? "Copied!" : "Copy"}
+              </Button>
+            </div>
+          </div>
+
+          {/* Issue Date */}
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <span>
+              Issued: {passportData?.issued_at
+                ? new Date(passportData.issued_at).toLocaleDateString()
+                : "N/A"}
+            </span>
+            <span>The 3rd Academy</span>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
-            <p className="text-xl font-semibold text-white">
-              {candidateProfile?.current_tier?.replace("_", " ").toUpperCase() || "TIER 1"}
-            </p>
+      </motion.div>
+
+      {/* Behavioral Scores */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-xl font-semibold text-white mb-4">Behavioral Dimensions</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {BEHAVIORAL_DIMENSIONS.map((dimension) => {
+            const score = behavioralScores[dimension.id] || 0;
+            const percentage = (score / 5) * 100;
+
+            return (
+              <div
+                key={dimension.id}
+                className="p-4 rounded-xl bg-white/5 border border-white/10"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-white">{dimension.label}</span>
+                  <span className="text-lg font-bold text-white">{score.toFixed(1)}/5</span>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Average Score */}
+      <motion.div variants={itemVariants}>
+        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400 mb-1">Overall Behavioral Score</p>
+              <p className="text-3xl font-bold text-white">
+                {Object.values(behavioralScores).length > 0
+                  ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
+                  : "N/A"}/5
+              </p>
+            </div>
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+              <Award className="w-10 h-10 text-purple-400" />
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Mentor Loops Completed</p>
-            <p className="text-xl font-semibold text-white">{candidateProfile?.mentor_loops || 0}</p>
+        </div>
+      </motion.div>
+
+      {/* Verification Info */}
+      <motion.div variants={itemVariants}>
+        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="flex items-center gap-3">
+            <Shield className="w-5 h-5 text-emerald-400" />
+            <p className="text-sm text-gray-400">
+              Employers can verify this credential at{" "}
+              <span className="text-emerald-400 font-mono">
+                {window.location.origin}/verify/{passportData?.verification_code}
+              </span>
+            </p>
           </div>
         </div>
       </motion.div>
