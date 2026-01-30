@@ -923,7 +923,6 @@ const Profile = () => {
     headline: "",
     bio: "",
     location: "",
-    linkedin_url: "",
     skills: [] as string[],
   });
   const [newSkill, setNewSkill] = useState("");
@@ -936,7 +935,6 @@ const Profile = () => {
         headline: profile.headline || "",
         bio: profile.bio || "",
         location: profile.location || "",
-        linkedin_url: profile.linkedin_url || "",
         skills: [],
       });
     }
@@ -978,7 +976,6 @@ const Profile = () => {
           headline: formData.headline,
           bio: formData.bio,
           location: formData.location,
-          linkedin_url: formData.linkedin_url,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
@@ -998,7 +995,6 @@ const Profile = () => {
           .insert({
             profile_id: user.id,
             skills: formData.skills,
-            entry_path: "resume_upload",
           });
       }
 
@@ -1082,7 +1078,6 @@ const Profile = () => {
           .insert({
             profile_id: user.id,
             resume_url: resumeUrl,
-            entry_path: "resume_upload",
             skills: [],
           })
           .select()
@@ -1381,42 +1376,20 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Location and LinkedIn */}
+        {/* Location */}
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-gray-400 block mb-2">Location</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
-                  placeholder="City, State"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
-                />
-              ) : (
-                <p className="text-white">{formData.location || "Not specified"}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-sm text-gray-400 block mb-2">LinkedIn URL</label>
-              {isEditing ? (
-                <input
-                  type="url"
-                  value={formData.linkedin_url}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, linkedin_url: e.target.value }))}
-                  placeholder="https://linkedin.com/in/..."
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
-                />
-              ) : formData.linkedin_url ? (
-                <a href={formData.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline flex items-center gap-1">
-                  View Profile <ExternalLink className="w-4 h-4" />
-                </a>
-              ) : (
-                <p className="text-white">Not linked</p>
-              )}
-            </div>
-          </div>
+          <label className="text-sm text-gray-400 block mb-2">Location</label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={formData.location}
+              onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
+              placeholder="City, State"
+              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+            />
+          ) : (
+            <p className="text-white">{formData.location || "Not specified"}</p>
+          )}
         </div>
 
         {/* Skills */}
