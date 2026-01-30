@@ -9,7 +9,7 @@ export type Json =
 export type UserRole = 'candidate' | 'mentor' | 'employer' | 'school_admin' | 'admin';
 export type EndorsementDecision = 'proceed' | 'redirect' | 'pause';
 export type ReadinessTier = 'tier_1' | 'tier_2' | 'tier_3';
-export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement';
+export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement' | 'signup' | 'resume_upload';
 export type ProjectStatus = 'draft' | 'open' | 'in_progress' | 'completed' | 'cancelled';
 export type MilestoneStatus = 'pending' | 'in_progress' | 'submitted' | 'approved' | 'revision_requested';
 export type ConnectionStatus = 'pending' | 'accepted' | 'declined' | 'expired';
@@ -223,7 +223,7 @@ export interface Database {
       skill_passports: {
         Row: {
           id: string;
-          candidate_id: string;
+          profile_id: string;
           created_at: string;
           updated_at: string;
           verification_code: string;
@@ -235,7 +235,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          candidate_id: string;
+          profile_id: string;
           created_at?: string;
           updated_at?: string;
           verification_code?: string;
@@ -247,7 +247,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          candidate_id?: string;
+          profile_id?: string;
           created_at?: string;
           updated_at?: string;
           verification_code?: string;
@@ -261,7 +261,7 @@ export interface Database {
       growth_log_entries: {
         Row: {
           id: string;
-          candidate_id: string;
+          profile_id: string;
           created_at: string;
           event_type: GrowthLogEventType;
           title: string;
@@ -272,7 +272,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          candidate_id: string;
+          profile_id: string;
           created_at?: string;
           event_type: GrowthLogEventType;
           title: string;
@@ -283,7 +283,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          candidate_id?: string;
+          profile_id?: string;
           created_at?: string;
           event_type?: GrowthLogEventType;
           title?: string;
@@ -445,7 +445,7 @@ export interface Database {
       bridgefast_progress: {
         Row: {
           id: string;
-          candidate_id: string;
+          profile_id: string;
           module_id: string;
           created_at: string;
           updated_at: string;
@@ -454,11 +454,10 @@ export interface Database {
           progress_percent: number;
           final_score: number | null;
           status: 'not_started' | 'in_progress' | 'completed' | 'failed';
-          deadline: string | null;
         };
         Insert: {
           id?: string;
-          candidate_id: string;
+          profile_id: string;
           module_id: string;
           created_at?: string;
           updated_at?: string;
@@ -467,11 +466,10 @@ export interface Database {
           progress_percent?: number;
           final_score?: number | null;
           status?: 'not_started' | 'in_progress' | 'completed' | 'failed';
-          deadline?: string | null;
         };
         Update: {
           id?: string;
-          candidate_id?: string;
+          profile_id?: string;
           module_id?: string;
           created_at?: string;
           updated_at?: string;
@@ -480,7 +478,6 @@ export interface Database {
           progress_percent?: number;
           final_score?: number | null;
           status?: 'not_started' | 'in_progress' | 'completed' | 'failed';
-          deadline?: string | null;
         };
       };
       liveworks_projects: {
