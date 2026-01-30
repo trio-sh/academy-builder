@@ -7,6 +7,7 @@ export type Json =
   | Json[];
 
 export type UserRole = 'candidate' | 'mentor' | 'employer' | 'school_admin' | 'admin';
+export type EntryPath = 'resume_upload' | 'liveworks' | 'civic_access';
 export type EndorsementDecision = 'proceed' | 'redirect' | 'pause';
 export type ReadinessTier = 'tier_1' | 'tier_2' | 'tier_3';
 export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement' | 'signup' | 'resume_upload';
@@ -75,6 +76,7 @@ export interface Database {
           experience_years: number | null;
           education: Json | null;
           work_history: Json | null;
+          entry_path: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier: ReadinessTier | null;
           mentor_loops: number;
           has_skill_passport: boolean;
@@ -91,6 +93,7 @@ export interface Database {
           experience_years?: number | null;
           education?: Json | null;
           work_history?: Json | null;
+          entry_path: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier?: ReadinessTier | null;
           mentor_loops?: number;
           has_skill_passport?: boolean;
@@ -107,6 +110,7 @@ export interface Database {
           experience_years?: number | null;
           education?: Json | null;
           work_history?: Json | null;
+          entry_path?: 'resume_upload' | 'liveworks' | 'civic_access';
           current_tier?: ReadinessTier | null;
           mentor_loops?: number;
           has_skill_passport?: boolean;
