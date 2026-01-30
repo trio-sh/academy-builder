@@ -929,14 +929,15 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         first_name: profile.first_name || "",
         last_name: profile.last_name || "",
         headline: profile.headline || "",
         bio: profile.bio || "",
         location: profile.location || "",
-        skills: [],
-      });
+        // Preserve skills - they come from candidate_profiles, not profiles
+      }));
     }
   }, [profile]);
 
@@ -1027,6 +1028,11 @@ const Profile = () => {
 
       if (updatedCandidateProfile) {
         setCandidateProfile(updatedCandidateProfile);
+        // Update formData.skills to reflect saved data
+        setFormData((prev) => ({
+          ...prev,
+          skills: updatedCandidateProfile.skills || [],
+        }));
       }
 
       await refreshProfile();
