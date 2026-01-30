@@ -819,6 +819,80 @@ export interface Database {
           period_end?: string;
         };
       };
+      // Email queue for notifications
+      email_queue: {
+        Row: {
+          id: string;
+          created_at: string;
+          to_email: string;
+          to_name: string;
+          template: string;
+          template_data: Json;
+          status: 'pending' | 'sent' | 'failed';
+          sent_at: string | null;
+          error_message: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          to_email: string;
+          to_name: string;
+          template: string;
+          template_data: Json;
+          status?: 'pending' | 'sent' | 'failed';
+          sent_at?: string | null;
+          error_message?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          to_email?: string;
+          to_name?: string;
+          template?: string;
+          template_data?: Json;
+          status?: 'pending' | 'sent' | 'failed';
+          sent_at?: string | null;
+          error_message?: string | null;
+        };
+      };
+      candidate_self_assessments: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          created_at: string;
+          updated_at: string;
+          behavioral_scores: Json;
+          notes: string | null;
+          goals: string | null;
+          strengths: string[];
+          areas_for_improvement: string[];
+          completed: boolean;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          created_at?: string;
+          updated_at?: string;
+          behavioral_scores: Json;
+          notes?: string | null;
+          goals?: string | null;
+          strengths?: string[];
+          areas_for_improvement?: string[];
+          completed?: boolean;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          behavioral_scores?: Json;
+          notes?: string | null;
+          goals?: string | null;
+          strengths?: string[];
+          areas_for_improvement?: string[];
+          completed?: boolean;
+        };
+      };
       notifications: {
         Row: {
           id: string;

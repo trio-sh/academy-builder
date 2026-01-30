@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, updatePassword } from "@/lib/supabase";
+import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -62,6 +63,10 @@ import {
   Target,
   GraduationCap,
   Send,
+  ClipboardCheck,
+  Sliders,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -77,6 +82,7 @@ type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
 type MentorAssignment = Database["public"]["Tables"]["mentor_assignments"]["Row"];
+type SelfAssessment = Database["public"]["Tables"]["candidate_self_assessments"]["Row"];
 
 // Behavioral dimensions for display
 const BEHAVIORAL_DIMENSIONS = [
@@ -107,6 +113,7 @@ const navItems = [
   { name: "Overview", href: "/dashboard/candidate", icon: BarChart3 },
   { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award },
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp },
+  { name: "Self Assessment", href: "/dashboard/candidate/assessment", icon: ClipboardCheck },
   { name: "Training", href: "/dashboard/candidate/training", icon: BookOpen },
   { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase },
   { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap },
@@ -1401,6 +1408,749 @@ const QUIZ_QUESTIONS: Record<string, { question: string; options: string[]; corr
     { question: "When you fail at something, you should:", options: ["Give up on similar tasks", "Analyze what went wrong and try again", "Blame external factors", "Avoid the topic forever"], correct: 1 },
     { question: "Continuous learning in the workplace means:", options: ["Only attending mandatory training", "Actively seeking new knowledge and skills", "Waiting for promotions to learn", "Learning stops after onboarding"], correct: 1 },
   ],
+};
+
+// Self Assessment Tool descriptions
+const ASSESSMENT_DESCRIPTIONS: Record<string, { title: string; description: string; examples: string[] }> = {
+  communication: {
+    title: "Communication",
+    description: "Your ability to express ideas clearly, listen actively, and adapt your message to different audiences.",
+    examples: ["Written and verbal communication", "Active listening", "Presentation skills", "Giving and receiving feedback"],
+  },
+  problem_solving: {
+    title: "Problem Solving",
+    description: "Your approach to analyzing issues, identifying root causes, and developing creative solutions.",
+    examples: ["Analytical thinking", "Creative solutions", "Root cause analysis", "Decision making"],
+  },
+  adaptability: {
+    title: "Adaptability",
+    description: "Your flexibility in responding to change and ability to thrive in dynamic environments.",
+    examples: ["Embracing change", "Learning new technologies", "Adjusting to new situations", "Resilience"],
+  },
+  collaboration: {
+    title: "Collaboration",
+    description: "Your effectiveness in working with others, contributing to team goals, and building relationships.",
+    examples: ["Team participation", "Conflict resolution", "Supporting colleagues", "Cross-functional work"],
+  },
+  initiative: {
+    title: "Initiative",
+    description: "Your tendency to take proactive action, seek opportunities, and drive improvements.",
+    examples: ["Proactive behavior", "Self-starting", "Identifying opportunities", "Going beyond requirements"],
+  },
+  time_management: {
+    title: "Time Management",
+    description: "Your ability to prioritize tasks, meet deadlines, and efficiently manage your workload.",
+    examples: ["Prioritization", "Meeting deadlines", "Planning ahead", "Managing multiple tasks"],
+  },
+  professionalism: {
+    title: "Professionalism",
+    description: "Your conduct, ethics, and reliability in professional settings.",
+    examples: ["Reliability", "Workplace etiquette", "Accountability", "Ethical behavior"],
+  },
+  learning_agility: {
+    title: "Learning Agility",
+    description: "Your ability to learn quickly from experience and apply knowledge to new situations.",
+    examples: ["Quick learning", "Applying lessons", "Curiosity", "Continuous improvement"],
+  },
+};
+
+// Self Assessment component
+const SelfAssessmentPage = () => {
+  const { user, profile } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [assessments, setAssessments] = useState<SelfAssessment[]>([]);
+  const [currentScores, setCurrentScores] = useState<Record<string, number>>({
+    communication: 3,
+    problem_solving: 3,
+    adaptability: 3,
+    collaboration: 3,
+    initiative: 3,
+    time_management: 3,
+    professionalism: 3,
+    learning_agility: 3,
+  });
+  const [strengths, setStrengths] = useState<string[]>([]);
+  const [improvements, setImprovements] = useState<string[]>([]);
+  const [goals, setGoals] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [activeStep, setActiveStep] = useState(0); // 0=intro, 1=rate, 2=reflect, 3=goals, 4=review
+
+  useEffect(() => {
+    const fetchAssessments = async () => {
+      if (!user?.id) return;
+
+      const { data } = await supabase
+        .from("candidate_self_assessments")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (data && data.length > 0) {
+        setAssessments(data);
+        // Load the most recent assessment
+        const latest = data[0];
+        if (latest.behavioral_scores) {
+          setCurrentScores(latest.behavioral_scores as Record<string, number>);
+        }
+        setStrengths(latest.strengths || []);
+        setImprovements(latest.areas_for_improvement || []);
+        setGoals(latest.goals || "");
+        setNotes(latest.notes || "");
+      }
+      setIsLoading(false);
+    };
+
+    fetchAssessments();
+  }, [user?.id]);
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 4.5) return "Excellent";
+    if (score >= 3.5) return "Strong";
+    if (score >= 2.5) return "Developing";
+    if (score >= 1.5) return "Emerging";
+    return "Beginning";
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 4.5) return "text-emerald-400";
+    if (score >= 3.5) return "text-blue-400";
+    if (score >= 2.5) return "text-amber-400";
+    if (score >= 1.5) return "text-orange-400";
+    return "text-red-400";
+  };
+
+  const getOverallScore = () => {
+    const values = Object.values(currentScores);
+    return values.reduce((a, b) => a + b, 0) / values.length;
+  };
+
+  const getRadarData = () => {
+    return BEHAVIORAL_DIMENSIONS.map((dim) => ({
+      subject: dim.label,
+      score: currentScores[dim.id] || 0,
+      fullMark: 5,
+    }));
+  };
+
+  const toggleStrength = (dimension: string) => {
+    if (strengths.includes(dimension)) {
+      setStrengths(strengths.filter((s) => s !== dimension));
+    } else if (strengths.length < 3) {
+      setStrengths([...strengths, dimension]);
+    }
+  };
+
+  const toggleImprovement = (dimension: string) => {
+    if (improvements.includes(dimension)) {
+      setImprovements(improvements.filter((s) => s !== dimension));
+    } else if (improvements.length < 3) {
+      setImprovements([...improvements, dimension]);
+    }
+  };
+
+  const saveAssessment = async () => {
+    if (!user?.id) return;
+    setIsSaving(true);
+
+    try {
+      // Save assessment
+      const { error } = await supabase.from("candidate_self_assessments").insert({
+        candidate_id: user.id,
+        behavioral_scores: currentScores,
+        strengths,
+        areas_for_improvement: improvements,
+        goals,
+        notes,
+        completed: true,
+      });
+
+      if (error) throw error;
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "assessment",
+        title: "Self Assessment Completed",
+        description: `Completed behavioral self-assessment with overall score of ${getOverallScore().toFixed(1)}/5`,
+        source_component: "SelfAssessment",
+        metadata: {
+          scores: currentScores,
+          overall: getOverallScore(),
+          strengths,
+          areas_for_improvement: improvements,
+        },
+      });
+
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+
+      // Refresh assessments
+      const { data } = await supabase
+        .from("candidate_self_assessments")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (data) setAssessments(data);
+    } catch (error) {
+      console.error("Error saving assessment:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-5xl mx-auto space-y-8"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Self Assessment</h1>
+        <p className="text-gray-400">
+          Reflect on your professional behavioral skills and identify areas for growth.
+        </p>
+      </motion.div>
+
+      {/* Success Banner */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3"
+        >
+          <CheckCircle className="w-5 h-5 text-emerald-400" />
+          <span className="text-emerald-300">Assessment saved successfully!</span>
+        </motion.div>
+      )}
+
+      {/* Progress Steps */}
+      <motion.div variants={itemVariants} className="flex items-center justify-center gap-2">
+        {["Introduction", "Rate Skills", "Reflect", "Goals", "Review"].map((step, index) => (
+          <div key={step} className="flex items-center">
+            <button
+              onClick={() => setActiveStep(index)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                activeStep === index
+                  ? "bg-indigo-600 text-white"
+                  : activeStep > index
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10"
+              }`}
+            >
+              {activeStep > index ? (
+                <CheckCircle className="w-4 h-4" />
+              ) : (
+                <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs">
+                  {index + 1}
+                </span>
+              )}
+              <span className="hidden sm:inline">{step}</span>
+            </button>
+            {index < 4 && <ChevronRight className="w-4 h-4 text-gray-600 mx-1" />}
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Step Content */}
+      <motion.div
+        key={activeStep}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="space-y-6"
+      >
+        {/* Introduction Step */}
+        {activeStep === 0 && (
+          <div className="p-8 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Welcome to Your Self Assessment</h2>
+                <p className="text-gray-400">A journey of self-discovery and professional growth</p>
+              </div>
+            </div>
+
+            <div className="space-y-6 text-gray-300">
+              <p>
+                This self-assessment tool helps you reflect on your professional behavioral skills across
+                8 key dimensions. Your honest self-evaluation will help you:
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  { icon: Target, text: "Identify your strengths and areas for improvement" },
+                  { icon: TrendingUp, text: "Track your professional growth over time" },
+                  { icon: Users, text: "Prepare for mentor observations and feedback" },
+                  { icon: Award, text: "Build a stronger Skill Passport profile" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5">
+                    <item.icon className="w-5 h-5 text-indigo-400" />
+                    <span className="text-sm">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <p className="text-amber-300 text-sm">
+                  <strong>Note:</strong> Be honest in your self-assessment. This is for your personal
+                  growth, and your mentor observations will provide external validation.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(1)}
+              >
+                Start Assessment
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Rate Skills Step */}
+        {activeStep === 1 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Rate Your Behavioral Skills</h2>
+              <p className="text-gray-400 mb-6">
+                Use the sliders to rate yourself on each dimension from 1 (Beginning) to 5 (Excellent).
+              </p>
+
+              <div className="grid gap-6">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => {
+                  const info = ASSESSMENT_DESCRIPTIONS[dim.id];
+                  const score = currentScores[dim.id] || 3;
+
+                  return (
+                    <div key={dim.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-white">{info.title}</h3>
+                          <p className="text-sm text-gray-400">{info.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`text-2xl font-bold ${getScoreColor(score)}`}>{score.toFixed(1)}</span>
+                          <p className={`text-xs ${getScoreColor(score)}`}>{getScoreLabel(score)}</p>
+                        </div>
+                      </div>
+
+                      <input
+                        type="range"
+                        min="1"
+                        max="5"
+                        step="0.5"
+                        value={score}
+                        onChange={(e) => setCurrentScores({ ...currentScores, [dim.id]: parseFloat(e.target.value) })}
+                        className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                      />
+
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>Beginning</span>
+                        <span>Emerging</span>
+                        <span>Developing</span>
+                        <span>Strong</span>
+                        <span>Excellent</span>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {info.examples.map((ex) => (
+                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-white/5 text-gray-400">
+                            {ex}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Radar Preview */}
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4">Your Skills Profile</h3>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={getRadarData()}>
+                    <PolarGrid stroke="#374151" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: "#9CA3AF", fontSize: 12 }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 5]} tick={{ fill: "#9CA3AF" }} />
+                    <Radar
+                      name="Self Assessment"
+                      dataKey="score"
+                      stroke="#8B5CF6"
+                      fill="#8B5CF6"
+                      fillOpacity={0.3}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-center mt-4">
+                <span className="text-3xl font-bold text-white">{getOverallScore().toFixed(1)}</span>
+                <span className="text-gray-400 ml-2">/ 5.0 Overall</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(0)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(2)}
+              >
+                Continue to Reflect
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Reflect Step */}
+        {activeStep === 2 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Identify Your Strengths</h2>
+              <p className="text-gray-400 mb-6">
+                Select up to 3 dimensions that you consider your strongest areas.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <button
+                    key={dim.id}
+                    onClick={() => toggleStrength(dim.id)}
+                    className={`p-4 rounded-xl border text-left transition-all ${
+                      strengths.includes(dim.id)
+                        ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                        : "bg-white/5 border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-white/10"
+                        }`}
+                      >
+                        {strengths.includes(dim.id) ? (
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        ) : (
+                          <Target className="w-5 h-5 text-gray-400" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-sm text-gray-500 mt-4">
+                {strengths.length}/3 selected
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Areas for Improvement</h2>
+              <p className="text-gray-400 mb-6">
+                Select up to 3 dimensions you want to focus on improving.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <button
+                    key={dim.id}
+                    onClick={() => toggleImprovement(dim.id)}
+                    className={`p-4 rounded-xl border text-left transition-all ${
+                      improvements.includes(dim.id)
+                        ? "bg-amber-500/20 border-amber-500/50 ring-2 ring-amber-500/30"
+                        : "bg-white/5 border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-white/10"
+                        }`}
+                      >
+                        {improvements.includes(dim.id) ? (
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        ) : (
+                          <TrendingUp className="w-5 h-5 text-gray-400" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-sm text-gray-500 mt-4">
+                {improvements.length}/3 selected
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-4">Additional Notes</h2>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add any reflections on your current skill levels..."
+                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                rows={4}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(1)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(3)}
+              >
+                Continue to Goals
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Goals Step */}
+        {activeStep === 3 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Set Your Goals</h2>
+              <p className="text-gray-400 mb-6">
+                What do you want to achieve in your professional development journey?
+              </p>
+
+              <textarea
+                value={goals}
+                onChange={(e) => setGoals(e.target.value)}
+                placeholder="Example: I want to improve my communication skills by actively participating in team meetings and seeking feedback from my mentor. I also aim to develop better time management habits by using task prioritization techniques..."
+                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                rows={6}
+              />
+            </div>
+
+            {improvements.length > 0 && (
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+                <h3 className="text-lg font-semibold text-white mb-4">Suggested Focus Areas</h3>
+                <p className="text-gray-400 mb-4">Based on your areas for improvement:</p>
+
+                <div className="space-y-4">
+                  {improvements.map((imp) => {
+                    const info = ASSESSMENT_DESCRIPTIONS[imp];
+                    return (
+                      <div key={imp} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <h4 className="font-medium text-white mb-2">{info.title}</h4>
+                        <ul className="text-sm text-gray-400 space-y-1">
+                          {info.examples.map((ex) => (
+                            <li key={ex} className="flex items-center gap-2">
+                              <ChevronRight className="w-3 h-3 text-indigo-400" />
+                              {ex}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(2)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(4)}
+              >
+                Review Assessment
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Review Step */}
+        {activeStep === 4 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-6">Review Your Assessment</h2>
+
+              {/* Overall Score */}
+              <div className="flex items-center justify-center gap-6 p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 mb-6">
+                <div className="text-center">
+                  <p className="text-5xl font-bold text-white">{getOverallScore().toFixed(1)}</p>
+                  <p className="text-gray-400">Overall Score</p>
+                </div>
+                <div className={`text-xl font-semibold ${getScoreColor(getOverallScore())}`}>
+                  {getScoreLabel(getOverallScore())}
+                </div>
+              </div>
+
+              {/* Skills Grid */}
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span className="text-gray-300">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
+                    <span className={`font-semibold ${getScoreColor(currentScores[dim.id])}`}>
+                      {currentScores[dim.id].toFixed(1)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Strengths & Improvements */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-emerald-400" />
+                    Strengths
+                  </h3>
+                  <div className="space-y-2">
+                    {strengths.length > 0 ? (
+                      strengths.map((s) => (
+                        <div key={s} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-300 text-sm">
+                          {ASSESSMENT_DESCRIPTIONS[s].title}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm">No strengths selected</p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-amber-400" />
+                    Areas for Improvement
+                  </h3>
+                  <div className="space-y-2">
+                    {improvements.length > 0 ? (
+                      improvements.map((s) => (
+                        <div key={s} className="p-2 rounded-lg bg-amber-500/10 text-amber-300 text-sm">
+                          {ASSESSMENT_DESCRIPTIONS[s].title}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm">No areas selected</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Goals */}
+              {goals && (
+                <div className="mb-6">
+                  <h3 className="font-semibold text-white mb-3">Goals</h3>
+                  <p className="text-gray-300 whitespace-pre-wrap">{goals}</p>
+                </div>
+              )}
+
+              {/* Notes */}
+              {notes && (
+                <div>
+                  <h3 className="font-semibold text-white mb-3">Notes</h3>
+                  <p className="text-gray-300 whitespace-pre-wrap">{notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(3)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                onClick={saveAssessment}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Assessment
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Previous Assessments */}
+      {assessments.length > 0 && (
+        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 className="text-xl font-semibold text-white mb-4">Assessment History</h2>
+          <div className="space-y-3">
+            {assessments.slice(0, 5).map((assessment) => {
+              const scores = assessment.behavioral_scores as Record<string, number>;
+              const avgScore =
+                Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length;
+              return (
+                <div
+                  key={assessment.id}
+                  className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                      <ClipboardCheck className="w-5 h-5 text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">
+                        {new Date(assessment.created_at).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        {assessment.strengths?.length || 0} strengths, {assessment.areas_for_improvement?.length || 0} areas to improve
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className={`text-xl font-bold ${getScoreColor(avgScore)}`}>
+                      {avgScore.toFixed(1)}
+                    </span>
+                    <p className="text-xs text-gray-500">Overall</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
 };
 
 // Training (BridgeFast) component
@@ -2886,6 +3636,7 @@ const Profile = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [showResumeViewer, setShowResumeViewer] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -3426,28 +4177,45 @@ const Profile = () => {
                     Your resume is on file and ready for review
                   </p>
                 </div>
-                <div className="flex gap-2">
-                  <a
-                    href={candidateProfile.resume_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm flex items-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View
-                  </a>
-                  <button
-                    onClick={handleDeleteResume}
-                    className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors text-sm flex items-center gap-2"
-                  >
-                    <X className="w-4 h-4" />
-                    Remove
-                  </button>
-                </div>
+              </div>
+
+              {/* Resume Actions */}
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setShowResumeViewer(true)}
+                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors flex items-center gap-2"
+                >
+                  <Eye className="w-4 h-4" />
+                  View Resume
+                </button>
+                <a
+                  href={candidateProfile.resume_url}
+                  download
+                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </a>
+                <a
+                  href={candidateProfile.resume_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in New Tab
+                </a>
+                <button
+                  onClick={handleDeleteResume}
+                  className="px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-2"
+                >
+                  <X className="w-4 h-4" />
+                  Remove
+                </button>
               </div>
 
               {/* Replace option */}
-              <div>
+              <div className="pt-2 border-t border-white/10">
                 <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm">
                   <Upload className="w-4 h-4" />
                   Replace Resume
@@ -3596,6 +4364,102 @@ const Profile = () => {
           )}
         </div>
       </motion.div>
+
+      {/* Resume Viewer Modal */}
+      {showResumeViewer && candidateProfile?.resume_url && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowResumeViewer(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-5xl h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Your Resume</h2>
+                  <p className="text-sm text-gray-400">View and review your uploaded resume</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={candidateProfile.resume_url}
+                  download
+                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </a>
+                <a
+                  href={candidateProfile.resume_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in New Tab
+                </a>
+                <button
+                  onClick={() => setShowResumeViewer(false)}
+                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Resume Viewer */}
+            <div className="flex-1 overflow-hidden">
+              {candidateProfile.resume_url.toLowerCase().endsWith('.pdf') ? (
+                <iframe
+                  src={`${candidateProfile.resume_url}#toolbar=1&navpanes=0&scrollbar=1`}
+                  className="w-full h-full border-0"
+                  title="Resume Viewer"
+                />
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4">
+                    <FileText className="w-10 h-10 text-indigo-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Document Preview</h3>
+                  <p className="text-gray-400 mb-6 max-w-md">
+                    This document format cannot be previewed directly in the browser.
+                    You can download it or open it in a new tab to view the contents.
+                  </p>
+                  <div className="flex gap-3">
+                    <a
+                      href={candidateProfile.resume_url}
+                      download
+                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors flex items-center gap-2"
+                    >
+                      <Download className="w-5 h-5" />
+                      Download Resume
+                    </a>
+                    <a
+                      href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                      Open with Google Docs
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -3880,10 +4744,21 @@ const FindMentor = () => {
   const [isRequesting, setIsRequesting] = useState(false);
   const [requestSent, setRequestSent] = useState<Set<string>>(new Set());
   const [industryFilter, setIndustryFilter] = useState<string>("all");
+  const [recommendedMatches, setRecommendedMatches] = useState<MentorMatch[]>([]);
+  const [showRecommended, setShowRecommended] = useState(true);
+  const [selectedMatch, setSelectedMatch] = useState<MentorMatch | null>(null);
 
   useEffect(() => {
     const fetchMentors = async () => {
       if (!user?.id) return;
+
+      // Fetch intelligent mentor matches
+      try {
+        const matches = await MentorMatchingService.findMentorMatches(user.id, 5);
+        setRecommendedMatches(matches);
+      } catch (error) {
+        console.log("Mentor matching unavailable:", error);
+      }
 
       // Fetch mentors who are accepting
       const { data: mentorsData } = await supabase
@@ -3921,6 +4796,19 @@ const FindMentor = () => {
 
     fetchMentors();
   }, [user?.id]);
+
+  const getCompatibilityBadgeColor = (level: string) => {
+    switch (level) {
+      case "excellent":
+        return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+      case "good":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "fair":
+        return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    }
+  };
 
   const requestMentor = async () => {
     if (!user?.id || !selectedMentor) return;
@@ -3998,6 +4886,159 @@ const FindMentor = () => {
           <p className="text-sm text-gray-400 mt-2">
             Loop Progress: {activeMentor.loop_number} / 3
           </p>
+        </motion.div>
+      )}
+
+      {/* Recommended Matches Section */}
+      {recommendedMatches.length > 0 && !activeMentor && (
+        <motion.div variants={itemVariants} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">Recommended For You</h2>
+                <p className="text-sm text-gray-400">Based on your skills and goals</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowRecommended(!showRecommended)}
+              className="text-indigo-400 hover:text-indigo-300 text-sm"
+            >
+              {showRecommended ? "Hide" : "Show"} recommendations
+            </button>
+          </div>
+
+          {showRecommended && (
+            <div className="grid gap-4">
+              {recommendedMatches.map((match) => {
+                const mentor = match.mentor;
+                const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
+                const hasSentRequest = requestSent.has(mentor.id);
+                const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
+
+                return (
+                  <motion.div
+                    key={mentor.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
+                  >
+                    {/* Match Score Badge */}
+                    <div className="absolute top-4 right-4 flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getCompatibilityBadgeColor(
+                          match.compatibilityLevel
+                        )}`}
+                      >
+                        {match.score.total}% Match
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      {mentor.profile?.avatar_url ? (
+                        <img
+                          src={mentor.profile.avatar_url}
+                          alt="Mentor"
+                          className="w-16 h-16 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                          {mentor.profile?.first_name?.[0]}
+                          {mentor.profile?.last_name?.[0]}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-lg">
+                          {mentor.profile?.first_name} {mentor.profile?.last_name}
+                        </h3>
+                        <p className="text-sm text-indigo-400">
+                          {mentor.job_title} {mentor.company && `at ${mentor.company}`}
+                        </p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                          <span>{mentor.years_experience} years exp</span>
+                          <span className="px-2 py-0.5 rounded bg-white/10">
+                            {mentor.industry}
+                          </span>
+                          {mentor.avg_rating && (
+                            <span className="flex items-center gap-1">
+                              <Star className="w-3 h-3 text-amber-400" />
+                              {mentor.avg_rating.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Match Reasons */}
+                    {match.matchReasons.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {match.matchReasons.map((reason, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 rounded-full text-xs bg-white/5 text-gray-300 border border-white/10"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Score Breakdown */}
+                    <div className="mt-4 grid grid-cols-5 gap-2">
+                      {[
+                        { label: "Skills", value: match.score.skillMatch, color: "bg-blue-500" },
+                        { label: "Industry", value: match.score.industryMatch, color: "bg-purple-500" },
+                        { label: "Available", value: match.score.availabilityScore, color: "bg-emerald-500" },
+                        { label: "Experience", value: match.score.experienceScore, color: "bg-amber-500" },
+                        { label: "Rating", value: match.score.ratingScore, color: "bg-rose-500" },
+                      ].map((item) => (
+                        <div key={item.label} className="text-center">
+                          <div className="h-1 rounded-full bg-white/10 mb-1">
+                            <div
+                              className={`h-full rounded-full ${item.color}`}
+                              style={{ width: `${item.value}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-500">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-4">
+                      {isAssigned ? (
+                        <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Currently Assigned
+                        </Button>
+                      ) : hasSentRequest ? (
+                        <Button disabled className="w-full bg-indigo-600/50 cursor-not-allowed">
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Request Sent
+                        </Button>
+                      ) : spotsAvailable > 0 ? (
+                        <Button
+                          onClick={() =>
+                            setSelectedMentor({ ...mentor, profile: mentor.profile })
+                          }
+                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          Request This Mentor
+                        </Button>
+                      ) : (
+                        <Button disabled className="w-full bg-gray-600/50 cursor-not-allowed">
+                          No Spots Available
+                        </Button>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </motion.div>
       )}
 
@@ -4704,6 +5745,7 @@ const CandidateDashboard = () => {
             <Route index element={<Overview />} />
             <Route path="passport" element={<SkillPassport />} />
             <Route path="growth" element={<GrowthLog />} />
+            <Route path="assessment" element={<SelfAssessmentPage />} />
             <Route path="training" element={<Training />} />
             <Route path="projects" element={<Projects />} />
             <Route path="mentors" element={<FindMentor />} />
