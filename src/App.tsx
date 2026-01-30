@@ -25,6 +25,8 @@ import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
@@ -62,6 +64,10 @@ const App = () => (
 
             {/* Auth callback */}
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
+
+            {/* Password reset */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Skill Passport verification (public) */}
             <Route path="/verify/:code" element={<VerifyPassport />} />

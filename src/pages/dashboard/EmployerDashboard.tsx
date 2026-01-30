@@ -1004,7 +1004,12 @@ const Projects = () => {
   });
   const [showEscrowModal, setShowEscrowModal] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState<LiveWorksMilestone | null>(null);
-  const [escrowAction, setEscrowAction] = useState<"fund" | "release" | null>(null);
+  const [escrowAction, setEscrowAction] = useState<"fund" | "release" | "verify" | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState({
+    method: "paypal",
+    credentials: "",
+    notes: "",
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -1118,34 +1123,43 @@ const Projects = () => {
     }
   };
 
-  const fundMilestoneEscrow = async (milestone: LiveWorksMilestone) => {
-    if (!milestone.payment_amount || !employerProfile) return;
+  // Share payment credentials for manual payment (no in-app payments)
+  const sharePaymentCredentials = async (milestone: LiveWorksMilestone) => {
+    if (!milestone.payment_amount || !employerProfile || !paymentDetails.credentials) return;
 
-    // Simulate payment processing (in production, integrate with Stripe)
     const { error } = await supabase
       .from("liveworks_milestones")
       .update({
-        escrow_status: "funded",
-        escrow_funded_at: new Date().toISOString(),
+        escrow_status: "pending",
+        payment_method: paymentDetails.method,
+        payment_credentials: paymentDetails.credentials,
+        payment_notes: paymentDetails.notes || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", milestone.id);
 
     if (!error) {
-      // Create escrow transaction record
+      // Create escrow transaction record for tracking
       await supabase.from("escrow_transactions").insert({
         project_id: milestone.project_id,
         milestone_id: milestone.id,
         employer_id: employerProfile.id,
         amount: milestone.payment_amount,
-        status: "funded",
-        funded_at: new Date().toISOString(),
+        status: "pending",
+        payment_method: paymentDetails.method,
+        payment_credentials: paymentDetails.credentials,
+        notes: `Payment credentials shared. Method: ${paymentDetails.method}`,
       });
 
       const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
         milestones?.map((m) =>
           m.id === milestone.id
-            ? { ...m, escrow_status: "funded" as const, escrow_funded_at: new Date().toISOString() }
+            ? {
+                ...m,
+                escrow_status: "pending" as const,
+                payment_method: paymentDetails.method,
+                payment_credentials: paymentDetails.credentials,
+              }
             : m
         );
 
@@ -1157,12 +1171,30 @@ const Projects = () => {
           prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
         );
       }
+
+      // Notify candidate about payment details
+      const project = projects.find((p) => p.id === milestone.project_id);
+      if (project?.selected_candidate_id) {
+        await supabase.from("notifications").insert({
+          user_id: project.selected_candidate_id,
+          type: "payment",
+          title: "Payment Credentials Shared",
+          message: `Payment details for milestone "${milestone.title}" have been shared. Amount: $${milestone.payment_amount}. Please complete the payment and submit proof.`,
+          metadata: {
+            milestone_id: milestone.id,
+            amount: milestone.payment_amount,
+            payment_method: paymentDetails.method,
+          },
+        });
+      }
     }
     setShowEscrowModal(false);
     setSelectedMilestone(null);
+    setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
   };
 
-  const releaseMilestoneEscrow = async (milestone: LiveWorksMilestone) => {
+  // Verify payment was received (manual confirmation)
+  const verifyPaymentReceived = async (milestone: LiveWorksMilestone) => {
     if (!milestone.payment_amount || !employerProfile) return;
 
     const project = projects.find((p) => p.id === milestone.project_id);
@@ -1172,6 +1204,7 @@ const Projects = () => {
       .from("liveworks_milestones")
       .update({
         escrow_status: "released",
+        payment_verified_at: new Date().toISOString(),
         escrow_released_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -1184,25 +1217,22 @@ const Projects = () => {
         .update({
           status: "released",
           released_at: new Date().toISOString(),
+          verified_at: new Date().toISOString(),
+          verified_by: employerProfile.profile_id,
           candidate_id: candidateId,
+          notes: "Payment verified and confirmed by employer",
         })
         .eq("milestone_id", milestone.id);
-
-      // Create notification for candidate
-      if (candidateId) {
-        await supabase.from("notifications").insert({
-          user_id: candidateId,
-          type: "payment",
-          title: "Payment Released!",
-          message: `Payment of $${milestone.payment_amount} has been released for milestone: ${milestone.title}`,
-          metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
-        });
-      }
 
       const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
         milestones?.map((m) =>
           m.id === milestone.id
-            ? { ...m, escrow_status: "released" as const, escrow_released_at: new Date().toISOString() }
+            ? {
+                ...m,
+                escrow_status: "released" as const,
+                payment_verified_at: new Date().toISOString(),
+                escrow_released_at: new Date().toISOString(),
+              }
             : m
         );
 
@@ -1214,10 +1244,22 @@ const Projects = () => {
           prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
         );
       }
+
+      // Notify candidate
+      if (candidateId) {
+        await supabase.from("notifications").insert({
+          user_id: candidateId,
+          type: "payment",
+          title: "Payment Verified!",
+          message: `Your payment of $${milestone.payment_amount} for milestone "${milestone.title}" has been verified and confirmed.`,
+          metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
+        });
+      }
     }
     setShowEscrowModal(false);
     setSelectedMilestone(null);
   };
+
 
   const getEscrowStatusBadge = (status: string | null) => {
     const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
@@ -1988,8 +2030,8 @@ const Projects = () => {
                                     </Button>
                                   </>
                                 )}
-                                {/* Escrow Actions */}
-                                {milestone.payment_amount && milestone.escrow_status === "pending" && (
+                                {/* Manual Payment Actions */}
+                                {milestone.payment_amount && milestone.escrow_status === "pending" && !milestone.payment_credentials && (
                                   <Button
                                     size="sm"
                                     onClick={() => {
@@ -1997,26 +2039,42 @@ const Projects = () => {
                                       setEscrowAction("fund");
                                       setShowEscrowModal(true);
                                     }}
-                                    className="bg-amber-600 hover:bg-amber-500 h-7 px-2"
+                                    className="bg-indigo-600 hover:bg-indigo-500 h-7 px-2"
                                   >
-                                    <CreditCard className="w-3 h-3 mr-1" />
-                                    Fund
+                                    <Wallet className="w-3 h-3 mr-1" />
+                                    Share Payment
                                   </Button>
                                 )}
                                 {milestone.payment_amount &&
-                                  milestone.escrow_status === "funded" &&
+                                  milestone.payment_credentials &&
+                                  milestone.escrow_status !== "released" &&
                                   milestone.status === "approved" && (
                                   <Button
                                     size="sm"
                                     onClick={() => {
                                       setSelectedMilestone(milestone);
-                                      setEscrowAction("release");
+                                      setEscrowAction("verify");
                                       setShowEscrowModal(true);
                                     }}
                                     className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
                                   >
-                                    <Unlock className="w-3 h-3 mr-1" />
-                                    Release
+                                    <CheckCircle className="w-3 h-3 mr-1" />
+                                    Verify Payment
+                                  </Button>
+                                )}
+                                {milestone.payment_amount && milestone.payment_credentials && milestone.escrow_status !== "released" && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction(null);
+                                      setShowEscrowModal(true);
+                                    }}
+                                    className="border-white/20 text-gray-400 hover:text-white h-7 px-2"
+                                  >
+                                    <Eye className="w-3 h-3 mr-1" />
+                                    View
                                   </Button>
                                 )}
                               </div>
@@ -2041,7 +2099,7 @@ const Projects = () => {
         </motion.div>
       )}
 
-      {/* Escrow Confirmation Modal */}
+      {/* Manual Payment Modal */}
       {showEscrowModal && selectedMilestone && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -2050,75 +2108,25 @@ const Projects = () => {
           onClick={() => {
             setShowEscrowModal(false);
             setSelectedMilestone(null);
+            setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
           }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-md p-6"
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             {escrowAction === "fund" ? (
               <>
+                {/* Share Payment Credentials */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                    <CreditCard className="w-6 h-6 text-amber-400" />
+                  <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                    <Wallet className="w-6 h-6 text-indigo-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Fund Escrow</h3>
-                    <p className="text-sm text-gray-400">Secure payment for milestone</p>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
-                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
-                  <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/10">
-                    <p className="text-sm text-gray-400 mb-1">Amount to Fund</p>
-                    <p className="text-2xl font-bold text-emerald-400">
-                      ${selectedMilestone.payment_amount?.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 mb-4">
-                  <div className="flex items-start gap-2">
-                    <Lock className="w-4 h-4 text-blue-400 mt-0.5" />
-                    <p className="text-sm text-blue-300">
-                      Funds will be held securely in escrow until the milestone is approved and you release the payment.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowEscrowModal(false);
-                      setSelectedMilestone(null);
-                    }}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={() => fundMilestoneEscrow(selectedMilestone)}
-                    className="flex-1 bg-amber-600 hover:bg-amber-500"
-                  >
-                    <CreditCard className="w-4 h-4 mr-2" />
-                    Fund ${selectedMilestone.payment_amount?.toLocaleString()}
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <Unlock className="w-6 h-6 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Release Payment</h3>
-                    <p className="text-sm text-gray-400">Pay the candidate for this milestone</p>
+                    <h3 className="text-lg font-semibold text-white">Share Payment Details</h3>
+                    <p className="text-sm text-gray-400">Provide payment credentials for the candidate</p>
                   </div>
                 </div>
 
@@ -2133,11 +2141,140 @@ const Projects = () => {
                   </div>
                 </div>
 
+                <div className="space-y-4 mb-4">
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Payment Method</label>
+                    <select
+                      value={paymentDetails.method}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, method: e.target.value }))}
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none"
+                    >
+                      <option value="paypal">PayPal</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                      <option value="venmo">Venmo</option>
+                      <option value="cashapp">Cash App</option>
+                      <option value="zelle">Zelle</option>
+                      <option value="wise">Wise (TransferWise)</option>
+                      <option value="crypto">Cryptocurrency</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">
+                      Payment Credentials
+                      <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      value={paymentDetails.credentials}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, credentials: e.target.value }))}
+                      placeholder={
+                        paymentDetails.method === "paypal"
+                          ? "Enter your PayPal email..."
+                          : paymentDetails.method === "bank_transfer"
+                          ? "Enter bank name, account number, routing number..."
+                          : paymentDetails.method === "crypto"
+                          ? "Enter wallet address and network (e.g., BTC, ETH)..."
+                          : "Enter payment details..."
+                      }
+                      rows={3}
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Additional Notes (Optional)</label>
+                    <input
+                      type="text"
+                      value={paymentDetails.notes}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, notes: e.target.value }))}
+                      placeholder="Any special instructions..."
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5" />
+                    <p className="text-sm text-amber-300">
+                      Payment is handled outside the platform. Share your payment details so the candidate can send payment. You'll verify receipt manually.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                      setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => sharePaymentCredentials(selectedMilestone)}
+                    disabled={!paymentDetails.credentials.trim()}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Share Payment Details
+                  </Button>
+                </div>
+              </>
+            ) : escrowAction === "verify" ? (
+              <>
+                {/* Verify Payment Received */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Verify Payment</h3>
+                    <p className="text-sm text-gray-400">Confirm you received the payment</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                  {selectedMilestone.payment_method && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
+                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    </div>
+                  )}
+                </div>
+
+                {selectedMilestone.payment_proof_url && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                    <p className="text-sm text-gray-400 mb-2">Payment Proof Submitted</p>
+                    <a
+                      href={selectedMilestone.payment_proof_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      View Screenshot / Receipt
+                    </a>
+                  </div>
+                )}
+
                 <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
                     <p className="text-sm text-emerald-300">
-                      This milestone has been approved. Releasing payment will transfer funds to the candidate.
+                      By clicking "Confirm Payment Received", you verify that you have received the payment from the candidate.
                     </p>
                   </div>
                 </div>
@@ -2154,11 +2291,60 @@ const Projects = () => {
                     Cancel
                   </Button>
                   <Button
-                    onClick={() => releaseMilestoneEscrow(selectedMilestone)}
+                    onClick={() => verifyPaymentReceived(selectedMilestone)}
                     className="flex-1 bg-emerald-600 hover:bg-emerald-500"
                   >
-                    <Unlock className="w-4 h-4 mr-2" />
-                    Release Payment
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Confirm Payment Received
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* View Payment Status */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Payment Details</h3>
+                    <p className="text-sm text-gray-400">Milestone payment information</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                  {selectedMilestone.payment_method && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
+                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    </div>
+                  )}
+                  {selectedMilestone.payment_credentials && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Credentials</p>
+                      <p className="text-white text-sm whitespace-pre-wrap">{selectedMilestone.payment_credentials}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Close
                   </Button>
                 </div>
               </>

@@ -553,6 +553,11 @@ export interface Database {
           escrow_status: EscrowStatus | null;
           escrow_funded_at: string | null;
           escrow_released_at: string | null;
+          payment_method: string | null;
+          payment_credentials: string | null;
+          payment_proof_url: string | null;
+          payment_verified_at: string | null;
+          payment_notes: string | null;
         };
         Insert: {
           id?: string;
@@ -570,6 +575,11 @@ export interface Database {
           escrow_status?: EscrowStatus | null;
           escrow_funded_at?: string | null;
           escrow_released_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          payment_verified_at?: string | null;
+          payment_notes?: string | null;
         };
         Update: {
           id?: string;
@@ -587,9 +597,14 @@ export interface Database {
           escrow_status?: EscrowStatus | null;
           escrow_funded_at?: string | null;
           escrow_released_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          payment_verified_at?: string | null;
+          payment_notes?: string | null;
         };
       };
-      // Payment escrow tracking
+      // Manual payment tracking (no in-app payments)
       escrow_transactions: {
         Row: {
           id: string;
@@ -603,7 +618,11 @@ export interface Database {
           funded_at: string | null;
           released_at: string | null;
           refunded_at: string | null;
-          stripe_payment_intent_id: string | null;
+          payment_method: string | null;
+          payment_credentials: string | null;
+          payment_proof_url: string | null;
+          verified_by: string | null;
+          verified_at: string | null;
           notes: string | null;
         };
         Insert: {
@@ -618,7 +637,11 @@ export interface Database {
           funded_at?: string | null;
           released_at?: string | null;
           refunded_at?: string | null;
-          stripe_payment_intent_id?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          verified_by?: string | null;
+          verified_at?: string | null;
           notes?: string | null;
         };
         Update: {
@@ -633,7 +656,11 @@ export interface Database {
           funded_at?: string | null;
           released_at?: string | null;
           refunded_at?: string | null;
-          stripe_payment_intent_id?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          verified_by?: string | null;
+          verified_at?: string | null;
           notes?: string | null;
         };
       };
