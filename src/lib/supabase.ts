@@ -37,6 +37,7 @@ export const signUp = async (
     role: 'candidate' | 'mentor' | 'employer' | 'school_admin';
   }
 ) => {
+  // First, create the auth user
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -48,6 +49,23 @@ export const signUp = async (
       },
     },
   });
+
+  // If signup successful, create profile in database
+  if (data.user && !error) {
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: data.user.id,
+      email: email,
+      first_name: metadata.firstName,
+      last_name: metadata.lastName,
+      role: metadata.role,
+    });
+
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+      // Don't fail signup if profile creation fails - can retry later
+    }
+  }
+
   return { data, error };
 };
 
