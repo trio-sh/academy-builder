@@ -980,23 +980,16 @@ const Profile = () => {
         })
         .eq("id", user.id);
 
-      // Update or create candidate_profiles
-      if (candidateProfile) {
-        await supabase
-          .from("candidate_profiles")
-          .update({
-            skills: formData.skills,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("profile_id", user.id);
-      } else {
-        await supabase
-          .from("candidate_profiles")
-          .insert({
-            profile_id: user.id,
-            skills: formData.skills,
-          });
-      }
+      // Upsert candidate_profiles (handles both insert and update)
+      await supabase
+        .from("candidate_profiles")
+        .upsert({
+          profile_id: user.id,
+          skills: formData.skills,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'profile_id'
+        });
 
       await refreshProfile();
       setIsEditing(false);
@@ -1060,32 +1053,22 @@ const Profile = () => {
 
       const resumeUrl = publicUrlData?.publicUrl || fileName;
 
-      // Update candidate profile with resume URL
-      if (candidateProfile) {
-        await supabase
-          .from("candidate_profiles")
-          .update({
-            resume_url: resumeUrl,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("profile_id", user.id);
+      // Upsert candidate profile with resume URL
+      const { data: updatedProfile } = await supabase
+        .from("candidate_profiles")
+        .upsert({
+          profile_id: user.id,
+          resume_url: resumeUrl,
+          skills: candidateProfile?.skills || [],
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'profile_id'
+        })
+        .select()
+        .single();
 
-        setCandidateProfile({ ...candidateProfile, resume_url: resumeUrl });
-      } else {
-        // Create candidate profile if it doesn't exist
-        const { data: newProfile } = await supabase
-          .from("candidate_profiles")
-          .insert({
-            profile_id: user.id,
-            resume_url: resumeUrl,
-            skills: [],
-          })
-          .select()
-          .single();
-
-        if (newProfile) {
-          setCandidateProfile(newProfile);
-        }
+      if (updatedProfile) {
+        setCandidateProfile(updatedProfile);
       }
 
       // Create growth log entry for resume upload
