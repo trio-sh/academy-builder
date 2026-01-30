@@ -83,7 +83,7 @@ const Overview = () => {
           const { count: menteeCount } = await supabase
             .from("mentor_assignments")
             .select("*", { count: "exact", head: true })
-            .eq("mentor_profile_id", mp.id)
+            .eq("mentor_id", mp.id)
             .eq("status", "active");
           setActiveMentees(menteeCount || 0);
         }
@@ -277,29 +277,30 @@ const Mentees = () => {
           .from("mentor_assignments")
           .select(`
             *,
-            candidate_profile:candidate_profile_id(
+            candidate_profiles!candidate_id(
+              id,
               profile_id,
               current_tier,
               mentor_loops
             )
           `)
-          .eq("mentor_profile_id", mp.id)
+          .eq("mentor_id", mp.id)
           .order("created_at", { ascending: false });
 
         // For each assignment, get the candidate's profile data
         if (assignments && assignments.length > 0) {
           const enhancedAssignments = await Promise.all(
             assignments.map(async (assignment: MenteeWithProfile) => {
-              if (assignment.candidate_profile) {
+              if (assignment.candidate_profiles) {
                 const { data: profileData } = await supabase
                   .from("profiles")
                   .select("*")
-                  .eq("id", (assignment.candidate_profile as { profile_id?: string }).profile_id)
+                  .eq("id", (assignment.candidate_profiles as { profile_id?: string }).profile_id)
                   .single();
                 return {
                   ...assignment,
                   candidate_profile: {
-                    ...assignment.candidate_profile,
+                    ...assignment.candidate_profiles,
                     profile: profileData,
                   },
                 };
@@ -344,7 +345,7 @@ const Mentees = () => {
       {mentees.length > 0 ? (
         <motion.div variants={itemVariants} className="space-y-4">
           {mentees.map((assignment) => {
-            const candidateProfile = assignment.candidate_profile as {
+            const candidateProfile = assignment.candidate_profiles as {
               profile?: Profile;
               current_tier?: string;
               mentor_loops?: number;
@@ -444,7 +445,7 @@ const Observations = () => {
         const { data: assignments } = await supabase
           .from("mentor_assignments")
           .select("id")
-          .eq("mentor_profile_id", mp.id);
+          .eq("mentor_id", mp.id);
 
         if (assignments && assignments.length > 0) {
           const assignmentIds = assignments.map((a) => a.id);
@@ -1034,7 +1035,7 @@ const MentorDashboard = () => {
       const { data } = await supabase
         .from("notifications")
         .select("id, title, message")
-        .eq("profile_id", user.id)
+        .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);

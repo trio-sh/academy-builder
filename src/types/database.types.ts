@@ -223,7 +223,7 @@ export interface Database {
       skill_passports: {
         Row: {
           id: string;
-          profile_id: string;
+          candidate_id: string;
           created_at: string;
           updated_at: string;
           verification_code: string;
@@ -235,7 +235,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          profile_id: string;
+          candidate_id: string;
           created_at?: string;
           updated_at?: string;
           verification_code?: string;
@@ -247,7 +247,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          profile_id?: string;
+          candidate_id?: string;
           created_at?: string;
           updated_at?: string;
           verification_code?: string;
@@ -261,7 +261,7 @@ export interface Database {
       growth_log_entries: {
         Row: {
           id: string;
-          profile_id: string;
+          candidate_id: string;
           created_at: string;
           event_type: GrowthLogEventType;
           title: string;
@@ -272,7 +272,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          profile_id: string;
+          candidate_id: string;
           created_at?: string;
           event_type: GrowthLogEventType;
           title: string;
@@ -283,7 +283,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          profile_id?: string;
+          candidate_id?: string;
           created_at?: string;
           event_type?: GrowthLogEventType;
           title?: string;
@@ -445,7 +445,7 @@ export interface Database {
       bridgefast_progress: {
         Row: {
           id: string;
-          profile_id: string;
+          candidate_id: string;
           module_id: string;
           created_at: string;
           updated_at: string;
@@ -454,10 +454,11 @@ export interface Database {
           progress_percent: number;
           final_score: number | null;
           status: 'not_started' | 'in_progress' | 'completed' | 'failed';
+          deadline: string | null;
         };
         Insert: {
           id?: string;
-          profile_id: string;
+          candidate_id: string;
           module_id: string;
           created_at?: string;
           updated_at?: string;
@@ -466,10 +467,11 @@ export interface Database {
           progress_percent?: number;
           final_score?: number | null;
           status?: 'not_started' | 'in_progress' | 'completed' | 'failed';
+          deadline?: string | null;
         };
         Update: {
           id?: string;
-          profile_id?: string;
+          candidate_id?: string;
           module_id?: string;
           created_at?: string;
           updated_at?: string;
@@ -478,6 +480,7 @@ export interface Database {
           progress_percent?: number;
           final_score?: number | null;
           status?: 'not_started' | 'in_progress' | 'completed' | 'failed';
+          deadline?: string | null;
         };
       };
       liveworks_projects: {
@@ -575,6 +578,32 @@ export interface Database {
           payment_amount?: number | null;
           submitted_at?: string | null;
           approved_at?: string | null;
+        };
+      };
+      liveworks_applications: {
+        Row: {
+          id: string;
+          project_id: string;
+          candidate_id: string;
+          created_at: string;
+          cover_letter: string | null;
+          status: 'pending' | 'accepted' | 'rejected';
+        };
+        Insert: {
+          id?: string;
+          project_id: string;
+          candidate_id: string;
+          created_at?: string;
+          cover_letter?: string | null;
+          status?: 'pending' | 'accepted' | 'rejected';
+        };
+        Update: {
+          id?: string;
+          project_id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          cover_letter?: string | null;
+          status?: 'pending' | 'accepted' | 'rejected';
         };
       };
       t3x_connections: {

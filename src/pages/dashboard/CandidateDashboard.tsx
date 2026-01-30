@@ -88,13 +88,13 @@ const Overview = () => {
         const { count } = await supabase
           .from("growth_log_entries")
           .select("*", { count: "exact", head: true })
-          .eq("profile_id", user.id);
+          .eq("candidate_id", user.id);
         setGrowthLogCount(count || 0);
 
         const { data: recent } = await supabase
           .from("growth_log_entries")
           .select("*")
-          .eq("profile_id", user.id)
+          .eq("candidate_id", user.id)
           .order("created_at", { ascending: false })
           .limit(5);
         setRecentActivity(recent || []);
@@ -494,7 +494,7 @@ const GrowthLog = () => {
       const { data } = await supabase
         .from("growth_log_entries")
         .select("*")
-        .eq("profile_id", user.id)
+        .eq("candidate_id", user.id)
         .order("created_at", { ascending: false });
 
       setEntries(data || []);
@@ -640,7 +640,7 @@ const Training = () => {
       const { data: progressData } = await supabase
         .from("bridgefast_progress")
         .select("*")
-        .eq("profile_id", user.id);
+        .eq("candidate_id", user.id);
 
       const progressMap: Record<string, BridgeFastProgress> = {};
       (progressData || []).forEach((p) => {
@@ -658,7 +658,7 @@ const Training = () => {
     if (!user?.id) return;
 
     const { error } = await supabase.from("bridgefast_progress").insert({
-      profile_id: user.id,
+      candidate_id: user.id,
       module_id: moduleId,
       status: "in_progress",
       started_at: new Date().toISOString(),
@@ -670,7 +670,7 @@ const Training = () => {
         ...prev,
         [moduleId]: {
           id: "",
-          profile_id: user.id,
+          candidate_id: user.id,
           module_id: moduleId,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -679,6 +679,7 @@ const Training = () => {
           progress_percent: 0,
           final_score: null,
           status: "in_progress",
+          deadline: null,
         },
       }));
     }
@@ -1094,7 +1095,7 @@ const Profile = () => {
 
       // Create growth log entry for resume upload
       await supabase.from("growth_log_entries").insert({
-        profile_id: user.id,
+        candidate_id: user.id,
         event_type: "resume_upload",
         title: "Resume Uploaded",
         description: `Uploaded resume: ${file.name}`,
@@ -1562,7 +1563,7 @@ const CandidateDashboard = () => {
       const { data } = await supabase
         .from("notifications")
         .select("*")
-        .eq("profile_id", user.id)
+        .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);

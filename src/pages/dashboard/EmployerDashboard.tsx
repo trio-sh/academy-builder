@@ -89,14 +89,14 @@ const Overview = () => {
           const { count: connCount } = await supabase
             .from("t3x_connections")
             .select("*", { count: "exact", head: true })
-            .eq("employer_profile_id", ep.id);
+            .eq("employer_id", ep.id);
           setConnectionCount(connCount || 0);
 
           // Count projects
           const { count: projCount } = await supabase
             .from("liveworks_projects")
             .select("*", { count: "exact", head: true })
-            .eq("employer_profile_id", ep.id)
+            .eq("employer_id", ep.id)
             .in("status", ["draft", "open", "in_progress"]);
           setProjectCount(projCount || 0);
         }
@@ -465,7 +465,7 @@ const Connections = () => {
         const { data } = await supabase
           .from("t3x_connections")
           .select("*")
-          .eq("employer_profile_id", ep.id)
+          .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
         setConnections(data || []);
@@ -603,7 +603,7 @@ const Projects = () => {
         const { data } = await supabase
           .from("liveworks_projects")
           .select("*")
-          .eq("employer_profile_id", ep.id)
+          .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
         setProjects(data || []);
@@ -621,7 +621,7 @@ const Projects = () => {
     const { data, error } = await supabase
       .from("liveworks_projects")
       .insert({
-        employer_profile_id: employerProfile.id,
+        employer_id: employerProfile.id,
         title: newProject.title,
         description: newProject.description,
         category: newProject.category || "General",
@@ -1144,7 +1144,7 @@ const EmployerDashboard = () => {
       const { data } = await supabase
         .from("notifications")
         .select("id, title, message")
-        .eq("profile_id", user.id)
+        .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);
