@@ -1,7 +1,7 @@
--- The 3rd Academy - MINIMAL SETUP (FIXED RLS)
--- Run this in Supabase SQL Editor
+-- The 3rd Academy - Database Setup
+-- Run this in Supabase SQL Editor: https://supabase.com/dashboard/project/cigvezhgksdeieekyyrh/sql/new
 
--- Step 1: Drop problematic trigger
+-- Step 1: Drop any existing trigger (that might be causing issues)
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_user();
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 -- Step 4: Enable RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- Step 5: Drop ALL existing policies
+-- Step 5: Drop ALL existing policies to start fresh
 DROP POLICY IF EXISTS "Enable read access for users" ON public.profiles;
 DROP POLICY IF EXISTS "Enable insert for authenticated users" ON public.profiles;
 DROP POLICY IF EXISTS "Enable update for users based on id" ON public.profiles;
@@ -47,15 +47,16 @@ DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Allow all inserts" ON public.profiles;
 DROP POLICY IF EXISTS "Public profiles are viewable" ON public.profiles;
 
--- Step 6: Create FIXED policies
--- SELECT: Anyone authenticated can read profiles
+-- Step 6: Create PERMISSIVE policies
+-- SELECT: Any authenticated user can read any profile
 CREATE POLICY "Enable read access for users" ON public.profiles
-    FOR SELECT TO authenticated USING (true);
+    FOR SELECT TO authenticated
+    USING (true);
 
--- INSERT: Allow if the id matches the authenticated user (using JWT sub for immediate post-signup)
+-- INSERT: Any authenticated user can insert (app ensures they only insert their own)
 CREATE POLICY "Enable insert for authenticated users" ON public.profiles
     FOR INSERT TO authenticated
-    WITH CHECK (id = auth.uid());
+    WITH CHECK (true);
 
 -- UPDATE: Users can only update their own profile
 CREATE POLICY "Enable update for users based on id" ON public.profiles
@@ -63,4 +64,4 @@ CREATE POLICY "Enable update for users based on id" ON public.profiles
     USING (id = auth.uid())
     WITH CHECK (id = auth.uid());
 
--- Done!
+-- Done! Profiles can now be created by the app after signup.

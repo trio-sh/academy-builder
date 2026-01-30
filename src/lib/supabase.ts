@@ -77,13 +77,30 @@ export const createProfile = async (
   lastName: string,
   role: 'candidate' | 'mentor' | 'employer' | 'school_admin'
 ) => {
-  const { error } = await supabase.from('profiles').upsert({
+  // First check if profile exists
+  const { data: existing } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', userId)
+    .single();
+
+  if (existing) {
+    // Profile already exists
+    return { error: null };
+  }
+
+  // Create new profile
+  const { error } = await supabase.from('profiles').insert({
     id: userId,
     email: email,
     first_name: firstName,
     last_name: lastName,
     role: role,
-  }, { onConflict: 'id' });
+  });
+
+  if (error) {
+    console.error('createProfile error:', error);
+  }
 
   return { error };
 };
