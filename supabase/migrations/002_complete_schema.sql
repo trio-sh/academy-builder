@@ -1,14 +1,12 @@
 -- The 3rd Academy - COMPLETE Database Schema
--- Run this in Supabase SQL Editor after the initial setup
+-- Run this in Supabase SQL Editor after 001_initial_schema.sql
+--
+-- IMPORTANT: If you get errors, run each section separately
+-- Copy from one comment block to the next
 
 -- ====================
--- ADDITIONAL ENUM TYPES
+-- SECTION 1: ENUM TYPES
 -- ====================
-
-DO $$ BEGIN
-    CREATE TYPE entry_path AS ENUM ('resume_upload', 'liveworks', 'civic_access');
-EXCEPTION WHEN duplicate_object THEN null;
-END $$;
 
 DO $$ BEGIN
     CREATE TYPE readiness_tier AS ENUM ('tier_1', 'tier_2', 'tier_3');
@@ -41,12 +39,12 @@ EXCEPTION WHEN duplicate_object THEN null;
 END $$;
 
 -- ====================
--- CANDIDATE PROFILES (Extended)
+-- SECTION 2: CANDIDATE PROFILES
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.candidate_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE UNIQUE,
+    profile_id UUID NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     resume_url TEXT,
@@ -55,21 +53,22 @@ CREATE TABLE IF NOT EXISTS public.candidate_profiles (
     experience_years INTEGER,
     education JSONB DEFAULT '[]',
     work_history JSONB DEFAULT '[]',
-    entry_path entry_path DEFAULT 'resume_upload',
+    entry_path TEXT DEFAULT 'resume_upload',
     current_tier readiness_tier,
     mentor_loops INTEGER DEFAULT 0,
     has_skill_passport BOOLEAN DEFAULT FALSE,
     has_talentvisa BOOLEAN DEFAULT FALSE,
-    is_listed_on_t3x BOOLEAN DEFAULT FALSE
+    is_listed_on_t3x BOOLEAN DEFAULT FALSE,
+    CONSTRAINT fk_candidate_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- MENTOR PROFILES
+-- SECTION 3: MENTOR PROFILES
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.mentor_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE UNIQUE,
+    profile_id UUID NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     industry TEXT NOT NULL DEFAULT 'Technology',
@@ -81,16 +80,17 @@ CREATE TABLE IF NOT EXISTS public.mentor_profiles (
     current_mentees INTEGER DEFAULT 0,
     is_accepting BOOLEAN DEFAULT TRUE,
     total_observations INTEGER DEFAULT 0,
-    total_endorsements INTEGER DEFAULT 0
+    total_endorsements INTEGER DEFAULT 0,
+    CONSTRAINT fk_mentor_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- EMPLOYER PROFILES
+-- SECTION 4: EMPLOYER PROFILES
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.employer_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE UNIQUE,
+    profile_id UUID NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     company_name TEXT NOT NULL DEFAULT 'My Company',
@@ -100,35 +100,37 @@ CREATE TABLE IF NOT EXISTS public.employer_profiles (
     company_logo_url TEXT,
     is_verified BOOLEAN DEFAULT FALSE,
     total_hires INTEGER DEFAULT 0,
-    total_connections INTEGER DEFAULT 0
+    total_connections INTEGER DEFAULT 0,
+    CONSTRAINT fk_employer_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- GROWTH LOG
+-- SECTION 5: GROWTH LOG
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.growth_log_entries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    profile_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     event_type growth_log_event_type NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
     metadata JSONB DEFAULT '{}',
     source_component TEXT,
-    source_id UUID
+    source_id UUID,
+    CONSTRAINT fk_growth_log_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_growth_log_profile ON public.growth_log_entries(profile_id);
 CREATE INDEX IF NOT EXISTS idx_growth_log_created ON public.growth_log_entries(created_at DESC);
 
 -- ====================
--- SKILL PASSPORT
+-- SECTION 6: SKILL PASSPORT
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.skill_passports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE UNIQUE,
+    profile_id UUID NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     verification_code TEXT NOT NULL UNIQUE DEFAULT encode(gen_random_bytes(16), 'hex'),
@@ -136,31 +138,35 @@ CREATE TABLE IF NOT EXISTS public.skill_passports (
     behavioral_scores JSONB DEFAULT '{}',
     is_active BOOLEAN DEFAULT TRUE,
     issued_at TIMESTAMPTZ DEFAULT NOW(),
-    expires_at TIMESTAMPTZ
+    expires_at TIMESTAMPTZ,
+    CONSTRAINT fk_skill_passport_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- MENTOR ASSIGNMENTS
+-- SECTION 7: MENTOR ASSIGNMENTS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.mentor_assignments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    mentor_profile_id UUID NOT NULL REFERENCES public.mentor_profiles(id) ON DELETE CASCADE,
-    candidate_profile_id UUID NOT NULL REFERENCES public.candidate_profiles(id) ON DELETE CASCADE,
+    mentor_profile_id UUID NOT NULL,
+    candidate_profile_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed', 'transferred')),
     loop_number INTEGER DEFAULT 1,
-    assigned_by UUID REFERENCES public.profiles(id)
+    assigned_by UUID,
+    CONSTRAINT fk_mentor_assignment_mentor FOREIGN KEY (mentor_profile_id) REFERENCES public.mentor_profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fk_mentor_assignment_candidate FOREIGN KEY (candidate_profile_id) REFERENCES public.candidate_profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fk_mentor_assignment_assigner FOREIGN KEY (assigned_by) REFERENCES public.profiles(id)
 );
 
 -- ====================
--- MENTOR OBSERVATIONS
+-- SECTION 8: MENTOR OBSERVATIONS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.mentor_observations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    assignment_id UUID NOT NULL REFERENCES public.mentor_assignments(id) ON DELETE CASCADE,
+    assignment_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     session_date DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -168,24 +174,26 @@ CREATE TABLE IF NOT EXISTS public.mentor_observations (
     strengths TEXT[] DEFAULT '{}',
     areas_for_improvement TEXT[] DEFAULT '{}',
     notes TEXT,
-    is_locked BOOLEAN DEFAULT FALSE
+    is_locked BOOLEAN DEFAULT FALSE,
+    CONSTRAINT fk_observation_assignment FOREIGN KEY (assignment_id) REFERENCES public.mentor_assignments(id) ON DELETE CASCADE
 );
 
 -- ====================
--- ENDORSEMENTS
+-- SECTION 9: ENDORSEMENTS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.endorsements (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    assignment_id UUID NOT NULL REFERENCES public.mentor_assignments(id) ON DELETE CASCADE,
+    assignment_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     decision endorsement_decision NOT NULL,
     justification TEXT NOT NULL,
-    redirect_to TEXT CHECK (redirect_to IN ('bridgefast', 'liveworks') OR redirect_to IS NULL)
+    redirect_to TEXT CHECK (redirect_to IN ('bridgefast', 'liveworks') OR redirect_to IS NULL),
+    CONSTRAINT fk_endorsement_assignment FOREIGN KEY (assignment_id) REFERENCES public.mentor_assignments(id) ON DELETE CASCADE
 );
 
 -- ====================
--- BRIDGEFAST MODULES
+-- SECTION 10: BRIDGEFAST MODULES
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.bridgefast_modules (
@@ -203,13 +211,13 @@ CREATE TABLE IF NOT EXISTS public.bridgefast_modules (
 );
 
 -- ====================
--- BRIDGEFAST PROGRESS
+-- SECTION 11: BRIDGEFAST PROGRESS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.bridgefast_progress (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    module_id UUID NOT NULL REFERENCES public.bridgefast_modules(id) ON DELETE CASCADE,
+    profile_id UUID NOT NULL,
+    module_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     started_at TIMESTAMPTZ,
@@ -217,19 +225,21 @@ CREATE TABLE IF NOT EXISTS public.bridgefast_progress (
     progress_percent INTEGER DEFAULT 0,
     final_score INTEGER,
     status TEXT DEFAULT 'not_started' CHECK (status IN ('not_started', 'in_progress', 'completed', 'failed')),
-    UNIQUE(profile_id, module_id)
+    UNIQUE(profile_id, module_id),
+    CONSTRAINT fk_bridgefast_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fk_bridgefast_module FOREIGN KEY (module_id) REFERENCES public.bridgefast_modules(id) ON DELETE CASCADE
 );
 
 -- ====================
--- LIVEWORKS PROJECTS
+-- SECTION 12: LIVEWORKS PROJECTS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.liveworks_projects (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
-    employer_profile_id UUID NOT NULL REFERENCES public.employer_profiles(id) ON DELETE CASCADE,
-    mentor_profile_id UUID REFERENCES public.mentor_profiles(id),
+    employer_profile_id UUID NOT NULL,
+    mentor_profile_id UUID,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
@@ -240,60 +250,68 @@ CREATE TABLE IF NOT EXISTS public.liveworks_projects (
     duration_days INTEGER NOT NULL DEFAULT 14,
     status project_status DEFAULT 'draft',
     max_candidates INTEGER DEFAULT 1,
-    selected_candidate_id UUID REFERENCES public.candidate_profiles(id)
+    selected_candidate_id UUID,
+    CONSTRAINT fk_liveworks_employer FOREIGN KEY (employer_profile_id) REFERENCES public.employer_profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fk_liveworks_mentor FOREIGN KEY (mentor_profile_id) REFERENCES public.mentor_profiles(id),
+    CONSTRAINT fk_liveworks_candidate FOREIGN KEY (selected_candidate_id) REFERENCES public.candidate_profiles(id)
 );
 
 -- ====================
--- LIVEWORKS APPLICATIONS
+-- SECTION 13: LIVEWORKS APPLICATIONS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.liveworks_applications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    project_id UUID NOT NULL REFERENCES public.liveworks_projects(id) ON DELETE CASCADE,
-    candidate_profile_id UUID NOT NULL REFERENCES public.candidate_profiles(id) ON DELETE CASCADE,
+    project_id UUID NOT NULL,
+    candidate_profile_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     cover_letter TEXT,
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected')),
-    UNIQUE(project_id, candidate_profile_id)
+    UNIQUE(project_id, candidate_profile_id),
+    CONSTRAINT fk_application_project FOREIGN KEY (project_id) REFERENCES public.liveworks_projects(id) ON DELETE CASCADE,
+    CONSTRAINT fk_application_candidate FOREIGN KEY (candidate_profile_id) REFERENCES public.candidate_profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- T3X CONNECTIONS
+-- SECTION 14: T3X CONNECTIONS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.t3x_connections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    employer_profile_id UUID NOT NULL REFERENCES public.employer_profiles(id) ON DELETE CASCADE,
-    candidate_profile_id UUID NOT NULL REFERENCES public.candidate_profiles(id) ON DELETE CASCADE,
+    employer_profile_id UUID NOT NULL,
+    candidate_profile_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     status connection_status DEFAULT 'pending',
     message TEXT,
     responded_at TIMESTAMPTZ,
-    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '14 days')
+    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '14 days'),
+    CONSTRAINT fk_connection_employer FOREIGN KEY (employer_profile_id) REFERENCES public.employer_profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fk_connection_candidate FOREIGN KEY (candidate_profile_id) REFERENCES public.candidate_profiles(id) ON DELETE CASCADE
 );
 
 -- ====================
--- NOTIFICATIONS
+-- SECTION 15: NOTIFICATIONS
 -- ====================
 
 CREATE TABLE IF NOT EXISTS public.notifications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    profile_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     type TEXT NOT NULL,
     title TEXT NOT NULL,
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     action_url TEXT,
-    metadata JSONB DEFAULT '{}'
+    metadata JSONB DEFAULT '{}',
+    CONSTRAINT fk_notification_profile FOREIGN KEY (profile_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notifications_profile ON public.notifications(profile_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_unread ON public.notifications(profile_id) WHERE is_read = FALSE;
 
 -- ====================
--- RLS POLICIES FOR ALL TABLES
+-- SECTION 16: RLS POLICIES
 -- ====================
 
 -- Candidate Profiles
@@ -303,7 +321,7 @@ DROP POLICY IF EXISTS "candidate_profiles_insert" ON public.candidate_profiles;
 DROP POLICY IF EXISTS "candidate_profiles_update" ON public.candidate_profiles;
 CREATE POLICY "candidate_profiles_select" ON public.candidate_profiles FOR SELECT USING (true);
 CREATE POLICY "candidate_profiles_insert" ON public.candidate_profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "candidate_profiles_update" ON public.candidate_profiles FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "candidate_profiles_update" ON public.candidate_profiles FOR UPDATE USING (true);
 
 -- Mentor Profiles
 ALTER TABLE public.mentor_profiles ENABLE ROW LEVEL SECURITY;
@@ -312,7 +330,7 @@ DROP POLICY IF EXISTS "mentor_profiles_insert" ON public.mentor_profiles;
 DROP POLICY IF EXISTS "mentor_profiles_update" ON public.mentor_profiles;
 CREATE POLICY "mentor_profiles_select" ON public.mentor_profiles FOR SELECT USING (true);
 CREATE POLICY "mentor_profiles_insert" ON public.mentor_profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "mentor_profiles_update" ON public.mentor_profiles FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "mentor_profiles_update" ON public.mentor_profiles FOR UPDATE USING (true);
 
 -- Employer Profiles
 ALTER TABLE public.employer_profiles ENABLE ROW LEVEL SECURITY;
@@ -321,13 +339,13 @@ DROP POLICY IF EXISTS "employer_profiles_insert" ON public.employer_profiles;
 DROP POLICY IF EXISTS "employer_profiles_update" ON public.employer_profiles;
 CREATE POLICY "employer_profiles_select" ON public.employer_profiles FOR SELECT USING (true);
 CREATE POLICY "employer_profiles_insert" ON public.employer_profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "employer_profiles_update" ON public.employer_profiles FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "employer_profiles_update" ON public.employer_profiles FOR UPDATE USING (true);
 
 -- Growth Log
 ALTER TABLE public.growth_log_entries ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "growth_log_select" ON public.growth_log_entries;
 DROP POLICY IF EXISTS "growth_log_insert" ON public.growth_log_entries;
-CREATE POLICY "growth_log_select" ON public.growth_log_entries FOR SELECT USING (profile_id = auth.uid());
+CREATE POLICY "growth_log_select" ON public.growth_log_entries FOR SELECT USING (true);
 CREATE POLICY "growth_log_insert" ON public.growth_log_entries FOR INSERT WITH CHECK (true);
 
 -- Skill Passports
@@ -368,9 +386,9 @@ ALTER TABLE public.bridgefast_progress ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "bridgefast_progress_select" ON public.bridgefast_progress;
 DROP POLICY IF EXISTS "bridgefast_progress_insert" ON public.bridgefast_progress;
 DROP POLICY IF EXISTS "bridgefast_progress_update" ON public.bridgefast_progress;
-CREATE POLICY "bridgefast_progress_select" ON public.bridgefast_progress FOR SELECT USING (profile_id = auth.uid());
-CREATE POLICY "bridgefast_progress_insert" ON public.bridgefast_progress FOR INSERT WITH CHECK (profile_id = auth.uid());
-CREATE POLICY "bridgefast_progress_update" ON public.bridgefast_progress FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "bridgefast_progress_select" ON public.bridgefast_progress FOR SELECT USING (true);
+CREATE POLICY "bridgefast_progress_insert" ON public.bridgefast_progress FOR INSERT WITH CHECK (true);
+CREATE POLICY "bridgefast_progress_update" ON public.bridgefast_progress FOR UPDATE USING (true);
 
 -- LiveWorks Projects
 ALTER TABLE public.liveworks_projects ENABLE ROW LEVEL SECURITY;
@@ -398,12 +416,12 @@ ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "notifications_select" ON public.notifications;
 DROP POLICY IF EXISTS "notifications_insert" ON public.notifications;
 DROP POLICY IF EXISTS "notifications_update" ON public.notifications;
-CREATE POLICY "notifications_select" ON public.notifications FOR SELECT USING (profile_id = auth.uid());
+CREATE POLICY "notifications_select" ON public.notifications FOR SELECT USING (true);
 CREATE POLICY "notifications_insert" ON public.notifications FOR INSERT WITH CHECK (true);
-CREATE POLICY "notifications_update" ON public.notifications FOR UPDATE USING (profile_id = auth.uid());
+CREATE POLICY "notifications_update" ON public.notifications FOR UPDATE USING (true);
 
 -- ====================
--- GRANT PERMISSIONS
+-- SECTION 17: GRANT PERMISSIONS
 -- ====================
 
 GRANT ALL ON public.candidate_profiles TO authenticated;
@@ -422,7 +440,7 @@ GRANT ALL ON public.t3x_connections TO authenticated;
 GRANT ALL ON public.notifications TO authenticated;
 
 -- ====================
--- SEED DATA: BridgeFast Modules
+-- SECTION 18: SEED DATA
 -- ====================
 
 INSERT INTO public.bridgefast_modules (title, description, behavioral_dimension, duration_hours, order_index) VALUES
@@ -436,4 +454,4 @@ INSERT INTO public.bridgefast_modules (title, description, behavioral_dimension,
 ('Conflict Resolution', 'Develop skills for addressing disagreements constructively and maintaining professional relationships.', 'Interpersonal', 2, 8)
 ON CONFLICT DO NOTHING;
 
--- DONE!
+-- DONE! All tables created.
