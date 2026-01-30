@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase, updatePassword } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -35,6 +35,9 @@ import {
   QrCode,
   Download,
   Share2,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -43,6 +46,7 @@ type BridgeFastModule = Database["public"]["Tables"]["bridgefast_modules"]["Row"
 type BridgeFastProgress = Database["public"]["Tables"]["bridgefast_progress"]["Row"];
 type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
 type SkillPassportRecord = Database["public"]["Tables"]["skill_passports"]["Row"];
 
 // Behavioral dimensions for display
@@ -1023,23 +1027,115 @@ const Training = () => {
 const Projects = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState<LiveWorksProject[]>([]);
+  const [myApplications, setMyApplications] = useState<Map<string, LiveWorksApplication>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"browse" | "applied">("browse");
+
+  // Application modal state
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<LiveWorksProject | null>(null);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [applicationSuccess, setApplicationSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const { data } = await supabase
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      // Fetch open projects
+      const { data: projectData } = await supabase
         .from("liveworks_projects")
         .select("*")
         .eq("status", "open")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
 
-      setProjects(data || []);
+      setProjects(projectData || []);
+
+      // Fetch my applications
+      const { data: applicationData } = await supabase
+        .from("liveworks_applications")
+        .select("*")
+        .eq("candidate_id", user.id);
+
+      if (applicationData) {
+        const appMap = new Map<string, LiveWorksApplication>();
+        applicationData.forEach(app => appMap.set(app.project_id, app));
+        setMyApplications(appMap);
+      }
+
       setIsLoading(false);
     };
 
-    fetchProjects();
-  }, []);
+    fetchData();
+  }, [user?.id]);
+
+  const openApplyModal = (project: LiveWorksProject) => {
+    setSelectedProject(project);
+    setCoverLetter("");
+    setApplicationSuccess(false);
+    setShowApplyModal(true);
+  };
+
+  const submitApplication = async () => {
+    if (!selectedProject || !user?.id) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // Create application
+      const { data: application, error } = await supabase
+        .from("liveworks_applications")
+        .insert({
+          project_id: selectedProject.id,
+          candidate_id: user.id,
+          cover_letter: coverLetter || null,
+          status: "pending",
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error submitting application:", error);
+        return;
+      }
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "project",
+        title: "Applied to LiveWorks Project",
+        description: `Applied to: ${selectedProject.title}`,
+        source_component: "LiveWorks",
+        source_id: application.id,
+      });
+
+      // Update local state
+      setMyApplications(prev => {
+        const newMap = new Map(prev);
+        newMap.set(selectedProject.id, application);
+        return newMap;
+      });
+
+      setApplicationSuccess(true);
+      setTimeout(() => {
+        setShowApplyModal(false);
+        setSelectedProject(null);
+        setApplicationSuccess(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getApplicationStatus = (projectId: string) => {
+    return myApplications.get(projectId);
+  };
+
+  const appliedProjects = projects.filter(p => myApplications.has(p.id));
 
   if (isLoading) {
     return (
@@ -1063,58 +1159,264 @@ const Projects = () => {
         </p>
       </motion.div>
 
-      {projects.length > 0 ? (
-        <motion.div variants={itemVariants} className="grid gap-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                  <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
-                    {project.category}
-                  </span>
+      {/* Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        <button
+          onClick={() => setActiveTab("browse")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === "browse"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Browse Projects
+        </button>
+        <button
+          onClick={() => setActiveTab("applied")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "applied"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          My Applications
+          {appliedProjects.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {appliedProjects.length}
+            </span>
+          )}
+        </button>
+      </motion.div>
+
+      {activeTab === "browse" ? (
+        projects.length > 0 ? (
+          <motion.div variants={itemVariants} className="grid gap-4">
+            {projects.map((project) => {
+              const application = getApplicationStatus(project.id);
+              const hasApplied = !!application;
+
+              return (
+                <div
+                  key={project.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="font-semibold text-white text-lg">{project.title}</h3>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+                        {project.category}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-400">{project.duration_days} days</p>
+                      {project.budget_min && project.budget_max && (
+                        <p className="text-sm text-emerald-400">
+                          ${project.budget_min} - ${project.budget_max}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">{project.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      project.skill_level === 'beginner'
+                        ? 'bg-green-500/20 text-green-400'
+                        : project.skill_level === 'intermediate'
+                        ? 'bg-amber-500/20 text-amber-400'
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {project.skill_level}
+                    </span>
+                    {hasApplied ? (
+                      <span className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+                        application.status === "accepted"
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : application.status === "rejected"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-amber-500/20 text-amber-400"
+                      }`}>
+                        {application.status === "accepted" ? "Accepted" :
+                         application.status === "rejected" ? "Not Selected" : "Application Pending"}
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className="bg-indigo-600 hover:bg-indigo-500"
+                        onClick={() => openApplyModal(project)}
+                      >
+                        Apply Now
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-400">{project.duration_days} days</p>
-                  {project.budget_min && project.budget_max && (
-                    <p className="text-sm text-emerald-400">
-                      ${project.budget_min} - ${project.budget_max}
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={itemVariants}
+            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          >
+            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No open projects available</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Check back soon for new opportunities
+            </p>
+          </motion.div>
+        )
+      ) : (
+        appliedProjects.length > 0 ? (
+          <motion.div variants={itemVariants} className="space-y-4">
+            {appliedProjects.map((project) => {
+              const application = getApplicationStatus(project.id)!;
+              return (
+                <div
+                  key={project.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-semibold text-white">{project.title}</h3>
+                      <p className="text-sm text-gray-500">
+                        Applied {new Date(application.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                      application.status === "accepted"
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : application.status === "rejected"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-amber-500/20 text-amber-400"
+                    }`}>
+                      {application.status === "accepted" ? "Accepted" :
+                       application.status === "rejected" ? "Not Selected" : "Pending"}
+                    </span>
+                  </div>
+                  {application.cover_letter && (
+                    <p className="text-sm text-gray-400 bg-black/20 p-3 rounded-lg line-clamp-2">
+                      {application.cover_letter}
                     </p>
                   )}
                 </div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={itemVariants}
+            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          >
+            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No applications yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Browse open projects and start applying
+            </p>
+            <Button
+              className="mt-4 bg-indigo-600 hover:bg-indigo-500"
+              onClick={() => setActiveTab("browse")}
+            >
+              Browse Projects
+            </Button>
+          </motion.div>
+        )
+      )}
+
+      {/* Application Modal */}
+      {showApplyModal && selectedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isSubmitting && setShowApplyModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {applicationSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Application Submitted!</h3>
+                <p className="text-gray-400">
+                  Your application has been sent to the employer.
+                </p>
               </div>
-              <p className="text-sm text-gray-400 mb-4 line-clamp-2">{project.description}</p>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${
-                  project.skill_level === 'beginner'
-                    ? 'bg-green-500/20 text-green-400'
-                    : project.skill_level === 'intermediate'
-                    ? 'bg-amber-500/20 text-amber-400'
-                    : 'bg-red-500/20 text-red-400'
-                }`}>
-                  {project.skill_level}
-                </span>
-                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500">
-                  Apply Now
-                </Button>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
-        >
-          <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No open projects available</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Check back soon for new opportunities
-          </p>
-        </motion.div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Apply to Project</h2>
+                  <button
+                    onClick={() => setShowApplyModal(false)}
+                    disabled={isSubmitting}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Project Preview */}
+                <div className="p-4 rounded-xl bg-white/5 mb-6">
+                  <h3 className="font-semibold text-white">{selectedProject.title}</h3>
+                  <div className="flex items-center gap-3 mt-2 text-sm">
+                    <span className="text-purple-400">{selectedProject.category}</span>
+                    <span className="text-gray-500">{selectedProject.duration_days} days</span>
+                    <span className={`px-2 py-0.5 rounded ${
+                      selectedProject.skill_level === 'beginner'
+                        ? 'bg-green-500/20 text-green-400'
+                        : selectedProject.skill_level === 'intermediate'
+                        ? 'bg-amber-500/20 text-amber-400'
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {selectedProject.skill_level}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Cover Letter */}
+                <div className="mb-6">
+                  <label className="text-sm text-gray-400 block mb-2">
+                    Cover Letter (optional)
+                  </label>
+                  <textarea
+                    value={coverLetter}
+                    onChange={(e) => setCoverLetter(e.target.value)}
+                    placeholder="Tell the employer why you're a great fit for this project..."
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowApplyModal(false)}
+                    disabled={isSubmitting}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={submitApplication}
+                    disabled={isSubmitting}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit Application"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
       )}
     </motion.div>
   );
@@ -1850,10 +2152,60 @@ const SettingsPage = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
+  // Password change state
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   const handleDeleteAccount = () => {
     if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       // Would implement account deletion here
       alert("Account deletion would be implemented here");
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    setPasswordError(null);
+
+    // Validation
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      const { error } = await updatePassword(passwordForm.newPassword);
+
+      if (error) {
+        setPasswordError(error.message || "Failed to update password");
+        return;
+      }
+
+      setPasswordSuccess(true);
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordSuccess(false);
+        setPasswordForm({ newPassword: "", confirmPassword: "" });
+      }, 1500);
+
+    } catch (error) {
+      setPasswordError("An unexpected error occurred");
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -1890,7 +2242,17 @@ const SettingsPage = () => {
         {/* Security */}
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+            onClick={() => {
+              setPasswordForm({ newPassword: "", confirmPassword: "" });
+              setPasswordError(null);
+              setPasswordSuccess(false);
+              setShowPasswordModal(true);
+            }}
+          >
+            <Lock className="w-4 h-4 mr-2" />
             Change Password
           </Button>
         </div>
@@ -1929,6 +2291,123 @@ const SettingsPage = () => {
           </Button>
         </div>
       </motion.div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isChangingPassword && setShowPasswordModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {passwordSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Password Updated!</h3>
+                <p className="text-gray-400">
+                  Your password has been successfully changed.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Change Password</h2>
+                  <button
+                    onClick={() => setShowPasswordModal(false)}
+                    disabled={isChangingPassword}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {passwordError && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    {passwordError}
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        value={passwordForm.newPassword}
+                        onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                        placeholder="Enter new password"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                      >
+                        {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Confirm Password</label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                        placeholder="Confirm new password"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500 mt-4">
+                  Password must be at least 8 characters long.
+                </p>
+
+                <div className="flex gap-3 mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPasswordModal(false)}
+                    disabled={isChangingPassword}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handlePasswordChange}
+                    disabled={isChangingPassword || !passwordForm.newPassword || !passwordForm.confirmPassword}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+                  >
+                    {isChangingPassword ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      "Update Password"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 };

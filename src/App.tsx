@@ -24,6 +24,7 @@ import Terms from "./pages/Terms";
 import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
+import VerifyPassport from "./pages/VerifyPassport";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
@@ -59,6 +60,9 @@ const App = () => (
 
             {/* Auth callback */}
             <Route path="/auth/callback" element={<AuthCallback />} />
+
+            {/* Skill Passport verification (public) */}
+            <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}
             <Route

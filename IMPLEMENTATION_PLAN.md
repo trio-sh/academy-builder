@@ -47,7 +47,7 @@ Last Updated: 2026-01-30
 
 ---
 
-## Phase 3: Candidate Dashboard 🟢 75% COMPLETE
+## Phase 3: Candidate Dashboard 🟢 85% COMPLETE
 
 ### Overview Page
 - [x] Welcome message with user name
@@ -73,11 +73,13 @@ Last Updated: 2026-01-30
 ### Skill Passport Page
 - [x] Progress display (mentor loops needed)
 - [x] Earning requirements explanation
-- [x] Basic credential display when earned
-- [ ] **QR code verification**
-- [ ] **PDF export**
-- [ ] **Shareable link generation**
-- [ ] **Behavioral dimension breakdown**
+- [x] Full credential display when earned
+- [x] Verification code display with copy
+- [x] Shareable link generation
+- [x] Behavioral dimension breakdown with bar charts
+- [x] Overall behavioral score
+- [ ] QR code visual (needs library)
+- [ ] PDF export
 
 ### Training (BridgeFast) Page
 - [x] Module listing
@@ -90,21 +92,20 @@ Last Updated: 2026-01-30
 ### Projects (LiveWorks) Page
 - [x] Browse open projects
 - [x] Project details display
-- [x] Apply button (UI only)
-- [ ] Application form modal
-- [ ] Track applied projects
+- [x] Application form modal with cover letter
+- [x] Track applied projects (My Applications tab)
 - [ ] Project workspace
 
 ### Settings Page
 - [x] Account info display
 - [x] Notification preferences (UI only)
 - [x] Delete account (UI only)
+- [x] Password change functionality
 - [ ] Working notification toggles
-- [ ] Password change functionality
 
 ---
 
-## Phase 4: Mentor Dashboard 🟡 45% COMPLETE
+## Phase 4: Mentor Dashboard 🟢 75% COMPLETE
 
 ### Overview Page
 - [x] Stats (active mentees, observations, endorsements)
@@ -123,16 +124,16 @@ Last Updated: 2026-01-30
 ### Observations Page
 - [x] Observations list
 - [x] Observation status (locked/draft)
-- [ ] **NEW: Record Observation Form** ⬅️ PRIORITY 1
+- [x] Record Observation Form (3-step modal with behavioral scoring)
 - [ ] Edit draft observations
 - [ ] Lock/finalize observations
 
-### Endorsements (NEW PAGE NEEDED)
-- [ ] **NEW: Endorsement Form** ⬅️ PRIORITY 2
-- [ ] Proceed/Redirect/Pause decision
-- [ ] Justification text
-- [ ] Redirect recommendations
-- [ ] Endorsement history
+### Endorsements Page ✅
+- [x] Endorsement Form
+- [x] Proceed/Redirect/Pause decision
+- [x] Justification text
+- [x] Redirect recommendations (BridgeFast/LiveWorks)
+- [x] Endorsement history
 
 ### Schedule Page
 - [x] Availability toggles (UI only)
@@ -148,7 +149,7 @@ Last Updated: 2026-01-30
 
 ---
 
-## Phase 5: Employer Dashboard 🟡 55% COMPLETE
+## Phase 5: Employer Dashboard 🟢 70% COMPLETE
 
 ### Overview Page
 - [x] Stats (connections, hires, projects)
@@ -159,9 +160,10 @@ Last Updated: 2026-01-30
 - [x] Candidate listing
 - [x] Tier filtering
 - [x] Skills display
+- [x] Connection request button with modal
+- [x] Track existing connections
 - [ ] Advanced filters (location, experience)
 - [ ] Save search
-- [ ] Connection request button
 
 ### Connections Page
 - [x] Connection list with status

@@ -256,19 +256,53 @@ const Overview = () => {
 // T3X Search component
 interface CandidateWithProfile extends CandidateProfile {
   profile?: Profile;
+  connectionStatus?: string | null;
 }
 
 const SearchTalent = () => {
   const { user } = useAuth();
+  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
   const [candidates, setCandidates] = useState<CandidateWithProfile[]>([]);
+  const [existingConnections, setExistingConnections] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState({
     tier: "",
     skill: "",
   });
 
+  // Connection modal state
+  const [showConnectModal, setShowConnectModal] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState<CandidateWithProfile | null>(null);
+  const [connectionMessage, setConnectionMessage] = useState("");
+  const [isSendingConnection, setIsSendingConnection] = useState(false);
+  const [connectionSuccess, setConnectionSuccess] = useState(false);
+
   useEffect(() => {
-    const fetchCandidates = async () => {
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      // Get employer profile first
+      const { data: ep } = await supabase
+        .from("employer_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+      setEmployerProfile(ep);
+
+      // Get existing connections for this employer
+      if (ep) {
+        const { data: connections } = await supabase
+          .from("t3x_connections")
+          .select("candidate_id, status")
+          .eq("employer_id", ep.id);
+
+        if (connections) {
+          const connectionMap = new Map<string, string>();
+          connections.forEach(c => connectionMap.set(c.candidate_id, c.status));
+          setExistingConnections(connectionMap);
+        }
+      }
+
       // Get candidates with Skill Passport listed on T3X
       let query = supabase
         .from("candidate_profiles")
@@ -302,8 +336,80 @@ const SearchTalent = () => {
       setIsLoading(false);
     };
 
-    fetchCandidates();
-  }, [filters]);
+    fetchData();
+  }, [user?.id, filters]);
+
+  const openConnectModal = (candidate: CandidateWithProfile) => {
+    setSelectedCandidate(candidate);
+    setConnectionMessage("");
+    setConnectionSuccess(false);
+    setShowConnectModal(true);
+  };
+
+  const sendConnectionRequest = async () => {
+    if (!employerProfile || !selectedCandidate) return;
+
+    setIsSendingConnection(true);
+
+    try {
+      // Create connection request
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // 30 day expiry
+
+      const { error } = await supabase.from("t3x_connections").insert({
+        employer_id: employerProfile.id,
+        candidate_id: selectedCandidate.profile_id,
+        message: connectionMessage || null,
+        status: "pending",
+        expires_at: expiresAt.toISOString(),
+      });
+
+      if (error) {
+        console.error("Error sending connection:", error);
+        return;
+      }
+
+      // Update employer stats
+      await supabase
+        .from("employer_profiles")
+        .update({
+          total_connections: (employerProfile.total_connections || 0) + 1,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", employerProfile.id);
+
+      // Create notification for candidate
+      await supabase.from("notifications").insert({
+        user_id: selectedCandidate.profile_id,
+        title: "New Connection Request",
+        message: `${employerProfile.company_name || "An employer"} wants to connect with you`,
+        type: "connection_request",
+      });
+
+      // Update local state
+      setExistingConnections(prev => {
+        const newMap = new Map(prev);
+        newMap.set(selectedCandidate.profile_id, "pending");
+        return newMap;
+      });
+
+      setConnectionSuccess(true);
+      setTimeout(() => {
+        setShowConnectModal(false);
+        setSelectedCandidate(null);
+        setConnectionSuccess(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error("Error sending connection:", error);
+    } finally {
+      setIsSendingConnection(false);
+    }
+  };
+
+  const getConnectionStatus = (candidateProfileId: string) => {
+    return existingConnections.get(candidateProfileId) || null;
+  };
 
   if (isLoading) {
     return (
@@ -414,13 +520,35 @@ const SearchTalent = () => {
                   <Eye className="w-4 h-4 mr-1" />
                   View Profile
                 </Button>
-                <Button
-                  size="sm"
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-                >
-                  <Send className="w-4 h-4 mr-1" />
-                  Connect
-                </Button>
+                {(() => {
+                  const status = getConnectionStatus(candidate.profile_id);
+                  if (status === "accepted") {
+                    return (
+                      <Button size="sm" disabled className="flex-1 bg-emerald-600/50">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Connected
+                      </Button>
+                    );
+                  } else if (status === "pending") {
+                    return (
+                      <Button size="sm" disabled className="flex-1 bg-amber-600/50">
+                        <Clock className="w-4 h-4 mr-1" />
+                        Pending
+                      </Button>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        size="sm"
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                        onClick={() => openConnectModal(candidate)}
+                      >
+                        <Send className="w-4 h-4 mr-1" />
+                        Connect
+                      </Button>
+                    );
+                  }
+                })()}
               </div>
             </div>
           ))}
@@ -436,6 +564,105 @@ const SearchTalent = () => {
             Try adjusting your filters or check back later
           </p>
         </motion.div>
+      )}
+
+      {/* Connection Request Modal */}
+      {showConnectModal && selectedCandidate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isSendingConnection && setShowConnectModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {connectionSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
+                <p className="text-gray-400">
+                  Your connection request has been sent to {selectedCandidate.profile?.first_name}.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Send Connection Request</h2>
+                  <button
+                    onClick={() => setShowConnectModal(false)}
+                    disabled={isSendingConnection}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Candidate Preview */}
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold">
+                    {selectedCandidate.profile?.first_name?.[0]}
+                    {selectedCandidate.profile?.last_name?.[0]}
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">
+                      {selectedCandidate.profile?.first_name} {selectedCandidate.profile?.last_name}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {selectedCandidate.profile?.headline || "Skill Passport Holder"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Message Input */}
+                <div className="mb-6">
+                  <label className="text-sm text-gray-400 block mb-2">
+                    Add a message (optional)
+                  </label>
+                  <textarea
+                    value={connectionMessage}
+                    onChange={(e) => setConnectionMessage(e.target.value)}
+                    placeholder="Introduce yourself and explain why you'd like to connect..."
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowConnectModal(false)}
+                    disabled={isSendingConnection}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={sendConnectionRequest}
+                    disabled={isSendingConnection}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    {isSendingConnection ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        Send Request
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
       )}
     </motion.div>
   );
