@@ -2,9 +2,26 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase, updatePassword } from "@/lib/supabase";
+import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from "recharts";
 import {
   Award,
   BarChart3,
@@ -31,6 +48,25 @@ import {
   Loader2,
   Save,
   Plus,
+  Copy,
+  QrCode,
+  Download,
+  Share2,
+  Lock,
+  Eye,
+  EyeOff,
+  Users,
+  Building2,
+  ThumbsUp,
+  ThumbsDown,
+  ChevronLeft,
+  Target,
+  GraduationCap,
+  Send,
+  ClipboardCheck,
+  Sliders,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -39,6 +75,26 @@ type BridgeFastModule = Database["public"]["Tables"]["bridgefast_modules"]["Row"
 type BridgeFastProgress = Database["public"]["Tables"]["bridgefast_progress"]["Row"];
 type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
+type SkillPassportRecord = Database["public"]["Tables"]["skill_passports"]["Row"];
+type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
+type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
+type MentorAssignment = Database["public"]["Tables"]["mentor_assignments"]["Row"];
+type SelfAssessment = Database["public"]["Tables"]["candidate_self_assessments"]["Row"];
+
+// Behavioral dimensions for display
+const BEHAVIORAL_DIMENSIONS = [
+  { id: "communication", label: "Communication", color: "from-blue-500 to-cyan-500" },
+  { id: "problem_solving", label: "Problem Solving", color: "from-purple-500 to-pink-500" },
+  { id: "adaptability", label: "Adaptability", color: "from-amber-500 to-orange-500" },
+  { id: "collaboration", label: "Collaboration", color: "from-emerald-500 to-teal-500" },
+  { id: "initiative", label: "Initiative", color: "from-red-500 to-rose-500" },
+  { id: "time_management", label: "Time Management", color: "from-indigo-500 to-violet-500" },
+  { id: "professionalism", label: "Professionalism", color: "from-sky-500 to-blue-500" },
+  { id: "learning_agility", label: "Learning Agility", color: "from-lime-500 to-green-500" },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -57,8 +113,12 @@ const navItems = [
   { name: "Overview", href: "/dashboard/candidate", icon: BarChart3 },
   { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award },
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp },
+  { name: "Self Assessment", href: "/dashboard/candidate/assessment", icon: ClipboardCheck },
   { name: "Training", href: "/dashboard/candidate/training", icon: BookOpen },
   { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase },
+  { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap },
+  { name: "Connections", href: "/dashboard/candidate/connections", icon: Users },
+  { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell },
   { name: "Profile", href: "/dashboard/candidate/profile", icon: User },
   { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings },
 ];
@@ -153,11 +213,24 @@ const Overview = () => {
   ];
 
   const getNextSteps = () => {
+    // Check if profile is reasonably complete (has name, headline or bio)
+    const hasBasicProfile = !!(
+      profile?.first_name &&
+      profile?.last_name &&
+      (profile?.headline || profile?.bio)
+    );
+
+    // Check if skills have been added
+    const hasSkills = (candidateProfile?.skills?.length || 0) > 0;
+
+    // Profile is complete if they have basic info AND skills
+    const profileComplete = hasBasicProfile && hasSkills;
+
     const steps = [
       {
         title: "Complete your profile",
-        description: "Add your skills and experience",
-        completed: profile?.onboarding_completed || false,
+        description: "Add your info and skills",
+        completed: profileComplete,
         href: "/dashboard/candidate/profile"
       },
       {
@@ -321,25 +394,307 @@ const Overview = () => {
 
 // Skill Passport component
 const SkillPassport = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
+  const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return;
 
-      const { data } = await supabase
+      // Fetch candidate profile
+      const { data: cp } = await supabase
         .from("candidate_profiles")
         .select("*")
         .eq("profile_id", user.id)
         .single();
-      setCandidateProfile(data);
+      setCandidateProfile(cp);
+
+      // If has passport, fetch passport data
+      if (cp?.has_skill_passport) {
+        const { data: passport } = await supabase
+          .from("skill_passports")
+          .select("*")
+          .eq("candidate_id", user.id)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+        setPassportData(passport);
+      }
+
       setIsLoading(false);
     };
 
     fetchData();
   }, [user?.id]);
+
+  const copyVerificationCode = () => {
+    if (passportData?.verification_code) {
+      navigator.clipboard.writeText(passportData.verification_code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const sharePassport = () => {
+    const url = `${window.location.origin}/verify/${passportData?.verification_code}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const downloadPDF = () => {
+    const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+    const avgScore = Object.values(behavioralScores).length > 0
+      ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
+      : "N/A";
+    const tierLabel = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Skill Passport - ${profile?.first_name} ${profile?.last_name}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 40px;
+            color: #1a1a2e;
+            background: white;
+          }
+          .passport-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 32px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdfa 100%);
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #d1d5db;
+          }
+          .profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+          .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #14b8a6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+          }
+          .name { font-size: 24px; font-weight: bold; color: #1a1a2e; }
+          .headline { color: #10b981; font-weight: 500; }
+          .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            border-radius: 20px;
+            color: #16a34a;
+            font-size: 14px;
+            font-weight: 500;
+          }
+          .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+          }
+          .stat-card {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+          }
+          .stat-label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+          .stat-value { font-size: 18px; font-weight: bold; }
+          .verification-box {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .verification-code {
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+          }
+          .dimensions-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+          .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+          }
+          .dimension {
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+          }
+          .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+          }
+          .dimension-name { font-weight: 500; }
+          .dimension-score { font-weight: bold; }
+          .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+          }
+          .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #14b8a6);
+            border-radius: 4px;
+          }
+          .overall-score {
+            padding: 24px;
+            background: linear-gradient(135deg, #f3e8ff, #fce7f3);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+          }
+          .overall-label { color: #6b7280; margin-bottom: 4px; }
+          .overall-value { font-size: 32px; font-weight: bold; color: #1a1a2e; }
+          .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #6b7280;
+          }
+          .verify-url { color: #10b981; font-family: monospace; }
+          @media print {
+            body { padding: 20px; }
+            .passport-container { border-width: 1px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="passport-container">
+          <div class="header">
+            <div class="profile">
+              <div class="avatar">${profile?.first_name?.[0] || ''}${profile?.last_name?.[0] || ''}</div>
+              <div>
+                <div class="name">${profile?.first_name || ''} ${profile?.last_name || ''}</div>
+                <div class="headline">${profile?.headline || 'Candidate'}</div>
+              </div>
+            </div>
+            <div class="verified-badge">✓ Verified</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Readiness Tier</div>
+              <div class="stat-value" style="color: ${tierLabel.color.includes('emerald') ? '#10b981' : tierLabel.color.includes('blue') ? '#3b82f6' : '#f59e0b'}">${tierLabel.label}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Mentor Loops</div>
+              <div class="stat-value">${candidateProfile?.mentor_loops || 3}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Valid Until</div>
+              <div class="stat-value">${passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}</div>
+            </div>
+          </div>
+
+          <div class="verification-box">
+            <span style="font-size: 24px;">📋</span>
+            <div>
+              <div class="stat-label">Verification Code</div>
+              <div class="verification-code">${passportData?.verification_code || 'N/A'}</div>
+            </div>
+          </div>
+
+          <div class="dimensions-title">Behavioral Dimensions</div>
+          <div class="dimensions-grid">
+            ${BEHAVIORAL_DIMENSIONS.map(dim => {
+              const score = behavioralScores[dim.id] || 0;
+              const percentage = (score / 5) * 100;
+              return `
+                <div class="dimension">
+                  <div class="dimension-header">
+                    <span class="dimension-name">${dim.label}</span>
+                    <span class="dimension-score">${score.toFixed(1)}/5</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="overall-score">
+            <div>
+              <div class="overall-label">Overall Behavioral Score</div>
+              <div class="overall-value">${avgScore}/5</div>
+            </div>
+            <div style="font-size: 48px;">🏆</div>
+          </div>
+
+          <div class="footer">
+            <span>Issued: ${passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : 'N/A'}</span>
+            <span>The 3rd Academy</span>
+            <span class="verify-url">${window.location.origin}/verify/${passportData?.verification_code}</span>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
+  const getTierLabel = (tier: string | null) => {
+    const labels: Record<string, { label: string; color: string }> = {
+      developing: { label: "Developing", color: "text-amber-400" },
+      emerging: { label: "Emerging", color: "text-blue-400" },
+      ready: { label: "Job Ready", color: "text-emerald-400" },
+      tier_1: { label: "Tier 1 - Developing", color: "text-amber-400" },
+      tier_2: { label: "Tier 2 - Emerging", color: "text-blue-400" },
+      tier_3: { label: "Tier 3 - Ready", color: "text-emerald-400" },
+    };
+    return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
+  };
 
   if (isLoading) {
     return (
@@ -436,7 +791,10 @@ const SkillPassport = () => {
     );
   }
 
-  // Has Skill Passport
+  // Has Skill Passport - Full Display
+  const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+  const tierInfo = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -444,36 +802,179 @@ const SkillPassport = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
-        <p className="text-gray-400">
-          Your verified behavioral credential.
-        </p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
+          <p className="text-gray-400">Your verified behavioral credential for employers.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+            onClick={sharePassport}
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            {copied ? "Copied!" : "Share Link"}
+          </Button>
+          <Button
+            variant="outline"
+            className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+            onClick={downloadPDF}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
+          </Button>
+        </div>
       </motion.div>
 
+      {/* Passport Card */}
       <motion.div
         variants={itemVariants}
-        className="p-8 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/30"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10 border border-emerald-500/30"
       >
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-            <Award className="w-8 h-8 text-emerald-400" />
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-white rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-60 h-60 bg-gradient-to-tl from-white rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative p-8">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
+                {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  {profile?.first_name} {profile?.last_name}
+                </h2>
+                <p className="text-emerald-400 font-medium">{profile?.headline || "Candidate"}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-400 font-medium text-sm">Verified</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-emerald-400 font-medium">Verified</p>
-            <h2 className="text-2xl font-bold text-white">Skill Passport Active</h2>
+
+          {/* Tier & Stats */}
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
+              <p className={`text-xl font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Mentor Loops</p>
+              <p className="text-xl font-bold text-white">{candidateProfile?.mentor_loops || 3}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+              <p className="text-sm text-gray-400 mb-1">Valid Until</p>
+              <p className="text-xl font-bold text-white">
+                {passportData?.expires_at
+                  ? new Date(passportData.expires_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+
+          {/* Verification Code */}
+          <div className="p-4 rounded-xl bg-black/20 backdrop-blur mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <QrCode className="w-8 h-8 text-emerald-400" />
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">Verification Code</p>
+                  <p className="text-lg font-mono font-bold text-white tracking-wider">
+                    {passportData?.verification_code || "N/A"}
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={copyVerificationCode}
+                className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+              >
+                <Copy className="w-4 h-4 mr-1" />
+                {copied ? "Copied!" : "Copy"}
+              </Button>
+            </div>
+          </div>
+
+          {/* Issue Date */}
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <span>
+              Issued: {passportData?.issued_at
+                ? new Date(passportData.issued_at).toLocaleDateString()
+                : "N/A"}
+            </span>
+            <span>The 3rd Academy</span>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
-            <p className="text-xl font-semibold text-white">
-              {candidateProfile?.current_tier?.replace("_", " ").toUpperCase() || "TIER 1"}
-            </p>
+      </motion.div>
+
+      {/* Behavioral Scores */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-xl font-semibold text-white mb-4">Behavioral Dimensions</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {BEHAVIORAL_DIMENSIONS.map((dimension) => {
+            const score = behavioralScores[dimension.id] || 0;
+            const percentage = (score / 5) * 100;
+
+            return (
+              <div
+                key={dimension.id}
+                className="p-4 rounded-xl bg-white/5 border border-white/10"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-white">{dimension.label}</span>
+                  <span className="text-lg font-bold text-white">{score.toFixed(1)}/5</span>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Average Score */}
+      <motion.div variants={itemVariants}>
+        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400 mb-1">Overall Behavioral Score</p>
+              <p className="text-3xl font-bold text-white">
+                {Object.values(behavioralScores).length > 0
+                  ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
+                  : "N/A"}/5
+              </p>
+            </div>
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+              <Award className="w-10 h-10 text-purple-400" />
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-400 mb-1">Mentor Loops Completed</p>
-            <p className="text-xl font-semibold text-white">{candidateProfile?.mentor_loops || 0}</p>
+        </div>
+      </motion.div>
+
+      {/* Verification Info */}
+      <motion.div variants={itemVariants}>
+        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="flex items-center gap-3">
+            <Shield className="w-5 h-5 text-emerald-400" />
+            <p className="text-sm text-gray-400">
+              Employers can verify this credential at{" "}
+              <span className="text-emerald-400 font-mono">
+                {window.location.origin}/verify/{passportData?.verification_code}
+              </span>
+            </p>
           </div>
         </div>
       </motion.div>
@@ -485,7 +986,9 @@ const SkillPassport = () => {
 const GrowthLog = () => {
   const { user } = useAuth();
   const [entries, setEntries] = useState<GrowthLogEntry[]>([]);
+  const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"timeline" | "charts">("charts");
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -497,6 +1000,16 @@ const GrowthLog = () => {
         .eq("candidate_id", user.id)
         .order("created_at", { ascending: false });
 
+      // Fetch passport for behavioral scores
+      const { data: passport } = await supabase
+        .from("skill_passports")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      setPassportData(passport);
       setEntries(data || []);
       setIsLoading(false);
     };
@@ -532,6 +1045,562 @@ const GrowthLog = () => {
     return colors[type] || "from-gray-500 to-gray-600";
   };
 
+  // Calculate activity trends data (last 30 days)
+  const getActivityTrendsData = () => {
+    const last30Days: Record<string, number> = {};
+    const today = new Date();
+
+    // Initialize last 30 days
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const key = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      last30Days[key] = 0;
+    }
+
+    // Count entries per day
+    entries.forEach((entry) => {
+      const entryDate = new Date(entry.created_at);
+      const daysDiff = Math.floor((today.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysDiff < 30) {
+        const key = entryDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        if (last30Days[key] !== undefined) {
+          last30Days[key]++;
+        }
+      }
+    });
+
+    return Object.entries(last30Days).map(([date, count]) => ({
+      date,
+      activities: count,
+    }));
+  };
+
+  // Calculate behavioral radar data
+  const getBehavioralRadarData = () => {
+    const scores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+    return BEHAVIORAL_DIMENSIONS.map((dim) => ({
+      dimension: dim.label,
+      score: scores[dim.id] || 0,
+      fullMark: 5,
+    }));
+  };
+
+  // Calculate event type distribution
+  const getEventDistribution = () => {
+    const distribution: Record<string, number> = {};
+    entries.forEach((entry) => {
+      distribution[entry.event_type] = (distribution[entry.event_type] || 0) + 1;
+    });
+    return Object.entries(distribution).map(([type, count]) => ({
+      type: type.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+      count,
+    }));
+  };
+
+  // Calculate growth stats
+  const getGrowthStats = () => {
+    const thisWeek = entries.filter((e) => {
+      const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff < 7;
+    }).length;
+
+    const lastWeek = entries.filter((e) => {
+      const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff >= 7 && daysDiff < 14;
+    }).length;
+
+    const growthRate = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : thisWeek > 0 ? 100 : 0;
+
+    return { thisWeek, lastWeek, growthRate };
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  const activityData = getActivityTrendsData();
+  const radarData = getBehavioralRadarData();
+  const eventDistribution = getEventDistribution();
+  const growthStats = getGrowthStats();
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
+          <p className="text-gray-400">
+            Your complete behavioral development timeline.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === "charts" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("charts")}
+            className={viewMode === "charts" ? "bg-indigo-600" : "border-white/20 text-white"}
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Analytics
+          </Button>
+          <Button
+            variant={viewMode === "timeline" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("timeline")}
+            className={viewMode === "timeline" ? "bg-indigo-600" : "border-white/20 text-white"}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            Timeline
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Stats Overview */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+          <p className="text-sm text-gray-400 mb-1">Total Activities</p>
+          <p className="text-2xl font-bold text-white">{entries.length}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+          <p className="text-sm text-gray-400 mb-1">This Week</p>
+          <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+          <p className="text-sm text-gray-400 mb-1">Growth Rate</p>
+          <p className={`text-2xl font-bold ${growthStats.growthRate >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+            {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
+          </p>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+          <p className="text-sm text-gray-400 mb-1">Event Types</p>
+          <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
+        </div>
+      </motion.div>
+
+      {viewMode === "charts" && (
+        <>
+          {/* Activity Trends Chart */}
+          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={activityData}>
+                  <defs>
+                    <linearGradient id="activityGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fill: "#9ca3af", fontSize: 10 }}
+                    tickLine={{ stroke: "#4b5563" }}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    tick={{ fill: "#9ca3af", fontSize: 12 }}
+                    tickLine={{ stroke: "#4b5563" }}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1f2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="activities"
+                    stroke="#6366f1"
+                    strokeWidth={2}
+                    fill="url(#activityGradient)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          {/* Behavioral Dimensions Radar */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={radarData}>
+                    <PolarGrid stroke="#374151" />
+                    <PolarAngleAxis
+                      dataKey="dimension"
+                      tick={{ fill: "#9ca3af", fontSize: 10 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={30}
+                      domain={[0, 5]}
+                      tick={{ fill: "#6b7280", fontSize: 10 }}
+                    />
+                    <Radar
+                      name="Score"
+                      dataKey="score"
+                      stroke="#10b981"
+                      fill="#10b981"
+                      fillOpacity={0.3}
+                      strokeWidth={2}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1f2937",
+                        border: "1px solid #374151",
+                        borderRadius: "8px",
+                        color: "#fff",
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
+              <div className="space-y-3">
+                {eventDistribution.map((item) => {
+                  const maxCount = Math.max(...eventDistribution.map((e) => e.count));
+                  const percentage = (item.count / maxCount) * 100;
+                  return (
+                    <div key={item.type}>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-gray-400">{item.type}</span>
+                        <span className="text-white font-medium">{item.count}</span>
+                      </div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                {eventDistribution.length === 0 && (
+                  <p className="text-gray-500 text-center py-4">No activities recorded yet</p>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+
+      {viewMode === "timeline" && (
+        <>
+          {entries.length > 0 ? (
+            <motion.div variants={itemVariants} className="relative">
+              {/* Timeline line */}
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
+
+              <div className="space-y-6">
+                {entries.map((entry, index) => {
+                  const Icon = getEventIcon(entry.event_type);
+                  return (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="relative pl-14"
+                    >
+                      {/* Timeline dot */}
+                      <div className={`absolute left-0 w-10 h-10 rounded-xl bg-gradient-to-br ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+
+                      <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-white">{entry.title}</h3>
+                          <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                            {new Date(entry.created_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        {entry.description && (
+                          <p className="text-sm text-gray-400">{entry.description}</p>
+                        )}
+                        {entry.source_component && (
+                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-white/10 text-gray-400">
+                            {entry.source_component}
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              variants={itemVariants}
+              className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+            >
+              <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-400">No entries yet</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Your growth log will populate as you complete activities
+              </p>
+            </motion.div>
+          )}
+        </>
+      )}
+    </motion.div>
+  );
+};
+
+// Quiz questions for each behavioral dimension
+const QUIZ_QUESTIONS: Record<string, { question: string; options: string[]; correct: number }[]> = {
+  communication: [
+    { question: "Which approach is most effective for delivering critical feedback?", options: ["Publicly to set an example", "Via email only", "Privately and constructively", "Avoid it entirely"], correct: 2 },
+    { question: "Active listening involves:", options: ["Thinking about your response while others speak", "Maintaining eye contact and asking clarifying questions", "Interrupting to show engagement", "Taking notes constantly"], correct: 1 },
+    { question: "When presenting complex information, you should:", options: ["Use as much jargon as possible", "Break it into digestible chunks with examples", "Speak quickly to cover more ground", "Assume audience knowledge"], correct: 1 },
+  ],
+  problem_solving: [
+    { question: "The first step in effective problem-solving is:", options: ["Implementing a quick fix", "Blaming the responsible party", "Clearly defining the problem", "Calling a meeting"], correct: 2 },
+    { question: "Root cause analysis helps you:", options: ["Find someone to blame", "Address symptoms quickly", "Identify and fix underlying issues", "Avoid accountability"], correct: 2 },
+    { question: "When facing a novel problem, you should:", options: ["Panic and escalate immediately", "Research similar cases and brainstorm options", "Ignore it until it resolves", "Make assumptions without data"], correct: 1 },
+  ],
+  adaptability: [
+    { question: "How should you respond to unexpected changes in project scope?", options: ["Refuse to accept changes", "Assess impact and adjust plans accordingly", "Complain to colleagues", "Ignore the changes"], correct: 1 },
+    { question: "Adaptable employees are characterized by:", options: ["Resistance to new ideas", "Flexibility and openness to change", "Strict adherence to routines", "Avoiding challenges"], correct: 1 },
+    { question: "When learning new technology, you should:", options: ["Wait for formal training only", "Explore, practice, and ask questions", "Avoid it as long as possible", "Claim you can't learn it"], correct: 1 },
+  ],
+  collaboration: [
+    { question: "Effective team collaboration requires:", options: ["Individual competition", "Clear communication and shared goals", "Working in isolation", "Avoiding disagreements"], correct: 1 },
+    { question: "When a team member disagrees with your idea, you should:", options: ["Dismiss their opinion", "Listen and consider their perspective", "Escalate to management", "Stop contributing"], correct: 1 },
+    { question: "Sharing credit for team success:", options: ["Makes you look weak", "Builds trust and morale", "Is unnecessary", "Should be avoided"], correct: 1 },
+  ],
+  initiative: [
+    { question: "Taking initiative means:", options: ["Waiting to be told what to do", "Proactively identifying and addressing opportunities", "Only doing assigned tasks", "Avoiding extra work"], correct: 1 },
+    { question: "When you notice a process improvement opportunity:", options: ["Ignore it - not your job", "Document and propose the improvement", "Complain about current process", "Wait for someone else to notice"], correct: 1 },
+    { question: "Self-starters typically:", options: ["Need constant supervision", "Seek out challenges and learning opportunities", "Avoid responsibility", "Follow others only"], correct: 1 },
+  ],
+  time_management: [
+    { question: "The best way to handle multiple deadlines is to:", options: ["Work on everything simultaneously", "Prioritize tasks by urgency and importance", "Miss some deadlines", "Only work on easy tasks"], correct: 1 },
+    { question: "When estimating task duration, you should:", options: ["Always give shortest estimate", "Add buffer time for unexpected issues", "Avoid giving estimates", "Double all estimates"], correct: 1 },
+    { question: "Effective time management includes:", options: ["Multitasking constantly", "Setting clear goals and minimizing distractions", "Working without breaks", "Checking email every 5 minutes"], correct: 1 },
+  ],
+  professionalism: [
+    { question: "Professional workplace behavior includes:", options: ["Gossip and office politics", "Reliability, respect, and accountability", "Casual attitude to deadlines", "Avoiding difficult conversations"], correct: 1 },
+    { question: "When you make a mistake at work, you should:", options: ["Hide it and hope no one notices", "Acknowledge it and work to fix it", "Blame others", "Ignore it"], correct: 1 },
+    { question: "Professional communication means:", options: ["Using slang and emojis always", "Clear, respectful, and appropriate language", "Being overly casual", "Avoiding communication"], correct: 1 },
+  ],
+  learning_agility: [
+    { question: "Learning agility is best described as:", options: ["Memorizing information quickly", "Ability to learn from experience and apply to new situations", "Avoiding new challenges", "Only learning from formal training"], correct: 1 },
+    { question: "When you fail at something, you should:", options: ["Give up on similar tasks", "Analyze what went wrong and try again", "Blame external factors", "Avoid the topic forever"], correct: 1 },
+    { question: "Continuous learning in the workplace means:", options: ["Only attending mandatory training", "Actively seeking new knowledge and skills", "Waiting for promotions to learn", "Learning stops after onboarding"], correct: 1 },
+  ],
+};
+
+// Self Assessment Tool descriptions
+const ASSESSMENT_DESCRIPTIONS: Record<string, { title: string; description: string; examples: string[] }> = {
+  communication: {
+    title: "Communication",
+    description: "Your ability to express ideas clearly, listen actively, and adapt your message to different audiences.",
+    examples: ["Written and verbal communication", "Active listening", "Presentation skills", "Giving and receiving feedback"],
+  },
+  problem_solving: {
+    title: "Problem Solving",
+    description: "Your approach to analyzing issues, identifying root causes, and developing creative solutions.",
+    examples: ["Analytical thinking", "Creative solutions", "Root cause analysis", "Decision making"],
+  },
+  adaptability: {
+    title: "Adaptability",
+    description: "Your flexibility in responding to change and ability to thrive in dynamic environments.",
+    examples: ["Embracing change", "Learning new technologies", "Adjusting to new situations", "Resilience"],
+  },
+  collaboration: {
+    title: "Collaboration",
+    description: "Your effectiveness in working with others, contributing to team goals, and building relationships.",
+    examples: ["Team participation", "Conflict resolution", "Supporting colleagues", "Cross-functional work"],
+  },
+  initiative: {
+    title: "Initiative",
+    description: "Your tendency to take proactive action, seek opportunities, and drive improvements.",
+    examples: ["Proactive behavior", "Self-starting", "Identifying opportunities", "Going beyond requirements"],
+  },
+  time_management: {
+    title: "Time Management",
+    description: "Your ability to prioritize tasks, meet deadlines, and efficiently manage your workload.",
+    examples: ["Prioritization", "Meeting deadlines", "Planning ahead", "Managing multiple tasks"],
+  },
+  professionalism: {
+    title: "Professionalism",
+    description: "Your conduct, ethics, and reliability in professional settings.",
+    examples: ["Reliability", "Workplace etiquette", "Accountability", "Ethical behavior"],
+  },
+  learning_agility: {
+    title: "Learning Agility",
+    description: "Your ability to learn quickly from experience and apply knowledge to new situations.",
+    examples: ["Quick learning", "Applying lessons", "Curiosity", "Continuous improvement"],
+  },
+};
+
+// Self Assessment component
+const SelfAssessmentPage = () => {
+  const { user, profile } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [assessments, setAssessments] = useState<SelfAssessment[]>([]);
+  const [currentScores, setCurrentScores] = useState<Record<string, number>>({
+    communication: 3,
+    problem_solving: 3,
+    adaptability: 3,
+    collaboration: 3,
+    initiative: 3,
+    time_management: 3,
+    professionalism: 3,
+    learning_agility: 3,
+  });
+  const [strengths, setStrengths] = useState<string[]>([]);
+  const [improvements, setImprovements] = useState<string[]>([]);
+  const [goals, setGoals] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [activeStep, setActiveStep] = useState(0); // 0=intro, 1=rate, 2=reflect, 3=goals, 4=review
+
+  useEffect(() => {
+    const fetchAssessments = async () => {
+      if (!user?.id) return;
+
+      const { data } = await supabase
+        .from("candidate_self_assessments")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (data && data.length > 0) {
+        setAssessments(data);
+        // Load the most recent assessment
+        const latest = data[0];
+        if (latest.behavioral_scores) {
+          setCurrentScores(latest.behavioral_scores as Record<string, number>);
+        }
+        setStrengths(latest.strengths || []);
+        setImprovements(latest.areas_for_improvement || []);
+        setGoals(latest.goals || "");
+        setNotes(latest.notes || "");
+      }
+      setIsLoading(false);
+    };
+
+    fetchAssessments();
+  }, [user?.id]);
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 4.5) return "Excellent";
+    if (score >= 3.5) return "Strong";
+    if (score >= 2.5) return "Developing";
+    if (score >= 1.5) return "Emerging";
+    return "Beginning";
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 4.5) return "text-emerald-400";
+    if (score >= 3.5) return "text-blue-400";
+    if (score >= 2.5) return "text-amber-400";
+    if (score >= 1.5) return "text-orange-400";
+    return "text-red-400";
+  };
+
+  const getOverallScore = () => {
+    const values = Object.values(currentScores);
+    return values.reduce((a, b) => a + b, 0) / values.length;
+  };
+
+  const getRadarData = () => {
+    return BEHAVIORAL_DIMENSIONS.map((dim) => ({
+      subject: dim.label,
+      score: currentScores[dim.id] || 0,
+      fullMark: 5,
+    }));
+  };
+
+  const toggleStrength = (dimension: string) => {
+    if (strengths.includes(dimension)) {
+      setStrengths(strengths.filter((s) => s !== dimension));
+    } else if (strengths.length < 3) {
+      setStrengths([...strengths, dimension]);
+    }
+  };
+
+  const toggleImprovement = (dimension: string) => {
+    if (improvements.includes(dimension)) {
+      setImprovements(improvements.filter((s) => s !== dimension));
+    } else if (improvements.length < 3) {
+      setImprovements([...improvements, dimension]);
+    }
+  };
+
+  const saveAssessment = async () => {
+    if (!user?.id) return;
+    setIsSaving(true);
+
+    try {
+      // Save assessment
+      const { error } = await supabase.from("candidate_self_assessments").insert({
+        candidate_id: user.id,
+        behavioral_scores: currentScores,
+        strengths,
+        areas_for_improvement: improvements,
+        goals,
+        notes,
+        completed: true,
+      });
+
+      if (error) throw error;
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "assessment",
+        title: "Self Assessment Completed",
+        description: `Completed behavioral self-assessment with overall score of ${getOverallScore().toFixed(1)}/5`,
+        source_component: "SelfAssessment",
+        metadata: {
+          scores: currentScores,
+          overall: getOverallScore(),
+          strengths,
+          areas_for_improvement: improvements,
+        },
+      });
+
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+
+      // Refresh assessments
+      const { data } = await supabase
+        .from("candidate_self_assessments")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (data) setAssessments(data);
+    } catch (error) {
+      console.error("Error saving assessment:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -545,71 +1614,539 @@ const GrowthLog = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-8"
+      className="max-w-5xl mx-auto space-y-8"
     >
+      {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Self Assessment</h1>
         <p className="text-gray-400">
-          Your complete behavioral development timeline.
+          Reflect on your professional behavioral skills and identify areas for growth.
         </p>
       </motion.div>
 
-      {entries.length > 0 ? (
-        <motion.div variants={itemVariants} className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
+      {/* Success Banner */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3"
+        >
+          <CheckCircle className="w-5 h-5 text-emerald-400" />
+          <span className="text-emerald-300">Assessment saved successfully!</span>
+        </motion.div>
+      )}
 
-          <div className="space-y-6">
-            {entries.map((entry, index) => {
-              const Icon = getEventIcon(entry.event_type);
-              return (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative pl-14"
-                >
-                  {/* Timeline dot */}
-                  <div className={`absolute left-0 w-10 h-10 rounded-xl bg-gradient-to-br ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
-                    <Icon className="w-5 h-5 text-white" />
+      {/* Progress Steps */}
+      <motion.div variants={itemVariants} className="flex items-center justify-center gap-2">
+        {["Introduction", "Rate Skills", "Reflect", "Goals", "Review"].map((step, index) => (
+          <div key={step} className="flex items-center">
+            <button
+              onClick={() => setActiveStep(index)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                activeStep === index
+                  ? "bg-indigo-600 text-white"
+                  : activeStep > index
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10"
+              }`}
+            >
+              {activeStep > index ? (
+                <CheckCircle className="w-4 h-4" />
+              ) : (
+                <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs">
+                  {index + 1}
+                </span>
+              )}
+              <span className="hidden sm:inline">{step}</span>
+            </button>
+            {index < 4 && <ChevronRight className="w-4 h-4 text-gray-600 mx-1" />}
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Step Content */}
+      <motion.div
+        key={activeStep}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="space-y-6"
+      >
+        {/* Introduction Step */}
+        {activeStep === 0 && (
+          <div className="p-8 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Welcome to Your Self Assessment</h2>
+                <p className="text-gray-400">A journey of self-discovery and professional growth</p>
+              </div>
+            </div>
+
+            <div className="space-y-6 text-gray-300">
+              <p>
+                This self-assessment tool helps you reflect on your professional behavioral skills across
+                8 key dimensions. Your honest self-evaluation will help you:
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  { icon: Target, text: "Identify your strengths and areas for improvement" },
+                  { icon: TrendingUp, text: "Track your professional growth over time" },
+                  { icon: Users, text: "Prepare for mentor observations and feedback" },
+                  { icon: Award, text: "Build a stronger Skill Passport profile" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5">
+                    <item.icon className="w-5 h-5 text-indigo-400" />
+                    <span className="text-sm">{item.text}</span>
                   </div>
+                ))}
+              </div>
 
-                  <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-white">{entry.title}</h3>
-                      <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
-                        {new Date(entry.created_at).toLocaleDateString("en-US", {
-                          month: "short",
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <p className="text-amber-300 text-sm">
+                  <strong>Note:</strong> Be honest in your self-assessment. This is for your personal
+                  growth, and your mentor observations will provide external validation.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(1)}
+              >
+                Start Assessment
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Rate Skills Step */}
+        {activeStep === 1 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Rate Your Behavioral Skills</h2>
+              <p className="text-gray-400 mb-6">
+                Use the sliders to rate yourself on each dimension from 1 (Beginning) to 5 (Excellent).
+              </p>
+
+              <div className="grid gap-6">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => {
+                  const info = ASSESSMENT_DESCRIPTIONS[dim.id];
+                  const score = currentScores[dim.id] || 3;
+
+                  return (
+                    <div key={dim.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-white">{info.title}</h3>
+                          <p className="text-sm text-gray-400">{info.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`text-2xl font-bold ${getScoreColor(score)}`}>{score.toFixed(1)}</span>
+                          <p className={`text-xs ${getScoreColor(score)}`}>{getScoreLabel(score)}</p>
+                        </div>
+                      </div>
+
+                      <input
+                        type="range"
+                        min="1"
+                        max="5"
+                        step="0.5"
+                        value={score}
+                        onChange={(e) => setCurrentScores({ ...currentScores, [dim.id]: parseFloat(e.target.value) })}
+                        className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                      />
+
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>Beginning</span>
+                        <span>Emerging</span>
+                        <span>Developing</span>
+                        <span>Strong</span>
+                        <span>Excellent</span>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {info.examples.map((ex) => (
+                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-white/5 text-gray-400">
+                            {ex}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Radar Preview */}
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4">Your Skills Profile</h3>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={getRadarData()}>
+                    <PolarGrid stroke="#374151" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: "#9CA3AF", fontSize: 12 }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 5]} tick={{ fill: "#9CA3AF" }} />
+                    <Radar
+                      name="Self Assessment"
+                      dataKey="score"
+                      stroke="#8B5CF6"
+                      fill="#8B5CF6"
+                      fillOpacity={0.3}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-center mt-4">
+                <span className="text-3xl font-bold text-white">{getOverallScore().toFixed(1)}</span>
+                <span className="text-gray-400 ml-2">/ 5.0 Overall</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(0)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(2)}
+              >
+                Continue to Reflect
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Reflect Step */}
+        {activeStep === 2 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Identify Your Strengths</h2>
+              <p className="text-gray-400 mb-6">
+                Select up to 3 dimensions that you consider your strongest areas.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <button
+                    key={dim.id}
+                    onClick={() => toggleStrength(dim.id)}
+                    className={`p-4 rounded-xl border text-left transition-all ${
+                      strengths.includes(dim.id)
+                        ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                        : "bg-white/5 border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-white/10"
+                        }`}
+                      >
+                        {strengths.includes(dim.id) ? (
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        ) : (
+                          <Target className="w-5 h-5 text-gray-400" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-sm text-gray-500 mt-4">
+                {strengths.length}/3 selected
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Areas for Improvement</h2>
+              <p className="text-gray-400 mb-6">
+                Select up to 3 dimensions you want to focus on improving.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <button
+                    key={dim.id}
+                    onClick={() => toggleImprovement(dim.id)}
+                    className={`p-4 rounded-xl border text-left transition-all ${
+                      improvements.includes(dim.id)
+                        ? "bg-amber-500/20 border-amber-500/50 ring-2 ring-amber-500/30"
+                        : "bg-white/5 border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-white/10"
+                        }`}
+                      >
+                        {improvements.includes(dim.id) ? (
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        ) : (
+                          <TrendingUp className="w-5 h-5 text-gray-400" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-sm text-gray-500 mt-4">
+                {improvements.length}/3 selected
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-4">Additional Notes</h2>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add any reflections on your current skill levels..."
+                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                rows={4}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(1)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(3)}
+              >
+                Continue to Goals
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Goals Step */}
+        {activeStep === 3 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-2">Set Your Goals</h2>
+              <p className="text-gray-400 mb-6">
+                What do you want to achieve in your professional development journey?
+              </p>
+
+              <textarea
+                value={goals}
+                onChange={(e) => setGoals(e.target.value)}
+                placeholder="Example: I want to improve my communication skills by actively participating in team meetings and seeking feedback from my mentor. I also aim to develop better time management habits by using task prioritization techniques..."
+                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                rows={6}
+              />
+            </div>
+
+            {improvements.length > 0 && (
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+                <h3 className="text-lg font-semibold text-white mb-4">Suggested Focus Areas</h3>
+                <p className="text-gray-400 mb-4">Based on your areas for improvement:</p>
+
+                <div className="space-y-4">
+                  {improvements.map((imp) => {
+                    const info = ASSESSMENT_DESCRIPTIONS[imp];
+                    return (
+                      <div key={imp} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <h4 className="font-medium text-white mb-2">{info.title}</h4>
+                        <ul className="text-sm text-gray-400 space-y-1">
+                          {info.examples.map((ex) => (
+                            <li key={ex} className="flex items-center gap-2">
+                              <ChevronRight className="w-3 h-3 text-indigo-400" />
+                              {ex}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(2)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                onClick={() => setActiveStep(4)}
+              >
+                Review Assessment
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Review Step */}
+        {activeStep === 4 && (
+          <div className="space-y-6">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h2 className="text-xl font-semibold text-white mb-6">Review Your Assessment</h2>
+
+              {/* Overall Score */}
+              <div className="flex items-center justify-center gap-6 p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 mb-6">
+                <div className="text-center">
+                  <p className="text-5xl font-bold text-white">{getOverallScore().toFixed(1)}</p>
+                  <p className="text-gray-400">Overall Score</p>
+                </div>
+                <div className={`text-xl font-semibold ${getScoreColor(getOverallScore())}`}>
+                  {getScoreLabel(getOverallScore())}
+                </div>
+              </div>
+
+              {/* Skills Grid */}
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                {BEHAVIORAL_DIMENSIONS.map((dim) => (
+                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                    <span className="text-gray-300">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
+                    <span className={`font-semibold ${getScoreColor(currentScores[dim.id])}`}>
+                      {currentScores[dim.id].toFixed(1)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Strengths & Improvements */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-emerald-400" />
+                    Strengths
+                  </h3>
+                  <div className="space-y-2">
+                    {strengths.length > 0 ? (
+                      strengths.map((s) => (
+                        <div key={s} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-300 text-sm">
+                          {ASSESSMENT_DESCRIPTIONS[s].title}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm">No strengths selected</p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-amber-400" />
+                    Areas for Improvement
+                  </h3>
+                  <div className="space-y-2">
+                    {improvements.length > 0 ? (
+                      improvements.map((s) => (
+                        <div key={s} className="p-2 rounded-lg bg-amber-500/10 text-amber-300 text-sm">
+                          {ASSESSMENT_DESCRIPTIONS[s].title}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 text-sm">No areas selected</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Goals */}
+              {goals && (
+                <div className="mb-6">
+                  <h3 className="font-semibold text-white mb-3">Goals</h3>
+                  <p className="text-gray-300 whitespace-pre-wrap">{goals}</p>
+                </div>
+              )}
+
+              {/* Notes */}
+              {notes && (
+                <div>
+                  <h3 className="font-semibold text-white mb-3">Notes</h3>
+                  <p className="text-gray-300 whitespace-pre-wrap">{notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between">
+              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(3)}>
+                Back
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                onClick={saveAssessment}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Assessment
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Previous Assessments */}
+      {assessments.length > 0 && (
+        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 className="text-xl font-semibold text-white mb-4">Assessment History</h2>
+          <div className="space-y-3">
+            {assessments.slice(0, 5).map((assessment) => {
+              const scores = assessment.behavioral_scores as Record<string, number>;
+              const avgScore =
+                Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length;
+              return (
+                <div
+                  key={assessment.id}
+                  className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                      <ClipboardCheck className="w-5 h-5 text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">
+                        {new Date(assessment.created_at).toLocaleDateString("en-US", {
+                          month: "long",
                           day: "numeric",
                           year: "numeric",
                         })}
-                      </span>
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        {assessment.strengths?.length || 0} strengths, {assessment.areas_for_improvement?.length || 0} areas to improve
+                      </p>
                     </div>
-                    {entry.description && (
-                      <p className="text-sm text-gray-400">{entry.description}</p>
-                    )}
-                    {entry.source_component && (
-                      <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-white/10 text-gray-400">
-                        {entry.source_component}
-                      </span>
-                    )}
                   </div>
-                </motion.div>
+                  <div className="text-right">
+                    <span className={`text-xl font-bold ${getScoreColor(avgScore)}`}>
+                      {avgScore.toFixed(1)}
+                    </span>
+                    <p className="text-xs text-gray-500">Overall</p>
+                  </div>
+                </div>
               );
             })}
           </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
-        >
-          <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No entries yet</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Your growth log will populate as you complete activities
-          </p>
         </motion.div>
       )}
     </motion.div>
@@ -618,10 +2155,16 @@ const GrowthLog = () => {
 
 // Training (BridgeFast) component
 const Training = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [modules, setModules] = useState<BridgeFastModule[]>([]);
   const [progress, setProgress] = useState<Record<string, BridgeFastProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [activeModule, setActiveModule] = useState<BridgeFastModule | null>(null);
+  const [moduleStep, setModuleStep] = useState(0); // 0=intro, 1=video, 2-4=content, 5=quiz, 6=complete
+  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -683,6 +2226,191 @@ const Training = () => {
         },
       }));
     }
+  };
+
+  const updateProgress = async (moduleId: string, newPercent: number) => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("bridgefast_progress")
+      .update({ progress_percent: newPercent, updated_at: new Date().toISOString() })
+      .eq("candidate_id", user.id)
+      .eq("module_id", moduleId);
+
+    setProgress((prev) => ({
+      ...prev,
+      [moduleId]: {
+        ...prev[moduleId],
+        progress_percent: newPercent,
+      },
+    }));
+  };
+
+  const completeModule = async (moduleId: string, score: number) => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("bridgefast_progress")
+      .update({
+        status: "completed",
+        progress_percent: 100,
+        final_score: score,
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("candidate_id", user.id)
+      .eq("module_id", moduleId);
+
+    // Create growth log entry
+    await supabase.from("growth_logs").insert({
+      candidate_id: user.id,
+      log_type: "training_completion",
+      title: `Completed BridgeFast Module`,
+      description: `Completed ${modules.find((m) => m.id === moduleId)?.title} with score ${score}%`,
+      metadata: { module_id: moduleId, score },
+    });
+
+    setProgress((prev) => ({
+      ...prev,
+      [moduleId]: {
+        ...prev[moduleId],
+        status: "completed",
+        progress_percent: 100,
+        final_score: score,
+        completed_at: new Date().toISOString(),
+      },
+    }));
+
+    setActiveModule(null);
+    setModuleStep(0);
+  };
+
+  const openModule = (module: BridgeFastModule) => {
+    const moduleProgress = progress[module.id];
+    if (!moduleProgress || moduleProgress.status === "not_started") {
+      startModule(module.id);
+    }
+    setActiveModule(module);
+    setQuizAnswers([]);
+    setQuizSubmitted(false);
+    setQuizScore(0);
+    // Set step based on current progress
+    const percent = moduleProgress?.progress_percent || 0;
+    setModuleStep(Math.floor(percent / 16.67)); // 6 steps total
+  };
+
+  const advanceStep = async () => {
+    if (!activeModule) return;
+    const newStep = moduleStep + 1;
+    setModuleStep(newStep);
+
+    // Update progress (each step is ~16.67%)
+    const newPercent = Math.min(Math.round(newStep * 16.67), 83); // Cap at 83% until quiz complete
+    await updateProgress(activeModule.id, newPercent);
+  };
+
+  const getQuizQuestions = () => {
+    const dimension = activeModule?.behavioral_dimension?.toLowerCase().replace(" ", "_") || "communication";
+    return QUIZ_QUESTIONS[dimension] || QUIZ_QUESTIONS.communication;
+  };
+
+  const submitQuiz = async () => {
+    const questions = getQuizQuestions();
+    let correct = 0;
+    questions.forEach((q, i) => {
+      if (quizAnswers[i] === q.correct) correct++;
+    });
+    const score = Math.round((correct / questions.length) * 100);
+    setQuizScore(score);
+    setQuizSubmitted(true);
+  };
+
+  const downloadCertificate = () => {
+    if (!activeModule || !profile) return;
+
+    const certWindow = window.open('', '_blank');
+    if (!certWindow) return;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Certificate - ${activeModule.title}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: 'Georgia', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 20px;
+          }
+          .certificate {
+            width: 800px;
+            padding: 50px;
+            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+            border: 3px solid #1e3a5f;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+          }
+          .certificate::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #d4af37;
+          }
+          .logo { font-size: 24px; color: #1e3a5f; margin-bottom: 10px; letter-spacing: 3px; }
+          .title { font-size: 42px; color: #d4af37; margin: 20px 0; font-weight: normal; }
+          .subtitle { font-size: 18px; color: #666; margin-bottom: 30px; }
+          .recipient { font-size: 32px; color: #1e3a5f; margin: 20px 0; border-bottom: 2px solid #d4af37; display: inline-block; padding-bottom: 10px; }
+          .course { font-size: 20px; color: #333; margin: 30px 0 10px; }
+          .course-name { font-size: 24px; color: #1e3a5f; font-weight: bold; }
+          .dimension { display: inline-block; padding: 8px 20px; background: #1e3a5f; color: #fff; border-radius: 20px; margin: 20px 0; font-size: 14px; }
+          .score { font-size: 18px; color: #666; margin: 20px 0; }
+          .date { font-size: 14px; color: #888; margin-top: 30px; }
+          .footer { display: flex; justify-content: space-around; margin-top: 40px; }
+          .signature { text-align: center; }
+          .signature-line { width: 150px; border-top: 1px solid #333; margin: 10px auto 5px; }
+          .signature-title { font-size: 12px; color: #666; }
+          .badge { position: absolute; top: 20px; right: 30px; width: 80px; height: 80px; background: linear-gradient(135deg, #d4af37, #b8962e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
+          @media print {
+            body { background: white; }
+            .certificate { box-shadow: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="certificate">
+          <div class="badge">VERIFIED</div>
+          <div class="logo">THE 3RD ACADEMY</div>
+          <div class="title">Certificate of Completion</div>
+          <div class="subtitle">This is to certify that</div>
+          <div class="recipient">${profile.first_name} ${profile.last_name}</div>
+          <div class="course">has successfully completed the BridgeFast training module</div>
+          <div class="course-name">${activeModule.title}</div>
+          <div class="dimension">${activeModule.behavioral_dimension}</div>
+          <div class="score">Final Score: ${quizScore}% | Duration: ${activeModule.duration_hours} hours</div>
+          <div class="date">Issued on ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+          <div class="footer">
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-title">Program Director</div>
+            </div>
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-title">Certificate ID: BF-${Date.now().toString(36).toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+        <script>window.onload = function() { window.print(); }</script>
+      </body>
+      </html>
+    `;
+    certWindow.document.write(html);
+    certWindow.document.close();
   };
 
   if (isLoading) {
@@ -782,6 +2510,7 @@ const Training = () => {
                     <Button
                       size="sm"
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500"
+                      onClick={() => openModule(module)}
                     >
                       <Play className="w-4 h-4 mr-2" />
                       Continue
@@ -792,7 +2521,7 @@ const Training = () => {
                     size="sm"
                     variant="outline"
                     className="w-full border-white/20 text-white hover:bg-white/10"
-                    onClick={() => startModule(module.id)}
+                    onClick={() => openModule(module)}
                   >
                     <Play className="w-4 h-4 mr-2" />
                     Start Module
@@ -803,6 +2532,444 @@ const Training = () => {
           })}
         </div>
       </motion.div>
+
+      {/* Module Viewer Modal */}
+      {activeModule && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[85vh] overflow-hidden"
+          >
+            {/* Header */}
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="inline-block px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400 mb-2">
+                    {activeModule.behavioral_dimension}
+                  </span>
+                  <h2 className="text-xl font-bold text-white">{activeModule.title}</h2>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setActiveModule(null);
+                    setModuleStep(0);
+                  }}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-gray-400">Progress</span>
+                  <span className="text-indigo-400">{Math.min(moduleStep * 20, 100)}%</span>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+                    style={{ width: `${Math.min(moduleStep * 20, 100)}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 overflow-y-auto max-h-[50vh]">
+              {/* Step 0: Introduction */}
+              {moduleStep === 0 && (
+                <div className="text-center py-8">
+                  <BookOpen className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-white mb-2">Welcome to This Module</h3>
+                  <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                    {activeModule.description}
+                  </p>
+                  <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mb-6">
+                    <span className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      {activeModule.duration_hours} hours
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Target className="w-4 h-4" />
+                      {activeModule.behavioral_dimension}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-6">
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <Play className="w-5 h-5 text-blue-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Video Lesson</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <BookOpen className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Reading</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <FileText className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Quiz</p>
+                    </div>
+                  </div>
+                  <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                    Start Learning
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              )}
+
+              {/* Step 1: Video Lesson */}
+              {moduleStep === 1 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-sm">
+                      Video Lesson
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Introduction to {activeModule.behavioral_dimension}
+                  </h3>
+
+                  {/* Video Player */}
+                  <div className="relative rounded-xl overflow-hidden bg-black aspect-video mb-4">
+                    {activeModule.content_url ? (
+                      <video
+                        controls
+                        className="w-full h-full"
+                        poster={`https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop`}
+                      >
+                        <source src={activeModule.content_url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900/50 to-purple-900/50">
+                        <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 cursor-pointer hover:bg-white/20 transition-colors">
+                          <Play className="w-10 h-10 text-white ml-1" />
+                        </div>
+                        <p className="text-white font-medium">{activeModule.behavioral_dimension} Training</p>
+                        <p className="text-gray-400 text-sm mt-1">Duration: {activeModule.duration_hours} hours</p>
+                        <div className="mt-4 px-4 py-2 bg-white/10 rounded-lg">
+                          <p className="text-xs text-gray-300">Demo Mode: Video content would play here</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                    <h4 className="font-medium text-white mb-2">Video Summary:</h4>
+                    <p className="text-sm text-gray-400">
+                      This video covers the fundamentals of {activeModule.behavioral_dimension.toLowerCase()},
+                      including key concepts, common challenges, and strategies for improvement in the workplace.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(0)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Back
+                    </Button>
+                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                      Continue to Reading
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Steps 2-4: Content/Reading */}
+              {moduleStep >= 2 && moduleStep <= 4 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-400 text-sm">
+                      Part {moduleStep - 1} of 3
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    {moduleStep === 2 && "Understanding the Fundamentals"}
+                    {moduleStep === 3 && "Key Concepts & Strategies"}
+                    {moduleStep === 4 && "Practical Applications"}
+                  </h3>
+
+                  <div className="space-y-4 text-gray-300">
+                    <p>
+                      This section covers essential aspects of <span className="text-indigo-400 font-medium">{activeModule.behavioral_dimension}</span> in the workplace.
+                    </p>
+
+                    <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                      <h4 className="font-medium text-white mb-2">Key Learning Points:</h4>
+                      <ul className="space-y-2 text-sm">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Understanding the importance of {activeModule.behavioral_dimension.toLowerCase()} in professional settings</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Developing strategies to improve your {activeModule.behavioral_dimension.toLowerCase()} skills</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Applying best practices in real workplace scenarios</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                      <h4 className="font-medium text-indigo-400 mb-2">Pro Tip</h4>
+                      <p className="text-sm">
+                        {moduleStep === 2 && "Start by observing how experienced professionals demonstrate this skill in your workplace."}
+                        {moduleStep === 3 && "Practice these concepts in low-stakes situations before applying them to important scenarios."}
+                        {moduleStep === 4 && "Keep a journal of instances where you successfully applied these skills."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(moduleStep - 1)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Previous
+                    </Button>
+                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                      {moduleStep === 4 ? "Take Quiz" : "Continue"}
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Quiz */}
+              {moduleStep === 5 && !quizSubmitted && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-sm">
+                      Knowledge Check
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Quiz: {activeModule.behavioral_dimension}
+                  </h3>
+
+                  <p className="text-gray-400 mb-6">
+                    Answer the following questions to test your understanding. You need 70% to pass.
+                  </p>
+
+                  <div className="space-y-6">
+                    {getQuizQuestions().map((q, qIndex) => (
+                      <div key={qIndex} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                        <p className="font-medium text-white mb-3">
+                          {qIndex + 1}. {q.question}
+                        </p>
+                        <div className="space-y-2">
+                          {q.options.map((option, oIndex) => (
+                            <label
+                              key={oIndex}
+                              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                quizAnswers[qIndex] === oIndex
+                                  ? "bg-indigo-500/20 border border-indigo-500/50"
+                                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={`question-${qIndex}`}
+                                className="sr-only"
+                                checked={quizAnswers[qIndex] === oIndex}
+                                onChange={() => {
+                                  const newAnswers = [...quizAnswers];
+                                  newAnswers[qIndex] = oIndex;
+                                  setQuizAnswers(newAnswers);
+                                }}
+                              />
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                quizAnswers[qIndex] === oIndex
+                                  ? "border-indigo-500 bg-indigo-500"
+                                  : "border-gray-500"
+                              }`}>
+                                {quizAnswers[qIndex] === oIndex && (
+                                  <div className="w-2 h-2 rounded-full bg-white" />
+                                )}
+                              </div>
+                              <span className="text-sm text-gray-300">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(4)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Back to Reading
+                    </Button>
+                    <Button
+                      onClick={submitQuiz}
+                      disabled={quizAnswers.length < getQuizQuestions().length}
+                      className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50"
+                    >
+                      Submit Quiz
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Quiz Results */}
+              {moduleStep === 5 && quizSubmitted && (
+                <div className="text-center py-8">
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    quizScore >= 70 ? "bg-emerald-500/20" : "bg-amber-500/20"
+                  }`}>
+                    {quizScore >= 70 ? (
+                      <CheckCircle className="w-10 h-10 text-emerald-400" />
+                    ) : (
+                      <AlertCircle className="w-10 h-10 text-amber-400" />
+                    )}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {quizScore >= 70 ? "Quiz Passed!" : "Keep Learning!"}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {quizScore >= 70
+                      ? "Great job! You've demonstrated understanding of this module."
+                      : "You need 70% to pass. Review the material and try again."}
+                  </p>
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 inline-block mb-6">
+                    <p className="text-sm text-gray-400 mb-1">Your Score</p>
+                    <p className={`text-3xl font-bold ${quizScore >= 70 ? "text-emerald-400" : "text-amber-400"}`}>
+                      {quizScore}%
+                    </p>
+                  </div>
+
+                  {/* Show correct answers */}
+                  <div className="text-left mb-6 space-y-3">
+                    {getQuizQuestions().map((q, i) => (
+                      <div
+                        key={i}
+                        className={`p-3 rounded-lg ${
+                          quizAnswers[i] === q.correct
+                            ? "bg-emerald-500/10 border border-emerald-500/30"
+                            : "bg-red-500/10 border border-red-500/30"
+                        }`}
+                      >
+                        <p className="text-sm text-gray-300">
+                          {i + 1}. {quizAnswers[i] === q.correct ? "✓" : "✗"} {q.question}
+                        </p>
+                        {quizAnswers[i] !== q.correct && (
+                          <p className="text-xs text-emerald-400 mt-1">
+                            Correct: {q.options[q.correct]}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-center gap-3">
+                    {quizScore >= 70 ? (
+                      <Button
+                        onClick={() => setModuleStep(6)}
+                        className="bg-emerald-600 hover:bg-emerald-500"
+                      >
+                        Continue to Certificate
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setQuizAnswers([]);
+                            setQuizSubmitted(false);
+                            setModuleStep(2);
+                          }}
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          Review Material
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setQuizAnswers([]);
+                            setQuizSubmitted(false);
+                          }}
+                          className="bg-indigo-600 hover:bg-indigo-500"
+                        >
+                          Retry Quiz
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 6: Completion & Certificate */}
+              {moduleStep === 6 && (
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                    <Award className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Module Complete!</h3>
+                  <p className="text-gray-400 mb-6">
+                    Congratulations! You've successfully completed this training module.
+                  </p>
+
+                  {/* Certificate Preview */}
+                  <div className="p-6 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 mb-6">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Award className="w-6 h-6 text-amber-400" />
+                      <span className="text-amber-400 font-semibold">Certificate Earned</span>
+                    </div>
+                    <p className="text-white font-medium mb-1">{activeModule.title}</p>
+                    <p className="text-sm text-gray-400 mb-3">{activeModule.behavioral_dimension}</p>
+                    <div className="flex items-center justify-center gap-6 text-sm">
+                      <span className="text-gray-400">Score: <span className="text-emerald-400 font-bold">{quizScore}%</span></span>
+                      <span className="text-gray-400">Date: {new Date().toLocaleDateString()}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={downloadCertificate}
+                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Certificate
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        completeModule(activeModule.id, quizScore);
+                        setShowCertificate(false);
+                      }}
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Finish & Save
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -811,23 +2978,115 @@ const Training = () => {
 const Projects = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState<LiveWorksProject[]>([]);
+  const [myApplications, setMyApplications] = useState<Map<string, LiveWorksApplication>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"browse" | "applied">("browse");
+
+  // Application modal state
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<LiveWorksProject | null>(null);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [applicationSuccess, setApplicationSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const { data } = await supabase
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      // Fetch open projects
+      const { data: projectData } = await supabase
         .from("liveworks_projects")
         .select("*")
         .eq("status", "open")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
 
-      setProjects(data || []);
+      setProjects(projectData || []);
+
+      // Fetch my applications
+      const { data: applicationData } = await supabase
+        .from("liveworks_applications")
+        .select("*")
+        .eq("candidate_id", user.id);
+
+      if (applicationData) {
+        const appMap = new Map<string, LiveWorksApplication>();
+        applicationData.forEach(app => appMap.set(app.project_id, app));
+        setMyApplications(appMap);
+      }
+
       setIsLoading(false);
     };
 
-    fetchProjects();
-  }, []);
+    fetchData();
+  }, [user?.id]);
+
+  const openApplyModal = (project: LiveWorksProject) => {
+    setSelectedProject(project);
+    setCoverLetter("");
+    setApplicationSuccess(false);
+    setShowApplyModal(true);
+  };
+
+  const submitApplication = async () => {
+    if (!selectedProject || !user?.id) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // Create application
+      const { data: application, error } = await supabase
+        .from("liveworks_applications")
+        .insert({
+          project_id: selectedProject.id,
+          candidate_id: user.id,
+          cover_letter: coverLetter || null,
+          status: "pending",
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error submitting application:", error);
+        return;
+      }
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "project",
+        title: "Applied to LiveWorks Project",
+        description: `Applied to: ${selectedProject.title}`,
+        source_component: "LiveWorks",
+        source_id: application.id,
+      });
+
+      // Update local state
+      setMyApplications(prev => {
+        const newMap = new Map(prev);
+        newMap.set(selectedProject.id, application);
+        return newMap;
+      });
+
+      setApplicationSuccess(true);
+      setTimeout(() => {
+        setShowApplyModal(false);
+        setSelectedProject(null);
+        setApplicationSuccess(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getApplicationStatus = (projectId: string) => {
+    return myApplications.get(projectId);
+  };
+
+  const appliedProjects = projects.filter(p => myApplications.has(p.id));
 
   if (isLoading) {
     return (
@@ -851,59 +3110,517 @@ const Projects = () => {
         </p>
       </motion.div>
 
-      {projects.length > 0 ? (
-        <motion.div variants={itemVariants} className="grid gap-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                  <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
-                    {project.category}
-                  </span>
+      {/* Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        <button
+          onClick={() => setActiveTab("browse")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === "browse"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Browse Projects
+        </button>
+        <button
+          onClick={() => setActiveTab("applied")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "applied"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          My Applications
+          {appliedProjects.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {appliedProjects.length}
+            </span>
+          )}
+        </button>
+      </motion.div>
+
+      {activeTab === "browse" ? (
+        projects.length > 0 ? (
+          <motion.div variants={itemVariants} className="grid gap-4">
+            {projects.map((project) => {
+              const application = getApplicationStatus(project.id);
+              const hasApplied = !!application;
+
+              return (
+                <div
+                  key={project.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="font-semibold text-white text-lg">{project.title}</h3>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+                        {project.category}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-400">{project.duration_days} days</p>
+                      {project.budget_min && project.budget_max && (
+                        <p className="text-sm text-emerald-400">
+                          ${project.budget_min} - ${project.budget_max}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">{project.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      project.skill_level === 'beginner'
+                        ? 'bg-green-500/20 text-green-400'
+                        : project.skill_level === 'intermediate'
+                        ? 'bg-amber-500/20 text-amber-400'
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {project.skill_level}
+                    </span>
+                    {hasApplied ? (
+                      <span className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+                        application.status === "accepted"
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : application.status === "rejected"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-amber-500/20 text-amber-400"
+                      }`}>
+                        {application.status === "accepted" ? "Accepted" :
+                         application.status === "rejected" ? "Not Selected" : "Application Pending"}
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className="bg-indigo-600 hover:bg-indigo-500"
+                        onClick={() => openApplyModal(project)}
+                      >
+                        Apply Now
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-400">{project.duration_days} days</p>
-                  {project.budget_min && project.budget_max && (
-                    <p className="text-sm text-emerald-400">
-                      ${project.budget_min} - ${project.budget_max}
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={itemVariants}
+            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          >
+            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No open projects available</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Check back soon for new opportunities
+            </p>
+          </motion.div>
+        )
+      ) : (
+        appliedProjects.length > 0 ? (
+          <motion.div variants={itemVariants} className="space-y-4">
+            {appliedProjects.map((project) => {
+              const application = getApplicationStatus(project.id)!;
+              return (
+                <div
+                  key={project.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-semibold text-white">{project.title}</h3>
+                      <p className="text-sm text-gray-500">
+                        Applied {new Date(application.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                      application.status === "accepted"
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : application.status === "rejected"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-amber-500/20 text-amber-400"
+                    }`}>
+                      {application.status === "accepted" ? "Accepted" :
+                       application.status === "rejected" ? "Not Selected" : "Pending"}
+                    </span>
+                  </div>
+                  {application.cover_letter && (
+                    <p className="text-sm text-gray-400 bg-black/20 p-3 rounded-lg line-clamp-2">
+                      {application.cover_letter}
                     </p>
                   )}
                 </div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={itemVariants}
+            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          >
+            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No applications yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Browse open projects and start applying
+            </p>
+            <Button
+              className="mt-4 bg-indigo-600 hover:bg-indigo-500"
+              onClick={() => setActiveTab("browse")}
+            >
+              Browse Projects
+            </Button>
+          </motion.div>
+        )
+      )}
+
+      {/* Application Modal */}
+      {showApplyModal && selectedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isSubmitting && setShowApplyModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {applicationSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Application Submitted!</h3>
+                <p className="text-gray-400">
+                  Your application has been sent to the employer.
+                </p>
               </div>
-              <p className="text-sm text-gray-400 mb-4 line-clamp-2">{project.description}</p>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${
-                  project.skill_level === 'beginner'
-                    ? 'bg-green-500/20 text-green-400'
-                    : project.skill_level === 'intermediate'
-                    ? 'bg-amber-500/20 text-amber-400'
-                    : 'bg-red-500/20 text-red-400'
-                }`}>
-                  {project.skill_level}
-                </span>
-                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500">
-                  Apply Now
-                </Button>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Apply to Project</h2>
+                  <button
+                    onClick={() => setShowApplyModal(false)}
+                    disabled={isSubmitting}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Project Preview */}
+                <div className="p-4 rounded-xl bg-white/5 mb-6">
+                  <h3 className="font-semibold text-white">{selectedProject.title}</h3>
+                  <div className="flex items-center gap-3 mt-2 text-sm">
+                    <span className="text-purple-400">{selectedProject.category}</span>
+                    <span className="text-gray-500">{selectedProject.duration_days} days</span>
+                    <span className={`px-2 py-0.5 rounded ${
+                      selectedProject.skill_level === 'beginner'
+                        ? 'bg-green-500/20 text-green-400'
+                        : selectedProject.skill_level === 'intermediate'
+                        ? 'bg-amber-500/20 text-amber-400'
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {selectedProject.skill_level}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Cover Letter */}
+                <div className="mb-6">
+                  <label className="text-sm text-gray-400 block mb-2">
+                    Cover Letter (optional)
+                  </label>
+                  <textarea
+                    value={coverLetter}
+                    onChange={(e) => setCoverLetter(e.target.value)}
+                    placeholder="Tell the employer why you're a great fit for this project..."
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowApplyModal(false)}
+                    disabled={isSubmitting}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={submitApplication}
+                    disabled={isSubmitting}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit Application"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+// Connections component - employer interest/requests
+interface ConnectionWithEmployer extends T3XConnection {
+  employer_profile?: EmployerProfile & { profile?: Profile };
+}
+
+const Connections = () => {
+  const { user } = useAuth();
+  const [connections, setConnections] = useState<ConnectionWithEmployer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [respondingTo, setRespondingTo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchConnections = async () => {
+      if (!user?.id) return;
+
+      // Fetch connections for this candidate
+      const { data: connectionData } = await supabase
+        .from("t3x_connections")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (connectionData && connectionData.length > 0) {
+        // Get employer profiles for each connection
+        const enrichedConnections = await Promise.all(
+          connectionData.map(async (conn) => {
+            const { data: employerProfile } = await supabase
+              .from("employer_profiles")
+              .select("*")
+              .eq("id", conn.employer_id)
+              .single();
+
+            let profile = null;
+            if (employerProfile) {
+              const { data: p } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", employerProfile.profile_id)
+                .single();
+              profile = p;
+            }
+
+            return {
+              ...conn,
+              employer_profile: employerProfile ? { ...employerProfile, profile } : undefined,
+            };
+          })
+        );
+        setConnections(enrichedConnections);
+      } else {
+        setConnections([]);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchConnections();
+  }, [user?.id]);
+
+  const respondToConnection = async (connectionId: string, accept: boolean) => {
+    setRespondingTo(connectionId);
+
+    try {
+      const newStatus = accept ? "accepted" : "declined";
+
+      const { error } = await supabase
+        .from("t3x_connections")
+        .update({
+          status: newStatus,
+          responded_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", connectionId);
+
+      if (error) {
+        console.error("Error updating connection:", error);
+        return;
+      }
+
+      // Update local state
+      setConnections(prev =>
+        prev.map(c => c.id === connectionId ? { ...c, status: newStatus, responded_at: new Date().toISOString() } : c)
+      );
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user?.id,
+        event_type: "tier_change",
+        title: accept ? "Accepted Employer Connection" : "Declined Employer Connection",
+        description: `Response sent to employer connection request`,
+        source_component: "T3X",
+        source_id: connectionId,
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setRespondingTo(null);
+    }
+  };
+
+  const pendingConnections = connections.filter(c => c.status === "pending");
+  const respondedConnections = connections.filter(c => c.status !== "pending");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Employer Connections</h1>
+        <p className="text-gray-400">
+          Manage connection requests from employers interested in your profile.
+        </p>
+      </motion.div>
+
+      {/* Pending Requests */}
+      {pendingConnections.length > 0 && (
+        <motion.div variants={itemVariants}>
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+            <Bell className="w-5 h-5 text-amber-400" />
+            Pending Requests ({pendingConnections.length})
+          </h2>
+          <div className="space-y-4">
+            {pendingConnections.map((connection) => (
+              <div
+                key={connection.id}
+                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white">
+                    <Building2 className="w-7 h-7" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white text-lg">
+                      {connection.employer_profile?.company_name || "Unknown Company"}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      {connection.employer_profile?.industry || "Industry not specified"}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Requested {new Date(connection.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+
+                {connection.message && (
+                  <div className="mt-4 p-3 rounded-lg bg-black/20">
+                    <p className="text-sm text-gray-300">{connection.message}</p>
+                  </div>
+                )}
+
+                <div className="mt-4 flex gap-3">
+                  <Button
+                    onClick={() => respondToConnection(connection.id, true)}
+                    disabled={respondingTo === connection.id}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    {respondingTo === connection.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <ThumbsUp className="w-4 h-4 mr-2" />
+                        Accept
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => respondToConnection(connection.id, false)}
+                    disabled={respondingTo === connection.id}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    <ThumbsDown className="w-4 h-4 mr-2" />
+                    Decline
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
-        >
-          <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No open projects available</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Check back soon for new opportunities
-          </p>
+            ))}
+          </div>
         </motion.div>
       )}
+
+      {/* Connection History */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-xl font-semibold text-white mb-4">Connection History</h2>
+        {respondedConnections.length > 0 ? (
+          <div className="space-y-3">
+            {respondedConnections.map((connection) => (
+              <div
+                key={connection.id}
+                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-4"
+              >
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  connection.status === "accepted"
+                    ? "bg-emerald-500/20"
+                    : "bg-gray-500/20"
+                }`}>
+                  <Building2 className={`w-5 h-5 ${
+                    connection.status === "accepted"
+                      ? "text-emerald-400"
+                      : "text-gray-400"
+                  }`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-white">
+                    {connection.employer_profile?.company_name || "Unknown Company"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {connection.responded_at
+                      ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
+                      : `Requested ${new Date(connection.created_at).toLocaleDateString()}`}
+                  </p>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-sm ${
+                  connection.status === "accepted"
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : connection.status === "declined"
+                    ? "bg-gray-500/20 text-gray-400"
+                    : "bg-amber-500/20 text-amber-400"
+                }`}>
+                  {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : pendingConnections.length === 0 ? (
+          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No connection requests yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              When employers are interested in your profile, you'll see their requests here
+            </p>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-sm">No previous connections</p>
+        )}
+      </motion.div>
     </motion.div>
   );
 };
@@ -919,6 +3636,7 @@ const Profile = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [showResumeViewer, setShowResumeViewer] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -970,6 +3688,14 @@ const Profile = () => {
     setIsSaving(true);
 
     try {
+      // Check if profile is reasonably complete
+      const isProfileComplete = !!(
+        formData.first_name &&
+        formData.last_name &&
+        (formData.headline || formData.bio) &&
+        formData.skills.length > 0
+      );
+
       // Update profiles table
       const { error: profileError } = await supabase
         .from("profiles")
@@ -979,6 +3705,7 @@ const Profile = () => {
           headline: formData.headline,
           bio: formData.bio,
           location: formData.location,
+          onboarding_completed: isProfileComplete,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
@@ -1450,28 +4177,45 @@ const Profile = () => {
                     Your resume is on file and ready for review
                   </p>
                 </div>
-                <div className="flex gap-2">
-                  <a
-                    href={candidateProfile.resume_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors text-sm flex items-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View
-                  </a>
-                  <button
-                    onClick={handleDeleteResume}
-                    className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors text-sm flex items-center gap-2"
-                  >
-                    <X className="w-4 h-4" />
-                    Remove
-                  </button>
-                </div>
+              </div>
+
+              {/* Resume Actions */}
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setShowResumeViewer(true)}
+                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors flex items-center gap-2"
+                >
+                  <Eye className="w-4 h-4" />
+                  View Resume
+                </button>
+                <a
+                  href={candidateProfile.resume_url}
+                  download
+                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </a>
+                <a
+                  href={candidateProfile.resume_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in New Tab
+                </a>
+                <button
+                  onClick={handleDeleteResume}
+                  className="px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-2"
+                >
+                  <X className="w-4 h-4" />
+                  Remove
+                </button>
               </div>
 
               {/* Replace option */}
-              <div>
+              <div className="pt-2 border-t border-white/10">
                 <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm">
                   <Upload className="w-4 h-4" />
                   Replace Resume
@@ -1620,6 +4364,102 @@ const Profile = () => {
           )}
         </div>
       </motion.div>
+
+      {/* Resume Viewer Modal */}
+      {showResumeViewer && candidateProfile?.resume_url && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowResumeViewer(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-5xl h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Your Resume</h2>
+                  <p className="text-sm text-gray-400">View and review your uploaded resume</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={candidateProfile.resume_url}
+                  download
+                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </a>
+                <a
+                  href={candidateProfile.resume_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in New Tab
+                </a>
+                <button
+                  onClick={() => setShowResumeViewer(false)}
+                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Resume Viewer */}
+            <div className="flex-1 overflow-hidden">
+              {candidateProfile.resume_url.toLowerCase().endsWith('.pdf') ? (
+                <iframe
+                  src={`${candidateProfile.resume_url}#toolbar=1&navpanes=0&scrollbar=1`}
+                  className="w-full h-full border-0"
+                  title="Resume Viewer"
+                />
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4">
+                    <FileText className="w-10 h-10 text-indigo-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Document Preview</h3>
+                  <p className="text-gray-400 mb-6 max-w-md">
+                    This document format cannot be previewed directly in the browser.
+                    You can download it or open it in a new tab to view the contents.
+                  </p>
+                  <div className="flex gap-3">
+                    <a
+                      href={candidateProfile.resume_url}
+                      download
+                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors flex items-center gap-2"
+                    >
+                      <Download className="w-5 h-5" />
+                      Download Resume
+                    </a>
+                    <a
+                      href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                      Open with Google Docs
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -1629,10 +4469,60 @@ const SettingsPage = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
+  // Password change state
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   const handleDeleteAccount = () => {
     if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       // Would implement account deletion here
       alert("Account deletion would be implemented here");
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    setPasswordError(null);
+
+    // Validation
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      const { error } = await updatePassword(passwordForm.newPassword);
+
+      if (error) {
+        setPasswordError(error.message || "Failed to update password");
+        return;
+      }
+
+      setPasswordSuccess(true);
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordSuccess(false);
+        setPasswordForm({ newPassword: "", confirmPassword: "" });
+      }, 1500);
+
+    } catch (error) {
+      setPasswordError("An unexpected error occurred");
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -1669,7 +4559,17 @@ const SettingsPage = () => {
         {/* Security */}
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+            onClick={() => {
+              setPasswordForm({ newPassword: "", confirmPassword: "" });
+              setPasswordError(null);
+              setPasswordSuccess(false);
+              setShowPasswordModal(true);
+            }}
+          >
+            <Lock className="w-4 h-4 mr-2" />
             Change Password
           </Button>
         </div>
@@ -1708,6 +4608,902 @@ const SettingsPage = () => {
           </Button>
         </div>
       </motion.div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isChangingPassword && setShowPasswordModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {passwordSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Password Updated!</h3>
+                <p className="text-gray-400">
+                  Your password has been successfully changed.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Change Password</h2>
+                  <button
+                    onClick={() => setShowPasswordModal(false)}
+                    disabled={isChangingPassword}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {passwordError && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    {passwordError}
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        value={passwordForm.newPassword}
+                        onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
+                        placeholder="Enter new password"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                      >
+                        {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Confirm Password</label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                        placeholder="Confirm new password"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500 mt-4">
+                  Password must be at least 8 characters long.
+                </p>
+
+                <div className="flex gap-3 mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPasswordModal(false)}
+                    disabled={isChangingPassword}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handlePasswordChange}
+                    disabled={isChangingPassword || !passwordForm.newPassword || !passwordForm.confirmPassword}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+                  >
+                    {isChangingPassword ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      "Update Password"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+// Find Mentor component
+interface MentorWithProfile extends MentorProfile {
+  profile?: Profile;
+}
+
+const FindMentor = () => {
+  const { user } = useAuth();
+  const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
+  const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [requestSent, setRequestSent] = useState<Set<string>>(new Set());
+  const [industryFilter, setIndustryFilter] = useState<string>("all");
+  const [recommendedMatches, setRecommendedMatches] = useState<MentorMatch[]>([]);
+  const [showRecommended, setShowRecommended] = useState(true);
+  const [selectedMatch, setSelectedMatch] = useState<MentorMatch | null>(null);
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      if (!user?.id) return;
+
+      // Fetch intelligent mentor matches
+      try {
+        const matches = await MentorMatchingService.findMentorMatches(user.id, 5);
+        setRecommendedMatches(matches);
+      } catch (error) {
+        console.log("Mentor matching unavailable:", error);
+      }
+
+      // Fetch mentors who are accepting
+      const { data: mentorsData } = await supabase
+        .from("mentor_profiles")
+        .select("*")
+        .eq("is_accepting", true)
+        .order("total_observations", { ascending: false });
+
+      if (mentorsData) {
+        // Enrich with profile data
+        const enrichedMentors = await Promise.all(
+          mentorsData.map(async (mentor) => {
+            const { data: profileData } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", mentor.profile_id)
+              .single();
+
+            return { ...mentor, profile: profileData };
+          })
+        );
+        setMentors(enrichedMentors);
+      }
+
+      // Fetch my current assignments
+      const { data: assignmentsData } = await supabase
+        .from("mentor_assignments")
+        .select("*")
+        .eq("candidate_id", user.id);
+
+      setMyAssignments(assignmentsData || []);
+
+      setIsLoading(false);
+    };
+
+    fetchMentors();
+  }, [user?.id]);
+
+  const getCompatibilityBadgeColor = (level: string) => {
+    switch (level) {
+      case "excellent":
+        return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+      case "good":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "fair":
+        return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    }
+  };
+
+  const requestMentor = async () => {
+    if (!user?.id || !selectedMentor) return;
+
+    setIsRequesting(true);
+
+    // Create mentor assignment request
+    const { error } = await supabase.from("mentor_assignments").insert({
+      mentor_id: selectedMentor.id,
+      candidate_id: user.id,
+      status: "active",
+      loop_number: 1,
+    });
+
+    if (!error) {
+      // Send notification to mentor
+      await supabase.from("notifications").insert({
+        user_id: selectedMentor.profile_id,
+        type: "mentee_request",
+        title: "New Mentee Request",
+        message: requestMessage || "A candidate has requested you as their mentor.",
+      });
+
+      setRequestSent((prev) => new Set(prev).add(selectedMentor.id));
+      setSelectedMentor(null);
+      setRequestMessage("");
+    }
+
+    setIsRequesting(false);
+  };
+
+  const industries = [...new Set(mentors.map((m) => m.industry))];
+  const filteredMentors =
+    industryFilter === "all"
+      ? mentors
+      : mentors.filter((m) => m.industry === industryFilter);
+
+  const activeMentor = myAssignments.find((a) => a.status === "active");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Find a Mentor</h1>
+        <p className="text-gray-400">
+          Connect with experienced professionals who can guide your career growth.
+        </p>
+      </motion.div>
+
+      {/* Active Mentor Status */}
+      {activeMentor && (
+        <motion.div
+          variants={itemVariants}
+          className="p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <CheckCircle className="w-5 h-5 text-emerald-400" />
+            <h3 className="font-semibold text-emerald-400">Active Mentorship</h3>
+          </div>
+          <p className="text-gray-300">
+            You currently have an active mentor. Complete your mentor loops to progress.
+          </p>
+          <p className="text-sm text-gray-400 mt-2">
+            Loop Progress: {activeMentor.loop_number} / 3
+          </p>
+        </motion.div>
+      )}
+
+      {/* Recommended Matches Section */}
+      {recommendedMatches.length > 0 && !activeMentor && (
+        <motion.div variants={itemVariants} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">Recommended For You</h2>
+                <p className="text-sm text-gray-400">Based on your skills and goals</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowRecommended(!showRecommended)}
+              className="text-indigo-400 hover:text-indigo-300 text-sm"
+            >
+              {showRecommended ? "Hide" : "Show"} recommendations
+            </button>
+          </div>
+
+          {showRecommended && (
+            <div className="grid gap-4">
+              {recommendedMatches.map((match) => {
+                const mentor = match.mentor;
+                const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
+                const hasSentRequest = requestSent.has(mentor.id);
+                const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
+
+                return (
+                  <motion.div
+                    key={mentor.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
+                  >
+                    {/* Match Score Badge */}
+                    <div className="absolute top-4 right-4 flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getCompatibilityBadgeColor(
+                          match.compatibilityLevel
+                        )}`}
+                      >
+                        {match.score.total}% Match
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      {mentor.profile?.avatar_url ? (
+                        <img
+                          src={mentor.profile.avatar_url}
+                          alt="Mentor"
+                          className="w-16 h-16 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                          {mentor.profile?.first_name?.[0]}
+                          {mentor.profile?.last_name?.[0]}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-lg">
+                          {mentor.profile?.first_name} {mentor.profile?.last_name}
+                        </h3>
+                        <p className="text-sm text-indigo-400">
+                          {mentor.job_title} {mentor.company && `at ${mentor.company}`}
+                        </p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                          <span>{mentor.years_experience} years exp</span>
+                          <span className="px-2 py-0.5 rounded bg-white/10">
+                            {mentor.industry}
+                          </span>
+                          {mentor.avg_rating && (
+                            <span className="flex items-center gap-1">
+                              <Star className="w-3 h-3 text-amber-400" />
+                              {mentor.avg_rating.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Match Reasons */}
+                    {match.matchReasons.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {match.matchReasons.map((reason, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 rounded-full text-xs bg-white/5 text-gray-300 border border-white/10"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Score Breakdown */}
+                    <div className="mt-4 grid grid-cols-5 gap-2">
+                      {[
+                        { label: "Skills", value: match.score.skillMatch, color: "bg-blue-500" },
+                        { label: "Industry", value: match.score.industryMatch, color: "bg-purple-500" },
+                        { label: "Available", value: match.score.availabilityScore, color: "bg-emerald-500" },
+                        { label: "Experience", value: match.score.experienceScore, color: "bg-amber-500" },
+                        { label: "Rating", value: match.score.ratingScore, color: "bg-rose-500" },
+                      ].map((item) => (
+                        <div key={item.label} className="text-center">
+                          <div className="h-1 rounded-full bg-white/10 mb-1">
+                            <div
+                              className={`h-full rounded-full ${item.color}`}
+                              style={{ width: `${item.value}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-500">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-4">
+                      {isAssigned ? (
+                        <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Currently Assigned
+                        </Button>
+                      ) : hasSentRequest ? (
+                        <Button disabled className="w-full bg-indigo-600/50 cursor-not-allowed">
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Request Sent
+                        </Button>
+                      ) : spotsAvailable > 0 ? (
+                        <Button
+                          onClick={() =>
+                            setSelectedMentor({ ...mentor, profile: mentor.profile })
+                          }
+                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          Request This Mentor
+                        </Button>
+                      ) : (
+                        <Button disabled className="w-full bg-gray-600/50 cursor-not-allowed">
+                          No Spots Available
+                        </Button>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
+      )}
+
+      {/* Industry Filter */}
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-2">
+        <button
+          onClick={() => setIndustryFilter("all")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            industryFilter === "all"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          All Industries
+        </button>
+        {industries.map((industry) => (
+          <button
+            key={industry}
+            onClick={() => setIndustryFilter(industry)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              industryFilter === industry
+                ? "bg-indigo-600 text-white"
+                : "bg-white/5 text-gray-400 hover:text-white"
+            }`}
+          >
+            {industry}
+          </button>
+        ))}
+      </motion.div>
+
+      {/* Mentors Grid */}
+      <motion.div variants={itemVariants}>
+        {filteredMentors.length > 0 ? (
+          <div className="grid md:grid-cols-2 gap-4">
+            {filteredMentors.map((mentor) => {
+              const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
+              const hasSentRequest = requestSent.has(mentor.id);
+              const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
+
+              return (
+                <motion.div
+                  key={mentor.id}
+                  whileHover={{ scale: 1.01 }}
+                  className={`p-6 rounded-xl border transition-colors ${
+                    isAssigned
+                      ? "bg-emerald-500/10 border-emerald-500/30"
+                      : "bg-white/5 border-white/10 hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    {mentor.profile?.avatar_url ? (
+                      <img
+                        src={mentor.profile.avatar_url}
+                        alt="Mentor"
+                        className="w-16 h-16 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                        {mentor.profile?.first_name?.[0]}{mentor.profile?.last_name?.[0]}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-white text-lg">
+                        {mentor.profile?.first_name} {mentor.profile?.last_name}
+                      </h3>
+                      <p className="text-sm text-indigo-400">
+                        {mentor.job_title} {mentor.company && `at ${mentor.company}`}
+                      </p>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <span>{mentor.years_experience} years exp</span>
+                        <span className="px-2 py-0.5 rounded bg-white/10">
+                          {mentor.industry}
+                        </span>
+                      </div>
+                    </div>
+                    {isAssigned && (
+                      <span className="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs">
+                        Your Mentor
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Specializations */}
+                  {mentor.specializations && mentor.specializations.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {mentor.specializations.slice(0, 3).map((spec, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                      {mentor.specializations.length > 3 && (
+                        <span className="px-2 py-1 rounded text-xs bg-white/10 text-gray-400">
+                          +{mentor.specializations.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Stats */}
+                  <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Award className="w-4 h-4" />
+                      {mentor.total_observations} observations
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {spotsAvailable} spot{spotsAvailable !== 1 ? "s" : ""} available
+                    </span>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="mt-4">
+                    {isAssigned ? (
+                      <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Currently Assigned
+                      </Button>
+                    ) : hasSentRequest ? (
+                      <Button disabled className="w-full bg-indigo-600/50 cursor-not-allowed">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Request Sent
+                      </Button>
+                    ) : spotsAvailable > 0 ? (
+                      <Button
+                        onClick={() => setSelectedMentor(mentor)}
+                        className="w-full bg-indigo-600 hover:bg-indigo-500"
+                        disabled={!!activeMentor}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        {activeMentor ? "Complete Current Mentorship" : "Request Mentorship"}
+                      </Button>
+                    ) : (
+                      <Button disabled className="w-full bg-gray-600/50 cursor-not-allowed">
+                        No Spots Available
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No mentors available</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Check back later for available mentors
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Request Mentor Modal */}
+      {selectedMentor && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedMentor(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-4 mb-6">
+              {selectedMentor.profile?.avatar_url ? (
+                <img
+                  src={selectedMentor.profile.avatar_url}
+                  alt="Mentor"
+                  className="w-16 h-16 rounded-xl object-cover"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                  {selectedMentor.profile?.first_name?.[0]}{selectedMentor.profile?.last_name?.[0]}
+                </div>
+              )}
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Request {selectedMentor.profile?.first_name} as your mentor
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {selectedMentor.job_title} {selectedMentor.company && `at ${selectedMentor.company}`}
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Introduction Message (Optional)
+              </label>
+              <textarea
+                value={requestMessage}
+                onChange={(e) => setRequestMessage(e.target.value)}
+                placeholder="Tell the mentor why you'd like them to guide you..."
+                rows={4}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedMentor(null)}
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={requestMentor}
+                disabled={isRequesting}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+              >
+                {isRequesting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 mr-2" />
+                    Send Request
+                  </>
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// Notifications Page component
+const NotificationsPage = () => {
+  const { user } = useAuth();
+  const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+
+  useEffect(() => {
+    const fetchAllNotifications = async () => {
+      if (!user?.id) return;
+
+      let query = supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (filter === "unread") {
+        query = query.eq("is_read", false);
+      } else if (filter === "read") {
+        query = query.eq("is_read", true);
+      }
+
+      const { data } = await query;
+      setAllNotifications(data || []);
+      setIsLoading(false);
+    };
+
+    fetchAllNotifications();
+  }, [user?.id, filter]);
+
+  const markAsRead = async (notificationId: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    setAllNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
+    );
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    setAllNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+  };
+
+  const deleteNotification = async (notificationId: string) => {
+    await supabase.from("notifications").delete().eq("id", notificationId);
+    setAllNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case "connection_request":
+        return Users;
+      case "connection_accepted":
+        return CheckCircle;
+      case "application_accepted":
+        return CheckCircle;
+      case "endorsement":
+        return Award;
+      case "passport_issued":
+        return Shield;
+      case "training_assigned":
+        return BookOpen;
+      default:
+        return Bell;
+    }
+  };
+
+  const getNotificationColor = (type: string) => {
+    switch (type) {
+      case "connection_request":
+        return "text-blue-400 bg-blue-500/20";
+      case "connection_accepted":
+      case "application_accepted":
+        return "text-emerald-400 bg-emerald-500/20";
+      case "endorsement":
+      case "passport_issued":
+        return "text-purple-400 bg-purple-500/20";
+      case "training_assigned":
+        return "text-amber-400 bg-amber-500/20";
+      default:
+        return "text-gray-400 bg-gray-500/20";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  const unreadCount = allNotifications.filter((n) => !n.is_read).length;
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
+          <p className="text-gray-400">
+            Stay updated on your activity.
+            {unreadCount > 0 && (
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-sm">
+                {unreadCount} unread
+              </span>
+            )}
+          </p>
+        </div>
+        {unreadCount > 0 && (
+          <Button
+            onClick={markAllAsRead}
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+          >
+            <CheckCircle className="w-4 h-4 mr-2" />
+            Mark all as read
+          </Button>
+        )}
+      </motion.div>
+
+      {/* Filter tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        {(["all", "unread", "read"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
+              filter === f
+                ? "bg-indigo-600 text-white"
+                : "bg-white/5 text-gray-400 hover:text-white"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+      </motion.div>
+
+      {/* Notifications List */}
+      <motion.div variants={itemVariants} className="space-y-3">
+        {allNotifications.length > 0 ? (
+          allNotifications.map((notification) => {
+            const IconComponent = getNotificationIcon(notification.type);
+            const colorClass = getNotificationColor(notification.type);
+
+            return (
+              <motion.div
+                key={notification.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className={`p-4 rounded-xl border transition-colors ${
+                  notification.is_read
+                    ? "bg-white/5 border-white/10"
+                    : "bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`p-2 rounded-lg ${colorClass}`}>
+                    <IconComponent className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className={`font-medium ${notification.is_read ? "text-gray-300" : "text-white"}`}>
+                          {notification.title}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">{notification.message}</p>
+                      </div>
+                      {!notification.is_read && (
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0 mt-2" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 mt-3">
+                      <span className="text-xs text-gray-500">
+                        {new Date(notification.created_at).toLocaleString()}
+                      </span>
+                      <div className="flex gap-2">
+                        {!notification.is_read && (
+                          <button
+                            onClick={() => markAsRead(notification.id)}
+                            className="text-xs text-indigo-400 hover:text-indigo-300"
+                          >
+                            Mark as read
+                          </button>
+                        )}
+                        <button
+                          onClick={() => deleteNotification(notification.id)}
+                          className="text-xs text-red-400 hover:text-red-300"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No notifications</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {filter === "unread"
+                ? "You're all caught up!"
+                : filter === "read"
+                ? "No read notifications yet"
+                : "Notifications will appear here"}
+            </p>
+          </div>
+        )}
+      </motion.div>
     </motion.div>
   );
 };
@@ -1718,6 +5514,7 @@ const CandidateDashboard = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -1739,6 +5536,28 @@ const CandidateDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const markAsRead = async (notificationId: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    setNotifications([]);
+    setShowNotifications(false);
   };
 
   const unreadCount = notifications.length;
@@ -1861,16 +5680,40 @@ const CandidateDashboard = () => {
 
             {/* Notifications dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/10">
+              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-white/10 flex items-center justify-between">
                   <h3 className="font-semibold text-white">Notifications</h3>
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={markAllAsRead}
+                      className="text-xs text-indigo-400 hover:text-indigo-300"
+                    >
+                      Mark all as read
+                    </button>
+                  )}
                 </div>
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-white/5 border-b border-white/5">
-                        <p className="text-sm font-medium text-white">{notification.title}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
+                      <div
+                        key={notification.id}
+                        className="p-3 hover:bg-white/5 border-b border-white/5 flex items-start gap-3"
+                      >
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white">{notification.title}</p>
+                          <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {new Date(notification.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => markAsRead(notification.id)}
+                          className="text-gray-500 hover:text-white p-1"
+                          title="Mark as read"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -1880,6 +5723,17 @@ const CandidateDashboard = () => {
                     <p className="text-sm text-gray-400">No new notifications</p>
                   </div>
                 )}
+                <div className="p-2 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      setShowNotifications(false);
+                      navigate("/dashboard/candidate/notifications");
+                    }}
+                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-white/5 rounded-lg"
+                  >
+                    View all notifications
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -1891,8 +5745,12 @@ const CandidateDashboard = () => {
             <Route index element={<Overview />} />
             <Route path="passport" element={<SkillPassport />} />
             <Route path="growth" element={<GrowthLog />} />
+            <Route path="assessment" element={<SelfAssessmentPage />} />
             <Route path="training" element={<Training />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="mentors" element={<FindMentor />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="notifications" element={<NotificationsPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

@@ -24,11 +24,16 @@ import Terms from "./pages/Terms";
 import Security from "./pages/Security";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
+import VerifyPassport from "./pages/VerifyPassport";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
 import MentorDashboard from "./pages/dashboard/MentorDashboard";
 import EmployerDashboard from "./pages/dashboard/EmployerDashboard";
+import SchoolDashboard from "./pages/dashboard/SchoolDashboard";
+import AdminDashboard from "./pages/dashboard/AdminDashboard";
 
 import { Chatbot } from "./components/Chatbot";
 
@@ -59,6 +64,13 @@ const App = () => (
 
             {/* Auth callback */}
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
+
+            {/* Password reset */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            {/* Skill Passport verification (public) */}
+            <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}
             <Route
@@ -100,6 +112,22 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={['employer']}>
                   <EmployerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/school/*"
+              element={
+                <ProtectedRoute allowedRoles={['school_admin']}>
+                  <SchoolDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/admin/*"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />

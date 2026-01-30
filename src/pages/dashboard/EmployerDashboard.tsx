@@ -32,13 +32,39 @@ import {
   CheckCircle,
   Clock,
   XCircle,
+  Play,
+  Pause,
+  Archive,
+  Edit,
+  ChevronDown,
+  UserPlus,
+  Star,
+  Calendar,
+  ThumbsUp,
+  ThumbsDown,
+  DollarSign,
+  CreditCard,
+  Wallet,
+  ArrowRight,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
+type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
 type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
+type EmployerFeedback = Database["public"]["Tables"]["employer_feedback"]["Row"];
+type EscrowTransaction = Database["public"]["Tables"]["escrow_transactions"]["Row"];
+
+interface ProjectWithApplications extends LiveWorksProject {
+  applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
+  milestones?: LiveWorksMilestone[];
+  escrow_transactions?: EscrowTransaction[];
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -58,7 +84,7 @@ const navItems = [
   { name: "Find Talent", href: "/dashboard/employer/search", icon: Search },
   { name: "Connections", href: "/dashboard/employer/connections", icon: Users },
   { name: "Projects", href: "/dashboard/employer/projects", icon: Briefcase },
-  { name: "Messages", href: "/dashboard/employer/messages", icon: MessageSquare },
+  { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
   { name: "Company", href: "/dashboard/employer/company", icon: Building2 },
   { name: "Settings", href: "/dashboard/employer/settings", icon: Settings },
 ];
@@ -256,19 +282,53 @@ const Overview = () => {
 // T3X Search component
 interface CandidateWithProfile extends CandidateProfile {
   profile?: Profile;
+  connectionStatus?: string | null;
 }
 
 const SearchTalent = () => {
   const { user } = useAuth();
+  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
   const [candidates, setCandidates] = useState<CandidateWithProfile[]>([]);
+  const [existingConnections, setExistingConnections] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState({
     tier: "",
     skill: "",
   });
 
+  // Connection modal state
+  const [showConnectModal, setShowConnectModal] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState<CandidateWithProfile | null>(null);
+  const [connectionMessage, setConnectionMessage] = useState("");
+  const [isSendingConnection, setIsSendingConnection] = useState(false);
+  const [connectionSuccess, setConnectionSuccess] = useState(false);
+
   useEffect(() => {
-    const fetchCandidates = async () => {
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      // Get employer profile first
+      const { data: ep } = await supabase
+        .from("employer_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+      setEmployerProfile(ep);
+
+      // Get existing connections for this employer
+      if (ep) {
+        const { data: connections } = await supabase
+          .from("t3x_connections")
+          .select("candidate_id, status")
+          .eq("employer_id", ep.id);
+
+        if (connections) {
+          const connectionMap = new Map<string, string>();
+          connections.forEach(c => connectionMap.set(c.candidate_id, c.status));
+          setExistingConnections(connectionMap);
+        }
+      }
+
       // Get candidates with Skill Passport listed on T3X
       let query = supabase
         .from("candidate_profiles")
@@ -302,8 +362,80 @@ const SearchTalent = () => {
       setIsLoading(false);
     };
 
-    fetchCandidates();
-  }, [filters]);
+    fetchData();
+  }, [user?.id, filters]);
+
+  const openConnectModal = (candidate: CandidateWithProfile) => {
+    setSelectedCandidate(candidate);
+    setConnectionMessage("");
+    setConnectionSuccess(false);
+    setShowConnectModal(true);
+  };
+
+  const sendConnectionRequest = async () => {
+    if (!employerProfile || !selectedCandidate) return;
+
+    setIsSendingConnection(true);
+
+    try {
+      // Create connection request
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 30); // 30 day expiry
+
+      const { error } = await supabase.from("t3x_connections").insert({
+        employer_id: employerProfile.id,
+        candidate_id: selectedCandidate.profile_id,
+        message: connectionMessage || null,
+        status: "pending",
+        expires_at: expiresAt.toISOString(),
+      });
+
+      if (error) {
+        console.error("Error sending connection:", error);
+        return;
+      }
+
+      // Update employer stats
+      await supabase
+        .from("employer_profiles")
+        .update({
+          total_connections: (employerProfile.total_connections || 0) + 1,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", employerProfile.id);
+
+      // Create notification for candidate
+      await supabase.from("notifications").insert({
+        user_id: selectedCandidate.profile_id,
+        title: "New Connection Request",
+        message: `${employerProfile.company_name || "An employer"} wants to connect with you`,
+        type: "connection_request",
+      });
+
+      // Update local state
+      setExistingConnections(prev => {
+        const newMap = new Map(prev);
+        newMap.set(selectedCandidate.profile_id, "pending");
+        return newMap;
+      });
+
+      setConnectionSuccess(true);
+      setTimeout(() => {
+        setShowConnectModal(false);
+        setSelectedCandidate(null);
+        setConnectionSuccess(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error("Error sending connection:", error);
+    } finally {
+      setIsSendingConnection(false);
+    }
+  };
+
+  const getConnectionStatus = (candidateProfileId: string) => {
+    return existingConnections.get(candidateProfileId) || null;
+  };
 
   if (isLoading) {
     return (
@@ -414,13 +546,35 @@ const SearchTalent = () => {
                   <Eye className="w-4 h-4 mr-1" />
                   View Profile
                 </Button>
-                <Button
-                  size="sm"
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-                >
-                  <Send className="w-4 h-4 mr-1" />
-                  Connect
-                </Button>
+                {(() => {
+                  const status = getConnectionStatus(candidate.profile_id);
+                  if (status === "accepted") {
+                    return (
+                      <Button size="sm" disabled className="flex-1 bg-emerald-600/50">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Connected
+                      </Button>
+                    );
+                  } else if (status === "pending") {
+                    return (
+                      <Button size="sm" disabled className="flex-1 bg-amber-600/50">
+                        <Clock className="w-4 h-4 mr-1" />
+                        Pending
+                      </Button>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        size="sm"
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                        onClick={() => openConnectModal(candidate)}
+                      >
+                        <Send className="w-4 h-4 mr-1" />
+                        Connect
+                      </Button>
+                    );
+                  }
+                })()}
               </div>
             </div>
           ))}
@@ -437,16 +591,120 @@ const SearchTalent = () => {
           </p>
         </motion.div>
       )}
+
+      {/* Connection Request Modal */}
+      {showConnectModal && selectedCandidate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/80"
+            onClick={() => !isSendingConnection && setShowConnectModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+          >
+            {connectionSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
+                <p className="text-gray-400">
+                  Your connection request has been sent to {selectedCandidate.profile?.first_name}.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white">Send Connection Request</h2>
+                  <button
+                    onClick={() => setShowConnectModal(false)}
+                    disabled={isSendingConnection}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Candidate Preview */}
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold">
+                    {selectedCandidate.profile?.first_name?.[0]}
+                    {selectedCandidate.profile?.last_name?.[0]}
+                  </div>
+                  <div>
+                    <p className="font-medium text-white">
+                      {selectedCandidate.profile?.first_name} {selectedCandidate.profile?.last_name}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {selectedCandidate.profile?.headline || "Skill Passport Holder"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Message Input */}
+                <div className="mb-6">
+                  <label className="text-sm text-gray-400 block mb-2">
+                    Add a message (optional)
+                  </label>
+                  <textarea
+                    value={connectionMessage}
+                    onChange={(e) => setConnectionMessage(e.target.value)}
+                    placeholder="Introduce yourself and explain why you'd like to connect..."
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowConnectModal(false)}
+                    disabled={isSendingConnection}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={sendConnectionRequest}
+                    disabled={isSendingConnection}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    {isSendingConnection ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        Send Request
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 };
 
-// Connections component
+// Connections component with candidate details
+interface ConnectionWithCandidate extends T3XConnection {
+  candidate_profile?: CandidateProfile & { profile?: Profile };
+}
+
 const Connections = () => {
   const { user } = useAuth();
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [connections, setConnections] = useState<T3XConnection[]>([]);
+  const [connections, setConnections] = useState<ConnectionWithCandidate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"all" | "accepted" | "pending">("all");
 
   useEffect(() => {
     const fetchConnections = async () => {
@@ -462,13 +720,42 @@ const Connections = () => {
       setEmployerProfile(ep);
 
       if (ep) {
-        const { data } = await supabase
+        const { data: connectionData } = await supabase
           .from("t3x_connections")
           .select("*")
           .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
-        setConnections(data || []);
+        if (connectionData && connectionData.length > 0) {
+          // Get candidate details for each connection
+          const enrichedConnections = await Promise.all(
+            connectionData.map(async (conn) => {
+              const { data: candidateProfile } = await supabase
+                .from("candidate_profiles")
+                .select("*")
+                .eq("profile_id", conn.candidate_id)
+                .single();
+
+              let profile = null;
+              if (candidateProfile) {
+                const { data: p } = await supabase
+                  .from("profiles")
+                  .select("*")
+                  .eq("id", candidateProfile.profile_id)
+                  .single();
+                profile = p;
+              }
+
+              return {
+                ...conn,
+                candidate_profile: candidateProfile ? { ...candidateProfile, profile } : undefined,
+              };
+            })
+          );
+          setConnections(enrichedConnections);
+        } else {
+          setConnections([]);
+        }
       }
 
       setIsLoading(false);
@@ -495,6 +782,16 @@ const Connections = () => {
     }
   };
 
+  const filteredConnections = connections.filter(c => {
+    if (activeTab === "all") return true;
+    if (activeTab === "accepted") return c.status === "accepted";
+    if (activeTab === "pending") return c.status === "pending";
+    return true;
+  });
+
+  const acceptedCount = connections.filter(c => c.status === "accepted").length;
+  const pendingCount = connections.filter(c => c.status === "pending").length;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -515,36 +812,141 @@ const Connections = () => {
         <p className="text-gray-400">Manage your candidate connections.</p>
       </motion.div>
 
-      {connections.length > 0 ? (
+      {/* Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        <button
+          onClick={() => setActiveTab("all")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === "all"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          All ({connections.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("accepted")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "accepted"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Accepted
+          {acceptedCount > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {acceptedCount}
+            </span>
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab("pending")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "pending"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Pending
+          {pendingCount > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {pendingCount}
+            </span>
+          )}
+        </button>
+      </motion.div>
+
+      {filteredConnections.length > 0 ? (
         <motion.div variants={itemVariants} className="space-y-4">
-          {connections.map((connection) => {
+          {filteredConnections.map((connection) => {
             const StatusIcon = getStatusIcon(connection.status);
+            const candidateProfile = connection.candidate_profile;
+            const profile = candidateProfile?.profile;
+
             return (
               <div
                 key={connection.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className={`p-6 rounded-xl border transition-colors ${
+                  connection.status === "accepted"
+                    ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
+                    : "bg-white/5 border-white/10 hover:border-white/20"
+                }`}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
-                    </div>
+                    {profile?.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt="Profile"
+                        className="w-14 h-14 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                        {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+                      </div>
+                    )}
                     <div>
-                      <p className="font-medium text-white">Connection Request</p>
-                      <p className="text-sm text-gray-400">
-                        Sent {new Date(connection.created_at).toLocaleDateString()}
+                      <p className="font-semibold text-white text-lg">
+                        {profile?.first_name} {profile?.last_name}
                       </p>
+                      <p className="text-sm text-gray-400">
+                        {profile?.headline || "Skill Passport Holder"}
+                      </p>
+                      {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {candidateProfile.skills.slice(0, 4).map((skill, i) => (
+                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                              {skill}
+                            </span>
+                          ))}
+                          {candidateProfile.skills.length > 4 && (
+                            <span className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                              +{candidateProfile.skills.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
-                    <StatusIcon className="w-4 h-4" />
-                    {connection.status}
-                  </span>
+                  <div className="text-right">
+                    <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
+                      <StatusIcon className="w-4 h-4" />
+                      {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-2">
+                      {connection.responded_at
+                        ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
+                        : `Sent ${new Date(connection.created_at).toLocaleDateString()}`}
+                    </p>
+                  </div>
                 </div>
+
                 {connection.message && (
-                  <p className="mt-4 text-sm text-gray-400 bg-white/5 p-3 rounded-lg">
+                  <p className="mt-4 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
+                    <span className="text-gray-500">Your message: </span>
                     {connection.message}
                   </p>
+                )}
+
+                {/* Actions for accepted connections */}
+                {connection.status === "accepted" && profile?.email && (
+                  <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View Full Profile
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <Send className="w-4 h-4 mr-1" />
+                      Send Message
+                    </Button>
+                  </div>
                 )}
               </div>
             );
@@ -573,18 +975,40 @@ const Connections = () => {
 };
 
 // Projects component
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
+type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
+
+interface ProjectWithApplications extends LiveWorksProject {
+  applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
+  milestones?: LiveWorksMilestone[];
+}
+
 const Projects = () => {
   const { user } = useAuth();
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [projects, setProjects] = useState<LiveWorksProject[]>([]);
+  const [projects, setProjects] = useState<ProjectWithApplications[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNewProject, setShowNewProject] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<ProjectWithApplications | null>(null);
+  const [showStatusMenu, setShowStatusMenu] = useState<string | null>(null);
+  const [showMilestoneForm, setShowMilestoneForm] = useState(false);
+  const [newMilestone, setNewMilestone] = useState({ title: "", description: "", dueDate: "", paymentAmount: "" });
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
     category: "",
     duration_days: 14,
     skill_level: "intermediate" as "beginner" | "intermediate" | "advanced",
+    budget_min: "",
+    budget_max: "",
+  });
+  const [showEscrowModal, setShowEscrowModal] = useState(false);
+  const [selectedMilestone, setSelectedMilestone] = useState<LiveWorksMilestone | null>(null);
+  const [escrowAction, setEscrowAction] = useState<"fund" | "release" | "verify" | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState({
+    method: "paypal",
+    credentials: "",
+    notes: "",
   });
 
   useEffect(() => {
@@ -600,13 +1024,58 @@ const Projects = () => {
       setEmployerProfile(ep);
 
       if (ep) {
-        const { data } = await supabase
+        const { data: projectsData } = await supabase
           .from("liveworks_projects")
           .select("*")
           .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
-        setProjects(data || []);
+        if (projectsData) {
+          // Fetch applications for each project
+          const enrichedProjects = await Promise.all(
+            projectsData.map(async (project) => {
+              const { data: applications } = await supabase
+                .from("liveworks_applications")
+                .select("*")
+                .eq("project_id", project.id);
+
+              // Enrich with candidate data
+              const enrichedApps = applications
+                ? await Promise.all(
+                    applications.map(async (app) => {
+                      const { data: candidate } = await supabase
+                        .from("candidate_profiles")
+                        .select("*")
+                        .eq("profile_id", app.candidate_id)
+                        .single();
+
+                      let profile = null;
+                      if (candidate) {
+                        const { data: p } = await supabase
+                          .from("profiles")
+                          .select("*")
+                          .eq("id", candidate.profile_id)
+                          .single();
+                        profile = p;
+                      }
+
+                      return { ...app, candidate: candidate ? { ...candidate, profile } : undefined };
+                    })
+                  )
+                : [];
+
+              // Fetch milestones for this project
+              const { data: milestones } = await supabase
+                .from("liveworks_milestones")
+                .select("*")
+                .eq("project_id", project.id)
+                .order("order_index");
+
+              return { ...project, applications: enrichedApps, milestones: milestones || [] };
+            })
+          );
+          setProjects(enrichedProjects);
+        }
       }
 
       setIsLoading(false);
@@ -614,6 +1083,255 @@ const Projects = () => {
 
     fetchProjects();
   }, [user?.id]);
+
+  const addMilestone = async (projectId: string) => {
+    if (!newMilestone.title) return;
+
+    const project = projects.find(p => p.id === projectId);
+    const orderIndex = (project?.milestones?.length || 0) + 1;
+
+    const { data, error } = await supabase
+      .from("liveworks_milestones")
+      .insert({
+        project_id: projectId,
+        title: newMilestone.title,
+        description: newMilestone.description || null,
+        order_index: orderIndex,
+        status: "pending",
+        due_date: newMilestone.dueDate || null,
+        payment_amount: newMilestone.paymentAmount ? parseFloat(newMilestone.paymentAmount) : null,
+        escrow_status: newMilestone.paymentAmount ? "pending" : null,
+      })
+      .select()
+      .single();
+
+    if (!error && data) {
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === projectId
+            ? { ...p, milestones: [...(p.milestones || []), data] }
+            : p
+        )
+      );
+      if (selectedProject?.id === projectId) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: [...(prev.milestones || []), data] } : null
+        );
+      }
+      setNewMilestone({ title: "", description: "", dueDate: "", paymentAmount: "" });
+      setShowMilestoneForm(false);
+    }
+  };
+
+  // Share payment credentials for manual payment (no in-app payments)
+  const sharePaymentCredentials = async (milestone: LiveWorksMilestone) => {
+    if (!milestone.payment_amount || !employerProfile || !paymentDetails.credentials) return;
+
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({
+        escrow_status: "pending",
+        payment_method: paymentDetails.method,
+        payment_credentials: paymentDetails.credentials,
+        payment_notes: paymentDetails.notes || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", milestone.id);
+
+    if (!error) {
+      // Create escrow transaction record for tracking
+      await supabase.from("escrow_transactions").insert({
+        project_id: milestone.project_id,
+        milestone_id: milestone.id,
+        employer_id: employerProfile.id,
+        amount: milestone.payment_amount,
+        status: "pending",
+        payment_method: paymentDetails.method,
+        payment_credentials: paymentDetails.credentials,
+        notes: `Payment credentials shared. Method: ${paymentDetails.method}`,
+      });
+
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) =>
+          m.id === milestone.id
+            ? {
+                ...m,
+                escrow_status: "pending" as const,
+                payment_method: paymentDetails.method,
+                payment_credentials: paymentDetails.credentials,
+              }
+            : m
+        );
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+
+      // Notify candidate about payment details
+      const project = projects.find((p) => p.id === milestone.project_id);
+      if (project?.selected_candidate_id) {
+        await supabase.from("notifications").insert({
+          user_id: project.selected_candidate_id,
+          type: "payment",
+          title: "Payment Credentials Shared",
+          message: `Payment details for milestone "${milestone.title}" have been shared. Amount: $${milestone.payment_amount}. Please complete the payment and submit proof.`,
+          metadata: {
+            milestone_id: milestone.id,
+            amount: milestone.payment_amount,
+            payment_method: paymentDetails.method,
+          },
+        });
+      }
+    }
+    setShowEscrowModal(false);
+    setSelectedMilestone(null);
+    setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
+  };
+
+  // Verify payment was received (manual confirmation)
+  const verifyPaymentReceived = async (milestone: LiveWorksMilestone) => {
+    if (!milestone.payment_amount || !employerProfile) return;
+
+    const project = projects.find((p) => p.id === milestone.project_id);
+    const candidateId = project?.selected_candidate_id;
+
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({
+        escrow_status: "released",
+        payment_verified_at: new Date().toISOString(),
+        escrow_released_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", milestone.id);
+
+    if (!error) {
+      // Update escrow transaction
+      await supabase
+        .from("escrow_transactions")
+        .update({
+          status: "released",
+          released_at: new Date().toISOString(),
+          verified_at: new Date().toISOString(),
+          verified_by: employerProfile.profile_id,
+          candidate_id: candidateId,
+          notes: "Payment verified and confirmed by employer",
+        })
+        .eq("milestone_id", milestone.id);
+
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) =>
+          m.id === milestone.id
+            ? {
+                ...m,
+                escrow_status: "released" as const,
+                payment_verified_at: new Date().toISOString(),
+                escrow_released_at: new Date().toISOString(),
+              }
+            : m
+        );
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+
+      // Notify candidate
+      if (candidateId) {
+        await supabase.from("notifications").insert({
+          user_id: candidateId,
+          type: "payment",
+          title: "Payment Verified!",
+          message: `Your payment of $${milestone.payment_amount} for milestone "${milestone.title}" has been verified and confirmed.`,
+          metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
+        });
+      }
+    }
+    setShowEscrowModal(false);
+    setSelectedMilestone(null);
+  };
+
+
+  const getEscrowStatusBadge = (status: string | null) => {
+    const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
+      pending: { label: "Not Funded", color: "text-gray-400 bg-gray-500/20", icon: Wallet },
+      funded: { label: "In Escrow", color: "text-amber-400 bg-amber-500/20", icon: Lock },
+      released: { label: "Released", color: "text-emerald-400 bg-emerald-500/20", icon: Unlock },
+      refunded: { label: "Refunded", color: "text-red-400 bg-red-500/20", icon: ArrowRight },
+    };
+    return badges[status || "pending"] || badges.pending;
+  };
+
+  const updateMilestoneStatus = async (milestoneId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", milestoneId);
+
+    if (!error) {
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) => (m.id === milestoneId ? { ...m, status: newStatus as any } : m));
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+    }
+  };
+
+  const updateProjectStatus = async (projectId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("liveworks_projects")
+      .update({ status: newStatus })
+      .eq("id", projectId);
+
+    if (!error) {
+      setProjects((prev) =>
+        prev.map((p) => (p.id === projectId ? { ...p, status: newStatus } : p))
+      );
+    }
+    setShowStatusMenu(null);
+  };
+
+  const getStatusActions = (currentStatus: string) => {
+    const actions: { status: string; label: string; icon: typeof Play }[] = [];
+
+    switch (currentStatus) {
+      case "draft":
+        actions.push({ status: "open", label: "Publish", icon: Play });
+        actions.push({ status: "closed", label: "Archive", icon: Archive });
+        break;
+      case "open":
+        actions.push({ status: "in_progress", label: "Start Review", icon: UserPlus });
+        actions.push({ status: "draft", label: "Unpublish", icon: Pause });
+        actions.push({ status: "closed", label: "Close", icon: Archive });
+        break;
+      case "in_progress":
+        actions.push({ status: "completed", label: "Mark Complete", icon: CheckCircle });
+        actions.push({ status: "open", label: "Reopen", icon: Play });
+        break;
+      case "completed":
+        actions.push({ status: "closed", label: "Archive", icon: Archive });
+        break;
+      case "closed":
+        actions.push({ status: "draft", label: "Reactivate", icon: Edit });
+        break;
+    }
+    return actions;
+  };
 
   const createProject = async () => {
     if (!employerProfile || !newProject.title || !newProject.description) return;
@@ -628,6 +1346,8 @@ const Projects = () => {
         duration_days: newProject.duration_days,
         skill_level: newProject.skill_level,
         status: "draft",
+        budget_min: newProject.budget_min ? parseFloat(newProject.budget_min) : null,
+        budget_max: newProject.budget_max ? parseFloat(newProject.budget_max) : null,
       })
       .select()
       .single();
@@ -641,6 +1361,8 @@ const Projects = () => {
         category: "",
         duration_days: 14,
         skill_level: "intermediate",
+        budget_min: "",
+        budget_max: "",
       });
     }
   };
@@ -748,6 +1470,38 @@ const Projects = () => {
                 </select>
               </div>
             </div>
+
+            {/* Budget Section */}
+            <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <DollarSign className="w-5 h-5 text-emerald-400" />
+                <h3 className="font-medium text-white">Project Budget</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-400 block mb-2">Minimum Budget ($)</label>
+                  <input
+                    type="number"
+                    value={newProject.budget_min}
+                    onChange={(e) => setNewProject((prev) => ({ ...prev, budget_min: e.target.value }))}
+                    placeholder="e.g., 500"
+                    min={0}
+                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 block mb-2">Maximum Budget ($)</label>
+                  <input
+                    type="number"
+                    value={newProject.budget_max}
+                    onChange={(e) => setNewProject((prev) => ({ ...prev, budget_max: e.target.value }))}
+                    placeholder="e.g., 1000"
+                    min={0}
+                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
             <div className="flex gap-3">
               <Button
                 variant="outline"
@@ -771,34 +1525,124 @@ const Projects = () => {
       {/* Projects List */}
       {projects.length > 0 ? (
         <motion.div variants={itemVariants} className="space-y-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
-                      {project.status}
-                    </span>
-                    <span className="text-sm text-gray-500">{project.category}</span>
-                    <span className="text-sm text-gray-500">{project.duration_days} days</span>
+          {projects.map((project) => {
+            const applicationCount = project.applications?.length || 0;
+            const pendingApps = project.applications?.filter((a) => a.status === "pending").length || 0;
+            const statusActions = getStatusActions(project.status);
+
+            return (
+              <div
+                key={project.id}
+                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="font-semibold text-white text-lg">{project.title}</h3>
+                    <div className="flex items-center gap-3 mt-2">
+                      <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
+                        {project.status.replace("_", " ")}
+                      </span>
+                      <span className="text-sm text-gray-500">{project.category}</span>
+                      <span className="text-sm text-gray-500">{project.duration_days} days</span>
+                      {applicationCount > 0 && (
+                        <span className="text-sm text-emerald-400 flex items-center gap-1">
+                          <UserPlus className="w-3 h-3" />
+                          {applicationCount} applicant{applicationCount !== 1 ? "s" : ""}
+                          {pendingApps > 0 && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs ml-1">
+                              {pendingApps} new
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {/* Status Actions Dropdown */}
+                    <div className="relative">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/20 text-white hover:bg-white/10"
+                        onClick={() => setShowStatusMenu(showStatusMenu === project.id ? null : project.id)}
+                      >
+                        <Edit className="w-4 h-4 mr-1" />
+                        Status
+                        <ChevronDown className="w-3 h-3 ml-1" />
+                      </Button>
+                      {showStatusMenu === project.id && (
+                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-gray-900 border border-white/10 shadow-xl z-10">
+                          {statusActions.map((action) => (
+                            <button
+                              key={action.status}
+                              onClick={() => updateProjectStatus(project.id, action.status)}
+                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/10 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                            >
+                              <action.icon className="w-4 h-4" />
+                              {action.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => setSelectedProject(project)}
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  <Eye className="w-4 h-4 mr-1" />
-                  Manage
-                </Button>
+                <p className="text-sm text-gray-400 line-clamp-2">{project.description}</p>
+
+                {/* Show applicants preview if any */}
+                {project.applications && project.applications.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-xs text-gray-500 mb-2">Recent Applicants:</p>
+                    <div className="flex items-center gap-2">
+                      {project.applications.slice(0, 4).map((app) => (
+                        <div
+                          key={app.id}
+                          className="flex items-center gap-2 px-2 py-1 rounded bg-white/5"
+                        >
+                          {app.candidate?.profile?.avatar_url ? (
+                            <img
+                              src={app.candidate.profile.avatar_url}
+                              alt="Applicant"
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs">
+                              {app.candidate?.profile?.first_name?.[0]}
+                            </div>
+                          )}
+                          <span className="text-xs text-gray-400">
+                            {app.candidate?.profile?.first_name}
+                          </span>
+                          <span className={`px-1.5 py-0.5 rounded text-xs ${
+                            app.status === "pending"
+                              ? "bg-amber-500/20 text-amber-400"
+                              : app.status === "accepted"
+                              ? "bg-emerald-500/20 text-emerald-400"
+                              : "bg-red-500/20 text-red-400"
+                          }`}>
+                            {app.status}
+                          </span>
+                        </div>
+                      ))}
+                      {project.applications.length > 4 && (
+                        <span className="text-xs text-gray-500">
+                          +{project.applications.length - 4} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-gray-400 line-clamp-2">{project.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </motion.div>
       ) : (
         !showNewProject && (
@@ -814,35 +1658,1212 @@ const Projects = () => {
           </motion.div>
         )
       )}
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-white">{selectedProject.title}</h2>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(selectedProject.status)}`}>
+                      {selectedProject.status.replace("_", " ")}
+                    </span>
+                    <span className="text-sm text-gray-500">{selectedProject.category}</span>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedProject(null)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="mb-6">
+                <h3 className="text-sm text-gray-400 mb-2">Description</h3>
+                <p className="text-gray-300">{selectedProject.description}</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Duration</p>
+                  <p className="text-white font-medium">{selectedProject.duration_days} days</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Skill Level</p>
+                  <p className="text-white font-medium capitalize">{selectedProject.skill_level}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Applicants</p>
+                  <p className="text-white font-medium">{selectedProject.applications?.length || 0}</p>
+                </div>
+              </div>
+
+              {/* Applicants List */}
+              <div>
+                <h3 className="text-sm text-gray-400 mb-3">Applicants</h3>
+                {selectedProject.applications && selectedProject.applications.length > 0 ? (
+                  <div className="space-y-3">
+                    {selectedProject.applications.map((app) => (
+                      <div
+                        key={app.id}
+                        className="p-4 rounded-lg bg-white/5 border border-white/10"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            {app.candidate?.profile?.avatar_url ? (
+                              <img
+                                src={app.candidate.profile.avatar_url}
+                                alt="Applicant"
+                                className="w-12 h-12 rounded-xl object-cover"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
+                                {app.candidate?.profile?.first_name?.[0]}{app.candidate?.profile?.last_name?.[0]}
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium text-white">
+                                {app.candidate?.profile?.first_name} {app.candidate?.profile?.last_name}
+                              </p>
+                              <p className="text-sm text-gray-400">
+                                {app.candidate?.profile?.headline || "Candidate"}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Applied {new Date(app.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {app.status === "pending" ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  onClick={async () => {
+                                    await supabase
+                                      .from("liveworks_applications")
+                                      .update({ status: "accepted" })
+                                      .eq("id", app.id);
+                                    setSelectedProject((prev) =>
+                                      prev
+                                        ? {
+                                            ...prev,
+                                            applications: prev.applications?.map((a) =>
+                                              a.id === app.id ? { ...a, status: "accepted" } : a
+                                            ),
+                                          }
+                                        : null
+                                    );
+                                    setProjects((prev) =>
+                                      prev.map((p) =>
+                                        p.id === selectedProject.id
+                                          ? {
+                                              ...p,
+                                              applications: p.applications?.map((a) =>
+                                                a.id === app.id ? { ...a, status: "accepted" } : a
+                                              ),
+                                            }
+                                          : p
+                                      )
+                                    );
+                                    // Notify candidate
+                                    await supabase.from("notifications").insert({
+                                      user_id: app.candidate_id,
+                                      type: "application_accepted",
+                                      title: "Application Accepted!",
+                                      message: `Your application for "${selectedProject.title}" has been accepted.`,
+                                    });
+                                  }}
+                                  className="bg-emerald-600 hover:bg-emerald-500"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Accept
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={async () => {
+                                    await supabase
+                                      .from("liveworks_applications")
+                                      .update({ status: "rejected" })
+                                      .eq("id", app.id);
+                                    setSelectedProject((prev) =>
+                                      prev
+                                        ? {
+                                            ...prev,
+                                            applications: prev.applications?.map((a) =>
+                                              a.id === app.id ? { ...a, status: "rejected" } : a
+                                            ),
+                                          }
+                                        : null
+                                    );
+                                    setProjects((prev) =>
+                                      prev.map((p) =>
+                                        p.id === selectedProject.id
+                                          ? {
+                                              ...p,
+                                              applications: p.applications?.map((a) =>
+                                                a.id === app.id ? { ...a, status: "rejected" } : a
+                                              ),
+                                            }
+                                          : p
+                                      )
+                                    );
+                                  }}
+                                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                >
+                                  <XCircle className="w-4 h-4 mr-1" />
+                                  Decline
+                                </Button>
+                              </>
+                            ) : (
+                              <span
+                                className={`px-3 py-1 rounded-full text-sm ${
+                                  app.status === "accepted"
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-red-500/20 text-red-400"
+                                }`}
+                              >
+                                {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {app.cover_letter && (
+                          <div className="mt-3 p-3 rounded bg-black/20">
+                            <p className="text-xs text-gray-500 mb-1">Cover Letter</p>
+                            <p className="text-sm text-gray-300">{app.cover_letter}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                    <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-400">No applicants yet</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Applicants will appear here when candidates apply
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Milestones Section */}
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm text-gray-400">Project Milestones</h3>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowMilestoneForm(!showMilestoneForm)}
+                    variant="outline"
+                    className="border-white/20 text-white hover:bg-white/10"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Milestone
+                  </Button>
+                </div>
+
+                {/* Add Milestone Form */}
+                {showMilestoneForm && (
+                  <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10">
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={newMilestone.title}
+                        onChange={(e) => setNewMilestone(prev => ({ ...prev, title: e.target.value }))}
+                        placeholder="Milestone title..."
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                      />
+                      <input
+                        type="text"
+                        value={newMilestone.description}
+                        onChange={(e) => setNewMilestone(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Description (optional)..."
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="date"
+                          value={newMilestone.dueDate}
+                          onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
+                          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                        />
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <input
+                            type="number"
+                            value={newMilestone.paymentAmount}
+                            onChange={(e) => setNewMilestone(prev => ({ ...prev, paymentAmount: e.target.value }))}
+                            placeholder="Payment amount"
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => addMilestone(selectedProject.id)}
+                          disabled={!newMilestone.title}
+                          className="bg-emerald-600 hover:bg-emerald-500"
+                        >
+                          Add Milestone
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setShowMilestoneForm(false);
+                            setNewMilestone({ title: "", description: "", dueDate: "", paymentAmount: "" });
+                          }}
+                          className="text-gray-400 hover:text-white"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Milestones List */}
+                {selectedProject.milestones && selectedProject.milestones.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedProject.milestones.map((milestone, index) => {
+                      const getMilestoneStatusColor = (status: string) => {
+                        switch (status) {
+                          case "approved": return "bg-emerald-500/20 text-emerald-400";
+                          case "submitted": return "bg-blue-500/20 text-blue-400";
+                          case "in_progress": return "bg-amber-500/20 text-amber-400";
+                          case "revision_requested": return "bg-red-500/20 text-red-400";
+                          default: return "bg-gray-500/20 text-gray-400";
+                        }
+                      };
+
+                      const escrowBadge = getEscrowStatusBadge(milestone.escrow_status);
+                      const EscrowIcon = escrowBadge.icon;
+
+                      return (
+                        <div
+                          key={milestone.id}
+                          className={`p-4 rounded-lg border transition-colors ${
+                            milestone.status === "approved"
+                              ? "bg-emerald-500/5 border-emerald-500/20"
+                              : "bg-white/5 border-white/10"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-3">
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                                milestone.status === "approved"
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : "bg-white/10 text-gray-400"
+                              }`}>
+                                {index + 1}
+                              </div>
+                              <div>
+                                <p className="font-medium text-white">{milestone.title}</p>
+                                {milestone.description && (
+                                  <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
+                                )}
+                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                  {milestone.due_date && (
+                                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                                      <Calendar className="w-3 h-3" />
+                                      Due: {new Date(milestone.due_date).toLocaleDateString()}
+                                    </span>
+                                  )}
+                                  {milestone.payment_amount && (
+                                    <span className="text-xs text-emerald-400 flex items-center gap-1">
+                                      <DollarSign className="w-3 h-3" />
+                                      ${milestone.payment_amount.toLocaleString()}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className={`px-2 py-1 rounded text-xs ${getMilestoneStatusColor(milestone.status)}`}>
+                                  {milestone.status.replace("_", " ")}
+                                </span>
+                                {milestone.payment_amount && (
+                                  <span className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${escrowBadge.color}`}>
+                                    <EscrowIcon className="w-3 h-3" />
+                                    {escrowBadge.label}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex gap-1">
+                                {milestone.status === "submitted" && (
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      onClick={() => updateMilestoneStatus(milestone.id, "approved")}
+                                      className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
+                                    >
+                                      <CheckCircle className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
+                                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-7 px-2"
+                                    >
+                                      <Edit className="w-3 h-3" />
+                                    </Button>
+                                  </>
+                                )}
+                                {/* Manual Payment Actions */}
+                                {milestone.payment_amount && milestone.escrow_status === "pending" && !milestone.payment_credentials && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction("fund");
+                                      setShowEscrowModal(true);
+                                    }}
+                                    className="bg-indigo-600 hover:bg-indigo-500 h-7 px-2"
+                                  >
+                                    <Wallet className="w-3 h-3 mr-1" />
+                                    Share Payment
+                                  </Button>
+                                )}
+                                {milestone.payment_amount &&
+                                  milestone.payment_credentials &&
+                                  milestone.escrow_status !== "released" &&
+                                  milestone.status === "approved" && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction("verify");
+                                      setShowEscrowModal(true);
+                                    }}
+                                    className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
+                                  >
+                                    <CheckCircle className="w-3 h-3 mr-1" />
+                                    Verify Payment
+                                  </Button>
+                                )}
+                                {milestone.payment_amount && milestone.payment_credentials && milestone.escrow_status !== "released" && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction(null);
+                                      setShowEscrowModal(true);
+                                    }}
+                                    className="border-white/20 text-gray-400 hover:text-white h-7 px-2"
+                                  >
+                                    <Eye className="w-3 h-3 mr-1" />
+                                    View
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                    <Briefcase className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-400">No milestones yet</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Add milestones to track project progress
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Manual Payment Modal */}
+      {showEscrowModal && selectedMilestone && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4"
+          onClick={() => {
+            setShowEscrowModal(false);
+            setSelectedMilestone(null);
+            setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {escrowAction === "fund" ? (
+              <>
+                {/* Share Payment Credentials */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                    <Wallet className="w-6 h-6 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Share Payment Details</h3>
+                    <p className="text-sm text-gray-400">Provide payment credentials for the candidate</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-4">
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Payment Method</label>
+                    <select
+                      value={paymentDetails.method}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, method: e.target.value }))}
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none"
+                    >
+                      <option value="paypal">PayPal</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                      <option value="venmo">Venmo</option>
+                      <option value="cashapp">Cash App</option>
+                      <option value="zelle">Zelle</option>
+                      <option value="wise">Wise (TransferWise)</option>
+                      <option value="crypto">Cryptocurrency</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">
+                      Payment Credentials
+                      <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      value={paymentDetails.credentials}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, credentials: e.target.value }))}
+                      placeholder={
+                        paymentDetails.method === "paypal"
+                          ? "Enter your PayPal email..."
+                          : paymentDetails.method === "bank_transfer"
+                          ? "Enter bank name, account number, routing number..."
+                          : paymentDetails.method === "crypto"
+                          ? "Enter wallet address and network (e.g., BTC, ETH)..."
+                          : "Enter payment details..."
+                      }
+                      rows={3}
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-400 block mb-2">Additional Notes (Optional)</label>
+                    <input
+                      type="text"
+                      value={paymentDetails.notes}
+                      onChange={(e) => setPaymentDetails((prev) => ({ ...prev, notes: e.target.value }))}
+                      placeholder="Any special instructions..."
+                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5" />
+                    <p className="text-sm text-amber-300">
+                      Payment is handled outside the platform. Share your payment details so the candidate can send payment. You'll verify receipt manually.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                      setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => sharePaymentCredentials(selectedMilestone)}
+                    disabled={!paymentDetails.credentials.trim()}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Share Payment Details
+                  </Button>
+                </div>
+              </>
+            ) : escrowAction === "verify" ? (
+              <>
+                {/* Verify Payment Received */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Verify Payment</h3>
+                    <p className="text-sm text-gray-400">Confirm you received the payment</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                  {selectedMilestone.payment_method && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
+                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    </div>
+                  )}
+                </div>
+
+                {selectedMilestone.payment_proof_url && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                    <p className="text-sm text-gray-400 mb-2">Payment Proof Submitted</p>
+                    <a
+                      href={selectedMilestone.payment_proof_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      View Screenshot / Receipt
+                    </a>
+                  </div>
+                )}
+
+                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
+                    <p className="text-sm text-emerald-300">
+                      By clicking "Confirm Payment Received", you verify that you have received the payment from the candidate.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => verifyPaymentReceived(selectedMilestone)}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Confirm Payment Received
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* View Payment Status */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Payment Details</h3>
+                    <p className="text-sm text-gray-400">Milestone payment information</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                  {selectedMilestone.payment_method && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
+                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    </div>
+                  )}
+                  {selectedMilestone.payment_credentials && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-sm text-gray-400 mb-1">Payment Credentials</p>
+                      <p className="text-white text-sm whitespace-pre-wrap">{selectedMilestone.payment_credentials}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
 
-// Messages component (placeholder)
-const Messages = () => (
-  <motion.div
-    variants={containerVariants}
-    initial="hidden"
-    animate="visible"
-    className="space-y-8"
-  >
-    <motion.div variants={itemVariants}>
-      <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-      <p className="text-gray-400">Communicate with candidates.</p>
-    </motion.div>
+// Feedback component for 30/60/90 day reviews
+interface HireWithCandidate {
+  connection: T3XConnection;
+  candidate?: CandidateProfile & { profile?: Profile };
+  feedbacks?: EmployerFeedback[];
+}
 
+const Feedback = () => {
+  const { user } = useAuth();
+  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
+  const [hires, setHires] = useState<HireWithCandidate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [selectedHire, setSelectedHire] = useState<HireWithCandidate | null>(null);
+  const [feedbackType, setFeedbackType] = useState<"30_day" | "60_day" | "90_day">("30_day");
+  const [feedbackForm, setFeedbackForm] = useState({
+    performanceRating: 0,
+    readinessAccuracy: 0,
+    comments: "",
+    wouldHireAgain: true,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      const { data: ep } = await supabase
+        .from("employer_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+
+      setEmployerProfile(ep);
+
+      if (ep) {
+        // Get accepted connections (hired candidates)
+        const { data: connections } = await supabase
+          .from("t3x_connections")
+          .select("*")
+          .eq("employer_id", ep.id)
+          .eq("status", "accepted")
+          .order("responded_at", { ascending: false });
+
+        if (connections) {
+          const enrichedHires = await Promise.all(
+            connections.map(async (conn) => {
+              const { data: candidate } = await supabase
+                .from("candidate_profiles")
+                .select("*")
+                .eq("profile_id", conn.candidate_id)
+                .single();
+
+              let profile = null;
+              if (candidate) {
+                const { data: p } = await supabase
+                  .from("profiles")
+                  .select("*")
+                  .eq("id", candidate.profile_id)
+                  .single();
+                profile = p;
+              }
+
+              // Get existing feedback
+              const { data: feedbacks } = await supabase
+                .from("employer_feedback")
+                .select("*")
+                .eq("employer_id", ep.id)
+                .eq("candidate_id", conn.candidate_id);
+
+              return {
+                connection: conn,
+                candidate: candidate ? { ...candidate, profile } : undefined,
+                feedbacks: feedbacks || [],
+              };
+            })
+          );
+          setHires(enrichedHires);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [user?.id]);
+
+  const submitFeedback = async () => {
+    if (!employerProfile || !selectedHire) return;
+
+    setIsSubmitting(true);
+
+    const { error } = await supabase.from("employer_feedback").insert({
+      employer_id: employerProfile.id,
+      candidate_id: selectedHire.connection.candidate_id,
+      hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
+      feedback_type: feedbackType,
+      performance_rating: feedbackForm.performanceRating,
+      readiness_accuracy: feedbackForm.readinessAccuracy,
+      comments: feedbackForm.comments,
+      would_hire_again: feedbackForm.wouldHireAgain,
+    });
+
+    if (!error) {
+      // Update local state
+      setHires((prev) =>
+        prev.map((h) =>
+          h.connection.id === selectedHire.connection.id
+            ? {
+                ...h,
+                feedbacks: [
+                  ...(h.feedbacks || []),
+                  {
+                    id: "",
+                    employer_id: employerProfile.id,
+                    candidate_id: selectedHire.connection.candidate_id,
+                    hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
+                    created_at: new Date().toISOString(),
+                    feedback_type: feedbackType,
+                    performance_rating: feedbackForm.performanceRating,
+                    readiness_accuracy: feedbackForm.readinessAccuracy,
+                    behavioral_alignment: null,
+                    comments: feedbackForm.comments,
+                    would_hire_again: feedbackForm.wouldHireAgain,
+                  },
+                ],
+              }
+            : h
+        )
+      );
+
+      setShowFeedbackModal(false);
+      setSelectedHire(null);
+      setFeedbackForm({
+        performanceRating: 0,
+        readinessAccuracy: 0,
+        comments: "",
+        wouldHireAgain: true,
+      });
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const getDaysSinceHire = (hireDate: string) => {
+    const days = Math.floor((Date.now() - new Date(hireDate).getTime()) / (1000 * 60 * 60 * 24));
+    return days;
+  };
+
+  const getAvailableFeedbackTypes = (hire: HireWithCandidate): ("30_day" | "60_day" | "90_day")[] => {
+    const existingTypes = hire.feedbacks?.map((f) => f.feedback_type) || [];
+    const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
+    const available: ("30_day" | "60_day" | "90_day")[] = [];
+
+    if (days >= 30 && !existingTypes.includes("30_day")) available.push("30_day");
+    if (days >= 60 && !existingTypes.includes("60_day")) available.push("60_day");
+    if (days >= 90 && !existingTypes.includes("90_day")) available.push("90_day");
+
+    return available;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+      </div>
+    );
+  }
+
+  return (
     <motion.div
-      variants={itemVariants}
-      className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
     >
-      <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-      <p className="text-gray-400">No messages yet</p>
-      <p className="text-sm text-gray-500 mt-1">
-        Messages will appear here when candidates respond to your connections
-      </p>
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Hire Feedback</h1>
+        <p className="text-gray-400">
+          Provide 30/60/90 day performance feedback for your hires.
+        </p>
+      </motion.div>
+
+      {/* Info Banner */}
+      <motion.div
+        variants={itemVariants}
+        className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-4"
+      >
+        <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="text-emerald-400 font-medium">Why feedback matters</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Your feedback helps improve the accuracy of Skill Passports and the overall
+            quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Hires List */}
+      <motion.div variants={itemVariants}>
+        {hires.length > 0 ? (
+          <div className="space-y-4">
+            {hires.map((hire) => {
+              const availableTypes = getAvailableFeedbackTypes(hire);
+              const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
+
+              return (
+                <div
+                  key={hire.connection.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      {hire.candidate?.profile?.avatar_url ? (
+                        <img
+                          src={hire.candidate.profile.avatar_url}
+                          alt=""
+                          className="w-14 h-14 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                          {hire.candidate?.profile?.first_name?.[0]}
+                          {hire.candidate?.profile?.last_name?.[0]}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-white text-lg">
+                          {hire.candidate?.profile?.first_name} {hire.candidate?.profile?.last_name}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Hired {days} days ago
+                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          {hire.candidate?.current_tier && (
+                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400">
+                              {hire.candidate.current_tier.replace("_", " ")}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Feedback Status */}
+                    <div className="flex gap-2">
+                      {["30_day", "60_day", "90_day"].map((type) => {
+                        const feedback = hire.feedbacks?.find((f) => f.feedback_type === type);
+                        const typeLabel = type.replace("_", " ");
+
+                        return (
+                          <div
+                            key={type}
+                            className={`px-3 py-2 rounded-lg text-center ${
+                              feedback
+                                ? "bg-emerald-500/20 border border-emerald-500/30"
+                                : "bg-white/5 border border-white/10"
+                            }`}
+                          >
+                            <p className="text-xs text-gray-500">{typeLabel}</p>
+                            {feedback ? (
+                              <div className="flex items-center justify-center gap-1 mt-1">
+                                <Star className="w-3 h-3 text-amber-400" />
+                                <span className="text-sm text-emerald-400">
+                                  {feedback.performance_rating}/5
+                                </span>
+                              </div>
+                            ) : (
+                              <p className="text-xs text-gray-600 mt-1">Pending</p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  {availableTypes.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                      {availableTypes.map((type) => (
+                        <Button
+                          key={type}
+                          onClick={() => {
+                            setSelectedHire(hire);
+                            setFeedbackType(type);
+                            setShowFeedbackModal(true);
+                          }}
+                          className="bg-emerald-600 hover:bg-emerald-500"
+                        >
+                          <Calendar className="w-4 h-4 mr-2" />
+                          Submit {type.replace("_", " ")} Feedback
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Show completed feedback summary */}
+                  {hire.feedbacks && hire.feedbacks.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-white/10">
+                      <p className="text-sm text-gray-500 mb-2">Previous Feedback</p>
+                      <div className="space-y-2">
+                        {hire.feedbacks.map((fb) => (
+                          <div
+                            key={fb.id || fb.feedback_type}
+                            className="flex items-center justify-between p-3 rounded-lg bg-black/20"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-gray-400">{fb.feedback_type.replace("_", " ")}</span>
+                              <div className="flex items-center gap-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-3 h-3 ${
+                                      i < fb.performance_rating
+                                        ? "text-amber-400 fill-amber-400"
+                                        : "text-gray-600"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <span
+                              className={`text-sm ${
+                                fb.would_hire_again ? "text-emerald-400" : "text-red-400"
+                              }`}
+                            >
+                              {fb.would_hire_again ? "Would hire again" : "Would not hire again"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No hires yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              When candidates accept your connection requests, they'll appear here for feedback.
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Feedback Modal */}
+      {showFeedbackModal && selectedHire && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowFeedbackModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold text-white mb-2">
+              {feedbackType.replace("_", " ")} Feedback
+            </h2>
+            <p className="text-gray-400 mb-6">
+              Share your experience with {selectedHire.candidate?.profile?.first_name}
+            </p>
+
+            {/* Performance Rating */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Overall Performance Rating
+              </label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    onClick={() =>
+                      setFeedbackForm((prev) => ({ ...prev, performanceRating: rating }))
+                    }
+                    className={`p-3 rounded-lg transition-colors ${
+                      feedbackForm.performanceRating >= rating
+                        ? "bg-amber-500/20 text-amber-400"
+                        : "bg-white/5 text-gray-500 hover:bg-white/10"
+                    }`}
+                  >
+                    <Star
+                      className={`w-6 h-6 ${
+                        feedbackForm.performanceRating >= rating ? "fill-amber-400" : ""
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Readiness Accuracy */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                How accurate was their Skill Passport tier?
+              </label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    onClick={() =>
+                      setFeedbackForm((prev) => ({ ...prev, readinessAccuracy: rating }))
+                    }
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      feedbackForm.readinessAccuracy === rating
+                        ? "bg-emerald-600 text-white"
+                        : "bg-white/5 text-gray-400 hover:bg-white/10"
+                    }`}
+                  >
+                    {rating}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>Not accurate</span>
+                <span>Very accurate</span>
+              </div>
+            </div>
+
+            {/* Would Hire Again */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Would you hire this person again?
+              </label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() =>
+                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: true }))
+                  }
+                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                    feedbackForm.wouldHireAgain
+                      ? "bg-emerald-600 text-white"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  }`}
+                >
+                  <ThumbsUp className="w-5 h-5" />
+                  Yes
+                </button>
+                <button
+                  onClick={() =>
+                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: false }))
+                  }
+                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                    !feedbackForm.wouldHireAgain
+                      ? "bg-red-600 text-white"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  }`}
+                >
+                  <ThumbsDown className="w-5 h-5" />
+                  No
+                </button>
+              </div>
+            </div>
+
+            {/* Comments */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Additional Comments (Optional)
+              </label>
+              <textarea
+                value={feedbackForm.comments}
+                onChange={(e) =>
+                  setFeedbackForm((prev) => ({ ...prev, comments: e.target.value }))
+                }
+                placeholder="Share specific observations about their work..."
+                rows={3}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowFeedbackModal(false)}
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={submitFeedback}
+                disabled={
+                  isSubmitting ||
+                  feedbackForm.performanceRating === 0 ||
+                  feedbackForm.readinessAccuracy === 0
+                }
+                className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Feedback"
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 // Company Profile component
 const Company = () => {
@@ -1293,7 +3314,7 @@ const EmployerDashboard = () => {
             <Route path="search" element={<SearchTalent />} />
             <Route path="connections" element={<Connections />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="messages" element={<Messages />} />
+            <Route path="feedback" element={<Feedback />} />
             <Route path="company" element={<Company />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

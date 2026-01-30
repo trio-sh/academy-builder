@@ -14,6 +14,8 @@ export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observ
 export type ProjectStatus = 'draft' | 'open' | 'in_progress' | 'completed' | 'cancelled';
 export type MilestoneStatus = 'pending' | 'in_progress' | 'submitted' | 'approved' | 'revision_requested';
 export type ConnectionStatus = 'pending' | 'accepted' | 'declined' | 'expired';
+export type EscrowStatus = 'pending' | 'funded' | 'released' | 'refunded' | 'disputed';
+export type TalentVisaTier = 'gold' | 'silver' | 'bronze';
 
 export interface Database {
   public: {
@@ -548,6 +550,14 @@ export interface Database {
           payment_amount: number | null;
           submitted_at: string | null;
           approved_at: string | null;
+          escrow_status: EscrowStatus | null;
+          escrow_funded_at: string | null;
+          escrow_released_at: string | null;
+          payment_method: string | null;
+          payment_credentials: string | null;
+          payment_proof_url: string | null;
+          payment_verified_at: string | null;
+          payment_notes: string | null;
         };
         Insert: {
           id?: string;
@@ -562,6 +572,14 @@ export interface Database {
           payment_amount?: number | null;
           submitted_at?: string | null;
           approved_at?: string | null;
+          escrow_status?: EscrowStatus | null;
+          escrow_funded_at?: string | null;
+          escrow_released_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          payment_verified_at?: string | null;
+          payment_notes?: string | null;
         };
         Update: {
           id?: string;
@@ -576,6 +594,74 @@ export interface Database {
           payment_amount?: number | null;
           submitted_at?: string | null;
           approved_at?: string | null;
+          escrow_status?: EscrowStatus | null;
+          escrow_funded_at?: string | null;
+          escrow_released_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          payment_verified_at?: string | null;
+          payment_notes?: string | null;
+        };
+      };
+      // Manual payment tracking (no in-app payments)
+      escrow_transactions: {
+        Row: {
+          id: string;
+          created_at: string;
+          project_id: string;
+          milestone_id: string | null;
+          employer_id: string;
+          candidate_id: string | null;
+          amount: number;
+          status: EscrowStatus;
+          funded_at: string | null;
+          released_at: string | null;
+          refunded_at: string | null;
+          payment_method: string | null;
+          payment_credentials: string | null;
+          payment_proof_url: string | null;
+          verified_by: string | null;
+          verified_at: string | null;
+          notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          project_id: string;
+          milestone_id?: string | null;
+          employer_id: string;
+          candidate_id?: string | null;
+          amount: number;
+          status?: EscrowStatus;
+          funded_at?: string | null;
+          released_at?: string | null;
+          refunded_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          verified_by?: string | null;
+          verified_at?: string | null;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          project_id?: string;
+          milestone_id?: string | null;
+          employer_id?: string;
+          candidate_id?: string | null;
+          amount?: number;
+          status?: EscrowStatus;
+          funded_at?: string | null;
+          released_at?: string | null;
+          refunded_at?: string | null;
+          payment_method?: string | null;
+          payment_credentials?: string | null;
+          payment_proof_url?: string | null;
+          verified_by?: string | null;
+          verified_at?: string | null;
+          notes?: string | null;
         };
       };
       liveworks_applications: {
@@ -692,6 +778,8 @@ export interface Database {
           reviewed_by: string | null;
           reviewed_at: string | null;
           expires_at: string | null;
+          tier: TalentVisaTier | null;
+          behavioral_score: number | null;
         };
         Insert: {
           id?: string;
@@ -704,6 +792,8 @@ export interface Database {
           reviewed_by?: string | null;
           reviewed_at?: string | null;
           expires_at?: string | null;
+          tier?: TalentVisaTier | null;
+          behavioral_score?: number | null;
         };
         Update: {
           id?: string;
@@ -716,6 +806,118 @@ export interface Database {
           reviewed_by?: string | null;
           reviewed_at?: string | null;
           expires_at?: string | null;
+          tier?: TalentVisaTier | null;
+          behavioral_score?: number | null;
+        };
+      };
+      // TalentVisa quota settings
+      talentvisa_quotas: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          period: 'monthly' | 'quarterly' | 'yearly';
+          tier: TalentVisaTier;
+          max_approvals: number;
+          current_approvals: number;
+          period_start: string;
+          period_end: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          period: 'monthly' | 'quarterly' | 'yearly';
+          tier: TalentVisaTier;
+          max_approvals: number;
+          current_approvals?: number;
+          period_start: string;
+          period_end: string;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          period?: 'monthly' | 'quarterly' | 'yearly';
+          tier?: TalentVisaTier;
+          max_approvals?: number;
+          current_approvals?: number;
+          period_start?: string;
+          period_end?: string;
+        };
+      };
+      // Email queue for notifications
+      email_queue: {
+        Row: {
+          id: string;
+          created_at: string;
+          to_email: string;
+          to_name: string;
+          template: string;
+          template_data: Json;
+          status: 'pending' | 'sent' | 'failed';
+          sent_at: string | null;
+          error_message: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          to_email: string;
+          to_name: string;
+          template: string;
+          template_data: Json;
+          status?: 'pending' | 'sent' | 'failed';
+          sent_at?: string | null;
+          error_message?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          to_email?: string;
+          to_name?: string;
+          template?: string;
+          template_data?: Json;
+          status?: 'pending' | 'sent' | 'failed';
+          sent_at?: string | null;
+          error_message?: string | null;
+        };
+      };
+      candidate_self_assessments: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          created_at: string;
+          updated_at: string;
+          behavioral_scores: Json;
+          notes: string | null;
+          goals: string | null;
+          strengths: string[];
+          areas_for_improvement: string[];
+          completed: boolean;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          created_at?: string;
+          updated_at?: string;
+          behavioral_scores: Json;
+          notes?: string | null;
+          goals?: string | null;
+          strengths?: string[];
+          areas_for_improvement?: string[];
+          completed?: boolean;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          behavioral_scores?: Json;
+          notes?: string | null;
+          goals?: string | null;
+          strengths?: string[];
+          areas_for_improvement?: string[];
+          completed?: boolean;
         };
       };
       notifications: {
@@ -750,6 +952,205 @@ export interface Database {
           message?: string;
           is_read?: boolean;
           action_url?: string | null;
+          metadata?: Json | null;
+        };
+      };
+      school_profiles: {
+        Row: {
+          id: string;
+          profile_id: string;
+          created_at: string;
+          updated_at: string;
+          school_name: string;
+          school_type: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district: string | null;
+          address: string | null;
+          total_students: number;
+          active_cohorts: number;
+          is_verified: boolean;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          created_at?: string;
+          updated_at?: string;
+          school_name: string;
+          school_type: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district?: string | null;
+          address?: string | null;
+          total_students?: number;
+          active_cohorts?: number;
+          is_verified?: boolean;
+        };
+        Update: {
+          id?: string;
+          profile_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          school_name?: string;
+          school_type?: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district?: string | null;
+          address?: string | null;
+          total_students?: number;
+          active_cohorts?: number;
+          is_verified?: boolean;
+        };
+      };
+      school_cohorts: {
+        Row: {
+          id: string;
+          school_id: string;
+          created_at: string;
+          updated_at: string;
+          name: string;
+          program: string;
+          start_date: string;
+          end_date: string | null;
+          status: 'active' | 'completed' | 'upcoming';
+          total_students: number;
+          teacher_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          school_id: string;
+          created_at?: string;
+          updated_at?: string;
+          name: string;
+          program: string;
+          start_date: string;
+          end_date?: string | null;
+          status?: 'active' | 'completed' | 'upcoming';
+          total_students?: number;
+          teacher_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          school_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          name?: string;
+          program?: string;
+          start_date?: string;
+          end_date?: string | null;
+          status?: 'active' | 'completed' | 'upcoming';
+          total_students?: number;
+          teacher_id?: string | null;
+        };
+      };
+      students: {
+        Row: {
+          id: string;
+          profile_id: string;
+          school_id: string;
+          cohort_id: string | null;
+          created_at: string;
+          updated_at: string;
+          student_id_number: string | null;
+          grade_level: string | null;
+          graduation_year: number | null;
+          status: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations: number;
+          avg_behavioral_score: number | null;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          school_id: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          student_id_number?: string | null;
+          grade_level?: string | null;
+          graduation_year?: number | null;
+          status?: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations?: number;
+          avg_behavioral_score?: number | null;
+        };
+        Update: {
+          id?: string;
+          profile_id?: string;
+          school_id?: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          student_id_number?: string | null;
+          grade_level?: string | null;
+          graduation_year?: number | null;
+          status?: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations?: number;
+          avg_behavioral_score?: number | null;
+        };
+      };
+      teacher_observations: {
+        Row: {
+          id: string;
+          teacher_id: string;
+          student_id: string;
+          cohort_id: string | null;
+          created_at: string;
+          updated_at: string;
+          observation_date: string;
+          context: string;
+          behavioral_scores: Json;
+          strengths: string[];
+          areas_for_growth: string[];
+          notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          teacher_id: string;
+          student_id: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          observation_date: string;
+          context: string;
+          behavioral_scores: Json;
+          strengths?: string[];
+          areas_for_growth?: string[];
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          teacher_id?: string;
+          student_id?: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          observation_date?: string;
+          context?: string;
+          behavioral_scores?: Json;
+          strengths?: string[];
+          areas_for_growth?: string[];
+          notes?: string | null;
+        };
+      };
+      growth_logs: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          created_at: string;
+          log_type: string;
+          title: string;
+          description: string | null;
+          metadata: Json | null;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          created_at?: string;
+          log_type: string;
+          title: string;
+          description?: string | null;
+          metadata?: Json | null;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          log_type?: string;
+          title?: string;
+          description?: string | null;
           metadata?: Json | null;
         };
       };
