@@ -9,7 +9,7 @@ export type Json =
 export type UserRole = 'candidate' | 'mentor' | 'employer' | 'school_admin' | 'admin';
 export type EndorsementDecision = 'proceed' | 'redirect' | 'pause';
 export type ReadinessTier = 'tier_1' | 'tier_2' | 'tier_3';
-export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement';
+export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement' | 'signup' | 'resume_upload';
 export type ProjectStatus = 'draft' | 'open' | 'in_progress' | 'completed' | 'cancelled';
 export type MilestoneStatus = 'pending' | 'in_progress' | 'submitted' | 'approved' | 'revision_requested';
 export type ConnectionStatus = 'pending' | 'accepted' | 'declined' | 'expired';
@@ -578,6 +578,32 @@ export interface Database {
           payment_amount?: number | null;
           submitted_at?: string | null;
           approved_at?: string | null;
+        };
+      };
+      liveworks_applications: {
+        Row: {
+          id: string;
+          project_id: string;
+          candidate_id: string;
+          created_at: string;
+          cover_letter: string | null;
+          status: 'pending' | 'accepted' | 'rejected';
+        };
+        Insert: {
+          id?: string;
+          project_id: string;
+          candidate_id: string;
+          created_at?: string;
+          cover_letter?: string | null;
+          status?: 'pending' | 'accepted' | 'rejected';
+        };
+        Update: {
+          id?: string;
+          project_id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          cover_letter?: string | null;
+          status?: 'pending' | 'accepted' | 'rejected';
         };
       };
       t3x_connections: {
