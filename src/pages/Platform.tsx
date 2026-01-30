@@ -456,7 +456,7 @@ const Platform = () => {
                 className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl"
                 asChild
               >
-                <Link to="/get-started">
+                <Link to="/join">
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>

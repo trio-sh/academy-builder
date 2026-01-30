@@ -40,7 +40,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-white/10">
+    <footer className="relative z-10 bg-black/95 backdrop-blur-xl border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
@@ -57,7 +57,7 @@ export function Footer() {
                 </span>
               </motion.div>
             </Link>
-            <p className="text-sm text-gray-500 leading-relaxed mb-6">
+            <p className="text-sm text-gray-300 leading-relaxed mb-6">
               Bridging the gap between credentials and workplace readiness through
               mentor-gated behavioral validation.
             </p>
@@ -86,7 +86,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -103,7 +103,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -120,7 +120,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -137,7 +137,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -149,11 +149,11 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} The 3rd Academy. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-xs text-gray-600 bg-white/5 px-3 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-white/5 px-3 py-1 rounded-full">
               Behavioral Readiness Platform
             </span>
           </div>

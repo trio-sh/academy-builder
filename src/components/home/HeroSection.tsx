@@ -95,7 +95,7 @@ export function HeroSection() {
 
           {/* Headline */}
           <motion.h1
-            className="text-4xl md:text-7xl font-extrabold leading-tight mb-6"
+            className="text-3xl md:text-5xl font-display font-normal leading-tight mb-6"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
@@ -112,7 +112,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed"
+            className="text-base md:text-lg text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed font-serif"
           >
             The 3rd Academy bridges the gap between what your resume says and what
             employers actually need — through sustained mentor observation and
@@ -133,7 +133,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-6 rounded-xl font-bold text-lg shadow-2xl shadow-indigo-600/40 transition-all duration-300"
                 asChild
               >
-                <Link to="/get-started">
+                <Link to="/join">
                   Start Your Journey
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>

@@ -69,7 +69,7 @@ export function CTASection() {
               {/* Headline */}
               <motion.h2
                 variants={itemVariants}
-                className="text-4xl md:text-6xl font-extrabold mb-8 leading-tight"
+                className="text-3xl md:text-4xl font-display font-normal mb-8 leading-tight"
               >
                 <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
                   Ready to Prove Your
@@ -83,7 +83,7 @@ export function CTASection() {
               {/* Description */}
               <motion.p
                 variants={itemVariants}
-                className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
+                className="text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
                 and start building your Skill Passport through evidence-based observation.
@@ -103,7 +103,7 @@ export function CTASection() {
                     className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl transition-all duration-300"
                     asChild
                   >
-                    <Link to="/get-started">
+                    <Link to="/join">
                       Get Started Free
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>

@@ -100,7 +100,7 @@ const NotFound = () => {
               {[
                 { label: "Platform", href: "/platform" },
                 { label: "About", href: "/about" },
-                { label: "Get Started", href: "/get-started" },
+                { label: "Get Started", href: "/join" },
               ].map((link) => (
                 <Link
                   key={link.href}

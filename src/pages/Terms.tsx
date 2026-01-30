@@ -244,7 +244,7 @@ const Terms = () => {
             </motion.div>
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
                 Terms of

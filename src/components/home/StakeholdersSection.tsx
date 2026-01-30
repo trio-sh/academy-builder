@@ -32,7 +32,7 @@ const stakeholders = [
       "Direct employer access via T3X",
     ],
     cta: "Start Your Journey",
-    href: "/get-started",
+    href: "/join",
     gradient: "from-indigo-600 to-indigo-700",
     glowColor: "indigo",
   },
