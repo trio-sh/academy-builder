@@ -30,7 +30,6 @@ export interface Database {
           headline: string | null;
           bio: string | null;
           location: string | null;
-          linkedin_url: string | null;
           is_active: boolean;
           onboarding_completed: boolean;
         };
@@ -46,7 +45,6 @@ export interface Database {
           headline?: string | null;
           bio?: string | null;
           location?: string | null;
-          linkedin_url?: string | null;
           is_active?: boolean;
           onboarding_completed?: boolean;
         };
@@ -62,7 +60,6 @@ export interface Database {
           headline?: string | null;
           bio?: string | null;
           location?: string | null;
-          linkedin_url?: string | null;
           is_active?: boolean;
           onboarding_completed?: boolean;
         };
