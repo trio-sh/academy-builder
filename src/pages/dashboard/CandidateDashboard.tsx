@@ -917,6 +917,8 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -1166,6 +1168,122 @@ const Profile = () => {
     }
   };
 
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setAvatarError('Please upload a JPG, PNG, GIF, or WebP image');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setAvatarError('Image size must be less than 5MB');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    setAvatarError(null);
+
+    try {
+      // Generate unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/avatar_${Date.now()}.${fileExt}`;
+
+      // Delete old avatar if exists
+      if (profile?.avatar_url) {
+        try {
+          const oldUrlParts = profile.avatar_url.split('/');
+          const oldFileName = oldUrlParts.slice(-2).join('/');
+          await supabase.storage.from('avatars').remove([oldFileName]);
+        } catch (e) {
+          // Ignore errors when deleting old avatar
+        }
+      }
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        if (uploadError.message.includes('bucket') || uploadError.message.includes('not found')) {
+          setAvatarError('Avatar storage is being configured. Please try again later.');
+          console.error('Storage bucket "avatars" may not exist:', uploadError);
+        } else {
+          setAvatarError('Failed to upload avatar. Please try again.');
+          console.error('Upload error:', uploadError);
+        }
+        return;
+      }
+
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      const avatarUrl = publicUrlData?.publicUrl || fileName;
+
+      // Update profile with avatar URL
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+
+      if (updateError) {
+        console.error("Error updating profile with avatar:", updateError);
+        setAvatarError('Failed to save avatar. Please try again.');
+        return;
+      }
+
+      // Refresh profile to get updated avatar
+      await refreshProfile();
+    } catch (error) {
+      console.error("Error uploading avatar:", error);
+      setAvatarError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsUploadingAvatar(false);
+      event.target.value = '';
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    if (!user?.id || !profile?.avatar_url) return;
+
+    if (!confirm('Are you sure you want to remove your profile picture?')) return;
+
+    try {
+      // Extract filename from URL
+      const urlParts = profile.avatar_url.split('/');
+      const fileName = urlParts.slice(-2).join('/');
+
+      // Delete from storage
+      await supabase.storage.from('avatars').remove([fileName]);
+
+      // Update profile
+      await supabase
+        .from("profiles")
+        .update({
+          avatar_url: null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+
+      await refreshProfile();
+    } catch (error) {
+      console.error("Error deleting avatar:", error);
+    }
+  };
+
   const addSkill = () => {
     if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
       setFormData((prev) => ({
@@ -1224,16 +1342,59 @@ const Profile = () => {
         {/* Avatar and basic info */}
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-3xl text-white font-bold">
-              {formData.first_name?.[0]}{formData.last_name?.[0]}
+            <div className="relative group">
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Profile"
+                  className="w-20 h-20 rounded-2xl object-cover"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-3xl text-white font-bold">
+                  {formData.first_name?.[0]}{formData.last_name?.[0]}
+                </div>
+              )}
+              {/* Upload overlay */}
+              <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                {isUploadingAvatar ? (
+                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                ) : (
+                  <Upload className="w-6 h-6 text-white" />
+                )}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  onChange={handleAvatarUpload}
+                  disabled={isUploadingAvatar}
+                  className="hidden"
+                />
+              </label>
+              {/* Delete button */}
+              {profile?.avatar_url && (
+                <button
+                  onClick={handleDeleteAvatar}
+                  className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  title="Remove photo"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <div>
               <h2 className="text-xl font-bold text-white">
                 {formData.first_name} {formData.last_name}
               </h2>
               <p className="text-gray-400">{profile?.email}</p>
+              <p className="text-xs text-gray-500 mt-1">Hover over photo to change</p>
             </div>
           </div>
+
+          {avatarError && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              {avatarError}
+            </div>
+          )}
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -1641,10 +1802,18 @@ const CandidateDashboard = () => {
           {/* User */}
           <div className="p-4 border-t border-white/10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium">
-                {profile?.first_name?.[0]}
-                {profile?.last_name?.[0]}
-              </div>
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium">
+                  {profile?.first_name?.[0]}
+                  {profile?.last_name?.[0]}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">
                   {profile?.first_name} {profile?.last_name}
