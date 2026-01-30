@@ -232,6 +232,8 @@ export interface Database {
           is_active: boolean;
           issued_at: string;
           expires_at: string | null;
+          pdf_url: string | null;
+          qr_code_url: string | null;
         };
         Insert: {
           id?: string;
@@ -244,6 +246,8 @@ export interface Database {
           is_active?: boolean;
           issued_at?: string;
           expires_at?: string | null;
+          pdf_url?: string | null;
+          qr_code_url?: string | null;
         };
         Update: {
           id?: string;
@@ -256,6 +260,8 @@ export interface Database {
           is_active?: boolean;
           issued_at?: string;
           expires_at?: string | null;
+          pdf_url?: string | null;
+          qr_code_url?: string | null;
         };
       };
       growth_log_entries: {
@@ -931,6 +937,8 @@ export interface Database {
           is_read: boolean;
           action_url: string | null;
           metadata: Json | null;
+          priority: 'low' | 'normal' | 'high';
+          action_type: string | null;
         };
         Insert: {
           id?: string;
@@ -942,6 +950,8 @@ export interface Database {
           is_read?: boolean;
           action_url?: string | null;
           metadata?: Json | null;
+          priority?: 'low' | 'normal' | 'high';
+          action_type?: string | null;
         };
         Update: {
           id?: string;
@@ -953,6 +963,8 @@ export interface Database {
           is_read?: boolean;
           action_url?: string | null;
           metadata?: Json | null;
+          priority?: 'low' | 'normal' | 'high';
+          action_type?: string | null;
         };
       };
       school_profiles: {
@@ -1152,6 +1164,368 @@ export interface Database {
           title?: string;
           description?: string | null;
           metadata?: Json | null;
+        };
+      };
+      // Messaging System
+      conversations: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          type: 'direct' | 'group';
+          title: string | null;
+          last_message_at: string | null;
+          last_message_preview: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          type?: 'direct' | 'group';
+          title?: string | null;
+          last_message_at?: string | null;
+          last_message_preview?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          type?: 'direct' | 'group';
+          title?: string | null;
+          last_message_at?: string | null;
+          last_message_preview?: string | null;
+        };
+      };
+      conversation_participants: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          user_id: string;
+          joined_at: string;
+          last_read_at: string | null;
+          is_muted: boolean;
+        };
+        Insert: {
+          id?: string;
+          conversation_id: string;
+          user_id: string;
+          joined_at?: string;
+          last_read_at?: string | null;
+          is_muted?: boolean;
+        };
+        Update: {
+          id?: string;
+          conversation_id?: string;
+          user_id?: string;
+          joined_at?: string;
+          last_read_at?: string | null;
+          is_muted?: boolean;
+        };
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          sender_id: string;
+          created_at: string;
+          updated_at: string;
+          content: string;
+          message_type: 'text' | 'file' | 'image' | 'system';
+          file_url: string | null;
+          is_edited: boolean;
+          is_deleted: boolean;
+          reply_to_id: string | null;
+          metadata: Json;
+        };
+        Insert: {
+          id?: string;
+          conversation_id: string;
+          sender_id: string;
+          created_at?: string;
+          updated_at?: string;
+          content: string;
+          message_type?: 'text' | 'file' | 'image' | 'system';
+          file_url?: string | null;
+          is_edited?: boolean;
+          is_deleted?: boolean;
+          reply_to_id?: string | null;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          conversation_id?: string;
+          sender_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          content?: string;
+          message_type?: 'text' | 'file' | 'image' | 'system';
+          file_url?: string | null;
+          is_edited?: boolean;
+          is_deleted?: boolean;
+          reply_to_id?: string | null;
+          metadata?: Json;
+        };
+      };
+      // Mentor Scheduling System
+      mentor_availability: {
+        Row: {
+          id: string;
+          mentor_id: string;
+          day_of_week: number;
+          start_time: string;
+          end_time: string;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          mentor_id: string;
+          day_of_week: number;
+          start_time: string;
+          end_time: string;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          mentor_id?: string;
+          day_of_week?: number;
+          start_time?: string;
+          end_time?: string;
+          is_active?: boolean;
+          created_at?: string;
+        };
+      };
+      mentor_sessions: {
+        Row: {
+          id: string;
+          mentor_id: string;
+          candidate_id: string;
+          assignment_id: string | null;
+          created_at: string;
+          updated_at: string;
+          scheduled_at: string;
+          duration_minutes: number;
+          status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+          session_type: 'observation' | 'feedback' | 'check_in' | 'other';
+          notes: string | null;
+          meeting_url: string | null;
+          cancelled_at: string | null;
+          cancelled_by: string | null;
+          cancellation_reason: string | null;
+        };
+        Insert: {
+          id?: string;
+          mentor_id: string;
+          candidate_id: string;
+          assignment_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          scheduled_at: string;
+          duration_minutes?: number;
+          status?: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+          session_type?: 'observation' | 'feedback' | 'check_in' | 'other';
+          notes?: string | null;
+          meeting_url?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
+          cancellation_reason?: string | null;
+        };
+        Update: {
+          id?: string;
+          mentor_id?: string;
+          candidate_id?: string;
+          assignment_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          scheduled_at?: string;
+          duration_minutes?: number;
+          status?: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+          session_type?: 'observation' | 'feedback' | 'check_in' | 'other';
+          notes?: string | null;
+          meeting_url?: string | null;
+          cancelled_at?: string | null;
+          cancelled_by?: string | null;
+          cancellation_reason?: string | null;
+        };
+      };
+      session_reminders: {
+        Row: {
+          id: string;
+          session_id: string;
+          user_id: string;
+          remind_at: string;
+          reminder_type: 'email' | 'in_app' | 'both';
+          sent: boolean;
+          sent_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          session_id: string;
+          user_id: string;
+          remind_at: string;
+          reminder_type?: 'email' | 'in_app' | 'both';
+          sent?: boolean;
+          sent_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          session_id?: string;
+          user_id?: string;
+          remind_at?: string;
+          reminder_type?: 'email' | 'in_app' | 'both';
+          sent?: boolean;
+          sent_at?: string | null;
+        };
+      };
+      // Training Content (Videos, Quizzes)
+      bridgefast_content: {
+        Row: {
+          id: string;
+          module_id: string;
+          created_at: string;
+          content_type: 'video' | 'document' | 'link' | 'quiz';
+          title: string;
+          description: string | null;
+          content_url: string | null;
+          duration_minutes: number | null;
+          order_index: number;
+          is_required: boolean;
+        };
+        Insert: {
+          id?: string;
+          module_id: string;
+          created_at?: string;
+          content_type: 'video' | 'document' | 'link' | 'quiz';
+          title: string;
+          description?: string | null;
+          content_url?: string | null;
+          duration_minutes?: number | null;
+          order_index?: number;
+          is_required?: boolean;
+        };
+        Update: {
+          id?: string;
+          module_id?: string;
+          created_at?: string;
+          content_type?: 'video' | 'document' | 'link' | 'quiz';
+          title?: string;
+          description?: string | null;
+          content_url?: string | null;
+          duration_minutes?: number | null;
+          order_index?: number;
+          is_required?: boolean;
+        };
+      };
+      bridgefast_quiz_questions: {
+        Row: {
+          id: string;
+          module_id: string;
+          created_at: string;
+          question: string;
+          question_type: 'multiple_choice' | 'true_false' | 'short_answer';
+          options: Json;
+          correct_answer: string;
+          explanation: string | null;
+          points: number;
+          order_index: number;
+        };
+        Insert: {
+          id?: string;
+          module_id: string;
+          created_at?: string;
+          question: string;
+          question_type?: 'multiple_choice' | 'true_false' | 'short_answer';
+          options?: Json;
+          correct_answer: string;
+          explanation?: string | null;
+          points?: number;
+          order_index?: number;
+        };
+        Update: {
+          id?: string;
+          module_id?: string;
+          created_at?: string;
+          question?: string;
+          question_type?: 'multiple_choice' | 'true_false' | 'short_answer';
+          options?: Json;
+          correct_answer?: string;
+          explanation?: string | null;
+          points?: number;
+          order_index?: number;
+        };
+      };
+      bridgefast_quiz_attempts: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          module_id: string;
+          created_at: string;
+          completed_at: string | null;
+          score: number | null;
+          max_score: number | null;
+          answers: Json;
+          passed: boolean | null;
+          attempt_number: number;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          module_id: string;
+          created_at?: string;
+          completed_at?: string | null;
+          score?: number | null;
+          max_score?: number | null;
+          answers?: Json;
+          passed?: boolean | null;
+          attempt_number?: number;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          module_id?: string;
+          created_at?: string;
+          completed_at?: string | null;
+          score?: number | null;
+          max_score?: number | null;
+          answers?: Json;
+          passed?: boolean | null;
+          attempt_number?: number;
+        };
+      };
+      training_certificates: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          module_id: string;
+          created_at: string;
+          certificate_number: string;
+          score: number | null;
+          issued_at: string;
+          expires_at: string | null;
+          pdf_url: string | null;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          module_id: string;
+          created_at?: string;
+          certificate_number: string;
+          score?: number | null;
+          issued_at?: string;
+          expires_at?: string | null;
+          pdf_url?: string | null;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          module_id?: string;
+          created_at?: string;
+          certificate_number?: string;
+          score?: number | null;
+          issued_at?: string;
+          expires_at?: string | null;
+          pdf_url?: string | null;
         };
       };
     };

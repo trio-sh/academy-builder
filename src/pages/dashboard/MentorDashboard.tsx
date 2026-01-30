@@ -1691,9 +1691,188 @@ const Endorsements = () => {
   );
 };
 
-// Schedule component
+// Schedule component with full functionality
 const Schedule = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+  const [mentorProfile, setMentorProfile] = useState<MentorProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<"availability" | "sessions">("availability");
+
+  // Days and time slots
+  const DAYS = [
+    { value: 0, label: "Sunday" },
+    { value: 1, label: "Monday" },
+    { value: 2, label: "Tuesday" },
+    { value: 3, label: "Wednesday" },
+    { value: 4, label: "Thursday" },
+    { value: 5, label: "Friday" },
+    { value: 6, label: "Saturday" },
+  ];
+
+  const TIME_SLOTS = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+  ];
+
+  // Availability state: { dayOfWeek: { startTime, endTime, isActive } }
+  const [availability, setAvailability] = useState<Record<number, { startTime: string; endTime: string; isActive: boolean }>>({
+    1: { startTime: "09:00", endTime: "17:00", isActive: true },
+    2: { startTime: "09:00", endTime: "17:00", isActive: true },
+    3: { startTime: "09:00", endTime: "17:00", isActive: true },
+    4: { startTime: "09:00", endTime: "17:00", isActive: true },
+    5: { startTime: "09:00", endTime: "17:00", isActive: true },
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      // Get mentor profile
+      const { data: mp } = await supabase
+        .from("mentor_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+
+      setMentorProfile(mp);
+
+      if (mp) {
+        // Fetch availability settings
+        const { data: availData } = await supabase
+          .from("mentor_availability")
+          .select("*")
+          .eq("mentor_id", mp.id);
+
+        if (availData && availData.length > 0) {
+          const availMap: Record<number, { startTime: string; endTime: string; isActive: boolean }> = {};
+          availData.forEach((slot) => {
+            availMap[slot.day_of_week] = {
+              startTime: slot.start_time,
+              endTime: slot.end_time,
+              isActive: slot.is_active,
+            };
+          });
+          setAvailability(availMap);
+        }
+
+        // Fetch upcoming sessions
+        const { data: sessionData } = await supabase
+          .from("mentor_sessions")
+          .select("*, candidate:profiles!mentor_sessions_candidate_id_fkey(first_name, last_name, email, avatar_url)")
+          .eq("mentor_id", mp.id)
+          .gte("scheduled_at", new Date().toISOString())
+          .order("scheduled_at", { ascending: true })
+          .limit(20);
+
+        setSessions(sessionData || []);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [user?.id]);
+
+  const toggleDayAvailability = (dayValue: number) => {
+    setAvailability((prev) => ({
+      ...prev,
+      [dayValue]: prev[dayValue]
+        ? { ...prev[dayValue], isActive: !prev[dayValue].isActive }
+        : { startTime: "09:00", endTime: "17:00", isActive: true },
+    }));
+  };
+
+  const updateDayTime = (dayValue: number, field: "startTime" | "endTime", value: string) => {
+    setAvailability((prev) => ({
+      ...prev,
+      [dayValue]: { ...prev[dayValue], [field]: value },
+    }));
+  };
+
+  const saveAvailability = async () => {
+    if (!mentorProfile) return;
+    setIsSaving(true);
+
+    try {
+      // Delete existing availability
+      await supabase
+        .from("mentor_availability")
+        .delete()
+        .eq("mentor_id", mentorProfile.id);
+
+      // Insert new availability
+      const records = Object.entries(availability)
+        .filter(([_, val]) => val.isActive)
+        .map(([day, val]) => ({
+          mentor_id: mentorProfile.id,
+          day_of_week: parseInt(day),
+          start_time: val.startTime,
+          end_time: val.endTime,
+          is_active: true,
+        }));
+
+      if (records.length > 0) {
+        await supabase.from("mentor_availability").insert(records);
+      }
+
+      alert("Availability saved successfully!");
+    } catch (error) {
+      console.error("Error saving availability:", error);
+      alert("Failed to save availability");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const updateSessionStatus = async (sessionId: string, status: "confirmed" | "cancelled") => {
+    const updateData: any = { status, updated_at: new Date().toISOString() };
+    if (status === "cancelled") {
+      updateData.cancelled_at = new Date().toISOString();
+      updateData.cancelled_by = user?.id;
+    }
+
+    await supabase
+      .from("mentor_sessions")
+      .update(updateData)
+      .eq("id", sessionId);
+
+    setSessions((prev) =>
+      prev.map((s) => (s.id === sessionId ? { ...s, status } : s))
+    );
+  };
+
+  const formatSessionDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, string> = {
+      scheduled: "bg-blue-500/20 text-blue-400",
+      confirmed: "bg-emerald-500/20 text-emerald-400",
+      completed: "bg-purple-500/20 text-purple-400",
+      cancelled: "bg-red-500/20 text-red-400",
+      no_show: "bg-amber-500/20 text-amber-400",
+    };
+    return styles[status] || "bg-gray-500/20 text-gray-400";
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -1707,37 +1886,217 @@ const Schedule = () => {
         <p className="text-gray-400">Manage your availability and upcoming sessions.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
-        {/* Availability Settings */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-4">Availability</h2>
-          <div className="space-y-4">
-            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => (
-              <div key={day} className="flex items-center justify-between">
-                <span className="text-gray-400">{day}</span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                </label>
-              </div>
-            ))}
-          </div>
-          <Button className="w-full mt-6 bg-purple-600 hover:bg-purple-500">
-            <Save className="w-4 h-4 mr-2" />
-            Save Availability
-          </Button>
-        </div>
-
-        {/* Upcoming Sessions */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-4">Upcoming Sessions</h2>
-          <div className="p-6 text-center">
-            <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No upcoming sessions</p>
-            <p className="text-sm text-gray-500 mt-1">Sessions will appear here when scheduled</p>
-          </div>
-        </div>
+      {/* Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        <Button
+          variant={activeTab === "availability" ? "default" : "outline"}
+          onClick={() => setActiveTab("availability")}
+          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-white/10"}
+        >
+          <Clock className="w-4 h-4 mr-2" />
+          Availability
+        </Button>
+        <Button
+          variant={activeTab === "sessions" ? "default" : "outline"}
+          onClick={() => setActiveTab("sessions")}
+          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-white/10"}
+        >
+          <Calendar className="w-4 h-4 mr-2" />
+          Sessions ({sessions.length})
+        </Button>
       </motion.div>
+
+      {activeTab === "availability" && (
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+          <h2 className="text-lg font-semibold text-white mb-6">Weekly Availability</h2>
+          <p className="text-sm text-gray-400 mb-6">
+            Set your available hours for each day. Candidates can book sessions during these times.
+          </p>
+
+          <div className="space-y-4">
+            {DAYS.map((day) => {
+              const dayAvail = availability[day.value];
+              const isActive = dayAvail?.isActive;
+
+              return (
+                <div
+                  key={day.value}
+                  className={`p-4 rounded-lg border transition-colors ${
+                    isActive
+                      ? "bg-purple-500/10 border-purple-500/30"
+                      : "bg-white/5 border-white/10"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={isActive || false}
+                          onChange={() => toggleDayAvailability(day.value)}
+                        />
+                        <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                      </label>
+                      <span className={`font-medium ${isActive ? "text-white" : "text-gray-500"}`}>
+                        {day.label}
+                      </span>
+                    </div>
+
+                    {isActive && (
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={dayAvail?.startTime || "09:00"}
+                          onChange={(e) => updateDayTime(day.value, "startTime", e.target.value)}
+                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
+                          {TIME_SLOTS.map((t) => (
+                            <option key={t} value={t} className="bg-gray-900">
+                              {t}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="text-gray-400">to</span>
+                        <select
+                          value={dayAvail?.endTime || "17:00"}
+                          onChange={(e) => updateDayTime(day.value, "endTime", e.target.value)}
+                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                        >
+                          {TIME_SLOTS.map((t) => (
+                            <option key={t} value={t} className="bg-gray-900">
+                              {t}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <Button
+            onClick={saveAvailability}
+            disabled={isSaving}
+            className="w-full mt-6 bg-purple-600 hover:bg-purple-500"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Availability
+              </>
+            )}
+          </Button>
+        </motion.div>
+      )}
+
+      {activeTab === "sessions" && (
+        <motion.div variants={itemVariants} className="space-y-4">
+          {sessions.length === 0 ? (
+            <div className="p-12 rounded-xl bg-white/5 border border-white/10 text-center">
+              <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">No Upcoming Sessions</h3>
+              <p className="text-gray-400 max-w-md mx-auto">
+                When candidates book sessions with you, they'll appear here. Make sure your availability is set up.
+              </p>
+            </div>
+          ) : (
+            sessions.map((session) => (
+              <div
+                key={session.id}
+                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                      {session.candidate?.avatar_url ? (
+                        <img
+                          src={session.candidate.avatar_url}
+                          alt=""
+                          className="w-full h-full rounded-xl object-cover"
+                        />
+                      ) : (
+                        <User className="w-6 h-6 text-purple-400" />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        {session.candidate?.first_name} {session.candidate?.last_name}
+                      </h3>
+                      <p className="text-sm text-gray-400">{session.candidate?.email}</p>
+                    </div>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(session.status)}`}>
+                    {session.status}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-500">Date & Time</p>
+                    <p className="text-white font-medium">{formatSessionDate(session.scheduled_at)}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Duration</p>
+                    <p className="text-white font-medium">{session.duration_minutes} minutes</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Type</p>
+                    <p className="text-white font-medium capitalize">{session.session_type?.replace("_", " ")}</p>
+                  </div>
+                </div>
+
+                {session.notes && (
+                  <div className="mt-4 p-3 rounded-lg bg-white/5">
+                    <p className="text-sm text-gray-400">{session.notes}</p>
+                  </div>
+                )}
+
+                {session.status === "scheduled" && (
+                  <div className="mt-4 flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => updateSessionStatus(session.id, "confirmed")}
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Confirm
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => updateSessionStatus(session.id, "cancelled")}
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel
+                    </Button>
+                    {session.meeting_url && (
+                      <a
+                        href={session.meeting_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-auto"
+                      >
+                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Join Meeting
+                        </Button>
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </motion.div>
+      )}
     </motion.div>
   );
 };
