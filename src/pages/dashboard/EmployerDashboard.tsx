@@ -961,9 +961,11 @@ const Connections = () => {
 
 // Projects component
 type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
+type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
 
 interface ProjectWithApplications extends LiveWorksProject {
   applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
+  milestones?: LiveWorksMilestone[];
 }
 
 const Projects = () => {
@@ -974,6 +976,8 @@ const Projects = () => {
   const [showNewProject, setShowNewProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectWithApplications | null>(null);
   const [showStatusMenu, setShowStatusMenu] = useState<string | null>(null);
+  const [showMilestoneForm, setShowMilestoneForm] = useState(false);
+  const [newMilestone, setNewMilestone] = useState({ title: "", description: "", dueDate: "" });
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -1035,7 +1039,14 @@ const Projects = () => {
                   )
                 : [];
 
-              return { ...project, applications: enrichedApps };
+              // Fetch milestones for this project
+              const { data: milestones } = await supabase
+                .from("liveworks_milestones")
+                .select("*")
+                .eq("project_id", project.id)
+                .order("order_index");
+
+              return { ...project, applications: enrichedApps, milestones: milestones || [] };
             })
           );
           setProjects(enrichedProjects);
@@ -1047,6 +1058,64 @@ const Projects = () => {
 
     fetchProjects();
   }, [user?.id]);
+
+  const addMilestone = async (projectId: string) => {
+    if (!newMilestone.title) return;
+
+    const project = projects.find(p => p.id === projectId);
+    const orderIndex = (project?.milestones?.length || 0) + 1;
+
+    const { data, error } = await supabase
+      .from("liveworks_milestones")
+      .insert({
+        project_id: projectId,
+        title: newMilestone.title,
+        description: newMilestone.description || null,
+        order_index: orderIndex,
+        status: "pending",
+        due_date: newMilestone.dueDate || null,
+      })
+      .select()
+      .single();
+
+    if (!error && data) {
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === projectId
+            ? { ...p, milestones: [...(p.milestones || []), data] }
+            : p
+        )
+      );
+      if (selectedProject?.id === projectId) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: [...(prev.milestones || []), data] } : null
+        );
+      }
+      setNewMilestone({ title: "", description: "", dueDate: "" });
+      setShowMilestoneForm(false);
+    }
+  };
+
+  const updateMilestoneStatus = async (milestoneId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", milestoneId);
+
+    if (!error) {
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) => (m.id === milestoneId ? { ...m, status: newStatus as any } : m));
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+    }
+  };
 
   const updateProjectStatus = async (projectId: string, newStatus: string) => {
     const { error } = await supabase
@@ -1581,6 +1650,154 @@ const Projects = () => {
                     <p className="text-gray-400">No applicants yet</p>
                     <p className="text-xs text-gray-500 mt-1">
                       Applicants will appear here when candidates apply
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Milestones Section */}
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm text-gray-400">Project Milestones</h3>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowMilestoneForm(!showMilestoneForm)}
+                    variant="outline"
+                    className="border-white/20 text-white hover:bg-white/10"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Milestone
+                  </Button>
+                </div>
+
+                {/* Add Milestone Form */}
+                {showMilestoneForm && (
+                  <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10">
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={newMilestone.title}
+                        onChange={(e) => setNewMilestone(prev => ({ ...prev, title: e.target.value }))}
+                        placeholder="Milestone title..."
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                      />
+                      <input
+                        type="text"
+                        value={newMilestone.description}
+                        onChange={(e) => setNewMilestone(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Description (optional)..."
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="date"
+                          value={newMilestone.dueDate}
+                          onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
+                          className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => addMilestone(selectedProject.id)}
+                          disabled={!newMilestone.title}
+                          className="bg-emerald-600 hover:bg-emerald-500"
+                        >
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setShowMilestoneForm(false);
+                            setNewMilestone({ title: "", description: "", dueDate: "" });
+                          }}
+                          className="text-gray-400 hover:text-white"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Milestones List */}
+                {selectedProject.milestones && selectedProject.milestones.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedProject.milestones.map((milestone, index) => {
+                      const getMilestoneStatusColor = (status: string) => {
+                        switch (status) {
+                          case "approved": return "bg-emerald-500/20 text-emerald-400";
+                          case "submitted": return "bg-blue-500/20 text-blue-400";
+                          case "in_progress": return "bg-amber-500/20 text-amber-400";
+                          case "revision_requested": return "bg-red-500/20 text-red-400";
+                          default: return "bg-gray-500/20 text-gray-400";
+                        }
+                      };
+
+                      return (
+                        <div
+                          key={milestone.id}
+                          className={`p-4 rounded-lg border transition-colors ${
+                            milestone.status === "approved"
+                              ? "bg-emerald-500/5 border-emerald-500/20"
+                              : "bg-white/5 border-white/10"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-3">
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                                milestone.status === "approved"
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : "bg-white/10 text-gray-400"
+                              }`}>
+                                {index + 1}
+                              </div>
+                              <div>
+                                <p className="font-medium text-white">{milestone.title}</p>
+                                {milestone.description && (
+                                  <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
+                                )}
+                                {milestone.due_date && (
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Due: {new Date(milestone.due_date).toLocaleDateString()}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-1 rounded text-xs ${getMilestoneStatusColor(milestone.status)}`}>
+                                {milestone.status.replace("_", " ")}
+                              </span>
+                              {milestone.status === "submitted" && (
+                                <div className="flex gap-1">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updateMilestoneStatus(milestone.id, "approved")}
+                                    className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
+                                  >
+                                    <CheckCircle className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
+                                    className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-7 px-2"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                    <Briefcase className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-400">No milestones yet</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Add milestones to track project progress
                     </p>
                   </div>
                 )}

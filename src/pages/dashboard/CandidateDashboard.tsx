@@ -423,6 +423,244 @@ const SkillPassport = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const downloadPDF = () => {
+    const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+    const avgScore = Object.values(behavioralScores).length > 0
+      ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
+      : "N/A";
+    const tierLabel = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Skill Passport - ${profile?.first_name} ${profile?.last_name}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 40px;
+            color: #1a1a2e;
+            background: white;
+          }
+          .passport-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 32px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdfa 100%);
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #d1d5db;
+          }
+          .profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+          .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #14b8a6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+          }
+          .name { font-size: 24px; font-weight: bold; color: #1a1a2e; }
+          .headline { color: #10b981; font-weight: 500; }
+          .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            border-radius: 20px;
+            color: #16a34a;
+            font-size: 14px;
+            font-weight: 500;
+          }
+          .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+          }
+          .stat-card {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+          }
+          .stat-label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+          .stat-value { font-size: 18px; font-weight: bold; }
+          .verification-box {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .verification-code {
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+          }
+          .dimensions-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+          .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+          }
+          .dimension {
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+          }
+          .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+          }
+          .dimension-name { font-weight: 500; }
+          .dimension-score { font-weight: bold; }
+          .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+          }
+          .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #14b8a6);
+            border-radius: 4px;
+          }
+          .overall-score {
+            padding: 24px;
+            background: linear-gradient(135deg, #f3e8ff, #fce7f3);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+          }
+          .overall-label { color: #6b7280; margin-bottom: 4px; }
+          .overall-value { font-size: 32px; font-weight: bold; color: #1a1a2e; }
+          .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #6b7280;
+          }
+          .verify-url { color: #10b981; font-family: monospace; }
+          @media print {
+            body { padding: 20px; }
+            .passport-container { border-width: 1px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="passport-container">
+          <div class="header">
+            <div class="profile">
+              <div class="avatar">${profile?.first_name?.[0] || ''}${profile?.last_name?.[0] || ''}</div>
+              <div>
+                <div class="name">${profile?.first_name || ''} ${profile?.last_name || ''}</div>
+                <div class="headline">${profile?.headline || 'Candidate'}</div>
+              </div>
+            </div>
+            <div class="verified-badge">✓ Verified</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Readiness Tier</div>
+              <div class="stat-value" style="color: ${tierLabel.color.includes('emerald') ? '#10b981' : tierLabel.color.includes('blue') ? '#3b82f6' : '#f59e0b'}">${tierLabel.label}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Mentor Loops</div>
+              <div class="stat-value">${candidateProfile?.mentor_loops || 3}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Valid Until</div>
+              <div class="stat-value">${passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}</div>
+            </div>
+          </div>
+
+          <div class="verification-box">
+            <span style="font-size: 24px;">📋</span>
+            <div>
+              <div class="stat-label">Verification Code</div>
+              <div class="verification-code">${passportData?.verification_code || 'N/A'}</div>
+            </div>
+          </div>
+
+          <div class="dimensions-title">Behavioral Dimensions</div>
+          <div class="dimensions-grid">
+            ${BEHAVIORAL_DIMENSIONS.map(dim => {
+              const score = behavioralScores[dim.id] || 0;
+              const percentage = (score / 5) * 100;
+              return `
+                <div class="dimension">
+                  <div class="dimension-header">
+                    <span class="dimension-name">${dim.label}</span>
+                    <span class="dimension-score">${score.toFixed(1)}/5</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="overall-score">
+            <div>
+              <div class="overall-label">Overall Behavioral Score</div>
+              <div class="overall-value">${avgScore}/5</div>
+            </div>
+            <div style="font-size: 48px;">🏆</div>
+          </div>
+
+          <div class="footer">
+            <span>Issued: ${passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : 'N/A'}</span>
+            <span>The 3rd Academy</span>
+            <span class="verify-url">${window.location.origin}/verify/${passportData?.verification_code}</span>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
   const getTierLabel = (tier: string | null) => {
     const labels: Record<string, { label: string; color: string }> = {
       developing: { label: "Developing", color: "text-amber-400" },
@@ -554,6 +792,14 @@ const SkillPassport = () => {
           >
             <Share2 className="w-4 h-4 mr-2" />
             {copied ? "Copied!" : "Share Link"}
+          </Button>
+          <Button
+            variant="outline"
+            className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+            onClick={downloadPDF}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
           </Button>
         </div>
       </motion.div>
