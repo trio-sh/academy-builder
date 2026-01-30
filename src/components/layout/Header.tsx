@@ -3,8 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, LayoutDashboard, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import type { Database } from "@/types/database.types";
+
+type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
 const navigation = [
   { name: "Platform", href: "/platform" },
@@ -13,9 +17,25 @@ const navigation = [
   { name: "About", href: "/about" },
 ];
 
+const dashboardRoutes: Record<UserRole, string> = {
+  candidate: "/dashboard/candidate",
+  mentor: "/dashboard/mentor",
+  employer: "/dashboard/employer",
+  school_admin: "/dashboard/school",
+  admin: "/dashboard/admin",
+};
+
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, isLoading, profile, signOut } = useAuth();
+
+  const userDashboard = profile?.role ? dashboardRoutes[profile.role] : "/dashboard/candidate";
+
+  const handleSignOut = async () => {
+    setMobileMenuOpen(false);
+    await signOut();
+  };
 
   return (
     <motion.header
@@ -66,23 +86,53 @@ export function Header() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-400 hover:text-white hover:bg-white/10"
-            asChild
-          >
-            <Link to="/login">Sign In</Link>
-          </Button>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-              asChild
-            >
-              <Link to="/get-started">Get Started</Link>
-            </Button>
-          </motion.div>
+          {isLoading ? (
+            <div className="w-20 h-8 bg-white/10 rounded-lg animate-pulse" />
+          ) : isAuthenticated && profile ? (
+            <>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
+                  asChild
+                >
+                  <Link to={userDashboard}>
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Link>
+                </Button>
+              </motion.div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-400 hover:text-white hover:bg-white/10"
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-400 hover:text-white hover:bg-white/10"
+                asChild
+              >
+                <Link to="/login">Sign In</Link>
+              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
+                  asChild
+                >
+                  <Link to="/get-started">Get Started</Link>
+                </Button>
+              </motion.div>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu */}
@@ -111,23 +161,61 @@ export function Header() {
                 </Link>
               ))}
               <div className="pt-6 border-t border-white/10 flex flex-col gap-3">
-                <Button
-                  variant="outline"
-                  className="w-full border-white/20 text-white hover:bg-white/10"
-                  asChild
-                >
-                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                    Sign In
-                  </Link>
-                </Button>
-                <Button
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
-                  asChild
-                >
-                  <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
-                  </Link>
-                </Button>
+                {isLoading ? (
+                  <div className="w-full h-10 bg-white/10 rounded-lg animate-pulse" />
+                ) : isAuthenticated && profile ? (
+                  <>
+                    {/* User info */}
+                    <div className="flex items-center gap-3 py-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium">
+                        {profile.first_name?.[0]}{profile.last_name?.[0]}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate">
+                          {profile.first_name} {profile.last_name}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{profile.email}</p>
+                      </div>
+                    </div>
+                    <Button
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                      asChild
+                    >
+                      <Link to={userDashboard} onClick={() => setMobileMenuOpen(false)}>
+                        <LayoutDashboard className="w-4 h-4 mr-2" />
+                        Go to Dashboard
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/20 text-white hover:bg-white/10"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/20 text-white hover:bg-white/10"
+                      asChild
+                    >
+                      <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                        Sign In
+                      </Link>
+                    </Button>
+                    <Button
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                      asChild
+                    >
+                      <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
+                        Get Started
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </SheetContent>
