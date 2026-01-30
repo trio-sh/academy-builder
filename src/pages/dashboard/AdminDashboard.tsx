@@ -58,6 +58,9 @@ import {
   Percent,
   Lock,
   Target,
+  Mail,
+  Send,
+  MessageSquare,
 } from "lucide-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -118,6 +121,7 @@ const navItems = [
   { name: "TalentVisa", href: "/dashboard/admin/talentvisa", icon: Award },
   { name: "Employers", href: "/dashboard/admin/employers", icon: Building2 },
   { name: "Schools", href: "/dashboard/admin/schools", icon: GraduationCap },
+  { name: "Communications", href: "/dashboard/admin/communications", icon: Mail },
   { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
   { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
 ];
@@ -1433,6 +1437,303 @@ const Reports = () => {
   );
 };
 
+// Communications component - Admin email/notification sending
+const CommunicationsPage = () => {
+  const [users, setUsers] = useState<Profile[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string>("all");
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [sendType, setSendType] = useState<"email" | "notification" | "both">("notification");
+  const [isSending, setIsSending] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
+      setUsers(data || []);
+      setIsLoading(false);
+    };
+    fetchUsers();
+  }, []);
+
+  const filteredUsers = users.filter((u) => {
+    const matchesRole = selectedRole === "all" || u.role === selectedRole;
+    const matchesSearch =
+      !searchQuery ||
+      `${u.first_name} ${u.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRole && matchesSearch;
+  });
+
+  const toggleUser = (userId: string) => {
+    setSelectedUsers((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    );
+  };
+
+  const selectAll = () => {
+    if (selectedUsers.length === filteredUsers.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(filteredUsers.map((u) => u.id));
+    }
+  };
+
+  const sendCommunication = async () => {
+    if (selectedUsers.length === 0) {
+      alert("Please select at least one recipient");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      // Send notifications
+      if (sendType === "notification" || sendType === "both") {
+        const notifications = selectedUsers.map((userId) => ({
+          user_id: userId,
+          type: "admin_message",
+          title: notificationTitle || subject || "Message from Admin",
+          message: notificationMessage || message,
+          priority: "high" as const,
+          action_type: "announcement",
+        }));
+
+        await supabase.from("notifications").insert(notifications);
+      }
+
+      // Queue emails
+      if (sendType === "email" || sendType === "both") {
+        const selectedUserData = users.filter((u) => selectedUsers.includes(u.id));
+        const emails = selectedUserData.map((u) => ({
+          to_email: u.email,
+          to_name: `${u.first_name} ${u.last_name}`,
+          subject: subject || notificationTitle || "Message from The 3rd Academy",
+          body: message || notificationMessage,
+          status: "pending",
+        }));
+
+        await supabase.from("email_queue").insert(emails);
+      }
+
+      alert(`Successfully sent to ${selectedUsers.length} user(s)!`);
+      setSelectedUsers([]);
+      setSubject("");
+      setMessage("");
+      setNotificationTitle("");
+      setNotificationMessage("");
+    } catch (error) {
+      console.error("Error sending:", error);
+      alert("Failed to send. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Communications</h1>
+        <p className="text-gray-400">Send emails and notifications to users.</p>
+      </motion.div>
+
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* User Selection */}
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+          <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
+
+          {/* Filters */}
+          <div className="flex gap-4 mb-4">
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+            >
+              <option value="all" className="bg-gray-900">All Roles</option>
+              <option value="candidate" className="bg-gray-900">Candidates</option>
+              <option value="mentor" className="bg-gray-900">Mentors</option>
+              <option value="employer" className="bg-gray-900">Employers</option>
+              <option value="school_admin" className="bg-gray-900">School Admins</option>
+            </select>
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Select All */}
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
+            <button
+              onClick={selectAll}
+              className="text-sm text-indigo-400 hover:text-indigo-300"
+            >
+              {selectedUsers.length === filteredUsers.length ? "Deselect All" : "Select All"}
+            </button>
+            <span className="text-sm text-gray-500">
+              {selectedUsers.length} of {filteredUsers.length} selected
+            </span>
+          </div>
+
+          {/* User List */}
+          <div className="max-h-80 overflow-y-auto space-y-2">
+            {filteredUsers.map((user) => (
+              <label
+                key={user.id}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                  selectedUsers.includes(user.id)
+                    ? "bg-red-500/10 border border-red-500/30"
+                    : "bg-white/5 hover:bg-white/10"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedUsers.includes(user.id)}
+                  onChange={() => toggleUser(user.id)}
+                  className="rounded border-white/20"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {user.first_name} {user.last_name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-400 capitalize">
+                  {user.role}
+                </span>
+              </label>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Message Composition */}
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+          <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
+
+          {/* Send Type */}
+          <div className="mb-6">
+            <label className="block text-sm text-gray-400 mb-2">Send as</label>
+            <div className="flex gap-2">
+              {[
+                { value: "notification", label: "In-App Notification", icon: Bell },
+                { value: "email", label: "Email", icon: Mail },
+                { value: "both", label: "Both", icon: Send },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSendType(option.value as typeof sendType)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-colors ${
+                    sendType === option.value
+                      ? "bg-red-500/20 border-red-500/50 text-white"
+                      : "border-white/10 text-gray-400 hover:bg-white/5"
+                  }`}
+                >
+                  <option.icon className="w-4 h-4" />
+                  <span className="text-sm">{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Notification Fields */}
+          {(sendType === "notification" || sendType === "both") && (
+            <div className="space-y-4 mb-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Notification Title</label>
+                <input
+                  type="text"
+                  value={notificationTitle}
+                  onChange={(e) => setNotificationTitle(e.target.value)}
+                  placeholder="Important Update"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Notification Message</label>
+                <textarea
+                  value={notificationMessage}
+                  onChange={(e) => setNotificationMessage(e.target.value)}
+                  placeholder="Enter your notification message..."
+                  rows={3}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Email Fields */}
+          {(sendType === "email" || sendType === "both") && (
+            <div className="space-y-4 mb-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Email Subject</label>
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Subject line"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Email Body</label>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Enter your email message..."
+                  rows={5}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                />
+              </div>
+            </div>
+          )}
+
+          <Button
+            onClick={sendCommunication}
+            disabled={isSending || selectedUsers.length === 0}
+            className="w-full bg-red-600 hover:bg-red-500 text-white"
+          >
+            {isSending ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4 mr-2" />
+                Send to {selectedUsers.length} User{selectedUsers.length !== 1 ? "s" : ""}
+              </>
+            )}
+          </Button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
 // Settings component
 const SettingsPage = () => {
   return (
@@ -1500,7 +1801,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
@@ -1576,6 +1877,7 @@ const AdminDashboard = () => {
             <Route path="talentvisa" element={<TalentVisaReview />} />
             <Route path="employers" element={<EmployersManagement />} />
             <Route path="schools" element={<SchoolsManagement />} />
+            <Route path="communications" element={<CommunicationsPage />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

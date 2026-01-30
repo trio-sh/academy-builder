@@ -27,6 +27,7 @@ import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Join from "./pages/Join";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
@@ -86,6 +87,14 @@ const App = () => (
               element={
                 <PublicOnlyRoute>
                   <GetStarted />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/join"
+              element={
+                <PublicOnlyRoute>
+                  <Join />
                 </PublicOnlyRoute>
               }
             />
