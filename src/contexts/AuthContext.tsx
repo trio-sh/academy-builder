@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
-import { supabase, signIn, signUp, signOut, signInWithOAuth } from '@/lib/supabase';
+import { supabase, signIn, signUp, signOut, signInWithOAuth, createProfile } from '@/lib/supabase';
 import type { Database } from '@/types/database.types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -39,14 +39,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user profile
-  const fetchProfile = useCallback(async (userId: string) => {
+  // Fetch user profile, create if doesn't exist
+  const fetchProfile = useCallback(async (userId: string, user?: User) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
+
+      if (error && error.code === 'PGRST116') {
+        // Profile doesn't exist, create it from user metadata
+        if (user) {
+          const metadata = user.user_metadata || {};
+          await createProfile(
+            userId,
+            user.email || '',
+            metadata.first_name || '',
+            metadata.last_name || '',
+            metadata.role || 'candidate'
+          );
+          // Fetch again after creation
+          const { data: newData } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+          return newData;
+        }
+        return null;
+      }
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -63,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Refresh profile data
   const refreshProfile = useCallback(async () => {
     if (user) {
-      const profileData = await fetchProfile(user.id);
+      const profileData = await fetchProfile(user.id, user);
       setProfile(profileData);
     }
   }, [user, fetchProfile]);
@@ -79,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(initialSession?.user ?? null);
 
         if (initialSession?.user) {
-          const profileData = await fetchProfile(initialSession.user.id);
+          const profileData = await fetchProfile(initialSession.user.id, initialSession.user);
           setProfile(profileData);
         }
       } catch (error) {
@@ -98,11 +120,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          // Small delay to ensure profile is created by trigger
-          setTimeout(async () => {
-            const profileData = await fetchProfile(currentSession.user.id);
-            setProfile(profileData);
-          }, 100);
+          // Fetch or create profile
+          const profileData = await fetchProfile(currentSession.user.id, currentSession.user);
+          setProfile(profileData);
         } else {
           setProfile(null);
         }

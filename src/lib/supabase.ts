@@ -37,7 +37,7 @@ export const signUp = async (
     role: 'candidate' | 'mentor' | 'employer' | 'school_admin';
   }
 ) => {
-  // First, create the auth user
+  // Create the auth user
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -50,8 +50,9 @@ export const signUp = async (
     },
   });
 
-  // If signup successful, create profile in database
-  if (data.user && !error) {
+  // If signup successful AND we have a session, create profile
+  if (data.user && data.session && !error) {
+    // Use the session to create the profile
     const { error: profileError } = await supabase.from('profiles').insert({
       id: data.user.id,
       email: email,
@@ -62,11 +63,29 @@ export const signUp = async (
 
     if (profileError) {
       console.error('Error creating profile:', profileError);
-      // Don't fail signup if profile creation fails - can retry later
     }
   }
 
   return { data, error };
+};
+
+// Create profile for user (called after session is established)
+export const createProfile = async (
+  userId: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  role: 'candidate' | 'mentor' | 'employer' | 'school_admin'
+) => {
+  const { error } = await supabase.from('profiles').upsert({
+    id: userId,
+    email: email,
+    first_name: firstName,
+    last_name: lastName,
+    role: role,
+  }, { onConflict: 'id' });
+
+  return { error };
 };
 
 export const signIn = async (email: string, password: string) => {
