@@ -6,6 +6,22 @@ import { supabase, updatePassword } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from "recharts";
+import {
   Award,
   BarChart3,
   Briefcase,
@@ -963,7 +979,9 @@ const SkillPassport = () => {
 const GrowthLog = () => {
   const { user } = useAuth();
   const [entries, setEntries] = useState<GrowthLogEntry[]>([]);
+  const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"timeline" | "charts">("charts");
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -975,6 +993,16 @@ const GrowthLog = () => {
         .eq("candidate_id", user.id)
         .order("created_at", { ascending: false });
 
+      // Fetch passport for behavioral scores
+      const { data: passport } = await supabase
+        .from("skill_passports")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      setPassportData(passport);
       setEntries(data || []);
       setIsLoading(false);
     };
@@ -1010,6 +1038,76 @@ const GrowthLog = () => {
     return colors[type] || "from-gray-500 to-gray-600";
   };
 
+  // Calculate activity trends data (last 30 days)
+  const getActivityTrendsData = () => {
+    const last30Days: Record<string, number> = {};
+    const today = new Date();
+
+    // Initialize last 30 days
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const key = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      last30Days[key] = 0;
+    }
+
+    // Count entries per day
+    entries.forEach((entry) => {
+      const entryDate = new Date(entry.created_at);
+      const daysDiff = Math.floor((today.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysDiff < 30) {
+        const key = entryDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        if (last30Days[key] !== undefined) {
+          last30Days[key]++;
+        }
+      }
+    });
+
+    return Object.entries(last30Days).map(([date, count]) => ({
+      date,
+      activities: count,
+    }));
+  };
+
+  // Calculate behavioral radar data
+  const getBehavioralRadarData = () => {
+    const scores = (passportData?.behavioral_scores || {}) as Record<string, number>;
+    return BEHAVIORAL_DIMENSIONS.map((dim) => ({
+      dimension: dim.label,
+      score: scores[dim.id] || 0,
+      fullMark: 5,
+    }));
+  };
+
+  // Calculate event type distribution
+  const getEventDistribution = () => {
+    const distribution: Record<string, number> = {};
+    entries.forEach((entry) => {
+      distribution[entry.event_type] = (distribution[entry.event_type] || 0) + 1;
+    });
+    return Object.entries(distribution).map(([type, count]) => ({
+      type: type.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+      count,
+    }));
+  };
+
+  // Calculate growth stats
+  const getGrowthStats = () => {
+    const thisWeek = entries.filter((e) => {
+      const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff < 7;
+    }).length;
+
+    const lastWeek = entries.filter((e) => {
+      const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff >= 7 && daysDiff < 14;
+    }).length;
+
+    const growthRate = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : thisWeek > 0 ? 100 : 0;
+
+    return { thisWeek, lastWeek, growthRate };
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -1018,6 +1116,11 @@ const GrowthLog = () => {
     );
   }
 
+  const activityData = getActivityTrendsData();
+  const radarData = getBehavioralRadarData();
+  const eventDistribution = getEventDistribution();
+  const growthStats = getGrowthStats();
+
   return (
     <motion.div
       variants={containerVariants}
@@ -1025,83 +1128,293 @@ const GrowthLog = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
-        <p className="text-gray-400">
-          Your complete behavioral development timeline.
-        </p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
+          <p className="text-gray-400">
+            Your complete behavioral development timeline.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === "charts" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("charts")}
+            className={viewMode === "charts" ? "bg-indigo-600" : "border-white/20 text-white"}
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Analytics
+          </Button>
+          <Button
+            variant={viewMode === "timeline" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("timeline")}
+            className={viewMode === "timeline" ? "bg-indigo-600" : "border-white/20 text-white"}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            Timeline
+          </Button>
+        </div>
       </motion.div>
 
-      {entries.length > 0 ? (
-        <motion.div variants={itemVariants} className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
-
-          <div className="space-y-6">
-            {entries.map((entry, index) => {
-              const Icon = getEventIcon(entry.event_type);
-              return (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative pl-14"
-                >
-                  {/* Timeline dot */}
-                  <div className={`absolute left-0 w-10 h-10 rounded-xl bg-gradient-to-br ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-
-                  <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-white">{entry.title}</h3>
-                      <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
-                        {new Date(entry.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
-                    {entry.description && (
-                      <p className="text-sm text-gray-400">{entry.description}</p>
-                    )}
-                    {entry.source_component && (
-                      <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-white/10 text-gray-400">
-                        {entry.source_component}
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
-        >
-          <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No entries yet</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Your growth log will populate as you complete activities
+      {/* Stats Overview */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+          <p className="text-sm text-gray-400 mb-1">Total Activities</p>
+          <p className="text-2xl font-bold text-white">{entries.length}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+          <p className="text-sm text-gray-400 mb-1">This Week</p>
+          <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+          <p className="text-sm text-gray-400 mb-1">Growth Rate</p>
+          <p className={`text-2xl font-bold ${growthStats.growthRate >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+            {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
           </p>
-        </motion.div>
+        </div>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+          <p className="text-sm text-gray-400 mb-1">Event Types</p>
+          <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
+        </div>
+      </motion.div>
+
+      {viewMode === "charts" && (
+        <>
+          {/* Activity Trends Chart */}
+          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={activityData}>
+                  <defs>
+                    <linearGradient id="activityGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fill: "#9ca3af", fontSize: 10 }}
+                    tickLine={{ stroke: "#4b5563" }}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    tick={{ fill: "#9ca3af", fontSize: 12 }}
+                    tickLine={{ stroke: "#4b5563" }}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1f2937",
+                      border: "1px solid #374151",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="activities"
+                    stroke="#6366f1"
+                    strokeWidth={2}
+                    fill="url(#activityGradient)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          {/* Behavioral Dimensions Radar */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={radarData}>
+                    <PolarGrid stroke="#374151" />
+                    <PolarAngleAxis
+                      dataKey="dimension"
+                      tick={{ fill: "#9ca3af", fontSize: 10 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={30}
+                      domain={[0, 5]}
+                      tick={{ fill: "#6b7280", fontSize: 10 }}
+                    />
+                    <Radar
+                      name="Score"
+                      dataKey="score"
+                      stroke="#10b981"
+                      fill="#10b981"
+                      fillOpacity={0.3}
+                      strokeWidth={2}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#1f2937",
+                        border: "1px solid #374151",
+                        borderRadius: "8px",
+                        color: "#fff",
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
+              <div className="space-y-3">
+                {eventDistribution.map((item) => {
+                  const maxCount = Math.max(...eventDistribution.map((e) => e.count));
+                  const percentage = (item.count / maxCount) * 100;
+                  return (
+                    <div key={item.type}>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-gray-400">{item.type}</span>
+                        <span className="text-white font-medium">{item.count}</span>
+                      </div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                {eventDistribution.length === 0 && (
+                  <p className="text-gray-500 text-center py-4">No activities recorded yet</p>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+
+      {viewMode === "timeline" && (
+        <>
+          {entries.length > 0 ? (
+            <motion.div variants={itemVariants} className="relative">
+              {/* Timeline line */}
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
+
+              <div className="space-y-6">
+                {entries.map((entry, index) => {
+                  const Icon = getEventIcon(entry.event_type);
+                  return (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="relative pl-14"
+                    >
+                      {/* Timeline dot */}
+                      <div className={`absolute left-0 w-10 h-10 rounded-xl bg-gradient-to-br ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+
+                      <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-white">{entry.title}</h3>
+                          <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                            {new Date(entry.created_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        {entry.description && (
+                          <p className="text-sm text-gray-400">{entry.description}</p>
+                        )}
+                        {entry.source_component && (
+                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-white/10 text-gray-400">
+                            {entry.source_component}
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              variants={itemVariants}
+              className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+            >
+              <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-400">No entries yet</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Your growth log will populate as you complete activities
+              </p>
+            </motion.div>
+          )}
+        </>
       )}
     </motion.div>
   );
 };
 
+// Quiz questions for each behavioral dimension
+const QUIZ_QUESTIONS: Record<string, { question: string; options: string[]; correct: number }[]> = {
+  communication: [
+    { question: "Which approach is most effective for delivering critical feedback?", options: ["Publicly to set an example", "Via email only", "Privately and constructively", "Avoid it entirely"], correct: 2 },
+    { question: "Active listening involves:", options: ["Thinking about your response while others speak", "Maintaining eye contact and asking clarifying questions", "Interrupting to show engagement", "Taking notes constantly"], correct: 1 },
+    { question: "When presenting complex information, you should:", options: ["Use as much jargon as possible", "Break it into digestible chunks with examples", "Speak quickly to cover more ground", "Assume audience knowledge"], correct: 1 },
+  ],
+  problem_solving: [
+    { question: "The first step in effective problem-solving is:", options: ["Implementing a quick fix", "Blaming the responsible party", "Clearly defining the problem", "Calling a meeting"], correct: 2 },
+    { question: "Root cause analysis helps you:", options: ["Find someone to blame", "Address symptoms quickly", "Identify and fix underlying issues", "Avoid accountability"], correct: 2 },
+    { question: "When facing a novel problem, you should:", options: ["Panic and escalate immediately", "Research similar cases and brainstorm options", "Ignore it until it resolves", "Make assumptions without data"], correct: 1 },
+  ],
+  adaptability: [
+    { question: "How should you respond to unexpected changes in project scope?", options: ["Refuse to accept changes", "Assess impact and adjust plans accordingly", "Complain to colleagues", "Ignore the changes"], correct: 1 },
+    { question: "Adaptable employees are characterized by:", options: ["Resistance to new ideas", "Flexibility and openness to change", "Strict adherence to routines", "Avoiding challenges"], correct: 1 },
+    { question: "When learning new technology, you should:", options: ["Wait for formal training only", "Explore, practice, and ask questions", "Avoid it as long as possible", "Claim you can't learn it"], correct: 1 },
+  ],
+  collaboration: [
+    { question: "Effective team collaboration requires:", options: ["Individual competition", "Clear communication and shared goals", "Working in isolation", "Avoiding disagreements"], correct: 1 },
+    { question: "When a team member disagrees with your idea, you should:", options: ["Dismiss their opinion", "Listen and consider their perspective", "Escalate to management", "Stop contributing"], correct: 1 },
+    { question: "Sharing credit for team success:", options: ["Makes you look weak", "Builds trust and morale", "Is unnecessary", "Should be avoided"], correct: 1 },
+  ],
+  initiative: [
+    { question: "Taking initiative means:", options: ["Waiting to be told what to do", "Proactively identifying and addressing opportunities", "Only doing assigned tasks", "Avoiding extra work"], correct: 1 },
+    { question: "When you notice a process improvement opportunity:", options: ["Ignore it - not your job", "Document and propose the improvement", "Complain about current process", "Wait for someone else to notice"], correct: 1 },
+    { question: "Self-starters typically:", options: ["Need constant supervision", "Seek out challenges and learning opportunities", "Avoid responsibility", "Follow others only"], correct: 1 },
+  ],
+  time_management: [
+    { question: "The best way to handle multiple deadlines is to:", options: ["Work on everything simultaneously", "Prioritize tasks by urgency and importance", "Miss some deadlines", "Only work on easy tasks"], correct: 1 },
+    { question: "When estimating task duration, you should:", options: ["Always give shortest estimate", "Add buffer time for unexpected issues", "Avoid giving estimates", "Double all estimates"], correct: 1 },
+    { question: "Effective time management includes:", options: ["Multitasking constantly", "Setting clear goals and minimizing distractions", "Working without breaks", "Checking email every 5 minutes"], correct: 1 },
+  ],
+  professionalism: [
+    { question: "Professional workplace behavior includes:", options: ["Gossip and office politics", "Reliability, respect, and accountability", "Casual attitude to deadlines", "Avoiding difficult conversations"], correct: 1 },
+    { question: "When you make a mistake at work, you should:", options: ["Hide it and hope no one notices", "Acknowledge it and work to fix it", "Blame others", "Ignore it"], correct: 1 },
+    { question: "Professional communication means:", options: ["Using slang and emojis always", "Clear, respectful, and appropriate language", "Being overly casual", "Avoiding communication"], correct: 1 },
+  ],
+  learning_agility: [
+    { question: "Learning agility is best described as:", options: ["Memorizing information quickly", "Ability to learn from experience and apply to new situations", "Avoiding new challenges", "Only learning from formal training"], correct: 1 },
+    { question: "When you fail at something, you should:", options: ["Give up on similar tasks", "Analyze what went wrong and try again", "Blame external factors", "Avoid the topic forever"], correct: 1 },
+    { question: "Continuous learning in the workplace means:", options: ["Only attending mandatory training", "Actively seeking new knowledge and skills", "Waiting for promotions to learn", "Learning stops after onboarding"], correct: 1 },
+  ],
+};
+
 // Training (BridgeFast) component
 const Training = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [modules, setModules] = useState<BridgeFastModule[]>([]);
   const [progress, setProgress] = useState<Record<string, BridgeFastProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [activeModule, setActiveModule] = useState<BridgeFastModule | null>(null);
-  const [moduleStep, setModuleStep] = useState(0); // 0=intro, 1-3=content, 4=quiz, 5=complete
+  const [moduleStep, setModuleStep] = useState(0); // 0=intro, 1=video, 2-4=content, 5=quiz, 6=complete
+  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -1228,9 +1541,12 @@ const Training = () => {
       startModule(module.id);
     }
     setActiveModule(module);
+    setQuizAnswers([]);
+    setQuizSubmitted(false);
+    setQuizScore(0);
     // Set step based on current progress
     const percent = moduleProgress?.progress_percent || 0;
-    setModuleStep(Math.floor(percent / 20)); // 0%, 20%, 40%, 60%, 80%
+    setModuleStep(Math.floor(percent / 16.67)); // 6 steps total
   };
 
   const advanceStep = async () => {
@@ -1238,9 +1554,113 @@ const Training = () => {
     const newStep = moduleStep + 1;
     setModuleStep(newStep);
 
-    // Update progress (each step is 20%)
-    const newPercent = Math.min(newStep * 20, 80); // Cap at 80% until quiz complete
+    // Update progress (each step is ~16.67%)
+    const newPercent = Math.min(Math.round(newStep * 16.67), 83); // Cap at 83% until quiz complete
     await updateProgress(activeModule.id, newPercent);
+  };
+
+  const getQuizQuestions = () => {
+    const dimension = activeModule?.behavioral_dimension?.toLowerCase().replace(" ", "_") || "communication";
+    return QUIZ_QUESTIONS[dimension] || QUIZ_QUESTIONS.communication;
+  };
+
+  const submitQuiz = async () => {
+    const questions = getQuizQuestions();
+    let correct = 0;
+    questions.forEach((q, i) => {
+      if (quizAnswers[i] === q.correct) correct++;
+    });
+    const score = Math.round((correct / questions.length) * 100);
+    setQuizScore(score);
+    setQuizSubmitted(true);
+  };
+
+  const downloadCertificate = () => {
+    if (!activeModule || !profile) return;
+
+    const certWindow = window.open('', '_blank');
+    if (!certWindow) return;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Certificate - ${activeModule.title}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: 'Georgia', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 20px;
+          }
+          .certificate {
+            width: 800px;
+            padding: 50px;
+            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+            border: 3px solid #1e3a5f;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+          }
+          .certificate::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #d4af37;
+          }
+          .logo { font-size: 24px; color: #1e3a5f; margin-bottom: 10px; letter-spacing: 3px; }
+          .title { font-size: 42px; color: #d4af37; margin: 20px 0; font-weight: normal; }
+          .subtitle { font-size: 18px; color: #666; margin-bottom: 30px; }
+          .recipient { font-size: 32px; color: #1e3a5f; margin: 20px 0; border-bottom: 2px solid #d4af37; display: inline-block; padding-bottom: 10px; }
+          .course { font-size: 20px; color: #333; margin: 30px 0 10px; }
+          .course-name { font-size: 24px; color: #1e3a5f; font-weight: bold; }
+          .dimension { display: inline-block; padding: 8px 20px; background: #1e3a5f; color: #fff; border-radius: 20px; margin: 20px 0; font-size: 14px; }
+          .score { font-size: 18px; color: #666; margin: 20px 0; }
+          .date { font-size: 14px; color: #888; margin-top: 30px; }
+          .footer { display: flex; justify-content: space-around; margin-top: 40px; }
+          .signature { text-align: center; }
+          .signature-line { width: 150px; border-top: 1px solid #333; margin: 10px auto 5px; }
+          .signature-title { font-size: 12px; color: #666; }
+          .badge { position: absolute; top: 20px; right: 30px; width: 80px; height: 80px; background: linear-gradient(135deg, #d4af37, #b8962e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
+          @media print {
+            body { background: white; }
+            .certificate { box-shadow: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="certificate">
+          <div class="badge">VERIFIED</div>
+          <div class="logo">THE 3RD ACADEMY</div>
+          <div class="title">Certificate of Completion</div>
+          <div class="subtitle">This is to certify that</div>
+          <div class="recipient">${profile.first_name} ${profile.last_name}</div>
+          <div class="course">has successfully completed the BridgeFast training module</div>
+          <div class="course-name">${activeModule.title}</div>
+          <div class="dimension">${activeModule.behavioral_dimension}</div>
+          <div class="score">Final Score: ${quizScore}% | Duration: ${activeModule.duration_hours} hours</div>
+          <div class="date">Issued on ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+          <div class="footer">
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-title">Program Director</div>
+            </div>
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-title">Certificate ID: BF-${Date.now().toString(36).toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+        <script>window.onload = function() { window.print(); }</script>
+      </body>
+      </html>
+    `;
+    certWindow.document.write(html);
+    certWindow.document.close();
   };
 
   if (isLoading) {
@@ -1413,6 +1833,7 @@ const Training = () => {
 
             {/* Content */}
             <div className="p-6 overflow-y-auto max-h-[50vh]">
+              {/* Step 0: Introduction */}
               {moduleStep === 0 && (
                 <div className="text-center py-8">
                   <BookOpen className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
@@ -1430,6 +1851,20 @@ const Training = () => {
                       {activeModule.behavioral_dimension}
                     </span>
                   </div>
+                  <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-6">
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <Play className="w-5 h-5 text-blue-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Video Lesson</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <BookOpen className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Reading</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                      <FileText className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
+                      <p className="text-xs text-gray-400">Quiz</p>
+                    </div>
+                  </div>
                   <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
                     Start Learning
                     <ChevronRight className="w-4 h-4 ml-2" />
@@ -1437,19 +1872,82 @@ const Training = () => {
                 </div>
               )}
 
-              {moduleStep >= 1 && moduleStep <= 4 && (
+              {/* Step 1: Video Lesson */}
+              {moduleStep === 1 && (
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2 py-1 rounded bg-indigo-500/20 text-indigo-400 text-sm">
-                      Part {moduleStep} of 4
+                    <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-sm">
+                      Video Lesson
                     </span>
                   </div>
 
                   <h3 className="text-xl font-semibold text-white mb-4">
-                    {moduleStep === 1 && "Understanding the Fundamentals"}
-                    {moduleStep === 2 && "Key Concepts & Strategies"}
-                    {moduleStep === 3 && "Practical Applications"}
-                    {moduleStep === 4 && "Real-World Scenarios"}
+                    Introduction to {activeModule.behavioral_dimension}
+                  </h3>
+
+                  {/* Video Player */}
+                  <div className="relative rounded-xl overflow-hidden bg-black aspect-video mb-4">
+                    {activeModule.content_url ? (
+                      <video
+                        controls
+                        className="w-full h-full"
+                        poster={`https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop`}
+                      >
+                        <source src={activeModule.content_url} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900/50 to-purple-900/50">
+                        <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 cursor-pointer hover:bg-white/20 transition-colors">
+                          <Play className="w-10 h-10 text-white ml-1" />
+                        </div>
+                        <p className="text-white font-medium">{activeModule.behavioral_dimension} Training</p>
+                        <p className="text-gray-400 text-sm mt-1">Duration: {activeModule.duration_hours} hours</p>
+                        <div className="mt-4 px-4 py-2 bg-white/10 rounded-lg">
+                          <p className="text-xs text-gray-300">Demo Mode: Video content would play here</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                    <h4 className="font-medium text-white mb-2">Video Summary:</h4>
+                    <p className="text-sm text-gray-400">
+                      This video covers the fundamentals of {activeModule.behavioral_dimension.toLowerCase()},
+                      including key concepts, common challenges, and strategies for improvement in the workplace.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(0)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Back
+                    </Button>
+                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                      Continue to Reading
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Steps 2-4: Content/Reading */}
+              {moduleStep >= 2 && moduleStep <= 4 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-400 text-sm">
+                      Part {moduleStep - 1} of 3
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    {moduleStep === 2 && "Understanding the Fundamentals"}
+                    {moduleStep === 3 && "Key Concepts & Strategies"}
+                    {moduleStep === 4 && "Practical Applications"}
                   </h3>
 
                   <div className="space-y-4 text-gray-300">
@@ -1476,63 +1974,240 @@ const Training = () => {
                     </div>
 
                     <div className="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                      <h4 className="font-medium text-indigo-400 mb-2">💡 Pro Tip</h4>
+                      <h4 className="font-medium text-indigo-400 mb-2">Pro Tip</h4>
                       <p className="text-sm">
-                        {moduleStep === 1 && "Start by observing how experienced professionals demonstrate this skill in your workplace."}
-                        {moduleStep === 2 && "Practice these concepts in low-stakes situations before applying them to important scenarios."}
-                        {moduleStep === 3 && "Keep a journal of instances where you successfully applied these skills."}
-                        {moduleStep === 4 && "Seek feedback from mentors and peers to continuously improve."}
+                        {moduleStep === 2 && "Start by observing how experienced professionals demonstrate this skill in your workplace."}
+                        {moduleStep === 3 && "Practice these concepts in low-stakes situations before applying them to important scenarios."}
+                        {moduleStep === 4 && "Keep a journal of instances where you successfully applied these skills."}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex justify-between mt-6">
-                    {moduleStep > 1 && (
-                      <Button
-                        variant="outline"
-                        onClick={() => setModuleStep(moduleStep - 1)}
-                        className="border-white/20 text-white hover:bg-white/10"
-                      >
-                        <ChevronLeft className="w-4 h-4 mr-2" />
-                        Previous
-                      </Button>
-                    )}
-                    <div className="ml-auto">
-                      <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
-                        {moduleStep === 4 ? "Take Quiz" : "Continue"}
-                        <ChevronRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(moduleStep - 1)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Previous
+                    </Button>
+                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                      {moduleStep === 4 ? "Take Quiz" : "Continue"}
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </div>
                 </div>
               )}
 
-              {moduleStep === 5 && (
-                <div className="text-center py-8">
-                  <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                    <Award className="w-10 h-10 text-emerald-400" />
+              {/* Step 5: Quiz */}
+              {moduleStep === 5 && !quizSubmitted && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-sm">
+                      Knowledge Check
+                    </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Module Complete!</h3>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Quiz: {activeModule.behavioral_dimension}
+                  </h3>
+
                   <p className="text-gray-400 mb-6">
-                    Congratulations! You've successfully completed this module.
+                    Answer the following questions to test your understanding. You need 70% to pass.
+                  </p>
+
+                  <div className="space-y-6">
+                    {getQuizQuestions().map((q, qIndex) => (
+                      <div key={qIndex} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                        <p className="font-medium text-white mb-3">
+                          {qIndex + 1}. {q.question}
+                        </p>
+                        <div className="space-y-2">
+                          {q.options.map((option, oIndex) => (
+                            <label
+                              key={oIndex}
+                              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                quizAnswers[qIndex] === oIndex
+                                  ? "bg-indigo-500/20 border border-indigo-500/50"
+                                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={`question-${qIndex}`}
+                                className="sr-only"
+                                checked={quizAnswers[qIndex] === oIndex}
+                                onChange={() => {
+                                  const newAnswers = [...quizAnswers];
+                                  newAnswers[qIndex] = oIndex;
+                                  setQuizAnswers(newAnswers);
+                                }}
+                              />
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                quizAnswers[qIndex] === oIndex
+                                  ? "border-indigo-500 bg-indigo-500"
+                                  : "border-gray-500"
+                              }`}>
+                                {quizAnswers[qIndex] === oIndex && (
+                                  <div className="w-2 h-2 rounded-full bg-white" />
+                                )}
+                              </div>
+                              <span className="text-sm text-gray-300">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => setModuleStep(4)}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-2" />
+                      Back to Reading
+                    </Button>
+                    <Button
+                      onClick={submitQuiz}
+                      disabled={quizAnswers.length < getQuizQuestions().length}
+                      className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50"
+                    >
+                      Submit Quiz
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Quiz Results */}
+              {moduleStep === 5 && quizSubmitted && (
+                <div className="text-center py-8">
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    quizScore >= 70 ? "bg-emerald-500/20" : "bg-amber-500/20"
+                  }`}>
+                    {quizScore >= 70 ? (
+                      <CheckCircle className="w-10 h-10 text-emerald-400" />
+                    ) : (
+                      <AlertCircle className="w-10 h-10 text-amber-400" />
+                    )}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {quizScore >= 70 ? "Quiz Passed!" : "Keep Learning!"}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {quizScore >= 70
+                      ? "Great job! You've demonstrated understanding of this module."
+                      : "You need 70% to pass. Review the material and try again."}
                   </p>
                   <div className="p-4 rounded-xl bg-white/5 border border-white/10 inline-block mb-6">
                     <p className="text-sm text-gray-400 mb-1">Your Score</p>
-                    <p className="text-3xl font-bold text-emerald-400">85%</p>
+                    <p className={`text-3xl font-bold ${quizScore >= 70 ? "text-emerald-400" : "text-amber-400"}`}>
+                      {quizScore}%
+                    </p>
                   </div>
+
+                  {/* Show correct answers */}
+                  <div className="text-left mb-6 space-y-3">
+                    {getQuizQuestions().map((q, i) => (
+                      <div
+                        key={i}
+                        className={`p-3 rounded-lg ${
+                          quizAnswers[i] === q.correct
+                            ? "bg-emerald-500/10 border border-emerald-500/30"
+                            : "bg-red-500/10 border border-red-500/30"
+                        }`}
+                      >
+                        <p className="text-sm text-gray-300">
+                          {i + 1}. {quizAnswers[i] === q.correct ? "✓" : "✗"} {q.question}
+                        </p>
+                        {quizAnswers[i] !== q.correct && (
+                          <p className="text-xs text-emerald-400 mt-1">
+                            Correct: {q.options[q.correct]}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-center gap-3">
+                    {quizScore >= 70 ? (
+                      <Button
+                        onClick={() => setModuleStep(6)}
+                        className="bg-emerald-600 hover:bg-emerald-500"
+                      >
+                        Continue to Certificate
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setQuizAnswers([]);
+                            setQuizSubmitted(false);
+                            setModuleStep(2);
+                          }}
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          Review Material
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setQuizAnswers([]);
+                            setQuizSubmitted(false);
+                          }}
+                          className="bg-indigo-600 hover:bg-indigo-500"
+                        >
+                          Retry Quiz
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 6: Completion & Certificate */}
+              {moduleStep === 6 && (
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                    <Award className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Module Complete!</h3>
+                  <p className="text-gray-400 mb-6">
+                    Congratulations! You've successfully completed this training module.
+                  </p>
+
+                  {/* Certificate Preview */}
+                  <div className="p-6 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 mb-6">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Award className="w-6 h-6 text-amber-400" />
+                      <span className="text-amber-400 font-semibold">Certificate Earned</span>
+                    </div>
+                    <p className="text-white font-medium mb-1">{activeModule.title}</p>
+                    <p className="text-sm text-gray-400 mb-3">{activeModule.behavioral_dimension}</p>
+                    <div className="flex items-center justify-center gap-6 text-sm">
+                      <span className="text-gray-400">Score: <span className="text-emerald-400 font-bold">{quizScore}%</span></span>
+                      <span className="text-gray-400">Date: {new Date().toLocaleDateString()}</span>
+                    </div>
+                  </div>
+
                   <div className="flex justify-center gap-3">
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        setActiveModule(null);
-                        setModuleStep(0);
-                      }}
-                      className="border-white/20 text-white hover:bg-white/10"
+                      onClick={downloadCertificate}
+                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                     >
-                      Back to Modules
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Certificate
                     </Button>
                     <Button
-                      onClick={() => completeModule(activeModule.id, 85)}
+                      onClick={() => {
+                        completeModule(activeModule.id, quizScore);
+                        setShowCertificate(false);
+                      }}
                       className="bg-emerald-600 hover:bg-emerald-500"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />

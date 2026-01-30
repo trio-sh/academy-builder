@@ -35,6 +35,12 @@ import {
   Briefcase,
   UserCheck,
   AlertCircle,
+  Crown,
+  Medal,
+  Star,
+  Percent,
+  Lock,
+  Target,
 } from "lucide-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -42,6 +48,39 @@ type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
 type TalentVisaNomination = Database["public"]["Tables"]["talentvisa_nominations"]["Row"];
+type TalentVisaQuota = Database["public"]["Tables"]["talentvisa_quotas"]["Row"];
+type TalentVisaTier = "gold" | "silver" | "bronze";
+
+// Tier configuration
+const TIER_CONFIG = {
+  gold: {
+    label: "Gold",
+    icon: Crown,
+    color: "text-amber-400",
+    bgColor: "bg-amber-500/20",
+    borderColor: "border-amber-500/30",
+    minScore: 4.5,
+    description: "Top 5% - Exceptional candidates",
+  },
+  silver: {
+    label: "Silver",
+    icon: Medal,
+    color: "text-slate-300",
+    bgColor: "bg-slate-500/20",
+    borderColor: "border-slate-500/30",
+    minScore: 4.0,
+    description: "Top 15% - Outstanding candidates",
+  },
+  bronze: {
+    label: "Bronze",
+    icon: Star,
+    color: "text-orange-400",
+    bgColor: "bg-orange-500/20",
+    borderColor: "border-orange-500/30",
+    minScore: 3.5,
+    description: "Top 30% - Strong candidates",
+  },
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -493,11 +532,17 @@ interface NominationWithDetails extends TalentVisaNomination {
 const TalentVisaReview = () => {
   const { user } = useAuth();
   const [nominations, setNominations] = useState<NominationWithDetails[]>([]);
+  const [quotas, setQuotas] = useState<TalentVisaQuota[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("pending");
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [selectedNomination, setSelectedNomination] = useState<NominationWithDetails | null>(null);
+  const [selectedTier, setSelectedTier] = useState<TalentVisaTier>("bronze");
+  const [showQuotaSettings, setShowQuotaSettings] = useState(false);
 
   useEffect(() => {
-    const fetchNominations = async () => {
+    const fetchData = async () => {
+      // Fetch nominations
       let query = supabase
         .from("talentvisa_nominations")
         .select("*")
@@ -524,28 +569,115 @@ const TalentVisaReview = () => {
               .eq("id", nom.nominating_mentor_id)
               .single();
 
-            return { ...nom, candidate, mentor };
+            // Fetch behavioral score
+            const { data: passport } = await supabase
+              .from("skill_passports")
+              .select("behavioral_scores")
+              .eq("candidate_id", nom.candidate_id)
+              .eq("is_active", true)
+              .single();
+
+            let avgScore = 0;
+            if (passport?.behavioral_scores) {
+              const scores = Object.values(passport.behavioral_scores as Record<string, number>);
+              avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+            }
+
+            return { ...nom, candidate, mentor, behavioral_score: avgScore };
           })
         );
         setNominations(enriched);
       }
 
+      // Fetch current month quotas
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
+
+      const { data: quotaData } = await supabase
+        .from("talentvisa_quotas")
+        .select("*")
+        .gte("period_start", monthStart)
+        .lte("period_end", monthEnd);
+
+      if (quotaData) {
+        setQuotas(quotaData);
+      } else {
+        // Create default quotas if none exist
+        const defaultQuotas: Omit<TalentVisaQuota, "id" | "created_at" | "updated_at">[] = [
+          { period: "monthly", tier: "gold", max_approvals: 5, current_approvals: 0, period_start: monthStart, period_end: monthEnd },
+          { period: "monthly", tier: "silver", max_approvals: 15, current_approvals: 0, period_start: monthStart, period_end: monthEnd },
+          { period: "monthly", tier: "bronze", max_approvals: 30, current_approvals: 0, period_start: monthStart, period_end: monthEnd },
+        ];
+
+        for (const q of defaultQuotas) {
+          await supabase.from("talentvisa_quotas").insert(q);
+        }
+
+        const { data: newQuotas } = await supabase
+          .from("talentvisa_quotas")
+          .select("*")
+          .gte("period_start", monthStart);
+        setQuotas(newQuotas || []);
+      }
+
       setIsLoading(false);
     };
 
-    fetchNominations();
+    fetchData();
   }, [filter]);
 
-  const reviewNomination = async (nominationId: string, decision: "approved" | "rejected") => {
+  const getQuotaForTier = (tier: TalentVisaTier) => {
+    return quotas.find(q => q.tier === tier) || { max_approvals: 0, current_approvals: 0 };
+  };
+
+  const isQuotaExceeded = (tier: TalentVisaTier) => {
+    const quota = getQuotaForTier(tier);
+    return quota.current_approvals >= quota.max_approvals;
+  };
+
+  const getSuggestedTier = (score: number): TalentVisaTier => {
+    if (score >= TIER_CONFIG.gold.minScore) return "gold";
+    if (score >= TIER_CONFIG.silver.minScore) return "silver";
+    return "bronze";
+  };
+
+  const openApprovalModal = (nomination: NominationWithDetails) => {
+    setSelectedNomination(nomination);
+    setSelectedTier(getSuggestedTier(nomination.behavioral_score || 0));
+    setShowApprovalModal(true);
+  };
+
+  const reviewNomination = async (nominationId: string, decision: "approved" | "rejected", tier?: TalentVisaTier) => {
     if (!user?.id) return;
+
+    const updateData: any = {
+      status: decision,
+      reviewed_by: user.id,
+      reviewed_at: new Date().toISOString(),
+    };
+
+    if (decision === "approved" && tier) {
+      updateData.tier = tier;
+
+      // Update quota
+      const quota = getQuotaForTier(tier);
+      if (quota) {
+        await supabase
+          .from("talentvisa_quotas")
+          .update({ current_approvals: (quota.current_approvals || 0) + 1 })
+          .eq("tier", tier)
+          .gte("period_start", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+
+        setQuotas(prev =>
+          prev.map(q => q.tier === tier ? { ...q, current_approvals: (q.current_approvals || 0) + 1 } : q)
+        );
+      }
+    }
 
     await supabase
       .from("talentvisa_nominations")
-      .update({
-        status: decision,
-        reviewed_by: user.id,
-        reviewed_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq("id", nominationId);
 
     // If approved, update candidate
@@ -556,18 +688,22 @@ const TalentVisaReview = () => {
         .update({ has_talentvisa: true })
         .eq("profile_id", nomination.candidate_id);
 
-      // Send notification
+      // Send notification with tier info
       await supabase.from("notifications").insert({
         user_id: nomination.candidate_id,
         type: "talentvisa_approved",
-        title: "TalentVisa Approved!",
-        message: "Congratulations! Your TalentVisa nomination has been approved. You now have access to premium opportunities.",
+        title: `TalentVisa ${TIER_CONFIG[tier || "bronze"].label} Approved!`,
+        message: `Congratulations! You've been awarded a ${TIER_CONFIG[tier || "bronze"].label} TalentVisa. You now have access to premium opportunities.`,
+        metadata: { tier },
       });
     }
 
     setNominations((prev) =>
-      prev.map((n) => (n.id === nominationId ? { ...n, status: decision } : n))
+      prev.map((n) => (n.id === nominationId ? { ...n, status: decision, tier } : n))
     );
+
+    setShowApprovalModal(false);
+    setSelectedNomination(null);
   };
 
   if (isLoading) {
@@ -585,9 +721,69 @@ const TalentVisaReview = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">TalentVisa Review</h1>
-        <p className="text-gray-400">Review and approve TalentVisa nominations.</p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">TalentVisa Review</h1>
+          <p className="text-gray-400">Review and approve TalentVisa nominations with tier assignment.</p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => setShowQuotaSettings(!showQuotaSettings)}
+          className="border-white/20 text-white hover:bg-white/10"
+        >
+          <Target className="w-4 h-4 mr-2" />
+          Quota Settings
+        </Button>
+      </motion.div>
+
+      {/* Quota Overview */}
+      <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
+        {(["gold", "silver", "bronze"] as TalentVisaTier[]).map((tier) => {
+          const config = TIER_CONFIG[tier];
+          const quota = getQuotaForTier(tier);
+          const TierIcon = config.icon;
+          const percentage = quota.max_approvals > 0
+            ? Math.round((quota.current_approvals / quota.max_approvals) * 100)
+            : 0;
+          const isExceeded = isQuotaExceeded(tier);
+
+          return (
+            <div
+              key={tier}
+              className={`p-4 rounded-xl border ${config.borderColor} ${config.bgColor}`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <TierIcon className={`w-6 h-6 ${config.color}`} />
+                <div>
+                  <p className={`font-semibold ${config.color}`}>{config.label} Tier</p>
+                  <p className="text-xs text-gray-400">{config.description}</p>
+                </div>
+              </div>
+              <div className="mb-2">
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-gray-400">Monthly Quota</span>
+                  <span className={isExceeded ? "text-red-400" : "text-white"}>
+                    {quota.current_approvals} / {quota.max_approvals}
+                  </span>
+                </div>
+                <div className="h-2 bg-black/30 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      isExceeded ? "bg-red-500" : percentage >= 80 ? "bg-amber-500" : "bg-emerald-500"
+                    }`}
+                    style={{ width: `${Math.min(percentage, 100)}%` }}
+                  />
+                </div>
+              </div>
+              {isExceeded && (
+                <p className="text-xs text-red-400 flex items-center gap-1">
+                  <Lock className="w-3 h-3" />
+                  Quota reached for this month
+                </p>
+              )}
+            </div>
+          );
+        })}
       </motion.div>
 
       {/* Filter Tabs */}
@@ -611,79 +807,107 @@ const TalentVisaReview = () => {
       <motion.div variants={itemVariants}>
         {nominations.length > 0 ? (
           <div className="space-y-4">
-            {nominations.map((nomination) => (
-              <div
-                key={nomination.id}
-                className={`p-6 rounded-xl border transition-colors ${
-                  nomination.status === "pending"
-                    ? "bg-amber-500/5 border-amber-500/20"
-                    : nomination.status === "approved"
-                    ? "bg-emerald-500/5 border-emerald-500/20"
-                    : "bg-red-500/5 border-red-500/20"
-                }`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    {nomination.candidate?.avatar_url ? (
-                      <img
-                        src={nomination.candidate.avatar_url}
-                        alt=""
-                        className="w-14 h-14 rounded-xl object-cover"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-lg">
-                        {nomination.candidate?.first_name?.[0]}{nomination.candidate?.last_name?.[0]}
+            {nominations.map((nomination) => {
+              const suggestedTier = getSuggestedTier(nomination.behavioral_score || 0);
+              const tierConfig = nomination.tier ? TIER_CONFIG[nomination.tier as TalentVisaTier] : null;
+              const TierIcon = tierConfig?.icon;
+
+              return (
+                <div
+                  key={nomination.id}
+                  className={`p-6 rounded-xl border transition-colors ${
+                    nomination.status === "pending"
+                      ? "bg-amber-500/5 border-amber-500/20"
+                      : nomination.status === "approved"
+                      ? "bg-emerald-500/5 border-emerald-500/20"
+                      : "bg-red-500/5 border-red-500/20"
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      {nomination.candidate?.avatar_url ? (
+                        <img
+                          src={nomination.candidate.avatar_url}
+                          alt=""
+                          className="w-14 h-14 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-lg">
+                          {nomination.candidate?.first_name?.[0]}{nomination.candidate?.last_name?.[0]}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-white text-lg">
+                          {nomination.candidate?.first_name} {nomination.candidate?.last_name}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Nominated by {nomination.mentor?.first_name} {nomination.mentor?.last_name}
+                        </p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="text-xs text-gray-500">
+                            {new Date(nomination.created_at).toLocaleDateString()}
+                          </span>
+                          {nomination.behavioral_score !== undefined && nomination.behavioral_score > 0 && (
+                            <span className="text-xs text-indigo-400 flex items-center gap-1">
+                              <Star className="w-3 h-3" />
+                              Score: {nomination.behavioral_score.toFixed(1)}/5
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <p className="font-semibold text-white text-lg">
-                        {nomination.candidate?.first_name} {nomination.candidate?.last_name}
-                      </p>
-                      <p className="text-sm text-gray-400">
-                        Nominated by {nomination.mentor?.first_name} {nomination.mentor?.last_name}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(nomination.created_at).toLocaleDateString()}
-                      </p>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className={`px-3 py-1 rounded-full text-sm ${
+                        nomination.status === "pending"
+                          ? "bg-amber-500/20 text-amber-400"
+                          : nomination.status === "approved"
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : "bg-red-500/20 text-red-400"
+                      }`}>
+                        {nomination.status}
+                      </span>
+                      {nomination.tier && tierConfig && TierIcon && (
+                        <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${tierConfig.bgColor} ${tierConfig.color}`}>
+                          <TierIcon className="w-3 h-3" />
+                          {tierConfig.label}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm ${
-                    nomination.status === "pending"
-                      ? "bg-amber-500/20 text-amber-400"
-                      : nomination.status === "approved"
-                      ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-red-500/20 text-red-400"
-                  }`}>
-                    {nomination.status}
-                  </span>
-                </div>
 
-                <div className="p-4 rounded-lg bg-black/20 mb-4">
-                  <p className="text-sm text-gray-400 mb-1">Justification</p>
-                  <p className="text-gray-300">{nomination.justification}</p>
-                </div>
-
-                {nomination.status === "pending" && (
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={() => reviewNomination(nomination.id, "approved")}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-                    >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Approve
-                    </Button>
-                    <Button
-                      onClick={() => reviewNomination(nomination.id, "rejected")}
-                      variant="outline"
-                      className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10"
-                    >
-                      <XCircle className="w-4 h-4 mr-2" />
-                      Reject
-                    </Button>
+                  <div className="p-4 rounded-lg bg-black/20 mb-4">
+                    <p className="text-sm text-gray-400 mb-1">Justification</p>
+                    <p className="text-gray-300">{nomination.justification}</p>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {nomination.status === "pending" && (
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/10">
+                        <p className="text-xs text-gray-400 mb-1">Suggested Tier</p>
+                        <p className={`font-medium ${TIER_CONFIG[suggestedTier].color}`}>
+                          {TIER_CONFIG[suggestedTier].label} (min score: {TIER_CONFIG[suggestedTier].minScore})
+                        </p>
+                      </div>
+                      <Button
+                        onClick={() => openApprovalModal(nomination)}
+                        className="bg-emerald-600 hover:bg-emerald-500"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Approve
+                      </Button>
+                      <Button
+                        onClick={() => reviewNomination(nomination.id, "rejected")}
+                        variant="outline"
+                        className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      >
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Reject
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
@@ -692,6 +916,109 @@ const TalentVisaReview = () => {
           </div>
         )}
       </motion.div>
+
+      {/* Tier Selection Modal */}
+      {showApprovalModal && selectedNomination && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setShowApprovalModal(false);
+            setSelectedNomination(null);
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-white mb-2">Approve TalentVisa</h3>
+            <p className="text-gray-400 mb-6">
+              Select a tier for {selectedNomination.candidate?.first_name} {selectedNomination.candidate?.last_name}
+            </p>
+
+            <div className="space-y-3 mb-6">
+              {(["gold", "silver", "bronze"] as TalentVisaTier[]).map((tier) => {
+                const config = TIER_CONFIG[tier];
+                const TierIcon = config.icon;
+                const quota = getQuotaForTier(tier);
+                const exceeded = isQuotaExceeded(tier);
+                const isSelected = selectedTier === tier;
+
+                return (
+                  <button
+                    key={tier}
+                    onClick={() => !exceeded && setSelectedTier(tier)}
+                    disabled={exceeded}
+                    className={`w-full p-4 rounded-xl border transition-all text-left ${
+                      exceeded
+                        ? "opacity-50 cursor-not-allowed bg-gray-800/50 border-gray-700"
+                        : isSelected
+                        ? `${config.bgColor} ${config.borderColor} border-2`
+                        : "bg-white/5 border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center`}>
+                          <TierIcon className={`w-5 h-5 ${config.color}`} />
+                        </div>
+                        <div>
+                          <p className={`font-semibold ${isSelected ? config.color : "text-white"}`}>
+                            {config.label} Tier
+                          </p>
+                          <p className="text-xs text-gray-400">{config.description}</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Min Score: {config.minScore}/5 | Quota: {quota.current_approvals}/{quota.max_approvals}
+                          </p>
+                        </div>
+                      </div>
+                      {isSelected && !exceeded && (
+                        <CheckCircle className={`w-5 h-5 ${config.color}`} />
+                      )}
+                      {exceeded && (
+                        <Lock className="w-5 h-5 text-gray-500" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {selectedNomination.behavioral_score !== undefined && selectedNomination.behavioral_score > 0 && (
+              <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 mb-6">
+                <p className="text-sm text-indigo-300">
+                  Candidate's behavioral score is <span className="font-bold">{selectedNomination.behavioral_score.toFixed(1)}/5</span>.
+                  Suggested tier: <span className="font-bold">{TIER_CONFIG[getSuggestedTier(selectedNomination.behavioral_score)].label}</span>
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowApprovalModal(false);
+                  setSelectedNomination(null);
+                }}
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => reviewNomination(selectedNomination.id, "approved", selectedTier)}
+                disabled={isQuotaExceeded(selectedTier)}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Approve as {TIER_CONFIG[selectedTier].label}
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };

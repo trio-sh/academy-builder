@@ -42,14 +42,29 @@ import {
   Calendar,
   ThumbsUp,
   ThumbsDown,
+  DollarSign,
+  CreditCard,
+  Wallet,
+  ArrowRight,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
+type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
 type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
 type EmployerFeedback = Database["public"]["Tables"]["employer_feedback"]["Row"];
+type EscrowTransaction = Database["public"]["Tables"]["escrow_transactions"]["Row"];
+
+interface ProjectWithApplications extends LiveWorksProject {
+  applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
+  milestones?: LiveWorksMilestone[];
+  escrow_transactions?: EscrowTransaction[];
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -977,14 +992,19 @@ const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectWithApplications | null>(null);
   const [showStatusMenu, setShowStatusMenu] = useState<string | null>(null);
   const [showMilestoneForm, setShowMilestoneForm] = useState(false);
-  const [newMilestone, setNewMilestone] = useState({ title: "", description: "", dueDate: "" });
+  const [newMilestone, setNewMilestone] = useState({ title: "", description: "", dueDate: "", paymentAmount: "" });
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
     category: "",
     duration_days: 14,
     skill_level: "intermediate" as "beginner" | "intermediate" | "advanced",
+    budget_min: "",
+    budget_max: "",
   });
+  const [showEscrowModal, setShowEscrowModal] = useState(false);
+  const [selectedMilestone, setSelectedMilestone] = useState<LiveWorksMilestone | null>(null);
+  const [escrowAction, setEscrowAction] = useState<"fund" | "release" | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -1074,6 +1094,8 @@ const Projects = () => {
         order_index: orderIndex,
         status: "pending",
         due_date: newMilestone.dueDate || null,
+        payment_amount: newMilestone.paymentAmount ? parseFloat(newMilestone.paymentAmount) : null,
+        escrow_status: newMilestone.paymentAmount ? "pending" : null,
       })
       .select()
       .single();
@@ -1091,9 +1113,120 @@ const Projects = () => {
           prev ? { ...prev, milestones: [...(prev.milestones || []), data] } : null
         );
       }
-      setNewMilestone({ title: "", description: "", dueDate: "" });
+      setNewMilestone({ title: "", description: "", dueDate: "", paymentAmount: "" });
       setShowMilestoneForm(false);
     }
+  };
+
+  const fundMilestoneEscrow = async (milestone: LiveWorksMilestone) => {
+    if (!milestone.payment_amount || !employerProfile) return;
+
+    // Simulate payment processing (in production, integrate with Stripe)
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({
+        escrow_status: "funded",
+        escrow_funded_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", milestone.id);
+
+    if (!error) {
+      // Create escrow transaction record
+      await supabase.from("escrow_transactions").insert({
+        project_id: milestone.project_id,
+        milestone_id: milestone.id,
+        employer_id: employerProfile.id,
+        amount: milestone.payment_amount,
+        status: "funded",
+        funded_at: new Date().toISOString(),
+      });
+
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) =>
+          m.id === milestone.id
+            ? { ...m, escrow_status: "funded" as const, escrow_funded_at: new Date().toISOString() }
+            : m
+        );
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+    }
+    setShowEscrowModal(false);
+    setSelectedMilestone(null);
+  };
+
+  const releaseMilestoneEscrow = async (milestone: LiveWorksMilestone) => {
+    if (!milestone.payment_amount || !employerProfile) return;
+
+    const project = projects.find((p) => p.id === milestone.project_id);
+    const candidateId = project?.selected_candidate_id;
+
+    const { error } = await supabase
+      .from("liveworks_milestones")
+      .update({
+        escrow_status: "released",
+        escrow_released_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", milestone.id);
+
+    if (!error) {
+      // Update escrow transaction
+      await supabase
+        .from("escrow_transactions")
+        .update({
+          status: "released",
+          released_at: new Date().toISOString(),
+          candidate_id: candidateId,
+        })
+        .eq("milestone_id", milestone.id);
+
+      // Create notification for candidate
+      if (candidateId) {
+        await supabase.from("notifications").insert({
+          user_id: candidateId,
+          type: "payment",
+          title: "Payment Released!",
+          message: `Payment of $${milestone.payment_amount} has been released for milestone: ${milestone.title}`,
+          metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
+        });
+      }
+
+      const updateMilestones = (milestones: LiveWorksMilestone[] | undefined) =>
+        milestones?.map((m) =>
+          m.id === milestone.id
+            ? { ...m, escrow_status: "released" as const, escrow_released_at: new Date().toISOString() }
+            : m
+        );
+
+      setProjects((prev) =>
+        prev.map((p) => ({ ...p, milestones: updateMilestones(p.milestones) }))
+      );
+      if (selectedProject) {
+        setSelectedProject((prev) =>
+          prev ? { ...prev, milestones: updateMilestones(prev.milestones) } : null
+        );
+      }
+    }
+    setShowEscrowModal(false);
+    setSelectedMilestone(null);
+  };
+
+  const getEscrowStatusBadge = (status: string | null) => {
+    const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
+      pending: { label: "Not Funded", color: "text-gray-400 bg-gray-500/20", icon: Wallet },
+      funded: { label: "In Escrow", color: "text-amber-400 bg-amber-500/20", icon: Lock },
+      released: { label: "Released", color: "text-emerald-400 bg-emerald-500/20", icon: Unlock },
+      refunded: { label: "Refunded", color: "text-red-400 bg-red-500/20", icon: ArrowRight },
+    };
+    return badges[status || "pending"] || badges.pending;
   };
 
   const updateMilestoneStatus = async (milestoneId: string, newStatus: string) => {
@@ -1171,6 +1304,8 @@ const Projects = () => {
         duration_days: newProject.duration_days,
         skill_level: newProject.skill_level,
         status: "draft",
+        budget_min: newProject.budget_min ? parseFloat(newProject.budget_min) : null,
+        budget_max: newProject.budget_max ? parseFloat(newProject.budget_max) : null,
       })
       .select()
       .single();
@@ -1184,6 +1319,8 @@ const Projects = () => {
         category: "",
         duration_days: 14,
         skill_level: "intermediate",
+        budget_min: "",
+        budget_max: "",
       });
     }
   };
@@ -1289,6 +1426,38 @@ const Projects = () => {
                   <option value="intermediate">Intermediate</option>
                   <option value="advanced">Advanced</option>
                 </select>
+              </div>
+            </div>
+
+            {/* Budget Section */}
+            <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <DollarSign className="w-5 h-5 text-emerald-400" />
+                <h3 className="font-medium text-white">Project Budget</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-400 block mb-2">Minimum Budget ($)</label>
+                  <input
+                    type="number"
+                    value={newProject.budget_min}
+                    onChange={(e) => setNewProject((prev) => ({ ...prev, budget_min: e.target.value }))}
+                    placeholder="e.g., 500"
+                    min={0}
+                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-400 block mb-2">Maximum Budget ($)</label>
+                  <input
+                    type="number"
+                    value={newProject.budget_max}
+                    onChange={(e) => setNewProject((prev) => ({ ...prev, budget_max: e.target.value }))}
+                    placeholder="e.g., 1000"
+                    min={0}
+                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  />
+                </div>
               </div>
             </div>
             <div className="flex gap-3">
@@ -1688,27 +1857,39 @@ const Projects = () => {
                         placeholder="Description (optional)..."
                         className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                       />
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <input
                           type="date"
                           value={newMilestone.dueDate}
                           onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
-                          className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none text-sm"
                         />
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <input
+                            type="number"
+                            value={newMilestone.paymentAmount}
+                            onChange={(e) => setNewMilestone(prev => ({ ...prev, paymentAmount: e.target.value }))}
+                            placeholder="Payment amount"
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
                         <Button
                           size="sm"
                           onClick={() => addMilestone(selectedProject.id)}
                           disabled={!newMilestone.title}
                           className="bg-emerald-600 hover:bg-emerald-500"
                         >
-                          Add
+                          Add Milestone
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => {
                             setShowMilestoneForm(false);
-                            setNewMilestone({ title: "", description: "", dueDate: "" });
+                            setNewMilestone({ title: "", description: "", dueDate: "", paymentAmount: "" });
                           }}
                           className="text-gray-400 hover:text-white"
                         >
@@ -1733,6 +1914,9 @@ const Projects = () => {
                         }
                       };
 
+                      const escrowBadge = getEscrowStatusBadge(milestone.escrow_status);
+                      const EscrowIcon = escrowBadge.icon;
+
                       return (
                         <div
                           key={milestone.id}
@@ -1756,36 +1940,86 @@ const Projects = () => {
                                 {milestone.description && (
                                   <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
                                 )}
-                                {milestone.due_date && (
-                                  <p className="text-xs text-gray-500 mt-1">
-                                    Due: {new Date(milestone.due_date).toLocaleDateString()}
-                                  </p>
-                                )}
+                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                  {milestone.due_date && (
+                                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                                      <Calendar className="w-3 h-3" />
+                                      Due: {new Date(milestone.due_date).toLocaleDateString()}
+                                    </span>
+                                  )}
+                                  {milestone.payment_amount && (
+                                    <span className="text-xs text-emerald-400 flex items-center gap-1">
+                                      <DollarSign className="w-3 h-3" />
+                                      ${milestone.payment_amount.toLocaleString()}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className={`px-2 py-1 rounded text-xs ${getMilestoneStatusColor(milestone.status)}`}>
-                                {milestone.status.replace("_", " ")}
-                              </span>
-                              {milestone.status === "submitted" && (
-                                <div className="flex gap-1">
+                            <div className="flex flex-col items-end gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className={`px-2 py-1 rounded text-xs ${getMilestoneStatusColor(milestone.status)}`}>
+                                  {milestone.status.replace("_", " ")}
+                                </span>
+                                {milestone.payment_amount && (
+                                  <span className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${escrowBadge.color}`}>
+                                    <EscrowIcon className="w-3 h-3" />
+                                    {escrowBadge.label}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex gap-1">
+                                {milestone.status === "submitted" && (
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      onClick={() => updateMilestoneStatus(milestone.id, "approved")}
+                                      className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
+                                    >
+                                      <CheckCircle className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
+                                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-7 px-2"
+                                    >
+                                      <Edit className="w-3 h-3" />
+                                    </Button>
+                                  </>
+                                )}
+                                {/* Escrow Actions */}
+                                {milestone.payment_amount && milestone.escrow_status === "pending" && (
                                   <Button
                                     size="sm"
-                                    onClick={() => updateMilestoneStatus(milestone.id, "approved")}
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction("fund");
+                                      setShowEscrowModal(true);
+                                    }}
+                                    className="bg-amber-600 hover:bg-amber-500 h-7 px-2"
+                                  >
+                                    <CreditCard className="w-3 h-3 mr-1" />
+                                    Fund
+                                  </Button>
+                                )}
+                                {milestone.payment_amount &&
+                                  milestone.escrow_status === "funded" &&
+                                  milestone.status === "approved" && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedMilestone(milestone);
+                                      setEscrowAction("release");
+                                      setShowEscrowModal(true);
+                                    }}
                                     className="bg-emerald-600 hover:bg-emerald-500 h-7 px-2"
                                   >
-                                    <CheckCircle className="w-3 h-3" />
+                                    <Unlock className="w-3 h-3 mr-1" />
+                                    Release
                                   </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
-                                    className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-7 px-2"
-                                  >
-                                    <Edit className="w-3 h-3" />
-                                  </Button>
-                                </div>
-                              )}
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1803,6 +2037,132 @@ const Projects = () => {
                 )}
               </div>
             </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Escrow Confirmation Modal */}
+      {showEscrowModal && selectedMilestone && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4"
+          onClick={() => {
+            setShowEscrowModal(false);
+            setSelectedMilestone(null);
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {escrowAction === "fund" ? (
+              <>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <CreditCard className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Fund Escrow</h3>
+                    <p className="text-sm text-gray-400">Secure payment for milestone</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Amount to Fund</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 mb-4">
+                  <div className="flex items-start gap-2">
+                    <Lock className="w-4 h-4 text-blue-400 mt-0.5" />
+                    <p className="text-sm text-blue-300">
+                      Funds will be held securely in escrow until the milestone is approved and you release the payment.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => fundMilestoneEscrow(selectedMilestone)}
+                    className="flex-1 bg-amber-600 hover:bg-amber-500"
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Fund ${selectedMilestone.payment_amount?.toLocaleString()}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                    <Unlock className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Release Payment</h3>
+                    <p className="text-sm text-gray-400">Pay the candidate for this milestone</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
+                  <p className="text-white font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                    <p className="text-2xl font-bold text-emerald-400">
+                      ${selectedMilestone.payment_amount?.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
+                    <p className="text-sm text-emerald-300">
+                      This milestone has been approved. Releasing payment will transfer funds to the candidate.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowEscrowModal(false);
+                      setSelectedMilestone(null);
+                    }}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => releaseMilestoneEscrow(selectedMilestone)}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    <Unlock className="w-4 h-4 mr-2" />
+                    Release Payment
+                  </Button>
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
