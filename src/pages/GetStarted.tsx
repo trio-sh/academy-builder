@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import {
   FileText,
@@ -138,6 +139,7 @@ const GetStarted = () => {
 
   return (
     <div className="min-h-screen bg-black">
+      <BackgroundVideo />
       <Header />
       <main className="pt-16">
         {/* Hero */}

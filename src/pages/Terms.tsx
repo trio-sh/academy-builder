@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { FileText, Calendar, Mail } from "lucide-react";
 
@@ -216,6 +217,7 @@ For general support inquiries, please visit our [Help Center](/help) or contact 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
       <Header />
 
       {/* Hero Section */}

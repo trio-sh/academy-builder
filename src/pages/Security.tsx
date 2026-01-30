@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -131,6 +132,7 @@ const securityPractices = [
 const Security = () => {
   return (
     <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
       <Header />
 
       {/* Hero Section */}

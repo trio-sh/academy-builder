@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { GraduationCap, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,6 +79,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-black">
+      <BackgroundVideo />
       <Header />
       <main className="pt-16">
         <section className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 relative overflow-hidden">
