@@ -753,6 +753,205 @@ export interface Database {
           metadata?: Json | null;
         };
       };
+      school_profiles: {
+        Row: {
+          id: string;
+          profile_id: string;
+          created_at: string;
+          updated_at: string;
+          school_name: string;
+          school_type: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district: string | null;
+          address: string | null;
+          total_students: number;
+          active_cohorts: number;
+          is_verified: boolean;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          created_at?: string;
+          updated_at?: string;
+          school_name: string;
+          school_type: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district?: string | null;
+          address?: string | null;
+          total_students?: number;
+          active_cohorts?: number;
+          is_verified?: boolean;
+        };
+        Update: {
+          id?: string;
+          profile_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          school_name?: string;
+          school_type?: 'high_school' | 'community_college' | 'university' | 'vocational';
+          district?: string | null;
+          address?: string | null;
+          total_students?: number;
+          active_cohorts?: number;
+          is_verified?: boolean;
+        };
+      };
+      school_cohorts: {
+        Row: {
+          id: string;
+          school_id: string;
+          created_at: string;
+          updated_at: string;
+          name: string;
+          program: string;
+          start_date: string;
+          end_date: string | null;
+          status: 'active' | 'completed' | 'upcoming';
+          total_students: number;
+          teacher_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          school_id: string;
+          created_at?: string;
+          updated_at?: string;
+          name: string;
+          program: string;
+          start_date: string;
+          end_date?: string | null;
+          status?: 'active' | 'completed' | 'upcoming';
+          total_students?: number;
+          teacher_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          school_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          name?: string;
+          program?: string;
+          start_date?: string;
+          end_date?: string | null;
+          status?: 'active' | 'completed' | 'upcoming';
+          total_students?: number;
+          teacher_id?: string | null;
+        };
+      };
+      students: {
+        Row: {
+          id: string;
+          profile_id: string;
+          school_id: string;
+          cohort_id: string | null;
+          created_at: string;
+          updated_at: string;
+          student_id_number: string | null;
+          grade_level: string | null;
+          graduation_year: number | null;
+          status: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations: number;
+          avg_behavioral_score: number | null;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          school_id: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          student_id_number?: string | null;
+          grade_level?: string | null;
+          graduation_year?: number | null;
+          status?: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations?: number;
+          avg_behavioral_score?: number | null;
+        };
+        Update: {
+          id?: string;
+          profile_id?: string;
+          school_id?: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          student_id_number?: string | null;
+          grade_level?: string | null;
+          graduation_year?: number | null;
+          status?: 'active' | 'graduated' | 'transferred' | 'inactive';
+          total_observations?: number;
+          avg_behavioral_score?: number | null;
+        };
+      };
+      teacher_observations: {
+        Row: {
+          id: string;
+          teacher_id: string;
+          student_id: string;
+          cohort_id: string | null;
+          created_at: string;
+          updated_at: string;
+          observation_date: string;
+          context: string;
+          behavioral_scores: Json;
+          strengths: string[];
+          areas_for_growth: string[];
+          notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          teacher_id: string;
+          student_id: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          observation_date: string;
+          context: string;
+          behavioral_scores: Json;
+          strengths?: string[];
+          areas_for_growth?: string[];
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          teacher_id?: string;
+          student_id?: string;
+          cohort_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          observation_date?: string;
+          context?: string;
+          behavioral_scores?: Json;
+          strengths?: string[];
+          areas_for_growth?: string[];
+          notes?: string | null;
+        };
+      };
+      growth_logs: {
+        Row: {
+          id: string;
+          candidate_id: string;
+          created_at: string;
+          log_type: string;
+          title: string;
+          description: string | null;
+          metadata: Json | null;
+        };
+        Insert: {
+          id?: string;
+          candidate_id: string;
+          created_at?: string;
+          log_type: string;
+          title: string;
+          description?: string | null;
+          metadata?: Json | null;
+        };
+        Update: {
+          id?: string;
+          candidate_id?: string;
+          created_at?: string;
+          log_type?: string;
+          title?: string;
+          description?: string | null;
+          metadata?: Json | null;
+        };
+      };
     };
     Views: {
       [_ in never]: never;

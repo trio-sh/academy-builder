@@ -38,6 +38,10 @@ import {
   Edit,
   ChevronDown,
   UserPlus,
+  Star,
+  Calendar,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -45,6 +49,7 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
 type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
+type EmployerFeedback = Database["public"]["Tables"]["employer_feedback"]["Row"];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -64,7 +69,7 @@ const navItems = [
   { name: "Find Talent", href: "/dashboard/employer/search", icon: Search },
   { name: "Connections", href: "/dashboard/employer/connections", icon: Users },
   { name: "Projects", href: "/dashboard/employer/projects", icon: Briefcase },
-  { name: "Messages", href: "/dashboard/employer/messages", icon: MessageSquare },
+  { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
   { name: "Company", href: "/dashboard/employer/company", icon: Building2 },
   { name: "Settings", href: "/dashboard/employer/settings", icon: Settings },
 ];
@@ -1588,31 +1593,514 @@ const Projects = () => {
   );
 };
 
-// Messages component (placeholder)
-const Messages = () => (
-  <motion.div
-    variants={containerVariants}
-    initial="hidden"
-    animate="visible"
-    className="space-y-8"
-  >
-    <motion.div variants={itemVariants}>
-      <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-      <p className="text-gray-400">Communicate with candidates.</p>
-    </motion.div>
+// Feedback component for 30/60/90 day reviews
+interface HireWithCandidate {
+  connection: T3XConnection;
+  candidate?: CandidateProfile & { profile?: Profile };
+  feedbacks?: EmployerFeedback[];
+}
 
+const Feedback = () => {
+  const { user } = useAuth();
+  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
+  const [hires, setHires] = useState<HireWithCandidate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [selectedHire, setSelectedHire] = useState<HireWithCandidate | null>(null);
+  const [feedbackType, setFeedbackType] = useState<"30_day" | "60_day" | "90_day">("30_day");
+  const [feedbackForm, setFeedbackForm] = useState({
+    performanceRating: 0,
+    readinessAccuracy: 0,
+    comments: "",
+    wouldHireAgain: true,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      const { data: ep } = await supabase
+        .from("employer_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+
+      setEmployerProfile(ep);
+
+      if (ep) {
+        // Get accepted connections (hired candidates)
+        const { data: connections } = await supabase
+          .from("t3x_connections")
+          .select("*")
+          .eq("employer_id", ep.id)
+          .eq("status", "accepted")
+          .order("responded_at", { ascending: false });
+
+        if (connections) {
+          const enrichedHires = await Promise.all(
+            connections.map(async (conn) => {
+              const { data: candidate } = await supabase
+                .from("candidate_profiles")
+                .select("*")
+                .eq("profile_id", conn.candidate_id)
+                .single();
+
+              let profile = null;
+              if (candidate) {
+                const { data: p } = await supabase
+                  .from("profiles")
+                  .select("*")
+                  .eq("id", candidate.profile_id)
+                  .single();
+                profile = p;
+              }
+
+              // Get existing feedback
+              const { data: feedbacks } = await supabase
+                .from("employer_feedback")
+                .select("*")
+                .eq("employer_id", ep.id)
+                .eq("candidate_id", conn.candidate_id);
+
+              return {
+                connection: conn,
+                candidate: candidate ? { ...candidate, profile } : undefined,
+                feedbacks: feedbacks || [],
+              };
+            })
+          );
+          setHires(enrichedHires);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [user?.id]);
+
+  const submitFeedback = async () => {
+    if (!employerProfile || !selectedHire) return;
+
+    setIsSubmitting(true);
+
+    const { error } = await supabase.from("employer_feedback").insert({
+      employer_id: employerProfile.id,
+      candidate_id: selectedHire.connection.candidate_id,
+      hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
+      feedback_type: feedbackType,
+      performance_rating: feedbackForm.performanceRating,
+      readiness_accuracy: feedbackForm.readinessAccuracy,
+      comments: feedbackForm.comments,
+      would_hire_again: feedbackForm.wouldHireAgain,
+    });
+
+    if (!error) {
+      // Update local state
+      setHires((prev) =>
+        prev.map((h) =>
+          h.connection.id === selectedHire.connection.id
+            ? {
+                ...h,
+                feedbacks: [
+                  ...(h.feedbacks || []),
+                  {
+                    id: "",
+                    employer_id: employerProfile.id,
+                    candidate_id: selectedHire.connection.candidate_id,
+                    hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
+                    created_at: new Date().toISOString(),
+                    feedback_type: feedbackType,
+                    performance_rating: feedbackForm.performanceRating,
+                    readiness_accuracy: feedbackForm.readinessAccuracy,
+                    behavioral_alignment: null,
+                    comments: feedbackForm.comments,
+                    would_hire_again: feedbackForm.wouldHireAgain,
+                  },
+                ],
+              }
+            : h
+        )
+      );
+
+      setShowFeedbackModal(false);
+      setSelectedHire(null);
+      setFeedbackForm({
+        performanceRating: 0,
+        readinessAccuracy: 0,
+        comments: "",
+        wouldHireAgain: true,
+      });
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const getDaysSinceHire = (hireDate: string) => {
+    const days = Math.floor((Date.now() - new Date(hireDate).getTime()) / (1000 * 60 * 60 * 24));
+    return days;
+  };
+
+  const getAvailableFeedbackTypes = (hire: HireWithCandidate): ("30_day" | "60_day" | "90_day")[] => {
+    const existingTypes = hire.feedbacks?.map((f) => f.feedback_type) || [];
+    const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
+    const available: ("30_day" | "60_day" | "90_day")[] = [];
+
+    if (days >= 30 && !existingTypes.includes("30_day")) available.push("30_day");
+    if (days >= 60 && !existingTypes.includes("60_day")) available.push("60_day");
+    if (days >= 90 && !existingTypes.includes("90_day")) available.push("90_day");
+
+    return available;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+      </div>
+    );
+  }
+
+  return (
     <motion.div
-      variants={itemVariants}
-      className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
     >
-      <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-      <p className="text-gray-400">No messages yet</p>
-      <p className="text-sm text-gray-500 mt-1">
-        Messages will appear here when candidates respond to your connections
-      </p>
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Hire Feedback</h1>
+        <p className="text-gray-400">
+          Provide 30/60/90 day performance feedback for your hires.
+        </p>
+      </motion.div>
+
+      {/* Info Banner */}
+      <motion.div
+        variants={itemVariants}
+        className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-4"
+      >
+        <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="text-emerald-400 font-medium">Why feedback matters</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Your feedback helps improve the accuracy of Skill Passports and the overall
+            quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Hires List */}
+      <motion.div variants={itemVariants}>
+        {hires.length > 0 ? (
+          <div className="space-y-4">
+            {hires.map((hire) => {
+              const availableTypes = getAvailableFeedbackTypes(hire);
+              const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
+
+              return (
+                <div
+                  key={hire.connection.id}
+                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      {hire.candidate?.profile?.avatar_url ? (
+                        <img
+                          src={hire.candidate.profile.avatar_url}
+                          alt=""
+                          className="w-14 h-14 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                          {hire.candidate?.profile?.first_name?.[0]}
+                          {hire.candidate?.profile?.last_name?.[0]}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-white text-lg">
+                          {hire.candidate?.profile?.first_name} {hire.candidate?.profile?.last_name}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Hired {days} days ago
+                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          {hire.candidate?.current_tier && (
+                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400">
+                              {hire.candidate.current_tier.replace("_", " ")}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Feedback Status */}
+                    <div className="flex gap-2">
+                      {["30_day", "60_day", "90_day"].map((type) => {
+                        const feedback = hire.feedbacks?.find((f) => f.feedback_type === type);
+                        const typeLabel = type.replace("_", " ");
+
+                        return (
+                          <div
+                            key={type}
+                            className={`px-3 py-2 rounded-lg text-center ${
+                              feedback
+                                ? "bg-emerald-500/20 border border-emerald-500/30"
+                                : "bg-white/5 border border-white/10"
+                            }`}
+                          >
+                            <p className="text-xs text-gray-500">{typeLabel}</p>
+                            {feedback ? (
+                              <div className="flex items-center justify-center gap-1 mt-1">
+                                <Star className="w-3 h-3 text-amber-400" />
+                                <span className="text-sm text-emerald-400">
+                                  {feedback.performance_rating}/5
+                                </span>
+                              </div>
+                            ) : (
+                              <p className="text-xs text-gray-600 mt-1">Pending</p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  {availableTypes.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                      {availableTypes.map((type) => (
+                        <Button
+                          key={type}
+                          onClick={() => {
+                            setSelectedHire(hire);
+                            setFeedbackType(type);
+                            setShowFeedbackModal(true);
+                          }}
+                          className="bg-emerald-600 hover:bg-emerald-500"
+                        >
+                          <Calendar className="w-4 h-4 mr-2" />
+                          Submit {type.replace("_", " ")} Feedback
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Show completed feedback summary */}
+                  {hire.feedbacks && hire.feedbacks.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-white/10">
+                      <p className="text-sm text-gray-500 mb-2">Previous Feedback</p>
+                      <div className="space-y-2">
+                        {hire.feedbacks.map((fb) => (
+                          <div
+                            key={fb.id || fb.feedback_type}
+                            className="flex items-center justify-between p-3 rounded-lg bg-black/20"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-gray-400">{fb.feedback_type.replace("_", " ")}</span>
+                              <div className="flex items-center gap-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-3 h-3 ${
+                                      i < fb.performance_rating
+                                        ? "text-amber-400 fill-amber-400"
+                                        : "text-gray-600"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <span
+                              className={`text-sm ${
+                                fb.would_hire_again ? "text-emerald-400" : "text-red-400"
+                              }`}
+                            >
+                              {fb.would_hire_again ? "Would hire again" : "Would not hire again"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No hires yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              When candidates accept your connection requests, they'll appear here for feedback.
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Feedback Modal */}
+      {showFeedbackModal && selectedHire && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowFeedbackModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold text-white mb-2">
+              {feedbackType.replace("_", " ")} Feedback
+            </h2>
+            <p className="text-gray-400 mb-6">
+              Share your experience with {selectedHire.candidate?.profile?.first_name}
+            </p>
+
+            {/* Performance Rating */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Overall Performance Rating
+              </label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    onClick={() =>
+                      setFeedbackForm((prev) => ({ ...prev, performanceRating: rating }))
+                    }
+                    className={`p-3 rounded-lg transition-colors ${
+                      feedbackForm.performanceRating >= rating
+                        ? "bg-amber-500/20 text-amber-400"
+                        : "bg-white/5 text-gray-500 hover:bg-white/10"
+                    }`}
+                  >
+                    <Star
+                      className={`w-6 h-6 ${
+                        feedbackForm.performanceRating >= rating ? "fill-amber-400" : ""
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Readiness Accuracy */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                How accurate was their Skill Passport tier?
+              </label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    onClick={() =>
+                      setFeedbackForm((prev) => ({ ...prev, readinessAccuracy: rating }))
+                    }
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      feedbackForm.readinessAccuracy === rating
+                        ? "bg-emerald-600 text-white"
+                        : "bg-white/5 text-gray-400 hover:bg-white/10"
+                    }`}
+                  >
+                    {rating}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>Not accurate</span>
+                <span>Very accurate</span>
+              </div>
+            </div>
+
+            {/* Would Hire Again */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Would you hire this person again?
+              </label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() =>
+                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: true }))
+                  }
+                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                    feedbackForm.wouldHireAgain
+                      ? "bg-emerald-600 text-white"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  }`}
+                >
+                  <ThumbsUp className="w-5 h-5" />
+                  Yes
+                </button>
+                <button
+                  onClick={() =>
+                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: false }))
+                  }
+                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                    !feedbackForm.wouldHireAgain
+                      ? "bg-red-600 text-white"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  }`}
+                >
+                  <ThumbsDown className="w-5 h-5" />
+                  No
+                </button>
+              </div>
+            </div>
+
+            {/* Comments */}
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Additional Comments (Optional)
+              </label>
+              <textarea
+                value={feedbackForm.comments}
+                onChange={(e) =>
+                  setFeedbackForm((prev) => ({ ...prev, comments: e.target.value }))
+                }
+                placeholder="Share specific observations about their work..."
+                rows={3}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowFeedbackModal(false)}
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={submitFeedback}
+                disabled={
+                  isSubmitting ||
+                  feedbackForm.performanceRating === 0 ||
+                  feedbackForm.readinessAccuracy === 0
+                }
+                className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Feedback"
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 // Company Profile component
 const Company = () => {
@@ -2063,7 +2551,7 @@ const EmployerDashboard = () => {
             <Route path="search" element={<SearchTalent />} />
             <Route path="connections" element={<Connections />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="messages" element={<Messages />} />
+            <Route path="feedback" element={<Feedback />} />
             <Route path="company" element={<Company />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

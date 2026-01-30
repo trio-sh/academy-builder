@@ -30,6 +30,8 @@ import VerifyPassport from "./pages/VerifyPassport";
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
 import MentorDashboard from "./pages/dashboard/MentorDashboard";
 import EmployerDashboard from "./pages/dashboard/EmployerDashboard";
+import SchoolDashboard from "./pages/dashboard/SchoolDashboard";
+import AdminDashboard from "./pages/dashboard/AdminDashboard";
 
 import { Chatbot } from "./components/Chatbot";
 
@@ -104,6 +106,22 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={['employer']}>
                   <EmployerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/school/*"
+              element={
+                <ProtectedRoute allowedRoles={['school_admin']}>
+                  <SchoolDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/admin/*"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />
