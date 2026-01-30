@@ -14,8 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Inter", "system-ui", "sans-serif"],
+        sans: ['"EB Garamond"', "serif"],
+        display: ['"Special Elite"', "system-ui", "sans-serif"],
+        serif: ['"EB Garamond"', "serif"],
+        elite: ['"Special Elite"', "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

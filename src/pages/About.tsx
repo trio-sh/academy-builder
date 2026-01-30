@@ -81,7 +81,7 @@ const About = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
               <motion.h1
-                className="text-4xl md:text-6xl font-bold mb-6"
+                className="text-3xl md:text-4xl font-display font-normal mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -332,7 +332,7 @@ const About = () => {
               whileTap={{ scale: 0.95 }}
             >
               <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl" asChild>
-                <Link to="/get-started">
+                <Link to="/join">
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>

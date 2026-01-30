@@ -132,7 +132,7 @@ const Press = () => {
             </motion.div>
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-6xl font-bold mb-6"
+              className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
                 News &
@@ -308,9 +308,11 @@ const Press = () => {
                       executive headshots, and fact sheets.
                     </p>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
-                        <Download className="mr-2 h-4 w-4" />
-                        Download Media Kit
+                      <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700" asChild>
+                        <Link to="/contact">
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Media Kit
+                        </Link>
                       </Button>
                     </motion.div>
                   </div>

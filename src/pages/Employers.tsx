@@ -157,7 +157,7 @@ const Employers = () => {
                 T3X Talent Exchange
               </motion.div>
               <motion.h1
-                className="text-4xl md:text-6xl font-bold mb-6"
+                className="text-3xl md:text-4xl font-display font-normal mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -393,8 +393,11 @@ const Employers = () => {
                           : "border-white/20 text-white hover:bg-white/10"
                       )}
                       variant={tier.popular ? "default" : "outline"}
+                      asChild
                     >
-                      {tier.cta}
+                      <Link to={tier.cta === "Get Started" ? "/join" : "/contact"}>
+                        {tier.cta}
+                      </Link>
                     </Button>
                   </div>
                 </motion.div>

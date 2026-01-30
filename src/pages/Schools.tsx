@@ -112,7 +112,7 @@ const Schools = () => {
                 Civic Access Lab
               </motion.div>
               <motion.h1
-                className="text-4xl md:text-6xl font-bold mb-6"
+                className="text-3xl md:text-4xl font-display font-normal mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -126,7 +126,7 @@ const Schools = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-400 mb-10"
+                className="text-base text-gray-400 mb-10 font-serif"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -141,13 +141,17 @@ const Schools = () => {
                 transition={{ delay: 0.5 }}
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-8">
-                    Request Demo
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-8" asChild>
+                    <Link to="/contact">
+                      Request Demo
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
                   </Button>
                 </motion.div>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10">
-                  Download Overview
+                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10" asChild>
+                  <Link to="/contact">
+                    Download Overview
+                  </Link>
                 </Button>
               </motion.div>
             </div>
@@ -407,13 +411,17 @@ const Schools = () => {
               transition={{ delay: 0.2 }}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl">
-                  Schedule a Demo
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl" asChild>
+                  <Link to="/contact">
+                    Schedule a Demo
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </motion.div>
-              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                Download Brochure
+              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10" asChild>
+                <Link to="/contact">
+                  Download Brochure
+                </Link>
               </Button>
             </motion.div>
           </div>

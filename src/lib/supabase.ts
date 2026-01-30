@@ -36,6 +36,10 @@ export const signUp = async (
     lastName: string;
     role: 'candidate' | 'mentor' | 'employer' | 'school_admin';
     entryPath?: 'resume_upload' | 'liveworks' | 'civic_access';
+    companyName?: string;
+    schoolName?: string;
+    industry?: string;
+    yearsExperience?: number;
   }
 ) => {
   // Create the auth user
@@ -48,6 +52,10 @@ export const signUp = async (
         last_name: metadata.lastName,
         role: metadata.role,
         entry_path: metadata.entryPath,
+        company_name: metadata.companyName,
+        school_name: metadata.schoolName,
+        industry: metadata.industry,
+        years_experience: metadata.yearsExperience,
       },
     },
   });

@@ -25,7 +25,16 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    metadata: { firstName: string; lastName: string; role: UserRole; entryPath?: EntryPath }
+    metadata: {
+      firstName: string;
+      lastName: string;
+      role: UserRole;
+      entryPath?: EntryPath;
+      companyName?: string;
+      schoolName?: string;
+      industry?: string;
+      yearsExperience?: number;
+    }
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -226,7 +235,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const handleSignUp = async (
     email: string,
     password: string,
-    metadata: { firstName: string; lastName: string; role: UserRole; entryPath?: EntryPath }
+    metadata: {
+      firstName: string;
+      lastName: string;
+      role: UserRole;
+      entryPath?: EntryPath;
+      companyName?: string;
+      schoolName?: string;
+      industry?: string;
+      yearsExperience?: number;
+    }
   ) => {
     setIsLoading(true);
     const { error } = await signUp(email, password, metadata);
