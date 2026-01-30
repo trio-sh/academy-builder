@@ -153,11 +153,24 @@ const Overview = () => {
   ];
 
   const getNextSteps = () => {
+    // Check if profile is reasonably complete (has name, headline or bio)
+    const hasBasicProfile = !!(
+      profile?.first_name &&
+      profile?.last_name &&
+      (profile?.headline || profile?.bio)
+    );
+
+    // Check if skills have been added
+    const hasSkills = (candidateProfile?.skills?.length || 0) > 0;
+
+    // Profile is complete if they have basic info AND skills
+    const profileComplete = hasBasicProfile && hasSkills;
+
     const steps = [
       {
         title: "Complete your profile",
-        description: "Add your skills and experience",
-        completed: profile?.onboarding_completed || false,
+        description: "Add your info and skills",
+        completed: profileComplete,
         href: "/dashboard/candidate/profile"
       },
       {
@@ -970,6 +983,14 @@ const Profile = () => {
     setIsSaving(true);
 
     try {
+      // Check if profile is reasonably complete
+      const isProfileComplete = !!(
+        formData.first_name &&
+        formData.last_name &&
+        (formData.headline || formData.bio) &&
+        formData.skills.length > 0
+      );
+
       // Update profiles table
       const { error: profileError } = await supabase
         .from("profiles")
@@ -979,6 +1000,7 @@ const Profile = () => {
           headline: formData.headline,
           bio: formData.bio,
           location: formData.location,
+          onboarding_completed: isProfileComplete,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
