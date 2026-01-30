@@ -9,7 +9,6 @@ import {
   Upload,
   ArrowRight,
   CheckCircle2,
-  Linkedin,
   Sparkles,
   Loader2,
   AlertCircle,
@@ -82,7 +81,7 @@ const GetStarted = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signUp, signInWithLinkedIn } = useAuth();
+  const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -125,23 +124,6 @@ const GetStarted = () => {
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLinkedInSignUp = async () => {
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const { error: oauthError } = await signInWithLinkedIn();
-
-      if (oauthError) {
-        setError(oauthError.message || "Failed to sign up with LinkedIn");
-        setIsLoading(false);
-      }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
       setIsLoading(false);
     }
   };
@@ -386,21 +368,6 @@ const GetStarted = () => {
                           />
                         </div>
                       </div>
-
-                      <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-white/10" /></div>
-                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-transparent px-2 text-gray-500">Or continue with</span></div>
-                      </div>
-
-                      <Button
-                        variant="outline"
-                        onClick={handleLinkedInSignUp}
-                        disabled={isLoading}
-                        className="w-full border-white/20 text-white hover:bg-white/10"
-                      >
-                        <Linkedin className="mr-2 h-4 w-4" />
-                        LinkedIn
-                      </Button>
 
                       <div className="flex gap-4 pt-6">
                         <Button
