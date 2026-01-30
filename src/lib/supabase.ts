@@ -35,6 +35,7 @@ export const signUp = async (
     firstName: string;
     lastName: string;
     role: 'candidate' | 'mentor' | 'employer' | 'school_admin';
+    entryPath?: 'resume_upload' | 'liveworks' | 'civic_access';
   }
 ) => {
   // Create the auth user
@@ -46,6 +47,7 @@ export const signUp = async (
         first_name: metadata.firstName,
         last_name: metadata.lastName,
         role: metadata.role,
+        entry_path: metadata.entryPath,
       },
     },
   });
@@ -63,6 +65,19 @@ export const signUp = async (
 
     if (profileError) {
       console.error('Error creating profile:', profileError);
+    }
+
+    // If candidate role and entry_path provided, create candidate_profile
+    if (metadata.role === 'candidate' && metadata.entryPath) {
+      const { error: candidateError } = await supabase.from('candidate_profiles').insert({
+        profile_id: data.user.id,
+        entry_path: metadata.entryPath,
+        skills: [],
+      });
+
+      if (candidateError) {
+        console.error('Error creating candidate profile:', candidateError);
+      }
     }
   }
 

@@ -86,6 +86,18 @@ const GetStarted = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Map UI path IDs to database entry_path values
+  const getEntryPath = (pathId: string | null): 'resume_upload' | 'liveworks' | 'civic_access' => {
+    switch (pathId) {
+      case 'resume':
+        return 'resume_upload';
+      case 'liveworks':
+        return 'liveworks';
+      default:
+        return 'resume_upload';
+    }
+  };
+
   const handleSignUp = async () => {
     setError("");
     setIsLoading(true);
@@ -95,6 +107,7 @@ const GetStarted = () => {
         firstName,
         lastName,
         role: "candidate",
+        entryPath: getEntryPath(selectedPath),
       });
 
       if (signUpError) {

@@ -1008,12 +1008,13 @@ const Profile = () => {
           console.error("Error updating candidate profile:", updateError);
         }
       } else {
-        // Insert new candidate_profile
+        // Insert new candidate_profile (default to resume_upload entry path)
         const { error: insertError } = await supabase
           .from("candidate_profiles")
           .insert({
             profile_id: user.id,
             skills: formData.skills,
+            entry_path: 'resume_upload',
           });
 
         if (insertError) {
@@ -1106,6 +1107,7 @@ const Profile = () => {
           profile_id: user.id,
           resume_url: resumeUrl,
           skills: candidateProfile?.skills || [],
+          entry_path: candidateProfile?.entry_path || 'resume_upload',
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'profile_id'

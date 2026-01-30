@@ -14,6 +14,8 @@ import type { Database } from '@/types/database.types';
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type UserRole = Database['public']['Tables']['profiles']['Row']['role'];
 
+type EntryPath = 'resume_upload' | 'liveworks' | 'civic_access';
+
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
@@ -23,7 +25,7 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    metadata: { firstName: string; lastName: string; role: UserRole }
+    metadata: { firstName: string; lastName: string; role: UserRole; entryPath?: EntryPath }
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -224,7 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const handleSignUp = async (
     email: string,
     password: string,
-    metadata: { firstName: string; lastName: string; role: UserRole }
+    metadata: { firstName: string; lastName: string; role: UserRole; entryPath?: EntryPath }
   ) => {
     setIsLoading(true);
     const { error } = await signUp(email, password, metadata);
