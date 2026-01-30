@@ -38,6 +38,14 @@ import {
   Lock,
   Eye,
   EyeOff,
+  Users,
+  Building2,
+  ThumbsUp,
+  ThumbsDown,
+  ChevronLeft,
+  Target,
+  GraduationCap,
+  Send,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -48,6 +56,11 @@ type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
 type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
 type SkillPassportRecord = Database["public"]["Tables"]["skill_passports"]["Row"];
+type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
+type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
+type MentorAssignment = Database["public"]["Tables"]["mentor_assignments"]["Row"];
 
 // Behavioral dimensions for display
 const BEHAVIORAL_DIMENSIONS = [
@@ -80,6 +93,9 @@ const navItems = [
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp },
   { name: "Training", href: "/dashboard/candidate/training", icon: BookOpen },
   { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase },
+  { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap },
+  { name: "Connections", href: "/dashboard/candidate/connections", icon: Users },
+  { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell },
   { name: "Profile", href: "/dashboard/candidate/profile", icon: User },
   { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings },
 ];
@@ -838,6 +854,8 @@ const Training = () => {
   const [modules, setModules] = useState<BridgeFastModule[]>([]);
   const [progress, setProgress] = useState<Record<string, BridgeFastProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [activeModule, setActiveModule] = useState<BridgeFastModule | null>(null);
+  const [moduleStep, setModuleStep] = useState(0); // 0=intro, 1-3=content, 4=quiz, 5=complete
 
   useEffect(() => {
     const fetchData = async () => {
@@ -899,6 +917,84 @@ const Training = () => {
         },
       }));
     }
+  };
+
+  const updateProgress = async (moduleId: string, newPercent: number) => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("bridgefast_progress")
+      .update({ progress_percent: newPercent, updated_at: new Date().toISOString() })
+      .eq("candidate_id", user.id)
+      .eq("module_id", moduleId);
+
+    setProgress((prev) => ({
+      ...prev,
+      [moduleId]: {
+        ...prev[moduleId],
+        progress_percent: newPercent,
+      },
+    }));
+  };
+
+  const completeModule = async (moduleId: string, score: number) => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("bridgefast_progress")
+      .update({
+        status: "completed",
+        progress_percent: 100,
+        final_score: score,
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("candidate_id", user.id)
+      .eq("module_id", moduleId);
+
+    // Create growth log entry
+    await supabase.from("growth_logs").insert({
+      candidate_id: user.id,
+      log_type: "training_completion",
+      title: `Completed BridgeFast Module`,
+      description: `Completed ${modules.find((m) => m.id === moduleId)?.title} with score ${score}%`,
+      metadata: { module_id: moduleId, score },
+    });
+
+    setProgress((prev) => ({
+      ...prev,
+      [moduleId]: {
+        ...prev[moduleId],
+        status: "completed",
+        progress_percent: 100,
+        final_score: score,
+        completed_at: new Date().toISOString(),
+      },
+    }));
+
+    setActiveModule(null);
+    setModuleStep(0);
+  };
+
+  const openModule = (module: BridgeFastModule) => {
+    const moduleProgress = progress[module.id];
+    if (!moduleProgress || moduleProgress.status === "not_started") {
+      startModule(module.id);
+    }
+    setActiveModule(module);
+    // Set step based on current progress
+    const percent = moduleProgress?.progress_percent || 0;
+    setModuleStep(Math.floor(percent / 20)); // 0%, 20%, 40%, 60%, 80%
+  };
+
+  const advanceStep = async () => {
+    if (!activeModule) return;
+    const newStep = moduleStep + 1;
+    setModuleStep(newStep);
+
+    // Update progress (each step is 20%)
+    const newPercent = Math.min(newStep * 20, 80); // Cap at 80% until quiz complete
+    await updateProgress(activeModule.id, newPercent);
   };
 
   if (isLoading) {
@@ -998,6 +1094,7 @@ const Training = () => {
                     <Button
                       size="sm"
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500"
+                      onClick={() => openModule(module)}
                     >
                       <Play className="w-4 h-4 mr-2" />
                       Continue
@@ -1008,7 +1105,7 @@ const Training = () => {
                     size="sm"
                     variant="outline"
                     className="w-full border-white/20 text-white hover:bg-white/10"
-                    onClick={() => startModule(module.id)}
+                    onClick={() => openModule(module)}
                   >
                     <Play className="w-4 h-4 mr-2" />
                     Start Module
@@ -1019,6 +1116,189 @@ const Training = () => {
           })}
         </div>
       </motion.div>
+
+      {/* Module Viewer Modal */}
+      {activeModule && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[85vh] overflow-hidden"
+          >
+            {/* Header */}
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="inline-block px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400 mb-2">
+                    {activeModule.behavioral_dimension}
+                  </span>
+                  <h2 className="text-xl font-bold text-white">{activeModule.title}</h2>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setActiveModule(null);
+                    setModuleStep(0);
+                  }}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-gray-400">Progress</span>
+                  <span className="text-indigo-400">{Math.min(moduleStep * 20, 100)}%</span>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+                    style={{ width: `${Math.min(moduleStep * 20, 100)}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 overflow-y-auto max-h-[50vh]">
+              {moduleStep === 0 && (
+                <div className="text-center py-8">
+                  <BookOpen className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-white mb-2">Welcome to This Module</h3>
+                  <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                    {activeModule.description}
+                  </p>
+                  <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mb-6">
+                    <span className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      {activeModule.duration_hours} hours
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Target className="w-4 h-4" />
+                      {activeModule.behavioral_dimension}
+                    </span>
+                  </div>
+                  <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                    Start Learning
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              )}
+
+              {moduleStep >= 1 && moduleStep <= 4 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-1 rounded bg-indigo-500/20 text-indigo-400 text-sm">
+                      Part {moduleStep} of 4
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    {moduleStep === 1 && "Understanding the Fundamentals"}
+                    {moduleStep === 2 && "Key Concepts & Strategies"}
+                    {moduleStep === 3 && "Practical Applications"}
+                    {moduleStep === 4 && "Real-World Scenarios"}
+                  </h3>
+
+                  <div className="space-y-4 text-gray-300">
+                    <p>
+                      This section covers essential aspects of <span className="text-indigo-400 font-medium">{activeModule.behavioral_dimension}</span> in the workplace.
+                    </p>
+
+                    <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                      <h4 className="font-medium text-white mb-2">Key Learning Points:</h4>
+                      <ul className="space-y-2 text-sm">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Understanding the importance of {activeModule.behavioral_dimension.toLowerCase()} in professional settings</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Developing strategies to improve your {activeModule.behavioral_dimension.toLowerCase()} skills</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span>Applying best practices in real workplace scenarios</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                      <h4 className="font-medium text-indigo-400 mb-2">💡 Pro Tip</h4>
+                      <p className="text-sm">
+                        {moduleStep === 1 && "Start by observing how experienced professionals demonstrate this skill in your workplace."}
+                        {moduleStep === 2 && "Practice these concepts in low-stakes situations before applying them to important scenarios."}
+                        {moduleStep === 3 && "Keep a journal of instances where you successfully applied these skills."}
+                        {moduleStep === 4 && "Seek feedback from mentors and peers to continuously improve."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    {moduleStep > 1 && (
+                      <Button
+                        variant="outline"
+                        onClick={() => setModuleStep(moduleStep - 1)}
+                        className="border-white/20 text-white hover:bg-white/10"
+                      >
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        Previous
+                      </Button>
+                    )}
+                    <div className="ml-auto">
+                      <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
+                        {moduleStep === 4 ? "Take Quiz" : "Continue"}
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {moduleStep === 5 && (
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                    <Award className="w-10 h-10 text-emerald-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Module Complete!</h3>
+                  <p className="text-gray-400 mb-6">
+                    Congratulations! You've successfully completed this module.
+                  </p>
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 inline-block mb-6">
+                    <p className="text-sm text-gray-400 mb-1">Your Score</p>
+                    <p className="text-3xl font-bold text-emerald-400">85%</p>
+                  </div>
+                  <div className="flex justify-center gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setActiveModule(null);
+                        setModuleStep(0);
+                      }}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      Back to Modules
+                    </Button>
+                    <Button
+                      onClick={() => completeModule(activeModule.id, 85)}
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Finish & Save
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -1418,6 +1698,258 @@ const Projects = () => {
           </motion.div>
         </div>
       )}
+    </motion.div>
+  );
+};
+
+// Connections component - employer interest/requests
+interface ConnectionWithEmployer extends T3XConnection {
+  employer_profile?: EmployerProfile & { profile?: Profile };
+}
+
+const Connections = () => {
+  const { user } = useAuth();
+  const [connections, setConnections] = useState<ConnectionWithEmployer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [respondingTo, setRespondingTo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchConnections = async () => {
+      if (!user?.id) return;
+
+      // Fetch connections for this candidate
+      const { data: connectionData } = await supabase
+        .from("t3x_connections")
+        .select("*")
+        .eq("candidate_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (connectionData && connectionData.length > 0) {
+        // Get employer profiles for each connection
+        const enrichedConnections = await Promise.all(
+          connectionData.map(async (conn) => {
+            const { data: employerProfile } = await supabase
+              .from("employer_profiles")
+              .select("*")
+              .eq("id", conn.employer_id)
+              .single();
+
+            let profile = null;
+            if (employerProfile) {
+              const { data: p } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", employerProfile.profile_id)
+                .single();
+              profile = p;
+            }
+
+            return {
+              ...conn,
+              employer_profile: employerProfile ? { ...employerProfile, profile } : undefined,
+            };
+          })
+        );
+        setConnections(enrichedConnections);
+      } else {
+        setConnections([]);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchConnections();
+  }, [user?.id]);
+
+  const respondToConnection = async (connectionId: string, accept: boolean) => {
+    setRespondingTo(connectionId);
+
+    try {
+      const newStatus = accept ? "accepted" : "declined";
+
+      const { error } = await supabase
+        .from("t3x_connections")
+        .update({
+          status: newStatus,
+          responded_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", connectionId);
+
+      if (error) {
+        console.error("Error updating connection:", error);
+        return;
+      }
+
+      // Update local state
+      setConnections(prev =>
+        prev.map(c => c.id === connectionId ? { ...c, status: newStatus, responded_at: new Date().toISOString() } : c)
+      );
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user?.id,
+        event_type: "tier_change",
+        title: accept ? "Accepted Employer Connection" : "Declined Employer Connection",
+        description: `Response sent to employer connection request`,
+        source_component: "T3X",
+        source_id: connectionId,
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setRespondingTo(null);
+    }
+  };
+
+  const pendingConnections = connections.filter(c => c.status === "pending");
+  const respondedConnections = connections.filter(c => c.status !== "pending");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Employer Connections</h1>
+        <p className="text-gray-400">
+          Manage connection requests from employers interested in your profile.
+        </p>
+      </motion.div>
+
+      {/* Pending Requests */}
+      {pendingConnections.length > 0 && (
+        <motion.div variants={itemVariants}>
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+            <Bell className="w-5 h-5 text-amber-400" />
+            Pending Requests ({pendingConnections.length})
+          </h2>
+          <div className="space-y-4">
+            {pendingConnections.map((connection) => (
+              <div
+                key={connection.id}
+                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white">
+                    <Building2 className="w-7 h-7" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white text-lg">
+                      {connection.employer_profile?.company_name || "Unknown Company"}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      {connection.employer_profile?.industry || "Industry not specified"}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Requested {new Date(connection.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+
+                {connection.message && (
+                  <div className="mt-4 p-3 rounded-lg bg-black/20">
+                    <p className="text-sm text-gray-300">{connection.message}</p>
+                  </div>
+                )}
+
+                <div className="mt-4 flex gap-3">
+                  <Button
+                    onClick={() => respondToConnection(connection.id, true)}
+                    disabled={respondingTo === connection.id}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
+                  >
+                    {respondingTo === connection.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <ThumbsUp className="w-4 h-4 mr-2" />
+                        Accept
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => respondToConnection(connection.id, false)}
+                    disabled={respondingTo === connection.id}
+                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  >
+                    <ThumbsDown className="w-4 h-4 mr-2" />
+                    Decline
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Connection History */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-xl font-semibold text-white mb-4">Connection History</h2>
+        {respondedConnections.length > 0 ? (
+          <div className="space-y-3">
+            {respondedConnections.map((connection) => (
+              <div
+                key={connection.id}
+                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-4"
+              >
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  connection.status === "accepted"
+                    ? "bg-emerald-500/20"
+                    : "bg-gray-500/20"
+                }`}>
+                  <Building2 className={`w-5 h-5 ${
+                    connection.status === "accepted"
+                      ? "text-emerald-400"
+                      : "text-gray-400"
+                  }`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-white">
+                    {connection.employer_profile?.company_name || "Unknown Company"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {connection.responded_at
+                      ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
+                      : `Requested ${new Date(connection.created_at).toLocaleDateString()}`}
+                  </p>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-sm ${
+                  connection.status === "accepted"
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : connection.status === "declined"
+                    ? "bg-gray-500/20 text-gray-400"
+                    : "bg-amber-500/20 text-amber-400"
+                }`}>
+                  {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : pendingConnections.length === 0 ? (
+          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No connection requests yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              When employers are interested in your profile, you'll see their requests here
+            </p>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-sm">No previous connections</p>
+        )}
+      </motion.div>
     </motion.div>
   );
 };
@@ -2412,12 +2944,615 @@ const SettingsPage = () => {
   );
 };
 
+// Find Mentor component
+interface MentorWithProfile extends MentorProfile {
+  profile?: Profile;
+}
+
+const FindMentor = () => {
+  const { user } = useAuth();
+  const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
+  const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [requestSent, setRequestSent] = useState<Set<string>>(new Set());
+  const [industryFilter, setIndustryFilter] = useState<string>("all");
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      if (!user?.id) return;
+
+      // Fetch mentors who are accepting
+      const { data: mentorsData } = await supabase
+        .from("mentor_profiles")
+        .select("*")
+        .eq("is_accepting", true)
+        .order("total_observations", { ascending: false });
+
+      if (mentorsData) {
+        // Enrich with profile data
+        const enrichedMentors = await Promise.all(
+          mentorsData.map(async (mentor) => {
+            const { data: profileData } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", mentor.profile_id)
+              .single();
+
+            return { ...mentor, profile: profileData };
+          })
+        );
+        setMentors(enrichedMentors);
+      }
+
+      // Fetch my current assignments
+      const { data: assignmentsData } = await supabase
+        .from("mentor_assignments")
+        .select("*")
+        .eq("candidate_id", user.id);
+
+      setMyAssignments(assignmentsData || []);
+
+      setIsLoading(false);
+    };
+
+    fetchMentors();
+  }, [user?.id]);
+
+  const requestMentor = async () => {
+    if (!user?.id || !selectedMentor) return;
+
+    setIsRequesting(true);
+
+    // Create mentor assignment request
+    const { error } = await supabase.from("mentor_assignments").insert({
+      mentor_id: selectedMentor.id,
+      candidate_id: user.id,
+      status: "active",
+      loop_number: 1,
+    });
+
+    if (!error) {
+      // Send notification to mentor
+      await supabase.from("notifications").insert({
+        user_id: selectedMentor.profile_id,
+        type: "mentee_request",
+        title: "New Mentee Request",
+        message: requestMessage || "A candidate has requested you as their mentor.",
+      });
+
+      setRequestSent((prev) => new Set(prev).add(selectedMentor.id));
+      setSelectedMentor(null);
+      setRequestMessage("");
+    }
+
+    setIsRequesting(false);
+  };
+
+  const industries = [...new Set(mentors.map((m) => m.industry))];
+  const filteredMentors =
+    industryFilter === "all"
+      ? mentors
+      : mentors.filter((m) => m.industry === industryFilter);
+
+  const activeMentor = myAssignments.find((a) => a.status === "active");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Find a Mentor</h1>
+        <p className="text-gray-400">
+          Connect with experienced professionals who can guide your career growth.
+        </p>
+      </motion.div>
+
+      {/* Active Mentor Status */}
+      {activeMentor && (
+        <motion.div
+          variants={itemVariants}
+          className="p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <CheckCircle className="w-5 h-5 text-emerald-400" />
+            <h3 className="font-semibold text-emerald-400">Active Mentorship</h3>
+          </div>
+          <p className="text-gray-300">
+            You currently have an active mentor. Complete your mentor loops to progress.
+          </p>
+          <p className="text-sm text-gray-400 mt-2">
+            Loop Progress: {activeMentor.loop_number} / 3
+          </p>
+        </motion.div>
+      )}
+
+      {/* Industry Filter */}
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-2">
+        <button
+          onClick={() => setIndustryFilter("all")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            industryFilter === "all"
+              ? "bg-indigo-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          All Industries
+        </button>
+        {industries.map((industry) => (
+          <button
+            key={industry}
+            onClick={() => setIndustryFilter(industry)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              industryFilter === industry
+                ? "bg-indigo-600 text-white"
+                : "bg-white/5 text-gray-400 hover:text-white"
+            }`}
+          >
+            {industry}
+          </button>
+        ))}
+      </motion.div>
+
+      {/* Mentors Grid */}
+      <motion.div variants={itemVariants}>
+        {filteredMentors.length > 0 ? (
+          <div className="grid md:grid-cols-2 gap-4">
+            {filteredMentors.map((mentor) => {
+              const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
+              const hasSentRequest = requestSent.has(mentor.id);
+              const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
+
+              return (
+                <motion.div
+                  key={mentor.id}
+                  whileHover={{ scale: 1.01 }}
+                  className={`p-6 rounded-xl border transition-colors ${
+                    isAssigned
+                      ? "bg-emerald-500/10 border-emerald-500/30"
+                      : "bg-white/5 border-white/10 hover:border-white/20"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    {mentor.profile?.avatar_url ? (
+                      <img
+                        src={mentor.profile.avatar_url}
+                        alt="Mentor"
+                        className="w-16 h-16 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                        {mentor.profile?.first_name?.[0]}{mentor.profile?.last_name?.[0]}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-white text-lg">
+                        {mentor.profile?.first_name} {mentor.profile?.last_name}
+                      </h3>
+                      <p className="text-sm text-indigo-400">
+                        {mentor.job_title} {mentor.company && `at ${mentor.company}`}
+                      </p>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <span>{mentor.years_experience} years exp</span>
+                        <span className="px-2 py-0.5 rounded bg-white/10">
+                          {mentor.industry}
+                        </span>
+                      </div>
+                    </div>
+                    {isAssigned && (
+                      <span className="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs">
+                        Your Mentor
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Specializations */}
+                  {mentor.specializations && mentor.specializations.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {mentor.specializations.slice(0, 3).map((spec, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                      {mentor.specializations.length > 3 && (
+                        <span className="px-2 py-1 rounded text-xs bg-white/10 text-gray-400">
+                          +{mentor.specializations.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Stats */}
+                  <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Award className="w-4 h-4" />
+                      {mentor.total_observations} observations
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {spotsAvailable} spot{spotsAvailable !== 1 ? "s" : ""} available
+                    </span>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="mt-4">
+                    {isAssigned ? (
+                      <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Currently Assigned
+                      </Button>
+                    ) : hasSentRequest ? (
+                      <Button disabled className="w-full bg-indigo-600/50 cursor-not-allowed">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Request Sent
+                      </Button>
+                    ) : spotsAvailable > 0 ? (
+                      <Button
+                        onClick={() => setSelectedMentor(mentor)}
+                        className="w-full bg-indigo-600 hover:bg-indigo-500"
+                        disabled={!!activeMentor}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        {activeMentor ? "Complete Current Mentorship" : "Request Mentorship"}
+                      </Button>
+                    ) : (
+                      <Button disabled className="w-full bg-gray-600/50 cursor-not-allowed">
+                        No Spots Available
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No mentors available</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Check back later for available mentors
+            </p>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Request Mentor Modal */}
+      {selectedMentor && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedMentor(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-4 mb-6">
+              {selectedMentor.profile?.avatar_url ? (
+                <img
+                  src={selectedMentor.profile.avatar_url}
+                  alt="Mentor"
+                  className="w-16 h-16 rounded-xl object-cover"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                  {selectedMentor.profile?.first_name?.[0]}{selectedMentor.profile?.last_name?.[0]}
+                </div>
+              )}
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Request {selectedMentor.profile?.first_name} as your mentor
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {selectedMentor.job_title} {selectedMentor.company && `at ${selectedMentor.company}`}
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">
+                Introduction Message (Optional)
+              </label>
+              <textarea
+                value={requestMessage}
+                onChange={(e) => setRequestMessage(e.target.value)}
+                placeholder="Tell the mentor why you'd like them to guide you..."
+                rows={4}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedMentor(null)}
+                className="flex-1 border-white/20 text-white hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={requestMentor}
+                disabled={isRequesting}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+              >
+                {isRequesting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 mr-2" />
+                    Send Request
+                  </>
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// Notifications Page component
+const NotificationsPage = () => {
+  const { user } = useAuth();
+  const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+
+  useEffect(() => {
+    const fetchAllNotifications = async () => {
+      if (!user?.id) return;
+
+      let query = supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (filter === "unread") {
+        query = query.eq("is_read", false);
+      } else if (filter === "read") {
+        query = query.eq("is_read", true);
+      }
+
+      const { data } = await query;
+      setAllNotifications(data || []);
+      setIsLoading(false);
+    };
+
+    fetchAllNotifications();
+  }, [user?.id, filter]);
+
+  const markAsRead = async (notificationId: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    setAllNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
+    );
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    setAllNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+  };
+
+  const deleteNotification = async (notificationId: string) => {
+    await supabase.from("notifications").delete().eq("id", notificationId);
+    setAllNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case "connection_request":
+        return Users;
+      case "connection_accepted":
+        return CheckCircle;
+      case "application_accepted":
+        return CheckCircle;
+      case "endorsement":
+        return Award;
+      case "passport_issued":
+        return Shield;
+      case "training_assigned":
+        return BookOpen;
+      default:
+        return Bell;
+    }
+  };
+
+  const getNotificationColor = (type: string) => {
+    switch (type) {
+      case "connection_request":
+        return "text-blue-400 bg-blue-500/20";
+      case "connection_accepted":
+      case "application_accepted":
+        return "text-emerald-400 bg-emerald-500/20";
+      case "endorsement":
+      case "passport_issued":
+        return "text-purple-400 bg-purple-500/20";
+      case "training_assigned":
+        return "text-amber-400 bg-amber-500/20";
+      default:
+        return "text-gray-400 bg-gray-500/20";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  const unreadCount = allNotifications.filter((n) => !n.is_read).length;
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8"
+    >
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
+          <p className="text-gray-400">
+            Stay updated on your activity.
+            {unreadCount > 0 && (
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-sm">
+                {unreadCount} unread
+              </span>
+            )}
+          </p>
+        </div>
+        {unreadCount > 0 && (
+          <Button
+            onClick={markAllAsRead}
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10"
+          >
+            <CheckCircle className="w-4 h-4 mr-2" />
+            Mark all as read
+          </Button>
+        )}
+      </motion.div>
+
+      {/* Filter tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        {(["all", "unread", "read"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
+              filter === f
+                ? "bg-indigo-600 text-white"
+                : "bg-white/5 text-gray-400 hover:text-white"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+      </motion.div>
+
+      {/* Notifications List */}
+      <motion.div variants={itemVariants} className="space-y-3">
+        {allNotifications.length > 0 ? (
+          allNotifications.map((notification) => {
+            const IconComponent = getNotificationIcon(notification.type);
+            const colorClass = getNotificationColor(notification.type);
+
+            return (
+              <motion.div
+                key={notification.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className={`p-4 rounded-xl border transition-colors ${
+                  notification.is_read
+                    ? "bg-white/5 border-white/10"
+                    : "bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`p-2 rounded-lg ${colorClass}`}>
+                    <IconComponent className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className={`font-medium ${notification.is_read ? "text-gray-300" : "text-white"}`}>
+                          {notification.title}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">{notification.message}</p>
+                      </div>
+                      {!notification.is_read && (
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0 mt-2" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 mt-3">
+                      <span className="text-xs text-gray-500">
+                        {new Date(notification.created_at).toLocaleString()}
+                      </span>
+                      <div className="flex gap-2">
+                        {!notification.is_read && (
+                          <button
+                            onClick={() => markAsRead(notification.id)}
+                            className="text-xs text-indigo-400 hover:text-indigo-300"
+                          >
+                            Mark as read
+                          </button>
+                        )}
+                        <button
+                          onClick={() => deleteNotification(notification.id)}
+                          className="text-xs text-red-400 hover:text-red-300"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })
+        ) : (
+          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No notifications</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {filter === "unread"
+                ? "You're all caught up!"
+                : filter === "read"
+                ? "No read notifications yet"
+                : "Notifications will appear here"}
+            </p>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const CandidateDashboard = () => {
   const { profile, signOut, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -2439,6 +3574,28 @@ const CandidateDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const markAsRead = async (notificationId: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    setNotifications([]);
+    setShowNotifications(false);
   };
 
   const unreadCount = notifications.length;
@@ -2561,16 +3718,40 @@ const CandidateDashboard = () => {
 
             {/* Notifications dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/10">
+              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-white/10 flex items-center justify-between">
                   <h3 className="font-semibold text-white">Notifications</h3>
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={markAllAsRead}
+                      className="text-xs text-indigo-400 hover:text-indigo-300"
+                    >
+                      Mark all as read
+                    </button>
+                  )}
                 </div>
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-white/5 border-b border-white/5">
-                        <p className="text-sm font-medium text-white">{notification.title}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
+                      <div
+                        key={notification.id}
+                        className="p-3 hover:bg-white/5 border-b border-white/5 flex items-start gap-3"
+                      >
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white">{notification.title}</p>
+                          <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {new Date(notification.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => markAsRead(notification.id)}
+                          className="text-gray-500 hover:text-white p-1"
+                          title="Mark as read"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -2580,6 +3761,17 @@ const CandidateDashboard = () => {
                     <p className="text-sm text-gray-400">No new notifications</p>
                   </div>
                 )}
+                <div className="p-2 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      setShowNotifications(false);
+                      navigate("/dashboard/candidate/notifications");
+                    }}
+                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-white/5 rounded-lg"
+                  >
+                    View all notifications
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -2593,6 +3785,9 @@ const CandidateDashboard = () => {
             <Route path="growth" element={<GrowthLog />} />
             <Route path="training" element={<Training />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="mentors" element={<FindMentor />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="notifications" element={<NotificationsPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

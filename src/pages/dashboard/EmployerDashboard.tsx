@@ -32,6 +32,12 @@ import {
   CheckCircle,
   Clock,
   XCircle,
+  Play,
+  Pause,
+  Archive,
+  Edit,
+  ChevronDown,
+  UserPlus,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -668,12 +674,17 @@ const SearchTalent = () => {
   );
 };
 
-// Connections component
+// Connections component with candidate details
+interface ConnectionWithCandidate extends T3XConnection {
+  candidate_profile?: CandidateProfile & { profile?: Profile };
+}
+
 const Connections = () => {
   const { user } = useAuth();
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [connections, setConnections] = useState<T3XConnection[]>([]);
+  const [connections, setConnections] = useState<ConnectionWithCandidate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"all" | "accepted" | "pending">("all");
 
   useEffect(() => {
     const fetchConnections = async () => {
@@ -689,13 +700,42 @@ const Connections = () => {
       setEmployerProfile(ep);
 
       if (ep) {
-        const { data } = await supabase
+        const { data: connectionData } = await supabase
           .from("t3x_connections")
           .select("*")
           .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
-        setConnections(data || []);
+        if (connectionData && connectionData.length > 0) {
+          // Get candidate details for each connection
+          const enrichedConnections = await Promise.all(
+            connectionData.map(async (conn) => {
+              const { data: candidateProfile } = await supabase
+                .from("candidate_profiles")
+                .select("*")
+                .eq("profile_id", conn.candidate_id)
+                .single();
+
+              let profile = null;
+              if (candidateProfile) {
+                const { data: p } = await supabase
+                  .from("profiles")
+                  .select("*")
+                  .eq("id", candidateProfile.profile_id)
+                  .single();
+                profile = p;
+              }
+
+              return {
+                ...conn,
+                candidate_profile: candidateProfile ? { ...candidateProfile, profile } : undefined,
+              };
+            })
+          );
+          setConnections(enrichedConnections);
+        } else {
+          setConnections([]);
+        }
       }
 
       setIsLoading(false);
@@ -722,6 +762,16 @@ const Connections = () => {
     }
   };
 
+  const filteredConnections = connections.filter(c => {
+    if (activeTab === "all") return true;
+    if (activeTab === "accepted") return c.status === "accepted";
+    if (activeTab === "pending") return c.status === "pending";
+    return true;
+  });
+
+  const acceptedCount = connections.filter(c => c.status === "accepted").length;
+  const pendingCount = connections.filter(c => c.status === "pending").length;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -742,36 +792,141 @@ const Connections = () => {
         <p className="text-gray-400">Manage your candidate connections.</p>
       </motion.div>
 
-      {connections.length > 0 ? (
+      {/* Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-2">
+        <button
+          onClick={() => setActiveTab("all")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === "all"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          All ({connections.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("accepted")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "accepted"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Accepted
+          {acceptedCount > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {acceptedCount}
+            </span>
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab("pending")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+            activeTab === "pending"
+              ? "bg-emerald-600 text-white"
+              : "bg-white/5 text-gray-400 hover:text-white"
+          }`}
+        >
+          Pending
+          {pendingCount > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+              {pendingCount}
+            </span>
+          )}
+        </button>
+      </motion.div>
+
+      {filteredConnections.length > 0 ? (
         <motion.div variants={itemVariants} className="space-y-4">
-          {connections.map((connection) => {
+          {filteredConnections.map((connection) => {
             const StatusIcon = getStatusIcon(connection.status);
+            const candidateProfile = connection.candidate_profile;
+            const profile = candidateProfile?.profile;
+
             return (
               <div
                 key={connection.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className={`p-6 rounded-xl border transition-colors ${
+                  connection.status === "accepted"
+                    ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
+                    : "bg-white/5 border-white/10 hover:border-white/20"
+                }`}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
-                    </div>
+                    {profile?.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt="Profile"
+                        className="w-14 h-14 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                        {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+                      </div>
+                    )}
                     <div>
-                      <p className="font-medium text-white">Connection Request</p>
-                      <p className="text-sm text-gray-400">
-                        Sent {new Date(connection.created_at).toLocaleDateString()}
+                      <p className="font-semibold text-white text-lg">
+                        {profile?.first_name} {profile?.last_name}
                       </p>
+                      <p className="text-sm text-gray-400">
+                        {profile?.headline || "Skill Passport Holder"}
+                      </p>
+                      {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {candidateProfile.skills.slice(0, 4).map((skill, i) => (
+                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                              {skill}
+                            </span>
+                          ))}
+                          {candidateProfile.skills.length > 4 && (
+                            <span className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                              +{candidateProfile.skills.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
-                    <StatusIcon className="w-4 h-4" />
-                    {connection.status}
-                  </span>
+                  <div className="text-right">
+                    <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
+                      <StatusIcon className="w-4 h-4" />
+                      {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-2">
+                      {connection.responded_at
+                        ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
+                        : `Sent ${new Date(connection.created_at).toLocaleDateString()}`}
+                    </p>
+                  </div>
                 </div>
+
                 {connection.message && (
-                  <p className="mt-4 text-sm text-gray-400 bg-white/5 p-3 rounded-lg">
+                  <p className="mt-4 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
+                    <span className="text-gray-500">Your message: </span>
                     {connection.message}
                   </p>
+                )}
+
+                {/* Actions for accepted connections */}
+                {connection.status === "accepted" && profile?.email && (
+                  <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View Full Profile
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <Send className="w-4 h-4 mr-1" />
+                      Send Message
+                    </Button>
+                  </div>
                 )}
               </div>
             );
@@ -800,12 +955,20 @@ const Connections = () => {
 };
 
 // Projects component
+type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
+
+interface ProjectWithApplications extends LiveWorksProject {
+  applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
+}
+
 const Projects = () => {
   const { user } = useAuth();
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [projects, setProjects] = useState<LiveWorksProject[]>([]);
+  const [projects, setProjects] = useState<ProjectWithApplications[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNewProject, setShowNewProject] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<ProjectWithApplications | null>(null);
+  const [showStatusMenu, setShowStatusMenu] = useState<string | null>(null);
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -827,13 +990,51 @@ const Projects = () => {
       setEmployerProfile(ep);
 
       if (ep) {
-        const { data } = await supabase
+        const { data: projectsData } = await supabase
           .from("liveworks_projects")
           .select("*")
           .eq("employer_id", ep.id)
           .order("created_at", { ascending: false });
 
-        setProjects(data || []);
+        if (projectsData) {
+          // Fetch applications for each project
+          const enrichedProjects = await Promise.all(
+            projectsData.map(async (project) => {
+              const { data: applications } = await supabase
+                .from("liveworks_applications")
+                .select("*")
+                .eq("project_id", project.id);
+
+              // Enrich with candidate data
+              const enrichedApps = applications
+                ? await Promise.all(
+                    applications.map(async (app) => {
+                      const { data: candidate } = await supabase
+                        .from("candidate_profiles")
+                        .select("*")
+                        .eq("profile_id", app.candidate_id)
+                        .single();
+
+                      let profile = null;
+                      if (candidate) {
+                        const { data: p } = await supabase
+                          .from("profiles")
+                          .select("*")
+                          .eq("id", candidate.profile_id)
+                          .single();
+                        profile = p;
+                      }
+
+                      return { ...app, candidate: candidate ? { ...candidate, profile } : undefined };
+                    })
+                  )
+                : [];
+
+              return { ...project, applications: enrichedApps };
+            })
+          );
+          setProjects(enrichedProjects);
+        }
       }
 
       setIsLoading(false);
@@ -841,6 +1042,47 @@ const Projects = () => {
 
     fetchProjects();
   }, [user?.id]);
+
+  const updateProjectStatus = async (projectId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("liveworks_projects")
+      .update({ status: newStatus })
+      .eq("id", projectId);
+
+    if (!error) {
+      setProjects((prev) =>
+        prev.map((p) => (p.id === projectId ? { ...p, status: newStatus } : p))
+      );
+    }
+    setShowStatusMenu(null);
+  };
+
+  const getStatusActions = (currentStatus: string) => {
+    const actions: { status: string; label: string; icon: typeof Play }[] = [];
+
+    switch (currentStatus) {
+      case "draft":
+        actions.push({ status: "open", label: "Publish", icon: Play });
+        actions.push({ status: "closed", label: "Archive", icon: Archive });
+        break;
+      case "open":
+        actions.push({ status: "in_progress", label: "Start Review", icon: UserPlus });
+        actions.push({ status: "draft", label: "Unpublish", icon: Pause });
+        actions.push({ status: "closed", label: "Close", icon: Archive });
+        break;
+      case "in_progress":
+        actions.push({ status: "completed", label: "Mark Complete", icon: CheckCircle });
+        actions.push({ status: "open", label: "Reopen", icon: Play });
+        break;
+      case "completed":
+        actions.push({ status: "closed", label: "Archive", icon: Archive });
+        break;
+      case "closed":
+        actions.push({ status: "draft", label: "Reactivate", icon: Edit });
+        break;
+    }
+    return actions;
+  };
 
   const createProject = async () => {
     if (!employerProfile || !newProject.title || !newProject.description) return;
@@ -998,34 +1240,124 @@ const Projects = () => {
       {/* Projects List */}
       {projects.length > 0 ? (
         <motion.div variants={itemVariants} className="space-y-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
-                      {project.status}
-                    </span>
-                    <span className="text-sm text-gray-500">{project.category}</span>
-                    <span className="text-sm text-gray-500">{project.duration_days} days</span>
+          {projects.map((project) => {
+            const applicationCount = project.applications?.length || 0;
+            const pendingApps = project.applications?.filter((a) => a.status === "pending").length || 0;
+            const statusActions = getStatusActions(project.status);
+
+            return (
+              <div
+                key={project.id}
+                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="font-semibold text-white text-lg">{project.title}</h3>
+                    <div className="flex items-center gap-3 mt-2">
+                      <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
+                        {project.status.replace("_", " ")}
+                      </span>
+                      <span className="text-sm text-gray-500">{project.category}</span>
+                      <span className="text-sm text-gray-500">{project.duration_days} days</span>
+                      {applicationCount > 0 && (
+                        <span className="text-sm text-emerald-400 flex items-center gap-1">
+                          <UserPlus className="w-3 h-3" />
+                          {applicationCount} applicant{applicationCount !== 1 ? "s" : ""}
+                          {pendingApps > 0 && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs ml-1">
+                              {pendingApps} new
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {/* Status Actions Dropdown */}
+                    <div className="relative">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/20 text-white hover:bg-white/10"
+                        onClick={() => setShowStatusMenu(showStatusMenu === project.id ? null : project.id)}
+                      >
+                        <Edit className="w-4 h-4 mr-1" />
+                        Status
+                        <ChevronDown className="w-3 h-3 ml-1" />
+                      </Button>
+                      {showStatusMenu === project.id && (
+                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-gray-900 border border-white/10 shadow-xl z-10">
+                          {statusActions.map((action) => (
+                            <button
+                              key={action.status}
+                              onClick={() => updateProjectStatus(project.id, action.status)}
+                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/10 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                            >
+                              <action.icon className="w-4 h-4" />
+                              {action.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => setSelectedProject(project)}
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  <Eye className="w-4 h-4 mr-1" />
-                  Manage
-                </Button>
+                <p className="text-sm text-gray-400 line-clamp-2">{project.description}</p>
+
+                {/* Show applicants preview if any */}
+                {project.applications && project.applications.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-xs text-gray-500 mb-2">Recent Applicants:</p>
+                    <div className="flex items-center gap-2">
+                      {project.applications.slice(0, 4).map((app) => (
+                        <div
+                          key={app.id}
+                          className="flex items-center gap-2 px-2 py-1 rounded bg-white/5"
+                        >
+                          {app.candidate?.profile?.avatar_url ? (
+                            <img
+                              src={app.candidate.profile.avatar_url}
+                              alt="Applicant"
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs">
+                              {app.candidate?.profile?.first_name?.[0]}
+                            </div>
+                          )}
+                          <span className="text-xs text-gray-400">
+                            {app.candidate?.profile?.first_name}
+                          </span>
+                          <span className={`px-1.5 py-0.5 rounded text-xs ${
+                            app.status === "pending"
+                              ? "bg-amber-500/20 text-amber-400"
+                              : app.status === "accepted"
+                              ? "bg-emerald-500/20 text-emerald-400"
+                              : "bg-red-500/20 text-red-400"
+                          }`}>
+                            {app.status}
+                          </span>
+                        </div>
+                      ))}
+                      {project.applications.length > 4 && (
+                        <span className="text-xs text-gray-500">
+                          +{project.applications.length - 4} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-gray-400 line-clamp-2">{project.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </motion.div>
       ) : (
         !showNewProject && (
@@ -1040,6 +1372,217 @@ const Projects = () => {
             </p>
           </motion.div>
         )
+      )}
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-white">{selectedProject.title}</h2>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(selectedProject.status)}`}>
+                      {selectedProject.status.replace("_", " ")}
+                    </span>
+                    <span className="text-sm text-gray-500">{selectedProject.category}</span>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedProject(null)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="mb-6">
+                <h3 className="text-sm text-gray-400 mb-2">Description</h3>
+                <p className="text-gray-300">{selectedProject.description}</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Duration</p>
+                  <p className="text-white font-medium">{selectedProject.duration_days} days</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Skill Level</p>
+                  <p className="text-white font-medium capitalize">{selectedProject.skill_level}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white/5">
+                  <p className="text-xs text-gray-500">Applicants</p>
+                  <p className="text-white font-medium">{selectedProject.applications?.length || 0}</p>
+                </div>
+              </div>
+
+              {/* Applicants List */}
+              <div>
+                <h3 className="text-sm text-gray-400 mb-3">Applicants</h3>
+                {selectedProject.applications && selectedProject.applications.length > 0 ? (
+                  <div className="space-y-3">
+                    {selectedProject.applications.map((app) => (
+                      <div
+                        key={app.id}
+                        className="p-4 rounded-lg bg-white/5 border border-white/10"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            {app.candidate?.profile?.avatar_url ? (
+                              <img
+                                src={app.candidate.profile.avatar_url}
+                                alt="Applicant"
+                                className="w-12 h-12 rounded-xl object-cover"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
+                                {app.candidate?.profile?.first_name?.[0]}{app.candidate?.profile?.last_name?.[0]}
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium text-white">
+                                {app.candidate?.profile?.first_name} {app.candidate?.profile?.last_name}
+                              </p>
+                              <p className="text-sm text-gray-400">
+                                {app.candidate?.profile?.headline || "Candidate"}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Applied {new Date(app.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {app.status === "pending" ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  onClick={async () => {
+                                    await supabase
+                                      .from("liveworks_applications")
+                                      .update({ status: "accepted" })
+                                      .eq("id", app.id);
+                                    setSelectedProject((prev) =>
+                                      prev
+                                        ? {
+                                            ...prev,
+                                            applications: prev.applications?.map((a) =>
+                                              a.id === app.id ? { ...a, status: "accepted" } : a
+                                            ),
+                                          }
+                                        : null
+                                    );
+                                    setProjects((prev) =>
+                                      prev.map((p) =>
+                                        p.id === selectedProject.id
+                                          ? {
+                                              ...p,
+                                              applications: p.applications?.map((a) =>
+                                                a.id === app.id ? { ...a, status: "accepted" } : a
+                                              ),
+                                            }
+                                          : p
+                                      )
+                                    );
+                                    // Notify candidate
+                                    await supabase.from("notifications").insert({
+                                      user_id: app.candidate_id,
+                                      type: "application_accepted",
+                                      title: "Application Accepted!",
+                                      message: `Your application for "${selectedProject.title}" has been accepted.`,
+                                    });
+                                  }}
+                                  className="bg-emerald-600 hover:bg-emerald-500"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Accept
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={async () => {
+                                    await supabase
+                                      .from("liveworks_applications")
+                                      .update({ status: "rejected" })
+                                      .eq("id", app.id);
+                                    setSelectedProject((prev) =>
+                                      prev
+                                        ? {
+                                            ...prev,
+                                            applications: prev.applications?.map((a) =>
+                                              a.id === app.id ? { ...a, status: "rejected" } : a
+                                            ),
+                                          }
+                                        : null
+                                    );
+                                    setProjects((prev) =>
+                                      prev.map((p) =>
+                                        p.id === selectedProject.id
+                                          ? {
+                                              ...p,
+                                              applications: p.applications?.map((a) =>
+                                                a.id === app.id ? { ...a, status: "rejected" } : a
+                                              ),
+                                            }
+                                          : p
+                                      )
+                                    );
+                                  }}
+                                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                >
+                                  <XCircle className="w-4 h-4 mr-1" />
+                                  Decline
+                                </Button>
+                              </>
+                            ) : (
+                              <span
+                                className={`px-3 py-1 rounded-full text-sm ${
+                                  app.status === "accepted"
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-red-500/20 text-red-400"
+                                }`}
+                              >
+                                {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {app.cover_letter && (
+                          <div className="mt-3 p-3 rounded bg-black/20">
+                            <p className="text-xs text-gray-500 mb-1">Cover Letter</p>
+                            <p className="text-sm text-gray-300">{app.cover_letter}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                    <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-400">No applicants yet</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Applicants will appear here when candidates apply
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
     </motion.div>
   );
