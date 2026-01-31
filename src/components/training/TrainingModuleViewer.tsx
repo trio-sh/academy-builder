@@ -21,12 +21,17 @@ import {
   Home,
   Volume2,
   VolumeX,
-  Pause
+  Pause,
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { INTERACTIVE_MODULES, InteractiveModule, ModuleScene, SceneChoice } from '@/data/interactiveTrainingModules';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
+import {
+  checkRetakeStatus,
+  generateVariedTrainingScenes
+} from '@/services/aiSceneGeneration';
 
 // Declare GSAP as global
 declare global {
@@ -60,6 +65,13 @@ export const TrainingModuleViewer = () => {
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [moduleCompleted, setModuleCompleted] = useState(false);
+
+  // AI-generated content for retakes
+  const [isRetake, setIsRetake] = useState(false);
+  const [attemptNumber, setAttemptNumber] = useState(1);
+  const [aiGeneratedScenes, setAiGeneratedScenes] = useState<Map<string, Partial<ModuleScene>>>(new Map());
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
 
   // Text-to-Speech state
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -96,6 +108,47 @@ export const TrainingModuleViewer = () => {
       setSceneProgress(initialProgress);
     }
   }, [moduleId]);
+
+  // Check for retake status and generate AI content
+  useEffect(() => {
+    const initializeRetakeContent = async () => {
+      if (!user?.id || !module) return;
+
+      try {
+        const retakeStatus = await checkRetakeStatus(user.id, module.id, supabase);
+        setIsRetake(retakeStatus.isRetake);
+        setAttemptNumber(retakeStatus.attemptNumber);
+
+        if (retakeStatus.isRetake && retakeStatus.attemptNumber > 1) {
+          setIsGeneratingContent(true);
+          setGenerationProgress(10);
+
+          try {
+            // Generate varied content for choice, quiz, and reflection scenes
+            const variedScenes = await generateVariedTrainingScenes(
+              module.title,
+              module.competencies,
+              module.scenes,
+              retakeStatus.attemptNumber
+            );
+
+            setGenerationProgress(90);
+            setAiGeneratedScenes(variedScenes);
+            setGenerationProgress(100);
+          } catch (e) {
+            console.error('Failed to generate AI content:', e);
+          }
+
+          setIsGeneratingContent(false);
+        }
+      } catch (error) {
+        console.error('Error checking retake status:', error);
+        setIsGeneratingContent(false);
+      }
+    };
+
+    initializeRetakeContent();
+  }, [user?.id, module]);
 
   // Initialize Text-to-Speech voice
   useEffect(() => {
@@ -571,6 +624,30 @@ export const TrainingModuleViewer = () => {
     certWindow.document.close();
   };
 
+  // Get scene with AI variations applied
+  const getSceneWithAIContent = useCallback((scene: ModuleScene): ModuleScene => {
+    if (!isRetake || aiGeneratedScenes.size === 0) {
+      return scene;
+    }
+
+    const aiVariation = aiGeneratedScenes.get(scene.id);
+    if (!aiVariation) {
+      return scene;
+    }
+
+    // Merge AI-generated content with original scene
+    return {
+      ...scene,
+      ...aiVariation,
+      // For choice scenes, use AI-generated choices if available
+      choices: aiVariation.choices || scene.choices,
+      // For quiz scenes, use AI-generated quiz if available
+      quiz: aiVariation.quiz || scene.quiz,
+      // For reflection scenes, use AI-generated reflection if available
+      reflection: aiVariation.reflection || scene.reflection
+    };
+  }, [isRetake, aiGeneratedScenes]);
+
   if (!module) {
     return (
       <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
@@ -582,8 +659,38 @@ export const TrainingModuleViewer = () => {
     );
   }
 
+  // Show loading screen when generating AI content for retakes
+  if (isGeneratingContent) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white flex items-center justify-center">
+        <div className="text-center max-w-md px-6">
+          <div className="relative mb-8">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mx-auto">
+              <Sparkles className="w-12 h-12 text-indigo-400 animate-pulse" />
+            </div>
+            <div className="absolute inset-0 w-24 h-24 mx-auto rounded-full border-2 border-indigo-500/30 border-t-indigo-500 animate-spin" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Preparing Your Training</h2>
+          <p className="text-gray-400 mb-6">
+            Since this is attempt #{attemptNumber}, we're generating fresh scenarios and questions to give you a unique learning experience.
+          </p>
+          <div className="w-full bg-gray-800 rounded-full h-2 mb-2">
+            <div
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${generationProgress}%` }}
+            />
+          </div>
+          <p className="text-sm text-gray-500">Generating personalized content...</p>
+        </div>
+      </div>
+    );
+  }
+
   const progress = ((currentSceneIndex + 1) / module.scenes.length) * 100;
   const completedScenes = Array.from(sceneProgress.values()).filter(p => p.completed).length;
+
+  // Get the current scene with any AI variations applied
+  const currentSceneWithAI = currentScene ? getSceneWithAIContent(currentScene) : null;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white overflow-hidden">
@@ -828,11 +935,17 @@ export const TrainingModuleViewer = () => {
                 )}
 
                 {/* Choice content */}
-                {currentScene?.type === 'choice' && (
+                {currentScene?.type === 'choice' && currentSceneWithAI && (
                   <div>
-                    <p className="text-gray-300 mb-6">{currentScene.content}</p>
+                    {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                        <Sparkles className="w-4 h-4" />
+                        <span>Fresh scenario for attempt #{attemptNumber}</span>
+                      </div>
+                    )}
+                    <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
                     <div className="space-y-3">
-                      {currentScene.choices?.map((choice) => (
+                      {currentSceneWithAI.choices?.map((choice) => (
                         <button
                           key={choice.id}
                           onClick={() => handleChoiceSelect(choice)}
@@ -873,28 +986,28 @@ export const TrainingModuleViewer = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className={`mt-6 p-4 rounded-xl ${
-                          currentScene.choices?.find(c => c.id === selectedChoice)?.isCorrect
+                          currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
                             ? 'bg-emerald-500/10 border border-emerald-500/30'
                             : 'bg-amber-500/10 border border-amber-500/30'
                         }`}
                       >
                         <div className="flex items-start gap-3">
-                          {currentScene.choices?.find(c => c.id === selectedChoice)?.isCorrect ? (
+                          {currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect ? (
                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                           ) : (
                             <Target className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                           )}
                           <div>
                             <p className="font-medium text-white mb-1">
-                              {currentScene.choices?.find(c => c.id === selectedChoice)?.isCorrect
+                              {currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
                                 ? 'Great choice!'
                                 : 'Learning opportunity'}
                             </p>
                             <p className="text-sm text-gray-300">
-                              {currentScene.choices?.find(c => c.id === selectedChoice)?.feedback}
+                              {currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.feedback}
                             </p>
                             <p className="text-sm text-gray-500 mt-2">
-                              +{currentScene.choices?.find(c => c.id === selectedChoice)?.points} points
+                              +{currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.points} points
                             </p>
                           </div>
                         </div>
@@ -915,11 +1028,17 @@ export const TrainingModuleViewer = () => {
                 )}
 
                 {/* Reflection content */}
-                {currentScene?.type === 'reflection' && (
+                {currentScene?.type === 'reflection' && currentSceneWithAI && (
                   <div>
-                    <p className="text-gray-300 mb-4">{currentScene.content}</p>
+                    {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                        <Sparkles className="w-4 h-4" />
+                        <span>Fresh reflection prompt for attempt #{attemptNumber}</span>
+                      </div>
+                    )}
+                    <p className="text-gray-300 mb-4">{currentSceneWithAI.content}</p>
                     <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 mb-4">
-                      <p className="text-amber-400 text-sm">{currentScene.reflection?.prompt}</p>
+                      <p className="text-amber-400 text-sm">{currentSceneWithAI.reflection?.prompt}</p>
                     </div>
                     <textarea
                       value={reflectionText}
@@ -929,15 +1048,15 @@ export const TrainingModuleViewer = () => {
                     />
                     <div className="flex items-center justify-between mt-2">
                       <span className={`text-sm ${
-                        reflectionText.length >= (currentScene.reflection?.minLength || 0)
+                        reflectionText.length >= (currentSceneWithAI.reflection?.minLength || 0)
                           ? 'text-emerald-400'
                           : 'text-gray-500'
                       }`}>
-                        {reflectionText.length} / {currentScene.reflection?.minLength} characters minimum
+                        {reflectionText.length} / {currentSceneWithAI.reflection?.minLength} characters minimum
                       </span>
                       <Button
                         onClick={submitReflection}
-                        disabled={reflectionText.length < (currentScene.reflection?.minLength || 0)}
+                        disabled={reflectionText.length < (currentSceneWithAI.reflection?.minLength || 0)}
                         className={`bg-gradient-to-r ${module.color} hover:opacity-90 disabled:opacity-50`}
                       >
                         Submit Reflection
@@ -948,11 +1067,17 @@ export const TrainingModuleViewer = () => {
                 )}
 
                 {/* Quiz content */}
-                {currentScene?.type === 'quiz' && (
+                {currentScene?.type === 'quiz' && currentSceneWithAI && (
                   <div>
-                    <p className="text-gray-300 mb-6">{currentScene.content}</p>
+                    {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                        <Sparkles className="w-4 h-4" />
+                        <span>Fresh questions for attempt #{attemptNumber}</span>
+                      </div>
+                    )}
+                    <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
                     <div className="space-y-6">
-                      {currentScene.quiz?.map((q, qIndex) => (
+                      {currentSceneWithAI.quiz?.map((q, qIndex) => (
                         <div key={qIndex} className="p-4 rounded-xl bg-white/5 border border-white/10">
                           <p className="font-medium text-white mb-3">
                             {qIndex + 1}. {q.question}
@@ -1012,7 +1137,7 @@ export const TrainingModuleViewer = () => {
                     {!quizSubmitted ? (
                       <Button
                         onClick={submitQuiz}
-                        disabled={quizAnswers.length < (currentScene.quiz?.length || 0)}
+                        disabled={quizAnswers.length < (currentSceneWithAI.quiz?.length || 0)}
                         className={`mt-6 bg-gradient-to-r ${module.color} hover:opacity-90 disabled:opacity-50`}
                       >
                         Submit Quiz
@@ -1021,7 +1146,7 @@ export const TrainingModuleViewer = () => {
                     ) : (
                       <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
                         <p className="text-indigo-400 font-medium">
-                          Quiz Complete! You answered {quizAnswers.filter((a, i) => a === currentScene.quiz?.[i].correctIndex).length} of {currentScene.quiz?.length} correctly.
+                          Quiz Complete! You answered {quizAnswers.filter((a, i) => a === currentSceneWithAI.quiz?.[i].correctIndex).length} of {currentSceneWithAI.quiz?.length} correctly.
                         </p>
                       </div>
                     )}
