@@ -139,7 +139,7 @@ export function JourneySection() {
               Placement
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
             Every credential is earned through sustained mentor observation — no shortcuts,
             no self-assessments. Human judgment at every critical gate.
           </p>
@@ -209,7 +209,7 @@ export function JourneySection() {
                         )}
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                      <p className="text-gray-400 leading-relaxed">{step.description}</p>
+                      <p className="text-gray-300 leading-relaxed">{step.description}</p>
                     </div>
                   </motion.div>
                 </motion.div>

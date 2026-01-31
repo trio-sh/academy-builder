@@ -276,7 +276,7 @@ const Platform = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-xl text-gray-400 leading-relaxed"
+                className="text-xl text-gray-300 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -340,7 +340,7 @@ const Platform = () => {
                       <div className="p-8 md:p-10">
                         {/* Purpose */}
                         <div className="mb-8 p-6 rounded-2xl bg-white/5 border border-white/10">
-                          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-2">
                             Flowchart Position
                           </h3>
                           <p className="text-gray-300 leading-relaxed">
@@ -358,7 +358,7 @@ const Platform = () => {
                               {component.features.map((feature) => (
                                 <li key={feature} className="flex items-start gap-3">
                                   <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                                  <span className="text-gray-400">{feature}</span>
+                                  <span className="text-gray-300">{feature}</span>
                                 </li>
                               ))}
                             </ul>
@@ -373,7 +373,7 @@ const Platform = () => {
                               {component.rules.map((rule) => (
                                 <li key={rule} className="flex items-start gap-3">
                                   <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                  <span className="text-gray-400">{rule}</span>
+                                  <span className="text-gray-300">{rule}</span>
                                 </li>
                               ))}
                             </ul>
@@ -382,7 +382,7 @@ const Platform = () => {
 
                         {/* User Types */}
                         <div className="mt-8 pt-6 border-t border-white/10">
-                          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">
                             User Types
                           </h3>
                           <div className="flex flex-wrap gap-2">
@@ -435,7 +435,7 @@ const Platform = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-xl text-gray-400 max-w-2xl mx-auto mb-10"
+              className="text-xl text-gray-300 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

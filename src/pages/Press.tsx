@@ -144,7 +144,7 @@ const Press = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-400 mb-8"
+              className="text-lg text-gray-300 mb-8"
             >
               Stay updated on The 3rd Academy's mission to transform credentialing
               through mentor-validated behavioral assessment.
@@ -172,7 +172,7 @@ const Press = () => {
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
+                <div className="text-sm text-gray-300">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -193,7 +193,7 @@ const Press = () => {
                 Press Releases
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Official announcements from The 3rd Academy.
             </p>
           </motion.div>
@@ -221,7 +221,7 @@ const Press = () => {
                   <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                     {release.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">{release.excerpt}</p>
+                  <p className="text-gray-300 text-sm mb-4">{release.excerpt}</p>
                   <span className="inline-flex items-center text-sm text-indigo-400">
                     Read More <ArrowRight className="ml-1 w-4 h-4" />
                   </span>
@@ -247,7 +247,7 @@ const Press = () => {
                 Featured In
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Media coverage and thought leadership features.
             </p>
           </motion.div>
@@ -303,7 +303,7 @@ const Press = () => {
                         Media Kit
                       </span>
                     </h2>
-                    <p className="text-gray-400 mb-6">
+                    <p className="text-gray-300 mb-6">
                       Download our press kit including logos, brand guidelines,
                       executive headshots, and fact sheets.
                     </p>
@@ -328,7 +328,7 @@ const Press = () => {
                         className="w-24 h-24 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2"
                       >
                         <item.icon className="w-6 h-6 text-indigo-400" />
-                        <span className="text-xs text-gray-400">{item.label}</span>
+                        <span className="text-xs text-gray-300">{item.label}</span>
                       </div>
                     ))}
                   </div>
@@ -357,7 +357,7 @@ const Press = () => {
                 Media Inquiries
               </span>
             </h2>
-            <p className="text-gray-400 mb-8">
+            <p className="text-gray-300 mb-8">
               For press inquiries, interview requests, or media partnerships,
               please contact our communications team.
             </p>

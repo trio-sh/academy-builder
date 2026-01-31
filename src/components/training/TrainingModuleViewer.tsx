@@ -65,8 +65,14 @@ export const TrainingModuleViewer = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [ttsVoice, setTtsVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const hasSpokenWelcome = useRef(false);
+  const hasSpokenScene = useRef<Set<number>>(new Set());
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Countdown timer state
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [isExtraTime, setIsExtraTime] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const sceneRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -160,15 +166,65 @@ export const TrainingModuleViewer = () => {
     setIsMuted(prev => !prev);
   }, [isMuted, stopSpeaking]);
 
-  // Auto-speak welcome scene when module loads
+  // Parse duration string to seconds (e.g., "25 min" -> 1500)
+  const parseDuration = useCallback((duration: string): number => {
+    const match = duration.match(/(\d+)\s*min/i);
+    if (match) {
+      return parseInt(match[1]) * 60;
+    }
+    return 10 * 60; // Default 10 minutes
+  }, []);
+
+  // Initialize countdown timer when module loads
   useEffect(() => {
-    if (module && currentSceneIndex === 0 && !hasSpokenWelcome.current && !isMuted && ttsVoice) {
-      const currentScene = module.scenes[0];
-      if (currentScene?.type === 'narrative' && currentScene.content) {
+    if (module && !timerStarted) {
+      const totalSeconds = parseDuration(module.duration);
+      setTimeRemaining(totalSeconds);
+      setTimerStarted(true);
+    }
+  }, [module, timerStarted, parseDuration]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (timerStarted && timeRemaining > 0 && !moduleCompleted) {
+      timerRef.current = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            if (!isExtraTime) {
+              // Add 3 minutes extra time
+              setIsExtraTime(true);
+              return 3 * 60;
+            }
+            // Extra time finished
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timerStarted, moduleCompleted, isExtraTime]);
+
+  // Format time remaining
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Auto-speak narrative scenes when scene changes
+  useEffect(() => {
+    if (module && !isMuted && ttsVoice && !hasSpokenScene.current.has(currentSceneIndex)) {
+      const scene = module.scenes[currentSceneIndex];
+      if (scene?.type === 'narrative' && scene.content) {
         // Small delay to let the UI settle
         const timer = setTimeout(() => {
-          speakText(currentScene.content);
-          hasSpokenWelcome.current = true;
+          speakText(scene.content);
+          hasSpokenScene.current.add(currentSceneIndex);
         }, 800);
         return () => clearTimeout(timer);
       }
@@ -553,7 +609,9 @@ export const TrainingModuleViewer = () => {
               </Button>
               <div className="h-8 w-px bg-white/10" />
               <div>
-                <h1 className="font-semibold text-lg text-white">{module.title}</h1>
+                <h1 className="font-semibold text-lg text-white" title={module.title}>
+                  {module.title.substring(0, 4)}...
+                </h1>
                 <p className="text-sm text-gray-500">{module.subtitle}</p>
               </div>
             </div>
@@ -595,9 +653,19 @@ export const TrainingModuleViewer = () => {
                 <span className="text-amber-400 font-semibold">{totalScore}</span>
                 <span className="text-amber-400/50">/ {module.totalPoints}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Clock className="w-4 h-4" />
-                {module.duration}
+              {/* Countdown Timer */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                isExtraTime
+                  ? 'bg-red-500/20 border border-red-500/30'
+                  : timeRemaining < 60
+                    ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                    : 'bg-white/5 border border-white/10'
+              }`}>
+                <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
+                <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  {formatTime(timeRemaining)}
+                </span>
+                {isExtraTime && <span className="text-xs text-red-400">+3</span>}
               </div>
             </div>
           </div>

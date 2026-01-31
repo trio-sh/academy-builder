@@ -176,7 +176,7 @@ const Security = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-400 mb-8"
+              className="text-lg text-gray-300 mb-8"
             >
               We implement industry-leading security measures to protect your
               personal information, credentials, and behavioral data.
@@ -199,7 +199,7 @@ const Security = () => {
                 Security Features
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Comprehensive security measures at every layer of our platform.
             </p>
           </motion.div>
@@ -225,7 +225,7 @@ const Security = () => {
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                  <p className="text-gray-300 text-sm">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -248,7 +248,7 @@ const Security = () => {
                 Compliance & Certifications
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               We maintain compliance with industry standards and regulations.
             </p>
           </motion.div>
@@ -272,7 +272,7 @@ const Security = () => {
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {cert.name}
                 </h3>
-                <p className="text-gray-400 text-sm">{cert.description}</p>
+                <p className="text-gray-300 text-sm">{cert.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -293,7 +293,7 @@ const Security = () => {
                 Our Security Practices
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               How we protect your data through robust security operations.
             </p>
           </motion.div>
@@ -318,7 +318,7 @@ const Security = () => {
                   {practice.items.map((item, itemIndex) => (
                     <li
                       key={itemIndex}
-                      className="flex items-start gap-3 text-gray-400 text-sm"
+                      className="flex items-start gap-3 text-gray-300 text-sm"
                     >
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       {item}
@@ -354,11 +354,11 @@ const Security = () => {
                         Responsible Disclosure
                       </span>
                     </h2>
-                    <p className="text-gray-400 mb-6">
+                    <p className="text-gray-300 mb-6">
                       We value the security research community. If you discover a
                       vulnerability, please report it responsibly. We commit to:
                     </p>
-                    <ul className="space-y-2 text-gray-400 text-sm mb-6">
+                    <ul className="space-y-2 text-gray-300 text-sm mb-6">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-400" />
                         Acknowledging reports within 24 hours

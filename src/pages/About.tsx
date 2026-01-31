@@ -95,7 +95,7 @@ const About = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-400 mb-8"
+                className="text-lg text-gray-300 mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -124,7 +124,7 @@ const About = () => {
                   Making Behavioral Readiness Observable
                 </span>
               </h2>
-              <div className="space-y-4 text-lg text-gray-400">
+              <div className="space-y-4 text-lg text-gray-300">
                 <p>
                   Education credentials tell employers what you studied. Certifications show
                   what you passed. But neither reveals how you'll actually perform in the workplace.
@@ -167,7 +167,7 @@ const About = () => {
                   Architecture as Philosophy
                 </span>
               </h2>
-              <p className="text-lg text-gray-400">
+              <p className="text-lg text-gray-300">
                 Every technical decision reflects a human value. Our architecture is our ethics.
               </p>
             </motion.div>
@@ -195,7 +195,7 @@ const About = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {value.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {value.description}
                     </p>
                   </div>
@@ -219,7 +219,7 @@ const About = () => {
                   Our Competitive Moat
                 </span>
               </h2>
-              <p className="text-lg text-gray-400">
+              <p className="text-lg text-gray-300">
                 A competitor can replicate our interface in weeks. They cannot replicate
                 years of judgment-outcome correlations.
               </p>
@@ -241,7 +241,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold text-white mb-4">
                     Mentor Decision Patterns
                   </h3>
-                  <p className="text-gray-400 mb-4">
+                  <p className="text-gray-300 mb-4">
                     Every proceed/redirect/pause decision correlated with eventual hiring outcomes.
                     We learn which mentor judgments actually predict workplace success.
                   </p>
@@ -260,7 +260,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold text-white mb-4">
                     Behavioral Fingerprint
                   </h3>
-                  <p className="text-gray-400 mb-4">
+                  <p className="text-gray-300 mb-4">
                     Passive interaction patterns correlated with real employment outcomes.
                     We learn which behaviors predict success, dropout, and even gaming attempts.
                   </p>
@@ -314,7 +314,7 @@ const About = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

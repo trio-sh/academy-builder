@@ -80,7 +80,7 @@ export function DifferentiatorSection() {
               A Category Difference.
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
             Competitors are doing point-in-time AI assessments. We're doing sustained
             human-gated observation with outcome learning.
           </p>
@@ -96,13 +96,13 @@ export function DifferentiatorSection() {
               {/* Header */}
               <div className="grid grid-cols-3 bg-white/5">
                 <div className="p-4 md:p-6 border-r border-white/10">
-                  <span className="text-sm font-medium text-gray-400">Criteria</span>
+                  <span className="text-sm font-medium text-gray-300">Criteria</span>
                 </div>
                 <div className="p-4 md:p-6 border-r border-white/10 bg-emerald-500/10">
                   <span className="text-sm font-bold text-emerald-400">The 3rd Academy</span>
                 </div>
                 <div className="p-4 md:p-6">
-                  <span className="text-sm font-medium text-gray-400">Traditional Platforms</span>
+                  <span className="text-sm font-medium text-gray-300">Traditional Platforms</span>
                 </div>
               </div>
 

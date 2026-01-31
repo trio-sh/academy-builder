@@ -125,7 +125,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p variants={itemVariants} className="mt-10 text-gray-400">
+              <motion.p variants={itemVariants} className="mt-10 text-gray-300">
                 No credit card required · Mentor-matched within 48 hours
               </motion.p>
             </div>

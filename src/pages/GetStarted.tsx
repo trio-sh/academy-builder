@@ -181,7 +181,7 @@ const GetStarted = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-400"
+                className="text-lg text-gray-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -211,7 +211,7 @@ const GetStarted = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-white/10 text-gray-400 border border-white/10"
+                          : "bg-white/10 text-gray-300 border border-white/10"
                       )}
                       whileHover={{ scale: 1.05 }}
                     >
@@ -268,13 +268,13 @@ const GetStarted = () => {
                               "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br",
                               selectedPath === path.id ? path.gradient : "from-white/10 to-white/5"
                             )}>
-                              <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-400")} />
+                              <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-300")} />
                             </div>
                             <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{path.entry}</span>
                           </div>
 
                           <h3 className="text-xl font-bold text-white mb-2">{path.title}</h3>
-                          <p className="text-gray-400 mb-6">{path.description}</p>
+                          <p className="text-gray-300 mb-6">{path.description}</p>
 
                           <ul className="space-y-3">
                             {path.features.map((feature) => (
@@ -417,7 +417,7 @@ const GetStarted = () => {
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Upload Your Resume</h2>
 
                       <motion.div className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer" whileHover={{ scale: 1.02 }}>
-                        <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <Upload className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                         <p className="text-white font-medium mb-2">Drop your resume here</p>
                         <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
                         <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">Browse Files</Button>
@@ -425,7 +425,7 @@ const GetStarted = () => {
 
                       <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-gray-300">
                           {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
                             <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                           ))}
@@ -465,7 +465,7 @@ const GetStarted = () => {
 
                       <div className="mt-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-gray-300">
                           {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Skill Passport"].map((item) => (
                             <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                           ))}

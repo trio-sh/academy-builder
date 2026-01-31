@@ -95,14 +95,27 @@ export const AssessmentViewer = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [ttsVoice, setTtsVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const hasSpokenWelcome = useRef(false);
+  const hasSpokenScene = useRef<Set<number>>(new Set());
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Countdown timer state (10 minutes for assessment)
+  const [timeRemaining, setTimeRemaining] = useState<number>(10 * 60);
+  const [isExtraTime, setIsExtraTime] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const sceneRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const currentScene = ASSESSMENT_SCENES[currentSceneIndex];
   const progress = ((currentSceneIndex + 1) / ASSESSMENT_SCENES.length) * 100;
+
+  // Format time remaining
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Initialize Text-to-Speech voice
   useEffect(() => {
@@ -165,14 +178,46 @@ export const AssessmentViewer = () => {
     setIsMuted(prev => !prev);
   }, [isMuted, stopSpeaking]);
 
-  // Auto-speak welcome scene
+  // Initialize countdown timer
   useEffect(() => {
-    if (currentSceneIndex === 0 && !hasSpokenWelcome.current && !isMuted && ttsVoice) {
-      const scene = ASSESSMENT_SCENES[0];
-      if (scene?.type === 'welcome' && scene.content) {
+    if (!timerStarted) {
+      setTimerStarted(true);
+    }
+  }, [timerStarted]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (timerStarted && timeRemaining > 0 && !isComplete) {
+      timerRef.current = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            if (!isExtraTime) {
+              // Add 3 minutes extra time
+              setIsExtraTime(true);
+              return 3 * 60;
+            }
+            // Extra time finished
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timerStarted, isComplete, isExtraTime]);
+
+  // Auto-speak narrative/welcome scenes when scene changes
+  useEffect(() => {
+    if (!isMuted && ttsVoice && !hasSpokenScene.current.has(currentSceneIndex)) {
+      const scene = ASSESSMENT_SCENES[currentSceneIndex];
+      if ((scene?.type === 'welcome' || scene?.type === 'narrative') && scene.content) {
         const timer = setTimeout(() => {
           speakText(scene.content);
-          hasSpokenWelcome.current = true;
+          hasSpokenScene.current.add(currentSceneIndex);
         }, 800);
         return () => clearTimeout(timer);
       }
@@ -829,8 +874,10 @@ export const AssessmentViewer = () => {
               </Button>
               <div className="h-8 w-px bg-white/10" />
               <div>
-                <h1 className="font-semibold text-lg text-white">Behavioral Self-Assessment</h1>
-                <p className="text-sm text-gray-500">Interactive Assessment Experience</p>
+                <h1 className="font-semibold text-lg text-white" title="Behavioral Self-Assessment">
+                  Beha...
+                </h1>
+                <p className="text-sm text-gray-500">Interactive Assessment</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -871,9 +918,19 @@ export const AssessmentViewer = () => {
                 <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
                 <span className="text-indigo-400/50">/ 5.0</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Clock className="w-4 h-4" />
-                ~10 min
+              {/* Countdown Timer */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                isExtraTime
+                  ? 'bg-red-500/20 border border-red-500/30'
+                  : timeRemaining < 60
+                    ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                    : 'bg-white/5 border border-white/10'
+              }`}>
+                <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
+                <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  {formatTime(timeRemaining)}
+                </span>
+                {isExtraTime && <span className="text-xs text-red-400">+3</span>}
               </div>
             </div>
           </div>

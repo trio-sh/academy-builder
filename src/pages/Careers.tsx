@@ -170,7 +170,7 @@ const Careers = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-400 mb-8"
+              className="text-lg text-gray-300 mb-8"
             >
               Join our mission to bridge the gap between credentials and workplace readiness.
               We're building technology that validates real human capability.
@@ -203,7 +203,7 @@ const Careers = () => {
                 Our Values
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               These principles guide everything we do at The 3rd Academy.
             </p>
           </motion.div>
@@ -226,7 +226,7 @@ const Careers = () => {
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-gray-400 text-sm">{value.description}</p>
+                  <p className="text-gray-300 text-sm">{value.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -249,7 +249,7 @@ const Careers = () => {
                 Benefits & Perks
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               We take care of our team so they can focus on changing the future of work.
             </p>
           </motion.div>
@@ -275,7 +275,7 @@ const Careers = () => {
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-400 text-sm">{benefit.description}</p>
+                  <p className="text-gray-300 text-sm">{benefit.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -297,7 +297,7 @@ const Careers = () => {
                 Open Positions
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Find your role in transforming how the world validates skills.
             </p>
           </motion.div>
@@ -327,7 +327,7 @@ const Careers = () => {
                       <h3 className="text-xl font-semibold text-white mb-2">
                         {position.title}
                       </h3>
-                      <p className="text-gray-400 text-sm mb-4">
+                      <p className="text-gray-300 text-sm mb-4">
                         {position.description}
                       </p>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
@@ -373,7 +373,7 @@ const Careers = () => {
                 Don't See Your Role?
               </span>
             </h2>
-            <p className="text-gray-400 mb-8">
+            <p className="text-gray-300 mb-8">
               We're always looking for talented people who share our mission.
               Send us your resume and tell us how you'd contribute.
             </p>
