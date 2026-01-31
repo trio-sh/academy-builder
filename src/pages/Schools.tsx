@@ -103,7 +103,7 @@ const Schools = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -117,7 +117,7 @@ const Schools = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Shape Future Talent.
                 </span>
                 <br />
@@ -126,7 +126,7 @@ const Schools = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-base text-gray-300 mb-10 font-serif"
+                className="text-base text-gray-100 mb-10 font-serif"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -169,7 +169,7 @@ const Schools = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto flex items-center gap-4 text-center md:text-left">
               <Shield className="w-8 h-8 text-amber-400 flex-shrink-0 hidden md:block" />
-              <p className="text-gray-300">
+              <p className="text-gray-100">
                 <strong className="text-amber-400">Important:</strong> Civic Access Lab is a
                 <strong className="text-white"> separate institutional track</strong>. It feeds system learning but
                 <strong className="text-white"> does NOT directly produce credentials</strong>. Students must enter the
@@ -192,11 +192,11 @@ const Schools = () => {
                 Platform Features
               </span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Tools for Modern Career Education
                 </span>
               </h2>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-100">
                 A complete platform for engaging students, empowering teachers, and
                 informing school leadership.
               </p>
@@ -225,7 +225,7 @@ const Schools = () => {
                     <h3 className="text-lg font-semibold text-white mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-gray-100 leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -252,7 +252,7 @@ const Schools = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Built for Everyone in the School
                 </span>
               </h2>
@@ -296,7 +296,7 @@ const Schools = () => {
                     <user.icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="font-semibold text-white mb-2">{user.title}</h3>
-                  <p className="text-sm text-gray-300">{user.desc}</p>
+                  <p className="text-sm text-gray-100">{user.desc}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -321,11 +321,11 @@ const Schools = () => {
                   Why Civic Access Lab
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  <span className="text-white">
                     Preparing Students for Real-World Success
                   </span>
                 </h2>
-                <p className="text-lg text-gray-300 mb-8">
+                <p className="text-lg text-gray-100 mb-8">
                   Early behavioral documentation creates a foundation that follows
                   students into the workforce. Build awareness now, validate later.
                 </p>
@@ -334,7 +334,7 @@ const Schools = () => {
                   {benefits.map((benefit) => (
                     <li key={benefit} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                      <span className="text-gray-300">{benefit}</span>
+                      <span className="text-gray-100">{benefit}</span>
                     </li>
                   ))}
                 </ul>
@@ -353,7 +353,7 @@ const Schools = () => {
                     <h3 className="text-2xl font-bold text-white mb-2">
                       Graduation Transition
                     </h3>
-                    <p className="text-gray-300">
+                    <p className="text-gray-100">
                       Student data ports seamlessly to the main credentialing
                       pathway upon graduation.
                     </p>
@@ -385,7 +385,7 @@ const Schools = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Ready to Transform
               </span>
               <br />
@@ -394,7 +394,7 @@ const Schools = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-100 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

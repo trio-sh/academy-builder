@@ -148,7 +148,7 @@ const Employers = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -162,7 +162,7 @@ const Employers = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Hire with Confidence.
                 </span>
                 <br />
@@ -171,7 +171,7 @@ const Employers = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-300 mb-10"
+                className="text-lg text-gray-100 mb-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -212,11 +212,11 @@ const Employers = () => {
                 Why T3X
               </span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Hiring That Actually Works
                 </span>
               </h2>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-100">
                 Traditional hiring relies on resumes and interviews. We provide
                 sustained behavioral evidence from mentor observation.
               </p>
@@ -245,7 +245,7 @@ const Employers = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {benefit.title}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-gray-100 leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -275,7 +275,7 @@ const Employers = () => {
                 How It Works
               </span>
               <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Your Hiring Process
                 </span>
               </h2>
@@ -300,7 +300,7 @@ const Employers = () => {
                       {item.step}
                     </div>
                     <h3 className="font-semibold text-white mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-300">{item.desc}</p>
+                    <p className="text-sm text-gray-100">{item.desc}</p>
                     {index < 3 && (
                       <div className="hidden md:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
@@ -324,7 +324,7 @@ const Employers = () => {
                 Pricing
               </span>
               <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Plans for Every Organization
                 </span>
               </h2>
@@ -365,14 +365,14 @@ const Employers = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {tier.name}
                     </h3>
-                    <p className="text-gray-300 mb-6">
+                    <p className="text-gray-100 mb-6">
                       {tier.description}
                     </p>
 
                     <div className="mb-6">
                       <span className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{tier.price}</span>
                       {tier.period && (
-                        <span className="text-gray-300">{tier.period}</span>
+                        <span className="text-gray-100">{tier.period}</span>
                       )}
                     </div>
 
@@ -380,7 +380,7 @@ const Employers = () => {
                       {tier.features.map((feature) => (
                         <li key={feature} className="flex items-center gap-3 text-sm">
                           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                          <span className="text-gray-300">{feature}</span>
+                          <span className="text-gray-100">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -450,12 +450,12 @@ const Employers = () => {
                         <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <blockquote className="text-lg text-gray-300 mb-6 leading-relaxed">
+                    <blockquote className="text-lg text-gray-100 mb-6 leading-relaxed">
                       "{testimonial.quote}"
                     </blockquote>
                     <div>
                       <p className="font-semibold text-white">{testimonial.author}</p>
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm text-gray-100">
                         {testimonial.role}, {testimonial.company}
                       </p>
                     </div>
@@ -487,7 +487,7 @@ const Employers = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Ready to Transform
               </span>
               <br />
@@ -496,7 +496,7 @@ const Employers = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-100 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -179,7 +179,7 @@ const Privacy = () => {
               variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Privacy
               </span>
               <br />
@@ -189,7 +189,7 @@ const Privacy = () => {
             </motion.h1>
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center gap-4 text-sm text-gray-300"
+              className="flex items-center justify-center gap-4 text-sm text-gray-100"
             >
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -215,13 +215,13 @@ const Privacy = () => {
               variants={itemVariants}
               className="mb-12 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
             >
-              <p className="text-gray-300 leading-relaxed">
+              <p className="text-gray-100 leading-relaxed">
                 At The 3rd Academy, we are committed to protecting your privacy and
                 ensuring the security of your personal information. This Privacy Policy
                 explains how we collect, use, disclose, and safeguard your information
                 when you use our platform and services.
               </p>
-              <p className="text-gray-300 leading-relaxed mt-4">
+              <p className="text-gray-100 leading-relaxed mt-4">
                 By using The 3rd Academy, you agree to the collection and use of
                 information in accordance with this policy. If you do not agree with
                 our policies and practices, please do not use our services.
@@ -239,7 +239,7 @@ const Privacy = () => {
                   <h2 className="text-xl font-semibold text-white mb-4">
                     {section.title}
                   </h2>
-                  <div className="text-gray-300 leading-relaxed whitespace-pre-line prose prose-invert prose-sm max-w-none">
+                  <div className="text-gray-100 leading-relaxed whitespace-pre-line prose prose-invert prose-sm max-w-none">
                     {section.content.split('\n\n').map((paragraph, pIndex) => (
                       <p key={pIndex} className="mb-4">
                         {paragraph.split('**').map((part, partIndex) =>
@@ -267,7 +267,7 @@ const Privacy = () => {
               <h3 className="text-lg font-semibold text-white mb-2">
                 Questions About Privacy?
               </h3>
-              <p className="text-gray-300 mb-4">
+              <p className="text-gray-100 mb-4">
                 Contact our privacy team for any questions or concerns.
               </p>
               <a

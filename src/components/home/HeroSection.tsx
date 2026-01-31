@@ -87,7 +87,7 @@ export function HeroSection() {
           {/* Badge */}
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-8"
           >
             <Sparkles className="w-4 h-4 text-indigo-400" />
             Mentor-Gated Behavioral Validation
@@ -222,7 +222,7 @@ function EntryPointCard({ icon, title, description, entry, delay }: EntryPointCa
           </span>
         </div>
         <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-300 leading-relaxed">{description}</p>
+        <p className="text-gray-100 leading-relaxed">{description}</p>
       </div>
     </motion.div>
   );

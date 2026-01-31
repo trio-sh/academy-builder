@@ -179,7 +179,7 @@ const Join = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-300 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -191,14 +191,14 @@ const Join = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Create Your
                 </span>{" "}
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Account
                 </span>
               </motion.h1>
-              <motion.p className="text-lg text-gray-300">
+              <motion.p className="text-lg text-gray-100">
                 Choose how you want to participate in the behavioral credentialing ecosystem.
               </motion.p>
             </div>
@@ -218,7 +218,7 @@ const Join = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-white/10 text-gray-300 border border-white/10"
+                          : "bg-white/10 text-gray-100 border border-white/10"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
@@ -263,20 +263,20 @@ const Join = () => {
                                 selectedRole === role.id ? role.gradient : "from-white/10 to-white/5"
                               )}
                             >
-                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-300")} />
+                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-100")} />
                             </div>
                             <div>
                               <h3 className="text-lg font-bold text-white">{role.title}</h3>
                             </div>
                           </div>
 
-                          <p className="text-gray-300 text-sm mb-4">{role.description}</p>
+                          <p className="text-gray-100 text-sm mb-4">{role.description}</p>
 
                           <ul className="space-y-2">
                             {role.features.map((feature) => (
                               <li key={feature} className="flex items-center gap-2 text-sm">
                                 <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-gray-500")} />
-                                <span className="text-gray-300">{feature}</span>
+                                <span className="text-gray-100">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -333,7 +333,7 @@ const Join = () => {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="firstName" className="text-gray-300">First Name</Label>
+                            <Label htmlFor="firstName" className="text-gray-100">First Name</Label>
                             <Input
                               id="firstName"
                               value={firstName}
@@ -343,7 +343,7 @@ const Join = () => {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="lastName" className="text-gray-300">Last Name</Label>
+                            <Label htmlFor="lastName" className="text-gray-100">Last Name</Label>
                             <Input
                               id="lastName"
                               value={lastName}
@@ -355,7 +355,7 @@ const Join = () => {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="email" className="text-gray-300">Email</Label>
+                          <Label htmlFor="email" className="text-gray-100">Email</Label>
                           <Input
                             id="email"
                             type="email"
@@ -367,7 +367,7 @@ const Join = () => {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="password" className="text-gray-300">Password</Label>
+                          <Label htmlFor="password" className="text-gray-100">Password</Label>
                           <Input
                             id="password"
                             type="password"
@@ -383,7 +383,7 @@ const Join = () => {
                         {selectedRole === "employer" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="companyName" className="text-gray-300">Company Name</Label>
+                              <Label htmlFor="companyName" className="text-gray-100">Company Name</Label>
                               <Input
                                 id="companyName"
                                 value={companyName}
@@ -393,7 +393,7 @@ const Join = () => {
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-300">Industry</Label>
+                              <Label htmlFor="industry" className="text-gray-100">Industry</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Technology, Healthcare"
@@ -408,7 +408,7 @@ const Join = () => {
 
                         {selectedRole === "school_admin" && (
                           <div className="space-y-2">
-                            <Label htmlFor="schoolName" className="text-gray-300">School / Institution Name</Label>
+                            <Label htmlFor="schoolName" className="text-gray-100">School / Institution Name</Label>
                             <Input
                               id="schoolName"
                               value={schoolName}
@@ -422,7 +422,7 @@ const Join = () => {
                         {selectedRole === "mentor" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-300">Industry / Expertise</Label>
+                              <Label htmlFor="industry" className="text-gray-100">Industry / Expertise</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Software Engineering"
@@ -433,7 +433,7 @@ const Join = () => {
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="yearsExperience" className="text-gray-300">Years of Experience</Label>
+                              <Label htmlFor="yearsExperience" className="text-gray-100">Years of Experience</Label>
                               <Input
                                 id="yearsExperience"
                                 type="number"
@@ -490,7 +490,7 @@ const Join = () => {
                       </div>
 
                       <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
-                      <p className="text-gray-300 mb-6">
+                      <p className="text-gray-100 mb-6">
                         Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
                       </p>
 

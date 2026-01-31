@@ -131,7 +131,7 @@ export function JourneySection() {
             The Credentialing Journey
           </span>
           <h2 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+            <span className="text-white">
               From Profile to
             </span>
             <br />
@@ -139,7 +139,7 @@ export function JourneySection() {
               Placement
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
             Every credential is earned through sustained mentor observation — no shortcuts,
             no self-assessments. Human judgment at every critical gate.
           </p>
@@ -209,7 +209,7 @@ export function JourneySection() {
                         )}
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                      <p className="text-gray-300 leading-relaxed">{step.description}</p>
+                      <p className="text-gray-100 leading-relaxed">{step.description}</p>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -247,7 +247,7 @@ export function JourneySection() {
                     transition={{ delay: index * 0.1 }}
                   >
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-300">{principle}</span>
+                    <span className="text-sm text-gray-100">{principle}</span>
                   </motion.div>
                 ))}
               </div>

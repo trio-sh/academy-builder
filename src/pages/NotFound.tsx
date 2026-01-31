@@ -51,7 +51,7 @@ const NotFound = () => {
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Page Not Found
                 </span>
               </h1>
