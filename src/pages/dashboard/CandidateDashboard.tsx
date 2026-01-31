@@ -5,6 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase, updatePassword } from "@/lib/supabase";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { Button } from "@/components/ui/button";
+import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
+import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import {
   LineChart,
@@ -2157,33 +2159,18 @@ const SelfAssessmentPage = () => {
   );
 };
 
-// Training (BridgeFast) component
+// Training (Interactive Modules) component
 const Training = () => {
-  const { user, profile } = useAuth();
-  const [modules, setModules] = useState<BridgeFastModule[]>([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [progress, setProgress] = useState<Record<string, BridgeFastProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [activeModule, setActiveModule] = useState<BridgeFastModule | null>(null);
-  const [moduleStep, setModuleStep] = useState(0); // 0=intro, 1=video, 2-4=content, 5=quiz, 6=complete
-  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState(0);
-  const [showCertificate, setShowCertificate] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return;
 
-      // Fetch all active modules
-      const { data: modulesData } = await supabase
-        .from("bridgefast_modules")
-        .select("*")
-        .eq("is_active", true)
-        .order("order_index");
-
-      setModules(modulesData || []);
-
-      // Fetch user's progress
+      // Fetch user's progress for interactive modules
       const { data: progressData } = await supabase
         .from("bridgefast_progress")
         .select("*")
@@ -2201,221 +2188,38 @@ const Training = () => {
     fetchData();
   }, [user?.id]);
 
-  const startModule = async (moduleId: string) => {
-    if (!user?.id) return;
-
-    const { error } = await supabase.from("bridgefast_progress").insert({
-      candidate_id: user.id,
-      module_id: moduleId,
-      status: "in_progress",
-      started_at: new Date().toISOString(),
-      progress_percent: 0,
-    });
-
-    if (!error) {
-      setProgress((prev) => ({
-        ...prev,
-        [moduleId]: {
-          id: "",
-          candidate_id: user.id,
-          module_id: moduleId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          started_at: new Date().toISOString(),
-          completed_at: null,
-          progress_percent: 0,
-          final_score: null,
-          status: "in_progress",
-          deadline: null,
-        },
-      }));
-    }
+  const openModule = (moduleSlug: string) => {
+    navigate(`/dashboard/candidate/training/module/${moduleSlug}`);
   };
 
-  const updateProgress = async (moduleId: string, newPercent: number) => {
-    if (!user?.id) return;
-
-    await supabase
-      .from("bridgefast_progress")
-      .update({ progress_percent: newPercent, updated_at: new Date().toISOString() })
-      .eq("candidate_id", user.id)
-      .eq("module_id", moduleId);
-
-    setProgress((prev) => ({
-      ...prev,
-      [moduleId]: {
-        ...prev[moduleId],
-        progress_percent: newPercent,
-      },
-    }));
+  // Get icon component by name
+  const getIconComponent = (iconName: string) => {
+    const icons: Record<string, React.ReactNode> = {
+      'Shield': <Shield className="w-6 h-6" />,
+      'Smartphone': <MessageSquare className="w-6 h-6" />,
+      'Award': <Award className="w-6 h-6" />,
+      'Users': <Users className="w-6 h-6" />,
+      'UserX': <User className="w-6 h-6" />,
+      'MessageSquare': <MessageSquare className="w-6 h-6" />,
+      'AlertTriangle': <AlertCircle className="w-6 h-6" />,
+      'Scale': <Sliders className="w-6 h-6" />,
+      'FileCheck': <FileText className="w-6 h-6" />,
+      'Handshake': <Users className="w-6 h-6" />,
+    };
+    return icons[iconName] || <BookOpen className="w-6 h-6" />;
   };
 
-  const completeModule = async (moduleId: string, score: number) => {
-    if (!user?.id) return;
+  // Calculate statistics
+  const completedCount = INTERACTIVE_MODULES.filter(m => progress[m.id]?.status === "completed").length;
+  const inProgressCount = INTERACTIVE_MODULES.filter(m => progress[m.id]?.status === "in_progress").length;
 
-    await supabase
-      .from("bridgefast_progress")
-      .update({
-        status: "completed",
-        progress_percent: 100,
-        final_score: score,
-        completed_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("candidate_id", user.id)
-      .eq("module_id", moduleId);
-
-    // Create growth log entry
-    await supabase.from("growth_log_entries").insert({
-      candidate_id: user.id,
-      event_type: "training",
-      title: `Completed BridgeFast Module`,
-      description: `Completed ${modules.find((m) => m.id === moduleId)?.title} with score ${score}%`,
-      source_component: "Training",
-      metadata: { module_id: moduleId, score },
-    });
-
-    setProgress((prev) => ({
-      ...prev,
-      [moduleId]: {
-        ...prev[moduleId],
-        status: "completed",
-        progress_percent: 100,
-        final_score: score,
-        completed_at: new Date().toISOString(),
-      },
-    }));
-
-    setActiveModule(null);
-    setModuleStep(0);
-  };
-
-  const openModule = (module: BridgeFastModule) => {
-    const moduleProgress = progress[module.id];
-    if (!moduleProgress || moduleProgress.status === "not_started") {
-      startModule(module.id);
-    }
-    setActiveModule(module);
-    setQuizAnswers([]);
-    setQuizSubmitted(false);
-    setQuizScore(0);
-    // Set step based on current progress
-    const percent = moduleProgress?.progress_percent || 0;
-    setModuleStep(Math.floor(percent / 16.67)); // 6 steps total
-  };
-
-  const advanceStep = async () => {
-    if (!activeModule) return;
-    const newStep = moduleStep + 1;
-    setModuleStep(newStep);
-
-    // Update progress (each step is ~16.67%)
-    const newPercent = Math.min(Math.round(newStep * 16.67), 83); // Cap at 83% until quiz complete
-    await updateProgress(activeModule.id, newPercent);
-  };
-
-  const getQuizQuestions = () => {
-    const dimension = activeModule?.behavioral_dimension?.toLowerCase().replace(" ", "_") || "communication";
-    return QUIZ_QUESTIONS[dimension] || QUIZ_QUESTIONS.communication;
-  };
-
-  const submitQuiz = async () => {
-    const questions = getQuizQuestions();
-    let correct = 0;
-    questions.forEach((q, i) => {
-      if (quizAnswers[i] === q.correct) correct++;
-    });
-    const score = Math.round((correct / questions.length) * 100);
-    setQuizScore(score);
-    setQuizSubmitted(true);
-  };
-
-  const downloadCertificate = () => {
-    if (!activeModule || !profile) return;
-
-    const certWindow = window.open('', '_blank');
-    if (!certWindow) return;
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Certificate - ${activeModule.title}</title>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body {
-            font-family: 'Georgia', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #f5f5f5;
-            padding: 20px;
-          }
-          .certificate {
-            width: 800px;
-            padding: 50px;
-            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
-            border: 3px solid #1e3a5f;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            position: relative;
-          }
-          .certificate::before {
-            content: '';
-            position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 1px solid #d4af37;
-          }
-          .logo { font-size: 24px; color: #1e3a5f; margin-bottom: 10px; letter-spacing: 3px; }
-          .title { font-size: 42px; color: #d4af37; margin: 20px 0; font-weight: normal; }
-          .subtitle { font-size: 18px; color: #666; margin-bottom: 30px; }
-          .recipient { font-size: 32px; color: #1e3a5f; margin: 20px 0; border-bottom: 2px solid #d4af37; display: inline-block; padding-bottom: 10px; }
-          .course { font-size: 20px; color: #333; margin: 30px 0 10px; }
-          .course-name { font-size: 24px; color: #1e3a5f; font-weight: bold; }
-          .dimension { display: inline-block; padding: 8px 20px; background: #1e3a5f; color: #fff; border-radius: 20px; margin: 20px 0; font-size: 14px; }
-          .score { font-size: 18px; color: #666; margin: 20px 0; }
-          .date { font-size: 14px; color: #888; margin-top: 30px; }
-          .footer { display: flex; justify-content: space-around; margin-top: 40px; }
-          .signature { text-align: center; }
-          .signature-line { width: 150px; border-top: 1px solid #333; margin: 10px auto 5px; }
-          .signature-title { font-size: 12px; color: #666; }
-          .badge { position: absolute; top: 20px; right: 30px; width: 80px; height: 80px; background: linear-gradient(135deg, #d4af37, #b8962e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
-          @media print {
-            body { background: white; }
-            .certificate { box-shadow: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="certificate">
-          <div class="badge">VERIFIED</div>
-          <div class="logo">THE 3RD ACADEMY</div>
-          <div class="title">Certificate of Completion</div>
-          <div class="subtitle">This is to certify that</div>
-          <div class="recipient">${profile.first_name} ${profile.last_name}</div>
-          <div class="course">has successfully completed the BridgeFast training module</div>
-          <div class="course-name">${activeModule.title}</div>
-          <div class="dimension">${activeModule.behavioral_dimension}</div>
-          <div class="score">Final Score: ${quizScore}% | Duration: ${activeModule.duration_hours} hours</div>
-          <div class="date">Issued on ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
-          <div class="footer">
-            <div class="signature">
-              <div class="signature-line"></div>
-              <div class="signature-title">Program Director</div>
-            </div>
-            <div class="signature">
-              <div class="signature-line"></div>
-              <div class="signature-title">Certificate ID: BF-${Date.now().toString(36).toUpperCase()}</div>
-            </div>
-          </div>
-        </div>
-        <script>window.onload = function() { window.print(); }</script>
-      </body>
-      </html>
-    `;
-    certWindow.document.write(html);
-    certWindow.document.close();
+  // Check if module is locked (requires previous modules to be completed for sequential unlocking)
+  const isModuleLocked = (index: number): boolean => {
+    if (index === 0) return false; // First module is always unlocked
+    // For now, all modules are unlocked - can enable sequential locking by uncommenting:
+    // const previousModule = INTERACTIVE_MODULES[index - 1];
+    // return progress[previousModule.id]?.status !== 'completed';
+    return false;
   };
 
   if (isLoading) {
@@ -2426,9 +2230,6 @@ const Training = () => {
     );
   }
 
-  const completedCount = Object.values(progress).filter(p => p.status === "completed").length;
-  const inProgressCount = Object.values(progress).filter(p => p.status === "in_progress").length;
-
   return (
     <motion.div
       variants={containerVariants}
@@ -2436,10 +2237,11 @@ const Training = () => {
       animate="visible"
       className="space-y-8"
     >
+      {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">BridgeFast Training</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Interactive Training</h1>
         <p className="text-gray-400">
-          Develop workplace-ready behaviors through targeted training modules.
+          Master workplace behaviors through immersive scenario-based learning modules.
         </p>
       </motion.div>
 
@@ -2447,7 +2249,7 @@ const Training = () => {
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <BookOpen className="w-8 h-8 text-indigo-400 mb-3" />
-          <p className="text-3xl font-bold text-white">{modules.length}</p>
+          <p className="text-3xl font-bold text-white">{INTERACTIVE_MODULES.length}</p>
           <p className="text-sm text-gray-400">Total Modules</p>
         </div>
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
@@ -2466,519 +2268,177 @@ const Training = () => {
       <motion.div variants={itemVariants}>
         <h2 className="text-xl font-semibold text-white mb-4">Training Modules</h2>
         <div className="grid md:grid-cols-2 gap-4">
-          {modules.map((module) => {
+          {INTERACTIVE_MODULES.map((module, index) => {
             const moduleProgress = progress[module.id];
             const status = moduleProgress?.status || "not_started";
+            const locked = isModuleLocked(index);
 
             return (
-              <div
+              <motion.div
                 key={module.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                whileHover={!locked ? { scale: 1.02 } : {}}
+                className={`relative p-6 rounded-xl border transition-all cursor-pointer overflow-hidden ${
+                  locked
+                    ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
+                    : status === 'completed'
+                    ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-500/50'
+                    : status === 'in_progress'
+                    ? 'bg-amber-500/10 border-amber-500/30 hover:border-amber-500/50'
+                    : 'bg-white/5 border-white/10 hover:border-white/30'
+                }`}
+                onClick={() => !locked && openModule(module.slug)}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <span className="inline-block px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400 mb-2">
-                      {module.behavioral_dimension}
+                {/* Gradient overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${module.color} opacity-5`} />
+
+                <div className="relative">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`p-3 rounded-xl bg-gradient-to-br ${module.color}`}>
+                      {getIconComponent(module.icon)}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {locked ? (
+                        <Lock className="w-5 h-5 text-gray-500" />
+                      ) : status === 'completed' ? (
+                        <div className="flex items-center gap-1 text-emerald-400">
+                          <CheckCircle className="w-5 h-5" />
+                          <span className="text-sm font-medium">
+                            {moduleProgress?.final_score}pts
+                          </span>
+                        </div>
+                      ) : status === 'in_progress' ? (
+                        <span className="px-2 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400">
+                          In Progress
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="mb-4">
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs mb-2 bg-gradient-to-r ${module.color} bg-opacity-20 text-white`}>
+                      {module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1)}
                     </span>
-                    <h3 className="font-semibold text-white">{module.title}</h3>
+                    <h3 className="font-semibold text-white text-lg">{module.title}</h3>
+                    <p className="text-sm text-gray-500">{module.subtitle}</p>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-400">
-                    <Clock className="w-4 h-4" />
-                    {module.duration_hours}h
+
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    {module.description}
+                  </p>
+
+                  {/* Meta info */}
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      {module.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Target className="w-4 h-4" />
+                      {module.scenes.length} scenes
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Star className="w-4 h-4" />
+                      {module.totalPoints} pts
+                    </span>
                   </div>
-                </div>
 
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                  {module.description}
-                </p>
-
-                {status === "completed" ? (
-                  <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="text-sm font-medium">Completed</span>
-                    {moduleProgress?.final_score && (
-                      <span className="ml-auto text-sm">Score: {moduleProgress.final_score}%</span>
+                  {/* Competencies */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {module.competencies.slice(0, 3).map((comp, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 rounded text-xs bg-white/5 text-gray-400"
+                      >
+                        {comp}
+                      </span>
+                    ))}
+                    {module.competencies.length > 3 && (
+                      <span className="px-2 py-0.5 rounded text-xs bg-white/5 text-gray-400">
+                        +{module.competencies.length - 3}
+                      </span>
                     )}
                   </div>
-                ) : status === "in_progress" ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-amber-400">In Progress</span>
-                      <span className="text-gray-400">{moduleProgress?.progress_percent || 0}%</span>
+
+                  {/* Progress bar for in-progress */}
+                  {status === 'in_progress' && moduleProgress?.progress_percent && (
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="text-gray-400">Progress</span>
+                        <span className="text-amber-400">{moduleProgress.progress_percent}%</span>
+                      </div>
+                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full bg-gradient-to-r ${module.color} transition-all`}
+                          style={{ width: `${moduleProgress.progress_percent}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all"
-                        style={{ width: `${moduleProgress?.progress_percent || 0}%` }}
-                      />
-                    </div>
+                  )}
+
+                  {/* Action button */}
+                  {!locked && (
                     <Button
                       size="sm"
-                      className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500"
-                      onClick={() => openModule(module)}
+                      className={`w-full ${
+                        status === 'completed'
+                          ? 'bg-emerald-600 hover:bg-emerald-500'
+                          : status === 'in_progress'
+                          ? 'bg-amber-600 hover:bg-amber-500'
+                          : `bg-gradient-to-r ${module.color} hover:opacity-90`
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openModule(module.slug);
+                      }}
                     >
-                      <Play className="w-4 h-4 mr-2" />
-                      Continue
+                      {status === 'completed' ? (
+                        <>
+                          <Play className="w-4 h-4 mr-2" />
+                          Review Module
+                        </>
+                      ) : status === 'in_progress' ? (
+                        <>
+                          <Play className="w-4 h-4 mr-2" />
+                          Continue
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4 mr-2" />
+                          Start Module
+                        </>
+                      )}
                     </Button>
-                  </div>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10"
-                    onClick={() => openModule(module)}
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Start Module
-                  </Button>
-                )}
-              </div>
+                  )}
+                </div>
+              </motion.div>
             );
           })}
         </div>
       </motion.div>
 
-      {/* Module Viewer Modal */}
-      {activeModule && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[85vh] overflow-hidden"
-          >
-            {/* Header */}
-            <div className="p-6 border-b border-white/10">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="inline-block px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400 mb-2">
-                    {activeModule.behavioral_dimension}
-                  </span>
-                  <h2 className="text-xl font-bold text-white">{activeModule.title}</h2>
-                </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setActiveModule(null);
-                    setModuleStep(0);
-                  }}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-              {/* Progress Bar */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-gray-400">Progress</span>
-                  <span className="text-indigo-400">{Math.min(moduleStep * 20, 100)}%</span>
-                </div>
-                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
-                    style={{ width: `${Math.min(moduleStep * 20, 100)}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
-              {/* Step 0: Introduction */}
-              {moduleStep === 0 && (
-                <div className="text-center py-8">
-                  <BookOpen className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-white mb-2">Welcome to This Module</h3>
-                  <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                    {activeModule.description}
-                  </p>
-                  <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mb-6">
-                    <span className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      {activeModule.duration_hours} hours
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <Target className="w-4 h-4" />
-                      {activeModule.behavioral_dimension}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-6">
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                      <Play className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-400">Video Lesson</p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                      <BookOpen className="w-5 h-5 text-purple-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-400">Reading</p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                      <FileText className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-400">Quiz</p>
-                    </div>
-                  </div>
-                  <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
-                    Start Learning
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              )}
-
-              {/* Step 1: Video Lesson */}
-              {moduleStep === 1 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-sm">
-                      Video Lesson
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Introduction to {activeModule.behavioral_dimension}
-                  </h3>
-
-                  {/* Video Player */}
-                  <div className="relative rounded-xl overflow-hidden bg-black aspect-video mb-4">
-                    {activeModule.content_url ? (
-                      <video
-                        controls
-                        className="w-full h-full"
-                        poster={`https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop`}
-                      >
-                        <source src={activeModule.content_url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900/50 to-purple-900/50">
-                        <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 cursor-pointer hover:bg-white/20 transition-colors">
-                          <Play className="w-10 h-10 text-white ml-1" />
-                        </div>
-                        <p className="text-white font-medium">{activeModule.behavioral_dimension} Training</p>
-                        <p className="text-gray-400 text-sm mt-1">Duration: {activeModule.duration_hours} hours</p>
-                        <div className="mt-4 px-4 py-2 bg-white/10 rounded-lg">
-                          <p className="text-xs text-gray-300">Demo Mode: Video content would play here</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                    <h4 className="font-medium text-white mb-2">Video Summary:</h4>
-                    <p className="text-sm text-gray-400">
-                      This video covers the fundamentals of {activeModule.behavioral_dimension.toLowerCase()},
-                      including key concepts, common challenges, and strategies for improvement in the workplace.
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => setModuleStep(0)}
-                      className="border-white/20 text-white hover:bg-white/10"
-                    >
-                      <ChevronLeft className="w-4 h-4 mr-2" />
-                      Back
-                    </Button>
-                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
-                      Continue to Reading
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Steps 2-4: Content/Reading */}
-              {moduleStep >= 2 && moduleStep <= 4 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-400 text-sm">
-                      Part {moduleStep - 1} of 3
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    {moduleStep === 2 && "Understanding the Fundamentals"}
-                    {moduleStep === 3 && "Key Concepts & Strategies"}
-                    {moduleStep === 4 && "Practical Applications"}
-                  </h3>
-
-                  <div className="space-y-4 text-gray-300">
-                    <p>
-                      This section covers essential aspects of <span className="text-indigo-400 font-medium">{activeModule.behavioral_dimension}</span> in the workplace.
-                    </p>
-
-                    <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                      <h4 className="font-medium text-white mb-2">Key Learning Points:</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                          <span>Understanding the importance of {activeModule.behavioral_dimension.toLowerCase()} in professional settings</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                          <span>Developing strategies to improve your {activeModule.behavioral_dimension.toLowerCase()} skills</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                          <span>Applying best practices in real workplace scenarios</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                      <h4 className="font-medium text-indigo-400 mb-2">Pro Tip</h4>
-                      <p className="text-sm">
-                        {moduleStep === 2 && "Start by observing how experienced professionals demonstrate this skill in your workplace."}
-                        {moduleStep === 3 && "Practice these concepts in low-stakes situations before applying them to important scenarios."}
-                        {moduleStep === 4 && "Keep a journal of instances where you successfully applied these skills."}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => setModuleStep(moduleStep - 1)}
-                      className="border-white/20 text-white hover:bg-white/10"
-                    >
-                      <ChevronLeft className="w-4 h-4 mr-2" />
-                      Previous
-                    </Button>
-                    <Button onClick={advanceStep} className="bg-indigo-600 hover:bg-indigo-500">
-                      {moduleStep === 4 ? "Take Quiz" : "Continue"}
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 5: Quiz */}
-              {moduleStep === 5 && !quizSubmitted && (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-sm">
-                      Knowledge Check
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Quiz: {activeModule.behavioral_dimension}
-                  </h3>
-
-                  <p className="text-gray-400 mb-6">
-                    Answer the following questions to test your understanding. You need 70% to pass.
-                  </p>
-
-                  <div className="space-y-6">
-                    {getQuizQuestions().map((q, qIndex) => (
-                      <div key={qIndex} className="p-4 rounded-lg bg-white/5 border border-white/10">
-                        <p className="font-medium text-white mb-3">
-                          {qIndex + 1}. {q.question}
-                        </p>
-                        <div className="space-y-2">
-                          {q.options.map((option, oIndex) => (
-                            <label
-                              key={oIndex}
-                              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                                quizAnswers[qIndex] === oIndex
-                                  ? "bg-indigo-500/20 border border-indigo-500/50"
-                                  : "bg-white/5 border border-white/10 hover:bg-white/10"
-                              }`}
-                            >
-                              <input
-                                type="radio"
-                                name={`question-${qIndex}`}
-                                className="sr-only"
-                                checked={quizAnswers[qIndex] === oIndex}
-                                onChange={() => {
-                                  const newAnswers = [...quizAnswers];
-                                  newAnswers[qIndex] = oIndex;
-                                  setQuizAnswers(newAnswers);
-                                }}
-                              />
-                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                quizAnswers[qIndex] === oIndex
-                                  ? "border-indigo-500 bg-indigo-500"
-                                  : "border-gray-500"
-                              }`}>
-                                {quizAnswers[qIndex] === oIndex && (
-                                  <div className="w-2 h-2 rounded-full bg-white" />
-                                )}
-                              </div>
-                              <span className="text-sm text-gray-300">{option}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex justify-between mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => setModuleStep(4)}
-                      className="border-white/20 text-white hover:bg-white/10"
-                    >
-                      <ChevronLeft className="w-4 h-4 mr-2" />
-                      Back to Reading
-                    </Button>
-                    <Button
-                      onClick={submitQuiz}
-                      disabled={quizAnswers.length < getQuizQuestions().length}
-                      className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50"
-                    >
-                      Submit Quiz
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 5: Quiz Results */}
-              {moduleStep === 5 && quizSubmitted && (
-                <div className="text-center py-8">
-                  <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                    quizScore >= 70 ? "bg-emerald-500/20" : "bg-amber-500/20"
-                  }`}>
-                    {quizScore >= 70 ? (
-                      <CheckCircle className="w-10 h-10 text-emerald-400" />
-                    ) : (
-                      <AlertCircle className="w-10 h-10 text-amber-400" />
-                    )}
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {quizScore >= 70 ? "Quiz Passed!" : "Keep Learning!"}
-                  </h3>
-                  <p className="text-gray-400 mb-4">
-                    {quizScore >= 70
-                      ? "Great job! You've demonstrated understanding of this module."
-                      : "You need 70% to pass. Review the material and try again."}
-                  </p>
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 inline-block mb-6">
-                    <p className="text-sm text-gray-400 mb-1">Your Score</p>
-                    <p className={`text-3xl font-bold ${quizScore >= 70 ? "text-emerald-400" : "text-amber-400"}`}>
-                      {quizScore}%
-                    </p>
-                  </div>
-
-                  {/* Show correct answers */}
-                  <div className="text-left mb-6 space-y-3">
-                    {getQuizQuestions().map((q, i) => (
-                      <div
-                        key={i}
-                        className={`p-3 rounded-lg ${
-                          quizAnswers[i] === q.correct
-                            ? "bg-emerald-500/10 border border-emerald-500/30"
-                            : "bg-red-500/10 border border-red-500/30"
-                        }`}
-                      >
-                        <p className="text-sm text-gray-300">
-                          {i + 1}. {quizAnswers[i] === q.correct ? "✓" : "✗"} {q.question}
-                        </p>
-                        {quizAnswers[i] !== q.correct && (
-                          <p className="text-xs text-emerald-400 mt-1">
-                            Correct: {q.options[q.correct]}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex justify-center gap-3">
-                    {quizScore >= 70 ? (
-                      <Button
-                        onClick={() => setModuleStep(6)}
-                        className="bg-emerald-600 hover:bg-emerald-500"
-                      >
-                        Continue to Certificate
-                        <ChevronRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    ) : (
-                      <>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setQuizAnswers([]);
-                            setQuizSubmitted(false);
-                            setModuleStep(2);
-                          }}
-                          className="border-white/20 text-white hover:bg-white/10"
-                        >
-                          Review Material
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            setQuizAnswers([]);
-                            setQuizSubmitted(false);
-                          }}
-                          className="bg-indigo-600 hover:bg-indigo-500"
-                        >
-                          Retry Quiz
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Step 6: Completion & Certificate */}
-              {moduleStep === 6 && (
-                <div className="text-center py-8">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4">
-                    <Award className="w-10 h-10 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Module Complete!</h3>
-                  <p className="text-gray-400 mb-6">
-                    Congratulations! You've successfully completed this training module.
-                  </p>
-
-                  {/* Certificate Preview */}
-                  <div className="p-6 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 mb-6">
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                      <Award className="w-6 h-6 text-amber-400" />
-                      <span className="text-amber-400 font-semibold">Certificate Earned</span>
-                    </div>
-                    <p className="text-white font-medium mb-1">{activeModule.title}</p>
-                    <p className="text-sm text-gray-400 mb-3">{activeModule.behavioral_dimension}</p>
-                    <div className="flex items-center justify-center gap-6 text-sm">
-                      <span className="text-gray-400">Score: <span className="text-emerald-400 font-bold">{quizScore}%</span></span>
-                      <span className="text-gray-400">Date: {new Date().toLocaleDateString()}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={downloadCertificate}
-                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Certificate
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        completeModule(activeModule.id, quizScore);
-                        setShowCertificate(false);
-                      }}
-                      className="bg-emerald-600 hover:bg-emerald-500"
-                    >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Finish & Save
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
+      {/* Info section */}
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-indigo-500/20">
+            <Sparkles className="w-6 h-6 text-indigo-400" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-white mb-1">Immersive Learning Experience</h3>
+            <p className="text-sm text-gray-400">
+              Each module features realistic workplace scenarios, interactive choices, reflection prompts,
+              and knowledge checks. Navigate through multi-scene experiences that test and develop your
+              professional judgment across key behavioral competencies.
+            </p>
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 };
 
+// [Old Training code removed - see TrainingModuleViewer for new implementation]
 // Projects (LiveWorks) component
 const Projects = () => {
   const { user } = useAuth();
@@ -6152,6 +5612,7 @@ const CandidateDashboard = () => {
             <Route path="growth" element={<GrowthLog />} />
             <Route path="assessment" element={<SelfAssessmentPage />} />
             <Route path="training" element={<Training />} />
+            <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
             <Route path="projects" element={<Projects />} />
             <Route path="mentors" element={<FindMentor />} />
             <Route path="connections" element={<Connections />} />
