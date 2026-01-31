@@ -6,6 +6,7 @@ import { supabase, updatePassword } from "@/lib/supabase";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
+import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import {
@@ -72,6 +73,7 @@ import {
   MessageSquare,
   Image,
   Paperclip,
+  Volume2,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -1679,54 +1681,128 @@ const SelfAssessmentPage = () => {
       >
         {/* Introduction Step */}
         {activeStep === 0 && (
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">Welcome to Your Self Assessment</h2>
-                <p className="text-gray-400">A journey of self-discovery and professional growth</p>
-              </div>
-            </div>
-
-            <div className="space-y-6 text-gray-300">
-              <p>
-                This self-assessment tool helps you reflect on your professional behavioral skills across
-                8 key dimensions. Your honest self-evaluation will help you:
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-white mb-2">Behavioral Self-Assessment</h1>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Discover your professional strengths and growth areas through guided self-reflection
               </p>
+            </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                {[
-                  { icon: Target, text: "Identify your strengths and areas for improvement" },
-                  { icon: TrendingUp, text: "Track your professional growth over time" },
-                  { icon: Users, text: "Prepare for mentor observations and feedback" },
-                  { icon: Award, text: "Build a stronger Skill Passport profile" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5">
-                    <item.icon className="w-5 h-5 text-indigo-400" />
-                    <span className="text-sm">{item.text}</span>
+            {/* Interactive Assessment - Featured Option */}
+            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-indigo-600/20 border border-indigo-500/30">
+              <div className="absolute top-4 right-4">
+                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-500 text-white">
+                  Recommended
+                </span>
+              </div>
+              <div className="flex flex-col md:flex-row items-start gap-6">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <Sparkles className="w-10 h-10 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold text-white mb-2">Interactive Assessment Experience</h2>
+                  <p className="text-gray-300 mb-4">
+                    A guided, immersive journey through all 8 behavioral dimensions with narrative introductions,
+                    thoughtful prompts, and voice narration. Perfect for deep self-reflection.
+                  </p>
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {[
+                      { icon: BookOpen, text: "Guided Narratives" },
+                      { icon: Volume2, text: "Voice Narration" },
+                      { icon: Target, text: "Step-by-Step" },
+                      { icon: Clock, text: "~10 minutes" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-sm text-gray-300">
+                        <item.icon className="w-4 h-4 text-indigo-400" />
+                        {item.text}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                <p className="text-amber-300 text-sm">
-                  <strong>Note:</strong> Be honest in your self-assessment. This is for your personal
-                  growth, and your mentor observations will provide external validation.
-                </p>
+                  <Link to="/dashboard/candidate/assessment/interactive">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-indigo-500/25"
+                    >
+                      Start Interactive Assessment
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8 flex justify-end">
-              <Button
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                onClick={() => setActiveStep(1)}
-              >
-                Start Assessment
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+            {/* Quick Assessment - Secondary Option */}
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <div className="flex flex-col md:flex-row items-start gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center">
+                  <Sliders className="w-7 h-7 text-gray-400" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white mb-1">Quick Assessment</h3>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Rate all 8 dimensions directly with sliders. Best for quick updates or when you're already familiar
+                    with the assessment process.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="border-white/20 text-gray-300 hover:bg-white/10"
+                    onClick={() => setActiveStep(1)}
+                  >
+                    Start Quick Assessment
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
             </div>
+
+            {/* Benefits */}
+            <div className="grid md:grid-cols-4 gap-4">
+              {[
+                { icon: Target, text: "Identify strengths & growth areas", color: "text-emerald-400" },
+                { icon: TrendingUp, text: "Track progress over time", color: "text-blue-400" },
+                { icon: Users, text: "Prepare for mentor feedback", color: "text-purple-400" },
+                { icon: Award, text: "Enhance your Skill Passport", color: "text-amber-400" },
+              ].map((item, i) => (
+                <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
+                  <item.icon className={`w-6 h-6 ${item.color} mx-auto mb-2`} />
+                  <span className="text-sm text-gray-400">{item.text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Assessment History */}
+            {assessments.length > 0 && (
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+                <h3 className="text-lg font-semibold text-white mb-4">Your Assessment History</h3>
+                <div className="space-y-3">
+                  {assessments.slice(0, 3).map((assessment, i) => {
+                    const scores = assessment.behavioral_scores as Record<string, number>;
+                    const overall = scores ? Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 0;
+                    return (
+                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                            <ClipboardCheck className="w-5 h-5 text-indigo-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-white">Self Assessment</p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(assessment.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-lg font-bold ${getScoreColor(overall)}`}>{overall.toFixed(1)}</p>
+                          <p className="text-xs text-gray-500">{getScoreLabel(overall)}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -5611,6 +5687,7 @@ const CandidateDashboard = () => {
             <Route path="passport" element={<SkillPassport />} />
             <Route path="growth" element={<GrowthLog />} />
             <Route path="assessment" element={<SelfAssessmentPage />} />
+            <Route path="assessment/interactive" element={<AssessmentViewer />} />
             <Route path="training" element={<Training />} />
             <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
             <Route path="projects" element={<Projects />} />
