@@ -41,6 +41,11 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import {
+  checkAssessmentRetakeStatus,
+  generateAssessmentNarrative,
+  generateSelectionContent
+} from '@/services/aiSceneGeneration';
+import {
   Radar,
   RadarChart,
   PolarGrid,
@@ -91,18 +96,38 @@ export const AssessmentViewer = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
+  // AI-generated content for retakes
+  const [isRetake, setIsRetake] = useState(false);
+  const [attemptNumber, setAttemptNumber] = useState(1);
+  const [aiGeneratedContent, setAiGeneratedContent] = useState<Map<string, string>>(new Map());
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
+
   // Text-to-Speech state
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [ttsVoice, setTtsVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const hasSpokenWelcome = useRef(false);
+  const hasSpokenScene = useRef<Set<number>>(new Set());
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Countdown timer state (10 minutes for assessment)
+  const [timeRemaining, setTimeRemaining] = useState<number>(10 * 60);
+  const [isExtraTime, setIsExtraTime] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const sceneRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const currentScene = ASSESSMENT_SCENES[currentSceneIndex];
   const progress = ((currentSceneIndex + 1) / ASSESSMENT_SCENES.length) * 100;
+
+  // Format time remaining
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Initialize Text-to-Speech voice
   useEffect(() => {
@@ -165,14 +190,129 @@ export const AssessmentViewer = () => {
     setIsMuted(prev => !prev);
   }, [isMuted, stopSpeaking]);
 
-  // Auto-speak welcome scene
+  // Check for retake status and generate AI content
   useEffect(() => {
-    if (currentSceneIndex === 0 && !hasSpokenWelcome.current && !isMuted && ttsVoice) {
-      const scene = ASSESSMENT_SCENES[0];
-      if (scene?.type === 'welcome' && scene.content) {
+    const initializeRetakeContent = async () => {
+      if (!user?.id) return;
+
+      try {
+        const retakeStatus = await checkAssessmentRetakeStatus(user.id, supabase);
+        setIsRetake(retakeStatus.isRetake);
+        setAttemptNumber(retakeStatus.attemptNumber);
+
+        if (retakeStatus.isRetake && retakeStatus.attemptNumber > 1) {
+          setIsGeneratingContent(true);
+          const newContent = new Map<string, string>();
+          const totalToGenerate = 4; // 2 narratives + 2 selection contents
+          let generated = 0;
+
+          // Generate varied narrative for first dimension (communication)
+          try {
+            const commNarrative = await generateAssessmentNarrative(
+              ASSESSMENT_DIMENSIONS[0],
+              retakeStatus.attemptNumber
+            );
+            if (commNarrative) {
+              newContent.set('intro-communication', commNarrative);
+            }
+            generated++;
+            setGenerationProgress((generated / totalToGenerate) * 100);
+          } catch (e) {
+            console.error('Failed to generate communication narrative:', e);
+          }
+
+          // Generate varied narrative for last dimension (learning agility)
+          try {
+            const lastDim = ASSESSMENT_DIMENSIONS[ASSESSMENT_DIMENSIONS.length - 1];
+            const learningNarrative = await generateAssessmentNarrative(
+              lastDim,
+              retakeStatus.attemptNumber
+            );
+            if (learningNarrative) {
+              newContent.set('intro-learning', learningNarrative);
+            }
+            generated++;
+            setGenerationProgress((generated / totalToGenerate) * 100);
+          } catch (e) {
+            console.error('Failed to generate learning narrative:', e);
+          }
+
+          // Generate varied strengths selection content
+          try {
+            const strengthsContent = await generateSelectionContent('strengths', retakeStatus.attemptNumber);
+            if (strengthsContent) {
+              newContent.set('select-strengths', strengthsContent);
+            }
+            generated++;
+            setGenerationProgress((generated / totalToGenerate) * 100);
+          } catch (e) {
+            console.error('Failed to generate strengths content:', e);
+          }
+
+          // Generate varied improvements selection content
+          try {
+            const improvementsContent = await generateSelectionContent('improvements', retakeStatus.attemptNumber);
+            if (improvementsContent) {
+              newContent.set('select-improvements', improvementsContent);
+            }
+            generated++;
+            setGenerationProgress((generated / totalToGenerate) * 100);
+          } catch (e) {
+            console.error('Failed to generate improvements content:', e);
+          }
+
+          setAiGeneratedContent(newContent);
+          setIsGeneratingContent(false);
+        }
+      } catch (error) {
+        console.error('Error checking retake status:', error);
+        setIsGeneratingContent(false);
+      }
+    };
+
+    initializeRetakeContent();
+  }, [user?.id]);
+
+  // Initialize countdown timer
+  useEffect(() => {
+    if (!timerStarted) {
+      setTimerStarted(true);
+    }
+  }, [timerStarted]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (timerStarted && timeRemaining > 0 && !isComplete) {
+      timerRef.current = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            if (!isExtraTime) {
+              // Add 3 minutes extra time
+              setIsExtraTime(true);
+              return 3 * 60;
+            }
+            // Extra time finished
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timerStarted, isComplete, isExtraTime]);
+
+  // Auto-speak narrative/welcome scenes when scene changes
+  useEffect(() => {
+    if (!isMuted && ttsVoice && !hasSpokenScene.current.has(currentSceneIndex)) {
+      const scene = ASSESSMENT_SCENES[currentSceneIndex];
+      if ((scene?.type === 'welcome' || scene?.type === 'narrative') && scene.content) {
         const timer = setTimeout(() => {
           speakText(scene.content);
-          hasSpokenWelcome.current = true;
+          hasSpokenScene.current.add(currentSceneIndex);
         }, 800);
         return () => clearTimeout(timer);
       }
@@ -340,17 +480,36 @@ export const AssessmentViewer = () => {
     return true;
   };
 
+  // Get content for a scene (AI-generated if available, otherwise original)
+  const getSceneContent = (scene: AssessmentScene): string => {
+    // Check for AI-generated content based on scene ID
+    if (isRetake && aiGeneratedContent.size > 0) {
+      const aiContent = aiGeneratedContent.get(scene.id);
+      if (aiContent) {
+        return aiContent;
+      }
+    }
+    return scene.content;
+  };
+
   // Render scene content
   const renderSceneContent = () => {
     const scene = currentScene;
 
     // Welcome / Narrative scenes
     if (scene.type === 'welcome' || scene.type === 'narrative') {
+      const content = getSceneContent(scene);
       return (
         <div>
+          {isRetake && attemptNumber > 1 && scene.type === 'narrative' && (
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+              <Sparkles className="w-4 h-4" />
+              <span>Fresh content for attempt #{attemptNumber}</span>
+            </div>
+          )}
           <div className="prose prose-invert max-w-none">
             <div className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
-              {scene.content.split('\n').map((line, i) => {
+              {content.split('\n').map((line, i) => {
                 if (line.startsWith('**') && line.endsWith('**')) {
                   return <h4 key={i} className="text-white font-semibold mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
                 }
@@ -366,7 +525,7 @@ export const AssessmentViewer = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => speakText(scene.content)}
+                onClick={() => speakText(content)}
                 disabled={isSpeaking}
                 className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
               >
@@ -501,12 +660,19 @@ export const AssessmentViewer = () => {
       const isStrengths = scene.selectionType === 'strengths';
       const selected = isStrengths ? strengths : improvements;
       const maxSelect = scene.maxSelections || 3;
+      const content = getSceneContent(scene);
 
       return (
         <div className="space-y-6">
+          {isRetake && attemptNumber > 1 && aiGeneratedContent.has(scene.id) && (
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+              <Sparkles className="w-4 h-4" />
+              <span>Fresh prompts for attempt #{attemptNumber}</span>
+            </div>
+          )}
           <div className="prose prose-invert max-w-none">
             <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-              {scene.content.split('\n').map((line, i) => {
+              {content.split('\n').map((line, i) => {
                 if (line.startsWith('•')) {
                   return <p key={i} className="ml-4 my-1 text-gray-400">{line}</p>;
                 }
@@ -805,6 +971,33 @@ export const AssessmentViewer = () => {
     }
   };
 
+  // Show loading screen when generating AI content for retakes
+  if (isGeneratingContent) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white flex items-center justify-center">
+        <div className="text-center max-w-md px-6">
+          <div className="relative mb-8">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mx-auto">
+              <Sparkles className="w-12 h-12 text-indigo-400 animate-pulse" />
+            </div>
+            <div className="absolute inset-0 w-24 h-24 mx-auto rounded-full border-2 border-indigo-500/30 border-t-indigo-500 animate-spin" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Preparing Your Assessment</h2>
+          <p className="text-gray-400 mb-6">
+            Since this is attempt #{attemptNumber}, we're generating fresh content to give you a unique experience.
+          </p>
+          <div className="w-full bg-gray-800 rounded-full h-2 mb-2">
+            <div
+              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${generationProgress}%` }}
+            />
+          </div>
+          <p className="text-sm text-gray-500">Generating personalized content...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white overflow-hidden">
       {/* Subtle background pattern */}
@@ -829,8 +1022,10 @@ export const AssessmentViewer = () => {
               </Button>
               <div className="h-8 w-px bg-white/10" />
               <div>
-                <h1 className="font-semibold text-lg text-white">Behavioral Self-Assessment</h1>
-                <p className="text-sm text-gray-500">Interactive Assessment Experience</p>
+                <h1 className="font-semibold text-lg text-white" title="Behavioral Self-Assessment">
+                  Beha...
+                </h1>
+                <p className="text-sm text-gray-500">Interactive Assessment</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -871,9 +1066,19 @@ export const AssessmentViewer = () => {
                 <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
                 <span className="text-indigo-400/50">/ 5.0</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Clock className="w-4 h-4" />
-                ~10 min
+              {/* Countdown Timer */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                isExtraTime
+                  ? 'bg-red-500/20 border border-red-500/30'
+                  : timeRemaining < 60
+                    ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                    : 'bg-white/5 border border-white/10'
+              }`}>
+                <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
+                <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  {formatTime(timeRemaining)}
+                </span>
+                {isExtraTime && <span className="text-xs text-red-400">+3</span>}
               </div>
             </div>
           </div>

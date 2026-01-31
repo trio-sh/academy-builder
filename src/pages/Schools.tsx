@@ -126,7 +126,7 @@ const Schools = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-base text-gray-400 mb-10 font-serif"
+                className="text-base text-gray-300 mb-10 font-serif"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -196,7 +196,7 @@ const Schools = () => {
                   Tools for Modern Career Education
                 </span>
               </h2>
-              <p className="text-lg text-gray-400">
+              <p className="text-lg text-gray-300">
                 A complete platform for engaging students, empowering teachers, and
                 informing school leadership.
               </p>
@@ -225,7 +225,7 @@ const Schools = () => {
                     <h3 className="text-lg font-semibold text-white mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -296,7 +296,7 @@ const Schools = () => {
                     <user.icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="font-semibold text-white mb-2">{user.title}</h3>
-                  <p className="text-sm text-gray-400">{user.desc}</p>
+                  <p className="text-sm text-gray-300">{user.desc}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -325,7 +325,7 @@ const Schools = () => {
                     Preparing Students for Real-World Success
                   </span>
                 </h2>
-                <p className="text-lg text-gray-400 mb-8">
+                <p className="text-lg text-gray-300 mb-8">
                   Early behavioral documentation creates a foundation that follows
                   students into the workforce. Build awareness now, validate later.
                 </p>
@@ -353,7 +353,7 @@ const Schools = () => {
                     <h3 className="text-2xl font-bold text-white mb-2">
                       Graduation Transition
                     </h3>
-                    <p className="text-gray-400">
+                    <p className="text-gray-300">
                       Student data ports seamlessly to the main credentialing
                       pathway upon graduation.
                     </p>
@@ -394,7 +394,7 @@ const Schools = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

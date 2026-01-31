@@ -198,7 +198,7 @@ const Join = () => {
                   Account
                 </span>
               </motion.h1>
-              <motion.p className="text-lg text-gray-400">
+              <motion.p className="text-lg text-gray-300">
                 Choose how you want to participate in the behavioral credentialing ecosystem.
               </motion.p>
             </div>
@@ -218,7 +218,7 @@ const Join = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-white/10 text-gray-400 border border-white/10"
+                          : "bg-white/10 text-gray-300 border border-white/10"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
@@ -263,14 +263,14 @@ const Join = () => {
                                 selectedRole === role.id ? role.gradient : "from-white/10 to-white/5"
                               )}
                             >
-                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-400")} />
+                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-300")} />
                             </div>
                             <div>
                               <h3 className="text-lg font-bold text-white">{role.title}</h3>
                             </div>
                           </div>
 
-                          <p className="text-gray-400 text-sm mb-4">{role.description}</p>
+                          <p className="text-gray-300 text-sm mb-4">{role.description}</p>
 
                           <ul className="space-y-2">
                             {role.features.map((feature) => (
@@ -490,7 +490,7 @@ const Join = () => {
                       </div>
 
                       <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
-                      <p className="text-gray-400 mb-6">
+                      <p className="text-gray-300 mb-6">
                         Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
                       </p>
 

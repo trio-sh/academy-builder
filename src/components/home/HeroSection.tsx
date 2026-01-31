@@ -112,7 +112,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="text-base md:text-lg text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed font-serif"
+            className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-12 leading-relaxed font-serif"
           >
             The 3rd Academy bridges the gap between what your resume says and what
             employers actually need — through sustained mentor observation and
@@ -222,7 +222,7 @@ function EntryPointCard({ icon, title, description, entry, delay }: EntryPointCa
           </span>
         </div>
         <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-400 leading-relaxed">{description}</p>
+        <p className="text-gray-300 leading-relaxed">{description}</p>
       </div>
     </motion.div>
   );

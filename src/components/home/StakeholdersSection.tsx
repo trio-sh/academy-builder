@@ -109,7 +109,7 @@ export function StakeholdersSection() {
               One Ecosystem
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
             Whether you're seeking your next opportunity, hiring talent, or preparing
             students for the workforce — we've built a pathway for you.
           </p>
@@ -147,7 +147,7 @@ export function StakeholdersSection() {
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                   {stakeholder.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed mb-8">
+                <p className="text-gray-300 leading-relaxed mb-8">
                   {stakeholder.description}
                 </p>
 

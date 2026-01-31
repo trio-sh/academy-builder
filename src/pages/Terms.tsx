@@ -256,7 +256,7 @@ const Terms = () => {
             </motion.h1>
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center gap-4 text-sm text-gray-400"
+              className="flex items-center justify-center gap-4 text-sm text-gray-300"
             >
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -302,7 +302,7 @@ const Terms = () => {
                   <h2 className="text-xl font-semibold text-white mb-4">
                     {section.title}
                   </h2>
-                  <div className="text-gray-400 leading-relaxed whitespace-pre-line">
+                  <div className="text-gray-300 leading-relaxed whitespace-pre-line">
                     {section.content.split('\n\n').map((paragraph, pIndex) => (
                       <p key={pIndex} className="mb-4">
                         {paragraph.split('**').map((part, partIndex) =>
@@ -330,7 +330,7 @@ const Terms = () => {
               <h3 className="text-lg font-semibold text-white mb-2">
                 Questions About Our Terms?
               </h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-gray-300 mb-4">
                 Contact our legal team for any questions or concerns.
               </p>
               <a

@@ -171,7 +171,7 @@ const Employers = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-400 mb-10"
+                className="text-lg text-gray-300 mb-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -216,7 +216,7 @@ const Employers = () => {
                   Hiring That Actually Works
                 </span>
               </h2>
-              <p className="text-lg text-gray-400">
+              <p className="text-lg text-gray-300">
                 Traditional hiring relies on resumes and interviews. We provide
                 sustained behavioral evidence from mentor observation.
               </p>
@@ -245,7 +245,7 @@ const Employers = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {benefit.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -300,7 +300,7 @@ const Employers = () => {
                       {item.step}
                     </div>
                     <h3 className="font-semibold text-white mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-400">{item.desc}</p>
+                    <p className="text-sm text-gray-300">{item.desc}</p>
                     {index < 3 && (
                       <div className="hidden md:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
@@ -365,14 +365,14 @@ const Employers = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {tier.name}
                     </h3>
-                    <p className="text-gray-400 mb-6">
+                    <p className="text-gray-300 mb-6">
                       {tier.description}
                     </p>
 
                     <div className="mb-6">
                       <span className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{tier.price}</span>
                       {tier.period && (
-                        <span className="text-gray-400">{tier.period}</span>
+                        <span className="text-gray-300">{tier.period}</span>
                       )}
                     </div>
 
@@ -455,7 +455,7 @@ const Employers = () => {
                     </blockquote>
                     <div>
                       <p className="font-semibold text-white">{testimonial.author}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-300">
                         {testimonial.role}, {testimonial.company}
                       </p>
                     </div>
@@ -496,7 +496,7 @@ const Employers = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-400 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

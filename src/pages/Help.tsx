@@ -207,7 +207,7 @@ const Help = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-400 mb-8"
+              className="text-lg text-gray-300 mb-8"
             >
               Search our knowledge base or browse categories to find answers
               to your questions about The 3rd Academy.
@@ -267,7 +267,7 @@ const Help = () => {
                     <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                       {category.title}
                     </h3>
-                    <p className="text-gray-400 text-sm mb-4">
+                    <p className="text-gray-300 text-sm mb-4">
                       {category.description}
                     </p>
                     <span className="text-xs text-gray-500">
@@ -345,7 +345,7 @@ const Help = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mt-4">
+              <p className="text-gray-300 text-sm mt-4">
                 Watch our comprehensive platform walkthrough to get started quickly.
               </p>
             </motion.div>
@@ -365,7 +365,7 @@ const Help = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               Quick answers to common questions about The 3rd Academy.
             </p>
           </motion.div>
@@ -399,7 +399,7 @@ const Help = () => {
                             animate={{ rotate: openFaq === faqId ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <ChevronDown className="w-5 h-5 text-gray-400" />
+                            <ChevronDown className="w-5 h-5 text-gray-300" />
                           </motion.div>
                         </button>
                         <AnimatePresence>
@@ -410,7 +410,7 @@ const Help = () => {
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <div className="px-4 pb-4 text-gray-400 text-sm">
+                              <div className="px-4 pb-4 text-gray-300 text-sm">
                                 {faq.a}
                               </div>
                             </motion.div>
@@ -444,7 +444,7 @@ const Help = () => {
                 Still Need Help?
               </span>
             </h2>
-            <p className="text-gray-400 mb-8">
+            <p className="text-gray-300 mb-8">
               Can't find what you're looking for? Our support team is here to help.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
