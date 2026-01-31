@@ -86,7 +86,7 @@ const About = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Bridging Credentials
                 </span>
                 <br />
@@ -95,7 +95,7 @@ const About = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-300 mb-8"
+                className="text-lg text-gray-100 mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -120,11 +120,11 @@ const About = () => {
                 Our Mission
               </span>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Making Behavioral Readiness Observable
                 </span>
               </h2>
-              <div className="space-y-4 text-lg text-gray-300">
+              <div className="space-y-4 text-lg text-gray-100">
                 <p>
                   Education credentials tell employers what you studied. Certifications show
                   what you passed. But neither reveals how you'll actually perform in the workplace.
@@ -163,11 +163,11 @@ const About = () => {
                 Our Values
               </span>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Architecture as Philosophy
                 </span>
               </h2>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-100">
                 Every technical decision reflects a human value. Our architecture is our ethics.
               </p>
             </motion.div>
@@ -195,7 +195,7 @@ const About = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       {value.title}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-gray-100 leading-relaxed">
                       {value.description}
                     </p>
                   </div>
@@ -215,11 +215,11 @@ const About = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Our Competitive Moat
                 </span>
               </h2>
-              <p className="text-lg text-gray-300">
+              <p className="text-lg text-gray-100">
                 A competitor can replicate our interface in weeks. They cannot replicate
                 years of judgment-outcome correlations.
               </p>
@@ -241,7 +241,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold text-white mb-4">
                     Mentor Decision Patterns
                   </h3>
-                  <p className="text-gray-300 mb-4">
+                  <p className="text-gray-100 mb-4">
                     Every proceed/redirect/pause decision correlated with eventual hiring outcomes.
                     We learn which mentor judgments actually predict workplace success.
                   </p>
@@ -260,7 +260,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold text-white mb-4">
                     Behavioral Fingerprint
                   </h3>
-                  <p className="text-gray-300 mb-4">
+                  <p className="text-gray-100 mb-4">
                     Passive interaction patterns correlated with real employment outcomes.
                     We learn which behaviors predict success, dropout, and even gaming attempts.
                   </p>
@@ -314,7 +314,7 @@ const About = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-300 max-w-2xl mx-auto mb-10"
+              className="text-lg text-gray-100 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -1009,28 +1009,33 @@ export const AssessmentViewer = () => {
 
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-5xl mx-auto px-6 py-4">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 md:gap-5 min-w-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-white/10"
+                className="text-gray-400 hover:text-white hover:bg-white/10 flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-white/10" />
-              <div>
-                <h1 className="font-semibold text-lg text-white" title="Behavioral Self-Assessment">
-                  Beha...
+              <div className="h-8 w-px bg-white/10 hidden md:block" />
+              <div className="min-w-0">
+                {/* Desktop: Full title */}
+                <h1 className="hidden md:block font-semibold text-lg text-white">
+                  Behavioral Self-Assessment
                 </h1>
-                <p className="text-sm text-gray-500">Interactive Assessment</p>
+                {/* Mobile: Truncated title */}
+                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="Behavioral Self-Assessment">
+                  Self-Assessment
+                </h1>
+                <p className="text-xs md:text-sm text-gray-500 truncate">Interactive Assessment</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               {/* TTS Control Button */}
-              <div className="flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2">
                 {isSpeaking ? (
                   <Button
                     variant="ghost"
@@ -1060,25 +1065,47 @@ export const AssessmentViewer = () => {
                   </div>
                 )}
               </div>
-              <div className="h-6 w-px bg-white/10" />
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
-                <Star className="w-4 h-4 text-indigo-400" />
-                <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
-                <span className="text-indigo-400/50">/ 5.0</span>
+              <div className="h-6 w-px bg-white/10 hidden md:block" />
+              {/* Desktop: Horizontal badges */}
+              <div className="hidden md:flex items-center gap-4">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                  <Star className="w-4 h-4 text-indigo-400" />
+                  <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
+                  <span className="text-indigo-400/50">/ 5.0</span>
+                </div>
+                {/* Countdown Timer */}
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                  isExtraTime
+                    ? 'bg-red-500/20 border border-red-500/30'
+                    : timeRemaining < 60
+                      ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                      : 'bg-white/5 border border-white/10'
+                }`}>
+                  <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                    {formatTime(timeRemaining)}
+                  </span>
+                  {isExtraTime && <span className="text-xs text-red-400">+3</span>}
+                </div>
               </div>
-              {/* Countdown Timer */}
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
-                isExtraTime
-                  ? 'bg-red-500/20 border border-red-500/30'
-                  : timeRemaining < 60
-                    ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
-                    : 'bg-white/5 border border-white/10'
-              }`}>
-                <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
-                <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
-                  {formatTime(timeRemaining)}
-                </span>
-                {isExtraTime && <span className="text-xs text-red-400">+3</span>}
+              {/* Mobile: Stacked compact badges */}
+              <div className="flex md:hidden flex-col gap-1">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                  <Star className="w-3 h-3 text-indigo-400" />
+                  <span className="text-indigo-400 font-semibold text-xs">{getOverallScore(scores).toFixed(1)}/5</span>
+                </div>
+                <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full ${
+                  isExtraTime
+                    ? 'bg-red-500/20 border border-red-500/30'
+                    : timeRemaining < 60
+                      ? 'bg-amber-500/20 border border-amber-500/30'
+                      : 'bg-white/5 border border-white/10'
+                }`}>
+                  <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                    {formatTime(timeRemaining)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

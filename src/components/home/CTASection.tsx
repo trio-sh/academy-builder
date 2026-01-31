@@ -83,7 +83,7 @@ export function CTASection() {
               {/* Description */}
               <motion.p
                 variants={itemVariants}
-                className="text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
+                className="text-base md:text-lg text-gray-100 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
                 and start building your Skill Passport through evidence-based observation.
@@ -125,7 +125,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p variants={itemVariants} className="mt-10 text-gray-300">
+              <motion.p variants={itemVariants} className="mt-10 text-gray-100">
                 No credit card required · Mentor-matched within 48 hours
               </motion.p>
             </div>

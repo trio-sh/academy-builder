@@ -127,7 +127,7 @@ const Contact = () => {
               variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Let's Start a
               </span>
               <br />
@@ -137,7 +137,7 @@ const Contact = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-300 mb-8"
+              className="text-lg text-gray-100 mb-8"
             >
               Have questions about The 3rd Academy? We'd love to hear from you.
               Our team is here to help.
@@ -171,7 +171,7 @@ const Contact = () => {
                       <h3 className="text-2xl font-bold text-white mb-4">
                         Message Sent!
                       </h3>
-                      <p className="text-gray-300 mb-6">
+                      <p className="text-gray-100 mb-6">
                         Thank you for reaching out. We'll get back to you within
                         24-48 hours.
                       </p>
@@ -199,7 +199,7 @@ const Contact = () => {
 
                       {/* Reason Selection */}
                       <div className="mb-6">
-                        <label className="block text-sm text-gray-300 mb-3">
+                        <label className="block text-sm text-gray-100 mb-3">
                           What can we help you with?
                         </label>
                         <div className="grid grid-cols-2 gap-3">
@@ -211,7 +211,7 @@ const Contact = () => {
                               className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
                                 selectedReason === reason.id
                                   ? "bg-indigo-600/20 border-indigo-500/50 text-white"
-                                  : "bg-white/5 border-white/10 text-gray-300 hover:border-white/20"
+                                  : "bg-white/5 border-white/10 text-gray-100 hover:border-white/20"
                               }`}
                             >
                               <reason.icon className="w-4 h-4" />
@@ -224,7 +224,7 @@ const Contact = () => {
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm text-gray-300 mb-2">
+                            <label className="block text-sm text-gray-100 mb-2">
                               Name
                             </label>
                             <Input
@@ -237,7 +237,7 @@ const Contact = () => {
                             />
                           </div>
                           <div>
-                            <label className="block text-sm text-gray-300 mb-2">
+                            <label className="block text-sm text-gray-100 mb-2">
                               Email
                             </label>
                             <Input
@@ -253,7 +253,7 @@ const Contact = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm text-gray-300 mb-2">
+                          <label className="block text-sm text-gray-100 mb-2">
                             Organization (Optional)
                           </label>
                           <Input
@@ -266,7 +266,7 @@ const Contact = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm text-gray-300 mb-2">
+                          <label className="block text-sm text-gray-100 mb-2">
                             Message
                           </label>
                           <Textarea
@@ -320,7 +320,7 @@ const Contact = () => {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   Contact Information
                 </h2>
-                <p className="text-gray-300">
+                <p className="text-gray-100">
                   Reach out directly or fill out the form and we'll get back to
                   you as soon as possible.
                 </p>
@@ -356,15 +356,15 @@ const Contact = () => {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Monday - Friday</span>
+                    <span className="text-gray-100">Monday - Friday</span>
                     <span className="text-white">9:00 AM - 6:00 PM PST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Saturday</span>
+                    <span className="text-gray-100">Saturday</span>
                     <span className="text-white">10:00 AM - 4:00 PM PST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Sunday</span>
+                    <span className="text-gray-100">Sunday</span>
                     <span className="text-gray-500">Closed</span>
                   </div>
                 </div>
@@ -375,7 +375,7 @@ const Contact = () => {
                 <h3 className="text-lg font-semibold text-white mb-2">
                   Quick Response Promise
                 </h3>
-                <p className="text-gray-300 text-sm">
+                <p className="text-gray-100 text-sm">
                   We aim to respond to all inquiries within 24-48 business hours.
                   For urgent matters, please call us directly.
                 </p>
@@ -400,7 +400,7 @@ const Contact = () => {
                 Looking for Quick Answers?
               </span>
             </h2>
-            <p className="text-gray-300 mb-8">
+            <p className="text-gray-100 mb-8">
               Check out our Help Center for frequently asked questions and
               detailed guides.
             </p>

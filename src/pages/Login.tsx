@@ -112,7 +112,7 @@ const Login = () => {
                   <GraduationCap className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                  <span className="text-lg font-bold tracking-tight text-white">
                     THE 3RD ACADEMY
                   </span>
                 </div>
@@ -168,7 +168,7 @@ const Login = () => {
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-300">Email</Label>
+                      <Label htmlFor="email" className="text-gray-100">Email</Label>
                       <Input
                         id="email"
                         type="email"
@@ -183,7 +183,7 @@ const Login = () => {
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-gray-300">Password</Label>
+                        <Label htmlFor="password" className="text-gray-100">Password</Label>
                         <Link to="/forgot-password" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
                           Forgot password?
                         </Link>

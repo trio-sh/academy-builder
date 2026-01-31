@@ -153,6 +153,9 @@ export const InteractiveSkillAssessment = () => {
   // Speech recognition ref
   const speechRecognitionRef = useRef<SpeechRecognitionService | null>(null);
 
+  // Ref to track latest transcript (solves timing issue with stopRecording)
+  const transcriptRef = useRef<string>('');
+
   // Refs
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -259,12 +262,17 @@ export const InteractiveSkillAssessment = () => {
     setInterimTranscript('');
     setRecordingTime(0);
     setVoiceAnalysis(null);
+    transcriptRef.current = '';
 
     const service = createSpeechRecognitionService({
       onStart: () => setIsRecording(true),
       onResult: (text, isFinal) => {
         if (isFinal) {
-          setTranscript(prev => prev + ' ' + text);
+          setTranscript(prev => {
+            const newTranscript = (prev + ' ' + text).trim();
+            transcriptRef.current = newTranscript;
+            return newTranscript;
+          });
           setInterimTranscript('');
         } else {
           setInterimTranscript(text);
@@ -298,14 +306,20 @@ export const InteractiveSkillAssessment = () => {
     }
     setIsRecording(false);
 
+    // Small delay to allow final results to process
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Get the latest transcript from ref (handles timing issue)
+    const finalTranscript = transcriptRef.current || transcript;
+
     // Analyze the recording
-    if (transcript && currentScene?.voicePrompt) {
+    if (finalTranscript && currentScene?.voicePrompt) {
       setIsAnalyzing(true);
       try {
-        const metrics = analyzeSpeechMetrics(transcript, recordingTime);
+        const metrics = analyzeSpeechMetrics(finalTranscript, recordingTime);
         const analysis = await analyzeVoiceResponse(
           currentScene.voicePrompt,
-          transcript,
+          finalTranscript,
           metrics
         );
         setVoiceAnalysis(analysis);
@@ -315,7 +329,7 @@ export const InteractiveSkillAssessment = () => {
           sceneId: currentScene.id,
           dimension: currentScene.dimension,
           scores: analysis.scores,
-          rawResponse: transcript,
+          rawResponse: finalTranscript,
           aiAnalysis: analysis.feedback,
           timestamp: new Date()
         }]);
@@ -1313,36 +1327,47 @@ export const InteractiveSkillAssessment = () => {
 
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-5xl mx-auto px-6 py-4">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 md:gap-5 min-w-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-white/10"
+                className="text-gray-400 hover:text-white hover:bg-white/10 flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-white/10" />
-              <div>
-                <h1 className="font-semibold text-lg text-white">Skill Assessment</h1>
-                <p className="text-sm text-gray-500">Interactive Challenges</p>
+              <div className="h-8 w-px bg-white/10 hidden md:block" />
+              <div className="min-w-0">
+                {/* Desktop: Full title */}
+                <h1 className="hidden md:block font-semibold text-lg text-white">Skill Assessment</h1>
+                {/* Mobile: Truncated title */}
+                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="Skill Assessment">
+                  Skill Test
+                </h1>
+                <p className="text-xs md:text-sm text-gray-500 truncate">Interactive Challenges</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMuted(!isMuted)}
-                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10`}
+                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10 hidden md:flex`}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </Button>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+              {/* Desktop: Horizontal badge */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
                 <Target className="w-4 h-4 text-indigo-400" />
                 <span className="text-indigo-400 font-semibold">{challengeResults.length}</span>
                 <span className="text-indigo-400/50">challenges</span>
+              </div>
+              {/* Mobile: Compact badge */}
+              <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                <Target className="w-3 h-3 text-indigo-400" />
+                <span className="text-indigo-400 font-semibold text-xs">{challengeResults.length} done</span>
               </div>
             </div>
           </div>

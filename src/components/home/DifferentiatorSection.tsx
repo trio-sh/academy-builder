@@ -72,7 +72,7 @@ export function DifferentiatorSection() {
             Why We're Different
           </span>
           <h2 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+            <span className="text-white">
               Not a Feature Difference.
             </span>
             <br />
@@ -80,7 +80,7 @@ export function DifferentiatorSection() {
               A Category Difference.
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
             Competitors are doing point-in-time AI assessments. We're doing sustained
             human-gated observation with outcome learning.
           </p>
@@ -96,13 +96,13 @@ export function DifferentiatorSection() {
               {/* Header */}
               <div className="grid grid-cols-3 bg-white/5">
                 <div className="p-4 md:p-6 border-r border-white/10">
-                  <span className="text-sm font-medium text-gray-300">Criteria</span>
+                  <span className="text-sm font-medium text-gray-100">Criteria</span>
                 </div>
                 <div className="p-4 md:p-6 border-r border-white/10 bg-emerald-500/10">
                   <span className="text-sm font-bold text-emerald-400">The 3rd Academy</span>
                 </div>
                 <div className="p-4 md:p-6">
-                  <span className="text-sm font-medium text-gray-300">Traditional Platforms</span>
+                  <span className="text-sm font-medium text-gray-100">Traditional Platforms</span>
                 </div>
               </div>
 
@@ -124,7 +124,7 @@ export function DifferentiatorSection() {
                   </div>
                   <div className="p-4 md:p-6 border-r border-white/10 bg-emerald-500/5 flex items-center gap-2">
                     <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-300">{row.t3a}</span>
+                    <span className="text-sm text-gray-100">{row.t3a}</span>
                   </div>
                   <div className="p-4 md:p-6 flex items-center gap-2">
                     <X className="w-4 h-4 text-red-400/50 flex-shrink-0" />

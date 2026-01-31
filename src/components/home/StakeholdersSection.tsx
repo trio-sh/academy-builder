@@ -101,7 +101,7 @@ export function StakeholdersSection() {
             Who We Serve
           </span>
           <h2 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+            <span className="text-white">
               Three Pathways,
             </span>
             <br />
@@ -109,7 +109,7 @@ export function StakeholdersSection() {
               One Ecosystem
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
             Whether you're seeking your next opportunity, hiring talent, or preparing
             students for the workforce — we've built a pathway for you.
           </p>
@@ -147,7 +147,7 @@ export function StakeholdersSection() {
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                   {stakeholder.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed mb-8">
+                <p className="text-gray-100 leading-relaxed mb-8">
                   {stakeholder.description}
                 </p>
 
@@ -156,7 +156,7 @@ export function StakeholdersSection() {
                   {stakeholder.benefits.map((benefit) => (
                     <li key={benefit} className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-indigo-400" />
-                      <span className="text-gray-300">{benefit}</span>
+                      <span className="text-gray-100">{benefit}</span>
                     </li>
                   ))}
                 </ul>

@@ -150,7 +150,7 @@ const Blog = () => {
               variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Insights on
               </span>
               <br />
@@ -160,7 +160,7 @@ const Blog = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-300 mb-8"
+              className="text-lg text-gray-100 mb-8"
             >
               Explore articles on behavioral validation, career readiness, and the
               future of work from our team of experts.
@@ -194,7 +194,7 @@ const Blog = () => {
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   index === 0
                     ? "bg-indigo-600/20 border border-indigo-500/50 text-white"
-                    : "bg-white/5 border border-white/10 text-gray-300 hover:border-white/20 hover:text-white"
+                    : "bg-white/5 border border-white/10 text-gray-100 hover:border-white/20 hover:text-white"
                 }`}
               >
                 {category}
@@ -236,7 +236,7 @@ const Blog = () => {
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-indigo-400 transition-colors">
                       {featuredPost.title}
                     </h3>
-                    <p className="text-gray-300 mb-6">{featuredPost.excerpt}</p>
+                    <p className="text-gray-100 mb-6">{featuredPost.excerpt}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
@@ -299,7 +299,7 @@ const Blog = () => {
                       <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                         {post.title}
                       </h3>
-                      <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+                      <p className="text-gray-100 text-sm mb-4 line-clamp-2">
                         {post.excerpt}
                       </p>
                       <div className="flex items-center justify-between text-sm text-gray-500">
@@ -354,7 +354,7 @@ const Blog = () => {
                     Stay Updated
                   </span>
                 </h2>
-                <p className="text-gray-300 mb-8 max-w-md mx-auto">
+                <p className="text-gray-100 mb-8 max-w-md mx-auto">
                   Subscribe to our newsletter for the latest insights on
                   credentialing, career readiness, and platform updates.
                 </p>

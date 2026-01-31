@@ -267,7 +267,7 @@ const Platform = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   8 Components.
                 </span>
                 <br />
@@ -276,7 +276,7 @@ const Platform = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-xl text-gray-300 leading-relaxed"
+                className="text-xl text-gray-100 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -340,10 +340,10 @@ const Platform = () => {
                       <div className="p-8 md:p-10">
                         {/* Purpose */}
                         <div className="mb-8 p-6 rounded-2xl bg-white/5 border border-white/10">
-                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-2">
+                          <h3 className="text-sm font-semibold text-gray-100 uppercase tracking-wider mb-2">
                             Flowchart Position
                           </h3>
-                          <p className="text-gray-300 leading-relaxed">
+                          <p className="text-gray-100 leading-relaxed">
                             {component.purpose}
                           </p>
                         </div>
@@ -358,7 +358,7 @@ const Platform = () => {
                               {component.features.map((feature) => (
                                 <li key={feature} className="flex items-start gap-3">
                                   <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                                  <span className="text-gray-300">{feature}</span>
+                                  <span className="text-gray-100">{feature}</span>
                                 </li>
                               ))}
                             </ul>
@@ -373,7 +373,7 @@ const Platform = () => {
                               {component.rules.map((rule) => (
                                 <li key={rule} className="flex items-start gap-3">
                                   <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                  <span className="text-gray-300">{rule}</span>
+                                  <span className="text-gray-100">{rule}</span>
                                 </li>
                               ))}
                             </ul>
@@ -382,14 +382,14 @@ const Platform = () => {
 
                         {/* User Types */}
                         <div className="mt-8 pt-6 border-t border-white/10">
-                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-3">
+                          <h3 className="text-sm font-semibold text-gray-100 uppercase tracking-wider mb-3">
                             User Types
                           </h3>
                           <div className="flex flex-wrap gap-2">
                             {component.userTypes.map((user) => (
                               <span
                                 key={user}
-                                className="px-3 py-1.5 text-sm rounded-full bg-white/10 text-gray-300"
+                                className="px-3 py-1.5 text-sm rounded-full bg-white/10 text-gray-100"
                               >
                                 {user}
                               </span>
@@ -426,7 +426,7 @@ const Platform = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="bg-gradient-to-r from-white via-gray-200 to-gray-300 bg-clip-text text-transparent">
+              <span className="text-white">
                 Ready to Experience
               </span>
               <br />
@@ -435,7 +435,7 @@ const Platform = () => {
               </span>
             </motion.h2>
             <motion.p
-              className="text-xl text-gray-300 max-w-2xl mx-auto mb-10"
+              className="text-xl text-gray-100 max-w-2xl mx-auto mb-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
