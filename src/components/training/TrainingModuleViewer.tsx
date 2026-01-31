@@ -418,7 +418,7 @@ export const TrainingModuleViewer = () => {
 
   if (!module) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-400">Loading module...</p>
@@ -431,31 +431,38 @@ export const TrainingModuleViewer = () => {
   const completedScenes = Array.from(sceneProgress.values()).filter(p => p.completed).length;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)`
+        }} />
+      </div>
+
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 py-3">
+      <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-5xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/training')}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white hover:bg-white/10"
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Exit
+                <X className="w-5 h-5" />
               </Button>
+              <div className="h-8 w-px bg-white/10" />
               <div>
-                <h1 className="font-semibold text-white">{module.title}</h1>
-                <p className="text-xs text-gray-400">{module.subtitle}</p>
+                <h1 className="font-semibold text-lg text-white">{module.title}</h1>
+                <p className="text-sm text-gray-500">{module.subtitle}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
                 <Star className="w-4 h-4 text-amber-400" />
-                <span className="text-amber-400 font-medium">{totalScore}</span>
-                <span className="text-gray-500">/ {module.totalPoints}</span>
+                <span className="text-amber-400 font-semibold">{totalScore}</span>
+                <span className="text-amber-400/50">/ {module.totalPoints}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <Clock className="w-4 h-4" />
@@ -463,28 +470,25 @@ export const TrainingModuleViewer = () => {
               </div>
             </div>
           </div>
-
-          {/* Progress bar */}
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-gray-400">Scene {currentSceneIndex + 1} of {module.scenes.length}</span>
-              <span className="text-indigo-400">{Math.round(progress)}%</span>
-            </div>
-            <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
-              <motion.div
-                className={`h-full bg-gradient-to-r ${module.color}`}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-              />
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Scene navigation dots */}
-      <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
-        <div className="flex flex-col gap-2">
+      {/* Progress bar - separate fixed element */}
+      <div className="absolute top-[72px] left-0 right-0 z-40">
+        <div className="h-1 bg-gray-800/50">
+          <motion.div
+            className={`h-full bg-gradient-to-r ${module.color}`}
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
+        </div>
+      </div>
+
+      {/* Scene navigation - left sidebar */}
+      <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40 hidden xl:block">
+        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-gray-900/50 backdrop-blur border border-white/5">
+          <span className="text-[10px] uppercase tracking-wider text-gray-500 text-center mb-1">Scenes</span>
           {module.scenes.map((scene, index) => {
             const isCompleted = sceneProgress.get(scene.id)?.completed;
             const isUnlocked = isSceneUnlocked(index);
@@ -501,22 +505,22 @@ export const TrainingModuleViewer = () => {
                   }
                 }}
                 disabled={!isUnlocked}
-                className={`group relative w-3 h-3 rounded-full transition-all ${
+                className={`group relative w-4 h-4 rounded-full transition-all duration-300 ${
                   isCurrent
-                    ? 'bg-indigo-500 scale-125'
+                    ? `bg-gradient-to-r ${module.color} scale-125 shadow-lg shadow-indigo-500/30`
                     : isCompleted
                     ? 'bg-emerald-500'
                     : isUnlocked
-                    ? 'bg-gray-600 hover:bg-gray-500'
-                    : 'bg-gray-800'
+                    ? 'bg-gray-600 hover:bg-gray-500 hover:scale-110'
+                    : 'bg-gray-800/50'
                 }`}
                 title={scene.title}
               >
                 {!isUnlocked && (
                   <Lock className="w-2 h-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-600" />
                 )}
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-900/90 px-2 py-1 rounded">
-                  {scene.title}
+                <span className="absolute left-8 top-1/2 -translate-y-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap bg-gray-800/95 px-3 py-1.5 rounded-lg border border-white/10 shadow-xl">
+                  {index + 1}. {scene.title}
                 </span>
               </button>
             );
@@ -524,42 +528,57 @@ export const TrainingModuleViewer = () => {
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="pt-28 pb-24 px-4">
-        <div className="max-w-3xl mx-auto" ref={sceneRef}>
+      {/* Main content area - scrollable */}
+      <div className="absolute inset-0 top-[76px] bottom-[80px] overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center px-4 py-12">
+          <div className="w-full max-w-3xl" ref={sceneRef}>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentScene?.id}
               ref={contentRef}
-              className="bg-gray-900/50 rounded-2xl border border-white/10 overflow-hidden"
+              className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
             >
               {/* Scene header */}
-              <div className="p-6 border-b border-white/10">
-                <div className="flex items-center gap-3 mb-2">
-                  {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-blue-400" />}
-                  {currentScene?.type === 'choice' && <Target className="w-5 h-5 text-purple-400" />}
-                  {currentScene?.type === 'reflection' && <MessageSquare className="w-5 h-5 text-amber-400" />}
-                  {currentScene?.type === 'quiz' && <FileText className="w-5 h-5 text-emerald-400" />}
-                  {currentScene?.type === 'completion' && <Award className="w-5 h-5 text-amber-400" />}
-                  <span className="text-sm text-gray-400 capitalize">{currentScene?.type}</span>
+              <div className="px-8 pt-8 pb-6 border-b border-white/5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`p-2 rounded-xl ${
+                    currentScene?.type === 'narrative' ? 'bg-blue-500/10' :
+                    currentScene?.type === 'choice' ? 'bg-purple-500/10' :
+                    currentScene?.type === 'reflection' ? 'bg-amber-500/10' :
+                    currentScene?.type === 'quiz' ? 'bg-emerald-500/10' :
+                    'bg-amber-500/10'
+                  }`}>
+                    {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-blue-400" />}
+                    {currentScene?.type === 'choice' && <Target className="w-5 h-5 text-purple-400" />}
+                    {currentScene?.type === 'reflection' && <MessageSquare className="w-5 h-5 text-amber-400" />}
+                    {currentScene?.type === 'quiz' && <FileText className="w-5 h-5 text-emerald-400" />}
+                    {currentScene?.type === 'completion' && <Award className="w-5 h-5 text-amber-400" />}
+                  </div>
+                  <span className="text-sm text-gray-400 capitalize font-medium">{currentScene?.type}</span>
+                  <span className="text-gray-600">•</span>
+                  <span className="text-sm text-gray-500">Scene {currentSceneIndex + 1}</span>
                 </div>
-                <h2 className="text-2xl font-bold text-white">{currentScene?.title}</h2>
+                <h2 className="text-3xl font-bold text-white tracking-tight">{currentScene?.title}</h2>
                 {currentScene?.setting && (
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-gray-400 mt-2 flex items-center gap-2">
+                    <span className="inline-block w-4 h-px bg-gray-600" />
                     <span className="italic">{currentScene.setting}</span>
                   </p>
                 )}
               </div>
 
               {/* Scene content */}
-              <div className="p-6">
+              <div className="px-8 py-6">
                 {/* Character indicator */}
                 {currentScene?.character && (
-                  <div className="mb-4 flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-medium">
+                  <div className="mb-6 flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-lg shadow-indigo-500/20">
                       {currentScene.character.charAt(0)}
                     </div>
-                    <span className="text-indigo-400 font-medium">{currentScene.character}</span>
+                    <div>
+                      <span className="text-white font-medium">{currentScene.character}</span>
+                      <p className="text-xs text-gray-500">Speaking</p>
+                    </div>
                   </div>
                 )}
 
@@ -852,41 +871,42 @@ export const TrainingModuleViewer = () => {
               </div>
             </motion.div>
           </AnimatePresence>
+          </div>
         </div>
       </div>
 
       {/* Footer navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-t border-white/10">
-        <div className="max-w-3xl mx-auto px-4 py-4">
+      <div className="absolute bottom-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-t border-white/5">
+        <div className="max-w-3xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <Button
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/20 text-white hover:bg-white/10 disabled:opacity-30"
+              className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous
             </Button>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               {module.scenes.slice(
-                Math.max(0, currentSceneIndex - 2),
-                Math.min(module.scenes.length, currentSceneIndex + 3)
+                Math.max(0, currentSceneIndex - 3),
+                Math.min(module.scenes.length, currentSceneIndex + 4)
               ).map((scene, i) => {
-                const actualIndex = Math.max(0, currentSceneIndex - 2) + i;
+                const actualIndex = Math.max(0, currentSceneIndex - 3) + i;
                 const isCompleted = sceneProgress.get(scene.id)?.completed;
                 const isCurrent = actualIndex === currentSceneIndex;
 
                 return (
                   <div
                     key={scene.id}
-                    className={`w-2 h-2 rounded-full ${
+                    className={`transition-all duration-300 rounded-full ${
                       isCurrent
-                        ? 'bg-indigo-500'
+                        ? 'w-6 h-2 bg-indigo-500'
                         : isCompleted
-                        ? 'bg-emerald-500'
-                        : 'bg-gray-600'
+                        ? 'w-2 h-2 bg-emerald-500'
+                        : 'w-2 h-2 bg-gray-700'
                     }`}
                   />
                 );
@@ -894,18 +914,18 @@ export const TrainingModuleViewer = () => {
             </div>
 
             {currentScene?.type === 'completion' ? (
-              <div className="w-24" /> // Spacer
+              <div className="w-28" />
             ) : currentScene?.type === 'choice' && !showFeedback ? (
-              <div className="w-24" /> // Spacer - button is in content
+              <div className="w-28" />
             ) : currentScene?.type === 'reflection' ? (
-              <div className="w-24" /> // Spacer - button is in content
+              <div className="w-28" />
             ) : currentScene?.type === 'quiz' && !quizSubmitted ? (
-              <div className="w-24" /> // Spacer - button is in content
+              <div className="w-28" />
             ) : (
               <Button
                 onClick={goToNextScene}
                 disabled={currentSceneIndex === module.scenes.length - 1}
-                className={`bg-gradient-to-r ${module.color} hover:opacity-90 disabled:opacity-30`}
+                className={`bg-gradient-to-r ${module.color} hover:opacity-90 disabled:opacity-30 px-6 shadow-lg`}
               >
                 Continue
                 <ChevronRight className="w-4 h-4 ml-2" />
