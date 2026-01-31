@@ -999,7 +999,6 @@ const GrowthLog = () => {
   const { user } = useAuth();
   const [entries, setEntries] = useState<GrowthLogEntry[]>([]);
   const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
-  const [trainingProgress, setTrainingProgress] = useState<BridgeFastProgress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"timeline" | "charts">("charts");
 
@@ -1020,15 +1019,8 @@ const GrowthLog = () => {
         .eq("candidate_id", user.id)
         .eq("is_active", true)
         .limit(1)
-        .maybeSingle();
+        .single();
 
-      // Fetch training progress from bridgefast_progress (same source as Training page)
-      const { data: progressData } = await supabase
-        .from("bridgefast_progress")
-        .select("*")
-        .eq("candidate_id", user.id);
-
-      setTrainingProgress(progressData || []);
       setPassportData(passport);
       setEntries(data || []);
       setIsLoading(false);
@@ -1135,15 +1127,6 @@ const GrowthLog = () => {
     return { thisWeek, lastWeek, growthRate };
   };
 
-  // Calculate training stats from bridgefast_progress (same source as Training page)
-  const getTrainingStats = () => {
-    const completed = trainingProgress.filter(p => p.status === 'completed').length;
-    const inProgress = trainingProgress.filter(p => p.status === 'in_progress').length;
-    const totalModules = INTERACTIVE_MODULES.length;
-    const totalScore = trainingProgress.reduce((sum, p) => sum + (p.final_score || 0), 0);
-    return { completed, inProgress, totalModules, totalScore };
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -1156,7 +1139,6 @@ const GrowthLog = () => {
   const radarData = getBehavioralRadarData();
   const eventDistribution = getEventDistribution();
   const growthStats = getGrowthStats();
-  const trainingStats = getTrainingStats();
 
   return (
     <motion.div
@@ -1195,18 +1177,14 @@ const GrowthLog = () => {
       </motion.div>
 
       {/* Stats Overview */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
           <p className="text-sm text-gray-400 mb-1">Total Activities</p>
           <p className="text-2xl font-bold text-white">{entries.length}</p>
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
-          <p className="text-sm text-gray-400 mb-1">Training Completed</p>
-          <p className="text-2xl font-bold text-white">{trainingStats.completed}<span className="text-sm text-gray-500">/{trainingStats.totalModules}</span></p>
-        </div>
-        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
-          <p className="text-sm text-gray-400 mb-1">Training Score</p>
-          <p className="text-2xl font-bold text-amber-400">{trainingStats.totalScore}<span className="text-sm text-gray-500"> pts</span></p>
+          <p className="text-sm text-gray-400 mb-1">This Week</p>
+          <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
           <p className="text-sm text-gray-400 mb-1">Growth Rate</p>
@@ -1214,9 +1192,9 @@ const GrowthLog = () => {
             {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
           </p>
         </div>
-        <div className="p-4 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
-          <p className="text-sm text-gray-400 mb-1">This Week</p>
-          <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
+        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+          <p className="text-sm text-gray-400 mb-1">Event Types</p>
+          <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
         </div>
       </motion.div>
 
