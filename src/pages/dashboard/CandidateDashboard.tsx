@@ -2265,25 +2265,45 @@ const SelfAssessmentPage = () => {
 };
 
 // Training (Interactive Modules) component
+// Type for training progress derived from growth log entries
+type TrainingProgressFromLog = {
+  module_id: string;
+  module_slug: string;
+  score: number;
+  completed_at: string;
+};
+
 const Training = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [progress, setProgress] = useState<Record<string, BridgeFastProgress>>({});
+  const [progress, setProgress] = useState<Record<string, TrainingProgressFromLog>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return;
 
-      // Fetch user's progress for interactive modules
-      const { data: progressData } = await supabase
-        .from("bridgefast_progress")
+      // Fetch training completions from growth_log_entries (same source as Growth page)
+      const { data: trainingLogs } = await supabase
+        .from("growth_log_entries")
         .select("*")
-        .eq("candidate_id", user.id);
+        .eq("candidate_id", user.id)
+        .eq("event_type", "training")
+        .order("created_at", { ascending: false });
 
-      const progressMap: Record<string, BridgeFastProgress> = {};
-      (progressData || []).forEach((p) => {
-        progressMap[p.module_id] = p;
+      // Build progress map from training logs
+      const progressMap: Record<string, TrainingProgressFromLog> = {};
+      (trainingLogs || []).forEach((log) => {
+        const metadata = log.metadata as { module_id?: string; module_slug?: string; score?: number } | null;
+        if (metadata?.module_id && !progressMap[metadata.module_id]) {
+          // Only keep the latest (first due to desc order) completion per module
+          progressMap[metadata.module_id] = {
+            module_id: metadata.module_id,
+            module_slug: metadata.module_slug || '',
+            score: metadata.score || 0,
+            completed_at: log.created_at,
+          };
+        }
       });
       setProgress(progressMap);
 
@@ -2314,9 +2334,9 @@ const Training = () => {
     return icons[iconName] || <BookOpen className="w-6 h-6" />;
   };
 
-  // Calculate statistics
-  const completedCount = INTERACTIVE_MODULES.filter(m => progress[m.id]?.status === "completed").length;
-  const inProgressCount = INTERACTIVE_MODULES.filter(m => progress[m.id]?.status === "in_progress").length;
+  // Calculate statistics from growth log entries
+  const completedCount = Object.keys(progress).length;
+  const inProgressCount = 0; // Growth log only tracks completions, not in-progress
 
   // Check if module is locked (requires previous modules to be completed for sequential unlocking)
   const isModuleLocked = (index: number): boolean => {
@@ -2375,7 +2395,8 @@ const Training = () => {
         <div className="grid md:grid-cols-2 gap-4">
           {INTERACTIVE_MODULES.map((module, index) => {
             const moduleProgress = progress[module.id];
-            const status = moduleProgress?.status || "not_started";
+            // If we have a log entry for this module, it's completed
+            const isCompleted = !!moduleProgress;
             const locked = isModuleLocked(index);
 
             return (
@@ -2385,10 +2406,8 @@ const Training = () => {
                 className={`relative p-6 rounded-xl border transition-all cursor-pointer overflow-hidden ${
                   locked
                     ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
-                    : status === 'completed'
+                    : isCompleted
                     ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-500/50'
-                    : status === 'in_progress'
-                    ? 'bg-amber-500/10 border-amber-500/30 hover:border-amber-500/50'
                     : 'bg-white/5 border-white/10 hover:border-white/30'
                 }`}
                 onClick={() => !locked && openModule(module.slug)}
@@ -2405,17 +2424,13 @@ const Training = () => {
                     <div className="flex items-center gap-2">
                       {locked ? (
                         <Lock className="w-5 h-5 text-gray-500" />
-                      ) : status === 'completed' ? (
+                      ) : isCompleted ? (
                         <div className="flex items-center gap-1 text-emerald-400">
                           <CheckCircle className="w-5 h-5" />
                           <span className="text-sm font-medium">
-                            {moduleProgress?.final_score}pts
+                            {moduleProgress.score}pts
                           </span>
                         </div>
-                      ) : status === 'in_progress' ? (
-                        <span className="px-2 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400">
-                          In Progress
-                        </span>
                       ) : null}
                     </div>
                   </div>
