@@ -485,16 +485,21 @@ export const TrainingModuleViewer = () => {
 
     // Save to database
     try {
-      // Check if progress exists
-      const { data: existingProgress } = await supabase
+      // Check if progress exists - use maybeSingle() to avoid error when no record exists
+      const { data: existingProgress, error: fetchError } = await supabase
         .from('bridgefast_progress')
         .select('id')
         .eq('candidate_id', user.id)
         .eq('module_id', module.id)
-        .single();
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Error checking existing progress:', fetchError);
+      }
 
       if (existingProgress) {
-        await supabase
+        // Update existing progress
+        const { error: updateError } = await supabase
           .from('bridgefast_progress')
           .update({
             status: 'completed',
@@ -504,8 +509,13 @@ export const TrainingModuleViewer = () => {
             updated_at: new Date().toISOString()
           })
           .eq('id', existingProgress.id);
+
+        if (updateError) {
+          console.error('Error updating progress:', updateError);
+        }
       } else {
-        await supabase
+        // Insert new progress
+        const { error: insertError } = await supabase
           .from('bridgefast_progress')
           .insert({
             candidate_id: user.id,
@@ -516,10 +526,14 @@ export const TrainingModuleViewer = () => {
             started_at: new Date().toISOString(),
             completed_at: new Date().toISOString()
           });
+
+        if (insertError) {
+          console.error('Error inserting progress:', insertError);
+        }
       }
 
       // Create growth log entry
-      await supabase.from('growth_log_entries').insert({
+      const { error: logError } = await supabase.from('growth_log_entries').insert({
         candidate_id: user.id,
         event_type: 'training',
         title: `Completed Interactive Module: ${module.title}`,
@@ -527,6 +541,10 @@ export const TrainingModuleViewer = () => {
         source_component: 'InteractiveTraining',
         metadata: { module_id: module.id, module_slug: module.slug, score: totalScore }
       });
+
+      if (logError) {
+        console.error('Error creating growth log entry:', logError);
+      }
     } catch (error) {
       console.error('Error saving module completion:', error);
     }
