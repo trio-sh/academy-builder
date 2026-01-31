@@ -18,7 +18,10 @@ import {
   Clock,
   Star,
   Download,
-  Home
+  Home,
+  Volume2,
+  VolumeX,
+  Pause
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { INTERACTIVE_MODULES, InteractiveModule, ModuleScene, SceneChoice } from '@/data/interactiveTrainingModules';
@@ -58,6 +61,13 @@ export const TrainingModuleViewer = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [moduleCompleted, setModuleCompleted] = useState(false);
 
+  // Text-to-Speech state
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [ttsVoice, setTtsVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const hasSpokenWelcome = useRef(false);
+  const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
   const sceneRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -80,6 +90,90 @@ export const TrainingModuleViewer = () => {
       setSceneProgress(initialProgress);
     }
   }, [moduleId]);
+
+  // Initialize Text-to-Speech voice
+  useEffect(() => {
+    const initVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      // Look for Google US English voice first, then any US English voice
+      const googleUSVoice = voices.find(v => v.name === 'Google US English' && v.lang === 'en-US');
+      const anyUSVoice = voices.find(v => v.lang === 'en-US');
+      const defaultVoice = voices.find(v => v.default);
+
+      setTtsVoice(googleUSVoice || anyUSVoice || defaultVoice || voices[0] || null);
+    };
+
+    // Voices may load asynchronously
+    if (window.speechSynthesis.getVoices().length > 0) {
+      initVoice();
+    } else {
+      window.speechSynthesis.onvoiceschanged = initVoice;
+    }
+
+    // Cleanup on unmount
+    return () => {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
+  // Function to speak text
+  const speakText = useCallback((text: string) => {
+    if (isMuted || !ttsVoice) return;
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
+    // Clean text for TTS (remove markdown formatting)
+    const cleanText = text
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '')
+      .replace(/•/g, '')
+      .replace(/\n+/g, ' ')
+      .trim();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.voice = ttsVoice;
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    speechSynthRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  }, [isMuted, ttsVoice]);
+
+  // Stop speaking
+  const stopSpeaking = useCallback(() => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  }, []);
+
+  // Toggle mute
+  const toggleMute = useCallback(() => {
+    if (!isMuted) {
+      stopSpeaking();
+    }
+    setIsMuted(prev => !prev);
+  }, [isMuted, stopSpeaking]);
+
+  // Auto-speak welcome scene when module loads
+  useEffect(() => {
+    if (module && currentSceneIndex === 0 && !hasSpokenWelcome.current && !isMuted && ttsVoice) {
+      const currentScene = module.scenes[0];
+      if (currentScene?.type === 'narrative' && currentScene.content) {
+        // Small delay to let the UI settle
+        const timer = setTimeout(() => {
+          speakText(currentScene.content);
+          hasSpokenWelcome.current = true;
+        }, 800);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [module, currentSceneIndex, isMuted, ttsVoice, speakText]);
 
   // GSAP animation for scene transitions
   const animateSceneIn = useCallback(() => {
@@ -232,6 +326,9 @@ export const TrainingModuleViewer = () => {
   const goToNextScene = () => {
     if (!module) return;
 
+    // Stop any ongoing speech
+    stopSpeaking();
+
     // Mark current scene as completed if not already
     if (currentScene && !sceneProgress.get(currentScene.id)?.completed) {
       setSceneProgress(prev => {
@@ -260,6 +357,8 @@ export const TrainingModuleViewer = () => {
   // Navigate to previous scene
   const goToPreviousScene = () => {
     if (currentSceneIndex > 0) {
+      // Stop any ongoing speech
+      stopSpeaking();
       setSelectedChoice(null);
       setShowFeedback(false);
       setReflectionText('');
@@ -458,7 +557,39 @@ export const TrainingModuleViewer = () => {
                 <p className="text-sm text-gray-500">{module.subtitle}</p>
               </div>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
+              {/* TTS Control Button */}
+              <div className="flex items-center gap-2">
+                {isSpeaking ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={stopSpeaking}
+                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                    title="Stop speaking"
+                  >
+                    <Pause className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleMute}
+                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10`}
+                    title={isMuted ? 'Unmute narration' : 'Mute narration'}
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </Button>
+                )}
+                {isSpeaking && (
+                  <div className="flex items-center gap-1">
+                    <span className="w-1 h-3 bg-indigo-500 rounded-full animate-pulse" />
+                    <span className="w-1 h-4 bg-indigo-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                    <span className="w-1 h-2 bg-indigo-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                  </div>
+                )}
+              </div>
+              <div className="h-6 w-px bg-white/10" />
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
                 <Star className="w-4 h-4 text-amber-400" />
                 <span className="text-amber-400 font-semibold">{totalScore}</span>
@@ -584,21 +715,47 @@ export const TrainingModuleViewer = () => {
 
                 {/* Narrative content */}
                 {currentScene?.type === 'narrative' && (
-                  <div className="prose prose-invert max-w-none">
-                    <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-                      {currentScene.content.split('\n').map((line, i) => {
-                        if (line.startsWith('**') && line.endsWith('**')) {
-                          return <h4 key={i} className="text-white font-semibold mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
-                        }
-                        if (line.startsWith('•')) {
-                          return <p key={i} className="ml-4 my-1">{line}</p>;
-                        }
-                        if (line.match(/^\d+\./)) {
-                          return <p key={i} className="ml-4 my-1">{line}</p>;
-                        }
-                        return <p key={i} className="my-2">{line}</p>;
-                      })}
+                  <div>
+                    <div className="prose prose-invert max-w-none">
+                      <div className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+                        {currentScene.content.split('\n').map((line, i) => {
+                          if (line.startsWith('**') && line.endsWith('**')) {
+                            return <h4 key={i} className="text-white font-semibold mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
+                          }
+                          if (line.startsWith('•')) {
+                            return <p key={i} className="ml-4 my-1">{line}</p>;
+                          }
+                          if (line.match(/^\d+\./)) {
+                            return <p key={i} className="ml-4 my-1">{line}</p>;
+                          }
+                          return <p key={i} className="my-2">{line}</p>;
+                        })}
+                      </div>
                     </div>
+                    {/* Play narration button */}
+                    {!isMuted && (
+                      <div className="mt-6 pt-4 border-t border-white/5">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => speakText(currentScene.content)}
+                          disabled={isSpeaking}
+                          className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                        >
+                          {isSpeaking ? (
+                            <>
+                              <Pause className="w-4 h-4 mr-2" />
+                              Speaking...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-4 h-4 mr-2" />
+                              Play Narration
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
