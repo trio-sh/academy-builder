@@ -7,6 +7,7 @@ import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
 import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
+import { InteractiveSkillAssessment } from "@/components/assessment/InteractiveSkillAssessment";
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import {
@@ -74,6 +75,9 @@ import {
   Image,
   Paperclip,
   Volume2,
+  Mic,
+  Brain,
+  Zap,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -1690,43 +1694,68 @@ const SelfAssessmentPage = () => {
               </p>
             </div>
 
-            {/* Interactive Assessment - Featured Option */}
-            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-indigo-600/20 border border-indigo-500/30">
+            {/* Interactive Skill Test - Featured Option */}
+            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/10 to-emerald-600/20 border border-emerald-500/30">
               <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-500 text-white">
-                  Recommended
+                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white animate-pulse">
+                  New! AI-Powered
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-start gap-6">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                  <Sparkles className="w-10 h-10 text-white" />
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                  <Brain className="w-10 h-10 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">Interactive Assessment Experience</h2>
+                  <h2 className="text-2xl font-bold text-white mb-2">Interactive Skill Test</h2>
                   <p className="text-gray-300 mb-4">
-                    A guided, immersive journey through all 8 behavioral dimensions with narrative introductions,
-                    thoughtful prompts, and voice narration. Perfect for deep self-reflection.
+                    Go beyond self-rating — actually demonstrate your skills! Voice responses, written challenges,
+                    prioritization tasks, role-play scenarios, and more, all analyzed by AI for real feedback.
                   </p>
                   <div className="flex flex-wrap gap-3 mb-6">
                     {[
-                      { icon: BookOpen, text: "Guided Narratives" },
-                      { icon: Volume2, text: "Voice Narration" },
-                      { icon: Target, text: "Step-by-Step" },
-                      { icon: Clock, text: "~10 minutes" },
+                      { icon: Mic, text: "Voice Challenges" },
+                      { icon: Brain, text: "AI Analysis" },
+                      { icon: Zap, text: "Real-Time Feedback" },
+                      { icon: Clock, text: "~15 minutes" },
                     ].map((item, i) => (
                       <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-sm text-gray-300">
-                        <item.icon className="w-4 h-4 text-indigo-400" />
+                        <item.icon className="w-4 h-4 text-emerald-400" />
                         {item.text}
                       </div>
                     ))}
                   </div>
-                  <Link to="/dashboard/candidate/assessment/interactive">
+                  <Link to="/dashboard/candidate/assessment/skill-test">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-indigo-500/25"
+                      className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
                     >
-                      Start Interactive Assessment
+                      Start Skill Test
                       <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Assessment - Secondary Option */}
+            <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-indigo-600/10 via-purple-600/5 to-indigo-600/10 border border-indigo-500/20">
+              <div className="flex flex-col md:flex-row items-start gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center">
+                  <Sparkles className="w-7 h-7 text-indigo-400" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white mb-1">Guided Self-Reflection</h3>
+                  <p className="text-gray-400 text-sm mb-4">
+                    A guided, immersive journey through all 8 behavioral dimensions with narrative introductions,
+                    thoughtful prompts, and voice narration. Rate yourself through self-reflection.
+                  </p>
+                  <Link to="/dashboard/candidate/assessment/interactive">
+                    <Button
+                      variant="outline"
+                      className="border-indigo-500/30 text-gray-300 hover:bg-indigo-500/10"
+                    >
+                      Start Guided Assessment
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>
                 </div>
@@ -5688,6 +5717,7 @@ const CandidateDashboard = () => {
             <Route path="growth" element={<GrowthLog />} />
             <Route path="assessment" element={<SelfAssessmentPage />} />
             <Route path="assessment/interactive" element={<AssessmentViewer />} />
+            <Route path="assessment/skill-test" element={<InteractiveSkillAssessment />} />
             <Route path="training" element={<Training />} />
             <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
             <Route path="projects" element={<Projects />} />
