@@ -141,7 +141,7 @@ const Blog = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
@@ -160,7 +160,7 @@ const Blog = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               Explore articles on behavioral validation, career readiness, and the
               future of work from our team of experts.
@@ -174,7 +174,7 @@ const Blog = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <Input
                 placeholder="Search articles..."
-                className="w-full pl-12 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                className="w-full pl-12 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
               />
             </motion.div>
           </motion.div>
@@ -182,7 +182,7 @@ const Blog = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-8 border-b border-white/10">
+      <section className="py-8 border-b border-white/30">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-3">
             {categories.map((category, index) => (
@@ -194,7 +194,7 @@ const Blog = () => {
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   index === 0
                     ? "bg-indigo-600/20 border border-indigo-500/50 text-white"
-                    : "bg-white/5 border border-white/10 text-gray-100 hover:border-white/20 hover:text-white"
+                    : "bg-black/80 border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
                 }`}
               >
                 {category}
@@ -220,7 +220,7 @@ const Blog = () => {
             <a href="#" className="group block">
               <div className="relative rounded-2xl overflow-hidden">
                 <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                   <div className="aspect-video rounded-xl overflow-hidden">
                     <img
                       src={featuredPost.image}
@@ -236,7 +236,7 @@ const Blog = () => {
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-indigo-400 transition-colors">
                       {featuredPost.title}
                     </h3>
-                    <p className="text-gray-100 mb-6">{featuredPost.excerpt}</p>
+                    <p className="text-gray-50 mb-6">{featuredPost.excerpt}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
@@ -283,7 +283,7 @@ const Blog = () => {
               >
                 <div className="relative h-full">
                   <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative h-full rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden hover:border-indigo-500/30 transition-colors">
+                  <div className="relative h-full rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 overflow-hidden hover:border-indigo-500/30 transition-colors">
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={post.image}
@@ -299,7 +299,7 @@ const Blog = () => {
                       <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                         {post.title}
                       </h3>
-                      <p className="text-gray-100 text-sm mb-4 line-clamp-2">
+                      <p className="text-gray-50 text-sm mb-4 line-clamp-2">
                         {post.excerpt}
                       </p>
                       <div className="flex items-center justify-between text-sm text-gray-500">
@@ -327,7 +327,7 @@ const Blog = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
               >
                 Load More Articles
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -348,13 +348,13 @@ const Blog = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 text-center">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 text-center">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                     Stay Updated
                   </span>
                 </h2>
-                <p className="text-gray-100 mb-8 max-w-md mx-auto">
+                <p className="text-gray-50 mb-8 max-w-md mx-auto">
                   Subscribe to our newsletter for the latest insights on
                   credentialing, career readiness, and platform updates.
                 </p>
@@ -362,7 +362,7 @@ const Blog = () => {
                   <Input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                    className="flex-1 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   />
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">

@@ -207,14 +207,14 @@ export function Chatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] h-full sm:h-[600px] sm:max-h-[80vh] flex flex-col bg-black/95 backdrop-blur-xl border border-white/10 sm:rounded-3xl shadow-2xl overflow-hidden"
+            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] h-full sm:h-[600px] sm:max-h-[80vh] flex flex-col bg-black/95 backdrop-blur-xl border border-white/30 sm:rounded-3xl shadow-2xl overflow-hidden"
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-indigo-950/50 to-purple-950/50">
+            <div className="flex items-center justify-between p-4 border-b border-white/30 bg-gradient-to-r from-indigo-950/50 to-purple-950/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
                   <Bot className="w-5 h-5 text-white" />
@@ -230,14 +230,14 @@ export function Chatbot() {
                     variant="ghost"
                     size="sm"
                     onClick={clearChat}
-                    className="text-gray-400 hover:text-white hover:bg-white/10 text-xs"
+                    className="text-gray-400 hover:text-white hover:bg-black/80 text-xs"
                   >
                     Clear
                   </Button>
                 )}
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-black/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -271,7 +271,7 @@ export function Chatbot() {
                       <motion.button
                         key={reply}
                         onClick={() => sendMessage(reply)}
-                        className="px-3 py-2 text-sm rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20 transition-colors"
+                        className="px-3 py-2 text-sm rounded-xl bg-black/80 border border-white/30 text-gray-300 hover:bg-black/80 hover:border-white/20 transition-colors"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -296,7 +296,7 @@ export function Chatbot() {
                     className={`w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-indigo-600 to-purple-600"
-                        : "bg-white/10"
+                        : "bg-black/80"
                     }`}
                   >
                     {message.role === "user" ? (
@@ -309,7 +309,7 @@ export function Chatbot() {
                     className={`max-w-[75%] p-3 rounded-2xl ${
                       message.role === "user"
                         ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-tr-sm"
-                        : "bg-white/5 border border-white/10 text-gray-300 rounded-tl-sm"
+                        : "bg-black/80 border border-white/30 text-gray-300 rounded-tl-sm"
                     }`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -338,10 +338,10 @@ export function Chatbot() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-black/80 flex items-center justify-center">
                     <Bot className="w-4 h-4 text-indigo-400" />
                   </div>
-                  <div className="p-3 rounded-2xl rounded-tl-sm bg-white/5 border border-white/10">
+                  <div className="p-3 rounded-2xl rounded-tl-sm bg-black/80 border border-white/30">
                     <div className="flex space-x-1">
                       <div
                         className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
@@ -366,7 +366,7 @@ export function Chatbot() {
             {/* Input */}
             <form
               onSubmit={handleSubmit}
-              className="p-4 border-t border-white/10 bg-black/50"
+              className="p-4 border-t border-white/30 bg-black/50"
             >
               <div className="flex gap-2">
                 <Input
@@ -374,7 +374,7 @@ export function Chatbot() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Ask me anything..."
-                  className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                  className="flex-1 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   disabled={isTyping}
                 />
                 <motion.button

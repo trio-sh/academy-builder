@@ -40,16 +40,23 @@ type MentorObservation = Database["public"]["Tables"]["mentor_observations"]["Ro
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 
-// Behavioral dimensions for observation scoring
+// T3A 14 Behavioral Dimensions — locked framework (February 2026)
+// MVP: top 5 active for initial launch; dimensions 6–14 post-launch
 const BEHAVIORAL_DIMENSIONS = [
-  { id: "communication", label: "Communication", description: "Clear, professional verbal and written communication" },
-  { id: "problem_solving", label: "Problem Solving", description: "Analytical thinking and solution development" },
-  { id: "adaptability", label: "Adaptability", description: "Flexibility and response to change" },
-  { id: "collaboration", label: "Collaboration", description: "Teamwork and interpersonal skills" },
-  { id: "initiative", label: "Initiative", description: "Self-direction and proactive behavior" },
-  { id: "time_management", label: "Time Management", description: "Prioritization and deadline management" },
-  { id: "professionalism", label: "Professionalism", description: "Workplace conduct and reliability" },
-  { id: "learning_agility", label: "Learning Agility", description: "Ability to learn and apply new concepts" },
+  { id: "integrity_ethics", label: "Integrity & Ethics", description: "Acting with honesty, maintaining trust, navigating ethical grey areas" },
+  { id: "accountability_ownership", label: "Accountability & Ownership", description: "Taking responsibility for outcomes, following through without excuses" },
+  { id: "execution_reliability", label: "Execution Reliability", description: "Delivering consistent, quality work on time without constant supervision" },
+  { id: "communication_pressure", label: "Communication Under Pressure", description: "Clear, timely messages with appropriate tone when stakes are high" },
+  { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution", description: "Working effectively with diverse teams, navigating disagreements productively" },
+  { id: "workplace_adaptability", label: "Workplace Adaptability", description: "Navigating organizational culture, reading situations, adjusting behavior" },
+  { id: "prioritization_time", label: "Prioritization & Time Management", description: "Managing competing demands, making sound decisions under deadline pressure" },
+  { id: "resilience_recovery", label: "Resilience & Recovery", description: "Bouncing back from setbacks, maintaining composure through failure" },
+  { id: "learning_agility", label: "Learning Agility", description: "Receiving and applying feedback; proactively acquiring new knowledge" },
+  { id: "professional_boundaries", label: "Professional Boundaries", description: "Maintaining appropriate workplace relationships, navigating social dynamics" },
+  { id: "creative_problem_solving", label: "Creative Problem-Solving", description: "Finding resourceful solutions when standard approaches don't work" },
+  { id: "customer_service_focus", label: "Customer & Service Focus", description: "Prioritizing stakeholder needs, delivering service with genuine care" },
+  { id: "influence_persuasion", label: "Influence & Persuasion", description: "Gaining cooperation and buy-in without formal authority" },
+  { id: "relationship_building", label: "Relationship Building", description: "Developing and maintaining professional networks that create mutual value" },
 ];
 
 // Context for observation modal
@@ -315,11 +322,11 @@ const ObservationFormModal = () => {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-gray-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+          className="bg-gray-900 border border-white/30 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <div className="flex items-center justify-between p-6 border-b border-white/30">
             <div>
               <h2 className="text-xl font-bold text-white">Record Observation</h2>
               <p className="text-sm text-gray-400 mt-1">
@@ -338,7 +345,7 @@ const ObservationFormModal = () => {
                 <div
                   key={s}
                   className={`h-1 flex-1 rounded-full transition-colors ${
-                    s <= step ? "bg-purple-500" : "bg-white/10"
+                    s <= step ? "bg-purple-500" : "bg-black/80"
                   }`}
                 />
               ))}
@@ -362,7 +369,7 @@ const ObservationFormModal = () => {
                       <button
                         key={assignment.id}
                         onClick={() => selectCandidate(assignment.id, assignment.candidate_id)}
-                        className="w-full p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
+                        className="w-full p-4 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
                       >
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
                           {profile?.first_name?.[0]}{profile?.last_name?.[0]}
@@ -386,7 +393,7 @@ const ObservationFormModal = () => {
               // Step 2: Behavioral Scoring
               <div className="space-y-6">
                 {selectedAssignment && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-sm">
                       {selectedAssignment.candidate_profile?.profile?.first_name?.[0]}
                       {selectedAssignment.candidate_profile?.profile?.last_name?.[0]}
@@ -406,7 +413,7 @@ const ObservationFormModal = () => {
                     type="date"
                     value={formData.sessionDate}
                     onChange={e => setFormData(prev => ({ ...prev, sessionDate: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-purple-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                   />
                 </div>
 
@@ -414,7 +421,7 @@ const ObservationFormModal = () => {
                   <p className="text-sm text-gray-400 mb-4">Rate each behavioral dimension (1-5):</p>
                   <div className="space-y-4">
                     {BEHAVIORAL_DIMENSIONS.map(dimension => (
-                      <div key={dimension.id} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                      <div key={dimension.id} className="p-4 rounded-lg bg-black/80 border border-white/30">
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <p className="font-medium text-white">{dimension.label}</p>
@@ -429,7 +436,7 @@ const ObservationFormModal = () => {
                               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 formData.scores[dimension.id] === score
                                   ? "bg-purple-600 text-white"
-                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
+                                  : "bg-black/80 text-gray-400 hover:bg-white/20"
                               }`}
                             >
                               {score}
@@ -464,7 +471,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewStrength(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addStrength())}
                       placeholder="Add a strength..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addStrength} size="sm" className="bg-emerald-600 hover:bg-emerald-500">
                       <Plus className="w-4 h-4" />
@@ -492,7 +499,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewImprovement(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImprovement())}
                       placeholder="Add an area for improvement..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addImprovement} size="sm" className="bg-amber-600 hover:bg-amber-500">
                       <Plus className="w-4 h-4" />
@@ -508,12 +515,12 @@ const ObservationFormModal = () => {
                     onChange={e => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                     placeholder="Any additional observations or context..."
                     rows={4}
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
                   />
                 </div>
 
                 {/* Score Summary */}
-                <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <div className="p-4 rounded-lg bg-purple-500/30 border border-purple-500/20">
                   <h3 className="font-medium text-white mb-3">Score Summary</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {BEHAVIORAL_DIMENSIONS.map(d => (
@@ -537,12 +544,12 @@ const ObservationFormModal = () => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between p-6 border-t border-white/10">
+          <div className="flex items-center justify-between p-6 border-t border-white/30">
             {step > 1 ? (
               <Button
                 variant="outline"
                 onClick={() => setStep(s => s - 1)}
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
               >
                 Back
               </Button>
@@ -555,7 +562,7 @@ const ObservationFormModal = () => {
                   variant="outline"
                   onClick={() => handleSubmit(true)}
                   disabled={isSaving}
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-black/80"
                 >
                   Save as Draft
                 </Button>
@@ -714,7 +721,7 @@ const Overview = () => {
       {mentorProfile && !mentorProfile.is_accepting && (
         <motion.div
           variants={itemVariants}
-          className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-3"
+          className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 text-amber-400" />
           <p className="text-amber-400">
@@ -730,7 +737,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-purple-600 to-pink-600 transition-opacity" />
             <div className="relative">
@@ -750,7 +757,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/mentor/mentees"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <Users className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">View Mentees</h3>
@@ -760,7 +767,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/mentor/observations"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <ClipboardCheck className="w-8 h-8 text-emerald-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Record Observation</h3>
@@ -770,7 +777,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/mentor/schedule"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <Calendar className="w-8 h-8 text-amber-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Manage Schedule</h3>
@@ -785,7 +792,7 @@ const Overview = () => {
         <h2 className="text-xl font-semibold text-white mb-4">Pending Actions</h2>
         {pendingObservations > 0 ? (
           <div className="space-y-3">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-4">
+            <div className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                 <ClipboardCheck className="w-5 h-5 text-amber-400" />
               </div>
@@ -797,7 +804,7 @@ const Overview = () => {
             </div>
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
             <p className="text-gray-400">No pending actions</p>
             <p className="text-sm text-gray-500 mt-1">You're all caught up!</p>
@@ -918,7 +925,7 @@ const Mentees = () => {
             return (
               <div
                 key={assignment.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
@@ -952,7 +959,7 @@ const Mentees = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-white/10"
+                      className="border-white/20 text-white hover:bg-black/80"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View
@@ -974,7 +981,7 @@ const Mentees = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
         >
           <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No mentees assigned yet</p>
@@ -1066,7 +1073,7 @@ const Observations = () => {
           {observations.map((observation) => (
             <div
               key={observation.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -1088,7 +1095,7 @@ const Observations = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-black/80"
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   View
@@ -1117,7 +1124,7 @@ const Observations = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
         >
           <ClipboardCheck className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No observations recorded yet</p>
@@ -1457,8 +1464,8 @@ const Endorsements = () => {
                   key={assignment.id}
                   className={`p-6 rounded-xl border transition-colors ${
                     isSelected
-                      ? "bg-purple-500/10 border-purple-500/30"
-                      : "bg-white/5 border-white/10 hover:border-white/20"
+                      ? "bg-purple-500/30 border-purple-500/30"
+                      : "bg-black/80 border-white/30 hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -1494,7 +1501,7 @@ const Endorsements = () => {
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
-                      className="mt-6 pt-6 border-t border-white/10 space-y-6"
+                      className="mt-6 pt-6 border-t border-white/30 space-y-6"
                     >
                       {/* Decision Selector */}
                       <div>
@@ -1515,7 +1522,7 @@ const Endorsements = () => {
                                     : option.color === "amber"
                                     ? "bg-amber-500/20 border-amber-500/50"
                                     : "bg-red-500/20 border-red-500/50"
-                                  : "bg-white/5 border-white/10 hover:border-white/20"
+                                  : "bg-black/80 border-white/30 hover:border-white/20"
                               }`}
                             >
                               <p className={`font-medium ${
@@ -1532,7 +1539,7 @@ const Endorsements = () => {
 
                       {/* Redirect Options */}
                       {endorsementForm.decision === "redirect" && (
-                        <div className="space-y-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                        <div className="space-y-4 p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
                           <p className="text-sm text-amber-400">
                             Select where to redirect the candidate:
                           </p>
@@ -1542,7 +1549,7 @@ const Endorsements = () => {
                               <select
                                 value={endorsementForm.redirectModule}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectModule: e.target.value, redirectToLiveworks: false }))}
-                                className="w-full px-4 py-2 rounded-lg bg-black/50 border border-white/10 text-white focus:border-amber-500 focus:outline-none"
+                                className="w-full px-4 py-2 rounded-lg bg-black/50 border border-white/30 text-white focus:border-amber-500 focus:outline-none"
                               >
                                 <option value="">Select a module...</option>
                                 {bridgefastModules.map(m => (
@@ -1558,7 +1565,7 @@ const Endorsements = () => {
                                 type="checkbox"
                                 checked={endorsementForm.redirectToLiveworks}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectToLiveworks: e.target.checked, redirectModule: "" }))}
-                                className="w-5 h-5 rounded bg-white/10 border-white/20"
+                                className="w-5 h-5 rounded bg-black/80 border-white/20"
                               />
                               <span className="text-white">Redirect to LiveWorks project experience</span>
                             </label>
@@ -1576,7 +1583,7 @@ const Endorsements = () => {
                           onChange={(e) => setEndorsementForm(prev => ({ ...prev, justification: e.target.value }))}
                           placeholder="Explain your decision and provide feedback for the candidate..."
                           rows={4}
-                          className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                          className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
                         />
                       </div>
 
@@ -1593,7 +1600,7 @@ const Endorsements = () => {
                               redirectToLiveworks: false,
                             });
                           }}
-                          className="border-white/20 text-white hover:bg-white/10"
+                          className="border-white/20 text-white hover:bg-black/80"
                         >
                           Cancel
                         </Button>
@@ -1622,7 +1629,7 @@ const Endorsements = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No candidates ready for endorsement</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -1640,7 +1647,7 @@ const Endorsements = () => {
             {pastEndorsements.map((endorsement) => (
               <div
                 key={endorsement.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-4"
+                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   endorsement.decision === "proceed"
@@ -1681,7 +1688,7 @@ const Endorsements = () => {
             ))}
           </div>
         ) : (
-          <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center">
+          <div className="p-6 rounded-xl bg-black/80 border border-white/30 text-center">
             <Award className="w-10 h-10 text-gray-600 mx-auto mb-3" />
             <p className="text-gray-400 text-sm">No endorsements given yet</p>
           </div>
@@ -1891,7 +1898,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "availability" ? "default" : "outline"}
           onClick={() => setActiveTab("availability")}
-          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-white/10"}
+          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black/80"}
         >
           <Clock className="w-4 h-4 mr-2" />
           Availability
@@ -1899,7 +1906,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "sessions" ? "default" : "outline"}
           onClick={() => setActiveTab("sessions")}
-          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-white/10"}
+          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black/80"}
         >
           <Calendar className="w-4 h-4 mr-2" />
           Sessions ({sessions.length})
@@ -1907,7 +1914,7 @@ const Schedule = () => {
       </motion.div>
 
       {activeTab === "availability" && (
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-6">Weekly Availability</h2>
           <p className="text-sm text-gray-400 mb-6">
             Set your available hours for each day. Candidates can book sessions during these times.
@@ -1923,8 +1930,8 @@ const Schedule = () => {
                   key={day.value}
                   className={`p-4 rounded-lg border transition-colors ${
                     isActive
-                      ? "bg-purple-500/10 border-purple-500/30"
-                      : "bg-white/5 border-white/10"
+                      ? "bg-purple-500/30 border-purple-500/30"
+                      : "bg-black/80 border-white/30"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -1936,7 +1943,7 @@ const Schedule = () => {
                           checked={isActive || false}
                           onChange={() => toggleDayAvailability(day.value)}
                         />
-                        <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        <div className="w-11 h-6 bg-black/80 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                       </label>
                       <span className={`font-medium ${isActive ? "text-white" : "text-gray-500"}`}>
                         {day.label}
@@ -1948,7 +1955,7 @@ const Schedule = () => {
                         <select
                           value={dayAvail?.startTime || "09:00"}
                           onChange={(e) => updateDayTime(day.value, "startTime", e.target.value)}
-                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
                             <option key={t} value={t} className="bg-gray-900">
@@ -1960,7 +1967,7 @@ const Schedule = () => {
                         <select
                           value={dayAvail?.endTime || "17:00"}
                           onChange={(e) => updateDayTime(day.value, "endTime", e.target.value)}
-                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
                             <option key={t} value={t} className="bg-gray-900">
@@ -1999,7 +2006,7 @@ const Schedule = () => {
       {activeTab === "sessions" && (
         <motion.div variants={itemVariants} className="space-y-4">
           {sessions.length === 0 ? (
-            <div className="p-12 rounded-xl bg-white/5 border border-white/10 text-center">
+            <div className="p-12 rounded-xl bg-black/80 border border-white/30 text-center">
               <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">No Upcoming Sessions</h3>
               <p className="text-gray-400 max-w-md mx-auto">
@@ -2010,7 +2017,7 @@ const Schedule = () => {
             sessions.map((session) => (
               <div
                 key={session.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -2053,7 +2060,7 @@ const Schedule = () => {
                 </div>
 
                 {session.notes && (
-                  <div className="mt-4 p-3 rounded-lg bg-white/5">
+                  <div className="mt-4 p-3 rounded-lg bg-black/80">
                     <p className="text-sm text-gray-400">{session.notes}</p>
                   </div>
                 )}
@@ -2072,7 +2079,7 @@ const Schedule = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => updateSessionStatus(session.id, "cancelled")}
-                      className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/30"
                     >
                       <X className="w-4 h-4 mr-2" />
                       Cancel
@@ -2084,7 +2091,7 @@ const Schedule = () => {
                         rel="noopener noreferrer"
                         className="ml-auto"
                       >
-                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black/80">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Join Meeting
                         </Button>
@@ -2262,7 +2269,7 @@ const ProfilePage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Basic Info */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-3xl text-white font-bold">
               {formData.first_name?.[0]}{formData.last_name?.[0]}
@@ -2286,7 +2293,7 @@ const ProfilePage = () => {
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.first_name}</p>
@@ -2299,7 +2306,7 @@ const ProfilePage = () => {
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.last_name}</p>
@@ -2309,7 +2316,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Professional Info */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">Professional Information</h3>
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -2320,7 +2327,7 @@ const ProfilePage = () => {
                   value={formData.company}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                   placeholder="Your company"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.company || "Not set"}</p>
@@ -2334,7 +2341,7 @@ const ProfilePage = () => {
                   value={formData.job_title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, job_title: e.target.value }))}
                   placeholder="Your title"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.job_title || "Not set"}</p>
@@ -2349,7 +2356,7 @@ const ProfilePage = () => {
                 value={formData.industry}
                 onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                 placeholder="e.g., Technology, Healthcare, Finance"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
               />
             ) : (
               <p className="text-white">{formData.industry || "Not set"}</p>
@@ -2358,7 +2365,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Specializations */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <label className="text-sm text-gray-400 block mb-3">Specializations</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.specializations.map((spec) => (
@@ -2386,7 +2393,7 @@ const ProfilePage = () => {
                 onChange={(e) => setNewSpec(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSpec())}
                 placeholder="Add a specialization..."
-                className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
               />
               <Button onClick={addSpec} size="sm" className="bg-purple-600 hover:bg-purple-500">
                 <Plus className="w-4 h-4" />
@@ -2396,7 +2403,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Mentor Settings */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">Mentor Settings</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -2412,7 +2419,7 @@ const ProfilePage = () => {
                     onChange={(e) => setFormData((prev) => ({ ...prev, is_accepting: e.target.checked }))}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  <div className="w-11 h-6 bg-black/80 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                 </label>
               ) : (
                 <span className={`px-2 py-1 rounded text-xs ${
@@ -2431,7 +2438,7 @@ const ProfilePage = () => {
                   onChange={(e) => setFormData((prev) => ({ ...prev, max_mentees: parseInt(e.target.value) || 5 }))}
                   min={1}
                   max={20}
-                  className="w-24 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-24 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.max_mentees}</p>
@@ -2462,7 +2469,7 @@ const SettingsPage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -2479,28 +2486,28 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
             Change Password
           </Button>
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">New mentee assignments</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Session reminders</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
           </div>
         </div>
@@ -2551,12 +2558,12 @@ const MentorDashboardInner = () => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/10 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
@@ -2585,7 +2592,7 @@ const MentorDashboardInner = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border border-purple-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -2595,7 +2602,7 @@ const MentorDashboardInner = () => {
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-medium">
                 {profile?.first_name?.[0]}
@@ -2610,7 +2617,7 @@ const MentorDashboardInner = () => {
             </div>
             <Button
               variant="outline"
-              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-white/10"
+              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -2621,7 +2628,7 @@ const MentorDashboardInner = () => {
       </aside>
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -2643,14 +2650,14 @@ const MentorDashboardInner = () => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/10">
+              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-white/30">
                   <h3 className="font-semibold text-white">Notifications</h3>
                 </div>
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-white/5 border-b border-white/5">
+                      <div key={notification.id} className="p-3 hover:bg-black/80 border-b border-white/5">
                         <p className="text-sm font-medium text-white">{notification.title}</p>
                         <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
                       </div>

@@ -87,7 +87,7 @@ export function HeroSection() {
           {/* Badge */}
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-8"
           >
             <Sparkles className="w-4 h-4 text-indigo-400" />
             Mentor-Gated Behavioral Validation
@@ -95,12 +95,12 @@ export function HeroSection() {
 
           {/* Headline */}
           <motion.h1
-            className="text-3xl md:text-5xl font-display font-normal leading-tight mb-6"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            className="text-4xl md:text-6xl font-bold leading-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            <span className="text-white">
               Beyond Credentials.
             </span>
             <br />
@@ -112,7 +112,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto mb-12 leading-relaxed font-serif"
+            className="text-xl text-white max-w-3xl mx-auto mb-12 leading-relaxed"
           >
             The 3rd Academy bridges the gap between what your resume says and what
             employers actually need — through sustained mentor observation and
@@ -124,13 +124,10 @@ export function HeroSection() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
           >
-            <motion.div
-              whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(99, 102, 241, 0.4)" }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-6 rounded-xl font-bold text-lg shadow-2xl shadow-indigo-600/40 transition-all duration-300"
+                className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl"
                 asChild
               >
                 <Link to="/join">
@@ -139,19 +136,14 @@ export function HeroSection() {
                 </Link>
               </Button>
             </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-12 py-7 rounded-xl text-lg"
+              asChild
             >
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-6 rounded-xl font-bold text-lg hover:bg-white hover:text-indigo-900 transition-all duration-300 backdrop-blur-xl"
-                asChild
-              >
-                <Link to="/employers">For Employers</Link>
-              </Button>
-            </motion.div>
+              <Link to="/employers">For Employers</Link>
+            </Button>
           </motion.div>
 
           {/* Entry Points Cards */}
@@ -205,24 +197,23 @@ function EntryPointCard({ icon, title, description, entry, delay }: EntryPointCa
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 + delay }}
-      whileHover={{ y: -10, rotateY: 5, rotateX: 5 }}
-      style={{ transformStyle: "preserve-3d" }}
+      whileHover={{ y: -10 }}
     >
       {/* Glow effect on hover */}
       <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500" />
 
       {/* Glass card */}
-      <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 group-hover:border-white/30 transition-all duration-500 text-left">
+      <div className="relative bg-black/90 backdrop-blur-xl border border-white/30 rounded-3xl p-8 group-hover:border-white/50 transition-all duration-500 text-left h-full">
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400">
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
             {icon}
           </div>
-          <span className="text-xs font-medium text-white/40 uppercase tracking-wider">
+          <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">
             {entry}
           </span>
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-100 leading-relaxed">{description}</p>
+        <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
+        <p className="text-white leading-relaxed">{description}</p>
       </div>
     </motion.div>
   );

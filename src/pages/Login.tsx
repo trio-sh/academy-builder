@@ -123,7 +123,7 @@ const Login = () => {
                 {/* Glow effect */}
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                   <h1 className="text-2xl font-bold text-center mb-2">
                     <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Welcome Back
@@ -135,7 +135,7 @@ const Login = () => {
 
                   {/* Error Message */}
                   {error && (
-                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+                    <div className="mb-6 p-4 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-3">
                       <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-red-400">{error}</p>
                     </div>
@@ -143,7 +143,7 @@ const Login = () => {
 
                   {/* User Type Tabs */}
                   <Tabs value={userType} onValueChange={setUserType} className="mb-6">
-                    <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/10">
+                    <TabsList className="grid w-full grid-cols-3 bg-black/80 border border-white/30">
                       <TabsTrigger
                         value="candidate"
                         className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-gray-400"
@@ -168,7 +168,7 @@ const Login = () => {
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-100">Email</Label>
+                      <Label htmlFor="email" className="text-gray-50">Email</Label>
                       <Input
                         id="email"
                         type="email"
@@ -177,13 +177,13 @@ const Login = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                        className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-gray-100">Password</Label>
+                        <Label htmlFor="password" className="text-gray-50">Password</Label>
                         <Link to="/forgot-password" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
                           Forgot password?
                         </Link>
@@ -196,7 +196,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                        className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
 

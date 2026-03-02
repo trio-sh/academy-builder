@@ -157,7 +157,7 @@ const Security = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Shield className="w-4 h-4" />
                 Security
               </span>
@@ -176,7 +176,7 @@ const Security = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               We implement industry-leading security measures to protect your
               personal information, credentials, and behavioral data.
@@ -199,7 +199,7 @@ const Security = () => {
                 Security Features
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               Comprehensive security measures at every layer of our platform.
             </p>
           </motion.div>
@@ -218,14 +218,14 @@ const Security = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 h-full">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                     <feature.icon className="w-6 h-6 text-indigo-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-100 text-sm">{feature.description}</p>
+                  <p className="text-gray-50 text-sm">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -248,7 +248,7 @@ const Security = () => {
                 Compliance & Certifications
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               We maintain compliance with industry standards and regulations.
             </p>
           </motion.div>
@@ -264,7 +264,7 @@ const Security = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+                className="text-center p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
               >
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-600/20 to-emerald-600/20 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-6 h-6 text-green-400" />
@@ -272,7 +272,7 @@ const Security = () => {
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {cert.name}
                 </h3>
-                <p className="text-gray-100 text-sm">{cert.description}</p>
+                <p className="text-gray-50 text-sm">{cert.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -293,7 +293,7 @@ const Security = () => {
                 Our Security Practices
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               How we protect your data through robust security operations.
             </p>
           </motion.div>
@@ -309,7 +309,7 @@ const Security = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+                className="p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
               >
                 <h3 className="text-lg font-semibold text-white mb-4">
                   {practice.title}
@@ -318,7 +318,7 @@ const Security = () => {
                   {practice.items.map((item, itemIndex) => (
                     <li
                       key={itemIndex}
-                      className="flex items-start gap-3 text-gray-100 text-sm"
+                      className="flex items-start gap-3 text-gray-50 text-sm"
                     >
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       {item}
@@ -343,7 +343,7 @@ const Security = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                 <div className="flex flex-col md:flex-row items-start gap-8">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-600/20 flex items-center justify-center flex-shrink-0">
                     <AlertTriangle className="w-8 h-8 text-amber-400" />
@@ -354,11 +354,11 @@ const Security = () => {
                         Responsible Disclosure
                       </span>
                     </h2>
-                    <p className="text-gray-100 mb-6">
+                    <p className="text-gray-50 mb-6">
                       We value the security research community. If you discover a
                       vulnerability, please report it responsibly. We commit to:
                     </p>
-                    <ul className="space-y-2 text-gray-100 text-sm mb-6">
+                    <ul className="space-y-2 text-gray-50 text-sm mb-6">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-400" />
                         Acknowledging reports within 24 hours
@@ -413,7 +413,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-black/80"
                   asChild
                 >
                   <Link to="/privacy">
@@ -425,7 +425,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-black/80"
                   asChild
                 >
                   <Link to="/terms">
@@ -437,7 +437,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-black/80"
                   asChild
                 >
                   <Link to="/help">

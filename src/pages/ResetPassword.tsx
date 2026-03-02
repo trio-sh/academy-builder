@@ -107,7 +107,7 @@ const ResetPassword = () => {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        <div className="p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+        <div className="p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
           {isValidSession === null ? (
             <div className="text-center py-8">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mx-auto mb-4" />
@@ -133,7 +133,7 @@ const ResetPassword = () => {
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-black/80">
                     Return to Login
                   </Button>
                 </Link>
@@ -177,7 +177,7 @@ const ResetPassword = () => {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 mb-6"
+                  className="flex items-center gap-2 p-3 rounded-lg bg-red-500/30 border border-red-500/20 text-red-400 mb-6"
                 >
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <p className="text-sm">{error}</p>
@@ -195,7 +195,7 @@ const ResetPassword = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter new password"
                       required
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
+                      className="bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
                     />
                     <button
                       type="button"
@@ -213,7 +213,7 @@ const ResetPassword = () => {
                           <div
                             key={i}
                             className={`h-1 flex-1 rounded-full ${
-                              i <= passwordStrength.strength ? passwordStrength.color : "bg-white/10"
+                              i <= passwordStrength.strength ? passwordStrength.color : "bg-black/80"
                             }`}
                           />
                         ))}
@@ -239,7 +239,7 @@ const ResetPassword = () => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm new password"
                       required
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
+                      className="bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
                     />
                     <button
                       type="button"
@@ -257,7 +257,7 @@ const ResetPassword = () => {
                   )}
                 </div>
 
-                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                <div className="p-3 rounded-lg bg-black/80 border border-white/30">
                   <p className="text-xs text-gray-400">Password requirements:</p>
                   <ul className="text-xs text-gray-500 mt-1 space-y-0.5">
                     <li className={password.length >= 8 ? "text-emerald-400" : ""}>

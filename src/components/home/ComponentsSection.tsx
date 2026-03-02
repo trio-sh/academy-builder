@@ -160,7 +160,7 @@ export function ComponentsSection() {
               Systems
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-50 leading-relaxed">
             Every component serves two purposes: a visible function for users and
             an invisible function for system intelligence.
           </p>
@@ -221,7 +221,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
       />
 
       {/* Glass card */}
-      <div className="relative h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
+      <div className="relative h-full bg-black/80 backdrop-blur-xl border border-white/30 rounded-3xl p-8 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
         {/* Icon */}
         <div
           className={cn(
@@ -233,7 +233,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
         </div>
 
         {/* Tagline */}
-        <span className="text-xs font-medium uppercase tracking-wider text-gray-500 group-hover:text-gray-100 transition-colors">
+        <span className="text-xs font-medium uppercase tracking-wider text-gray-500 group-hover:text-gray-50 transition-colors">
           {component.tagline}
         </span>
 
@@ -243,7 +243,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-100 group-hover:text-gray-100 leading-relaxed mb-6 transition-colors">
+        <p className="text-sm text-gray-50 group-hover:text-gray-50 leading-relaxed mb-6 transition-colors">
           {component.description}
         </p>
 
@@ -252,7 +252,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
           {component.features.slice(0, 2).map((feature) => (
             <span
               key={feature}
-              className="px-3 py-1 text-xs rounded-full bg-white/10 text-gray-100 group-hover:bg-white/20 group-hover:text-white transition-colors"
+              className="px-3 py-1 text-xs rounded-full bg-black/80 text-gray-50 group-hover:bg-white/20 group-hover:text-white transition-colors"
             >
               {feature}
             </span>

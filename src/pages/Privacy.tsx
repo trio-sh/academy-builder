@@ -170,7 +170,7 @@ const Privacy = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Shield className="w-4 h-4" />
                 Legal
               </span>
@@ -189,7 +189,7 @@ const Privacy = () => {
             </motion.h1>
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center gap-4 text-sm text-gray-100"
+              className="flex items-center justify-center gap-4 text-sm text-gray-50"
             >
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -213,15 +213,15 @@ const Privacy = () => {
             {/* Introduction */}
             <motion.div
               variants={itemVariants}
-              className="mb-12 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+              className="mb-12 p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
             >
-              <p className="text-gray-100 leading-relaxed">
+              <p className="text-gray-50 leading-relaxed">
                 At The 3rd Academy, we are committed to protecting your privacy and
                 ensuring the security of your personal information. This Privacy Policy
                 explains how we collect, use, disclose, and safeguard your information
                 when you use our platform and services.
               </p>
-              <p className="text-gray-100 leading-relaxed mt-4">
+              <p className="text-gray-50 leading-relaxed mt-4">
                 By using The 3rd Academy, you agree to the collection and use of
                 information in accordance with this policy. If you do not agree with
                 our policies and practices, please do not use our services.
@@ -239,7 +239,7 @@ const Privacy = () => {
                   <h2 className="text-xl font-semibold text-white mb-4">
                     {section.title}
                   </h2>
-                  <div className="text-gray-100 leading-relaxed whitespace-pre-line prose prose-invert prose-sm max-w-none">
+                  <div className="text-gray-50 leading-relaxed whitespace-pre-line prose prose-invert prose-sm max-w-none">
                     {section.content.split('\n\n').map((paragraph, pIndex) => (
                       <p key={pIndex} className="mb-4">
                         {paragraph.split('**').map((part, partIndex) =>
@@ -261,13 +261,13 @@ const Privacy = () => {
             {/* Contact Box */}
             <motion.div
               variants={itemVariants}
-              className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 text-center"
+              className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 text-center"
             >
               <Mail className="w-8 h-8 text-indigo-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">
                 Questions About Privacy?
               </h3>
-              <p className="text-gray-100 mb-4">
+              <p className="text-gray-50 mb-4">
                 Contact our privacy team for any questions or concerns.
               </p>
               <a

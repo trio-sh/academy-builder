@@ -109,7 +109,7 @@ export function StakeholdersSection() {
               One Ecosystem
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-50 leading-relaxed">
             Whether you're seeking your next opportunity, hiring talent, or preparing
             students for the workforce — we've built a pathway for you.
           </p>
@@ -130,7 +130,7 @@ export function StakeholdersSection() {
               />
 
               {/* Glass card */}
-              <div className="relative h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
+              <div className="relative h-full bg-black/80 backdrop-blur-xl border border-white/30 rounded-3xl p-10 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute top-0 right-0 w-40 h-40 opacity-5">
                   <stakeholder.icon className="w-full h-full text-white" />
@@ -147,7 +147,7 @@ export function StakeholdersSection() {
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                   {stakeholder.title}
                 </h3>
-                <p className="text-gray-100 leading-relaxed mb-8">
+                <p className="text-gray-50 leading-relaxed mb-8">
                   {stakeholder.description}
                 </p>
 
@@ -156,7 +156,7 @@ export function StakeholdersSection() {
                   {stakeholder.benefits.map((benefit) => (
                     <li key={benefit} className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-indigo-400" />
-                      <span className="text-gray-100">{benefit}</span>
+                      <span className="text-gray-50">{benefit}</span>
                     </li>
                   ))}
                 </ul>

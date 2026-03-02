@@ -502,7 +502,7 @@ export const AssessmentViewer = () => {
       return (
         <div>
           {isRetake && attemptNumber > 1 && scene.type === 'narrative' && (
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
               <Sparkles className="w-4 h-4" />
               <span>Fresh content for attempt #{attemptNumber}</span>
             </div>
@@ -527,7 +527,7 @@ export const AssessmentViewer = () => {
                 size="sm"
                 onClick={() => speakText(content)}
                 disabled={isSpeaking}
-                className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/30"
               >
                 {isSpeaking ? (
                   <>
@@ -559,7 +559,7 @@ export const AssessmentViewer = () => {
         <div className="space-y-8">
           <p className="text-gray-300 text-lg">{scene.content}</p>
 
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/30">
             <div className="flex items-start gap-4 mb-6">
               <div className={`p-3 rounded-xl bg-gradient-to-br ${dimension.color}`}>
                 <IconComponent className="w-6 h-6 text-white" />
@@ -620,7 +620,7 @@ export const AssessmentViewer = () => {
             const scoreInfo = getScoreLabel(score);
 
             return (
-              <div key={dimId} className="p-5 rounded-xl bg-white/5 border border-white/10">
+              <div key={dimId} className="p-5 rounded-xl bg-black/80 border border-white/30">
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`p-2 rounded-lg bg-gradient-to-br ${dimension.color}`}>
                     <IconComponent className="w-5 h-5 text-white" />
@@ -665,7 +665,7 @@ export const AssessmentViewer = () => {
       return (
         <div className="space-y-6">
           {isRetake && attemptNumber > 1 && aiGeneratedContent.has(scene.id) && (
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
               <Sparkles className="w-4 h-4" />
               <span>Fresh prompts for attempt #{attemptNumber}</span>
             </div>
@@ -700,7 +700,7 @@ export const AssessmentViewer = () => {
                   className={`p-4 rounded-xl border text-left transition-all ${
                     isSelected
                       ? 'bg-indigo-500/20 border-indigo-500/50'
-                      : 'bg-white/5 border-white/10 hover:bg-white/10 disabled:opacity-40'
+                      : 'bg-black/80 border-white/30 hover:bg-black/80 disabled:opacity-40'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -739,7 +739,7 @@ export const AssessmentViewer = () => {
           </div>
 
           {improvements.length > 0 && (
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
               <p className="text-sm text-amber-400 mb-2">Focus areas based on your selections:</p>
               <div className="flex flex-wrap gap-2">
                 {improvements.map(id => {
@@ -759,7 +759,7 @@ export const AssessmentViewer = () => {
               value={goals}
               onChange={(e) => setGoals(e.target.value)}
               placeholder="Example: Over the next 3 months, I will practice presenting to small groups at least twice a week to improve my communication confidence..."
-              className="min-h-[150px] bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
+              className="min-h-[150px] bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
             />
             <div className="flex items-center justify-between text-sm">
               <span className={goals.length >= 20 ? 'text-emerald-400' : 'text-gray-500'}>
@@ -773,7 +773,7 @@ export const AssessmentViewer = () => {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Any other reflections or context you want to capture..."
-                className="min-h-[80px] bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
+                className="min-h-[80px] bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
               />
             </div>
           </div>
@@ -825,7 +825,7 @@ export const AssessmentViewer = () => {
               const IconComponent = getDimensionIcon(dim.icon);
 
               return (
-                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
                   <div className={`p-1.5 rounded-lg bg-gradient-to-br ${dim.color}`}>
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
@@ -840,7 +840,7 @@ export const AssessmentViewer = () => {
 
           {/* Strengths & Improvements */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20">
               <p className="text-sm text-emerald-400 font-medium mb-2">Strengths</p>
               <div className="space-y-1">
                 {strengths.map(id => {
@@ -851,7 +851,7 @@ export const AssessmentViewer = () => {
                 })}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
               <p className="text-sm text-amber-400 font-medium mb-2">Growth Areas</p>
               <div className="space-y-1">
                 {improvements.map(id => {
@@ -866,7 +866,7 @@ export const AssessmentViewer = () => {
 
           {/* Goals Summary */}
           {goals && (
-            <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+            <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
               <p className="text-sm text-indigo-400 font-medium mb-2">Your Goals</p>
               <p className="text-sm text-gray-300 whitespace-pre-wrap">{goals}</p>
             </div>
@@ -895,15 +895,15 @@ export const AssessmentViewer = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
               <p className={`text-2xl font-bold ${overallInfo.color}`}>{overall.toFixed(1)}</p>
               <p className="text-xs text-gray-400">Overall Score</p>
             </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
               <p className="text-2xl font-bold text-emerald-400">{strengths.length}</p>
               <p className="text-xs text-gray-400">Strengths</p>
             </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
               <p className="text-2xl font-bold text-amber-400">{improvements.length}</p>
               <p className="text-xs text-gray-400">Growth Areas</p>
             </div>
@@ -929,7 +929,7 @@ export const AssessmentViewer = () => {
             </Button>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 max-w-sm mx-auto">
+              <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 max-w-sm mx-auto">
                 <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                 <p className="text-emerald-400 font-medium">Assessment Saved!</p>
               </div>
@@ -1016,11 +1016,11 @@ export const AssessmentViewer = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-white/10 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-white/10 hidden md:block" />
+              <div className="h-8 w-px bg-black/80 hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
                 <h1 className="hidden md:block font-semibold text-lg text-white">
@@ -1041,7 +1041,7 @@ export const AssessmentViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={stopSpeaking}
-                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/30"
                     title="Stop speaking"
                   >
                     <Pause className="w-4 h-4" />
@@ -1051,7 +1051,7 @@ export const AssessmentViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={toggleMute}
-                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10`}
+                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80`}
                     title={isMuted ? 'Unmute narration' : 'Mute narration'}
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -1065,10 +1065,10 @@ export const AssessmentViewer = () => {
                   </div>
                 )}
               </div>
-              <div className="h-6 w-px bg-white/10 hidden md:block" />
+              <div className="h-6 w-px bg-black/80 hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
                   <Star className="w-4 h-4 text-indigo-400" />
                   <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
                   <span className="text-indigo-400/50">/ 5.0</span>
@@ -1079,7 +1079,7 @@ export const AssessmentViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
-                      : 'bg-white/5 border border-white/10'
+                      : 'bg-black/80 border border-white/30'
                 }`}>
                   <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -1090,7 +1090,7 @@ export const AssessmentViewer = () => {
               </div>
               {/* Mobile: Stacked compact badges */}
               <div className="flex md:hidden flex-col gap-1">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
                   <Star className="w-3 h-3 text-indigo-400" />
                   <span className="text-indigo-400 font-semibold text-xs">{getOverallScore(scores).toFixed(1)}/5</span>
                 </div>
@@ -1099,7 +1099,7 @@ export const AssessmentViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30'
-                      : 'bg-white/5 border border-white/10'
+                      : 'bg-black/80 border border-white/30'
                 }`}>
                   <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -1132,18 +1132,18 @@ export const AssessmentViewer = () => {
               <motion.div
                 key={currentScene?.id}
                 ref={contentRef}
-                className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
+                className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
               >
                 {/* Scene header */}
                 <div className="px-8 pt-8 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`p-2 rounded-xl ${
-                      currentScene?.type === 'welcome' || currentScene?.type === 'narrative' ? 'bg-blue-500/10' :
-                      currentScene?.type === 'dimension' || currentScene?.type === 'multi-dimension' ? 'bg-purple-500/10' :
-                      currentScene?.type === 'selection' ? 'bg-amber-500/10' :
-                      currentScene?.type === 'goals' ? 'bg-cyan-500/10' :
-                      currentScene?.type === 'review' ? 'bg-emerald-500/10' :
-                      'bg-amber-500/10'
+                      currentScene?.type === 'welcome' || currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
+                      currentScene?.type === 'dimension' || currentScene?.type === 'multi-dimension' ? 'bg-purple-500/30' :
+                      currentScene?.type === 'selection' ? 'bg-amber-500/30' :
+                      currentScene?.type === 'goals' ? 'bg-cyan-500/30' :
+                      currentScene?.type === 'review' ? 'bg-emerald-500/30' :
+                      'bg-amber-500/30'
                     }`}>
                       {getSceneIcon()}
                     </div>
@@ -1189,7 +1189,7 @@ export const AssessmentViewer = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black/80 hover:text-white disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

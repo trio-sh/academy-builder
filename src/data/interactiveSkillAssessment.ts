@@ -160,71 +160,73 @@ export interface InteractiveAssessmentScene {
   timeLimit?: number; // seconds
 }
 
-// Skill Dimensions with actual testing methods
+// T3A Behavioral Dimensions observed in the L1 Observation Session
+// IDs are locked — match the T3A 14-dimension framework exactly.
+// MVP top-5 are active for initial launch; others post-launch.
 export const SKILL_DIMENSIONS = [
   {
-    id: 'communication',
-    title: 'Communication',
-    description: 'Verbal and written clarity, active listening, professional tone',
+    id: 'communication_pressure',
+    title: 'Communication Under Pressure',
+    description: 'Clear, timely messages with appropriate tone when stakes are high',
     testMethods: ['voice-response', 'written-challenge', 'active-listening'],
     icon: 'MessageCircle',
-    color: 'from-blue-500 to-blue-600'
+    color: 'from-sky-500 to-blue-600'
   },
   {
-    id: 'problem_solving',
-    title: 'Problem Solving',
-    description: 'Analysis, creativity, structured thinking, practical solutions',
+    id: 'accountability_ownership',
+    title: 'Accountability & Ownership',
+    description: 'Taking responsibility for outcomes, following through without excuses',
     testMethods: ['problem-solving', 'quick-response'],
     icon: 'Lightbulb',
+    color: 'from-blue-500 to-indigo-600'
+  },
+  {
+    id: 'workplace_adaptability',
+    title: 'Workplace Adaptability',
+    description: 'Navigating organizational culture, reading situations, adjusting behavior',
+    testMethods: ['problem-solving', 'role-play'],
+    icon: 'RefreshCw',
     color: 'from-amber-500 to-orange-600'
   },
   {
-    id: 'adaptability',
-    title: 'Adaptability',
-    description: 'Flexibility, handling change, pivoting under pressure',
-    testMethods: ['problem-solving', 'role-play'],
-    icon: 'RefreshCw',
-    color: 'from-emerald-500 to-teal-600'
-  },
-  {
-    id: 'collaboration',
-    title: 'Collaboration',
-    description: 'Teamwork, conflict resolution, building consensus',
+    id: 'collaboration_conflict',
+    title: 'Collaboration & Conflict Resolution',
+    description: 'Working effectively with diverse teams, navigating disagreements productively',
     testMethods: ['role-play', 'written-challenge'],
     icon: 'Users',
-    color: 'from-purple-500 to-violet-600'
-  },
-  {
-    id: 'initiative',
-    title: 'Initiative',
-    description: 'Proactiveness, identifying opportunities, taking ownership',
-    testMethods: ['problem-solving', 'judgment'],
-    icon: 'Rocket',
     color: 'from-pink-500 to-rose-600'
   },
   {
-    id: 'time_management',
-    title: 'Time Management',
-    description: 'Prioritization, deadline management, efficient execution',
-    testMethods: ['prioritization', 'quick-response'],
-    icon: 'Clock',
-    color: 'from-cyan-500 to-sky-600'
-  },
-  {
-    id: 'professionalism',
-    title: 'Professionalism',
-    description: 'Ethics, judgment, workplace conduct, accountability',
+    id: 'integrity_ethics',
+    title: 'Integrity & Ethics',
+    description: 'Acting with honesty, maintaining trust, navigating ethical grey areas',
     testMethods: ['judgment', 'written-challenge'],
     icon: 'Briefcase',
-    color: 'from-slate-500 to-gray-600'
+    color: 'from-emerald-500 to-teal-600'
+  },
+  {
+    id: 'execution_reliability',
+    title: 'Execution Reliability',
+    description: 'Delivering consistent, quality work on time without constant supervision',
+    testMethods: ['prioritization', 'quick-response'],
+    icon: 'Clock',
+    color: 'from-violet-500 to-purple-600'
   },
   {
     id: 'learning_agility',
     title: 'Learning Agility',
-    description: 'Quick comprehension, applying new concepts, curiosity',
+    description: 'Receiving and applying feedback; proactively acquiring new knowledge',
     testMethods: ['active-listening', 'quick-response'],
     icon: 'GraduationCap',
-    color: 'from-indigo-500 to-purple-600'
+    color: 'from-cyan-500 to-sky-600'
+  },
+  {
+    id: 'resilience_recovery',
+    title: 'Resilience & Recovery',
+    description: 'Bouncing back from setbacks, maintaining composure through failure',
+    testMethods: ['problem-solving', 'judgment'],
+    icon: 'Rocket',
+    color: 'from-red-500 to-rose-600'
   }
 ];
 
@@ -234,21 +236,21 @@ export const INTERACTIVE_ASSESSMENT_SCENES: InteractiveAssessmentScene[] = [
   {
     id: 'welcome',
     type: 'welcome',
-    title: 'Interactive Skill Assessment',
+    title: 'L1 Observation Session',
     dimension: 'all',
-    content: `Welcome to the Interactive Skill Assessment.
+    content: `Welcome to your L1 Observation Session.
 
-Unlike traditional self-assessments where you rate yourself, this assessment will actually test your skills through real challenges:
+You will complete a series of AI-driven pressure scenarios across the T3A Behavioral Dimensions:
 
-• **Voice Responses** - Speak your answers and receive AI analysis
+• **Voice Scenarios** - Speak your response under timed pressure
 • **Written Challenges** - Compose professional communications
-• **Prioritization Tests** - Organize tasks under time pressure
-• **Role-Play Dialogues** - Navigate difficult conversations
-• **Problem-Solving Scenarios** - Make decisions with consequences
+• **Prioritization Tests** - Rank tasks under deadline pressure
+• **Situation Responses** - Navigate difficult workplace situations
+• **Judgment Scenarios** - Make decisions with real consequences
 
-Your responses will be analyzed to provide objective, evidence-based scores that mentors can validate.
+Your responses are recorded as behavioral evidence. No scores or feedback are shown during the session — your mentor will review your evidence and be in touch with next steps.
 
-Ready to demonstrate your actual abilities?`,
+Ready to begin?`,
     character: 'Assessment Guide',
     animationType: 'fadeIn'
   },
@@ -259,7 +261,7 @@ Ready to demonstrate your actual abilities?`,
     type: 'voice-response',
     title: 'Communication Challenge',
     subtitle: 'Verbal Response Test',
-    dimension: 'communication',
+    dimension: 'communication_pressure',
     content: 'You will be given a workplace scenario. Speak your response clearly and professionally. Your response will be analyzed for clarity, structure, and tone.',
     voicePrompt: {
       id: 'voice-1',
@@ -283,7 +285,7 @@ Ready to demonstrate your actual abilities?`,
     type: 'written-challenge',
     title: 'Written Communication',
     subtitle: 'Professional Email Composition',
-    dimension: 'communication',
+    dimension: 'communication_pressure',
     content: 'Compose a professional email based on the scenario below. Your writing will be analyzed for tone, clarity, and effectiveness.',
     writtenChallenge: {
       id: 'written-1',
@@ -314,7 +316,7 @@ Ready to demonstrate your actual abilities?`,
     type: 'active-listening',
     title: 'Active Listening Test',
     subtitle: 'Comprehension Challenge',
-    dimension: 'communication',
+    dimension: 'communication_pressure',
     content: 'Listen carefully to the following workplace scenario. You will be asked questions about the details afterward.',
     audioScript: `Good morning team. I wanted to brief you on the Henderson account situation.
 
@@ -357,7 +359,7 @@ Any questions?`,
     type: 'problem-solving',
     title: 'Problem Solving Challenge',
     subtitle: 'Critical Decision Making',
-    dimension: 'problem_solving',
+    dimension: 'execution_reliability',
     content: 'Navigate this workplace crisis. Your decisions will have consequences.',
     problemSolving: {
       id: 'problem-1',
@@ -442,7 +444,7 @@ What do you do first?`,
     type: 'prioritization',
     title: 'Prioritization Challenge',
     subtitle: 'Task Management Under Pressure',
-    dimension: 'time_management',
+    dimension: 'prioritization_time',
     content: 'It\'s Monday morning. You have these 8 tasks. Rank them in the order you would complete them. You have 60 seconds.',
     prioritizationTasks: [
       {
@@ -533,7 +535,7 @@ What do you do first?`,
     type: 'role-play',
     title: 'Collaboration Challenge',
     subtitle: 'Difficult Conversation Simulation',
-    dimension: 'collaboration',
+    dimension: 'collaboration_conflict',
     content: 'Navigate this conversation with a frustrated teammate. Your goal is to resolve the conflict while maintaining the relationship.',
     rolePlay: {
       id: 'roleplay-1',
@@ -631,7 +633,7 @@ What do you do first?`,
     type: 'judgment',
     title: 'Professional Judgment',
     subtitle: 'Ethical Decision Making',
-    dimension: 'professionalism',
+    dimension: 'integrity_ethics',
     content: 'Evaluate this situation and choose the most appropriate course of action.',
     judgmentScenario: {
       id: 'judgment-1',
@@ -683,7 +685,7 @@ What do you do?`,
     type: 'quick-response',
     title: 'Initiative Test',
     subtitle: 'Opportunity Identification',
-    dimension: 'initiative',
+    dimension: 'accountability_ownership',
     content: 'You\'ll see a scenario and have 30 seconds to type what you would do. Focus on identifying opportunities beyond the minimum requirement.',
     animationType: 'scaleIn',
     timeLimit: 30

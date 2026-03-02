@@ -159,7 +159,7 @@ const GetStarted = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -181,7 +181,7 @@ const GetStarted = () => {
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-100"
+                className="text-lg text-gray-50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -211,7 +211,7 @@ const GetStarted = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-white/10 text-gray-100 border border-white/10"
+                          : "bg-black/80 text-gray-50 border border-white/30"
                       )}
                       whileHover={{ scale: 1.05 }}
                     >
@@ -220,7 +220,7 @@ const GetStarted = () => {
                     {s < 3 && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
-                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-white/10"
+                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black/80"
                       )} />
                     )}
                   </div>
@@ -247,8 +247,8 @@ const GetStarted = () => {
                         className={cn(
                           "group relative p-8 rounded-3xl text-left transition-all duration-500",
                           selectedPath === path.id
-                            ? "bg-white/10 border-2 border-indigo-500/50"
-                            : "bg-white/5 border border-white/10 hover:border-white/30"
+                            ? "bg-black/80 border-2 border-indigo-500/50"
+                            : "bg-black/80 border border-white/30 hover:border-white/30"
                         )}
                         whileHover={{ y: -5 }}
                       >
@@ -268,19 +268,19 @@ const GetStarted = () => {
                               "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br",
                               selectedPath === path.id ? path.gradient : "from-white/10 to-white/5"
                             )}>
-                              <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-100")} />
+                              <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-50")} />
                             </div>
                             <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{path.entry}</span>
                           </div>
 
                           <h3 className="text-xl font-bold text-white mb-2">{path.title}</h3>
-                          <p className="text-gray-100 mb-6">{path.description}</p>
+                          <p className="text-gray-50 mb-6">{path.description}</p>
 
                           <ul className="space-y-3">
                             {path.features.map((feature) => (
                               <li key={feature} className="flex items-center gap-3 text-sm">
                                 <CheckCircle2 className={cn("w-4 h-4", selectedPath === path.id ? "text-emerald-400" : "text-gray-500")} />
-                                <span className="text-gray-100">{feature}</span>
+                                <span className="text-gray-50">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -309,12 +309,12 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10">
+                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Create Your Account</h2>
 
                       {/* Error Message */}
                       {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+                        <div className="mb-6 p-4 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-3">
                           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-red-400">{error}</p>
                         </div>
@@ -323,30 +323,30 @@ const GetStarted = () => {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="firstName" className="text-gray-100">First Name</Label>
+                            <Label htmlFor="firstName" className="text-gray-50">First Name</Label>
                             <Input
                               id="firstName"
                               placeholder="John"
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="lastName" className="text-gray-100">Last Name</Label>
+                            <Label htmlFor="lastName" className="text-gray-50">Last Name</Label>
                             <Input
                               id="lastName"
                               placeholder="Doe"
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
                             />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="email" className="text-gray-100">Email</Label>
+                          <Label htmlFor="email" className="text-gray-50">Email</Label>
                           <Input
                             id="email"
                             type="email"
@@ -354,11 +354,11 @@ const GetStarted = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="password" className="text-gray-100">Password</Label>
+                          <Label htmlFor="password" className="text-gray-50">Password</Label>
                           <Input
                             id="password"
                             type="password"
@@ -366,7 +366,7 @@ const GetStarted = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
                           />
                         </div>
                       </div>
@@ -376,7 +376,7 @@ const GetStarted = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-white/10"
+                          className="flex-1 border-white/20 text-white hover:bg-black/80"
                         >
                           Back
                         </Button>
@@ -413,19 +413,19 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10">
+                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Upload Your Resume</h2>
 
                       <motion.div className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer" whileHover={{ scale: 1.02 }}>
-                        <Upload className="w-12 h-12 text-gray-100 mx-auto mb-4" />
+                        <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
                         <p className="text-white font-medium mb-2">Drop your resume here</p>
                         <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                        <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">Browse Files</Button>
+                        <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black/80">Browse Files</Button>
                       </motion.div>
 
-                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
-                        <ul className="space-y-2 text-sm text-gray-100">
+                        <ul className="space-y-2 text-sm text-gray-50">
                           {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
                             <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                           ))}
@@ -433,7 +433,7 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-white/10">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
                         <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>
@@ -445,27 +445,27 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10">
+                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
 
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="headline" className="text-gray-100">Professional Headline</Label>
-                          <Input id="headline" placeholder="e.g., Full Stack Developer" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                          <Label htmlFor="headline" className="text-gray-50">Professional Headline</Label>
+                          <Input id="headline" placeholder="e.g., Full Stack Developer" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="skills" className="text-gray-100">Primary Skills</Label>
-                          <Input id="skills" placeholder="e.g., React, Node.js, Python" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                          <Label htmlFor="skills" className="text-gray-50">Primary Skills</Label>
+                          <Input id="skills" placeholder="e.g., React, Node.js, Python" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="experience" className="text-gray-100">Years of Experience</Label>
-                          <Input id="experience" type="number" placeholder="e.g., 3" className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
+                          <Label htmlFor="experience" className="text-gray-50">Years of Experience</Label>
+                          <Input id="experience" type="number" placeholder="e.g., 3" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                       </div>
 
-                      <div className="mt-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-purple-500/30 border border-purple-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
-                        <ul className="space-y-2 text-sm text-gray-100">
+                        <ul className="space-y-2 text-sm text-gray-50">
                           {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Skill Passport"].map((item) => (
                             <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                           ))}
@@ -473,7 +473,7 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-white/10">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
                         <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>

@@ -209,7 +209,7 @@ const Overview = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-6 rounded-xl bg-white/5 border border-white/10"
+            className="p-6 rounded-xl bg-black/80 border border-white/30"
           >
             <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
             <p className="text-3xl font-bold text-white">{stat.value}</p>
@@ -224,7 +224,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/school/students"
-            className="p-6 rounded-xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 border border-teal-500/20 hover:border-teal-500/40 transition-colors group"
+            className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20 hover:border-teal-500/40 transition-colors group"
           >
             <Users className="w-8 h-8 text-teal-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Manage Students</h3>
@@ -234,7 +234,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/school/observations"
-            className="p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
+            className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
           >
             <ClipboardList className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Record Observation</h3>
@@ -244,7 +244,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/school/analytics"
-            className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20 hover:border-blue-500/40 transition-colors group"
+            className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20 hover:border-blue-500/40 transition-colors group"
           >
             <TrendingUp className="w-8 h-8 text-blue-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">View Analytics</h3>
@@ -267,7 +267,7 @@ const Overview = () => {
             {recentObservations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between"
+                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
@@ -289,7 +289,7 @@ const Overview = () => {
             ))}
           </div>
         ) : (
-          <div className="p-8 rounded-xl bg-white/5 border border-white/10 text-center">
+          <div className="p-8 rounded-xl bg-black/80 border border-white/30 text-center">
             <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No observations recorded yet</p>
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
@@ -428,7 +428,7 @@ const Students = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search students by name or ID..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
           />
         </div>
       </motion.div>
@@ -440,7 +440,7 @@ const Students = () => {
             {filteredStudents.map((student) => (
               <div
                 key={student.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className="p-4 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -467,7 +467,7 @@ const Students = () => {
                           <span>Grade: {student.grade_level}</span>
                         )}
                         {student.cohort && (
-                          <span className="px-2 py-0.5 rounded bg-white/10">
+                          <span className="px-2 py-0.5 rounded bg-black/80">
                             {student.cohort.name}
                           </span>
                         )}
@@ -491,7 +491,7 @@ const Students = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-white/10"
+                      className="border-white/20 text-white hover:bg-black/80"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -501,7 +501,7 @@ const Students = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No students found</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -620,7 +620,7 @@ const Cohorts = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-white/5 border border-white/10"
+          className="p-6 rounded-xl bg-black/80 border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Cohort</h2>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
@@ -631,7 +631,7 @@ const Cohorts = () => {
                 value={newCohort.name}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, name: e.target.value }))}
                 placeholder="e.g., Spring 2024"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
@@ -641,7 +641,7 @@ const Cohorts = () => {
                 value={newCohort.program}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, program: e.target.value }))}
                 placeholder="e.g., Career Readiness"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
@@ -650,7 +650,7 @@ const Cohorts = () => {
                 type="date"
                 value={newCohort.startDate}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, startDate: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-teal-500 focus:outline-none"
               />
             </div>
           </div>
@@ -658,7 +658,7 @@ const Cohorts = () => {
             <Button
               variant="outline"
               onClick={() => setShowNewCohort(false)}
-              className="border-white/20 text-white hover:bg-white/10"
+              className="border-white/20 text-white hover:bg-black/80"
             >
               Cancel
             </Button>
@@ -680,7 +680,7 @@ const Cohorts = () => {
             {cohorts.map((cohort) => (
               <div
                 key={cohort.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -704,7 +704,7 @@ const Cohorts = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full mt-4 border-white/20 text-white hover:bg-white/10"
+                  className="w-full mt-4 border-white/20 text-white hover:bg-black/80"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   View Details
@@ -713,7 +713,7 @@ const Cohorts = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No cohorts created yet</p>
             <p className="text-sm text-gray-500 mt-1">Create cohorts to organize your students</p>
@@ -879,10 +879,10 @@ const Observations = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-2xl max-h-[85vh] overflow-hidden"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-2xl max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-white/10">
+            <div className="p-6 border-b border-white/30">
               <h2 className="text-xl font-bold text-white">New Observation</h2>
             </div>
 
@@ -893,7 +893,7 @@ const Observations = () => {
                 <select
                   value={selectedStudent?.id || ""}
                   onChange={(e) => setSelectedStudent(students.find(s => s.id === e.target.value) || null)}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-teal-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-teal-500 focus:outline-none"
                 >
                   <option value="">Choose a student...</option>
                   {students.map((student) => (
@@ -914,7 +914,7 @@ const Observations = () => {
                       value={observationForm.context}
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, context: e.target.value }))}
                       placeholder="e.g., Class project presentation"
-                      className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
                     />
                   </div>
 
@@ -938,7 +938,7 @@ const Observations = () => {
                                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                                   observationForm.scores[dimension] === score
                                     ? "bg-teal-600 text-white"
-                                    : "bg-white/5 text-gray-400 hover:bg-white/10"
+                                    : "bg-black/80 text-gray-400 hover:bg-black/80"
                                 }`}
                               >
                                 {score}
@@ -958,18 +958,18 @@ const Observations = () => {
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Additional observations..."
                       rows={3}
-                      className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none resize-none"
                     />
                   </div>
                 </>
               )}
             </div>
 
-            <div className="p-6 border-t border-white/10 flex gap-3">
+            <div className="p-6 border-t border-white/30 flex gap-3">
               <Button
                 variant="outline"
                 onClick={() => setShowNewObservation(false)}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+                className="flex-1 border-white/20 text-white hover:bg-black/80"
               >
                 Cancel
               </Button>
@@ -992,7 +992,7 @@ const Observations = () => {
             {observations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10"
+                className="p-4 rounded-xl bg-black/80 border border-white/30"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -1019,7 +1019,7 @@ const Observations = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No observations recorded yet</p>
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
@@ -1045,7 +1045,7 @@ const Analytics = () => {
       </motion.div>
 
       {/* Behavioral Dimension Overview */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
         <h2 className="text-lg font-semibold text-white mb-4">Behavioral Dimensions Average</h2>
         <div className="space-y-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension, index) => {
@@ -1053,7 +1053,7 @@ const Analytics = () => {
             return (
               <div key={dimension} className="flex items-center gap-4">
                 <span className="text-sm text-gray-400 w-40">{dimension}</span>
-                <div className="flex-1 h-3 bg-white/10 rounded-full overflow-hidden">
+                <div className="flex-1 h-3 bg-black/80 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-teal-500 to-cyan-500"
                     style={{ width: `${score}%` }}
@@ -1068,17 +1068,17 @@ const Analytics = () => {
 
       {/* Stats Cards */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
-        <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/10 to-cyan-500/10 border border-teal-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
           <TrendingUp className="w-8 h-8 text-teal-400 mb-3" />
           <p className="text-3xl font-bold text-white">+12%</p>
           <p className="text-sm text-gray-400">Average Score Improvement</p>
         </div>
-        <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20">
           <Award className="w-8 h-8 text-purple-400 mb-3" />
           <p className="text-3xl font-bold text-white">24</p>
           <p className="text-sm text-gray-400">Students Ready for Mentorship</p>
         </div>
-        <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
           <Target className="w-8 h-8 text-blue-400 mb-3" />
           <p className="text-3xl font-bold text-white">78%</p>
           <p className="text-sm text-gray-400">Goal Completion Rate</p>
@@ -1102,7 +1102,7 @@ const SettingsPage = () => {
         <p className="text-gray-400">Manage your school profile and preferences.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
         <p className="text-gray-400">School settings will appear here.</p>
       </motion.div>
     </motion.div>
@@ -1131,13 +1131,13 @@ const SchoolDashboard = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/10 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing teal circuit patterns&aspect=1:1&seed=civic_logo"
@@ -1167,7 +1167,7 @@ const SchoolDashboard = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-teal-600/20 to-cyan-600/20 text-white border border-teal-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -1178,7 +1178,7 @@ const SchoolDashboard = () => {
           </nav>
 
           {/* User */}
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/30">
             <div className="flex items-center gap-3 mb-4">
               {profile?.avatar_url ? (
                 <img
@@ -1200,7 +1200,7 @@ const SchoolDashboard = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 w-full px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+              className="flex items-center gap-2 w-full px-4 py-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -1212,7 +1212,7 @@ const SchoolDashboard = () => {
       {/* Main content */}
       <div className="lg:ml-64">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"

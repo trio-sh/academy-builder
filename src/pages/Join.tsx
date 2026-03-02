@@ -179,7 +179,7 @@ const Join = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -198,7 +198,7 @@ const Join = () => {
                   Account
                 </span>
               </motion.h1>
-              <motion.p className="text-lg text-gray-100">
+              <motion.p className="text-lg text-gray-50">
                 Choose how you want to participate in the behavioral credentialing ecosystem.
               </motion.p>
             </div>
@@ -218,13 +218,13 @@ const Join = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-white/10 text-gray-100 border border-white/10"
+                          : "bg-black/80 text-gray-50 border border-white/30"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
                     </motion.div>
                     {s < 3 && (
-                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-white/10")} />
+                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black/80")} />
                     )}
                   </div>
                 ))}
@@ -246,8 +246,8 @@ const Join = () => {
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
                           selectedRole === role.id
-                            ? "bg-white/10 border-2 border-indigo-500/50"
-                            : "bg-white/5 border border-white/10 hover:border-white/30"
+                            ? "bg-black/80 border-2 border-indigo-500/50"
+                            : "bg-black/80 border border-white/30 hover:border-white/30"
                         )}
                         whileHover={{ y: -5 }}
                       >
@@ -263,20 +263,20 @@ const Join = () => {
                                 selectedRole === role.id ? role.gradient : "from-white/10 to-white/5"
                               )}
                             >
-                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-100")} />
+                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-50")} />
                             </div>
                             <div>
                               <h3 className="text-lg font-bold text-white">{role.title}</h3>
                             </div>
                           </div>
 
-                          <p className="text-gray-100 text-sm mb-4">{role.description}</p>
+                          <p className="text-gray-50 text-sm mb-4">{role.description}</p>
 
                           <ul className="space-y-2">
                             {role.features.map((feature) => (
                               <li key={feature} className="flex items-center gap-2 text-sm">
                                 <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-gray-500")} />
-                                <span className="text-gray-100">{feature}</span>
+                                <span className="text-gray-50">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -311,7 +311,7 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -324,7 +324,7 @@ const Join = () => {
                       </div>
 
                       {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+                        <div className="mb-6 p-4 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-3">
                           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-red-400">{error}</p>
                         </div>
@@ -333,41 +333,41 @@ const Join = () => {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="firstName" className="text-gray-100">First Name</Label>
+                            <Label htmlFor="firstName" className="text-gray-50">First Name</Label>
                             <Input
                               id="firstName"
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-white/10 border-white/20 text-white"
+                              className="bg-black/80 border-white/20 text-white"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="lastName" className="text-gray-100">Last Name</Label>
+                            <Label htmlFor="lastName" className="text-gray-50">Last Name</Label>
                             <Input
                               id="lastName"
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-white/10 border-white/20 text-white"
+                              className="bg-black/80 border-white/20 text-white"
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="email" className="text-gray-100">Email</Label>
+                          <Label htmlFor="email" className="text-gray-50">Email</Label>
                           <Input
                             id="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-white/10 border-white/20 text-white"
+                            className="bg-black/80 border-white/20 text-white"
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="password" className="text-gray-100">Password</Label>
+                          <Label htmlFor="password" className="text-gray-50">Password</Label>
                           <Input
                             id="password"
                             type="password"
@@ -375,7 +375,7 @@ const Join = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-white/10 border-white/20 text-white"
+                            className="bg-black/80 border-white/20 text-white"
                           />
                         </div>
 
@@ -383,24 +383,24 @@ const Join = () => {
                         {selectedRole === "employer" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="companyName" className="text-gray-100">Company Name</Label>
+                              <Label htmlFor="companyName" className="text-gray-50">Company Name</Label>
                               <Input
                                 id="companyName"
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-white/10 border-white/20 text-white"
+                                className="bg-black/80 border-white/20 text-white"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-100">Industry</Label>
+                              <Label htmlFor="industry" className="text-gray-50">Industry</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Technology, Healthcare"
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-white/10 border-white/20 text-white"
+                                className="bg-black/80 border-white/20 text-white"
                               />
                             </div>
                           </>
@@ -408,13 +408,13 @@ const Join = () => {
 
                         {selectedRole === "school_admin" && (
                           <div className="space-y-2">
-                            <Label htmlFor="schoolName" className="text-gray-100">School / Institution Name</Label>
+                            <Label htmlFor="schoolName" className="text-gray-50">School / Institution Name</Label>
                             <Input
                               id="schoolName"
                               value={schoolName}
                               onChange={(e) => setSchoolName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-white/10 border-white/20 text-white"
+                              className="bg-black/80 border-white/20 text-white"
                             />
                           </div>
                         )}
@@ -422,25 +422,25 @@ const Join = () => {
                         {selectedRole === "mentor" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-100">Industry / Expertise</Label>
+                              <Label htmlFor="industry" className="text-gray-50">Industry / Expertise</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Software Engineering"
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-white/10 border-white/20 text-white"
+                                className="bg-black/80 border-white/20 text-white"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="yearsExperience" className="text-gray-100">Years of Experience</Label>
+                              <Label htmlFor="yearsExperience" className="text-gray-50">Years of Experience</Label>
                               <Input
                                 id="yearsExperience"
                                 type="number"
                                 value={yearsExperience}
                                 onChange={(e) => setYearsExperience(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-white/10 border-white/20 text-white"
+                                className="bg-black/80 border-white/20 text-white"
                               />
                             </div>
                           </>
@@ -452,7 +452,7 @@ const Join = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-white/10"
+                          className="flex-1 border-white/20 text-white hover:bg-black/80"
                         >
                           Back
                         </Button>
@@ -484,13 +484,13 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>
 
                       <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
-                      <p className="text-gray-100 mb-6">
+                      <p className="text-gray-50 mb-6">
                         Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
                       </p>
 

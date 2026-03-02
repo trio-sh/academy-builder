@@ -118,7 +118,7 @@ const Contact = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <MessageSquare className="w-4 h-4" />
                 Get in Touch
               </span>
@@ -137,7 +137,7 @@ const Contact = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               Have questions about The 3rd Academy? We'd love to hear from you.
               Our team is here to help.
@@ -158,7 +158,7 @@ const Contact = () => {
             >
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                   {isSubmitted ? (
                     <motion.div
                       className="text-center py-12"
@@ -171,13 +171,13 @@ const Contact = () => {
                       <h3 className="text-2xl font-bold text-white mb-4">
                         Message Sent!
                       </h3>
-                      <p className="text-gray-100 mb-6">
+                      <p className="text-gray-50 mb-6">
                         Thank you for reaching out. We'll get back to you within
                         24-48 hours.
                       </p>
                       <Button
                         variant="outline"
-                        className="border-white/20 text-white hover:bg-white/10"
+                        className="border-white/20 text-white hover:bg-black/80"
                         onClick={() => {
                           setIsSubmitted(false);
                           setFormData({
@@ -199,7 +199,7 @@ const Contact = () => {
 
                       {/* Reason Selection */}
                       <div className="mb-6">
-                        <label className="block text-sm text-gray-100 mb-3">
+                        <label className="block text-sm text-gray-50 mb-3">
                           What can we help you with?
                         </label>
                         <div className="grid grid-cols-2 gap-3">
@@ -211,7 +211,7 @@ const Contact = () => {
                               className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
                                 selectedReason === reason.id
                                   ? "bg-indigo-600/20 border-indigo-500/50 text-white"
-                                  : "bg-white/5 border-white/10 text-gray-100 hover:border-white/20"
+                                  : "bg-black/80 border-white/30 text-gray-50 hover:border-white/20"
                               }`}
                             >
                               <reason.icon className="w-4 h-4" />
@@ -224,7 +224,7 @@ const Contact = () => {
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm text-gray-100 mb-2">
+                            <label className="block text-sm text-gray-50 mb-2">
                               Name
                             </label>
                             <Input
@@ -233,11 +233,11 @@ const Contact = () => {
                               onChange={handleChange}
                               placeholder="Your name"
                               required
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm text-gray-100 mb-2">
+                            <label className="block text-sm text-gray-50 mb-2">
                               Email
                             </label>
                             <Input
@@ -247,13 +247,13 @@ const Contact = () => {
                               onChange={handleChange}
                               placeholder="you@example.com"
                               required
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-sm text-gray-100 mb-2">
+                          <label className="block text-sm text-gray-50 mb-2">
                             Organization (Optional)
                           </label>
                           <Input
@@ -261,12 +261,12 @@ const Contact = () => {
                             value={formData.organization}
                             onChange={handleChange}
                             placeholder="Company or school name"
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm text-gray-100 mb-2">
+                          <label className="block text-sm text-gray-50 mb-2">
                             Message
                           </label>
                           <Textarea
@@ -276,7 +276,7 @@ const Contact = () => {
                             placeholder="How can we help you?"
                             required
                             rows={5}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 resize-none"
+                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 resize-none"
                           />
                         </div>
 
@@ -320,7 +320,7 @@ const Contact = () => {
                 <h2 className="text-2xl font-bold text-white mb-4">
                   Contact Information
                 </h2>
-                <p className="text-gray-100">
+                <p className="text-gray-50">
                   Reach out directly or fill out the form and we'll get back to
                   you as soon as possible.
                 </p>
@@ -334,7 +334,7 @@ const Contact = () => {
                     className="group block"
                     whileHover={{ x: 5 }}
                   >
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/30 transition-colors">
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-indigo-500/30 transition-colors">
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center">
                         <info.icon className="w-5 h-5 text-indigo-400" />
                       </div>
@@ -350,32 +350,32 @@ const Contact = () => {
               </div>
 
               {/* Office Hours */}
-              <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Office Hours
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-100">Monday - Friday</span>
+                    <span className="text-gray-50">Monday - Friday</span>
                     <span className="text-white">9:00 AM - 6:00 PM PST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-100">Saturday</span>
+                    <span className="text-gray-50">Saturday</span>
                     <span className="text-white">10:00 AM - 4:00 PM PST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-100">Sunday</span>
+                    <span className="text-gray-50">Sunday</span>
                     <span className="text-gray-500">Closed</span>
                   </div>
                 </div>
               </div>
 
               {/* Response Time */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border border-indigo-500/20">
+              <div className="p-6 rounded-2xl bg-gradient-to-r from-indigo-600/30 to-purple-600/30 border border-indigo-500/20">
                 <h3 className="text-lg font-semibold text-white mb-2">
                   Quick Response Promise
                 </h3>
-                <p className="text-gray-100 text-sm">
+                <p className="text-gray-50 text-sm">
                   We aim to respond to all inquiries within 24-48 business hours.
                   For urgent matters, please call us directly.
                 </p>
@@ -400,7 +400,7 @@ const Contact = () => {
                 Looking for Quick Answers?
               </span>
             </h2>
-            <p className="text-gray-100 mb-8">
+            <p className="text-gray-50 mb-8">
               Check out our Help Center for frequently asked questions and
               detailed guides.
             </p>
@@ -408,7 +408,7 @@ const Contact = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
                 asChild
               >
                 <a href="/help">Visit Help Center</a>

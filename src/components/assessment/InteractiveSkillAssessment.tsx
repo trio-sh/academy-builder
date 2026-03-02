@@ -43,6 +43,13 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import {
+  checkObservationCooldown,
+  startObservationSession,
+  completeObservationSession,
+  generateRandomSeed,
+  CooldownStatus
+} from '@/lib/observationIntegrity';
+import {
   createSpeechRecognitionService,
   isSpeechRecognitionSupported,
   requestMicrophonePermission,
@@ -156,6 +163,14 @@ export const InteractiveSkillAssessment = () => {
   // Ref to track latest transcript (solves timing issue with stopRecording)
   const transcriptRef = useRef<string>('');
 
+  // Build Rule 9 — Cooldown enforcement
+  const [cooldownStatus, setCooldownStatus] = useState<CooldownStatus | null>(null);
+  const [isCheckingCooldown, setIsCheckingCooldown] = useState(true);
+
+  // Build Rule 10 — Session tracking
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const sessionStartedRef = useRef(false);
+
   // Refs
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -201,6 +216,43 @@ export const InteractiveSkillAssessment = () => {
     };
     checkMic();
   }, []);
+
+  // Build Rule 9 — Check cooldown on mount
+  // Uses dimension_id 'l1_interactive' to track the full L1 session cooldown
+  useEffect(() => {
+    const checkCooldown = async () => {
+      if (!user?.id) {
+        setIsCheckingCooldown(false);
+        return;
+      }
+      const status = await checkObservationCooldown(user.id, 'l1_interactive');
+      setCooldownStatus(status);
+      setIsCheckingCooldown(false);
+    };
+    checkCooldown();
+  }, [user?.id]);
+
+  // Build Rule 10 — Start observation session when candidate reaches first challenge
+  // Session is created once per assessment run; not re-created on back-navigation
+  useEffect(() => {
+    if (!user?.id) return;
+    if (sessionStartedRef.current) return;
+    if (cooldownStatus === null) return; // wait for cooldown check
+
+    const scene = INTERACTIVE_ASSESSMENT_SCENES[currentSceneIndex];
+    const isChallenge = scene && scene.type !== 'welcome' && scene.type !== 'narrative';
+
+    if (isChallenge) {
+      sessionStartedRef.current = true;
+      const seed = generateRandomSeed();
+      const sceneIds = INTERACTIVE_ASSESSMENT_SCENES
+        .filter(s => s.type !== 'welcome' && s.type !== 'narrative' && s.type !== 'review' && s.type !== 'completion')
+        .map(s => s.id);
+
+      startObservationSession(user.id, 'l1_interactive', 1, seed, sceneIds)
+        .then(id => { if (id) setSessionId(id); });
+    }
+  }, [currentSceneIndex, user?.id, cooldownStatus]);
 
   // Initialize scene timer
   useEffect(() => {
@@ -622,12 +674,12 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'voice-response' && scene.voicePrompt) {
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
             <p className="text-indigo-300 font-medium mb-2">Scenario:</p>
             <p className="text-gray-300">{scene.voicePrompt.scenario}</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
             <p className="text-amber-300 font-medium mb-2">Your Task:</p>
             <p className="text-gray-300">{scene.voicePrompt.prompt}</p>
           </div>
@@ -681,7 +733,7 @@ export const InteractiveSkillAssessment = () => {
 
                 {/* Transcript display */}
                 {(transcript || interimTranscript) && (
-                  <div className="w-full p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="w-full p-4 rounded-xl bg-black/80 border border-white/30">
                     <p className="text-sm text-gray-400 mb-2">Transcript:</p>
                     <p className="text-gray-300">
                       {transcript}
@@ -698,39 +750,20 @@ export const InteractiveSkillAssessment = () => {
                   </div>
                 )}
 
-                {/* Analysis results */}
+                {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
                 {voiceAnalysis && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full space-y-4"
                   >
-                    <div className="grid grid-cols-4 gap-3">
-                      {Object.entries(voiceAnalysis.scores).map(([key, value]) => (
-                        <div key={key} className="p-3 rounded-xl bg-white/5 text-center">
-                          <p className="text-2xl font-bold text-white">{value.toFixed(1)}</p>
-                          <p className="text-xs text-gray-400 capitalize">{key}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                      <p className="text-emerald-400">{voiceAnalysis.feedback}</p>
-                    </div>
-
-                    {voiceAnalysis.strengths.length > 0 && (
-                      <div className="p-3 rounded-lg bg-white/5">
-                        <p className="text-sm text-gray-400 mb-2">Strengths:</p>
-                        <ul className="space-y-1">
-                          {voiceAnalysis.strengths.map((s, i) => (
-                            <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
-                              <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                              {s}
-                            </li>
-                          ))}
-                        </ul>
+                    <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+                      <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-emerald-300 font-medium">Response recorded.</p>
+                        <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
                       </div>
-                    )}
+                    </div>
                   </motion.div>
                 )}
               </>
@@ -747,7 +780,7 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
             <p className="text-indigo-300 font-medium mb-2">Scenario:</p>
             <p className="text-gray-300">{challenge.scenario}</p>
           </div>
@@ -774,7 +807,7 @@ export const InteractiveSkillAssessment = () => {
             value={writtenResponse}
             onChange={(e) => setWrittenResponse(e.target.value)}
             placeholder={`Write your ${challenge.type} here...`}
-            className="min-h-[200px] bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+            className="min-h-[200px] bg-black/80 border-white/30 text-white placeholder:text-gray-500"
             disabled={writtenAnalysis !== null}
           />
 
@@ -798,32 +831,20 @@ export const InteractiveSkillAssessment = () => {
             </Button>
           )}
 
-          {/* Analysis results */}
+          {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
           {writtenAnalysis && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <div className="grid grid-cols-4 gap-3">
-                {Object.entries(writtenAnalysis.scores).map(([key, value]) => (
-                  <div key={key} className="p-3 rounded-xl bg-white/5 text-center">
-                    <p className="text-2xl font-bold text-white">{value.toFixed(1)}</p>
-                    <p className="text-xs text-gray-400 capitalize">{key}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                <p className="text-emerald-400">{writtenAnalysis.feedback}</p>
-              </div>
-
-              {writtenAnalysis.suggestedRevision && (
-                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                  <p className="text-sm text-amber-400 mb-2">Suggested improvement:</p>
-                  <p className="text-gray-300 italic">"{writtenAnalysis.suggestedRevision}"</p>
+              <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-emerald-300 font-medium">Response recorded.</p>
+                  <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
                 </div>
-              )}
+              </div>
             </motion.div>
           )}
         </div>
@@ -849,10 +870,10 @@ export const InteractiveSkillAssessment = () => {
             {taskOrder.map((taskId, index) => {
               const task = scene.prioritizationTasks!.find(t => t.id === taskId)!;
               const urgencyColors = {
-                critical: 'border-red-500/50 bg-red-500/10',
-                high: 'border-orange-500/50 bg-orange-500/10',
-                medium: 'border-yellow-500/50 bg-yellow-500/10',
-                low: 'border-gray-500/50 bg-gray-500/10'
+                critical: 'border-red-500/50 bg-red-500/30',
+                high: 'border-orange-500/50 bg-orange-500/30',
+                medium: 'border-yellow-500/50 bg-yellow-500/30',
+                low: 'border-gray-500/50 bg-gray-500/30'
               };
 
               return (
@@ -870,17 +891,17 @@ export const InteractiveSkillAssessment = () => {
                   }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 rounded-full bg-black/80 flex items-center justify-center text-white font-bold">
                       {index + 1}
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-white">{task.title}</p>
                       <p className="text-sm text-gray-400">{task.description}</p>
                       <div className="flex gap-2 mt-2 text-xs">
-                        <span className="px-2 py-0.5 rounded bg-white/10 text-gray-300">
+                        <span className="px-2 py-0.5 rounded bg-black/80 text-gray-300">
                           {task.deadline}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-white/10 text-gray-300">
+                        <span className="px-2 py-0.5 rounded bg-black/80 text-gray-300">
                           {task.estimatedTime}
                         </span>
                       </div>
@@ -900,9 +921,12 @@ export const InteractiveSkillAssessment = () => {
               Submit Prioritization
             </Button>
           ) : (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle className="w-6 h-6 text-emerald-400 mb-2" />
-              <p className="text-emerald-400">Prioritization submitted and analyzed!</p>
+            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-300 font-medium">Response recorded.</p>
+                <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
+              </div>
             </div>
           )}
         </div>
@@ -916,7 +940,7 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+          <div className="p-4 rounded-xl bg-purple-500/30 border border-purple-500/20">
             <p className="text-purple-300 font-medium mb-2">{rolePlay.title}</p>
             <p className="text-gray-300 text-sm">{rolePlay.context}</p>
             <p className="text-gray-400 text-sm mt-2">
@@ -946,7 +970,7 @@ export const InteractiveSkillAssessment = () => {
                       <button
                         key={option.id}
                         onClick={() => handleDialogueChoice(option)}
-                        className="w-full p-3 text-left rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-indigo-500/50 transition-all"
+                        className="w-full p-3 text-left rounded-xl bg-black/80 border border-white/30 hover:bg-black/80 hover:border-indigo-500/50 transition-all"
                       >
                         <p className="text-gray-300">{option.text}</p>
                       </button>
@@ -958,9 +982,12 @@ export const InteractiveSkillAssessment = () => {
           </div>
 
           {dialogueChoices.length >= 2 && (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle className="w-6 h-6 text-emerald-400 mb-2" />
-              <p className="text-emerald-400">Dialogue completed! Your choices have been analyzed.</p>
+            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-300 font-medium">Response recorded.</p>
+                <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
+              </div>
             </div>
           )}
         </div>
@@ -974,7 +1001,7 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
             <p className="text-amber-300 font-medium mb-2">{problem.title}</p>
             <p className="text-gray-300">{problem.initialSituation}</p>
           </div>
@@ -985,7 +1012,7 @@ export const InteractiveSkillAssessment = () => {
               key={i}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-3 rounded-lg bg-white/5 border-l-4 border-indigo-500"
+              className="p-3 rounded-lg bg-black/80 border-l-4 border-indigo-500"
             >
               <p className="text-gray-400 text-sm">{choice.consequence}</p>
             </motion.div>
@@ -999,7 +1026,7 @@ export const InteractiveSkillAssessment = () => {
                 <button
                   key={choice.id}
                   onClick={() => handleProblemChoice(choice)}
-                  className="w-full p-4 text-left rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-500/50 transition-all"
+                  className="w-full p-4 text-left rounded-xl bg-black/80 border border-white/30 hover:bg-black/80 hover:border-amber-500/50 transition-all"
                 >
                   <p className="text-gray-300">{choice.text}</p>
                 </button>
@@ -1008,9 +1035,12 @@ export const InteractiveSkillAssessment = () => {
           )}
 
           {problemChoices.length >= 1 && !currentBranchData && (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle className="w-6 h-6 text-emerald-400 mb-2" />
-              <p className="text-emerald-400">Scenario completed! Your decision path has been analyzed.</p>
+            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-300 font-medium">Response recorded.</p>
+                <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
+              </div>
             </div>
           )}
         </div>
@@ -1050,7 +1080,7 @@ export const InteractiveSkillAssessment = () => {
               <p className="text-emerald-400 text-sm">Audio completed. Answer the questions below:</p>
 
               {scene.comprehensionQuestions?.map((q, qIndex) => (
-                <div key={qIndex} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <div key={qIndex} className="p-4 rounded-xl bg-black/80 border border-white/30">
                   <p className="text-white font-medium mb-3">{qIndex + 1}. {q.question}</p>
                   <div className="space-y-2">
                     {q.options.map((option, oIndex) => (
@@ -1066,14 +1096,8 @@ export const InteractiveSkillAssessment = () => {
                         disabled={listeningSubmitted}
                         className={`w-full p-3 text-left rounded-lg transition-all ${
                           listeningAnswers[qIndex] === oIndex
-                            ? listeningSubmitted
-                              ? oIndex === q.correctIndex
-                                ? 'bg-emerald-500/20 border border-emerald-500/50'
-                                : 'bg-red-500/20 border border-red-500/50'
-                              : 'bg-indigo-500/20 border border-indigo-500/50'
-                            : listeningSubmitted && oIndex === q.correctIndex
-                              ? 'bg-emerald-500/20 border border-emerald-500/50'
-                              : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                            ? 'bg-indigo-500/20 border border-indigo-500/50'
+                            : 'bg-black/80 border border-white/30 hover:bg-black/80'
                         }`}
                       >
                         <span className="text-gray-300">{option}</span>
@@ -1104,7 +1128,7 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-slate-500/10 border border-slate-500/20">
+          <div className="p-4 rounded-xl bg-slate-500/30 border border-slate-500/20">
             <p className="text-gray-300 whitespace-pre-line">{judgment.situation}</p>
           </div>
 
@@ -1112,7 +1136,7 @@ export const InteractiveSkillAssessment = () => {
             <p className="font-medium mb-2">Stakeholders affected:</p>
             <div className="flex flex-wrap gap-2">
               {judgment.stakeholders.map((s, i) => (
-                <span key={i} className="px-2 py-1 rounded bg-white/10">{s}</span>
+                <span key={i} className="px-2 py-1 rounded bg-black/80">{s}</span>
               ))}
             </div>
           </div>
@@ -1126,7 +1150,7 @@ export const InteractiveSkillAssessment = () => {
                 className={`w-full p-4 text-left rounded-xl border transition-all ${
                   judgmentChoice === option.id
                     ? 'bg-indigo-500/20 border-indigo-500/50'
-                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    : 'bg-black/80 border-white/30 hover:bg-black/80'
                 }`}
               >
                 <p className="text-white font-medium mb-1">{option.action}</p>
@@ -1135,9 +1159,9 @@ export const InteractiveSkillAssessment = () => {
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-3 pt-3 border-t border-white/10"
+                    className="mt-3 pt-3 border-t border-white/30"
                   >
-                    <p className="text-emerald-400 text-sm">{option.feedback}</p>
+                    <p className="text-emerald-400 text-sm">Response recorded.</p>
                   </motion.div>
                 )}
               </button>
@@ -1153,7 +1177,7 @@ export const InteractiveSkillAssessment = () => {
         <div className="space-y-6">
           <p className="text-gray-300">{scene.content}</p>
 
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
             <p className="text-amber-300">Scenario:</p>
             <p className="text-gray-300 mt-2">
               You've finished your assigned work early. Your teammate is visibly struggling with their task.
@@ -1174,7 +1198,7 @@ export const InteractiveSkillAssessment = () => {
             value={quickResponse}
             onChange={(e) => setQuickResponse(e.target.value)}
             placeholder="Type your response quickly..."
-            className="min-h-[120px] bg-white/5 border-white/10 text-white"
+            className="min-h-[120px] bg-black/80 border-white/30 text-white"
             disabled={quickResponseSubmitted}
           />
 
@@ -1188,9 +1212,12 @@ export const InteractiveSkillAssessment = () => {
               Submit Response
             </Button>
           ) : (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle className="w-6 h-6 text-emerald-400 mb-2" />
-              <p className="text-emerald-400">Response analyzed for initiative!</p>
+            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-300 font-medium">Response recorded.</p>
+                <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
+              </div>
             </div>
           )}
         </div>
@@ -1201,7 +1228,12 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'review') {
       return (
         <div className="space-y-6">
-          <p className="text-gray-300">{scene.content}</p>
+          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+            <p className="text-indigo-300 font-medium text-sm mb-1">L1 Session AI Observation Notes</p>
+            <p className="text-gray-400 text-sm">
+              These are auto-generated AI observation notes from your session. Your mentor will review, add their own notes, and share feedback with you directly.
+            </p>
+          </div>
 
           {/* Radar Chart */}
           <div className="h-64 w-full">
@@ -1228,7 +1260,7 @@ export const InteractiveSkillAssessment = () => {
               const IconComponent = DimensionIcons[dim.icon] || Star;
 
               return (
-                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
                   <div className={`p-1.5 rounded-lg bg-gradient-to-br ${dim.color}`}>
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
@@ -1247,7 +1279,7 @@ export const InteractiveSkillAssessment = () => {
           </div>
 
           {/* Evidence count */}
-          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
             <p className="text-indigo-400 text-sm">
               <strong>{challengeResults.length}</strong> skill demonstrations captured as evidence for mentor review.
             </p>
@@ -1260,22 +1292,27 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'completion') {
       return (
         <div className="text-center py-8">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-6">
-            <Award className="w-12 h-12 text-white" />
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-12 h-12 text-white" />
           </div>
 
-          <div className="prose prose-invert max-w-md mx-auto mb-8">
-            {scene.content.split('\n').map((line, i) => (
-              line.trim() ? <p key={i} className="text-gray-300">{line}</p> : null
-            ))}
-          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Session Recorded.</h2>
+          <p className="text-gray-400 max-w-md mx-auto mb-2">
+            Scenario complete — your mentor will review.
+          </p>
+          <p className="text-gray-500 text-sm max-w-md mx-auto mb-8">
+            Your behavioral evidence has been logged. No re-attempts are available — your mentor will be in touch with next steps.
+          </p>
 
           <Button
-            onClick={() => navigate('/dashboard/candidate/assessment')}
+            onClick={async () => {
+              if (sessionId) await completeObservationSession(sessionId);
+              navigate('/dashboard/candidate/assessment');
+            }}
             className="bg-indigo-600 hover:bg-indigo-500"
           >
             <CheckCircle className="w-4 h-4 mr-2" />
-            Complete Assessment
+            Return to Observation Pathway
           </Button>
         </div>
       );
@@ -1316,9 +1353,77 @@ export const InteractiveSkillAssessment = () => {
     }
   };
 
+  // ── Build Rule 9 — Cooldown blocking screens ─────────────────────
+  // Loading: checking cooldown status
+  if (isCheckingCooldown) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" />
+          <p className="text-gray-400">Checking session eligibility...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Blocked: cooldown is active
+  if (cooldownStatus && !cooldownStatus.allowed) {
+    const endsAt = cooldownStatus.cooldownEndsAt;
+    const dateStr = endsAt
+      ? endsAt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+      : '';
+
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-white/5">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/dashboard/candidate/assessment')}
+              className="text-gray-400 hover:text-white hover:bg-black/80"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+            <h1 className="font-semibold text-lg text-white">L1 Observation Session</h1>
+          </div>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center">
+            <div className="w-20 h-20 rounded-full bg-amber-500/30 border border-amber-500/20 flex items-center justify-center mx-auto mb-6">
+              <Clock className="w-10 h-10 text-amber-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">Session Closed</h2>
+            <p className="text-gray-400 mb-2">
+              You have recently completed an L1 Observation Session.
+            </p>
+            <p className="text-gray-400 mb-6">
+              Next session available:{' '}
+              <span className="text-white font-medium">{dateStr}</span>
+              {cooldownStatus.daysRemaining && cooldownStatus.daysRemaining > 1 && (
+                <span className="text-gray-500"> ({cooldownStatus.daysRemaining} days)</span>
+              )}
+            </p>
+            <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20 mb-6 text-left">
+              <p className="text-indigo-300 text-sm font-medium mb-1">What happens next?</p>
+              <p className="text-gray-400 text-sm">
+                Your mentor will review your session evidence and be in touch with feedback and next steps before your next observation window opens.
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate('/dashboard/candidate/assessment')}
+              className="bg-indigo-600 hover:bg-indigo-500"
+            >
+              Return to Observation Pathway
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)`
@@ -1334,19 +1439,19 @@ export const InteractiveSkillAssessment = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-white/10 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-white/10 hidden md:block" />
+              <div className="h-8 w-px bg-black/80 hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
-                <h1 className="hidden md:block font-semibold text-lg text-white">Skill Assessment</h1>
+                <h1 className="hidden md:block font-semibold text-lg text-white">L1 Observation Session</h1>
                 {/* Mobile: Truncated title */}
-                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="Skill Assessment">
-                  Skill Test
+                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="L1 Observation Session">
+                  L1 Session
                 </h1>
-                <p className="text-xs md:text-sm text-gray-500 truncate">Interactive Challenges</p>
+                <p className="text-xs md:text-sm text-gray-500 truncate">T3A Observation Protocol</p>
               </div>
             </div>
             <div className="flex items-center gap-2 md:gap-4">
@@ -1354,20 +1459,20 @@ export const InteractiveSkillAssessment = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMuted(!isMuted)}
-                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10 hidden md:flex`}
+                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80 hidden md:flex`}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </Button>
               {/* Desktop: Horizontal badge */}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
                 <Target className="w-4 h-4 text-indigo-400" />
                 <span className="text-indigo-400 font-semibold">{challengeResults.length}</span>
-                <span className="text-indigo-400/50">challenges</span>
+                <span className="text-indigo-400/50">scenarios observed</span>
               </div>
               {/* Mobile: Compact badge */}
-              <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+              <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
                 <Target className="w-3 h-3 text-indigo-400" />
-                <span className="text-indigo-400 font-semibold text-xs">{challengeResults.length} done</span>
+                <span className="text-indigo-400 font-semibold text-xs">{challengeResults.length} observed</span>
               </div>
             </div>
           </div>
@@ -1396,12 +1501,12 @@ export const InteractiveSkillAssessment = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm shadow-2xl"
+                className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden backdrop-blur-sm shadow-2xl"
               >
                 {/* Scene header */}
                 <div className="px-8 pt-8 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-xl bg-white/5">
+                    <div className="p-2 rounded-xl bg-black/80">
                       {getSceneIcon()}
                     </div>
                     <span className="text-sm text-gray-400 capitalize font-medium">
@@ -1440,7 +1545,7 @@ export const InteractiveSkillAssessment = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black/80 disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

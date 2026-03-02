@@ -10,8 +10,11 @@ import {
   Shield,
   Building2,
   ArrowRight,
-  Star,
-  Clock
+  TrendingUp,
+  Clock,
+  Zap,
+  Target,
+  Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -35,87 +38,101 @@ const itemVariants = {
 
 const benefits = [
   {
-    icon: Users,
-    title: "Mentor-Vetted Candidates",
-    description: "Every candidate has been observed by experienced professionals. No self-assessments or AI-generated credentials.",
+    icon: Shield,
+    title: "Pre-Validated Talent",
+    description: "Every candidate has been rigorously assessed by experienced industry mentors—no guesswork, no resume inflation.",
   },
   {
     icon: Award,
-    title: "Evidence-Based Profiles",
-    description: "See actual behavioral evidence, not just resume keywords. Each Skill Passport links to real observations and outcomes.",
+    title: "Evidence-Based Credentials",
+    description: "Access detailed behavioral profiles backed by real observations, project work, and mentor endorsements.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Reduced Turnover",
+    description: "Behavioral screening reduces bad hires by up to 60%, saving your organization time and recruitment costs.",
   },
   {
     icon: BarChart3,
-    title: "Outcome Tracking",
-    description: "Your 30/60/90-day feedback improves the system. Better candidates over time, calibrated to your actual needs.",
+    title: "Continuous Intelligence",
+    description: "Your hiring feedback improves our algorithm, delivering increasingly better-matched candidates over time.",
   },
-  {
-    icon: Shield,
-    title: "TalentVisa Premium Access",
-    description: "Access the top <5% of candidates with exceptional behavioral performance. Rare, conditional, and verified.",
-  },
+];
+
+const stats = [
+  { value: "60%", label: "Reduction in Bad Hires" },
+  { value: "10K+", label: "Verified Candidates" },
+  { value: "500+", label: "Hiring Partners" },
+  { value: "4.8/5", label: "Employer Satisfaction" },
 ];
 
 const tiers = [
   {
-    name: "Standard",
-    description: "Access Skill Passport holders",
+    name: "Starter",
+    description: "Perfect for small teams testing the platform",
     price: "Free",
     features: [
-      "Browse candidate listings",
-      "View behavioral scores",
-      "Send connection requests",
-      "Basic search filters",
-      "Hiring confirmation",
+      "Browse up to 50 candidate profiles/month",
+      "Basic behavioral score visibility",
+      "Standard search filters",
+      "5 connection requests/month",
+      "Email support",
     ],
-    cta: "Get Started",
+    cta: "Start Free",
+    href: "/join",
     popular: false,
   },
   {
-    name: "Premium",
-    description: "Full platform access",
-    price: "$499",
+    name: "Professional",
+    description: "For growing teams hiring regularly",
+    price: "$799",
     period: "/month",
     features: [
-      "Everything in Standard",
-      "TalentVisa candidate access",
-      "Advanced search & filters",
-      "Priority connection requests",
+      "Unlimited candidate browsing",
+      "Advanced behavioral insights & analytics",
+      "TalentVisa premium candidate access",
+      "Unlimited connection requests",
+      "Priority candidate responses",
       "Dedicated account manager",
-      "API access",
+      "API integration access",
     ],
-    cta: "Contact Sales",
+    cta: "Get Started",
+    href: "/contact",
     popular: true,
   },
   {
     name: "Enterprise",
-    description: "Custom solutions",
+    description: "Custom solutions for large organizations",
     price: "Custom",
     features: [
-      "Everything in Premium",
-      "Custom integrations",
-      "Bulk hiring tools",
-      "White-label options",
-      "On-site training",
-      "SLA guarantees",
+      "Everything in Professional",
+      "White-label platform options",
+      "Custom behavioral assessments",
+      "Bulk hiring workflows",
+      "On-site mentor training",
+      "SLA with 99.9% uptime guarantee",
+      "Dedicated success team",
     ],
     cta: "Contact Sales",
+    href: "/contact",
     popular: false,
   },
 ];
 
 const testimonials = [
   {
-    quote: "The quality of candidates from T3X is remarkable. The behavioral evidence gives us confidence before we even interview.",
-    author: "Sarah Chen",
-    role: "VP of Talent",
-    company: "TechCorp Inc.",
+    quote: "We've slashed our time-to-hire by 40% and virtually eliminated first-year turnover. The behavioral data is a game-changer.",
+    author: "Sarah Mitchell",
+    role: "Chief People Officer",
+    company: "Vertex Technologies",
+    rating: 5,
   },
   {
-    quote: "We've reduced our bad-hire rate by 60% since switching to T3X. The mentor-gated process actually works.",
-    author: "Marcus Johnson",
-    role: "Head of HR",
-    company: "Growth Dynamics",
+    quote: "The quality of T3X candidates is unmatched. These aren't just skilled workers—they're workplace-ready professionals who integrate seamlessly.",
+    author: "David Chen",
+    role: "VP of Talent Acquisition",
+    company: "Quantum Dynamics",
+    rating: 5,
   },
 ];
 
@@ -146,9 +163,9 @@ const Employers = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
+            <div className="max-w-4xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-gray-100 mb-6"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-white mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -157,27 +174,27 @@ const Employers = () => {
                 T3X Talent Exchange
               </motion.div>
               <motion.h1
-                className="text-3xl md:text-4xl font-display font-normal mb-6"
+                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
-                  Hire with Confidence.
+                  Hire Smarter.
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Evidence, Not Guesswork.
+                  Scale Faster.
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-100 mb-10"
+                className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                Access pre-validated candidates with proven behavioral readiness.
-                Every listing backed by mentor observations, not self-reported skills.
+                Access a curated marketplace of pre-validated, workplace-ready candidates.
+                Every profile backed by mentor observations and behavioral evidence—not just resumes.
               </motion.p>
               <motion.div
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
@@ -186,44 +203,68 @@ const Employers = () => {
                 transition={{ delay: 0.5 }}
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-8">
-                    Start Hiring
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold shadow-2xl" asChild>
+                    <Link to="/join">
+                      Start Hiring Today
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
                   </Button>
                 </motion.div>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10">
-                  See Demo
+                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-10 py-6 text-base" asChild>
+                  <Link to="/contact">
+                    <Clock className="mr-2 h-5 w-5" />
+                    Schedule Demo
+                  </Link>
                 </Button>
               </motion.div>
             </div>
           </div>
         </motion.section>
 
-        {/* Benefits */}
-        <section className="py-16 md:py-24 bg-black">
+        {/* Stats */}
+        <section className="py-12 bg-black/40 backdrop-blur-sm border-y border-white/10">
           <div className="container px-4 md:px-6">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-16"
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-                Why T3X
+              {stats.map((stat, index) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-white">{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Benefits */}
+        <section className="py-20 md:py-28 bg-black">
+          <div className="container px-4 md:px-6">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                Why Leading Companies Choose T3X
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="text-white">
-                  Hiring That Actually Works
-                </span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                The Future of Talent Acquisition
               </h2>
-              <p className="text-lg text-gray-100">
-                Traditional hiring relies on resumes and interviews. We provide
-                sustained behavioral evidence from mentor observation.
+              <p className="text-lg text-white max-w-2xl mx-auto">
+                Traditional hiring relies on resumes and gut feelings. We deliver
+                data-backed insights from real-world behavioral validation.
               </p>
             </motion.div>
 
             <motion.div
-              className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+              className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -235,17 +276,16 @@ const Employers = () => {
                   variants={itemVariants}
                   className="group relative"
                 >
-                  {/* Glow effect */}
-                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                  <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
-                      <benefit.icon className="w-6 h-6 text-indigo-400" />
+                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-600/30">
+                      <benefit.icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-2xl font-bold text-white mb-3">
                       {benefit.title}
                     </h3>
-                    <p className="text-gray-100 leading-relaxed">
+                    <p className="text-white leading-relaxed text-base">
                       {benefit.description}
                     </p>
                   </div>
@@ -256,7 +296,7 @@ const Employers = () => {
         </section>
 
         {/* How It Works */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
+        <section className="py-20 md:py-28 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
           <motion.div
             className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-900/30 rounded-full blur-3xl"
@@ -266,43 +306,46 @@ const Employers = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-16"
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-                How It Works
+              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                Simple & Streamlined
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="text-white">
-                  Your Hiring Process
-                </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white">
+                Your Hiring Journey
               </h2>
             </motion.div>
 
             <motion.div
-              className="max-w-4xl mx-auto"
+              className="max-w-5xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="grid md:grid-cols-4 gap-6">
+              <div className="grid md:grid-cols-4 gap-8">
                 {[
-                  { step: "1", title: "Search", desc: "Filter by skills, experience, and readiness tier" },
-                  { step: "2", title: "Review", desc: "View Skill Passport evidence and mentor endorsements" },
-                  { step: "3", title: "Connect", desc: "Send connection requests to candidates" },
-                  { step: "4", title: "Hire", desc: "Confirm hire and provide 30/60/90-day feedback" },
+                  { step: "1", icon: Target, title: "Search & Filter", desc: "Use advanced filters to find candidates matching your exact requirements" },
+                  { step: "2", icon: Award, title: "Review Evidence", desc: "Explore detailed Skill Passports with mentor endorsements and behavioral data" },
+                  { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
+                  { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
                 ].map((item, index) => (
                   <motion.div key={item.step} variants={itemVariants} className="relative text-center">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center text-lg font-bold mx-auto mb-4 shadow-lg shadow-indigo-600/30">
-                      {item.step}
+                    <div className="relative mb-6">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/30">
+                        <item.icon className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                        {item.step}
+                      </div>
                     </div>
-                    <h3 className="font-semibold text-white mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-100">{item.desc}</p>
+                    <h3 className="font-bold text-white mb-3 text-lg">{item.title}</h3>
+                    <p className="text-sm text-white leading-relaxed">{item.desc}</p>
                     {index < 3 && (
-                      <div className="hidden md:block absolute top-6 left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
+                      <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
                   </motion.div>
                 ))}
@@ -312,26 +355,27 @@ const Employers = () => {
         </section>
 
         {/* Pricing */}
-        <section className="py-16 md:py-24 bg-black">
+        <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-16"
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-                Pricing
+              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                Transparent Pricing
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="text-white">
-                  Plans for Every Organization
-                </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Plans That Scale With You
               </h2>
+              <p className="text-lg text-white">
+                Start free, upgrade when ready. No hidden fees, cancel anytime.
+              </p>
             </motion.div>
 
             <motion.div
-              className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -343,60 +387,64 @@ const Employers = () => {
                   variants={itemVariants}
                   className="group relative"
                 >
-                  {/* Glow effect */}
                   {tier.popular && (
-                    <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
+                    <div className="absolute -inset-2 rounded-3xl opacity-40 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
                   )}
 
                   <div className={cn(
-                    "relative p-8 rounded-2xl border transition-all duration-300",
+                    "relative p-8 rounded-2xl border transition-all duration-300 h-full flex flex-col",
                     tier.popular
-                      ? "border-indigo-500/50 bg-white/10 backdrop-blur-xl"
-                      : "border-white/10 bg-white/5 backdrop-blur-xl hover:border-white/20"
+                      ? "border-indigo-500/60 bg-black/90 backdrop-blur-xl"
+                      : "border-white/30 bg-black/80 backdrop-blur-xl hover:border-white/50"
                   )}>
                     {tier.popular && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="px-4 py-1 text-xs font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
-                          Most Popular
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                        <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg">
+                          MOST POPULAR
                         </span>
                       </div>
                     )}
 
-                    <h3 className="text-xl font-semibold text-white mb-2">
-                      {tier.name}
-                    </h3>
-                    <p className="text-gray-100 mb-6">
-                      {tier.description}
-                    </p>
-
                     <div className="mb-6">
-                      <span className="text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{tier.price}</span>
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        {tier.name}
+                      </h3>
+                      <p className="text-white/80 text-sm">
+                        {tier.description}
+                      </p>
+                    </div>
+
+                    <div className="mb-8">
+                      <span className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        {tier.price}
+                      </span>
                       {tier.period && (
-                        <span className="text-gray-100">{tier.period}</span>
+                        <span className="text-white/70 text-lg">{tier.period}</span>
                       )}
                     </div>
 
-                    <ul className="space-y-3 mb-8">
+                    <ul className="space-y-4 mb-8 flex-grow">
                       {tier.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-3 text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                          <span className="text-gray-100">{feature}</span>
+                        <li key={feature} className="flex items-start gap-3">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-white text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
 
                     <Button
                       className={cn(
-                        "w-full",
+                        "w-full text-base font-semibold py-6",
                         tier.popular
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-                          : "border-white/20 text-white hover:bg-white/10"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
+                          : "border-white/30 text-white hover:bg-white/10"
                       )}
                       variant={tier.popular ? "default" : "outline"}
                       asChild
                     >
-                      <Link to={tier.cta === "Get Started" ? "/join" : "/contact"}>
+                      <Link to={tier.href}>
                         {tier.cta}
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -407,7 +455,7 @@ const Employers = () => {
         </section>
 
         {/* Testimonials */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
+        <section className="py-20 md:py-28 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
@@ -417,20 +465,23 @@ const Employers = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-12"
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  What Employers Say
+                  Trusted by Industry Leaders
                 </span>
               </h2>
+              <p className="text-lg text-white">
+                See what hiring professionals are saying about T3X
+              </p>
             </motion.div>
 
             <motion.div
-              className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+              className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -442,22 +493,27 @@ const Employers = () => {
                   variants={itemVariants}
                   className="group relative"
                 >
-                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                  <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
+                    <div className="flex gap-1 mb-6">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <blockquote className="text-lg text-gray-100 mb-6 leading-relaxed">
+                    <blockquote className="text-lg text-white mb-6 leading-relaxed">
                       "{testimonial.quote}"
                     </blockquote>
-                    <div>
-                      <p className="font-semibold text-white">{testimonial.author}</p>
-                      <p className="text-sm text-gray-100">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                        {testimonial.author.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <p className="font-bold text-white">{testimonial.author}</p>
+                        <p className="text-sm text-white/70">
+                          {testimonial.role}, {testimonial.company}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -475,14 +531,14 @@ const Employers = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
             <motion.h2
-              className="text-4xl md:text-5xl font-bold mb-6"
+              className="text-5xl md:text-6xl font-bold mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -492,17 +548,17 @@ const Employers = () => {
               </span>
               <br />
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Your Hiring?
+                Your Hiring Process?
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-100 max-w-2xl mx-auto mb-10"
+              className="text-xl text-white max-w-2xl mx-auto mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              Join leading companies who trust T3X for evidence-based hiring decisions.
+              Join 500+ companies hiring smarter with evidence-based talent validation.
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
@@ -512,14 +568,18 @@ const Employers = () => {
               transition={{ delay: 0.2 }}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl">
-                  Start Free Trial
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>
+                  <Link to="/join">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
                 </Button>
               </motion.div>
-              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                <Clock className="mr-2 h-4 w-4" />
-                Schedule Demo
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-12 py-7 rounded-xl text-lg" asChild>
+                <Link to="/contact">
+                  <Clock className="mr-2 h-5 w-5" />
+                  Schedule Demo
+                </Link>
               </Button>
             </motion.div>
           </div>

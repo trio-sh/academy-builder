@@ -95,16 +95,23 @@ type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
 type MentorAssignment = Database["public"]["Tables"]["mentor_assignments"]["Row"];
 type SelfAssessment = Database["public"]["Tables"]["candidate_self_assessments"]["Row"];
 
-// Behavioral dimensions for display
+// T3A 14 Behavioral Dimensions — locked framework (February 2026)
+// MVP: top 5 active for initial launch; dimensions 6–14 post-launch
 const BEHAVIORAL_DIMENSIONS = [
-  { id: "communication", label: "Communication", color: "from-blue-500 to-cyan-500" },
-  { id: "problem_solving", label: "Problem Solving", color: "from-purple-500 to-pink-500" },
-  { id: "adaptability", label: "Adaptability", color: "from-amber-500 to-orange-500" },
-  { id: "collaboration", label: "Collaboration", color: "from-emerald-500 to-teal-500" },
-  { id: "initiative", label: "Initiative", color: "from-red-500 to-rose-500" },
-  { id: "time_management", label: "Time Management", color: "from-indigo-500 to-violet-500" },
-  { id: "professionalism", label: "Professionalism", color: "from-sky-500 to-blue-500" },
-  { id: "learning_agility", label: "Learning Agility", color: "from-lime-500 to-green-500" },
+  { id: "integrity_ethics", label: "Integrity & Ethics", color: "from-emerald-500 to-teal-500" },
+  { id: "accountability_ownership", label: "Accountability & Ownership", color: "from-blue-500 to-indigo-500" },
+  { id: "execution_reliability", label: "Execution Reliability", color: "from-violet-500 to-purple-500" },
+  { id: "communication_pressure", label: "Communication Under Pressure", color: "from-sky-500 to-blue-500" },
+  { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution", color: "from-pink-500 to-rose-500" },
+  { id: "workplace_adaptability", label: "Workplace Adaptability", color: "from-amber-500 to-orange-500" },
+  { id: "prioritization_time", label: "Prioritization & Time Management", color: "from-lime-500 to-green-500" },
+  { id: "resilience_recovery", label: "Resilience & Recovery", color: "from-red-500 to-rose-500" },
+  { id: "learning_agility", label: "Learning Agility", color: "from-cyan-500 to-sky-500" },
+  { id: "professional_boundaries", label: "Professional Boundaries", color: "from-slate-500 to-gray-500" },
+  { id: "creative_problem_solving", label: "Creative Problem-Solving", color: "from-yellow-500 to-amber-500" },
+  { id: "customer_service_focus", label: "Customer & Service Focus", color: "from-teal-500 to-cyan-500" },
+  { id: "influence_persuasion", label: "Influence & Persuasion", color: "from-fuchsia-500 to-pink-500" },
+  { id: "relationship_building", label: "Relationship Building", color: "from-indigo-500 to-violet-500" },
 ];
 
 const containerVariants = {
@@ -121,18 +128,18 @@ const itemVariants = {
 };
 
 const navItems = [
-  { name: "Overview", href: "/dashboard/candidate", icon: BarChart3 },
-  { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award },
-  { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp },
-  { name: "Self Assessment", href: "/dashboard/candidate/assessment", icon: ClipboardCheck },
-  { name: "Training", href: "/dashboard/candidate/training", icon: BookOpen },
-  { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase },
-  { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap },
-  { name: "Connections", href: "/dashboard/candidate/connections", icon: Users },
-  { name: "Messages", href: "/dashboard/candidate/messages", icon: MessageSquare },
-  { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell },
-  { name: "Profile", href: "/dashboard/candidate/profile", icon: User },
-  { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings },
+  { name: "Overview", href: "/dashboard/candidate", icon: BarChart3, section: "observation" },
+  { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
+  { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
+  { name: "Observation Pathway", href: "/dashboard/candidate/assessment", icon: ClipboardCheck, section: "observation" },
+  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "bridgefast" },
+  { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase, section: "liveworks" },
+  { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap, section: "account" },
+  { name: "Connections", href: "/dashboard/candidate/connections", icon: Users, section: "account" },
+  { name: "Messages", href: "/dashboard/candidate/messages", icon: MessageSquare, section: "account" },
+  { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell, section: "account" },
+  { name: "Profile", href: "/dashboard/candidate/profile", icon: User, section: "account" },
+  { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings, section: "account" },
 ];
 
 // Overview component with real data
@@ -308,7 +315,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity" />
             <div className="relative">
@@ -330,12 +337,12 @@ const Overview = () => {
             <Link
               key={index}
               to={step.href}
-              className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 step.completed
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-white/10 text-gray-400"
+                  : "bg-black/80 text-gray-400"
               }`}>
                 {step.completed ? (
                   <CheckCircle className="w-5 h-5" />
@@ -367,7 +374,7 @@ const Overview = () => {
               return (
                 <div
                   key={entry.id}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10"
+                  className="flex items-start gap-4 p-4 rounded-xl bg-black/80 border border-white/30"
                 >
                   <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
                     <Icon className="w-5 h-5 text-indigo-400" />
@@ -391,7 +398,7 @@ const Overview = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
             <AlertCircle className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No recent activity</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -733,7 +740,7 @@ const SkillPassport = () => {
 
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 text-center"
+          className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 border border-indigo-500/20 text-center"
         >
           <div className="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
             <Shield className="w-10 h-10 text-indigo-400" />
@@ -788,7 +795,7 @@ const SkillPassport = () => {
             ].map((item) => (
               <div
                 key={item.step}
-                className="p-6 rounded-xl bg-white/5 border border-white/10"
+                className="p-6 rounded-xl bg-black/80 border border-white/30"
               >
                 <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold mb-4">
                   {item.step}
@@ -822,7 +829,7 @@ const SkillPassport = () => {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-white/20 text-white hover:bg-black/80"
             onClick={sharePassport}
           >
             <Share2 className="w-4 h-4 mr-2" />
@@ -830,7 +837,7 @@ const SkillPassport = () => {
           </Button>
           <Button
             variant="outline"
-            className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+            className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30"
             onClick={downloadPDF}
           >
             <Download className="w-4 h-4 mr-2" />
@@ -842,7 +849,7 @@ const SkillPassport = () => {
       {/* Passport Card */}
       <motion.div
         variants={itemVariants}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10 border border-emerald-500/30"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/30 via-teal-500/30 to-cyan-500/30 border border-emerald-500/30"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -908,7 +915,7 @@ const SkillPassport = () => {
                 size="sm"
                 variant="outline"
                 onClick={copyVerificationCode}
-                className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30"
               >
                 <Copy className="w-4 h-4 mr-1" />
                 {copied ? "Copied!" : "Copy"}
@@ -939,13 +946,13 @@ const SkillPassport = () => {
             return (
               <div
                 key={dimension.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10"
+                className="p-4 rounded-xl bg-black/80 border border-white/30"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-white">{dimension.label}</span>
                   <span className="text-lg font-bold text-white">{score.toFixed(1)}/5</span>
                 </div>
-                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-2 bg-black/80 rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -959,10 +966,10 @@ const SkillPassport = () => {
 
       {/* Average Score */}
       <motion.div variants={itemVariants}>
-        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/20">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 mb-1">Overall Behavioral Score</p>
+              <p className="text-gray-400 mb-1">Behavioral Evidence Summary</p>
               <p className="text-3xl font-bold text-white">
                 {Object.values(behavioralScores).length > 0
                   ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
@@ -978,7 +985,7 @@ const SkillPassport = () => {
 
       {/* Verification Info */}
       <motion.div variants={itemVariants}>
-        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-emerald-400" />
             <p className="text-sm text-gray-400">
@@ -1178,21 +1185,21 @@ const GrowthLog = () => {
 
       {/* Stats Overview */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
           <p className="text-sm text-gray-400 mb-1">Total Activities</p>
           <p className="text-2xl font-bold text-white">{entries.length}</p>
         </div>
-        <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border border-emerald-500/20">
           <p className="text-sm text-gray-400 mb-1">This Week</p>
           <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
         </div>
-        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20">
           <p className="text-sm text-gray-400 mb-1">Growth Rate</p>
           <p className={`text-2xl font-bold ${growthStats.growthRate >= 0 ? "text-emerald-400" : "text-red-400"}`}>
             {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
           </p>
         </div>
-        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 border border-amber-500/20">
           <p className="text-sm text-gray-400 mb-1">Event Types</p>
           <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
         </div>
@@ -1201,7 +1208,7 @@ const GrowthLog = () => {
       {viewMode === "charts" && (
         <>
           {/* Activity Trends Chart */}
-          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
             <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -1246,7 +1253,7 @@ const GrowthLog = () => {
 
           {/* Behavioral Dimensions Radar */}
           <div className="grid md:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1282,7 +1289,7 @@ const GrowthLog = () => {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
               <div className="space-y-3">
                 {eventDistribution.map((item) => {
@@ -1294,7 +1301,7 @@ const GrowthLog = () => {
                         <span className="text-gray-400">{item.type}</span>
                         <span className="text-white font-medium">{item.count}</span>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-2 bg-black/80 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
@@ -1335,7 +1342,7 @@ const GrowthLog = () => {
                         <Icon className="w-5 h-5 text-white" />
                       </div>
 
-                      <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                      <div className="p-5 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-white">{entry.title}</h3>
                           <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
@@ -1350,7 +1357,7 @@ const GrowthLog = () => {
                           <p className="text-sm text-gray-400">{entry.description}</p>
                         )}
                         {entry.source_component && (
-                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-white/10 text-gray-400">
+                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-black/80 text-gray-400">
                             {entry.source_component}
                           </span>
                         )}
@@ -1363,7 +1370,7 @@ const GrowthLog = () => {
           ) : (
             <motion.div
               variants={itemVariants}
-              className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+              className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
             >
               <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400">No entries yet</p>
@@ -1422,47 +1429,77 @@ const QUIZ_QUESTIONS: Record<string, { question: string; options: string[]; corr
   ],
 };
 
-// Self Assessment Tool descriptions
+// Observation Readiness Check — dimension descriptions (T3A 14 Behavioral Dimensions, MVP top 5)
 const ASSESSMENT_DESCRIPTIONS: Record<string, { title: string; description: string; examples: string[] }> = {
-  communication: {
-    title: "Communication",
-    description: "Your ability to express ideas clearly, listen actively, and adapt your message to different audiences.",
-    examples: ["Written and verbal communication", "Active listening", "Presentation skills", "Giving and receiving feedback"],
+  integrity_ethics: {
+    title: "Integrity & Ethics",
+    description: "Acting with honesty, maintaining trust, and navigating ethical grey areas under pressure.",
+    examples: ["Honesty under pressure", "Reporting misconduct", "Navigating conflicts of interest", "Maintaining trust"],
   },
-  problem_solving: {
-    title: "Problem Solving",
-    description: "Your approach to analyzing issues, identifying root causes, and developing creative solutions.",
-    examples: ["Analytical thinking", "Creative solutions", "Root cause analysis", "Decision making"],
+  accountability_ownership: {
+    title: "Accountability & Ownership",
+    description: "Taking full responsibility for outcomes and following through on commitments without excuses.",
+    examples: ["Owning mistakes", "Following through on promises", "Transparent communication", "Not shifting blame"],
   },
-  adaptability: {
-    title: "Adaptability",
-    description: "Your flexibility in responding to change and ability to thrive in dynamic environments.",
-    examples: ["Embracing change", "Learning new technologies", "Adjusting to new situations", "Resilience"],
+  execution_reliability: {
+    title: "Execution Reliability",
+    description: "Delivering consistent, quality work on time without constant supervision.",
+    examples: ["Meeting deadlines", "Quality output under pressure", "Self-managed delivery", "Consistent performance"],
   },
-  collaboration: {
-    title: "Collaboration",
-    description: "Your effectiveness in working with others, contributing to team goals, and building relationships.",
-    examples: ["Team participation", "Conflict resolution", "Supporting colleagues", "Cross-functional work"],
+  communication_pressure: {
+    title: "Communication Under Pressure",
+    description: "Delivering clear, timely messages with appropriate tone when stakes are high.",
+    examples: ["Calm messaging in conflict", "Clear written communication", "Tone under stress", "Active listening"],
   },
-  initiative: {
-    title: "Initiative",
-    description: "Your tendency to take proactive action, seek opportunities, and drive improvements.",
-    examples: ["Proactive behavior", "Self-starting", "Identifying opportunities", "Going beyond requirements"],
+  collaboration_conflict: {
+    title: "Collaboration & Conflict Resolution",
+    description: "Working effectively with diverse teams and navigating disagreements productively.",
+    examples: ["Navigating team conflict", "Building consensus", "Supporting colleagues", "Cross-functional work"],
   },
-  time_management: {
-    title: "Time Management",
-    description: "Your ability to prioritize tasks, meet deadlines, and efficiently manage your workload.",
-    examples: ["Prioritization", "Meeting deadlines", "Planning ahead", "Managing multiple tasks"],
+  workplace_adaptability: {
+    title: "Workplace Adaptability",
+    description: "Reading situations, adjusting behavior appropriately, and navigating organizational culture.",
+    examples: ["Adjusting to new environments", "Reading the room", "Cultural sensitivity", "Flexible problem-solving"],
   },
-  professionalism: {
-    title: "Professionalism",
-    description: "Your conduct, ethics, and reliability in professional settings.",
-    examples: ["Reliability", "Workplace etiquette", "Accountability", "Ethical behavior"],
+  prioritization_time: {
+    title: "Prioritization & Time Management",
+    description: "Managing competing demands and making sound decisions under deadline pressure.",
+    examples: ["Prioritizing under pressure", "Managing multiple tasks", "Meeting deadlines", "Clear decision-making"],
+  },
+  resilience_recovery: {
+    title: "Resilience & Recovery",
+    description: "Bouncing back from setbacks and maintaining composure through failure and rejection.",
+    examples: ["Handling rejection", "Recovering from failure", "Composure under pressure", "Sustained performance"],
   },
   learning_agility: {
     title: "Learning Agility",
-    description: "Your ability to learn quickly from experience and apply knowledge to new situations.",
-    examples: ["Quick learning", "Applying lessons", "Curiosity", "Continuous improvement"],
+    description: "Receiving and applying feedback without defensiveness; proactively acquiring new knowledge.",
+    examples: ["Applying feedback", "Self-directed learning", "Curiosity and openness", "Adapting quickly"],
+  },
+  professional_boundaries: {
+    title: "Professional Boundaries",
+    description: "Maintaining appropriate workplace relationships and navigating social dynamics professionally.",
+    examples: ["Appropriate humor", "Confidentiality", "Relationship limits", "Workplace conduct"],
+  },
+  creative_problem_solving: {
+    title: "Creative Problem-Solving",
+    description: "Finding resourceful solutions when standard approaches don't work.",
+    examples: ["Improvising under constraints", "Innovative thinking", "Lateral approaches", "Resource creativity"],
+  },
+  customer_service_focus: {
+    title: "Customer & Service Focus",
+    description: "Prioritizing stakeholder needs and delivering service with genuine care.",
+    examples: ["Stakeholder empathy", "Service under pressure", "Going beyond requirements", "Following through"],
+  },
+  influence_persuasion: {
+    title: "Influence & Persuasion",
+    description: "Gaining cooperation and buy-in without formal authority.",
+    examples: ["Influencing peers", "Building buy-in", "Negotiating without authority", "Motivating others"],
+  },
+  relationship_building: {
+    title: "Relationship Building",
+    description: "Developing and maintaining professional networks that create mutual value.",
+    examples: ["Building trust", "Networking authentically", "Long-term relationship maintenance", "Mutual value creation"],
   },
 };
 
@@ -1472,14 +1509,20 @@ const SelfAssessmentPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [assessments, setAssessments] = useState<SelfAssessment[]>([]);
   const [currentScores, setCurrentScores] = useState<Record<string, number>>({
-    communication: 3,
-    problem_solving: 3,
-    adaptability: 3,
-    collaboration: 3,
-    initiative: 3,
-    time_management: 3,
-    professionalism: 3,
+    integrity_ethics: 3,
+    accountability_ownership: 3,
+    execution_reliability: 3,
+    communication_pressure: 3,
+    collaboration_conflict: 3,
+    workplace_adaptability: 3,
+    prioritization_time: 3,
+    resilience_recovery: 3,
     learning_agility: 3,
+    professional_boundaries: 3,
+    creative_problem_solving: 3,
+    customer_service_focus: 3,
+    influence_persuasion: 3,
+    relationship_building: 3,
   });
   const [strengths, setStrengths] = useState<string[]>([]);
   const [improvements, setImprovements] = useState<string[]>([]);
@@ -1584,8 +1627,8 @@ const SelfAssessmentPage = () => {
       await supabase.from("growth_log_entries").insert({
         candidate_id: user.id,
         event_type: "assessment",
-        title: "Self Assessment Completed",
-        description: `Completed behavioral self-assessment with overall score of ${getOverallScore().toFixed(1)}/5`,
+        title: "Observation Readiness Check Completed",
+        description: `Personal readiness reflection recorded. Evidence profile captured across ${Object.keys(currentScores).length} behavioral dimensions.`,
         source_component: "SelfAssessment",
         metadata: {
           scores: currentScores,
@@ -1630,10 +1673,16 @@ const SelfAssessmentPage = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Self Assessment</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Observation Readiness Check</h1>
         <p className="text-gray-400">
-          Reflect on your professional behavioral skills and identify areas for growth.
+          A personal reflection tool to help you prepare for your formal observation sessions.
         </p>
+        <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-300">
+            This is a personal readiness reflection tool. It is not part of your formal T3A observation and will not appear in your Skill Passport. Your formal observation is conducted by AI and your mentor.
+          </p>
+        </div>
       </motion.div>
 
       {/* Success Banner */}
@@ -1644,7 +1693,7 @@ const SelfAssessmentPage = () => {
           className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3"
         >
           <CheckCircle className="w-5 h-5 text-emerald-400" />
-          <span className="text-emerald-300">Assessment saved successfully!</span>
+          <span className="text-emerald-300">Reflection saved.</span>
         </motion.div>
       )}
 
@@ -1659,13 +1708,13 @@ const SelfAssessmentPage = () => {
                   ? "bg-indigo-600 text-white"
                   : activeStep > index
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10"
+                  : "bg-black/80 text-gray-400 hover:bg-black/80"
               }`}
             >
               {activeStep > index ? (
                 <CheckCircle className="w-4 h-4" />
               ) : (
-                <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs">
+                <span className="w-5 h-5 rounded-full bg-black/80 flex items-center justify-center text-xs">
                   {index + 1}
                 </span>
               )}
@@ -1688,17 +1737,17 @@ const SelfAssessmentPage = () => {
           <div className="space-y-6">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Behavioral Self-Assessment</h1>
+              <h1 className="text-3xl font-bold text-white mb-2">Your Observation Pathway</h1>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Discover your professional strengths and growth areas through guided self-reflection
+                Begin your formal observation or use the readiness reflection tool to prepare before your session.
               </p>
             </div>
 
-            {/* Interactive Skill Test - Featured Option */}
-            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/10 to-emerald-600/20 border border-emerald-500/30">
+            {/* L1 Observation Session - Featured Option */}
+            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
               <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white animate-pulse">
-                  New! AI-Powered
+                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
+                  Level 1 — AI Observation
                 </span>
               </div>
               <div className="flex flex-col md:flex-row items-start gap-6">
@@ -1706,19 +1755,18 @@ const SelfAssessmentPage = () => {
                   <Brain className="w-10 h-10 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">Interactive Skill Test</h2>
+                  <h2 className="text-2xl font-bold text-white mb-2">L1 Observation Session</h2>
                   <p className="text-gray-300 mb-4">
-                    Go beyond self-rating — actually demonstrate your skills! Voice responses, written challenges,
-                    prioritization tasks, role-play scenarios, and more, all analyzed by AI for real feedback.
+                    Timed AI-driven pressure scenarios across the T3A Behavioral Dimensions. Your responses are recorded as behavioral evidence. No scores or feedback are shown during the session.
                   </p>
                   <div className="flex flex-wrap gap-3 mb-6">
                     {[
-                      { icon: Mic, text: "Voice Challenges" },
-                      { icon: Brain, text: "AI Analysis" },
-                      { icon: Zap, text: "Real-Time Feedback" },
-                      { icon: Clock, text: "~15 minutes" },
+                      { icon: Mic, text: "Voice Scenarios" },
+                      { icon: Brain, text: "AI Observation" },
+                      { icon: Clock, text: "Timed Scenarios" },
+                      { icon: ClipboardCheck, text: "Evidence Recorded" },
                     ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-sm text-gray-300">
+                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 text-sm text-gray-300">
                         <item.icon className="w-4 h-4 text-emerald-400" />
                         {item.text}
                       </div>
@@ -1729,7 +1777,7 @@ const SelfAssessmentPage = () => {
                       size="lg"
                       className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
                     >
-                      Start Skill Test
+                      Begin Observation Session
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>
@@ -1738,7 +1786,7 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Interactive Assessment - Secondary Option */}
-            <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-indigo-600/10 via-purple-600/5 to-indigo-600/10 border border-indigo-500/20">
+            <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 via-purple-600/5 to-indigo-600/30 border border-indigo-500/20">
               <div className="flex flex-col md:flex-row items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center">
                   <Sparkles className="w-7 h-7 text-indigo-400" />
@@ -1752,7 +1800,7 @@ const SelfAssessmentPage = () => {
                   <Link to="/dashboard/candidate/assessment/interactive">
                     <Button
                       variant="outline"
-                      className="border-indigo-500/30 text-gray-300 hover:bg-indigo-500/10"
+                      className="border-indigo-500/30 text-gray-300 hover:bg-indigo-500/30"
                     >
                       Start Guided Assessment
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -1763,7 +1811,7 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Quick Assessment - Secondary Option */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <div className="flex flex-col md:flex-row items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center">
                   <Sliders className="w-7 h-7 text-gray-400" />
@@ -1776,7 +1824,7 @@ const SelfAssessmentPage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="border-white/20 text-gray-300 hover:bg-white/10"
+                    className="border-white/20 text-gray-300 hover:bg-black/80"
                     onClick={() => setActiveStep(1)}
                   >
                     Start Quick Assessment
@@ -1794,29 +1842,29 @@ const SelfAssessmentPage = () => {
                 { icon: Users, text: "Prepare for mentor feedback", color: "text-purple-400" },
                 { icon: Award, text: "Enhance your Skill Passport", color: "text-amber-400" },
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
+                <div key={i} className="p-4 rounded-xl bg-black/80 border border-white/30 text-center">
                   <item.icon className={`w-6 h-6 ${item.color} mx-auto mb-2`} />
                   <span className="text-sm text-gray-400">{item.text}</span>
                 </div>
               ))}
             </div>
 
-            {/* Assessment History */}
+            {/* Readiness Reflection History */}
             {assessments.length > 0 && (
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <h3 className="text-lg font-semibold text-white mb-4">Your Assessment History</h3>
+              <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+                <h3 className="text-lg font-semibold text-white mb-4">Your Readiness Reflections</h3>
                 <div className="space-y-3">
                   {assessments.slice(0, 3).map((assessment, i) => {
                     const scores = assessment.behavioral_scores as Record<string, number>;
                     const overall = scores ? Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 0;
                     return (
-                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-black/80">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
                             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
                           </div>
                           <div>
-                            <p className="text-sm text-white">Self Assessment</p>
+                            <p className="text-sm text-white">Readiness Reflection</p>
                             <p className="text-xs text-gray-500">
                               {new Date(assessment.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </p>
@@ -1838,7 +1886,7 @@ const SelfAssessmentPage = () => {
         {/* Rate Skills Step */}
         {activeStep === 1 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Rate Your Behavioral Skills</h2>
               <p className="text-gray-400 mb-6">
                 Use the sliders to rate yourself on each dimension from 1 (Beginning) to 5 (Excellent).
@@ -1850,7 +1898,7 @@ const SelfAssessmentPage = () => {
                   const score = currentScores[dim.id] || 3;
 
                   return (
-                    <div key={dim.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div key={dim.id} className="p-4 rounded-xl bg-black/80 border border-white/30">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h3 className="font-semibold text-white">{info.title}</h3>
@@ -1869,7 +1917,7 @@ const SelfAssessmentPage = () => {
                         step="0.5"
                         value={score}
                         onChange={(e) => setCurrentScores({ ...currentScores, [dim.id]: parseFloat(e.target.value) })}
-                        className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                        className="w-full h-2 bg-black/80 rounded-lg appearance-none cursor-pointer accent-indigo-500"
                       />
 
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -1882,7 +1930,7 @@ const SelfAssessmentPage = () => {
 
                       <div className="mt-3 flex flex-wrap gap-2">
                         {info.examples.map((ex) => (
-                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-white/5 text-gray-400">
+                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-black/80 text-gray-400">
                             {ex}
                           </span>
                         ))}
@@ -1894,7 +1942,7 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Radar Preview */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h3 className="text-lg font-semibold text-white mb-4">Your Skills Profile</h3>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1936,7 +1984,7 @@ const SelfAssessmentPage = () => {
         {/* Reflect Step */}
         {activeStep === 2 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Identify Your Strengths</h2>
               <p className="text-gray-400 mb-6">
                 Select up to 3 dimensions that you consider your strongest areas.
@@ -1950,13 +1998,13 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       strengths.includes(dim.id)
                         ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
-                        : "bg-white/5 border-white/10 hover:border-white/20"
+                        : "bg-black/80 border-white/30 hover:border-white/20"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-white/10"
+                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-black/80"
                         }`}
                       >
                         {strengths.includes(dim.id) ? (
@@ -1979,7 +2027,7 @@ const SelfAssessmentPage = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Areas for Improvement</h2>
               <p className="text-gray-400 mb-6">
                 Select up to 3 dimensions you want to focus on improving.
@@ -1993,13 +2041,13 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       improvements.includes(dim.id)
                         ? "bg-amber-500/20 border-amber-500/50 ring-2 ring-amber-500/30"
-                        : "bg-white/5 border-white/10 hover:border-white/20"
+                        : "bg-black/80 border-white/30 hover:border-white/20"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-white/10"
+                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-black/80"
                         }`}
                       >
                         {improvements.includes(dim.id) ? (
@@ -2022,13 +2070,13 @@ const SelfAssessmentPage = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-4">Additional Notes</h2>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add any reflections on your current skill levels..."
-                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={4}
               />
             </div>
@@ -2051,7 +2099,7 @@ const SelfAssessmentPage = () => {
         {/* Goals Step */}
         {activeStep === 3 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Set Your Goals</h2>
               <p className="text-gray-400 mb-6">
                 What do you want to achieve in your professional development journey?
@@ -2061,13 +2109,13 @@ const SelfAssessmentPage = () => {
                 value={goals}
                 onChange={(e) => setGoals(e.target.value)}
                 placeholder="Example: I want to improve my communication skills by actively participating in team meetings and seeking feedback from my mentor. I also aim to develop better time management habits by using task prioritization techniques..."
-                className="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={6}
               />
             </div>
 
             {improvements.length > 0 && (
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">Suggested Focus Areas</h3>
                 <p className="text-gray-400 mb-4">Based on your areas for improvement:</p>
 
@@ -2075,7 +2123,7 @@ const SelfAssessmentPage = () => {
                   {improvements.map((imp) => {
                     const info = ASSESSMENT_DESCRIPTIONS[imp];
                     return (
-                      <div key={imp} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div key={imp} className="p-4 rounded-xl bg-black/80 border border-white/30">
                         <h4 className="font-medium text-white mb-2">{info.title}</h4>
                         <ul className="text-sm text-gray-400 space-y-1">
                           {info.examples.map((ex) => (
@@ -2110,14 +2158,15 @@ const SelfAssessmentPage = () => {
         {/* Review Step */}
         {activeStep === 4 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-              <h2 className="text-xl font-semibold text-white mb-6">Review Your Assessment</h2>
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+              <h2 className="text-xl font-semibold text-white mb-6">Review Your Readiness Reflection</h2>
 
-              {/* Overall Score */}
+              {/* Readiness Profile */}
               <div className="flex items-center justify-center gap-6 p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 mb-6">
                 <div className="text-center">
                   <p className="text-5xl font-bold text-white">{getOverallScore().toFixed(1)}</p>
-                  <p className="text-gray-400">Overall Score</p>
+                  <p className="text-gray-400">Readiness Reflection Index</p>
+                  <p className="text-xs text-gray-500 mt-1">Personal reflection only — not formal observation</p>
                 </div>
                 <div className={`text-xl font-semibold ${getScoreColor(getOverallScore())}`}>
                   {getScoreLabel(getOverallScore())}
@@ -2127,7 +2176,7 @@ const SelfAssessmentPage = () => {
               {/* Skills Grid */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {BEHAVIORAL_DIMENSIONS.map((dim) => (
-                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-black/80">
                     <span className="text-gray-300">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
                     <span className={`font-semibold ${getScoreColor(currentScores[dim.id])}`}>
                       {currentScores[dim.id].toFixed(1)}
@@ -2146,7 +2195,7 @@ const SelfAssessmentPage = () => {
                   <div className="space-y-2">
                     {strengths.length > 0 ? (
                       strengths.map((s) => (
-                        <div key={s} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-300 text-sm">
+                        <div key={s} className="p-2 rounded-lg bg-emerald-500/30 text-emerald-300 text-sm">
                           {ASSESSMENT_DESCRIPTIONS[s].title}
                         </div>
                       ))
@@ -2163,7 +2212,7 @@ const SelfAssessmentPage = () => {
                   <div className="space-y-2">
                     {improvements.length > 0 ? (
                       improvements.map((s) => (
-                        <div key={s} className="p-2 rounded-lg bg-amber-500/10 text-amber-300 text-sm">
+                        <div key={s} className="p-2 rounded-lg bg-amber-500/30 text-amber-300 text-sm">
                           {ASSESSMENT_DESCRIPTIONS[s].title}
                         </div>
                       ))
@@ -2217,10 +2266,10 @@ const SelfAssessmentPage = () => {
         )}
       </motion.div>
 
-      {/* Previous Assessments */}
+      {/* Previous Readiness Reflections */}
       {assessments.length > 0 && (
-        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <h2 className="text-xl font-semibold text-white mb-4">Assessment History</h2>
+        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-black/80 border border-white/30">
+          <h2 className="text-xl font-semibold text-white mb-4">Reflection History</h2>
           <div className="space-y-3">
             {assessments.slice(0, 5).map((assessment) => {
               const scores = assessment.behavioral_scores as Record<string, number>;
@@ -2229,7 +2278,7 @@ const SelfAssessmentPage = () => {
               return (
                 <div
                   key={assessment.id}
-                  className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-black/80 hover:bg-black/80 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
@@ -2364,25 +2413,31 @@ const Training = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Interactive Training</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">BridgeFast</h1>
         <p className="text-gray-400">
-          Master workplace behaviors through immersive scenario-based learning modules.
+          Skill development programs to build workplace readiness before or between your observation sessions.
         </p>
+        <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-300">
+            BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Skill Passport.
+          </p>
+        </div>
       </motion.div>
 
       {/* Progress Overview */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <BookOpen className="w-8 h-8 text-indigo-400 mb-3" />
           <p className="text-3xl font-bold text-white">{INTERACTIVE_MODULES.length}</p>
-          <p className="text-sm text-gray-400">Total Modules</p>
+          <p className="text-sm text-gray-400">Total Programs</p>
         </div>
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <Play className="w-8 h-8 text-amber-400 mb-3" />
           <p className="text-3xl font-bold text-white">{inProgressCount}</p>
           <p className="text-sm text-gray-400">In Progress</p>
         </div>
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <CheckCircle className="w-8 h-8 text-emerald-400 mb-3" />
           <p className="text-3xl font-bold text-white">{completedCount}</p>
           <p className="text-sm text-gray-400">Completed</p>
@@ -2391,7 +2446,7 @@ const Training = () => {
 
       {/* Modules Grid */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Training Modules</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">BridgeFast Programs</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {INTERACTIVE_MODULES.map((module, index) => {
             const moduleProgress = progress[module.id];
@@ -2407,8 +2462,8 @@ const Training = () => {
                   locked
                     ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
                     : isCompleted
-                    ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-500/50'
-                    : 'bg-white/5 border-white/10 hover:border-white/30'
+                    ? 'bg-emerald-500/30 border-emerald-500/30 hover:border-emerald-500/50'
+                    : 'bg-black/80 border-white/30 hover:border-white/30'
                 }`}
                 onClick={() => !locked && openModule(module.slug)}
               >
@@ -2469,13 +2524,13 @@ const Training = () => {
                     {module.competencies.slice(0, 3).map((comp, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-xs bg-white/5 text-gray-400"
+                        className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400"
                       >
                         {comp}
                       </span>
                     ))}
                     {module.competencies.length > 3 && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-white/5 text-gray-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
                         +{module.competencies.length - 3}
                       </span>
                     )}
@@ -2488,7 +2543,7 @@ const Training = () => {
                         <span className="text-gray-400">Progress</span>
                         <span className="text-amber-400">{moduleProgress.progress_percent}%</span>
                       </div>
-                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-black/80 rounded-full overflow-hidden">
                         <div
                           className={`h-full bg-gradient-to-r ${module.color} transition-all`}
                           style={{ width: `${moduleProgress.progress_percent}%` }}
@@ -2539,7 +2594,7 @@ const Training = () => {
       </motion.div>
 
       {/* Info section */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/30 border border-indigo-500/30">
         <div className="flex items-start gap-4">
           <div className="p-3 rounded-xl bg-indigo-500/20">
             <Sparkles className="w-6 h-6 text-indigo-400" />
@@ -2702,7 +2757,7 @@ const Projects = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "browse"
               ? "bg-indigo-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           Browse Projects
@@ -2712,7 +2767,7 @@ const Projects = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "applied"
               ? "bg-indigo-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           My Applications
@@ -2734,7 +2789,7 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                  className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -2791,7 +2846,7 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No open projects available</p>
@@ -2808,7 +2863,7 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                  className="p-6 rounded-xl bg-black/80 border border-white/30"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -2840,7 +2895,7 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No applications yet</p>
@@ -2867,7 +2922,7 @@ const Projects = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {applicationSuccess ? (
               <div className="text-center py-8">
@@ -2893,7 +2948,7 @@ const Projects = () => {
                 </div>
 
                 {/* Project Preview */}
-                <div className="p-4 rounded-xl bg-white/5 mb-6">
+                <div className="p-4 rounded-xl bg-black/80 mb-6">
                   <h3 className="font-semibold text-white">{selectedProject.title}</h3>
                   <div className="flex items-center gap-3 mt-2 text-sm">
                     <span className="text-purple-400">{selectedProject.category}</span>
@@ -2920,7 +2975,7 @@ const Projects = () => {
                     onChange={(e) => setCoverLetter(e.target.value)}
                     placeholder="Tell the employer why you're a great fit for this project..."
                     rows={5}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -2930,7 +2985,7 @@ const Projects = () => {
                     variant="outline"
                     onClick={() => setShowApplyModal(false)}
                     disabled={isSubmitting}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Cancel
                   </Button>
@@ -3095,7 +3150,7 @@ const Connections = () => {
             {pendingConnections.map((connection) => (
               <div
                 key={connection.id}
-                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20"
+                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/30 to-orange-500/30 border border-amber-500/20"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white">
@@ -3139,7 +3194,7 @@ const Connections = () => {
                     variant="outline"
                     onClick={() => respondToConnection(connection.id, false)}
                     disabled={respondingTo === connection.id}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     <ThumbsDown className="w-4 h-4 mr-2" />
                     Decline
@@ -3159,7 +3214,7 @@ const Connections = () => {
             {respondedConnections.map((connection) => (
               <div
                 key={connection.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-4"
+                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   connection.status === "accepted"
@@ -3195,7 +3250,7 @@ const Connections = () => {
             ))}
           </div>
         ) : pendingConnections.length === 0 ? (
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No connection requests yet</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -3654,7 +3709,7 @@ const Profile = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Avatar and basic info */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative group">
               {profile?.avatar_url ? (
@@ -3704,7 +3759,7 @@ const Profile = () => {
           </div>
 
           {avatarError && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/30 border border-red-500/20 text-red-400 text-sm mb-4">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               {avatarError}
             </div>
@@ -3718,7 +3773,7 @@ const Profile = () => {
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.first_name}</p>
@@ -3731,7 +3786,7 @@ const Profile = () => {
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.last_name}</p>
@@ -3741,7 +3796,7 @@ const Profile = () => {
         </div>
 
         {/* Resume Upload */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-white">Resume</h3>
@@ -3752,7 +3807,7 @@ const Profile = () => {
 
           {candidateProfile?.resume_url ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <div className="flex items-center gap-4 p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
                 <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
                   <CheckCircle className="w-6 h-6 text-emerald-400" />
                 </div>
@@ -3776,7 +3831,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -3785,14 +3840,14 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
                 </a>
                 <button
                   onClick={handleDeleteResume}
-                  className="px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-red-500/30 text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-2"
                 >
                   <X className="w-4 h-4" />
                   Remove
@@ -3800,8 +3855,8 @@ const Profile = () => {
               </div>
 
               {/* Replace option */}
-              <div className="pt-2 border-t border-white/10">
-                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm">
+              <div className="pt-2 border-t border-white/30">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-black/80 transition-colors text-sm">
                   <Upload className="w-4 h-4" />
                   Replace Resume
                   <input
@@ -3847,14 +3902,14 @@ const Profile = () => {
               </div>
 
               {uploadError && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/30 border border-red-500/20 text-red-400 text-sm">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   {uploadError}
                 </div>
               )}
 
               {uploadSuccess && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-500/30 border border-emerald-500/20 text-emerald-400 text-sm">
                   <CheckCircle className="w-5 h-5 flex-shrink-0" />
                   Resume uploaded successfully!
                 </div>
@@ -3864,7 +3919,7 @@ const Profile = () => {
         </div>
 
         {/* Headline and Bio */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <div className="mb-4">
             <label className="text-sm text-gray-400 block mb-2">Headline</label>
             {isEditing ? (
@@ -3873,7 +3928,7 @@ const Profile = () => {
                 value={formData.headline}
                 onChange={(e) => setFormData((prev) => ({ ...prev, headline: e.target.value }))}
                 placeholder="e.g., Software Developer | Career Changer"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
               />
             ) : (
               <p className="text-white">{formData.headline || "No headline set"}</p>
@@ -3887,7 +3942,7 @@ const Profile = () => {
                 onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
                 placeholder="Tell us about yourself..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
               />
             ) : (
               <p className="text-white whitespace-pre-wrap">{formData.bio || "No bio set"}</p>
@@ -3896,7 +3951,7 @@ const Profile = () => {
         </div>
 
         {/* Location */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <label className="text-sm text-gray-400 block mb-2">Location</label>
           {isEditing ? (
             <input
@@ -3904,7 +3959,7 @@ const Profile = () => {
               value={formData.location}
               onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
               placeholder="City, State"
-              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
             />
           ) : (
             <p className="text-white">{formData.location || "Not specified"}</p>
@@ -3912,7 +3967,7 @@ const Profile = () => {
         </div>
 
         {/* Skills */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <label className="text-sm text-gray-400 block mb-3">Skills</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.skills.map((skill) => (
@@ -3940,7 +3995,7 @@ const Profile = () => {
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                 placeholder="Add a skill..."
-                className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
               />
               <Button onClick={addSkill} size="sm" className="bg-indigo-600 hover:bg-indigo-500">
                 <Plus className="w-4 h-4" />
@@ -3961,11 +4016,11 @@ const Profile = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-5xl h-[90vh] flex flex-col"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-5xl h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-white/30">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
                   <FileText className="w-5 h-5 text-indigo-400" />
@@ -3979,7 +4034,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -3988,14 +4043,14 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
                 </a>
                 <button
                   onClick={() => setShowResumeViewer(false)}
-                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                  className="p-2 rounded-lg hover:bg-black/80 text-gray-400 hover:text-white transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -4033,7 +4088,7 @@ const Profile = () => {
                       href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-black/80 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
                     >
                       <ExternalLink className="w-5 h-5" />
                       Open with Google Docs
@@ -4125,7 +4180,7 @@ const SettingsPage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -4142,11 +4197,11 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-white/20 text-white hover:bg-black/80"
             onClick={() => {
               setPasswordForm({ newPassword: "", confirmPassword: "" });
               setPasswordError(null);
@@ -4160,33 +4215,33 @@ const SettingsPage = () => {
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Progress updates</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Project opportunities</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
           </div>
         </div>
 
         {/* Danger Zone */}
-        <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20">
+        <div className="p-6 rounded-xl bg-red-500/30 border border-red-500/20">
           <h2 className="text-lg font-semibold text-red-400 mb-4">Danger Zone</h2>
           <p className="text-sm text-gray-400 mb-4">
             Once you delete your account, there is no going back. Please be certain.
           </p>
           <Button
             variant="outline"
-            className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+            className="border-red-500/30 text-red-400 hover:bg-red-500/30"
             onClick={handleDeleteAccount}
           >
             Delete Account
@@ -4204,7 +4259,7 @@ const SettingsPage = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {passwordSuccess ? (
               <div className="text-center py-8">
@@ -4230,7 +4285,7 @@ const SettingsPage = () => {
                 </div>
 
                 {passwordError && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/30 border border-red-500/20 text-red-400 text-sm mb-4">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
                     {passwordError}
                   </div>
@@ -4245,7 +4300,7 @@ const SettingsPage = () => {
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
                         placeholder="Enter new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -4264,7 +4319,7 @@ const SettingsPage = () => {
                         value={passwordForm.confirmPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
                         placeholder="Confirm new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -4286,7 +4341,7 @@ const SettingsPage = () => {
                     variant="outline"
                     onClick={() => setShowPasswordModal(false)}
                     disabled={isChangingPassword}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Cancel
                   </Button>
@@ -4459,7 +4514,7 @@ const FindMentor = () => {
       {activeMentor && (
         <motion.div
           variants={itemVariants}
-          className="p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20"
+          className="p-6 rounded-xl bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border border-emerald-500/20"
         >
           <div className="flex items-center gap-3 mb-2">
             <CheckCircle className="w-5 h-5 text-emerald-400" />
@@ -4508,7 +4563,7 @@ const FindMentor = () => {
                     key={mentor.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
+                    className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
                   >
                     {/* Match Score Badge */}
                     <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -4543,7 +4598,7 @@ const FindMentor = () => {
                         </p>
                         <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                           <span>{mentor.years_experience} years exp</span>
-                          <span className="px-2 py-0.5 rounded bg-white/10">
+                          <span className="px-2 py-0.5 rounded bg-black/80">
                             {mentor.industry}
                           </span>
                           {mentor.avg_rating && (
@@ -4562,7 +4617,7 @@ const FindMentor = () => {
                         {match.matchReasons.map((reason, i) => (
                           <span
                             key={i}
-                            className="px-2 py-1 rounded-full text-xs bg-white/5 text-gray-300 border border-white/10"
+                            className="px-2 py-1 rounded-full text-xs bg-black/80 text-gray-300 border border-white/30"
                           >
                             {reason}
                           </span>
@@ -4580,7 +4635,7 @@ const FindMentor = () => {
                         { label: "Rating", value: match.score.ratingScore, color: "bg-rose-500" },
                       ].map((item) => (
                         <div key={item.label} className="text-center">
-                          <div className="h-1 rounded-full bg-white/10 mb-1">
+                          <div className="h-1 rounded-full bg-black/80 mb-1">
                             <div
                               className={`h-full rounded-full ${item.color}`}
                               style={{ width: `${item.value}%` }}
@@ -4634,7 +4689,7 @@ const FindMentor = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             industryFilter === "all"
               ? "bg-indigo-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           All Industries
@@ -4646,7 +4701,7 @@ const FindMentor = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               industryFilter === industry
                 ? "bg-indigo-600 text-white"
-                : "bg-white/5 text-gray-400 hover:text-white"
+                : "bg-black/80 text-gray-400 hover:text-white"
             }`}
           >
             {industry}
@@ -4669,8 +4724,8 @@ const FindMentor = () => {
                   whileHover={{ scale: 1.01 }}
                   className={`p-6 rounded-xl border transition-colors ${
                     isAssigned
-                      ? "bg-emerald-500/10 border-emerald-500/30"
-                      : "bg-white/5 border-white/10 hover:border-white/20"
+                      ? "bg-emerald-500/30 border-emerald-500/30"
+                      : "bg-black/80 border-white/30 hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -4694,7 +4749,7 @@ const FindMentor = () => {
                       </p>
                       <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                         <span>{mentor.years_experience} years exp</span>
-                        <span className="px-2 py-0.5 rounded bg-white/10">
+                        <span className="px-2 py-0.5 rounded bg-black/80">
                           {mentor.industry}
                         </span>
                       </div>
@@ -4718,7 +4773,7 @@ const FindMentor = () => {
                         </span>
                       ))}
                       {mentor.specializations.length > 3 && (
-                        <span className="px-2 py-1 rounded text-xs bg-white/10 text-gray-400">
+                        <span className="px-2 py-1 rounded text-xs bg-black/80 text-gray-400">
                           +{mentor.specializations.length - 3}
                         </span>
                       )}
@@ -4769,7 +4824,7 @@ const FindMentor = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No mentors available</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -4790,7 +4845,7 @@ const FindMentor = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-4 mb-6">
@@ -4824,7 +4879,7 @@ const FindMentor = () => {
                 onChange={(e) => setRequestMessage(e.target.value)}
                 placeholder="Tell the mentor why you'd like them to guide you..."
                 rows={4}
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -4832,7 +4887,7 @@ const FindMentor = () => {
               <Button
                 variant="outline"
                 onClick={() => setSelectedMentor(null)}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+                className="flex-1 border-white/20 text-white hover:bg-black/80"
               >
                 Cancel
               </Button>
@@ -5064,19 +5119,19 @@ const MessagesPage = () => {
 
       <motion.div
         variants={itemVariants}
-        className="h-[calc(100%-5rem)] rounded-xl bg-white/5 border border-white/10 overflow-hidden flex"
+        className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex"
       >
         {/* Conversations List */}
-        <div className="w-80 border-r border-white/10 flex flex-col">
+        <div className="w-80 border-r border-white/30 flex flex-col">
           {/* Search */}
-          <div className="p-4 border-b border-white/10">
+          <div className="p-4 border-b border-white/30">
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search conversations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
           </div>
@@ -5099,8 +5154,8 @@ const MessagesPage = () => {
                   <button
                     key={conv.id}
                     onClick={() => setActiveConversation(conv)}
-                    className={`w-full p-4 flex items-start gap-3 hover:bg-white/5 transition-colors text-left ${
-                      activeConversation?.id === conv.id ? "bg-indigo-500/10 border-l-2 border-indigo-500" : ""
+                    className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${
+                      activeConversation?.id === conv.id ? "bg-indigo-500/30 border-l-2 border-indigo-500" : ""
                     }`}
                   >
                     <div className="relative">
@@ -5144,7 +5199,7 @@ const MessagesPage = () => {
           {activeConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 border-b border-white/10 flex items-center gap-4">
+              <div className="p-4 border-b border-white/30 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
                   {activeConversation.other_user?.avatar_url ? (
                     <img
@@ -5197,7 +5252,7 @@ const MessagesPage = () => {
                             className={`px-4 py-2 rounded-2xl ${
                               isOwn
                                 ? "bg-indigo-600 text-white rounded-br-md"
-                                : "bg-white/10 text-gray-200 rounded-bl-md"
+                                : "bg-black/80 text-gray-200 rounded-bl-md"
                             }`}
                           >
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -5213,7 +5268,7 @@ const MessagesPage = () => {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t border-white/10">
+              <div className="p-4 border-t border-white/30">
                 <div className="flex items-center gap-3">
                   <div className="flex-1 relative">
                     <input
@@ -5227,7 +5282,7 @@ const MessagesPage = () => {
                           sendMessage();
                         }
                       }}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <Button
@@ -5390,7 +5445,7 @@ const NotificationsPage = () => {
           <Button
             onClick={markAllAsRead}
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-white/20 text-white hover:bg-black/80"
           >
             <CheckCircle className="w-4 h-4 mr-2" />
             Mark all as read
@@ -5407,7 +5462,7 @@ const NotificationsPage = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
                 ? "bg-indigo-600 text-white"
-                : "bg-white/5 text-gray-400 hover:text-white"
+                : "bg-black/80 text-gray-400 hover:text-white"
             }`}
           >
             {f}
@@ -5429,8 +5484,8 @@ const NotificationsPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 className={`p-4 rounded-xl border transition-colors ${
                   notification.is_read
-                    ? "bg-white/5 border-white/10"
-                    : "bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20"
+                    ? "bg-black/80 border-white/30"
+                    : "bg-gradient-to-r from-indigo-500/30 to-purple-500/30 border-indigo-500/20"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -5476,7 +5531,7 @@ const NotificationsPage = () => {
             );
           })
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No notifications</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -5559,13 +5614,13 @@ const CandidateDashboard = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/10 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
@@ -5585,28 +5640,69 @@ const CandidateDashboard = () => {
           </div>
 
           {/* Navigation - scrollable */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-            {navItems.map((item) => {
+          <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+            {navItems.map((item, index) => {
               const isActive = location.pathname === item.href;
+              const prevSection = index > 0 ? navItems[index - 1].section : null;
+              const showSectionLabel = item.section !== prevSection;
+
               return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-white border border-indigo-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
-                </Link>
+                <div key={item.name}>
+                  {/* Section divider labels */}
+                  {showSectionLabel && item.section === "observation" && (
+                    <p className="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Observation Platform
+                    </p>
+                  )}
+                  {showSectionLabel && item.section === "bridgefast" && (
+                    <div className="mt-3 mb-1">
+                      <div className="border-t border-white/30 mb-3" />
+                      <div className="flex items-center gap-2 px-2 pb-1">
+                        <p className="text-xs font-semibold text-amber-400/80 uppercase tracking-wider">
+                          BridgeFast
+                        </p>
+                        <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-400 font-medium">
+                          Dev
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {showSectionLabel && item.section === "liveworks" && (
+                    <div className="mt-3 mb-1">
+                      <div className="border-t border-white/30 mb-3" />
+                      <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        LiveWorks
+                      </p>
+                    </div>
+                  )}
+                  {showSectionLabel && item.section === "account" && (
+                    <div className="mt-3 mb-1">
+                      <div className="border-t border-white/30 mb-3" />
+                      <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Account
+                      </p>
+                    </div>
+                  )}
+                  <Link
+                    to={item.href}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors mb-0.5 ${
+                      isActive
+                        ? item.section === "bridgefast"
+                          ? "bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white border border-amber-500/30"
+                          : "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-white border border-indigo-500/30"
+                        : "text-gray-400 hover:text-white hover:bg-black/80"
+                    }`}
+                  >
+                    <item.icon className={`w-5 h-5 ${item.section === "bridgefast" && isActive ? "text-amber-400" : ""}`} />
+                    {item.name}
+                  </Link>
+                </div>
               );
             })}
           </nav>
 
           {/* User */}
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/30">
             <div className="flex items-center gap-3 mb-4">
               {profile?.avatar_url ? (
                 <img
@@ -5629,7 +5725,7 @@ const CandidateDashboard = () => {
             </div>
             <Button
               variant="outline"
-              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-white/10"
+              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -5642,7 +5738,7 @@ const CandidateDashboard = () => {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -5665,8 +5761,8 @@ const CandidateDashboard = () => {
 
             {/* Notifications dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/10 flex items-center justify-between">
+              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-white/30 flex items-center justify-between">
                   <h3 className="font-semibold text-white">Notifications</h3>
                   {notifications.length > 0 && (
                     <button
@@ -5682,7 +5778,7 @@ const CandidateDashboard = () => {
                     {notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="p-3 hover:bg-white/5 border-b border-white/5 flex items-start gap-3"
+                        className="p-3 hover:bg-black/80 border-b border-white/5 flex items-start gap-3"
                       >
                         <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
@@ -5708,13 +5804,13 @@ const CandidateDashboard = () => {
                     <p className="text-sm text-gray-400">No new notifications</p>
                   </div>
                 )}
-                <div className="p-2 border-t border-white/10">
+                <div className="p-2 border-t border-white/30">
                   <button
                     onClick={() => {
                       setShowNotifications(false);
                       navigate("/dashboard/candidate/notifications");
                     }}
-                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-white/5 rounded-lg"
+                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-black/80 rounded-lg"
                   >
                     View all notifications
                   </button>

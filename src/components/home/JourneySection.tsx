@@ -139,7 +139,7 @@ export function JourneySection() {
               Placement
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-50 leading-relaxed">
             Every credential is earned through sustained mentor observation — no shortcuts,
             no self-assessments. Human judgment at every critical gate.
           </p>
@@ -189,8 +189,8 @@ export function JourneySection() {
                       className={cn(
                         "relative p-6 rounded-2xl transition-all duration-500",
                         step.highlight
-                          ? "bg-white/10 backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
-                          : "bg-white/5 backdrop-blur-xl border border-white/10 group-hover:border-white/30 group-hover:bg-white/10"
+                          ? "bg-black/80 backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
+                          : "bg-black/80 backdrop-blur-xl border border-white/30 group-hover:border-white/30 group-hover:bg-black/80"
                       )}
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -209,7 +209,7 @@ export function JourneySection() {
                         )}
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                      <p className="text-gray-100 leading-relaxed">{step.description}</p>
+                      <p className="text-gray-50 leading-relaxed">{step.description}</p>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -227,7 +227,7 @@ export function JourneySection() {
             {/* Glow effect */}
             <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500" />
 
-            <div className="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 group-hover:border-white/30 transition-all duration-500">
+            <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30 group-hover:border-white/30 transition-all duration-500">
               <h3 className="text-lg font-bold text-white mb-6 text-center">
                 Architectural Principles
               </h3>
@@ -247,7 +247,7 @@ export function JourneySection() {
                     transition={{ delay: index * 0.1 }}
                   >
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-100">{principle}</span>
+                    <span className="text-sm text-gray-50">{principle}</span>
                   </motion.div>
                 ))}
               </div>

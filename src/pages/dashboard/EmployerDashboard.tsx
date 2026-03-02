@@ -191,7 +191,7 @@ const Overview = () => {
       {employerProfile && !employerProfile.is_verified && (
         <motion.div
           variants={itemVariants}
-          className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-3"
+          className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 text-amber-400" />
           <p className="text-amber-400">
@@ -207,7 +207,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-emerald-600 to-teal-600 transition-opacity" />
             <div className="relative">
@@ -227,7 +227,7 @@ const Overview = () => {
           <div className="space-y-3">
             <Link
               to="/dashboard/employer/search"
-              className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-emerald-500/30 transition-colors group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
                 <Search className="w-5 h-5 text-white" />
@@ -240,7 +240,7 @@ const Overview = () => {
             </Link>
             <Link
               to="/dashboard/employer/projects"
-              className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-emerald-500/30 transition-colors group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center">
                 <Briefcase className="w-5 h-5 text-white" />
@@ -256,7 +256,7 @@ const Overview = () => {
 
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">Platform Benefits</h2>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+          <div className="p-6 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border border-emerald-500/20">
             <h3 className="font-semibold text-white mb-4">Why Use The 3rd Academy?</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
@@ -460,7 +460,7 @@ const SearchTalent = () => {
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-black/80 border border-white/30">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-400">Filters:</span>
@@ -468,7 +468,7 @@ const SearchTalent = () => {
         <select
           value={filters.tier}
           onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:border-emerald-500 focus:outline-none"
+          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
         >
           <option value="">All Tiers</option>
           <option value="tier_1">Tier 1 - Ready</option>
@@ -480,7 +480,7 @@ const SearchTalent = () => {
           placeholder="Search skills..."
           value={filters.skill}
           onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
         />
       </motion.div>
 
@@ -490,7 +490,7 @@ const SearchTalent = () => {
           {candidates.map((candidate) => (
             <div
               key={candidate.id}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
@@ -525,12 +525,12 @@ const SearchTalent = () => {
               {candidate.skills && candidate.skills.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1">
                   {candidate.skills.slice(0, 5).map((skill, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                    <span key={i} className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
                       {skill}
                     </span>
                   ))}
                   {candidate.skills.length > 5 && (
-                    <span className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                    <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
                       +{candidate.skills.length - 5} more
                     </span>
                   )}
@@ -541,7 +541,7 @@ const SearchTalent = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="flex-1 border-white/20 text-white hover:bg-white/10"
+                  className="flex-1 border-white/20 text-white hover:bg-black/80"
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   View Profile
@@ -582,7 +582,7 @@ const SearchTalent = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
         >
           <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No candidates found</p>
@@ -602,7 +602,7 @@ const SearchTalent = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10"
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {connectionSuccess ? (
               <div className="text-center py-8">
@@ -628,7 +628,7 @@ const SearchTalent = () => {
                 </div>
 
                 {/* Candidate Preview */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 mb-6">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-black/80 mb-6">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold">
                     {selectedCandidate.profile?.first_name?.[0]}
                     {selectedCandidate.profile?.last_name?.[0]}
@@ -653,7 +653,7 @@ const SearchTalent = () => {
                     onChange={(e) => setConnectionMessage(e.target.value)}
                     placeholder="Introduce yourself and explain why you'd like to connect..."
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -663,7 +663,7 @@ const SearchTalent = () => {
                     variant="outline"
                     onClick={() => setShowConnectModal(false)}
                     disabled={isSendingConnection}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Cancel
                   </Button>
@@ -819,7 +819,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "all"
               ? "bg-emerald-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           All ({connections.length})
@@ -829,7 +829,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "accepted"
               ? "bg-emerald-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           Accepted
@@ -844,7 +844,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "pending"
               ? "bg-emerald-600 text-white"
-              : "bg-white/5 text-gray-400 hover:text-white"
+              : "bg-black/80 text-gray-400 hover:text-white"
           }`}
         >
           Pending
@@ -868,8 +868,8 @@ const Connections = () => {
                 key={connection.id}
                 className={`p-6 rounded-xl border transition-colors ${
                   connection.status === "accepted"
-                    ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
-                    : "bg-white/5 border-white/10 hover:border-white/20"
+                    ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-emerald-500/20"
+                    : "bg-black/80 border-white/30 hover:border-white/20"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -895,12 +895,12 @@ const Connections = () => {
                       {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {candidateProfile.skills.slice(0, 4).map((skill, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
                               {skill}
                             </span>
                           ))}
                           {candidateProfile.skills.length > 4 && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-white/10 text-gray-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
                               +{candidateProfile.skills.length - 4}
                             </span>
                           )}
@@ -930,11 +930,11 @@ const Connections = () => {
 
                 {/* Actions for accepted connections */}
                 {connection.status === "accepted" && profile?.email && (
-                  <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                  <div className="mt-4 pt-4 border-t border-white/30 flex gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-white/10"
+                      className="border-white/20 text-white hover:bg-black/80"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View Full Profile
@@ -955,7 +955,7 @@ const Connections = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
         >
           <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No connections yet</p>
@@ -1411,7 +1411,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-white/5 border border-white/10"
+          className="p-6 rounded-xl bg-black/80 border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Project</h2>
           <div className="space-y-4">
@@ -1422,7 +1422,7 @@ const Projects = () => {
                 value={newProject.title}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g., Build a Landing Page"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
               />
             </div>
             <div>
@@ -1432,7 +1432,7 @@ const Projects = () => {
                 onChange={(e) => setNewProject((prev) => ({ ...prev, description: e.target.value }))}
                 placeholder="Describe the project requirements..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
             <div className="grid md:grid-cols-3 gap-4">
@@ -1443,7 +1443,7 @@ const Projects = () => {
                   value={newProject.category}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, category: e.target.value }))}
                   placeholder="e.g., Web Development"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -1454,7 +1454,7 @@ const Projects = () => {
                   onChange={(e) => setNewProject((prev) => ({ ...prev, duration_days: parseInt(e.target.value) || 14 }))}
                   min={7}
                   max={90}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -1462,7 +1462,7 @@ const Projects = () => {
                 <select
                   value={newProject.skill_level}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, skill_level: e.target.value as "beginner" | "intermediate" | "advanced" }))}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -1472,7 +1472,7 @@ const Projects = () => {
             </div>
 
             {/* Budget Section */}
-            <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <div className="p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
               <div className="flex items-center gap-2 mb-3">
                 <DollarSign className="w-5 h-5 text-emerald-400" />
                 <h3 className="font-medium text-white">Project Budget</h3>
@@ -1486,7 +1486,7 @@ const Projects = () => {
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_min: e.target.value }))}
                     placeholder="e.g., 500"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -1497,7 +1497,7 @@ const Projects = () => {
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_max: e.target.value }))}
                     placeholder="e.g., 1000"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1533,7 +1533,7 @@ const Projects = () => {
             return (
               <div
                 key={project.id}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -1563,7 +1563,7 @@ const Projects = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/20 text-white hover:bg-white/10"
+                        className="border-white/20 text-white hover:bg-black/80"
                         onClick={() => setShowStatusMenu(showStatusMenu === project.id ? null : project.id)}
                       >
                         <Edit className="w-4 h-4 mr-1" />
@@ -1571,12 +1571,12 @@ const Projects = () => {
                         <ChevronDown className="w-3 h-3 ml-1" />
                       </Button>
                       {showStatusMenu === project.id && (
-                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-gray-900 border border-white/10 shadow-xl z-10">
+                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-gray-900 border border-white/30 shadow-xl z-10">
                           {statusActions.map((action) => (
                             <button
                               key={action.status}
                               onClick={() => updateProjectStatus(project.id, action.status)}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/10 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-black/80 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
                             >
                               <action.icon className="w-4 h-4" />
                               {action.label}
@@ -1599,13 +1599,13 @@ const Projects = () => {
 
                 {/* Show applicants preview if any */}
                 {project.applications && project.applications.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="mt-4 pt-4 border-t border-white/30">
                     <p className="text-xs text-gray-500 mb-2">Recent Applicants:</p>
                     <div className="flex items-center gap-2">
                       {project.applications.slice(0, 4).map((app) => (
                         <div
                           key={app.id}
-                          className="flex items-center gap-2 px-2 py-1 rounded bg-white/5"
+                          className="flex items-center gap-2 px-2 py-1 rounded bg-black/80"
                         >
                           {app.candidate?.profile?.avatar_url ? (
                             <img
@@ -1648,7 +1648,7 @@ const Projects = () => {
         !showNewProject && (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No projects yet</p>
@@ -1670,10 +1670,10 @@ const Projects = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-3xl max-h-[80vh] overflow-hidden"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-3xl max-h-[80vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-white/10">
+            <div className="p-6 border-b border-white/30">
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-white">{selectedProject.title}</h2>
@@ -1702,15 +1702,15 @@ const Projects = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-white/5">
+                <div className="p-3 rounded-lg bg-black/80">
                   <p className="text-xs text-gray-500">Duration</p>
                   <p className="text-white font-medium">{selectedProject.duration_days} days</p>
                 </div>
-                <div className="p-3 rounded-lg bg-white/5">
+                <div className="p-3 rounded-lg bg-black/80">
                   <p className="text-xs text-gray-500">Skill Level</p>
                   <p className="text-white font-medium capitalize">{selectedProject.skill_level}</p>
                 </div>
-                <div className="p-3 rounded-lg bg-white/5">
+                <div className="p-3 rounded-lg bg-black/80">
                   <p className="text-xs text-gray-500">Applicants</p>
                   <p className="text-white font-medium">{selectedProject.applications?.length || 0}</p>
                 </div>
@@ -1724,7 +1724,7 @@ const Projects = () => {
                     {selectedProject.applications.map((app) => (
                       <div
                         key={app.id}
-                        className="p-4 rounded-lg bg-white/5 border border-white/10"
+                        className="p-4 rounded-lg bg-black/80 border border-white/30"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
@@ -1827,7 +1827,7 @@ const Projects = () => {
                                       )
                                     );
                                   }}
-                                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                  className="border-red-500/30 text-red-400 hover:bg-red-500/30"
                                 >
                                   <XCircle className="w-4 h-4 mr-1" />
                                   Decline
@@ -1856,7 +1856,7 @@ const Projects = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                  <div className="p-6 rounded-lg bg-black/80 text-center">
                     <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
                     <p className="text-gray-400">No applicants yet</p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -1867,14 +1867,14 @@ const Projects = () => {
               </div>
 
               {/* Milestones Section */}
-              <div className="mt-6 pt-6 border-t border-white/10">
+              <div className="mt-6 pt-6 border-t border-white/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm text-gray-400">Project Milestones</h3>
                   <Button
                     size="sm"
                     onClick={() => setShowMilestoneForm(!showMilestoneForm)}
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10"
+                    className="border-white/20 text-white hover:bg-black/80"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Milestone
@@ -1883,28 +1883,28 @@ const Projects = () => {
 
                 {/* Add Milestone Form */}
                 {showMilestoneForm && (
-                  <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10">
+                  <div className="mb-4 p-4 rounded-lg bg-black/80 border border-white/30">
                     <div className="space-y-3">
                       <input
                         type="text"
                         value={newMilestone.title}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, title: e.target.value }))}
                         placeholder="Milestone title..."
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <input
                         type="text"
                         value={newMilestone.description}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Description (optional)..."
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="date"
                           value={newMilestone.dueDate}
                           onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
-                          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                          className="px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none text-sm"
                         />
                         <div className="relative">
                           <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -1913,7 +1913,7 @@ const Projects = () => {
                             value={newMilestone.paymentAmount}
                             onChange={(e) => setNewMilestone(prev => ({ ...prev, paymentAmount: e.target.value }))}
                             placeholder="Payment amount"
-                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                           />
                         </div>
                       </div>
@@ -1965,7 +1965,7 @@ const Projects = () => {
                           className={`p-4 rounded-lg border transition-colors ${
                             milestone.status === "approved"
                               ? "bg-emerald-500/5 border-emerald-500/20"
-                              : "bg-white/5 border-white/10"
+                              : "bg-black/80 border-white/30"
                           }`}
                         >
                           <div className="flex items-start justify-between">
@@ -1973,7 +1973,7 @@ const Projects = () => {
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
                                 milestone.status === "approved"
                                   ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-white/10 text-gray-400"
+                                  : "bg-black/80 text-gray-400"
                               }`}>
                                 {index + 1}
                               </div>
@@ -2024,7 +2024,7 @@ const Projects = () => {
                                       size="sm"
                                       variant="outline"
                                       onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
-                                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10 h-7 px-2"
+                                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/30 h-7 px-2"
                                     >
                                       <Edit className="w-3 h-3" />
                                     </Button>
@@ -2085,7 +2085,7 @@ const Projects = () => {
                     })}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-white/5 text-center">
+                  <div className="p-6 rounded-lg bg-black/80 text-center">
                     <Briefcase className="w-8 h-8 text-gray-600 mx-auto mb-2" />
                     <p className="text-gray-400">No milestones yet</p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -2114,7 +2114,7 @@ const Projects = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             {escrowAction === "fund" ? (
@@ -2130,10 +2130,10 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/10">
+                  <div className="mt-3 pt-3 border-t border-white/30">
                     <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
@@ -2147,7 +2147,7 @@ const Projects = () => {
                     <select
                       value={paymentDetails.method}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, method: e.target.value }))}
-                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                     >
                       <option value="paypal">PayPal</option>
                       <option value="bank_transfer">Bank Transfer</option>
@@ -2178,7 +2178,7 @@ const Projects = () => {
                           : "Enter payment details..."
                       }
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
                     />
                   </div>
 
@@ -2189,12 +2189,12 @@ const Projects = () => {
                       value={paymentDetails.notes}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Any special instructions..."
-                      className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
+                <div className="p-3 rounded-lg bg-amber-500/30 border border-amber-500/20 mb-4">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5" />
                     <p className="text-sm text-amber-300">
@@ -2211,7 +2211,7 @@ const Projects = () => {
                       setSelectedMilestone(null);
                       setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Cancel
                   </Button>
@@ -2238,17 +2238,17 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/10">
+                  <div className="mt-3 pt-3 border-t border-white/30">
                     <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
                   {selectedMilestone.payment_method && (
-                    <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="mt-3 pt-3 border-t border-white/30">
                       <p className="text-sm text-gray-400 mb-1">Payment Method</p>
                       <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
                     </div>
@@ -2256,7 +2256,7 @@ const Projects = () => {
                 </div>
 
                 {selectedMilestone.payment_proof_url && (
-                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
                     <p className="text-sm text-gray-400 mb-2">Payment Proof Submitted</p>
                     <a
                       href={selectedMilestone.payment_proof_url}
@@ -2270,7 +2270,7 @@ const Projects = () => {
                   </div>
                 )}
 
-                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                <div className="p-3 rounded-lg bg-emerald-500/30 border border-emerald-500/20 mb-4">
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
                     <p className="text-sm text-emerald-300">
@@ -2286,7 +2286,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Cancel
                   </Button>
@@ -2312,23 +2312,23 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-4">
+                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/10">
+                  <div className="mt-3 pt-3 border-t border-white/30">
                     <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
                   {selectedMilestone.payment_method && (
-                    <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="mt-3 pt-3 border-t border-white/30">
                       <p className="text-sm text-gray-400 mb-1">Payment Method</p>
                       <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
                     </div>
                   )}
                   {selectedMilestone.payment_credentials && (
-                    <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="mt-3 pt-3 border-t border-white/30">
                       <p className="text-sm text-gray-400 mb-1">Payment Credentials</p>
                       <p className="text-white text-sm whitespace-pre-wrap">{selectedMilestone.payment_credentials}</p>
                     </div>
@@ -2342,7 +2342,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-white/10"
+                    className="flex-1 border-white/20 text-white hover:bg-black/80"
                   >
                     Close
                   </Button>
@@ -2542,7 +2542,7 @@ const Feedback = () => {
       {/* Info Banner */}
       <motion.div
         variants={itemVariants}
-        className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-4"
+        className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-4"
       >
         <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
         <div>
@@ -2565,7 +2565,7 @@ const Feedback = () => {
               return (
                 <div
                   key={hire.connection.id}
-                  className="p-6 rounded-xl bg-white/5 border border-white/10"
+                  className="p-6 rounded-xl bg-black/80 border border-white/30"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -2610,7 +2610,7 @@ const Feedback = () => {
                             className={`px-3 py-2 rounded-lg text-center ${
                               feedback
                                 ? "bg-emerald-500/20 border border-emerald-500/30"
-                                : "bg-white/5 border border-white/10"
+                                : "bg-black/80 border border-white/30"
                             }`}
                           >
                             <p className="text-xs text-gray-500">{typeLabel}</p>
@@ -2632,7 +2632,7 @@ const Feedback = () => {
 
                   {/* Action Buttons */}
                   {availableTypes.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/10 flex gap-2">
+                    <div className="mt-4 pt-4 border-t border-white/30 flex gap-2">
                       {availableTypes.map((type) => (
                         <Button
                           key={type}
@@ -2652,7 +2652,7 @@ const Feedback = () => {
 
                   {/* Show completed feedback summary */}
                   {hire.feedbacks && hire.feedbacks.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="mt-4 pt-4 border-t border-white/30">
                       <p className="text-sm text-gray-500 mb-2">Previous Feedback</p>
                       <div className="space-y-2">
                         {hire.feedbacks.map((fb) => (
@@ -2692,7 +2692,7 @@ const Feedback = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No hires yet</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -2713,7 +2713,7 @@ const Feedback = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold text-white mb-2">
@@ -2738,7 +2738,7 @@ const Feedback = () => {
                     className={`p-3 rounded-lg transition-colors ${
                       feedbackForm.performanceRating >= rating
                         ? "bg-amber-500/20 text-amber-400"
-                        : "bg-white/5 text-gray-500 hover:bg-white/10"
+                        : "bg-black/80 text-gray-500 hover:bg-black/80"
                     }`}
                   >
                     <Star
@@ -2766,7 +2766,7 @@ const Feedback = () => {
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                       feedbackForm.readinessAccuracy === rating
                         ? "bg-emerald-600 text-white"
-                        : "bg-white/5 text-gray-400 hover:bg-white/10"
+                        : "bg-black/80 text-gray-400 hover:bg-black/80"
                     }`}
                   >
                     {rating}
@@ -2792,7 +2792,7 @@ const Feedback = () => {
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     feedbackForm.wouldHireAgain
                       ? "bg-emerald-600 text-white"
-                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                      : "bg-black/80 text-gray-400 hover:bg-black/80"
                   }`}
                 >
                   <ThumbsUp className="w-5 h-5" />
@@ -2805,7 +2805,7 @@ const Feedback = () => {
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     !feedbackForm.wouldHireAgain
                       ? "bg-red-600 text-white"
-                      : "bg-white/5 text-gray-400 hover:bg-white/10"
+                      : "bg-black/80 text-gray-400 hover:bg-black/80"
                   }`}
                 >
                   <ThumbsDown className="w-5 h-5" />
@@ -2826,7 +2826,7 @@ const Feedback = () => {
                 }
                 placeholder="Share specific observations about their work..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -2835,7 +2835,7 @@ const Feedback = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowFeedbackModal(false)}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+                className="flex-1 border-white/20 text-white hover:bg-black/80"
               >
                 Cancel
               </Button>
@@ -2970,7 +2970,7 @@ const Company = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Contact Info */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">Contact Information</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -2985,7 +2985,7 @@ const Company = () => {
         </div>
 
         {/* Company Info */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">Company Details</h3>
           <div className="space-y-4">
             <div>
@@ -2996,7 +2996,7 @@ const Company = () => {
                   value={formData.company_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_name: e.target.value }))}
                   placeholder="Your company name"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.company_name || "Not set"}</p>
@@ -3011,7 +3011,7 @@ const Company = () => {
                     value={formData.industry}
                     onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                     placeholder="e.g., Technology"
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 ) : (
                   <p className="text-white">{formData.industry || "Not set"}</p>
@@ -3023,7 +3023,7 @@ const Company = () => {
                   <select
                     value={formData.company_size}
                     onChange={(e) => setFormData((prev) => ({ ...prev, company_size: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                   >
                     <option value="">Select size</option>
                     <option value="1-10">1-10 employees</option>
@@ -3045,7 +3045,7 @@ const Company = () => {
                   value={formData.company_website}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_website: e.target.value }))}
                   placeholder="https://yourcompany.com"
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               ) : formData.company_website ? (
                 <a href={formData.company_website} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
@@ -3061,8 +3061,8 @@ const Company = () => {
         {/* Verification Status */}
         <div className={`p-6 rounded-xl border ${
           employerProfile?.is_verified
-            ? "bg-emerald-500/10 border-emerald-500/20"
-            : "bg-amber-500/10 border-amber-500/20"
+            ? "bg-emerald-500/30 border-emerald-500/20"
+            : "bg-amber-500/30 border-amber-500/20"
         }`}>
           <div className="flex items-center gap-3">
             {employerProfile?.is_verified ? (
@@ -3106,7 +3106,7 @@ const SettingsPage = () => {
       </motion.div>
 
       <motion.div variants={itemVariants} className="space-y-4">
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -3122,27 +3122,27 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+          <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
             Change Password
           </Button>
         </div>
 
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">New candidate matches</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Connection responses</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-white/10 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
             </label>
           </div>
         </div>
@@ -3192,12 +3192,12 @@ const EmployerDashboard = () => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/10 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
@@ -3226,7 +3226,7 @@ const EmployerDashboard = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-emerald-600/20 to-teal-600/20 text-white border border-emerald-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -3236,7 +3236,7 @@ const EmployerDashboard = () => {
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-medium">
                 {profile?.first_name?.[0]}
@@ -3251,7 +3251,7 @@ const EmployerDashboard = () => {
             </div>
             <Button
               variant="outline"
-              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-white/10"
+              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -3262,7 +3262,7 @@ const EmployerDashboard = () => {
       </aside>
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3284,14 +3284,14 @@ const EmployerDashboard = () => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/10 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/10">
+              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-white/30">
                   <h3 className="font-semibold text-white">Notifications</h3>
                 </div>
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-white/5 border-b border-white/5">
+                      <div key={notification.id} className="p-3 hover:bg-black/80 border-b border-white/5">
                         <p className="text-sm font-medium text-white">{notification.title}</p>
                         <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
                       </div>

@@ -40,7 +40,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative z-10 bg-black/95 backdrop-blur-xl border-t border-white/10">
+    <footer className="relative z-10 bg-black/95 backdrop-blur-xl border-t border-white/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
@@ -67,7 +67,7 @@ export function Footer() {
                 <motion.a
                   key={social.name}
                   href={social.href}
-                  className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="w-9 h-9 rounded-lg bg-black/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-black/80 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -148,12 +148,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-16 pt-8 border-t border-white/30 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} The 3rd Academy. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-xs text-gray-400 bg-white/5 px-3 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-black/80 px-3 py-1 rounded-full">
               Behavioral Readiness Platform
             </span>
           </div>

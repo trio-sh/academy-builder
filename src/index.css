@@ -11,15 +11,15 @@
   :root {
     /* Core backgrounds - pure black base */
     --background: 0 0% 0%;
-    --foreground: 220 9% 82%;
+    --foreground: 0 0% 100%;
 
     /* Card surfaces with glass effect */
     --card: 0 0% 5%;
-    --card-foreground: 220 9% 82%;
+    --card-foreground: 0 0% 100%;
 
     /* Popover/overlay surfaces */
     --popover: 0 0% 5%;
-    --popover-foreground: 220 9% 82%;
+    --popover-foreground: 0 0% 100%;
 
     /* Primary - Indigo */
     --primary: 239 84% 67%;
@@ -27,11 +27,11 @@
 
     /* Secondary - Dark glass */
     --secondary: 0 0% 8%;
-    --secondary-foreground: 220 9% 82%;
+    --secondary-foreground: 0 0% 100%;
 
     /* Muted surfaces */
     --muted: 0 0% 10%;
-    --muted-foreground: 220 9% 60%;
+    --muted-foreground: 0 0% 85%;
 
     /* Accent - Purple */
     --accent: 270 91% 65%;
@@ -83,11 +83,11 @@
 
     /* Sidebar */
     --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 220 9% 82%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 239 84% 67%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 239 84% 20%;
-    --sidebar-accent-foreground: 220 9% 82%;
+    --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 15%;
     --sidebar-ring: 239 84% 67%;
   }
@@ -104,6 +104,11 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-size: 1rem;
+    line-height: 1.75;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -188,6 +193,13 @@
     );
     background-size: 200% 100%;
     animation: shimmer 2s ease-in-out infinite;
+  }
+
+  /* High visibility text for dark backgrounds */
+  .text-visible {
+    color: rgb(255, 255, 255) !important;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 4px rgba(255, 255, 255, 0.8) !important;
+    opacity: 1 !important;
   }
 }
 

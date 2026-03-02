@@ -728,11 +728,11 @@ export const TrainingModuleViewer = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/training')}
-                className="text-gray-400 hover:text-white hover:bg-white/10 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-white/10 hidden md:block" />
+              <div className="h-8 w-px bg-black/80 hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
                 <h1 className="hidden md:block font-semibold text-lg text-white">
@@ -753,7 +753,7 @@ export const TrainingModuleViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={stopSpeaking}
-                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/30"
                     title="Stop speaking"
                   >
                     <Pause className="w-4 h-4" />
@@ -763,7 +763,7 @@ export const TrainingModuleViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={toggleMute}
-                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-white/10`}
+                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80`}
                     title={isMuted ? 'Unmute narration' : 'Mute narration'}
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -777,10 +777,10 @@ export const TrainingModuleViewer = () => {
                   </div>
                 )}
               </div>
-              <div className="h-6 w-px bg-white/10 hidden md:block" />
+              <div className="h-6 w-px bg-black/80 hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/30 border border-amber-500/20">
                   <Star className="w-4 h-4 text-amber-400" />
                   <span className="text-amber-400 font-semibold">{totalScore}</span>
                   <span className="text-amber-400/50">/ {module.totalPoints}</span>
@@ -791,7 +791,7 @@ export const TrainingModuleViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
-                      : 'bg-white/5 border border-white/10'
+                      : 'bg-black/80 border border-white/30'
                 }`}>
                   <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -802,7 +802,7 @@ export const TrainingModuleViewer = () => {
               </div>
               {/* Mobile: Stacked compact badges */}
               <div className="flex md:hidden flex-col gap-1">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/30 border border-amber-500/20">
                   <Star className="w-3 h-3 text-amber-400" />
                   <span className="text-amber-400 font-semibold text-xs">{totalScore}/{module.totalPoints}</span>
                 </div>
@@ -811,7 +811,7 @@ export const TrainingModuleViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30'
-                      : 'bg-white/5 border border-white/10'
+                      : 'bg-black/80 border border-white/30'
                 }`}>
                   <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -870,7 +870,7 @@ export const TrainingModuleViewer = () => {
                 {!isUnlocked && (
                   <Lock className="w-2 h-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-600" />
                 )}
-                <span className="absolute left-8 top-1/2 -translate-y-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap bg-gray-800/95 px-3 py-1.5 rounded-lg border border-white/10 shadow-xl">
+                <span className="absolute left-8 top-1/2 -translate-y-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap bg-gray-800/95 px-3 py-1.5 rounded-lg border border-white/30 shadow-xl">
                   {index + 1}. {scene.title}
                 </span>
               </button>
@@ -887,17 +887,17 @@ export const TrainingModuleViewer = () => {
             <motion.div
               key={currentScene?.id}
               ref={contentRef}
-              className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
+              className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
             >
               {/* Scene header */}
               <div className="px-8 pt-8 pb-6 border-b border-white/5">
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`p-2 rounded-xl ${
-                    currentScene?.type === 'narrative' ? 'bg-blue-500/10' :
-                    currentScene?.type === 'choice' ? 'bg-purple-500/10' :
-                    currentScene?.type === 'reflection' ? 'bg-amber-500/10' :
-                    currentScene?.type === 'quiz' ? 'bg-emerald-500/10' :
-                    'bg-amber-500/10'
+                    currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
+                    currentScene?.type === 'choice' ? 'bg-purple-500/30' :
+                    currentScene?.type === 'reflection' ? 'bg-amber-500/30' :
+                    currentScene?.type === 'quiz' ? 'bg-emerald-500/30' :
+                    'bg-amber-500/30'
                   }`}>
                     {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-blue-400" />}
                     {currentScene?.type === 'choice' && <Target className="w-5 h-5 text-purple-400" />}
@@ -960,7 +960,7 @@ export const TrainingModuleViewer = () => {
                           size="sm"
                           onClick={() => speakText(currentScene.content)}
                           disabled={isSpeaking}
-                          className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10"
+                          className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/30"
                         >
                           {isSpeaking ? (
                             <>
@@ -983,7 +983,7 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'choice' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh scenario for attempt #{attemptNumber}</span>
                       </div>
@@ -1002,7 +1002,7 @@ export const TrainingModuleViewer = () => {
                                   ? 'bg-emerald-500/20 border-emerald-500/50'
                                   : 'bg-red-500/20 border-red-500/50'
                                 : 'bg-indigo-500/20 border-indigo-500/50'
-                              : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                              : 'bg-black/80 border-white/30 hover:bg-black/80 hover:border-white/20'
                           } ${showFeedback && choice.isCorrect ? 'bg-emerald-500/20 border-emerald-500/50' : ''}`}
                         >
                           <div className="flex items-start gap-3">
@@ -1032,8 +1032,8 @@ export const TrainingModuleViewer = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className={`mt-6 p-4 rounded-xl ${
                           currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
-                            ? 'bg-emerald-500/10 border border-emerald-500/30'
-                            : 'bg-amber-500/10 border border-amber-500/30'
+                            ? 'bg-emerald-500/30 border border-emerald-500/30'
+                            : 'bg-amber-500/30 border border-amber-500/30'
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -1076,20 +1076,20 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'reflection' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh reflection prompt for attempt #{attemptNumber}</span>
                       </div>
                     )}
                     <p className="text-gray-300 mb-4">{currentSceneWithAI.content}</p>
-                    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 mb-4">
+                    <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/30 mb-4">
                       <p className="text-amber-400 text-sm">{currentSceneWithAI.reflection?.prompt}</p>
                     </div>
                     <textarea
                       value={reflectionText}
                       onChange={(e) => setReflectionText(e.target.value)}
                       placeholder="Write your reflection here..."
-                      className="w-full h-40 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-indigo-500/50 focus:outline-none resize-none"
+                      className="w-full h-40 p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder-gray-500 focus:border-indigo-500/50 focus:outline-none resize-none"
                     />
                     <div className="flex items-center justify-between mt-2">
                       <span className={`text-sm ${
@@ -1115,7 +1115,7 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'quiz' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh questions for attempt #{attemptNumber}</span>
                       </div>
@@ -1123,7 +1123,7 @@ export const TrainingModuleViewer = () => {
                     <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
                     <div className="space-y-6">
                       {currentSceneWithAI.quiz?.map((q, qIndex) => (
-                        <div key={qIndex} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <div key={qIndex} className="p-4 rounded-xl bg-black/80 border border-white/30">
                           <p className="font-medium text-white mb-3">
                             {qIndex + 1}. {q.question}
                           </p>
@@ -1148,7 +1148,7 @@ export const TrainingModuleViewer = () => {
                                       : 'bg-indigo-500/20 border border-indigo-500/50'
                                     : quizSubmitted && oIndex === q.correctIndex
                                     ? 'bg-emerald-500/20 border border-emerald-500/50'
-                                    : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                                    : 'bg-black/80 border border-white/30 hover:bg-black/80'
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
@@ -1189,7 +1189,7 @@ export const TrainingModuleViewer = () => {
                         <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
                     ) : (
-                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
+                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/30">
                         <p className="text-indigo-400 font-medium">
                           Quiz Complete! You answered {quizAnswers.filter((a, i) => a === currentSceneWithAI.quiz?.[i].correctIndex).length} of {currentSceneWithAI.quiz?.length} correctly.
                         </p>
@@ -1207,11 +1207,11 @@ export const TrainingModuleViewer = () => {
                     <h3 className="text-3xl font-bold text-white mb-4">{currentScene.content}</h3>
 
                     <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8">
-                      <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="p-4 rounded-xl bg-black/80 border border-white/30">
                         <p className="text-2xl font-bold text-emerald-400">{totalScore}</p>
                         <p className="text-sm text-gray-400">Points Earned</p>
                       </div>
-                      <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="p-4 rounded-xl bg-black/80 border border-white/30">
                         <p className="text-2xl font-bold text-indigo-400">{completedScenes}</p>
                         <p className="text-sm text-gray-400">Scenes Completed</p>
                       </div>
@@ -1238,7 +1238,7 @@ export const TrainingModuleViewer = () => {
                       </Button>
                     ) : (
                       <div className="space-y-4">
-                        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 mb-4">
+                        <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 mb-4">
                           <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                           <p className="text-emerald-400 font-medium">Module Completed!</p>
                         </div>
@@ -1246,7 +1246,7 @@ export const TrainingModuleViewer = () => {
                           <Button
                             onClick={downloadCertificate}
                             variant="outline"
-                            className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                            className="border-amber-500/50 text-amber-400 hover:bg-amber-500/30"
                           >
                             <Download className="w-4 h-4 mr-2" />
                             Download Certificate
@@ -1278,7 +1278,7 @@ export const TrainingModuleViewer = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black/80 hover:text-white disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

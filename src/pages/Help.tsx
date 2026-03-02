@@ -188,7 +188,7 @@ const Help = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <HelpCircle className="w-4 h-4" />
                 Help Center
               </span>
@@ -207,7 +207,7 @@ const Help = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               Search our knowledge base or browse categories to find answers
               to your questions about The 3rd Academy.
@@ -223,7 +223,7 @@ const Help = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for help articles..."
-                className="w-full pl-12 pr-4 py-6 text-lg bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 rounded-xl"
+                className="w-full pl-12 pr-4 py-6 text-lg bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 rounded-xl"
               />
             </motion.div>
           </motion.div>
@@ -260,14 +260,14 @@ const Help = () => {
               >
                 <div className="relative h-full">
                   <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-indigo-500/30 transition-colors h-full">
+                  <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors h-full">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                       <category.icon className="w-6 h-6 text-indigo-400" />
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                       {category.title}
                     </h3>
-                    <p className="text-gray-100 text-sm mb-4">
+                    <p className="text-gray-50 text-sm mb-4">
                       {category.description}
                     </p>
                     <span className="text-xs text-gray-500">
@@ -301,13 +301,13 @@ const Help = () => {
                   <motion.a
                     key={index}
                     href="#"
-                    className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/30 transition-colors"
+                    className="group flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-indigo-500/30 transition-colors"
                     whileHover={{ x: 5 }}
                   >
                     <div className="w-8 h-8 rounded-lg bg-indigo-600/20 flex items-center justify-center flex-shrink-0">
                       <FileText className="w-4 h-4 text-indigo-400" />
                     </div>
-                    <span className="text-gray-100 group-hover:text-white transition-colors">
+                    <span className="text-gray-50 group-hover:text-white transition-colors">
                       {article}
                     </span>
                     <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-indigo-400 transition-colors ml-auto" />
@@ -328,7 +328,7 @@ const Help = () => {
               </h2>
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-2xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-white/5 border border-white/10">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-black/80 border border-white/30">
                   <img
                     src="https://api.a0.dev/assets/image?text=Video tutorial thumbnail showing platform walkthrough&aspect=16:9&seed=help_video"
                     alt="Platform Tutorial"
@@ -345,7 +345,7 @@ const Help = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-100 text-sm mt-4">
+              <p className="text-gray-50 text-sm mt-4">
                 Watch our comprehensive platform walkthrough to get started quickly.
               </p>
             </motion.div>
@@ -365,7 +365,7 @@ const Help = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-gray-100">
+            <p className="text-gray-50">
               Quick answers to common questions about The 3rd Academy.
             </p>
           </motion.div>
@@ -388,7 +388,7 @@ const Help = () => {
                     return (
                       <div
                         key={faqId}
-                        className="rounded-xl bg-white/5 border border-white/10 overflow-hidden"
+                        className="rounded-xl bg-black/80 border border-white/30 overflow-hidden"
                       >
                         <button
                           onClick={() => toggleFaq(faqId)}
@@ -399,7 +399,7 @@ const Help = () => {
                             animate={{ rotate: openFaq === faqId ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <ChevronDown className="w-5 h-5 text-gray-100" />
+                            <ChevronDown className="w-5 h-5 text-gray-50" />
                           </motion.div>
                         </button>
                         <AnimatePresence>
@@ -410,7 +410,7 @@ const Help = () => {
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <div className="px-4 pb-4 text-gray-100 text-sm">
+                              <div className="px-4 pb-4 text-gray-50 text-sm">
                                 {faq.a}
                               </div>
                             </motion.div>
@@ -444,7 +444,7 @@ const Help = () => {
                 Still Need Help?
               </span>
             </h2>
-            <p className="text-gray-100 mb-8">
+            <p className="text-gray-50 mb-8">
               Can't find what you're looking for? Our support team is here to help.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -463,7 +463,7 @@ const Help = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Live Chat

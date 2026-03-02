@@ -45,7 +45,7 @@ const NotFound = () => {
             {/* Glow effect */}
             <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-            <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+            <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
                 <Search className="w-8 h-8 text-indigo-400" />
               </div>
@@ -78,7 +78,7 @@ const NotFound = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10"
+                  className="w-full sm:w-auto border-white/20 text-white hover:bg-black/80"
                   onClick={() => window.history.back()}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />

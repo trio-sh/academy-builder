@@ -125,7 +125,7 @@ const Press = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>
@@ -144,7 +144,7 @@ const Press = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               Stay updated on The 3rd Academy's mission to transform credentialing
               through mentor-validated behavioral assessment.
@@ -167,12 +167,12 @@ const Press = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10"
+                className="text-center p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
               >
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-100">{stat.label}</div>
+                <div className="text-sm text-gray-50">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -193,7 +193,7 @@ const Press = () => {
                 Press Releases
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               Official announcements from The 3rd Academy.
             </p>
           </motion.div>
@@ -213,7 +213,7 @@ const Press = () => {
                 className="group block relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-indigo-500/30 transition-colors">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                     <Calendar className="w-4 h-4" />
                     {release.date}
@@ -221,7 +221,7 @@ const Press = () => {
                   <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
                     {release.title}
                   </h3>
-                  <p className="text-gray-100 text-sm mb-4">{release.excerpt}</p>
+                  <p className="text-gray-50 text-sm mb-4">{release.excerpt}</p>
                   <span className="inline-flex items-center text-sm text-indigo-400">
                     Read More <ArrowRight className="ml-1 w-4 h-4" />
                   </span>
@@ -247,7 +247,7 @@ const Press = () => {
                 Featured In
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               Media coverage and thought leadership features.
             </p>
           </motion.div>
@@ -266,7 +266,7 @@ const Press = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 h-full">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-semibold text-indigo-400">
                       {feature.outlet}
@@ -295,7 +295,7 @@ const Press = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 text-center md:text-left">
                     <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -303,7 +303,7 @@ const Press = () => {
                         Media Kit
                       </span>
                     </h2>
-                    <p className="text-gray-100 mb-6">
+                    <p className="text-gray-50 mb-6">
                       Download our press kit including logos, brand guidelines,
                       executive headshots, and fact sheets.
                     </p>
@@ -325,10 +325,10 @@ const Press = () => {
                     ].map((item, index) => (
                       <div
                         key={index}
-                        className="w-24 h-24 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2"
+                        className="w-24 h-24 rounded-xl bg-black/80 border border-white/30 flex flex-col items-center justify-center gap-2"
                       >
                         <item.icon className="w-6 h-6 text-indigo-400" />
-                        <span className="text-xs text-gray-100">{item.label}</span>
+                        <span className="text-xs text-gray-50">{item.label}</span>
                       </div>
                     ))}
                   </div>
@@ -357,7 +357,7 @@ const Press = () => {
                 Media Inquiries
               </span>
             </h2>
-            <p className="text-gray-100 mb-8">
+            <p className="text-gray-50 mb-8">
               For press inquiries, interview requests, or media partnerships,
               please contact our communications team.
             </p>
@@ -377,7 +377,7 @@ const Press = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
                 asChild
               >
                 <Link to="/contact">

@@ -39,7 +39,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10"
+      className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/30"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -69,12 +69,12 @@ export function Header() {
                 "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors",
                 location.pathname === item.href
                   ? "text-white"
-                  : "text-gray-400 hover:text-white"
+                  : "text-white hover:text-white"
               )}
             >
               {location.pathname === item.href && (
                 <motion.div
-                  className="absolute inset-0 bg-white/10 rounded-lg"
+                  className="absolute inset-0 bg-black/80 rounded-lg"
                   layoutId="activeNav"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
@@ -87,7 +87,7 @@ export function Header() {
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
           {isLoading ? (
-            <div className="w-20 h-8 bg-white/10 rounded-lg animate-pulse" />
+            <div className="w-20 h-8 bg-black/80 rounded-lg animate-pulse" />
           ) : isAuthenticated && profile ? (
             <>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -105,7 +105,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white hover:bg-white/10"
+                className="text-gray-400 hover:text-white hover:bg-black/80"
                 onClick={handleSignOut}
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -117,7 +117,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white hover:bg-white/10"
+                className="text-gray-400 hover:text-white hover:bg-black/80"
                 asChild
               >
                 <Link to="/login">Sign In</Link>
@@ -138,12 +138,12 @@ export function Header() {
         {/* Mobile Menu */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+            <Button variant="ghost" size="icon" className="text-white hover:bg-black/80">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs bg-black/95 backdrop-blur-xl border-white/10">
+          <SheetContent side="right" className="w-full max-w-xs bg-black/95 backdrop-blur-xl border-white/30">
             <div className="flex flex-col gap-6 mt-8">
               {navigation.map((item) => (
                 <Link
@@ -154,15 +154,15 @@ export function Header() {
                     "text-lg font-medium transition-colors",
                     location.pathname === item.href
                       ? "text-white"
-                      : "text-gray-400 hover:text-white"
+                      : "text-white hover:text-white"
                   )}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="pt-6 border-t border-white/10 flex flex-col gap-3">
+              <div className="pt-6 border-t border-white/30 flex flex-col gap-3">
                 {isLoading ? (
-                  <div className="w-full h-10 bg-white/10 rounded-lg animate-pulse" />
+                  <div className="w-full h-10 bg-black/80 rounded-lg animate-pulse" />
                 ) : isAuthenticated && profile ? (
                   <>
                     {/* User info */}
@@ -188,7 +188,7 @@ export function Header() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full border-white/20 text-white hover:bg-white/10"
+                      className="w-full border-white/20 text-white hover:bg-black/80"
                       onClick={handleSignOut}
                     >
                       <LogOut className="w-4 h-4 mr-2" />
@@ -199,7 +199,7 @@ export function Header() {
                   <>
                     <Button
                       variant="outline"
-                      className="w-full border-white/20 text-white hover:bg-white/10"
+                      className="w-full border-white/20 text-white hover:bg-black/80"
                       asChild
                     >
                       <Link to="/login" onClick={() => setMobileMenuOpen(false)}>

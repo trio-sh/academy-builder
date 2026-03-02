@@ -8,7 +8,11 @@ import {
   Users,
   BarChart3,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
+  TrendingUp,
+  Award,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -31,24 +35,46 @@ const itemVariants = {
 
 const values = [
   {
-    icon: Target,
-    title: "Human Judgment First",
-    description: "Every credential is earned through mentor observation. AI supports, but humans decide. No automated credentialing.",
+    icon: Users,
+    title: "Human Judgment Above All",
+    description: "Every credential is earned through rigorous mentor observation. AI assists, but humans make the final call—no automated shortcuts.",
   },
   {
     icon: Shield,
-    title: "Earned, Not Generated",
-    description: "Skill Passports emerge from sustained observation and evidence. No shortcuts, no self-assessments, no gaming.",
+    title: "Credentials Must Be Earned",
+    description: "Skill Passports emerge from sustained observation and documented evidence. No self-assessments, no gaming the system.",
   },
   {
-    icon: Users,
+    icon: Target,
     title: "Dignity in Every Outcome",
-    description: "Rejection preserves dignity. Exits are graceful. Re-entry is optional. No permanent failure labels.",
+    description: "Rejection is delivered with respect. Exits are graceful. Re-entry is always an option. No permanent labels, no closed doors.",
   },
   {
     icon: BarChart3,
-    title: "System Learning",
-    description: "Every outcome feeds the framework. The system improves without judging individuals. Data informs, never intervenes.",
+    title: "Continuous System Learning",
+    description: "Every outcome strengthens the framework. The system evolves without judging individuals—data informs, never punishes.",
+  },
+];
+
+const stats = [
+  { value: "10K+", label: "Candidates Validated" },
+  { value: "500+", label: "Employer Partners" },
+  { value: "200+", label: "School Partners" },
+  { value: "95%", label: "Satisfaction Rate" },
+];
+
+const differentiators = [
+  {
+    title: "Mentor Decision Intelligence",
+    description: "Years of mentor proceed/redirect/pause decisions correlated with actual hiring outcomes. We've mapped which observations truly predict workplace success.",
+    highlight: "Cannot be replicated in months—requires years of real-world validation.",
+    gradient: "from-amber-500 to-orange-500",
+  },
+  {
+    title: "Behavioral Fingerprinting",
+    description: "Passive interaction patterns correlated with employment outcomes. Our system identifies success signals, dropout risks, and even gaming attempts before they happen.",
+    highlight: "Requires massive scale and longitudinal data—impossible to fake.",
+    gradient: "from-indigo-600 to-purple-600",
   },
 ];
 
@@ -79,72 +105,105 @@ const About = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.div
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-white mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                The 3rd Academy
+              </motion.div>
               <motion.h1
-                className="text-3xl md:text-4xl font-display font-normal mb-6"
+                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
-                  Bridging Credentials
+                  Bridging the Gap Between
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  and Workplace Readiness
+                  Credentials and Readiness
                 </span>
               </motion.h1>
               <motion.p
-                className="text-lg text-gray-100 mb-8"
+                className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                The 3rd Academy addresses the gap between what education provides (Layer 1 & 2)
-                and what employers actually need (Layer 3) — through mentor-gated behavioral validation.
+                Education tells employers what you studied. Certifications show what you passed.
+                <span className="font-bold"> We prove what you can actually do.</span>
               </motion.p>
             </div>
           </div>
         </motion.section>
 
-        {/* Mission */}
-        <section className="py-16 md:py-24 bg-black">
+        {/* Stats */}
+        <section className="py-12 bg-black/40 backdrop-blur-sm border-y border-white/10">
           <div className="container px-4 md:px-6">
             <motion.div
-              className="max-w-3xl mx-auto"
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-                Our Mission
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                <span className="text-white">
-                  Making Behavioral Readiness Observable
-                </span>
-              </h2>
-              <div className="space-y-4 text-lg text-gray-100">
-                <p>
-                  Education credentials tell employers what you studied. Certifications show
-                  what you passed. But neither reveals how you'll actually perform in the workplace.
-                </p>
-                <p>
-                  The 3rd Academy fills this gap with a mentor-gated system that observes,
-                  documents, and validates behavioral readiness over time. Not through AI scores
-                  or self-assessments, but through sustained human observation.
-                </p>
-                <p>
-                  The result? Candidates with evidence-backed credentials. Employers with
-                  confidence in their hires. Schools with tools to prepare students early.
-                </p>
-              </div>
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-white">{stat.label}</div>
+                </div>
+              ))}
             </motion.div>
           </div>
         </section>
 
+        {/* Mission */}
+        <section className="py-20 md:py-28 bg-black">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-12 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
+              >
+                <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                  Our Mission
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                  Making Behavioral Readiness Measurable
+                </h2>
+              </motion.div>
+
+              <div className="relative p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30">
+                <div className="space-y-6 text-lg text-white leading-relaxed">
+                  <p>
+                    Traditional credentials tell employers what you studied. Certifications show what tests you passed.
+                    But <strong>neither reveals how you'll actually perform in the workplace.</strong>
+                  </p>
+                  <p>
+                    The 3rd Academy fills this gap with a mentor-gated validation system that observes, documents,
+                    and certifies behavioral readiness over time. Not through AI scores or self-assessments—
+                    <strong> through sustained human observation by experienced professionals.</strong>
+                  </p>
+                  <p>
+                    The result? <strong>Candidates with evidence-backed credentials.</strong> Employers with confidence in their hires.
+                    Schools with tools to prepare students from day one.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Values */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
+        <section className="py-20 md:py-28 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
           <motion.div
             className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-900/30 rounded-full blur-3xl"
@@ -154,26 +213,24 @@ const About = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-16"
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-                Our Values
+              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                Our Principles
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="text-white">
-                  Architecture as Philosophy
-                </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Architecture as Philosophy
               </h2>
-              <p className="text-lg text-gray-100">
+              <p className="text-lg text-white">
                 Every technical decision reflects a human value. Our architecture is our ethics.
               </p>
             </motion.div>
 
             <motion.div
-              className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+              className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -185,17 +242,16 @@ const About = () => {
                   variants={itemVariants}
                   className="group relative"
                 >
-                  {/* Glow effect */}
-                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
+                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                  <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
-                      <value.icon className="w-6 h-6 text-indigo-400" />
+                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-600/30">
+                      <value.icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-2xl font-bold text-white mb-3">
                       {value.title}
                     </h3>
-                    <p className="text-gray-100 leading-relaxed">
+                    <p className="text-white leading-relaxed">
                       {value.description}
                     </p>
                   </div>
@@ -205,85 +261,158 @@ const About = () => {
           </div>
         </section>
 
-        {/* The Moat */}
-        <section className="py-16 md:py-24 bg-black">
+        {/* Competitive Advantage */}
+        <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
             <motion.div
-              className="max-w-3xl mx-auto text-center mb-12"
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="text-white">
-                  Our Competitive Moat
-                </span>
+              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
+                Our Competitive Moat
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                What Makes Us Defensible
               </h2>
-              <p className="text-lg text-gray-100">
-                A competitor can replicate our interface in weeks. They cannot replicate
-                years of judgment-outcome correlations.
+              <p className="text-lg text-white">
+                A competitor can copy our interface in weeks. They cannot replicate
+                years of judgment-outcome correlations and behavioral data.
               </p>
             </motion.div>
 
             <motion.div
-              className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"
+              className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <motion.div
-                variants={itemVariants}
-                className="group relative"
-              >
-                <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-amber-500 to-orange-500" />
-                <div className="relative p-8 rounded-2xl bg-amber-500/10 border border-amber-500/20 hover:border-amber-500/30 transition-all duration-300">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Mentor Decision Patterns
-                  </h3>
-                  <p className="text-gray-100 mb-4">
-                    Every proceed/redirect/pause decision correlated with eventual hiring outcomes.
-                    We learn which mentor judgments actually predict workplace success.
-                  </p>
-                  <p className="text-sm text-amber-400 font-medium">
-                    Requires years of data to replicate.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={itemVariants}
-                className="group relative"
-              >
-                <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative p-8 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Behavioral Fingerprint
-                  </h3>
-                  <p className="text-gray-100 mb-4">
-                    Passive interaction patterns correlated with real employment outcomes.
-                    We learn which behaviors predict success, dropout, and even gaming attempts.
-                  </p>
-                  <p className="text-sm text-indigo-400 font-medium">
-                    Requires scale + time to build.
-                  </p>
-                </div>
-              </motion.div>
+              {differentiators.map((diff) => (
+                <motion.div
+                  key={diff.title}
+                  variants={itemVariants}
+                  className="group relative"
+                >
+                  <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${diff.gradient}`} />
+                  <div className={`relative p-8 rounded-2xl bg-black/85 backdrop-blur-xl border-2 transition-all duration-300 border-${diff.gradient.split(' ')[0].replace('from-', '')}/40 hover:border-${diff.gradient.split(' ')[0].replace('from-', '')}/60`}>
+                    <div className="flex items-start gap-4 mb-4">
+                      <Zap className={`w-8 h-8 text-${diff.gradient.split(' ')[0].replace('from-', '')}-400`} />
+                      <h3 className="text-2xl font-bold text-white">
+                        {diff.title}
+                      </h3>
+                    </div>
+                    <p className="text-white mb-4 leading-relaxed">
+                      {diff.description}
+                    </p>
+                    <div className={`inline-block px-4 py-2 rounded-lg bg-gradient-to-r ${diff.gradient} bg-opacity-10 border border-${diff.gradient.split(' ')[0].replace('from-', '')}-500/30`}>
+                      <p className={`text-sm font-bold text-${diff.gradient.split(' ')[0].replace('from-', '')}-400`}>
+                        {diff.highlight}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
 
             <motion.div
-              className="max-w-2xl mx-auto mt-12 relative group"
+              className="max-w-3xl mx-auto mt-16 relative group"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className="absolute -inset-2 rounded-3xl opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-6 rounded-2xl bg-white/5 border border-white/10 text-center backdrop-blur-xl">
-                <blockquote className="text-lg font-medium text-white italic">
+              <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
+              <div className="relative p-10 rounded-3xl bg-black/85 border border-white/30 text-center backdrop-blur-xl">
+                <Award className="w-16 h-16 text-indigo-400 mx-auto mb-6" />
+                <blockquote className="text-2xl font-semibold text-white italic mb-4">
                   "The flowchart is the map. The data is the territory.
                   We share the map selectively. We never share the territory."
                 </blockquote>
+                <p className="text-white/70">
+                  — Core Philosophy, The 3rd Academy
+                </p>
               </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Who We Serve */}
+        <section className="py-20 md:py-28 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <div className="container px-4 md:px-6 relative z-10">
+            <motion.div
+              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Built for Everyone
+                </span>
+              </h2>
+              <p className="text-lg text-white">
+                Three pathways, one ecosystem—designed for candidates, employers, and educators.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {[
+                {
+                  title: "For Candidates",
+                  desc: "Earn validated credentials through mentor observation. Build a Skill Passport that proves workplace readiness.",
+                  link: "/join",
+                  icon: Users,
+                  gradient: "from-indigo-600 to-indigo-700",
+                },
+                {
+                  title: "For Employers",
+                  desc: "Access pre-validated talent with evidence-backed behavioral profiles. Hire with confidence, reduce turnover.",
+                  link: "/employers",
+                  icon: TrendingUp,
+                  gradient: "from-purple-600 to-purple-700",
+                },
+                {
+                  title: "For Schools",
+                  desc: "Prepare students early with career awareness tools. Build longitudinal profiles that transition seamlessly.",
+                  link: "/schools",
+                  icon: Target,
+                  gradient: "from-pink-600 to-pink-700",
+                },
+              ].map((item) => (
+                <motion.div key={item.title} variants={itemVariants} className="group relative">
+                  <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${item.gradient}`} />
+                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300 h-full flex flex-col">
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-5 shadow-lg`}>
+                      <item.icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="font-bold text-white mb-3 text-2xl text-center">{item.title}</h3>
+                    <p className="text-white leading-relaxed text-center mb-6 flex-grow">{item.desc}</p>
+                    <Button
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold"
+                      asChild
+                    >
+                      <Link to={item.link}>
+                        Learn More
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
         </section>
@@ -297,44 +426,54 @@ const About = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
             <motion.h2
-              className="text-4xl md:text-5xl font-bold mb-6"
+              className="text-5xl md:text-6xl font-bold mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
+              <span className="text-white">
+                Ready to Join
+              </span>
+              <br />
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Join the Movement
+                The Movement?
               </span>
             </motion.h2>
             <motion.p
-              className="text-lg text-gray-100 max-w-2xl mx-auto mb-10"
+              className="text-xl text-white max-w-2xl mx-auto mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              Whether you're a candidate seeking validation, an employer seeking confidence,
-              or an educator preparing students — there's a place for you.
+              Whether you're seeking validation, hiring talent, or educating students—
+              there's a place for you in our ecosystem.
             </motion.p>
             <motion.div
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
-              <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl" asChild>
-                <Link to="/join">
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>
+                  <Link to="/join">
+                    Get Started Today
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </motion.div>
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-12 py-7 rounded-xl text-lg" asChild>
+                <Link to="/contact">
+                  Contact Us
                 </Link>
               </Button>
             </motion.div>

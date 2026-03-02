@@ -299,14 +299,14 @@ const Overview = () => {
       {/* Stats Grid */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/10 to-cyan-500/10" },
-          { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/10 to-teal-500/10" },
-          { label: "Mentors", value: stats.totalMentors, icon: GraduationCap, color: "text-purple-400", bg: "from-purple-500/10 to-pink-500/10" },
-          { label: "Employers", value: stats.totalEmployers, icon: Building2, color: "text-amber-400", bg: "from-amber-500/10 to-orange-500/10" },
+          { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/30 to-cyan-500/30" },
+          { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/30 to-teal-500/30" },
+          { label: "Mentors", value: stats.totalMentors, icon: GraduationCap, color: "text-purple-400", bg: "from-purple-500/30 to-pink-500/30" },
+          { label: "Employers", value: stats.totalEmployers, icon: Building2, color: "text-amber-400", bg: "from-amber-500/30 to-orange-500/30" },
         ].map((stat) => (
           <div
             key={stat.label}
-            className={`p-6 rounded-xl bg-gradient-to-br ${stat.bg} border border-white/10`}
+            className={`p-6 rounded-xl bg-gradient-to-br ${stat.bg} border border-white/30`}
           >
             <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
             <p className="text-3xl font-bold text-white">{stat.value}</p>
@@ -325,7 +325,7 @@ const Overview = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl bg-white/5 border border-white/10"
+            className="p-4 rounded-xl bg-black/80 border border-white/30"
           >
             <div className="flex items-center gap-3">
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
@@ -341,7 +341,7 @@ const Overview = () => {
       {/* Analytics Charts */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         {/* User Growth Chart */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Growth (12 Weeks)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -383,7 +383,7 @@ const Overview = () => {
         </div>
 
         {/* Role Distribution Pie Chart */}
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Role Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -418,7 +418,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Platform Activity Bar Chart */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
         <h3 className="text-lg font-semibold text-white mb-4">Platform Activity Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -448,7 +448,7 @@ const Overview = () => {
       {/* Alerts */}
       {stats.pendingTalentVisas > 0 && (
         <motion.div variants={itemVariants}>
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-4">
+          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-4">
             <AlertTriangle className="w-6 h-6 text-amber-400" />
             <div className="flex-1">
               <p className="font-medium text-amber-400">Pending Review</p>
@@ -471,7 +471,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/admin/users"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
           >
             <Users className="w-8 h-8 text-blue-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Manage Users</h3>
@@ -481,7 +481,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/admin/talentvisa"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
           >
             <Award className="w-8 h-8 text-yellow-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">TalentVisa Review</h3>
@@ -491,7 +491,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/admin/reports"
-            className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
           >
             <FileText className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">View Reports</h3>
@@ -513,7 +513,7 @@ const Overview = () => {
           {recentActivity.map((user) => (
             <div
               key={user.id}
-              className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between"
+              className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
             >
               <div className="flex items-center gap-4">
                 {user.avatar_url ? (
@@ -623,13 +623,13 @@ const UsersManagement = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search users..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
           />
         </div>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-red-500 focus:outline-none"
+          className="px-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white focus:border-red-500 focus:outline-none"
         >
           <option value="all">All Roles</option>
           <option value="candidate">Candidates</option>
@@ -642,10 +642,10 @@ const UsersManagement = () => {
 
       {/* Users Table */}
       <motion.div variants={itemVariants}>
-        <div className="rounded-xl border border-white/10 overflow-hidden">
+        <div className="rounded-xl border border-white/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-white/5">
+              <thead className="bg-black/80">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">User</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Role</th>
@@ -656,7 +656,7 @@ const UsersManagement = () => {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-white/5">
+                  <tr key={user.id} className="hover:bg-black/80">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         {user.avatar_url ? (
@@ -929,7 +929,7 @@ const TalentVisaReview = () => {
         <Button
           variant="outline"
           onClick={() => setShowQuotaSettings(!showQuotaSettings)}
-          className="border-white/20 text-white hover:bg-white/10"
+          className="border-white/20 text-white hover:bg-black/80"
         >
           <Target className="w-4 h-4 mr-2" />
           Quota Settings
@@ -995,7 +995,7 @@ const TalentVisaReview = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
                 ? "bg-red-600 text-white"
-                : "bg-white/5 text-gray-400 hover:text-white"
+                : "bg-black/80 text-gray-400 hover:text-white"
             }`}
           >
             {f}
@@ -1082,7 +1082,7 @@ const TalentVisaReview = () => {
 
                   {nomination.status === "pending" && (
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/10">
+                      <div className="flex-1 p-3 rounded-lg bg-black/80 border border-white/30">
                         <p className="text-xs text-gray-400 mb-1">Suggested Tier</p>
                         <p className={`font-medium ${TIER_CONFIG[suggestedTier].color}`}>
                           {TIER_CONFIG[suggestedTier].label} (min score: {TIER_CONFIG[suggestedTier].minScore})
@@ -1098,7 +1098,7 @@ const TalentVisaReview = () => {
                       <Button
                         onClick={() => reviewNomination(nomination.id, "rejected")}
                         variant="outline"
-                        className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                        className="border-red-500/30 text-red-400 hover:bg-red-500/30"
                       >
                         <XCircle className="w-4 h-4 mr-2" />
                         Reject
@@ -1110,7 +1110,7 @@ const TalentVisaReview = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Award className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No {filter !== "all" ? filter : ""} nominations</p>
           </div>
@@ -1131,7 +1131,7 @@ const TalentVisaReview = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/10 w-full max-w-lg p-6"
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-xl font-bold text-white mb-2">Approve TalentVisa</h3>
@@ -1157,7 +1157,7 @@ const TalentVisaReview = () => {
                         ? "opacity-50 cursor-not-allowed bg-gray-800/50 border-gray-700"
                         : isSelected
                         ? `${config.bgColor} ${config.borderColor} border-2`
-                        : "bg-white/5 border-white/10 hover:border-white/30"
+                        : "bg-black/80 border-white/30 hover:border-white/30"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -1188,7 +1188,7 @@ const TalentVisaReview = () => {
             </div>
 
             {selectedNomination.behavioral_score !== undefined && selectedNomination.behavioral_score > 0 && (
-              <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 mb-6">
+              <div className="p-3 rounded-lg bg-indigo-500/30 border border-indigo-500/20 mb-6">
                 <p className="text-sm text-indigo-300">
                   Candidate's behavioral score is <span className="font-bold">{selectedNomination.behavioral_score.toFixed(1)}/5</span>.
                   Suggested tier: <span className="font-bold">{TIER_CONFIG[getSuggestedTier(selectedNomination.behavioral_score)].label}</span>
@@ -1203,7 +1203,7 @@ const TalentVisaReview = () => {
                   setShowApprovalModal(false);
                   setSelectedNomination(null);
                 }}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
+                className="flex-1 border-white/20 text-white hover:bg-black/80"
               >
                 Cancel
               </Button>
@@ -1292,7 +1292,7 @@ const EmployersManagement = () => {
             {employers.map((employer) => (
               <div
                 key={employer.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between"
+                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   {employer.company_logo_url ? (
@@ -1333,7 +1333,7 @@ const EmployersManagement = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
             <Building2 className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No employers registered yet</p>
           </div>
@@ -1357,7 +1357,7 @@ const SchoolsManagement = () => {
         <p className="text-gray-400">Manage and verify school accounts.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-12 rounded-2xl bg-white/5 border border-white/10 text-center">
+      <motion.div variants={itemVariants} className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
         <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
         <p className="text-gray-400">No schools registered yet</p>
       </motion.div>
@@ -1380,7 +1380,7 @@ const Reports = () => {
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">User Growth (30 days)</h3>
           <div className="h-48 flex items-end gap-2">
             {Array.from({ length: 30 }).map((_, i) => (
@@ -1393,7 +1393,7 @@ const Reports = () => {
           </div>
         </div>
 
-        <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">User Distribution</h3>
           <div className="space-y-4">
             {[
@@ -1407,7 +1407,7 @@ const Reports = () => {
                   <span className="text-gray-400">{item.role}</span>
                   <span className="text-white">{item.percent}%</span>
                 </div>
-                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-2 bg-black/80 rounded-full overflow-hidden">
                   <div
                     className={`h-full ${item.color}`}
                     style={{ width: `${item.percent}%` }}
@@ -1426,7 +1426,7 @@ const Reports = () => {
           { label: "Project Completions", value: "567", change: "+15%" },
           { label: "Employer Hires", value: "189", change: "+23%" },
         ].map((stat) => (
-          <div key={stat.label} className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div key={stat.label} className="p-4 rounded-xl bg-black/80 border border-white/30">
             <p className="text-2xl font-bold text-white">{stat.value}</p>
             <p className="text-sm text-gray-400">{stat.label}</p>
             <p className="text-xs text-emerald-400 mt-1">{stat.change} this month</p>
@@ -1558,7 +1558,7 @@ const CommunicationsPage = () => {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* User Selection */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
 
           {/* Filters */}
@@ -1566,7 +1566,7 @@ const CommunicationsPage = () => {
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
             >
               <option value="all" className="bg-gray-900">All Roles</option>
               <option value="candidate" className="bg-gray-900">Candidates</option>
@@ -1581,13 +1581,13 @@ const CommunicationsPage = () => {
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
+                className="w-full bg-black/80 border border-white/30 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
               />
             </div>
           </div>
 
           {/* Select All */}
-          <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/30">
             <button
               onClick={selectAll}
               className="text-sm text-indigo-400 hover:text-indigo-300"
@@ -1606,8 +1606,8 @@ const CommunicationsPage = () => {
                 key={user.id}
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                   selectedUsers.includes(user.id)
-                    ? "bg-red-500/10 border border-red-500/30"
-                    : "bg-white/5 hover:bg-white/10"
+                    ? "bg-red-500/30 border border-red-500/30"
+                    : "bg-black/80 hover:bg-black/80"
                 }`}
               >
                 <input
@@ -1622,7 +1622,7 @@ const CommunicationsPage = () => {
                   </p>
                   <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-400 capitalize">
+                <span className="text-xs px-2 py-1 rounded-full bg-black/80 text-gray-400 capitalize">
                   {user.role}
                 </span>
               </label>
@@ -1631,7 +1631,7 @@ const CommunicationsPage = () => {
         </motion.div>
 
         {/* Message Composition */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
 
           {/* Send Type */}
@@ -1649,7 +1649,7 @@ const CommunicationsPage = () => {
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-colors ${
                     sendType === option.value
                       ? "bg-red-500/20 border-red-500/50 text-white"
-                      : "border-white/10 text-gray-400 hover:bg-white/5"
+                      : "border-white/30 text-gray-400 hover:bg-black/80"
                   }`}
                 >
                   <option.icon className="w-4 h-4" />
@@ -1669,7 +1669,7 @@ const CommunicationsPage = () => {
                   value={notificationTitle}
                   onChange={(e) => setNotificationTitle(e.target.value)}
                   placeholder="Important Update"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
               </div>
               <div>
@@ -1679,7 +1679,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setNotificationMessage(e.target.value)}
                   placeholder="Enter your notification message..."
                   rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
                 />
               </div>
             </div>
@@ -1695,7 +1695,7 @@ const CommunicationsPage = () => {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Subject line"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
               </div>
               <div>
@@ -1705,7 +1705,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Enter your email message..."
                   rows={5}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
                 />
               </div>
             </div>
@@ -1748,7 +1748,7 @@ const SettingsPage = () => {
         <p className="text-gray-400">Platform configuration and preferences.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-white/5 border border-white/10">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
         <p className="text-gray-400">Admin settings will appear here.</p>
       </motion.div>
     </motion.div>
@@ -1777,13 +1777,13 @@ const AdminDashboard = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/10 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-orange-600 flex items-center justify-center">
                 <Shield className="w-4 h-4 text-white" />
@@ -1811,7 +1811,7 @@ const AdminDashboard = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-red-600/20 to-orange-600/20 text-white border border-red-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -1822,7 +1822,7 @@ const AdminDashboard = () => {
           </nav>
 
           {/* User */}
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/30">
             <div className="flex items-center gap-3 mb-4">
               {profile?.avatar_url ? (
                 <img
@@ -1844,7 +1844,7 @@ const AdminDashboard = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 w-full px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+              className="flex items-center gap-2 w-full px-4 py-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -1856,7 +1856,7 @@ const AdminDashboard = () => {
       {/* Main content */}
       <div className="lg:ml-64">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"

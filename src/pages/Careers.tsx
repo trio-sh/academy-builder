@@ -151,7 +151,7 @@ const Careers = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Sparkles className="w-4 h-4" />
                 We're Hiring
               </span>
@@ -170,7 +170,7 @@ const Careers = () => {
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-lg text-gray-100 mb-8"
+              className="text-lg text-gray-50 mb-8"
             >
               Join our mission to bridge the gap between credentials and workplace readiness.
               We're building technology that validates real human capability.
@@ -203,7 +203,7 @@ const Careers = () => {
                 Our Values
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               These principles guide everything we do at The 3rd Academy.
             </p>
           </motion.div>
@@ -222,11 +222,11 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 h-full">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-gray-100 text-sm">{value.description}</p>
+                  <p className="text-gray-50 text-sm">{value.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -249,7 +249,7 @@ const Careers = () => {
                 Benefits & Perks
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               We take care of our team so they can focus on changing the future of work.
             </p>
           </motion.div>
@@ -268,14 +268,14 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 h-full">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                     <benefit.icon className="w-6 h-6 text-indigo-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-100 text-sm">{benefit.description}</p>
+                  <p className="text-gray-50 text-sm">{benefit.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -297,7 +297,7 @@ const Careers = () => {
                 Open Positions
               </span>
             </h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="text-gray-50 max-w-2xl mx-auto">
               Find your role in transforming how the world validates skills.
             </p>
           </motion.div>
@@ -316,7 +316,7 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-indigo-500/30 transition-colors">
+                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -327,7 +327,7 @@ const Careers = () => {
                       <h3 className="text-xl font-semibold text-white mb-2">
                         {position.title}
                       </h3>
-                      <p className="text-gray-100 text-sm mb-4">
+                      <p className="text-gray-50 text-sm mb-4">
                         {position.description}
                       </p>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
@@ -373,7 +373,7 @@ const Careers = () => {
                 Don't See Your Role?
               </span>
             </h2>
-            <p className="text-gray-100 mb-8">
+            <p className="text-gray-50 mb-8">
               We're always looking for talented people who share our mission.
               Send us your resume and tell us how you'd contribute.
             </p>
@@ -381,7 +381,7 @@ const Careers = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white hover:bg-black/80"
                 asChild
               >
                 <Link to="/contact">

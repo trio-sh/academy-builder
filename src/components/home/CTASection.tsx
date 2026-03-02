@@ -60,7 +60,7 @@ export function CTASection() {
               {/* Badge */}
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-sm text-white mb-8"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/20 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 Begin Your Credential Journey
@@ -83,7 +83,7 @@ export function CTASection() {
               {/* Description */}
               <motion.p
                 variants={itemVariants}
-                className="text-base md:text-lg text-gray-100 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
+                className="text-base md:text-lg text-gray-50 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
                 and start building your Skill Passport through evidence-based observation.
@@ -116,7 +116,7 @@ export function CTASection() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto border-2 border-white/30 text-white px-10 py-6 rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-xl"
+                    className="w-full sm:w-auto border-2 border-white/30 text-white px-10 py-6 rounded-xl font-bold text-lg hover:bg-black/80 transition-all duration-300 backdrop-blur-xl"
                     asChild
                   >
                     <Link to="/platform">Learn More</Link>
@@ -125,7 +125,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p variants={itemVariants} className="mt-10 text-gray-100">
+              <motion.p variants={itemVariants} className="mt-10 text-gray-50">
                 No credit card required · Mentor-matched within 48 hours
               </motion.p>
             </div>

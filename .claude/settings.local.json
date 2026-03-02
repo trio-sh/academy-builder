@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-ChildItem -Path src -Recurse -Include *.tsx,*.ts | ForEach-Object { (Get-Content $_FullName) -replace ''text-gray-100'', ''text-gray-50'' | Set-Content $_FullName }\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\Users\\DELL\\Downloads\\the3rdacademy\\academy-builder\\replace-text.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\Users\\DELL\\Downloads\\the3rdacademy\\academy-builder\\fix-card-opacity.ps1\")",
+      "WebSearch",
+      "Bash(claude mcp add playwright -s local npx \"@playwright/mcp@latest\")",
+      "Bash(claude mcp list:*)",
+      "Bash(claude mcp add playwright -s global npx \"@playwright/mcp@latest\")",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_console_messages",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

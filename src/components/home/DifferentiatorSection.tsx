@@ -80,7 +80,7 @@ export function DifferentiatorSection() {
               A Category Difference.
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-100 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-50 leading-relaxed">
             Competitors are doing point-in-time AI assessments. We're doing sustained
             human-gated observation with outcome learning.
           </p>
@@ -92,17 +92,17 @@ export function DifferentiatorSection() {
             {/* Glow effect */}
             <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500" />
 
-            <div className="relative rounded-3xl border border-white/10 overflow-hidden bg-white/5 backdrop-blur-xl">
+            <div className="relative rounded-3xl border border-white/30 overflow-hidden bg-black/80 backdrop-blur-xl">
               {/* Header */}
-              <div className="grid grid-cols-3 bg-white/5">
-                <div className="p-4 md:p-6 border-r border-white/10">
-                  <span className="text-sm font-medium text-gray-100">Criteria</span>
+              <div className="grid grid-cols-3 bg-black/80">
+                <div className="p-4 md:p-6 border-r border-white/30">
+                  <span className="text-sm font-medium text-gray-50">Criteria</span>
                 </div>
-                <div className="p-4 md:p-6 border-r border-white/10 bg-emerald-500/10">
+                <div className="p-4 md:p-6 border-r border-white/30 bg-emerald-500/30">
                   <span className="text-sm font-bold text-emerald-400">The 3rd Academy</span>
                 </div>
                 <div className="p-4 md:p-6">
-                  <span className="text-sm font-medium text-gray-100">Traditional Platforms</span>
+                  <span className="text-sm font-medium text-gray-50">Traditional Platforms</span>
                 </div>
               </div>
 
@@ -116,15 +116,15 @@ export function DifferentiatorSection() {
                   transition={{ delay: index * 0.1 }}
                   className={cn(
                     "grid grid-cols-3",
-                    index !== comparisons.length - 1 && "border-b border-white/10"
+                    index !== comparisons.length - 1 && "border-b border-white/30"
                   )}
                 >
-                  <div className="p-4 md:p-6 border-r border-white/10 flex items-center">
+                  <div className="p-4 md:p-6 border-r border-white/30 flex items-center">
                     <span className="text-sm font-medium text-white">{row.criteria}</span>
                   </div>
-                  <div className="p-4 md:p-6 border-r border-white/10 bg-emerald-500/5 flex items-center gap-2">
+                  <div className="p-4 md:p-6 border-r border-white/30 bg-emerald-500/5 flex items-center gap-2">
                     <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-100">{row.t3a}</span>
+                    <span className="text-sm text-gray-50">{row.t3a}</span>
                   </div>
                   <div className="p-4 md:p-6 flex items-center gap-2">
                     <X className="w-4 h-4 text-red-400/50 flex-shrink-0" />
