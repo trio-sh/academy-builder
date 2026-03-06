@@ -129,10 +129,11 @@ const itemVariants = {
 
 const navItems = [
   { name: "Overview", href: "/dashboard/candidate", icon: BarChart3, section: "observation" },
+  { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
   { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
-  { name: "Observation Pathway", href: "/dashboard/candidate/assessment", icon: ClipboardCheck, section: "observation" },
-  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "bridgefast" },
+  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
+  { name: "Readiness Reflection", href: "/dashboard/candidate/assessment", icon: Sliders, section: "preparation" },
   { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase, section: "liveworks" },
   { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap, section: "account" },
   { name: "Connections", href: "/dashboard/candidate/connections", icon: Users, section: "account" },
@@ -254,7 +255,7 @@ const Overview = () => {
       },
       {
         title: "Upload your resume",
-        description: "Start the credentialing process",
+        description: "Start the observation process",
         completed: !!candidateProfile?.resume_url,
         href: "/dashboard/candidate/profile"
       },
@@ -266,7 +267,7 @@ const Overview = () => {
       },
       {
         title: "Earn your Skill Passport",
-        description: "Receive your behavioral credential",
+        description: "Receive your behavioral readiness documentation",
         completed: candidateProfile?.has_skill_passport || false,
         href: "/dashboard/candidate/passport"
       },
@@ -306,7 +307,7 @@ const Overview = () => {
           Welcome back, {profile?.first_name || "Candidate"}
         </h1>
         <p className="text-gray-400">
-          Track your progress and continue your credentialing journey.
+          Track your progress and continue your observation journey.
         </p>
       </motion.div>
 
@@ -663,12 +664,12 @@ const SkillPassport = () => {
           <div class="dimensions-grid">
             ${BEHAVIORAL_DIMENSIONS.map(dim => {
               const score = behavioralScores[dim.id] || 0;
-              const percentage = (score / 5) * 100;
+              const percentage = (score / 4) * 100;
               return `
                 <div class="dimension">
                   <div class="dimension-header">
                     <span class="dimension-name">${dim.label}</span>
-                    <span class="dimension-score">${score.toFixed(1)}/5</span>
+                    <span class="dimension-score">${score.toFixed(1)}/4</span>
                   </div>
                   <div class="progress-bar">
                     <div class="progress-fill" style="width: ${percentage}%"></div>
@@ -681,7 +682,7 @@ const SkillPassport = () => {
           <div class="overall-score">
             <div>
               <div class="overall-label">Overall Behavioral Score</div>
-              <div class="overall-value">${avgScore}/5</div>
+              <div class="overall-value">${avgScore}/4</div>
             </div>
             <div style="font-size: 48px;">🏆</div>
           </div>
@@ -734,7 +735,7 @@ const SkillPassport = () => {
         <motion.div variants={itemVariants}>
           <h1 className="text-3xl font-bold text-white mb-2">Skill Passport</h1>
           <p className="text-gray-400">
-            Your behavioral credential that proves workplace readiness.
+            Your behavioral readiness documentation for the workplace.
           </p>
         </motion.div>
 
@@ -748,7 +749,7 @@ const SkillPassport = () => {
           <h2 className="text-2xl font-bold text-white mb-2">Earn Your Skill Passport</h2>
           <p className="text-gray-400 max-w-md mx-auto mb-6">
             Complete the MentorLink process to receive your verified Skill Passport.
-            This credential validates your behavioral readiness for the workplace.
+            This documents your observed behavioral readiness for the workplace.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <div className="flex items-center gap-2 text-gray-400">
@@ -824,7 +825,7 @@ const SkillPassport = () => {
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
-          <p className="text-gray-400">Your verified behavioral credential for employers.</p>
+          <p className="text-gray-400">Your documented behavioral readiness assessment for employers.</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -941,7 +942,7 @@ const SkillPassport = () => {
         <div className="grid md:grid-cols-2 gap-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension) => {
             const score = behavioralScores[dimension.id] || 0;
-            const percentage = (score / 5) * 100;
+            const percentage = (score / 4) * 100;
 
             return (
               <div
@@ -950,7 +951,7 @@ const SkillPassport = () => {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-white">{dimension.label}</span>
-                  <span className="text-lg font-bold text-white">{score.toFixed(1)}/5</span>
+                  <span className="text-lg font-bold text-white">{score.toFixed(1)}/4</span>
                 </div>
                 <div className="h-2 bg-black/80 rounded-full overflow-hidden">
                   <div
@@ -973,7 +974,7 @@ const SkillPassport = () => {
               <p className="text-3xl font-bold text-white">
                 {Object.values(behavioralScores).length > 0
                   ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
-                  : "N/A"}/5
+                  : "N/A"}/4
               </p>
             </div>
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
@@ -989,7 +990,7 @@ const SkillPassport = () => {
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-emerald-400" />
             <p className="text-sm text-gray-400">
-              Employers can verify this credential at{" "}
+              Employers can review this documentation at{" "}
               <span className="text-emerald-400 font-mono">
                 {window.location.origin}/verify/{passportData?.verification_code}
               </span>
@@ -1101,7 +1102,7 @@ const GrowthLog = () => {
     return BEHAVIORAL_DIMENSIONS.map((dim) => ({
       dimension: dim.label,
       score: scores[dim.id] || 0,
-      fullMark: 5,
+      fullMark: 4,
     }));
   };
 
@@ -1265,7 +1266,7 @@ const GrowthLog = () => {
                     />
                     <PolarRadiusAxis
                       angle={30}
-                      domain={[0, 5]}
+                      domain={[0, 4]}
                       tick={{ fill: "#6b7280", fontSize: 10 }}
                     />
                     <Radar
@@ -1503,7 +1504,388 @@ const ASSESSMENT_DESCRIPTIONS: Record<string, { title: string; description: stri
   },
 };
 
-// Self Assessment component
+// Mentor-Gated Observation Pathway
+// Candidates MUST have an active mentor assignment to access observations.
+// Mentor assigns dimensions before any observation activity (L1–L4) can begin.
+const ObservationPathway = () => {
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [mentorAssignment, setMentorAssignment] = useState<MentorAssignment | null>(null);
+  const [mentorProfile, setMentorProfile] = useState<{ first_name: string; last_name: string } | null>(null);
+  const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
+  const [observationFeedback, setObservationFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; final_feedback: string | null }>>([]);
+
+  useEffect(() => {
+    const fetchObservationData = async () => {
+      if (!user?.id) return;
+
+      try {
+        // Check for active mentor assignment
+        const { data: assignments } = await supabase
+          .from("mentor_assignments")
+          .select("*")
+          .eq("candidate_id", user.id)
+          .eq("status", "active")
+          .limit(1);
+
+        if (assignments && assignments.length > 0) {
+          const assignment = assignments[0];
+          setMentorAssignment(assignment);
+
+          // Get mentor name
+          const { data: mentorData } = await supabase
+            .from("profiles")
+            .select("first_name, last_name")
+            .eq("id", assignment.mentor_id)
+            .single();
+          if (mentorData) setMentorProfile(mentorData);
+
+          // Get mentor-assigned dimensions
+          const { data: dims } = await supabase
+            .from("mentor_assigned_dimensions")
+            .select("dimension_id")
+            .eq("assignment_id", assignment.id)
+            .eq("is_active", true);
+
+          if (dims) {
+            setAssignedDimensions(dims.map((d: { dimension_id: string }) => d.dimension_id));
+          }
+
+          // Get observation feedback for this assignment
+          const { data: feedback } = await supabase
+            .from("observation_feedback")
+            .select("dimension_id, feedback_level, bars_score, status, final_feedback")
+            .eq("assignment_id", assignment.id)
+            .eq("candidate_id", user.id);
+
+          if (feedback) setObservationFeedback(feedback);
+        }
+      } catch (error) {
+        console.error("Error fetching observation data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchObservationData();
+  }, [user?.id]);
+
+  const getBarsLabel = (score: number) => {
+    switch (score) {
+      case 1: return "Developing";
+      case 2: return "Competent";
+      case 3: return "Proficient";
+      case 4: return "Exemplary";
+      default: return "—";
+    }
+  };
+
+  const getBarsColor = (score: number) => {
+    switch (score) {
+      case 1: return "text-orange-400";
+      case 2: return "text-amber-400";
+      case 3: return "text-blue-400";
+      case 4: return "text-emerald-400";
+      default: return "text-gray-400";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  // NO MENTOR ASSIGNMENT — Gate the entire observation pathway
+  if (!mentorAssignment) {
+    return (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="max-w-3xl mx-auto space-y-8"
+      >
+        <motion.div variants={itemVariants} className="text-center py-12">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-10 h-10 text-indigo-400" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-3">Observation Pathway</h1>
+          <p className="text-gray-400 max-w-xl mx-auto mb-6">
+            The Observation Pathway requires an active mentor assignment. Your mentor will assign behavioral dimensions for observation and guide you through the assessment process.
+          </p>
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 inline-flex items-start gap-3 max-w-lg text-left">
+            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-amber-300 font-medium">Mentor Assignment Required</p>
+              <p className="text-sm text-amber-300/70 mt-1">
+                No observation activity can begin until a mentor is assigned and has selected your behavioral dimensions for assessment. Find a mentor to get started.
+              </p>
+            </div>
+          </div>
+          <div className="mt-8">
+            <Link to="/dashboard/candidate/mentors">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+              >
+                <GraduationCap className="w-5 h-5 mr-2" />
+                Find a Mentor
+              </Button>
+            </Link>
+          </div>
+
+          <div className="mt-12 grid md:grid-cols-3 gap-4 text-left">
+            {[
+              { step: "1", title: "Get Matched", desc: "Find and connect with a qualified mentor" },
+              { step: "2", title: "Dimensions Assigned", desc: "Your mentor selects behavioral dimensions for observation" },
+              { step: "3", title: "Begin Observations", desc: "Complete L1–L4 observation sessions on assigned dimensions" },
+            ].map((item) => (
+              <div key={item.step} className="p-4 rounded-xl bg-black/80 border border-white/10">
+                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm mb-3">
+                  {item.step}
+                </div>
+                <h3 className="font-semibold text-white text-sm">{item.title}</h3>
+                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  }
+
+  // HAS MENTOR BUT NO ASSIGNED DIMENSIONS
+  if (assignedDimensions.length === 0) {
+    return (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="max-w-3xl mx-auto space-y-8"
+      >
+        <motion.div variants={itemVariants}>
+          <h1 className="text-3xl font-bold text-white mb-2">Observation Pathway</h1>
+          <p className="text-gray-400">
+            You are assigned to mentor {mentorProfile?.first_name} {mentorProfile?.last_name}.
+          </p>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black/80 border border-white/10 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
+            <Clock className="w-8 h-8 text-amber-400" />
+          </div>
+          <h2 className="text-xl font-semibold text-white mb-2">Awaiting Dimension Assignment</h2>
+          <p className="text-gray-400 max-w-md mx-auto">
+            Your mentor has not yet assigned behavioral dimensions for your observation. Once dimensions are assigned, you will be able to begin your L1 observation session.
+          </p>
+          <p className="text-sm text-gray-500 mt-4">
+            Your mentor will be notified that you are ready to begin.
+          </p>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+            <p className="text-sm text-indigo-300">
+              While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Skill Passport.
+            </p>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  }
+
+  // HAS MENTOR + ASSIGNED DIMENSIONS — Show observation dashboard
+  const mvpDimensions = BEHAVIORAL_DIMENSIONS.filter(d => assignedDimensions.includes(d.id));
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-5xl mx-auto space-y-8"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-white mb-2">Your Observation Pathway</h1>
+        <p className="text-gray-400">
+          Observation sessions on your mentor-assigned dimensions. All feedback is documented and assessed by your mentor.
+        </p>
+        <div className="mt-3 flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-sm text-emerald-400">
+            <CheckCircle className="w-4 h-4" />
+            Mentor: {mentorProfile?.first_name} {mentorProfile?.last_name}
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 text-sm text-indigo-400">
+            <ClipboardCheck className="w-4 h-4" />
+            {assignedDimensions.length} Dimensions Assigned
+          </div>
+        </div>
+      </motion.div>
+
+      {/* L1 Observation Session — Only on assigned dimensions */}
+      <motion.div variants={itemVariants}>
+        <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
+          <div className="absolute top-4 right-4">
+            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
+              Level 1 — AI Observation
+            </span>
+          </div>
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <Brain className="w-10 h-10 text-white" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-white mb-2">L1 Observation Session</h2>
+              <p className="text-gray-300 mb-4">
+                AI-driven observation scenarios on your mentor-assigned dimensions. Your responses are documented as behavioral evidence. L1 feedback is delivered automatically after completion.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-6">
+                {[
+                  { icon: Mic, text: "Voice Scenarios" },
+                  { icon: Brain, text: "AI Observation" },
+                  { icon: Clock, text: "Timed Scenarios" },
+                  { icon: ClipboardCheck, text: "Evidence Documented" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 text-sm text-gray-300">
+                    <item.icon className="w-4 h-4 text-emerald-400" />
+                    {item.text}
+                  </div>
+                ))}
+              </div>
+              <Link to="/dashboard/candidate/observations/session">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
+                >
+                  Begin Observation Session
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Assigned Dimensions */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-xl font-semibold text-white mb-4">Assigned Dimensions</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {mvpDimensions.map((dim) => {
+            const dimFeedback = observationFeedback.filter(f => f.dimension_id === dim.id);
+            const latestScore = dimFeedback.find(f => f.bars_score)?.bars_score;
+            const completedLevels = dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').length;
+
+            return (
+              <div key={dim.id} className="p-5 rounded-xl bg-black/80 border border-white/10">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 className="font-semibold text-white">{dim.label}</h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {completedLevels}/4 levels documented
+                    </p>
+                  </div>
+                  {latestScore && (
+                    <div className="text-right">
+                      <span className={`text-lg font-bold ${getBarsColor(latestScore)}`}>
+                        {latestScore}/4
+                      </span>
+                      <p className={`text-xs ${getBarsColor(latestScore)}`}>
+                        {getBarsLabel(latestScore)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4].map((level) => {
+                    const levelFeedback = dimFeedback.find(f => f.feedback_level === level);
+                    const isComplete = levelFeedback && (levelFeedback.status === 'ai_delivered' || levelFeedback.status === 'approved');
+                    const isPending = levelFeedback && levelFeedback.status === 'mentor_review';
+                    return (
+                      <div
+                        key={level}
+                        className={`flex-1 h-2 rounded-full ${
+                          isComplete
+                            ? "bg-emerald-500"
+                            : isPending
+                            ? "bg-amber-500"
+                            : "bg-white/10"
+                        }`}
+                        title={`L${level}: ${isComplete ? "Complete" : isPending ? "Awaiting mentor review" : "Not started"}`}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="flex justify-between text-[10px] text-gray-600 mt-1">
+                  <span>L1 AI</span>
+                  <span>L2 Mentor</span>
+                  <span>L3 Draft</span>
+                  <span>L4 Mentor</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Feedback History */}
+      {observationFeedback.filter(f => f.final_feedback).length > 0 && (
+        <motion.div variants={itemVariants}>
+          <h2 className="text-xl font-semibold text-white mb-4">Observation Feedback</h2>
+          <div className="space-y-3">
+            {observationFeedback
+              .filter(f => f.final_feedback)
+              .map((fb, i) => {
+                const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === fb.dimension_id);
+                return (
+                  <div key={i} className="p-4 rounded-xl bg-black/80 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-400">
+                          L{fb.feedback_level}
+                        </span>
+                        <span className="font-medium text-white text-sm">{dim?.label}</span>
+                      </div>
+                      {fb.bars_score && (
+                        <span className={`font-bold ${getBarsColor(fb.bars_score)}`}>
+                          {fb.bars_score}/4 — {getBarsLabel(fb.bars_score)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-400">{fb.final_feedback}</p>
+                  </div>
+                );
+              })}
+          </div>
+        </motion.div>
+      )}
+
+      {/* BARS Scale Reference */}
+      <motion.div variants={itemVariants}>
+        <div className="p-4 rounded-xl bg-black/80 border border-white/10">
+          <h3 className="text-sm font-semibold text-gray-400 mb-3">4-Point BARS Scoring Reference</h3>
+          <div className="grid grid-cols-4 gap-3">
+            {[
+              { score: 1, label: "Developing", desc: "Emerging awareness, needs guidance", color: "text-orange-400" },
+              { score: 2, label: "Competent", desc: "Meets expectations with support", color: "text-amber-400" },
+              { score: 3, label: "Proficient", desc: "Consistently demonstrates independently", color: "text-blue-400" },
+              { score: 4, label: "Exemplary", desc: "Models best practice, mentors others", color: "text-emerald-400" },
+            ].map((item) => (
+              <div key={item.score} className="text-center">
+                <span className={`text-lg font-bold ${item.color}`}>{item.score}</span>
+                <p className={`text-xs font-medium ${item.color}`}>{item.label}</p>
+                <p className="text-[10px] text-gray-500 mt-1">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Self Assessment component (Preparation — NOT part of formal observation)
 const SelfAssessmentPage = () => {
   const { user, profile } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -1627,8 +2009,8 @@ const SelfAssessmentPage = () => {
       await supabase.from("growth_log_entries").insert({
         candidate_id: user.id,
         event_type: "assessment",
-        title: "Observation Readiness Check Completed",
-        description: `Personal readiness reflection recorded. Evidence profile captured across ${Object.keys(currentScores).length} behavioral dimensions.`,
+        title: "Readiness Reflection Completed",
+        description: `Personal readiness reflection recorded across ${Object.keys(currentScores).length} behavioral dimensions. This is a preparation tool — not part of formal observation.`,
         source_component: "SelfAssessment",
         metadata: {
           scores: currentScores,
@@ -1673,14 +2055,14 @@ const SelfAssessmentPage = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Observation Readiness Check</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Readiness Reflection</h1>
         <p className="text-gray-400">
           A personal reflection tool to help you prepare for your formal observation sessions.
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-sm text-amber-300">
-            This is a personal readiness reflection tool. It is not part of your formal T3A observation and will not appear in your Skill Passport. Your formal observation is conducted by AI and your mentor.
+            This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Skill Passport. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
           </p>
         </div>
       </motion.div>
@@ -1737,72 +2119,36 @@ const SelfAssessmentPage = () => {
           <div className="space-y-6">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Your Observation Pathway</h1>
+              <h1 className="text-3xl font-bold text-white mb-2">Readiness Reflection</h1>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Begin your formal observation or use the readiness reflection tool to prepare before your session.
+                A self-directed preparation tool to reflect on your behavioral readiness before your formal observation sessions.
               </p>
-            </div>
-
-            {/* L1 Observation Session - Featured Option */}
-            <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
-              <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
-                  Level 1 — AI Observation
-                </span>
-              </div>
-              <div className="flex flex-col md:flex-row items-start gap-6">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                  <Brain className="w-10 h-10 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-2">L1 Observation Session</h2>
-                  <p className="text-gray-300 mb-4">
-                    Timed AI-driven pressure scenarios across the T3A Behavioral Dimensions. Your responses are recorded as behavioral evidence. No scores or feedback are shown during the session.
-                  </p>
-                  <div className="flex flex-wrap gap-3 mb-6">
-                    {[
-                      { icon: Mic, text: "Voice Scenarios" },
-                      { icon: Brain, text: "AI Observation" },
-                      { icon: Clock, text: "Timed Scenarios" },
-                      { icon: ClipboardCheck, text: "Evidence Recorded" },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 text-sm text-gray-300">
-                        <item.icon className="w-4 h-4 text-emerald-400" />
-                        {item.text}
-                      </div>
-                    ))}
-                  </div>
-                  <Link to="/dashboard/candidate/assessment/skill-test">
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
-                    >
-                      Begin Observation Session
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </Link>
-                </div>
+              <div className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 inline-flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                <p className="text-xs text-amber-300">
+                  Preparation only — not part of your formal observation. Results do not appear in your Skill Passport.
+                </p>
               </div>
             </div>
 
-            {/* Interactive Assessment - Secondary Option */}
-            <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 via-purple-600/5 to-indigo-600/30 border border-indigo-500/20">
+            {/* Guided Self-Reflection */}
+            <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-amber-600/20 via-orange-600/5 to-amber-600/20 border border-amber-500/20">
               <div className="flex flex-col md:flex-row items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center">
-                  <Sparkles className="w-7 h-7 text-indigo-400" />
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-600/20 flex items-center justify-center">
+                  <Sparkles className="w-7 h-7 text-amber-400" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-1">Guided Self-Reflection</h3>
                   <p className="text-gray-400 text-sm mb-4">
-                    A guided, immersive journey through all 8 behavioral dimensions with narrative introductions,
+                    A guided, immersive journey through all 14 behavioral dimensions with narrative introductions,
                     thoughtful prompts, and voice narration. Rate yourself through self-reflection.
                   </p>
                   <Link to="/dashboard/candidate/assessment/interactive">
                     <Button
                       variant="outline"
-                      className="border-indigo-500/30 text-gray-300 hover:bg-indigo-500/30"
+                      className="border-amber-500/30 text-gray-300 hover:bg-amber-500/10"
                     >
-                      Start Guided Assessment
+                      Start Guided Reflection
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>
@@ -1810,24 +2156,24 @@ const SelfAssessmentPage = () => {
               </div>
             </div>
 
-            {/* Quick Assessment - Secondary Option */}
+            {/* Quick Reflection */}
             <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
               <div className="flex flex-col md:flex-row items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center">
                   <Sliders className="w-7 h-7 text-gray-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-1">Quick Assessment</h3>
+                  <h3 className="text-lg font-semibold text-white mb-1">Quick Reflection</h3>
                   <p className="text-gray-400 text-sm mb-4">
-                    Rate all 8 dimensions directly with sliders. Best for quick updates or when you're already familiar
-                    with the assessment process.
+                    Rate all 14 dimensions directly with sliders. Best for quick updates or when you are already familiar
+                    with the reflection process.
                   </p>
                   <Button
                     variant="outline"
                     className="border-white/20 text-gray-300 hover:bg-black/80"
                     onClick={() => setActiveStep(1)}
                   >
-                    Start Quick Assessment
+                    Start Quick Reflection
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
@@ -1839,8 +2185,8 @@ const SelfAssessmentPage = () => {
               {[
                 { icon: Target, text: "Identify strengths & growth areas", color: "text-emerald-400" },
                 { icon: TrendingUp, text: "Track progress over time", color: "text-blue-400" },
-                { icon: Users, text: "Prepare for mentor feedback", color: "text-purple-400" },
-                { icon: Award, text: "Enhance your Skill Passport", color: "text-amber-400" },
+                { icon: Users, text: "Prepare for mentor observations", color: "text-purple-400" },
+                { icon: Award, text: "Personal development only", color: "text-amber-400" },
               ].map((item, i) => (
                 <div key={i} className="p-4 rounded-xl bg-black/80 border border-white/30 text-center">
                   <item.icon className={`w-6 h-6 ${item.color} mx-auto mb-2`} />
@@ -3800,7 +4146,7 @@ const Profile = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-white">Resume</h3>
-              <p className="text-sm text-gray-400">Upload your resume to start the credentialing process</p>
+              <p className="text-sm text-gray-400">Upload your resume to start the observation process</p>
             </div>
             <FileText className="w-8 h-8 text-indigo-400" />
           </div>
@@ -5654,15 +6000,15 @@ const CandidateDashboard = () => {
                       Observation Platform
                     </p>
                   )}
-                  {showSectionLabel && item.section === "bridgefast" && (
+                  {showSectionLabel && item.section === "preparation" && (
                     <div className="mt-3 mb-1">
                       <div className="border-t border-white/30 mb-3" />
                       <div className="flex items-center gap-2 px-2 pb-1">
                         <p className="text-xs font-semibold text-amber-400/80 uppercase tracking-wider">
-                          BridgeFast
+                          Preparation
                         </p>
                         <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-400 font-medium">
-                          Dev
+                          Self-Directed
                         </span>
                       </div>
                     </div>
@@ -5687,13 +6033,13 @@ const CandidateDashboard = () => {
                     to={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors mb-0.5 ${
                       isActive
-                        ? item.section === "bridgefast"
+                        ? item.section === "preparation"
                           ? "bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white border border-amber-500/30"
                           : "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-white border border-indigo-500/30"
                         : "text-gray-400 hover:text-white hover:bg-black/80"
                     }`}
                   >
-                    <item.icon className={`w-5 h-5 ${item.section === "bridgefast" && isActive ? "text-amber-400" : ""}`} />
+                    <item.icon className={`w-5 h-5 ${item.section === "preparation" && isActive ? "text-amber-400" : ""}`} />
                     {item.name}
                   </Link>
                 </div>
@@ -5824,11 +6170,12 @@ const CandidateDashboard = () => {
         <main className="p-4 md:p-8">
           <Routes>
             <Route index element={<Overview />} />
+            <Route path="observations" element={<ObservationPathway />} />
+            <Route path="observations/session" element={<InteractiveSkillAssessment />} />
             <Route path="passport" element={<SkillPassport />} />
             <Route path="growth" element={<GrowthLog />} />
             <Route path="assessment" element={<SelfAssessmentPage />} />
             <Route path="assessment/interactive" element={<AssessmentViewer />} />
-            <Route path="assessment/skill-test" element={<InteractiveSkillAssessment />} />
             <Route path="training" element={<Training />} />
             <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
             <Route path="projects" element={<Projects />} />

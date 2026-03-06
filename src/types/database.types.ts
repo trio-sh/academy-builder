@@ -16,6 +16,8 @@ export type MilestoneStatus = 'pending' | 'in_progress' | 'submitted' | 'approve
 export type ConnectionStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 export type EscrowStatus = 'pending' | 'funded' | 'released' | 'refunded' | 'disputed';
 export type TalentVisaTier = 'gold' | 'silver' | 'bronze';
+export type BarsScore = 1 | 2 | 3 | 4; // 1=Developing, 2=Competent, 3=Proficient, 4=Exemplary
+export type FeedbackLevel = 1 | 2 | 3 | 4; // L1=AI auto, L2=Mentor, L3=AI draft+mentor, L4=Mentor
 
 export interface Database {
   public: {
@@ -1491,6 +1493,156 @@ export interface Database {
           answers?: Json;
           passed?: boolean | null;
           attempt_number?: number;
+        };
+      };
+      // Mentor-assigned dimensions for observation gating
+      mentor_assigned_dimensions: {
+        Row: {
+          id: string;
+          assignment_id: string;
+          mentor_id: string;
+          candidate_id: string;
+          dimension_id: string;
+          assigned_at: string;
+          is_active: boolean;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          assignment_id: string;
+          mentor_id: string;
+          candidate_id: string;
+          dimension_id: string;
+          assigned_at?: string;
+          is_active?: boolean;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          assignment_id?: string;
+          mentor_id?: string;
+          candidate_id?: string;
+          dimension_id?: string;
+          assigned_at?: string;
+          is_active?: boolean;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      // L1-L4 Observation Feedback
+      observation_feedback: {
+        Row: {
+          id: string;
+          session_id: string | null;
+          assignment_id: string;
+          candidate_id: string;
+          mentor_id: string | null;
+          dimension_id: string;
+          feedback_level: number;
+          bars_score: number | null;
+          ai_draft_feedback: string | null;
+          mentor_feedback: string | null;
+          final_feedback: string | null;
+          status: 'pending' | 'ai_delivered' | 'draft' | 'mentor_review' | 'approved' | 'rejected';
+          mentor_approved: boolean;
+          mentor_approved_at: string | null;
+          mentor_rejected_reason: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          session_id?: string | null;
+          assignment_id: string;
+          candidate_id: string;
+          mentor_id?: string | null;
+          dimension_id: string;
+          feedback_level: number;
+          bars_score?: number | null;
+          ai_draft_feedback?: string | null;
+          mentor_feedback?: string | null;
+          final_feedback?: string | null;
+          status?: 'pending' | 'ai_delivered' | 'draft' | 'mentor_review' | 'approved' | 'rejected';
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+          mentor_rejected_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          session_id?: string | null;
+          assignment_id?: string;
+          candidate_id?: string;
+          mentor_id?: string | null;
+          dimension_id?: string;
+          feedback_level?: number;
+          bars_score?: number | null;
+          ai_draft_feedback?: string | null;
+          mentor_feedback?: string | null;
+          final_feedback?: string | null;
+          status?: 'pending' | 'ai_delivered' | 'draft' | 'mentor_review' | 'approved' | 'rejected';
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+          mentor_rejected_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      // Final synthesis across L1-L4
+      observation_synthesis: {
+        Row: {
+          id: string;
+          assignment_id: string;
+          candidate_id: string;
+          mentor_id: string;
+          dimension_id: string;
+          ai_synthesis: string | null;
+          mentor_edited_synthesis: string | null;
+          final_synthesis: string | null;
+          overall_bars_score: number | null;
+          status: 'draft' | 'mentor_review' | 'approved';
+          mentor_approved: boolean;
+          mentor_approved_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          assignment_id: string;
+          candidate_id: string;
+          mentor_id: string;
+          dimension_id: string;
+          ai_synthesis?: string | null;
+          mentor_edited_synthesis?: string | null;
+          final_synthesis?: string | null;
+          overall_bars_score?: number | null;
+          status?: 'draft' | 'mentor_review' | 'approved';
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          assignment_id?: string;
+          candidate_id?: string;
+          mentor_id?: string;
+          dimension_id?: string;
+          ai_synthesis?: string | null;
+          mentor_edited_synthesis?: string | null;
+          final_synthesis?: string | null;
+          overall_bars_score?: number | null;
+          status?: 'draft' | 'mentor_review' | 'approved';
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
       };
       training_certificates: {

@@ -32,6 +32,8 @@ import {
   ThumbsUp,
   ArrowRight,
   Lock,
+  Star,
+  Target,
 } from "lucide-react";
 
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
@@ -418,7 +420,13 @@ const ObservationFormModal = () => {
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-400 mb-4">Rate each behavioral dimension (1-5):</p>
+                  <p className="text-sm text-gray-400 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
+                  <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black/60 border border-white/10 text-center">
+                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Developing</p></div>
+                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-gray-500">Competent</p></div>
+                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-gray-500">Proficient</p></div>
+                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-gray-500">Exemplary</p></div>
+                  </div>
                   <div className="space-y-4">
                     {BEHAVIORAL_DIMENSIONS.map(dimension => (
                       <div key={dimension.id} className="p-4 rounded-lg bg-black/80 border border-white/30">
@@ -429,15 +437,21 @@ const ObservationFormModal = () => {
                           </div>
                         </div>
                         <div className="flex gap-2 mt-3">
-                          {[1, 2, 3, 4, 5].map(score => (
+                          {[
+                            { score: 1, label: "Developing", color: "bg-orange-600" },
+                            { score: 2, label: "Competent", color: "bg-amber-600" },
+                            { score: 3, label: "Proficient", color: "bg-blue-600" },
+                            { score: 4, label: "Exemplary", color: "bg-emerald-600" },
+                          ].map(({ score, label, color }) => (
                             <button
                               key={score}
                               onClick={() => handleScoreChange(dimension.id, score)}
                               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 formData.scores[dimension.id] === score
-                                  ? "bg-purple-600 text-white"
+                                  ? `${color} text-white`
                                   : "bg-black/80 text-gray-400 hover:bg-white/20"
                               }`}
+                              title={label}
                             >
                               {score}
                             </button>
@@ -526,7 +540,7 @@ const ObservationFormModal = () => {
                     {BEHAVIORAL_DIMENSIONS.map(d => (
                       <div key={d.id} className="flex justify-between">
                         <span className="text-gray-400">{d.label}:</span>
-                        <span className="text-white font-medium">{formData.scores[d.id] || "-"}/5</span>
+                        <span className="text-white font-medium">{formData.scores[d.id] || "-"}/4</span>
                       </div>
                     ))}
                   </div>
@@ -535,7 +549,7 @@ const ObservationFormModal = () => {
                     <span className="text-purple-400 font-bold">
                       {Object.values(formData.scores).length > 0
                         ? (Object.values(formData.scores).reduce((a, b) => a + b, 0) / Object.values(formData.scores).length).toFixed(1)
-                        : "-"}/5
+                        : "-"}/4
                     </span>
                   </div>
                 </div>
@@ -964,6 +978,16 @@ const Mentees = () => {
                       <Eye className="w-4 h-4 mr-1" />
                       View
                     </Button>
+                    <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                      >
+                        <Star className="w-4 h-4 mr-1" />
+                        Dimensions
+                      </Button>
+                    </Link>
                     <Button
                       size="sm"
                       className="bg-purple-600 hover:bg-purple-500"
@@ -990,6 +1014,234 @@ const Mentees = () => {
           </p>
         </motion.div>
       )}
+    </motion.div>
+  );
+};
+
+// Dimension Assignment Page — Mentor assigns behavioral dimensions to a candidate
+const AssignDimensions = () => {
+  const { user } = useAuth();
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [candidateName, setCandidateName] = useState("");
+  const [selectedDimensions, setSelectedDimensions] = useState<string[]>([]);
+  const [existingDimensions, setExistingDimensions] = useState<string[]>([]);
+
+  // Extract assignment ID and candidate ID from URL
+  const pathParts = location.pathname.split("/");
+  const assignmentId = pathParts[pathParts.length - 2];
+  const candidateId = pathParts[pathParts.length - 1];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user?.id || !assignmentId || !candidateId) return;
+
+      try {
+        // Get candidate name
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("first_name, last_name")
+          .eq("id", candidateId)
+          .single();
+        if (profile) setCandidateName(`${profile.first_name} ${profile.last_name}`);
+
+        // Get existing assigned dimensions
+        const { data: dims } = await supabase
+          .from("mentor_assigned_dimensions")
+          .select("dimension_id")
+          .eq("assignment_id", assignmentId)
+          .eq("is_active", true);
+
+        if (dims && dims.length > 0) {
+          const dimIds = dims.map((d: { dimension_id: string }) => d.dimension_id);
+          setExistingDimensions(dimIds);
+          setSelectedDimensions(dimIds);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user?.id, assignmentId, candidateId]);
+
+  const toggleDimension = (dimId: string) => {
+    if (selectedDimensions.includes(dimId)) {
+      setSelectedDimensions(selectedDimensions.filter(d => d !== dimId));
+    } else {
+      setSelectedDimensions([...selectedDimensions, dimId]);
+    }
+  };
+
+  const saveDimensions = async () => {
+    if (!user?.id || !assignmentId || !candidateId) return;
+    setIsSaving(true);
+
+    try {
+      // Deactivate existing dimensions not in new selection
+      const toDeactivate = existingDimensions.filter(d => !selectedDimensions.includes(d));
+      if (toDeactivate.length > 0) {
+        for (const dimId of toDeactivate) {
+          await supabase
+            .from("mentor_assigned_dimensions")
+            .update({ is_active: false, updated_at: new Date().toISOString() })
+            .eq("assignment_id", assignmentId)
+            .eq("dimension_id", dimId);
+        }
+      }
+
+      // Insert new dimensions
+      const toInsert = selectedDimensions.filter(d => !existingDimensions.includes(d));
+      if (toInsert.length > 0) {
+        await supabase.from("mentor_assigned_dimensions").insert(
+          toInsert.map(dimId => ({
+            assignment_id: assignmentId,
+            mentor_id: user.id,
+            candidate_id: candidateId,
+            dimension_id: dimId,
+          }))
+        );
+      }
+
+      setExistingDimensions(selectedDimensions);
+
+      // Create growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: candidateId,
+        event_type: "observation",
+        title: "Observation Dimensions Assigned",
+        description: `Your mentor has assigned ${selectedDimensions.length} behavioral dimensions for observation.`,
+        source_component: "MentorLink",
+      });
+    } catch (error) {
+      console.error("Error saving dimensions:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // MVP dimensions (first 5)
+  const mvpDimensions = BEHAVIORAL_DIMENSIONS.slice(0, 5);
+  const futureDimensions = BEHAVIORAL_DIMENSIONS.slice(5);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-4xl mx-auto space-y-8"
+    >
+      <motion.div variants={itemVariants}>
+        <Link to="/dashboard/mentor/mentees" className="text-sm text-indigo-400 hover:text-indigo-300 mb-4 inline-block">
+          &larr; Back to Mentees
+        </Link>
+        <h1 className="text-3xl font-bold text-white mb-2">Assign Observation Dimensions</h1>
+        <p className="text-gray-400">
+          Select the behavioral dimensions for <span className="text-white font-medium">{candidateName}</span> to be observed on. The candidate cannot begin any observation activity until dimensions are assigned.
+        </p>
+      </motion.div>
+
+      {/* MVP Dimensions */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-lg font-semibold text-white mb-3">MVP Dimensions (Active)</h2>
+        <div className="grid md:grid-cols-2 gap-3">
+          {mvpDimensions.map(dim => (
+            <button
+              key={dim.id}
+              onClick={() => toggleDimension(dim.id)}
+              className={`p-4 rounded-xl border text-left transition-all ${
+                selectedDimensions.includes(dim.id)
+                  ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                  : "bg-black/80 border-white/10 hover:border-white/20"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  selectedDimensions.includes(dim.id) ? "bg-emerald-500" : "bg-black/60"
+                }`}>
+                  {selectedDimensions.includes(dim.id) ? (
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  ) : (
+                    <Target className="w-5 h-5 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-white">{dim.label}</p>
+                  <p className="text-xs text-gray-500">{dim.description}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Future Dimensions */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-lg font-semibold text-white mb-3">Additional Dimensions (Post-MVP)</h2>
+        <div className="grid md:grid-cols-2 gap-3">
+          {futureDimensions.map(dim => (
+            <button
+              key={dim.id}
+              onClick={() => toggleDimension(dim.id)}
+              className={`p-4 rounded-xl border text-left transition-all ${
+                selectedDimensions.includes(dim.id)
+                  ? "bg-indigo-500/20 border-indigo-500/50 ring-2 ring-indigo-500/30"
+                  : "bg-black/80 border-white/10 hover:border-white/20"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  selectedDimensions.includes(dim.id) ? "bg-indigo-500" : "bg-black/60"
+                }`}>
+                  {selectedDimensions.includes(dim.id) ? (
+                    <CheckCircle className="w-5 h-5 text-white" />
+                  ) : (
+                    <Target className="w-5 h-5 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-white">{dim.label}</p>
+                  <p className="text-xs text-gray-500">{dim.description}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Save */}
+      <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-xl bg-black/80 border border-white/10">
+        <div>
+          <p className="text-sm text-gray-400">
+            {selectedDimensions.length} dimension{selectedDimensions.length !== 1 ? "s" : ""} selected
+          </p>
+          {selectedDimensions.length === 0 && (
+            <p className="text-xs text-amber-400 mt-1">At least one dimension must be assigned for the candidate to begin observations.</p>
+          )}
+        </div>
+        <Button
+          onClick={saveDimensions}
+          disabled={isSaving || selectedDimensions.length === 0}
+          className="bg-purple-600 hover:bg-purple-500"
+        >
+          {isSaving ? (
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+          ) : (
+            <><Save className="w-4 h-4 mr-2" /> Save Assigned Dimensions</>
+          )}
+        </Button>
+      </motion.div>
     </motion.div>
   );
 };
@@ -2678,6 +2930,7 @@ const MentorDashboardInner = () => {
           <Routes>
             <Route index element={<Overview />} />
             <Route path="mentees" element={<Mentees />} />
+            <Route path="assign-dimensions/:assignmentId/:candidateId" element={<AssignDimensions />} />
             <Route path="observations" element={<Observations />} />
             <Route path="endorsements" element={<Endorsements />} />
             <Route path="schedule" element={<Schedule />} />
