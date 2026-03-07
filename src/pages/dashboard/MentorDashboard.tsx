@@ -32,7 +32,6 @@ import {
   ThumbsUp,
   ArrowRight,
   Lock,
-  Star,
   Target,
 } from "lucide-react";
 
