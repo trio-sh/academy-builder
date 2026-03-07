@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 
 # Playwright
+e2e/.auth/
+test-results/
+playwright-report/
 .playwright-cli/
 .playwright/
 screenshot-*.png
