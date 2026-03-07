@@ -432,12 +432,12 @@ const SkillPassport = () => {
         .single();
       setCandidateProfile(cp);
 
-      // If has passport, fetch passport data
+      // If has passport, fetch passport data (skill_passports.candidate_id references candidate_profiles.id)
       if (cp?.has_skill_passport) {
         const { data: passport } = await supabase
           .from("skill_passports")
           .select("*")
-          .eq("candidate_id", user.id)
+          .eq("candidate_id", cp.id)
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(1)
@@ -1020,16 +1020,25 @@ const GrowthLog = () => {
         .eq("candidate_id", user.id)
         .order("created_at", { ascending: false });
 
-      // Fetch passport for behavioral scores
-      const { data: passport } = await supabase
-        .from("skill_passports")
-        .select("*")
-        .eq("candidate_id", user.id)
-        .eq("is_active", true)
-        .limit(1)
+      // Fetch candidate_profiles.id for skill_passports FK
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
         .single();
 
-      setPassportData(passport);
+      // Fetch passport for behavioral scores (skill_passports.candidate_id references candidate_profiles.id)
+      if (cpData) {
+        const { data: passport } = await supabase
+          .from("skill_passports")
+          .select("*")
+          .eq("candidate_id", cpData.id)
+          .eq("is_active", true)
+          .limit(1)
+          .single();
+        setPassportData(passport);
+      }
+
       setEntries(data || []);
       setIsLoading(false);
     };
@@ -1520,11 +1529,20 @@ const ObservationPathway = () => {
       if (!user?.id) return;
 
       try {
-        // Check for active mentor assignment
+        // First get candidate_profiles.id for this user (FK-correct query)
+        const { data: cpData } = await supabase
+          .from("candidate_profiles")
+          .select("id")
+          .eq("profile_id", user.id)
+          .single();
+
+        if (!cpData) return;
+
+        // Check for active mentor assignment (candidate_id references candidate_profiles.id)
         const { data: assignments } = await supabase
           .from("mentor_assignments")
           .select("*")
-          .eq("candidate_id", user.id)
+          .eq("candidate_id", cpData.id)
           .eq("status", "active")
           .limit(1);
 
@@ -1532,13 +1550,20 @@ const ObservationPathway = () => {
           const assignment = assignments[0];
           setMentorAssignment(assignment);
 
-          // Get mentor name
-          const { data: mentorData } = await supabase
-            .from("profiles")
-            .select("first_name, last_name")
+          // Get mentor name (mentor_id references mentor_profiles.id, not profiles.id)
+          const { data: mpData } = await supabase
+            .from("mentor_profiles")
+            .select("profile_id")
             .eq("id", assignment.mentor_id)
             .single();
-          if (mentorData) setMentorProfile(mentorData);
+          if (mpData) {
+            const { data: mentorData } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", mpData.profile_id)
+              .single();
+            if (mentorData) setMentorProfile(mentorData);
+          }
 
           // Get mentor-assigned dimensions
           const { data: dims } = await supabase
@@ -1551,12 +1576,12 @@ const ObservationPathway = () => {
             setAssignedDimensions(dims.map((d: { dimension_id: string }) => d.dimension_id));
           }
 
-          // Get observation feedback for this assignment
+          // Get observation feedback for this assignment (candidate_id is candidate_profiles.id)
           const { data: feedback } = await supabase
             .from("observation_feedback")
             .select("dimension_id, feedback_level, bars_score, status, final_feedback")
             .eq("assignment_id", assignment.id)
-            .eq("candidate_id", user.id);
+            .eq("candidate_id", cpData.id);
 
           if (feedback) setObservationFeedback(feedback);
         }
@@ -2975,9 +3000,19 @@ const Projects = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationSuccess, setApplicationSuccess] = useState(false);
 
+  const [candidateProfileIdForProjects, setCandidateProfileIdForProjects] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.id) return;
+
+      // Fetch candidate_profiles.id for FK-correct queries
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      if (cpData) setCandidateProfileIdForProjects(cpData.id);
 
       // Fetch open projects
       const { data: projectData } = await supabase
@@ -2989,16 +3024,18 @@ const Projects = () => {
 
       setProjects(projectData || []);
 
-      // Fetch my applications
-      const { data: applicationData } = await supabase
-        .from("liveworks_applications")
-        .select("*")
-        .eq("candidate_id", user.id);
+      // Fetch my applications (liveworks_applications.candidate_id references candidate_profiles.id)
+      if (cpData) {
+        const { data: applicationData } = await supabase
+          .from("liveworks_applications")
+          .select("*")
+          .eq("candidate_id", cpData.id);
 
-      if (applicationData) {
-        const appMap = new Map<string, LiveWorksApplication>();
-        applicationData.forEach(app => appMap.set(app.project_id, app));
-        setMyApplications(appMap);
+        if (applicationData) {
+          const appMap = new Map<string, LiveWorksApplication>();
+          applicationData.forEach(app => appMap.set(app.project_id, app));
+          setMyApplications(appMap);
+        }
       }
 
       setIsLoading(false);
@@ -3015,17 +3052,17 @@ const Projects = () => {
   };
 
   const submitApplication = async () => {
-    if (!selectedProject || !user?.id) return;
+    if (!selectedProject || !user?.id || !candidateProfileIdForProjects) return;
 
     setIsSubmitting(true);
 
     try {
-      // Create application
+      // Create application (candidate_id references candidate_profiles.id)
       const { data: application, error } = await supabase
         .from("liveworks_applications")
         .insert({
           project_id: selectedProject.id,
-          candidate_id: user.id,
+          candidate_id: candidateProfileIdForProjects,
           cover_letter: coverLetter || null,
           status: "pending",
         })
@@ -3374,11 +3411,19 @@ const Connections = () => {
     const fetchConnections = async () => {
       if (!user?.id) return;
 
+      // Get candidate_profiles.id (t3x_connections.candidate_id references candidate_profiles.id)
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      if (!cpData) { setIsLoading(false); return; }
+
       // Fetch connections for this candidate
       const { data: connectionData } = await supabase
         .from("t3x_connections")
         .select("*")
-        .eq("candidate_id", user.id)
+        .eq("candidate_id", cpData.id)
         .order("created_at", { ascending: false });
 
       if (connectionData && connectionData.length > 0) {
@@ -4724,6 +4769,7 @@ const FindMentor = () => {
   const { user } = useAuth();
   const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
   const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
+  const [candidateProfileId, setCandidateProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
   const [requestMessage, setRequestMessage] = useState("");
@@ -4769,13 +4815,24 @@ const FindMentor = () => {
         setMentors(enrichedMentors);
       }
 
-      // Fetch my current assignments
-      const { data: assignmentsData } = await supabase
-        .from("mentor_assignments")
-        .select("*")
-        .eq("candidate_id", user.id);
+      // Fetch my candidate_profiles.id for FK-correct queries
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
 
-      setMyAssignments(assignmentsData || []);
+      if (cpData) {
+        setCandidateProfileId(cpData.id);
+
+        // Fetch my current assignments
+        const { data: assignmentsData } = await supabase
+          .from("mentor_assignments")
+          .select("*")
+          .eq("candidate_id", cpData.id);
+
+        setMyAssignments(assignmentsData || []);
+      }
 
       setIsLoading(false);
     };
@@ -4797,14 +4854,14 @@ const FindMentor = () => {
   };
 
   const requestMentor = async () => {
-    if (!user?.id || !selectedMentor) return;
+    if (!user?.id || !selectedMentor || !candidateProfileId) return;
 
     setIsRequesting(true);
 
-    // Create mentor assignment request
+    // Create mentor assignment request (candidate_id references candidate_profiles.id)
     const { error } = await supabase.from("mentor_assignments").insert({
       mentor_id: selectedMentor.id,
-      candidate_id: user.id,
+      candidate_id: candidateProfileId,
       status: "active",
       loop_number: 1,
     });

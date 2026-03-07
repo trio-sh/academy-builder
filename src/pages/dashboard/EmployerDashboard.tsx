@@ -1172,20 +1172,27 @@ const Projects = () => {
         );
       }
 
-      // Notify candidate about payment details
+      // Notify candidate about payment details (resolve candidate_profiles.id to profiles.id)
       const project = projects.find((p) => p.id === milestone.project_id);
       if (project?.selected_candidate_id) {
-        await supabase.from("notifications").insert({
-          user_id: project.selected_candidate_id,
-          type: "payment",
-          title: "Payment Credentials Shared",
-          message: `Payment details for milestone "${milestone.title}" have been shared. Amount: $${milestone.payment_amount}. Please complete the payment and submit proof.`,
-          metadata: {
-            milestone_id: milestone.id,
-            amount: milestone.payment_amount,
-            payment_method: paymentDetails.method,
-          },
-        });
+        const { data: cpData } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
+          .eq("id", project.selected_candidate_id)
+          .single();
+        if (cpData) {
+          await supabase.from("notifications").insert({
+            user_id: cpData.profile_id,
+            type: "payment",
+            title: "Payment Credentials Shared",
+            message: `Payment details for milestone "${milestone.title}" have been shared. Amount: $${milestone.payment_amount}. Please complete the payment and submit proof.`,
+            metadata: {
+              milestone_id: milestone.id,
+              amount: milestone.payment_amount,
+              payment_method: paymentDetails.method,
+            },
+          });
+        }
       }
     }
     setShowEscrowModal(false);
@@ -1245,15 +1252,22 @@ const Projects = () => {
         );
       }
 
-      // Notify candidate
+      // Notify candidate (resolve candidate_profiles.id to profiles.id for notifications)
       if (candidateId) {
-        await supabase.from("notifications").insert({
-          user_id: candidateId,
-          type: "payment",
-          title: "Payment Verified!",
-          message: `Your payment of $${milestone.payment_amount} for milestone "${milestone.title}" has been verified and confirmed.`,
-          metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
-        });
+        const { data: cpNotif } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
+          .eq("id", candidateId)
+          .single();
+        if (cpNotif) {
+          await supabase.from("notifications").insert({
+            user_id: cpNotif.profile_id,
+            type: "payment",
+            title: "Payment Verified!",
+            message: `Your payment of $${milestone.payment_amount} for milestone "${milestone.title}" has been verified and confirmed.`,
+            metadata: { milestone_id: milestone.id, amount: milestone.payment_amount },
+          });
+        }
       }
     }
     setShowEscrowModal(false);
@@ -1783,13 +1797,20 @@ const Projects = () => {
                                           : p
                                       )
                                     );
-                                    // Notify candidate
-                                    await supabase.from("notifications").insert({
-                                      user_id: app.candidate_id,
-                                      type: "application_accepted",
-                                      title: "Application Accepted!",
-                                      message: `Your application for "${selectedProject.title}" has been accepted.`,
-                                    });
+                                    // Notify candidate (resolve candidate_profiles.id to profiles.id)
+                                    const { data: cpApp } = await supabase
+                                      .from("candidate_profiles")
+                                      .select("profile_id")
+                                      .eq("id", app.candidate_id)
+                                      .single();
+                                    if (cpApp) {
+                                      await supabase.from("notifications").insert({
+                                        user_id: cpApp.profile_id,
+                                        type: "application_accepted",
+                                        title: "Application Accepted!",
+                                        message: `Your application for "${selectedProject.title}" has been accepted.`,
+                                      });
+                                    }
                                   }}
                                   className="bg-emerald-600 hover:bg-emerald-500"
                                 >

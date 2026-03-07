@@ -130,7 +130,7 @@ const ObservationFormModal = () => {
                 const { data: candidateProfile } = await supabase
                   .from("candidate_profiles")
                   .select("*")
-                  .eq("profile_id", assignment.candidate_id)
+                  .eq("id", assignment.candidate_id)
                   .single();
 
                 if (candidateProfile) {
@@ -259,9 +259,10 @@ const ObservationFormModal = () => {
           })
           .eq("id", mentorProfile.id);
 
-        // Create growth log entry for candidate
+        // Create growth log entry for candidate (growth_log uses profiles.id, not candidate_profiles.id)
+        const candidateProfileId = selectedAssignment?.candidate_profile?.profile_id || formData.candidateId;
         await supabase.from("growth_log_entries").insert({
-          candidate_id: formData.candidateId,
+          candidate_id: candidateProfileId,
           event_type: "observation",
           title: "Mentor Observation Completed",
           description: `Behavioral observation recorded by mentor`,
@@ -286,14 +287,14 @@ const ObservationFormModal = () => {
             })
             .eq("id", formData.assignmentId);
 
-          // Update candidate's mentor_loops count
+          // Update candidate's mentor_loops count (formData.candidateId is candidate_profiles.id)
           await supabase
             .from("candidate_profiles")
             .update({
               mentor_loops: 3,
               updated_at: new Date().toISOString(),
             })
-            .eq("profile_id", formData.candidateId);
+            .eq("id", formData.candidateId);
         }
       }
 
@@ -1037,13 +1038,20 @@ const AssignDimensions = () => {
       if (!user?.id || !assignmentId || !candidateId) return;
 
       try {
-        // Get candidate name
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("first_name, last_name")
+        // Get candidate name (candidateId is candidate_profiles.id, need to join to profiles)
+        const { data: cpData } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
           .eq("id", candidateId)
           .single();
-        if (profile) setCandidateName(`${profile.first_name} ${profile.last_name}`);
+        if (cpData) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("first_name, last_name")
+            .eq("id", cpData.profile_id)
+            .single();
+          if (profile) setCandidateName(`${profile.first_name} ${profile.last_name}`);
+        }
 
         // Get existing assigned dimensions
         const { data: dims } = await supabase
@@ -1080,6 +1088,21 @@ const AssignDimensions = () => {
     setIsSaving(true);
 
     try {
+      // Get mentor_profiles.id for FK-correct inserts
+      const { data: mp } = await supabase
+        .from("mentor_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      if (!mp) return;
+
+      // Get candidate's profiles.id for growth_log (which uses profiles.id FK)
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", candidateId)
+        .single();
+
       // Deactivate existing dimensions not in new selection
       const toDeactivate = existingDimensions.filter(d => !selectedDimensions.includes(d));
       if (toDeactivate.length > 0) {
@@ -1092,13 +1115,13 @@ const AssignDimensions = () => {
         }
       }
 
-      // Insert new dimensions
+      // Insert new dimensions (mentor_id is mentor_profiles.id, candidate_id is candidate_profiles.id)
       const toInsert = selectedDimensions.filter(d => !existingDimensions.includes(d));
       if (toInsert.length > 0) {
         await supabase.from("mentor_assigned_dimensions").insert(
           toInsert.map(dimId => ({
             assignment_id: assignmentId,
-            mentor_id: user.id,
+            mentor_id: mp.id,
             candidate_id: candidateId,
             dimension_id: dimId,
           }))
@@ -1107,9 +1130,9 @@ const AssignDimensions = () => {
 
       setExistingDimensions(selectedDimensions);
 
-      // Create growth log entry
+      // Create growth log entry (candidate_id uses profiles.id)
       await supabase.from("growth_log_entries").insert({
-        candidate_id: candidateId,
+        candidate_id: cpData?.profile_id || candidateId,
         event_type: "observation",
         title: "Observation Dimensions Assigned",
         description: `Your mentor has assigned ${selectedDimensions.length} behavioral dimensions for observation.`,
@@ -1449,7 +1472,7 @@ const Endorsements = () => {
                 const { data: candidateProfile } = await supabase
                   .from("candidate_profiles")
                   .select("*")
-                  .eq("profile_id", assignment.candidate_id)
+                  .eq("id", assignment.candidate_id)
                   .single();
 
                 let profile = null;
@@ -1535,7 +1558,7 @@ const Endorsements = () => {
           decision: endorsementForm.decision,
           justification: endorsementForm.justification,
           redirect_module_id: endorsementForm.decision === "redirect" && endorsementForm.redirectModule ? endorsementForm.redirectModule : null,
-          redirect_to_liveworks: endorsementForm.decision === "redirect" ? endorsementForm.redirectToLiveworks : false,
+          redirect_to: endorsementForm.decision === "redirect" ? (endorsementForm.redirectToLiveworks ? "liveworks" : "bridgefast") : null,
         })
         .select()
         .single();
@@ -1572,7 +1595,7 @@ const Endorsements = () => {
           current_tier: newTier,
           updated_at: new Date().toISOString(),
         })
-        .eq("profile_id", assignment.candidate_id);
+        .eq("id", assignment.candidate_id);
 
       // Create growth log entry
       const decisionLabels: Record<string, string> = {
@@ -1581,8 +1604,10 @@ const Endorsements = () => {
         pause: "Pause - Not ready to continue",
       };
 
+      // growth_log_entries uses profiles.id, resolve from candidate_profiles
+      const growthLogCandidateId = assignment.candidate_profile?.profile_id || assignment.candidate_id;
       await supabase.from("growth_log_entries").insert({
-        candidate_id: assignment.candidate_id,
+        candidate_id: growthLogCandidateId,
         event_type: "endorsement",
         title: `Mentor Endorsement: ${endorsementForm.decision.charAt(0).toUpperCase() + endorsementForm.decision.slice(1)}`,
         description: decisionLabels[endorsementForm.decision],
@@ -1622,18 +1647,18 @@ const Endorsements = () => {
           expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year expiry
         });
 
-        // Update candidate profile
+        // Update candidate profile (assignment.candidate_id is candidate_profiles.id)
         await supabase
           .from("candidate_profiles")
           .update({
             has_skill_passport: true,
             updated_at: new Date().toISOString(),
           })
-          .eq("profile_id", assignment.candidate_id);
+          .eq("id", assignment.candidate_id);
 
-        // Create growth log entry for passport
+        // Create growth log entry for passport (uses profiles.id)
         await supabase.from("growth_log_entries").insert({
-          candidate_id: assignment.candidate_id,
+          candidate_id: growthLogCandidateId,
           event_type: "skill_passport",
           title: "Skill Passport Earned",
           description: `Verification Code: ${verificationCode}`,
@@ -1650,9 +1675,9 @@ const Endorsements = () => {
         })
         .eq("id", selectedAssignment);
 
-      // Create notification for candidate
+      // Create notification for candidate (uses profiles.id)
       await supabase.from("notifications").insert({
-        user_id: assignment.candidate_id,
+        user_id: growthLogCandidateId,
         title: "New Endorsement Received",
         message: `Your mentor has submitted an endorsement: ${decisionLabels[endorsementForm.decision]}`,
         type: "endorsement",

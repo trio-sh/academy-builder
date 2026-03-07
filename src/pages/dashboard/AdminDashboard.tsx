@@ -883,19 +883,28 @@ const TalentVisaReview = () => {
     // If approved, update candidate
     const nomination = nominations.find(n => n.id === nominationId);
     if (decision === "approved" && nomination) {
+      // nomination.candidate_id is candidate_profiles.id
       await supabase
         .from("candidate_profiles")
         .update({ has_talentvisa: true })
-        .eq("profile_id", nomination.candidate_id);
+        .eq("id", nomination.candidate_id);
 
-      // Send notification with tier info
-      await supabase.from("notifications").insert({
-        user_id: nomination.candidate_id,
-        type: "talentvisa_approved",
-        title: `TalentVisa ${TIER_CONFIG[tier || "bronze"].label} Approved!`,
-        message: `Congratulations! You've been awarded a ${TIER_CONFIG[tier || "bronze"].label} TalentVisa. You now have access to premium opportunities.`,
-        metadata: { tier },
-      });
+      // Resolve to profiles.id for notifications
+      const { data: cpData } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", nomination.candidate_id)
+        .single();
+
+      if (cpData) {
+        await supabase.from("notifications").insert({
+          user_id: cpData.profile_id,
+          type: "talentvisa_approved",
+          title: `TalentVisa ${TIER_CONFIG[tier || "bronze"].label} Approved!`,
+          message: `Congratulations! You've been awarded a ${TIER_CONFIG[tier || "bronze"].label} TalentVisa. You now have access to premium opportunities.`,
+          metadata: { tier },
+        });
+      }
     }
 
     setNominations((prev) =>
