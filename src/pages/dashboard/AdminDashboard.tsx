@@ -47,7 +47,6 @@ import {
   Filter,
   ChevronRight,
   Activity,
-  Database,
   FileText,
   Briefcase,
   UserCheck,
@@ -1514,8 +1513,11 @@ const CommunicationsPage = () => {
         const emails = selectedUserData.map((u) => ({
           to_email: u.email,
           to_name: `${u.first_name} ${u.last_name}`,
-          subject: subject || notificationTitle || "Message from The 3rd Academy",
-          body: message || notificationMessage,
+          template: "admin_message",
+          template_data: {
+            subject: subject || notificationTitle || "Message from The 3rd Academy",
+            body: message || notificationMessage,
+          },
           status: "pending",
         }));
 

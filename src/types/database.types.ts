@@ -1645,6 +1645,50 @@ export interface Database {
           updated_at?: string;
         };
       };
+      observation_sessions: {
+        Row: {
+          id: string;
+          assignment_id: string | null;
+          candidate_id: string;
+          created_at: string;
+          updated_at: string;
+          session_type: string | null;
+          status: string;
+          assignment_id_ref: string | null;
+          mentor_id: string | null;
+          feedback_level: number | null;
+          mentor_approved: boolean;
+          mentor_approved_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          assignment_id?: string | null;
+          candidate_id: string;
+          created_at?: string;
+          updated_at?: string;
+          session_type?: string | null;
+          status?: string;
+          assignment_id_ref?: string | null;
+          mentor_id?: string | null;
+          feedback_level?: number | null;
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          assignment_id?: string | null;
+          candidate_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          session_type?: string | null;
+          status?: string;
+          assignment_id_ref?: string | null;
+          mentor_id?: string | null;
+          feedback_level?: number | null;
+          mentor_approved?: boolean;
+          mentor_approved_at?: string | null;
+        };
+      };
       training_certificates: {
         Row: {
           id: string;

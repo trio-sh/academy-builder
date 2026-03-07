@@ -32,7 +32,6 @@ import {
   ThumbsUp,
   ArrowRight,
   Lock,
-  Star,
   Target,
 } from "lucide-react";
 
@@ -1536,7 +1535,7 @@ const Endorsements = () => {
           decision: endorsementForm.decision,
           justification: endorsementForm.justification,
           redirect_module_id: endorsementForm.decision === "redirect" && endorsementForm.redirectModule ? endorsementForm.redirectModule : null,
-          redirect_to_liveworks: endorsementForm.decision === "redirect" ? endorsementForm.redirectToLiveworks : false,
+          redirect_to: endorsementForm.decision === "redirect" ? (endorsementForm.redirectToLiveworks ? "liveworks" : "bridgefast") : null,
         })
         .select()
         .single();
