@@ -1532,13 +1532,20 @@ const ObservationPathway = () => {
           const assignment = assignments[0];
           setMentorAssignment(assignment);
 
-          // Get mentor name
-          const { data: mentorData } = await supabase
-            .from("profiles")
-            .select("first_name, last_name")
+          // Get mentor name — mentor_id references mentor_profiles.id, need to join through profile_id
+          const { data: mentorProfileData } = await supabase
+            .from("mentor_profiles")
+            .select("profile_id")
             .eq("id", assignment.mentor_id)
             .single();
-          if (mentorData) setMentorProfile(mentorData);
+          if (mentorProfileData) {
+            const { data: mentorData } = await supabase
+              .from("profiles")
+              .select("first_name, last_name")
+              .eq("id", mentorProfileData.profile_id)
+              .single();
+            if (mentorData) setMentorProfile(mentorData);
+          }
 
           // Get mentor-assigned dimensions
           const { data: dims } = await supabase
