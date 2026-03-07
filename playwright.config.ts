@@ -45,7 +45,7 @@ export default defineConfig({
     },
     {
       name: "candidate-tests",
-      testMatch: /candidate\.spec\.ts/,
+      testMatch: /candidate.*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/candidate.json",
@@ -54,7 +54,7 @@ export default defineConfig({
     },
     {
       name: "mentor-tests",
-      testMatch: /mentor\.spec\.ts/,
+      testMatch: /mentor.*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/mentor.json",
@@ -63,7 +63,7 @@ export default defineConfig({
     },
     {
       name: "employer-tests",
-      testMatch: /employer\.spec\.ts/,
+      testMatch: /employer.*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/employer.json",
@@ -72,7 +72,7 @@ export default defineConfig({
     },
     {
       name: "school-tests",
-      testMatch: /school\.spec\.ts/,
+      testMatch: /school.*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/school.json",
@@ -81,7 +81,7 @@ export default defineConfig({
     },
     {
       name: "admin-tests",
-      testMatch: /admin\.spec\.ts/,
+      testMatch: /admin.*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/admin.json",
