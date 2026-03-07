@@ -1555,15 +1555,15 @@ const Endorsements = () => {
         .eq("id", mentorProfile.id);
 
       // Update candidate tier based on decision
-      let newTier = assignment.candidate_profile?.current_tier || "developing";
+      let newTier = assignment.candidate_profile?.current_tier || "tier_3";
       if (endorsementForm.decision === "proceed") {
-        // Promote candidate
+        // Promote candidate: tier_3 (Emerging) -> tier_2 (Developing) -> tier_1 (Ready)
         const tierProgression: Record<string, string> = {
-          developing: "emerging",
-          emerging: "ready",
-          ready: "ready", // Already at max
+          tier_3: "tier_2",
+          tier_2: "tier_1",
+          tier_1: "tier_1", // Already at max
         };
-        newTier = tierProgression[newTier] || "emerging";
+        newTier = tierProgression[newTier] || "tier_2";
       }
 
       await supabase
@@ -1634,7 +1634,7 @@ const Endorsements = () => {
         // Create growth log entry for passport
         await supabase.from("growth_log_entries").insert({
           candidate_id: assignment.candidate_id,
-          event_type: "skill_passport",
+          event_type: "endorsement",
           title: "Skill Passport Earned",
           description: `Verification Code: ${verificationCode}`,
           source_component: "SkillPassport",
