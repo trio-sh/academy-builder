@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, FileText, Users, Briefcase, Sparkles } from "lucide-react";
+import { ArrowRight, FileText, Users, Briefcase, Sparkles, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -19,6 +19,13 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 };
 
+const floatingVariants = {
+  animate: {
+    y: [0, -15, 0],
+    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+  },
+};
+
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
@@ -29,48 +36,61 @@ export function HeroSection() {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover opacity-30"
         >
           <source
             src="https://bloujipdkyjsgzwxnoej.supabase.co/storage/v1/object/public/storage/homelivebg.mp4"
             type="video/mp4"
           />
         </video>
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
       </div>
 
       {/* Animated Background Blobs */}
       <motion.div
-        className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          rotate: [0, 180, 360],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-indigo-600 rounded-full opacity-15 blur-[120px]"
+        animate={{ scale: [1, 1.3, 1], rotate: [0, 90, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-900 rounded-full opacity-20 blur-3xl"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          rotate: [360, 180, 0],
-        }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-purple-600 rounded-full opacity-15 blur-[120px]"
+        animate={{ scale: [1.2, 1, 1.2], rotate: [0, -90, 0] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-950 rounded-full opacity-30 blur-3xl"
-        animate={{
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/3 right-1/4 w-[300px] h-[300px] bg-pink-600 rounded-full opacity-10 blur-[100px]"
+        animate={{ scale: [1, 1.4, 1], x: [0, 50, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
+      {/* Floating decorative images */}
+      <motion.div
+        className="absolute top-32 right-[8%] w-48 h-48 rounded-2xl overflow-hidden opacity-20 hidden lg:block"
+        variants={floatingVariants}
+        animate="animate"
+      >
+        <img
+          src="https://api.a0.dev/assets/image?text=professional%20mentor%20guiding%20young%20professional%20in%20modern%20office%20setting%20warm%20lighting&aspect=1:1&seed=hero_float1"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
+      <motion.div
+        className="absolute bottom-40 left-[5%] w-36 h-36 rounded-2xl overflow-hidden opacity-15 hidden lg:block"
+        variants={floatingVariants}
+        animate="animate"
+        transition={{ delay: 2 }}
+      >
+        <img
+          src="https://api.a0.dev/assets/image?text=diverse%20team%20collaborating%20on%20project%20modern%20workspace&aspect=1:1&seed=hero_float2"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
 
       {/* Grid Pattern Overlay */}
       <div
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
@@ -83,79 +103,152 @@ export function HeroSection() {
         initial="hidden"
         animate="visible"
       >
-        <div className="max-w-5xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-indigo-400" />
-            Mentor-Gated Behavioral Validation
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            className="text-4xl md:text-6xl font-bold leading-tight mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <span className="text-white">
-              Beyond Credentials.
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Workplace Ready.
-            </span>
-          </motion.h1>
-
-          {/* Subheadline */}
-          <motion.p
-            variants={itemVariants}
-            className="text-xl text-white max-w-3xl mx-auto mb-12 leading-relaxed"
-          >
-            The 3rd Academy bridges the gap between what your resume says and what
-            employers actually need — through sustained mentor observation and
-            evidence-based behavioral validation.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl"
-                asChild
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Text Content */}
+            <div className="text-left">
+              {/* Badge */}
+              <motion.div
+                variants={itemVariants}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 text-sm text-indigo-300 mb-8"
               >
-                <Link to="/get-started">
-                  Start Your Journey
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </motion.div>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-12 py-7 rounded-xl text-lg"
-              asChild
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                Mentor-Gated Behavioral Validation
+              </motion.div>
+
+              {/* Headline */}
+              <motion.h1
+                className="text-5xl md:text-7xl font-bold leading-[1.1] mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <span className="text-white">
+                  Beyond
+                </span>
+                <br />
+                <span className="text-white">
+                  Credentials.
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Workplace Ready.
+                </span>
+              </motion.h1>
+
+              {/* Subheadline */}
+              <motion.p
+                variants={itemVariants}
+                className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
+              >
+                The 3rd Academy bridges the gap between what your resume says and what
+                employers actually need — through sustained mentor observation and
+                evidence-based behavioral validation.
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col sm:flex-row items-start gap-4"
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-7 rounded-2xl font-bold text-lg shadow-2xl shadow-indigo-600/30"
+                    asChild
+                  >
+                    <Link to="/get-started">
+                      Start Your Journey
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-white/20 text-white hover:bg-white/10 px-10 py-7 rounded-2xl text-lg backdrop-blur-xl"
+                    asChild
+                  >
+                    <Link to="/employers">
+                      <Play className="mr-2 h-5 w-5" />
+                      For Employers
+                    </Link>
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Trust indicators */}
+              <motion.div
+                variants={itemVariants}
+                className="flex items-center gap-6 mt-10 text-sm text-gray-400"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Free to start</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Mentor-matched in 48h</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Evidence-based</span>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right: Hero Image + Stats */}
+            <motion.div
+              variants={itemVariants}
+              className="relative hidden lg:block"
             >
-              <Link to="/employers">For Employers</Link>
-            </Button>
-          </motion.div>
+              {/* Main hero image */}
+              <motion.div
+                className="relative rounded-3xl overflow-hidden shadow-2xl shadow-indigo-600/20 border border-white/10"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src="https://api.a0.dev/assets/image?text=futuristic%20digital%20skill%20passport%20holographic%20interface%20with%20glowing%20blue%20purple%20gradients%20showing%20behavioral%20scores%20and%20mentor%20endorsements%20dark%20background&aspect=4:3&seed=hero_main"
+                  alt="Skill Passport Interface"
+                  className="w-full h-auto"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              </motion.div>
+
+              {/* Floating stat cards */}
+              <motion.div
+                className="absolute -left-8 top-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="text-2xl font-bold text-indigo-400">95%</div>
+                <div className="text-xs text-gray-400">Satisfaction Rate</div>
+              </motion.div>
+
+              <motion.div
+                className="absolute -right-4 bottom-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              >
+                <div className="text-2xl font-bold text-emerald-400">500+</div>
+                <div className="text-xs text-gray-400">Mentor-Verified</div>
+              </motion.div>
+            </motion.div>
+          </div>
 
           {/* Entry Points Cards */}
           <motion.div
             variants={containerVariants}
-            className="grid md:grid-cols-3 gap-6"
+            className="grid md:grid-cols-3 gap-6 mt-20"
           >
             <EntryPointCard
               icon={<FileText className="w-6 h-6" />}
               title="Resume Upload"
               description="Start with your resume. Our enhancer identifies areas for mentor focus."
               entry="Entry A"
+              image="https://api.a0.dev/assets/image?text=professional%20resume%20being%20analyzed%20by%20AI%20with%20highlighted%20sections%20and%20glowing%20data%20points%20dark%20theme&aspect=16:9&seed=entry_resume"
               delay={0}
             />
             <EntryPointCard
@@ -163,6 +256,7 @@ export function HeroSection() {
               title="Civic Access Lab"
               description="For schools — engage students early in career awareness."
               entry="Entry B"
+              image="https://api.a0.dev/assets/image?text=students%20in%20modern%20classroom%20using%20tablets%20for%20career%20planning%20with%20holographic%20displays%20futuristic&aspect=16:9&seed=entry_civic"
               delay={0.1}
             />
             <EntryPointCard
@@ -170,6 +264,7 @@ export function HeroSection() {
               title="LiveWorks Studio"
               description="Complete real projects under mentor supervision."
               entry="Entry C"
+              image="https://api.a0.dev/assets/image?text=team%20working%20on%20real%20project%20in%20modern%20co-working%20space%20with%20screens%20showing%20project%20milestones&aspect=16:9&seed=entry_liveworks"
               delay={0.2}
             />
           </motion.div>
@@ -187,10 +282,11 @@ interface EntryPointCardProps {
   title: string;
   description: string;
   entry: string;
+  image: string;
   delay: number;
 }
 
-function EntryPointCard({ icon, title, description, entry, delay }: EntryPointCardProps) {
+function EntryPointCard({ icon, title, description, entry, image, delay }: EntryPointCardProps) {
   return (
     <motion.div
       className="group relative"
@@ -203,17 +299,30 @@ function EntryPointCard({ icon, title, description, entry, delay }: EntryPointCa
       <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500" />
 
       {/* Glass card */}
-      <div className="relative bg-black/90 backdrop-blur-xl border border-white/30 rounded-3xl p-8 group-hover:border-white/50 transition-all duration-500 text-left h-full">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
-            {icon}
-          </div>
-          <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">
+      <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
+        {/* Image */}
+        <div className="relative h-36 overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+          <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-medium text-indigo-300 bg-black/70 backdrop-blur-sm rounded-full border border-indigo-500/30">
             {entry}
           </span>
         </div>
-        <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
-        <p className="text-white leading-relaxed">{description}</p>
+
+        {/* Content */}
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
+              {icon}
+            </div>
+            <h3 className="text-lg font-bold text-white">{title}</h3>
+          </div>
+          <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
+        </div>
       </div>
     </motion.div>
   );

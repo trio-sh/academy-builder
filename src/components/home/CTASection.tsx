@@ -26,33 +26,35 @@ export function CTASection() {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.2 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div variants={itemVariants} className="relative max-w-4xl mx-auto">
+        <motion.div variants={itemVariants} className="relative max-w-5xl mx-auto">
           {/* Outer glow */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[40px] opacity-20 blur-2xl" />
+          <div className="absolute -inset-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[40px] opacity-20 blur-3xl" />
 
           {/* Main card */}
           <div className="relative rounded-3xl overflow-hidden">
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-950 to-black" />
+            {/* Background image with overlay */}
+            <div className="absolute inset-0">
+              <img
+                src="https://api.a0.dev/assets/image?text=abstract%20futuristic%20network%20connections%20with%20glowing%20indigo%20purple%20nodes%20representing%20career%20pathways%20and%20opportunities%20dark%20space%20background&aspect=21:9&seed=cta_bg"
+                alt=""
+                className="w-full h-full object-cover opacity-30"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/90 via-purple-950/90 to-black/95" />
+            </div>
 
             {/* Decorative Elements */}
             <motion.div
-              className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+              className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-              className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/30 rounded-full blur-3xl"
-              animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.5, 0.3] }}
+              className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"
+              animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
               transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-600/20 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
             />
 
             {/* Content */}
@@ -60,7 +62,7 @@ export function CTASection() {
               {/* Badge */}
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/20 text-sm text-white mb-8"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 Begin Your Credential Journey
@@ -69,9 +71,9 @@ export function CTASection() {
               {/* Headline */}
               <motion.h2
                 variants={itemVariants}
-                className="text-3xl md:text-4xl font-display font-normal mb-8 leading-tight"
+                className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
               >
-                <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+                <span className="text-white">
                   Ready to Prove Your
                 </span>
                 <br />
@@ -83,7 +85,7 @@ export function CTASection() {
               {/* Description */}
               <motion.p
                 variants={itemVariants}
-                className="text-base md:text-lg text-gray-50 max-w-2xl mx-auto mb-12 leading-relaxed font-serif"
+                className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
                 and start building your Skill Passport through evidence-based observation.
@@ -100,7 +102,7 @@ export function CTASection() {
                 >
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 rounded-xl font-bold text-lg shadow-2xl transition-all duration-300"
+                    className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-6 rounded-2xl font-bold text-lg shadow-2xl shadow-indigo-600/30 transition-all duration-300"
                     asChild
                   >
                     <Link to="/get-started">
@@ -116,7 +118,7 @@ export function CTASection() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto border-2 border-white/30 text-white px-10 py-6 rounded-xl font-bold text-lg hover:bg-black/80 transition-all duration-300 backdrop-blur-xl"
+                    className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-6 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all duration-300 backdrop-blur-xl"
                     asChild
                   >
                     <Link to="/platform">Learn More</Link>
@@ -125,7 +127,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p variants={itemVariants} className="mt-10 text-gray-50">
+              <motion.p variants={itemVariants} className="mt-10 text-gray-400 text-sm">
                 No credit card required · Mentor-matched within 48 hours
               </motion.p>
             </div>
