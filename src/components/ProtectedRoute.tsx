@@ -35,6 +35,11 @@ export function ProtectedRoute({
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
+  // If onboarding not completed, redirect to get-started to finish setup
+  if (profile && !profile.onboarding_completed) {
+    return <Navigate to="/get-started" replace />;
+  }
+
   // Check role if specified
   if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
     // Redirect to appropriate dashboard based on role

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
@@ -13,6 +13,9 @@ import {
   Sparkles,
   Loader2,
   AlertCircle,
+  Users,
+  GraduationCap,
+  School,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +27,8 @@ import { supabase } from "@/lib/supabase";
 import { parseResume } from "@/lib/resumeParser";
 import { analyzeResume } from "@/services/resumeEnhancer";
 import { findMentorMatches } from "@/lib/mentorMatching";
+
+type UserRole = "candidate" | "mentor" | "employer" | "school_admin";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -40,6 +45,41 @@ const itemVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
+
+const roleOptions = [
+  {
+    id: "candidate" as UserRole,
+    title: "Job Seeker",
+    description: "Build your behavioral credential and find opportunities",
+    icon: Users,
+    gradient: "from-indigo-600 to-indigo-700",
+    features: ["Get mentor-observed", "Earn Skill Passport", "Access job marketplace"],
+  },
+  {
+    id: "mentor" as UserRole,
+    title: "Mentor",
+    description: "Guide candidates and provide behavioral observations",
+    icon: GraduationCap,
+    gradient: "from-purple-600 to-purple-700",
+    features: ["Observe candidates", "Write endorsements", "Shape careers"],
+  },
+  {
+    id: "employer" as UserRole,
+    title: "Employer",
+    description: "Find pre-vetted, behaviorally-credentialed talent",
+    icon: Briefcase,
+    gradient: "from-emerald-600 to-emerald-700",
+    features: ["Access T3X marketplace", "Post LiveWorks projects", "Hire confidently"],
+  },
+  {
+    id: "school_admin" as UserRole,
+    title: "School / Institution",
+    description: "Credential your students with behavioral evidence",
+    icon: School,
+    gradient: "from-amber-600 to-amber-700",
+    features: ["Manage cohorts", "Track student progress", "Issue credentials"],
+  },
+];
 
 const entryPaths = [
   {
@@ -75,18 +115,24 @@ const entryPaths = [
 ];
 
 const GetStarted = () => {
+  const [selectedRole, setSelectedRole] = useState<UserRole>("candidate");
   const [selectedPath, setSelectedPath] = useState<string | null>("resume");
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   // Track whether the user just signed up in this session (don't redirect them away)
-  const [justSignedUp, setJustSignedUp] = useState(false);
+  const justSignedUpRef = useRef(false);
 
   // Form state
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Role-specific fields
+  const [companyName, setCompanyName] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [industry, setIndustry] = useState("");
 
   // LiveWorks profile state
   const [headline, setHeadline] = useState("");
@@ -105,19 +151,23 @@ const GetStarted = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const getDashboardRoute = (role: string) => {
+    const routes: Record<string, string> = {
+      candidate: "/dashboard/candidate",
+      mentor: "/dashboard/mentor",
+      employer: "/dashboard/employer",
+      school_admin: "/dashboard/school",
+      admin: "/dashboard/admin",
+    };
+    return routes[role] || "/dashboard/candidate";
+  };
+
   // If user is already authenticated and didn't just sign up, redirect to dashboard
   useEffect(() => {
-    if (isAuthenticated && profile && !justSignedUp) {
-      const dashboardRoutes: Record<string, string> = {
-        candidate: "/dashboard/candidate",
-        mentor: "/dashboard/mentor",
-        employer: "/dashboard/employer",
-        school_admin: "/dashboard/school",
-        admin: "/dashboard/admin",
-      };
-      navigate(dashboardRoutes[profile.role] || "/dashboard/candidate", { replace: true });
+    if (isAuthenticated && profile && !justSignedUpRef.current) {
+      navigate(getDashboardRoute(profile.role), { replace: true });
     }
-  }, [isAuthenticated, profile, justSignedUp, navigate]);
+  }, [isAuthenticated, profile, navigate]);
 
   // Map UI path IDs to database entry_path values
   const getEntryPath = (pathId: string | null): 'resume_upload' | 'liveworks' | 'civic_access' => {
@@ -131,25 +181,43 @@ const GetStarted = () => {
     }
   };
 
+  const selectedRoleInfo = roleOptions.find((r) => r.id === selectedRole);
+
   const handleSignUp = async () => {
     setError("");
     setIsLoading(true);
 
+    // Set BEFORE calling signUp to prevent race condition with onAuthStateChange
+    justSignedUpRef.current = true;
+
     try {
-      const { error: signUpError } = await signUp(email, password, {
+      const metadata: Record<string, unknown> = {
         firstName,
         lastName,
-        role: "candidate",
-        entryPath: getEntryPath(selectedPath),
-      });
+        role: selectedRole,
+      };
+
+      // Add role-specific metadata
+      if (selectedRole === "candidate") {
+        metadata.entryPath = getEntryPath(selectedPath);
+      } else if (selectedRole === "employer") {
+        metadata.companyName = companyName;
+        metadata.industry = industry;
+      } else if (selectedRole === "school_admin") {
+        metadata.schoolName = schoolName;
+      } else if (selectedRole === "mentor") {
+        metadata.industry = industry;
+        metadata.yearsExperience = parseInt(yearsExperience) || 0;
+      }
+
+      const { error: signUpError } = await signUp(email, password, metadata as Parameters<typeof signUp>[2]);
 
       if (signUpError) {
         setError(signUpError.message || "Failed to create account");
+        justSignedUpRef.current = false;
         setIsLoading(false);
         return;
       }
-
-      setJustSignedUp(true);
 
       toast({
         title: "Account created!",
@@ -159,6 +227,7 @@ const GetStarted = () => {
       setStep(3);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
+      justSignedUpRef.current = false;
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +235,7 @@ const GetStarted = () => {
 
   const handleCompleteSetup = async () => {
     if (!user?.id) {
-      navigate("/dashboard/candidate");
+      navigate(getDashboardRoute(selectedRole));
       return;
     }
 
@@ -174,7 +243,7 @@ const GetStarted = () => {
 
     try {
       // If LiveWorks path, save the profile fields first
-      if (selectedPath === "liveworks") {
+      if (selectedRole === "candidate" && selectedPath === "liveworks") {
         const skillsArray = skills
           .split(",")
           .map((s) => s.trim())
@@ -219,60 +288,72 @@ const GetStarted = () => {
         });
       }
 
-      // Auto-trigger mentor matching for both paths
-      try {
-        const matches = await findMentorMatches(user.id, 1);
-        if (matches.length > 0) {
-          const topMentor = matches[0];
+      // Mark onboarding as completed
+      await supabase
+        .from("profiles")
+        .update({ onboarding_completed: true, updated_at: new Date().toISOString() })
+        .eq("id", user.id);
 
-          // Get the candidate_profiles.id (PK) for the FK reference
-          const { data: cpRow } = await supabase
-            .from("candidate_profiles")
-            .select("id")
-            .eq("profile_id", user.id)
-            .single();
+      // Auto-trigger mentor matching for candidate paths
+      if (selectedRole === "candidate") {
+        try {
+          const matches = await findMentorMatches(user.id, 1);
+          if (matches.length > 0) {
+            const topMentor = matches[0];
 
-          if (cpRow) {
-            // Create a mentor assignment using table PKs
-            await supabase.from("mentor_assignments").insert({
-              mentor_id: topMentor.mentor.id,
-              candidate_id: cpRow.id,
-              status: "active",
+            // Get the candidate_profiles.id (PK) for the FK reference
+            const { data: cpRow } = await supabase
+              .from("candidate_profiles")
+              .select("id")
+              .eq("profile_id", user.id)
+              .single();
+
+            if (cpRow) {
+              // Create a mentor assignment using table PKs
+              await supabase.from("mentor_assignments").insert({
+                mentor_id: topMentor.mentor.id,
+                candidate_id: cpRow.id,
+                status: "active",
+              });
+            }
+
+            await supabase.from("growth_log_entries").insert({
+              candidate_id: user.id,
+              event_type: "training",
+              title: "Mentor Matched",
+              description: `Auto-matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match)`,
+              source_component: "MentorMatching",
+            });
+
+            toast({
+              title: "Setup complete!",
+              description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match).`,
+            });
+          } else {
+            await supabase.from("growth_log_entries").insert({
+              candidate_id: user.id,
+              event_type: "training",
+              title: "Mentor Matching Queued",
+              description: "You'll be matched with a mentor as one becomes available.",
+              source_component: "MentorMatching",
+            });
+
+            toast({
+              title: "Setup complete!",
+              description: "Welcome! We'll match you with a mentor shortly.",
             });
           }
-
-          await supabase.from("growth_log_entries").insert({
-            candidate_id: user.id,
-            event_type: "training",
-            title: "Mentor Matched",
-            description: `Auto-matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match)`,
-            source_component: "MentorMatching",
-          });
-
+        } catch (matchErr) {
+          console.error("Mentor matching error (non-blocking):", matchErr);
           toast({
             title: "Setup complete!",
-            description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match).`,
-          });
-        } else {
-          // No mentors available yet
-          await supabase.from("growth_log_entries").insert({
-            candidate_id: user.id,
-            event_type: "training",
-            title: "Mentor Matching Queued",
-            description: "You'll be matched with a mentor as one becomes available.",
-            source_component: "MentorMatching",
-          });
-
-          toast({
-            title: "Setup complete!",
-            description: "Welcome! We'll match you with a mentor shortly.",
+            description: "Welcome to The 3rd Academy. Let's begin your journey.",
           });
         }
-      } catch (matchErr) {
-        console.error("Mentor matching error (non-blocking):", matchErr);
+      } else {
         toast({
           title: "Setup complete!",
-          description: "Welcome to The 3rd Academy. Let's begin your journey.",
+          description: `Welcome to The 3rd Academy! Your ${selectedRoleInfo?.title} account is ready.`,
         });
       }
     } catch (err) {
@@ -283,8 +364,13 @@ const GetStarted = () => {
       });
     } finally {
       setIsCompletingSetup(false);
-      navigate("/dashboard/candidate");
+      justSignedUpRef.current = false;
+      navigate(getDashboardRoute(selectedRole));
     }
+  };
+
+  const handleNonCandidateComplete = () => {
+    handleCompleteSetup();
   };
 
   const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,6 +469,9 @@ const GetStarted = () => {
     }
   };
 
+  // Determine total steps based on role
+  const totalSteps = selectedRole === "candidate" ? 3 : 3;
+
   return (
     <div className="min-h-screen bg-black">
       <BackgroundVideo />
@@ -432,17 +521,17 @@ const GetStarted = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                Choose your entry point and start building your evidence-based
+                Choose your role and start building your evidence-based
                 behavioral profile with mentor guidance.
               </motion.p>
             </div>
           </div>
         </motion.section>
 
-        {/* Entry Path Selection */}
+        {/* Main Content */}
         <section className="py-12 md:py-16 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {/* Progress */}
               <motion.div
                 className="flex items-center justify-center gap-4 mb-12"
@@ -463,7 +552,7 @@ const GetStarted = () => {
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
                     </motion.div>
-                    {s < 3 && (
+                    {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
                         step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black/80"
@@ -473,6 +562,7 @@ const GetStarted = () => {
                 ))}
               </motion.div>
 
+              {/* Step 1: Role Selection + Entry Path for candidates */}
               {step === 1 && (
                 <motion.div
                   className="space-y-8"
@@ -481,51 +571,48 @@ const GetStarted = () => {
                   animate="visible"
                 >
                   <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-white mb-8">
-                    Choose Your Entry Point
+                    I want to join as...
                   </motion.h2>
 
                   <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-6">
-                    {entryPaths.map((path) => (
+                    {roleOptions.map((role) => (
                       <motion.button
-                        key={path.id}
+                        key={role.id}
                         variants={itemVariants}
-                        onClick={() => setSelectedPath(path.id)}
+                        onClick={() => setSelectedRole(role.id)}
                         className={cn(
-                          "group relative p-8 rounded-3xl text-left transition-all duration-500",
-                          selectedPath === path.id
+                          "group relative p-6 rounded-2xl text-left transition-all duration-500",
+                          selectedRole === role.id
                             ? "bg-black/80 border-2 border-indigo-500/50"
                             : "bg-black/80 border border-white/30 hover:border-white/30"
                         )}
                         whileHover={{ y: -5 }}
                       >
-                        {selectedPath === path.id && (
-                          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
+                        {selectedRole === role.id && (
+                          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
                         )}
 
                         <div className="relative">
-                          {path.recommended && (
-                            <span className="absolute -top-4 left-0 px-3 py-1 text-xs font-medium bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full">
-                              Recommended
-                            </span>
-                          )}
-
-                          <div className="flex items-center gap-3 mb-4 mt-2">
-                            <div className={cn(
-                              "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br",
-                              selectedPath === path.id ? path.gradient : "from-white/10 to-white/5"
-                            )}>
-                              <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-50")} />
+                          <div className="flex items-center gap-3 mb-3">
+                            <div
+                              className={cn(
+                                "w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br",
+                                selectedRole === role.id ? role.gradient : "from-white/10 to-white/5"
+                              )}
+                            >
+                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-50")} />
                             </div>
-                            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{path.entry}</span>
+                            <div>
+                              <h3 className="text-lg font-bold text-white">{role.title}</h3>
+                            </div>
                           </div>
 
-                          <h3 className="text-xl font-bold text-white mb-2">{path.title}</h3>
-                          <p className="text-gray-50 mb-6">{path.description}</p>
+                          <p className="text-gray-50 text-sm mb-4">{role.description}</p>
 
-                          <ul className="space-y-3">
-                            {path.features.map((feature) => (
-                              <li key={feature} className="flex items-center gap-3 text-sm">
-                                <CheckCircle2 className={cn("w-4 h-4", selectedPath === path.id ? "text-emerald-400" : "text-gray-500")} />
+                          <ul className="space-y-2">
+                            {role.features.map((feature) => (
+                              <li key={feature} className="flex items-center gap-2 text-sm">
+                                <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-gray-500")} />
                                 <span className="text-gray-50">{feature}</span>
                               </li>
                             ))}
@@ -535,12 +622,73 @@ const GetStarted = () => {
                     ))}
                   </motion.div>
 
+                  {/* Entry Path Selection - only for candidates */}
+                  {selectedRole === "candidate" && (
+                    <motion.div
+                      className="space-y-6 mt-8"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="text-xl font-bold text-center text-white">Choose Your Entry Point</h3>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {entryPaths.map((path) => (
+                          <motion.button
+                            key={path.id}
+                            onClick={() => setSelectedPath(path.id)}
+                            className={cn(
+                              "group relative p-8 rounded-3xl text-left transition-all duration-500",
+                              selectedPath === path.id
+                                ? "bg-black/80 border-2 border-indigo-500/50"
+                                : "bg-black/80 border border-white/30 hover:border-white/30"
+                            )}
+                            whileHover={{ y: -5 }}
+                          >
+                            {selectedPath === path.id && (
+                              <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
+                            )}
+
+                            <div className="relative">
+                              {path.recommended && (
+                                <span className="absolute -top-4 left-0 px-3 py-1 text-xs font-medium bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full">
+                                  Recommended
+                                </span>
+                              )}
+
+                              <div className="flex items-center gap-3 mb-4 mt-2">
+                                <div className={cn(
+                                  "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br",
+                                  selectedPath === path.id ? path.gradient : "from-white/10 to-white/5"
+                                )}>
+                                  <path.icon className={cn("w-7 h-7", selectedPath === path.id ? "text-white" : "text-gray-50")} />
+                                </div>
+                                <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{path.entry}</span>
+                              </div>
+
+                              <h3 className="text-xl font-bold text-white mb-2">{path.title}</h3>
+                              <p className="text-gray-50 mb-6">{path.description}</p>
+
+                              <ul className="space-y-3">
+                                {path.features.map((feature) => (
+                                  <li key={feature} className="flex items-center gap-3 text-sm">
+                                    <CheckCircle2 className={cn("w-4 h-4", selectedPath === path.id ? "text-emerald-400" : "text-gray-500")} />
+                                    <span className="text-gray-50">{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
                   <motion.div variants={itemVariants} className="flex justify-center pt-6">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button
                         size="lg"
                         onClick={() => setStep(2)}
-                        disabled={!selectedPath}
+                        disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
                         className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-10 py-6 rounded-xl font-bold text-lg shadow-2xl shadow-indigo-600/30"
                       >
                         Continue
@@ -548,15 +696,32 @@ const GetStarted = () => {
                       </Button>
                     </motion.div>
                   </motion.div>
+
+                  <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
+                    Already have an account?{" "}
+                    <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
+                      Sign In
+                    </Link>
+                  </motion.p>
                 </motion.div>
               )}
 
+              {/* Step 2: Account Details */}
               {step === 2 && (
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
-                      <h2 className="text-2xl font-bold text-center text-white mb-8">Create Your Account</h2>
+                      <div className="flex items-center gap-3 mb-6">
+                        {selectedRoleInfo && (
+                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
+                            <selectedRoleInfo.icon className="w-5 h-5 text-white" />
+                          </div>
+                        )}
+                        <div>
+                          <h2 className="text-xl font-bold text-white">Create {selectedRoleInfo?.title} Account</h2>
+                        </div>
+                      </div>
 
                       {/* Error Message */}
                       {error && (
@@ -615,6 +780,73 @@ const GetStarted = () => {
                             className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
                           />
                         </div>
+
+                        {/* Role-specific fields */}
+                        {selectedRole === "employer" && (
+                          <>
+                            <div className="space-y-2">
+                              <Label htmlFor="companyName" className="text-gray-50">Company Name</Label>
+                              <Input
+                                id="companyName"
+                                value={companyName}
+                                onChange={(e) => setCompanyName(e.target.value)}
+                                disabled={isLoading}
+                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="industry" className="text-gray-50">Industry</Label>
+                              <Input
+                                id="industry"
+                                placeholder="e.g., Technology, Healthcare"
+                                value={industry}
+                                onChange={(e) => setIndustry(e.target.value)}
+                                disabled={isLoading}
+                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {selectedRole === "school_admin" && (
+                          <div className="space-y-2">
+                            <Label htmlFor="schoolName" className="text-gray-50">School / Institution Name</Label>
+                            <Input
+                              id="schoolName"
+                              value={schoolName}
+                              onChange={(e) => setSchoolName(e.target.value)}
+                              disabled={isLoading}
+                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                            />
+                          </div>
+                        )}
+
+                        {selectedRole === "mentor" && (
+                          <>
+                            <div className="space-y-2">
+                              <Label htmlFor="industry" className="text-gray-50">Industry / Expertise</Label>
+                              <Input
+                                id="industry"
+                                placeholder="e.g., Software Engineering"
+                                value={industry}
+                                onChange={(e) => setIndustry(e.target.value)}
+                                disabled={isLoading}
+                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="yearsExperience" className="text-gray-50">Years of Experience</Label>
+                              <Input
+                                id="yearsExperience"
+                                type="number"
+                                value={yearsExperience}
+                                onChange={(e) => setYearsExperience(e.target.value)}
+                                disabled={isLoading}
+                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              />
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       <div className="flex gap-4 pt-6">
@@ -655,7 +887,8 @@ const GetStarted = () => {
                 </motion.div>
               )}
 
-              {step === 3 && selectedPath === "resume" && (
+              {/* Step 3 for Candidates: Resume Upload */}
+              {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
@@ -732,7 +965,8 @@ const GetStarted = () => {
                 </motion.div>
               )}
 
-              {step === 3 && selectedPath === "liveworks" && (
+              {/* Step 3 for Candidates: LiveWorks Profile */}
+              {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
@@ -773,6 +1007,37 @@ const GetStarted = () => {
                           )}
                         </Button>
                       </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* Step 3 for Non-Candidate Roles: Welcome / Success */}
+              {step === 3 && selectedRole !== "candidate" && (
+                <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
+                  <motion.div variants={itemVariants} className="relative">
+                    <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
+                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
+                        <CheckCircle2 className="w-10 h-10 text-white" />
+                      </div>
+
+                      <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
+                      <p className="text-gray-50 mb-6">
+                        Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
+                      </p>
+
+                      <Button
+                        onClick={handleNonCandidateComplete}
+                        disabled={isCompletingSetup}
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
+                      >
+                        {isCompletingSetup ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
+                        ) : (
+                          <>Go to Dashboard<ArrowRight className="ml-2 h-4 w-4" /></>
+                        )}
+                      </Button>
                     </div>
                   </motion.div>
                 </motion.div>
