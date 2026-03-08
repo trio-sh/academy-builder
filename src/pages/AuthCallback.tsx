@@ -22,7 +22,7 @@ const AuthCallback = () => {
             .from('profiles')
             .select('role, onboarding_completed')
             .eq('id', session.user.id)
-            .single();
+            .maybeSingle();
 
           if (profile) {
             const dashboardRoutes: Record<string, string> = {

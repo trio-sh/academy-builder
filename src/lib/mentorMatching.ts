@@ -397,8 +397,8 @@ export async function findMentorMatches(
     .eq("id", candidateId)
     .single();
 
-  // Fetch all available mentors
-  const { data: mentors } = await supabase
+  // Fetch all available mentors and filter capacity in JS
+  const { data: allMentors } = await supabase
     .from("mentor_profiles")
     .select(
       `
@@ -406,38 +406,17 @@ export async function findMentorMatches(
       profile:profiles(*)
     `
     )
-    .eq("is_accepting", true)
-    .gt("max_mentees", supabase.rpc("current_mentees_placeholder")); // Will filter in JS
+    .eq("is_accepting", true);
 
-  if (!mentors || mentors.length === 0) {
-    // Try fetching without the complex filter
-    const { data: allMentors } = await supabase
-      .from("mentor_profiles")
-      .select(
-        `
-        *,
-        profile:profiles(*)
-      `
-      )
-      .eq("is_accepting", true);
+  if (!allMentors) return [];
 
-    if (!allMentors) return [];
-
-    // Filter to available mentors
-    const availableMentors = allMentors.filter(
-      (m) => m.current_mentees < m.max_mentees
-    );
-
-    return scoreMentors(
-      availableMentors as unknown as MentorWithProfile[],
-      candidateData,
-      candidateProfile?.headline || null,
-      limit
-    );
-  }
+  // Filter to mentors with available capacity
+  const availableMentors = allMentors.filter(
+    (m) => m.current_mentees < m.max_mentees
+  );
 
   return scoreMentors(
-    mentors as unknown as MentorWithProfile[],
+    availableMentors as unknown as MentorWithProfile[],
     candidateData,
     candidateProfile?.headline || null,
     limit
