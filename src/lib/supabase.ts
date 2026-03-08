@@ -105,7 +105,7 @@ export const createProfile = async (
     .from('profiles')
     .select('id')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     // Profile already exists

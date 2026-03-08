@@ -774,7 +774,7 @@ const TalentVisaReview = () => {
               .select("behavioral_scores")
               .eq("candidate_id", nom.candidate_id)
               .eq("is_active", true)
-              .single();
+              .maybeSingle();
 
             let avgScore = 0;
             if (passport?.behavioral_scores) {

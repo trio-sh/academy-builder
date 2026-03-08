@@ -443,7 +443,7 @@ const SkillPassport = () => {
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
         setPassportData(passport);
       }
 
@@ -1037,7 +1037,7 @@ const GrowthLog = () => {
           .eq("candidate_id", cp.id)
           .eq("is_active", true)
           .limit(1)
-          .single();
+          .maybeSingle();
         setPassportData(passport);
       }
 

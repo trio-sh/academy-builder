@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
@@ -20,6 +20,9 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
+import { parseResume } from "@/lib/resumeParser";
+import { analyzeResume } from "@/services/resumeEnhancer";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -82,7 +85,14 @@ const GetStarted = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signUp } = useAuth();
+  // Resume upload state
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -135,6 +145,102 @@ const GetStarted = () => {
       description: "Welcome to The 3rd Academy. Let's begin your journey.",
     });
     navigate("/dashboard/candidate");
+  };
+
+  const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      setUploadError('Please upload a PDF or Word document');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('File size must be less than 10MB');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadError(null);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}_resume.${fileExt}`;
+
+      const { error: storageError } = await supabase.storage
+        .from('resumes')
+        .upload(fileName, file, { cacheControl: '3600', upsert: true });
+
+      if (storageError) {
+        setUploadError('Failed to upload resume. Please try again.');
+        console.error('Upload error:', storageError);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase.storage.from('resumes').getPublicUrl(fileName);
+      const resumeUrl = publicUrlData?.publicUrl || fileName;
+
+      // Update candidate profile with resume URL
+      await supabase.from("candidate_profiles").upsert({
+        profile_id: user.id,
+        resume_url: resumeUrl,
+        skills: [],
+        entry_path: 'resume_upload',
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'profile_id' });
+
+      // Growth log entry
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "resume_upload",
+        title: "Resume Uploaded",
+        description: `Uploaded resume: ${file.name}`,
+        source_component: "Profile",
+      });
+
+      setUploadedFile(file.name);
+
+      // Run Resume Enhancer AI
+      setIsEnhancing(true);
+      try {
+        const parsed = await parseResume(file);
+        const enhancerResult = await analyzeResume(parsed.rawText || "");
+
+        const updateData: Record<string, unknown> = {
+          observation_areas: enhancerResult.observationDimensions,
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        };
+        if (enhancerResult.suggestedSkills.length > 0) {
+          updateData.skills = Array.from(new Set([...parsed.skills, ...enhancerResult.suggestedSkills]));
+        }
+        await supabase.from("candidate_profiles").update(updateData).eq("profile_id", user.id);
+
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Resume Enhancer — Basic Profile Created",
+          description: `AI-analyzed resume. ${enhancerResult.summary}`,
+          source_component: "ResumeEnhancer",
+        });
+      } catch (enhancerErr) {
+        console.error("Resume Enhancer error (non-blocking):", enhancerErr);
+        // Fallback: create basic profile with default dimensions
+        await supabase.from("candidate_profiles").update({
+          observation_areas: ["integrity_ethics", "accountability_ownership", "execution_reliability", "communication_pressure", "collaboration_conflict"],
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        }).eq("profile_id", user.id);
+      } finally {
+        setIsEnhancing(false);
+      }
+    } catch (err) {
+      setUploadError('An unexpected error occurred. Please try again.');
+      console.error('Resume upload error:', err);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -416,12 +522,51 @@ const GetStarted = () => {
                     <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Upload Your Resume</h2>
 
-                      <motion.div className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer" whileHover={{ scale: 1.02 }}>
-                        <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
-                        <p className="text-white font-medium mb-2">Drop your resume here</p>
-                        <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                        <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black/80">Browse Files</Button>
-                      </motion.div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeUpload}
+                        className="hidden"
+                      />
+
+                      {uploadError && (
+                        <div className="mb-4 p-3 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-2">
+                          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-red-400">{uploadError}</p>
+                        </div>
+                      )}
+
+                      {!uploadedFile ? (
+                        <motion.div
+                          className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer"
+                          whileHover={{ scale: 1.02 }}
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          {isUploading || isEnhancing ? (
+                            <>
+                              <Loader2 className="w-12 h-12 text-indigo-400 mx-auto mb-4 animate-spin" />
+                              <p className="text-white font-medium mb-2">
+                                {isEnhancing ? "AI analyzing your resume..." : "Uploading..."}
+                              </p>
+                              <p className="text-sm text-gray-500">This may take a moment</p>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
+                              <p className="text-white font-medium mb-2">Click to upload your resume</p>
+                              <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
+                              <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black/80" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                            </>
+                          )}
+                        </motion.div>
+                      ) : (
+                        <div className="border-2 border-emerald-500/30 rounded-2xl p-8 text-center bg-emerald-500/5">
+                          <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+                          <p className="text-white font-medium mb-1">Resume uploaded & analyzed!</p>
+                          <p className="text-sm text-gray-400">{uploadedFile}</p>
+                        </div>
+                      )}
 
                       <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
@@ -434,7 +579,10 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
-                        <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
+                        <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+                          {uploadedFile ? "Go to Dashboard" : "Skip for Now"}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </motion.div>
