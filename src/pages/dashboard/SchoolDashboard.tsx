@@ -1140,7 +1140,7 @@ const SchoolDashboard = () => {
           <div className="flex items-center justify-between p-4 border-b border-white/30">
             <Link to="/" className="flex items-center gap-2">
               <img
-                src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing teal circuit patterns&aspect=1:1&seed=civic_logo"
+                src="/icon-192.png"
                 alt="Logo"
                 className="w-8 h-8 rounded-full"
               />
