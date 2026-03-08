@@ -72,11 +72,18 @@ interface ParsedAction {
   raw: string;
 }
 
-const ACTION_REGEX = /\[\[ACTION:(\w+)\|([^\]]*)\]\]/g;
+// Robust regex: match [[ACTION:TYPE|...]] even when params contain brackets
+const ACTION_REGEX = /\[\[ACTION:(\w+)\|((?:[^\]]|\][^\]])*?)\]\]/g;
+
+// Fallback: catch plain-text patterns the AI sometimes emits instead of proper tags
+const FALLBACK_CLICK_REGEX = /^(?:Click(?:ing)?|Tap(?:ping)?|Press(?:ing)?)\s+[""]([^""]+)[""]\s*$/gim;
+const FALLBACK_NAV_REGEX = /^(?:Navigate|Navigating|Going|Go)\s+to\s+[""]?([/\w-]+)[""]?\s*$/gim;
 
 function parseActions(text: string): { cleanText: string; actions: ParsedAction[] } {
   const actions: ParsedAction[] = [];
-  const cleanText = text.replace(ACTION_REGEX, (match, type, paramStr) => {
+
+  // 1. Extract formal [[ACTION:...]] tags
+  let cleanText = text.replace(ACTION_REGEX, (match, type, paramStr) => {
     actions.push({
       type: type as ActionType,
       params: paramStr.split("|").map((p: string) => p.trim()),
@@ -84,7 +91,36 @@ function parseActions(text: string): { cleanText: string; actions: ParsedAction[
     });
     return "";
   });
-  return { cleanText: cleanText.trim(), actions };
+
+  // 2. Extract fallback plain-text actions (only if no formal actions found)
+  if (actions.length === 0) {
+    let fallbackMatch: RegExpExecArray | null;
+
+    FALLBACK_CLICK_REGEX.lastIndex = 0;
+    while ((fallbackMatch = FALLBACK_CLICK_REGEX.exec(cleanText)) !== null) {
+      actions.push({
+        type: "CLICK",
+        params: [fallbackMatch[1]],
+        raw: fallbackMatch[0],
+      });
+      cleanText = cleanText.replace(fallbackMatch[0], "");
+    }
+
+    FALLBACK_NAV_REGEX.lastIndex = 0;
+    while ((fallbackMatch = FALLBACK_NAV_REGEX.exec(cleanText)) !== null) {
+      actions.push({
+        type: "NAVIGATE",
+        params: [fallbackMatch[1]],
+        raw: fallbackMatch[0],
+      });
+      cleanText = cleanText.replace(fallbackMatch[0], "");
+    }
+  }
+
+  // 3. Clean up extra whitespace/newlines from removed tags
+  cleanText = cleanText.replace(/\n{3,}/g, "\n\n").trim();
+
+  return { cleanText, actions };
 }
 
 function actionLabel(action: ParsedAction): string {
@@ -149,48 +185,110 @@ function actionIcon(type: ActionType) {
 
 // ─── DOM Action Executor ─────────────────────────────────────────────────────
 
-/** Find an element by visible text content, placeholder, aria-label, or CSS selector */
-function findElement(query: string): HTMLElement | null {
-  // Try as CSS selector first
-  try {
-    const el = document.querySelector(query) as HTMLElement;
-    if (el) return el;
-  } catch {
-    // Not a valid selector, continue
+/** Normalize AI-generated field identifiers like "email[email]", "password[password]" to clean names */
+function normalizeFieldQuery(query: string): string[] {
+  const candidates: string[] = [query.trim()];
+
+  // Handle "type[name]" format from context: extract inner name
+  const bracketMatch = query.match(/^[\w-]+\[([^\]]+)\]$/);
+  if (bracketMatch) {
+    candidates.push(bracketMatch[1]);
   }
 
-  // Search by text content in buttons, links, headings, labels
-  const searchTargets = "button, a, [role='button'], h1, h2, h3, h4, label, [role='tab'], [role='menuitem'], input, textarea, select";
+  // Handle "name=value" or quoted strings
+  const eqMatch = query.match(/^["']?([^"'=]+)["']?$/);
+  if (eqMatch && eqMatch[1] !== query) {
+    candidates.push(eqMatch[1].trim());
+  }
+
+  return [...new Set(candidates)];
+}
+
+/** Find an element by visible text content, placeholder, aria-label, name, id, or CSS selector */
+function findElement(query: string): HTMLElement | null {
+  const queries = normalizeFieldQuery(query);
+
+  for (const q of queries) {
+    // Try as CSS selector
+    try {
+      const el = document.querySelector(q) as HTMLElement;
+      if (el) return el;
+    } catch {
+      // Not a valid selector, continue
+    }
+
+    // Try by id
+    const byId = document.getElementById(q);
+    if (byId) return byId;
+
+    // Try by name attribute (for form fields)
+    try {
+      const byName = document.querySelector(`[name="${q}"]`) as HTMLElement;
+      if (byName) return byName;
+    } catch { /* ignore */ }
+
+    // Try by placeholder
+    try {
+      const byPlaceholder = document.querySelector(`[placeholder="${q}"], [placeholder*="${q}" i]`) as HTMLElement;
+      if (byPlaceholder) return byPlaceholder;
+    } catch { /* ignore */ }
+
+    // Try by type attribute for inputs (e.g. "email" matches input[type="email"])
+    try {
+      const byType = document.querySelector(`input[type="${q}"]`) as HTMLElement;
+      if (byType) return byType;
+    } catch { /* ignore */ }
+  }
+
+  // Full element search by text/attributes
+  const searchTargets = "button, a, [role='button'], h1, h2, h3, h4, label, [role='tab'], [role='menuitem'], input, textarea, select, [role='checkbox'], [role='switch']";
   const allEls = Array.from(document.querySelectorAll(searchTargets)) as HTMLElement[];
 
-  const queryLower = query.toLowerCase().trim();
+  for (const q of queries) {
+    const qLower = q.toLowerCase().trim();
+    if (!qLower) continue;
 
-  // Exact text match
-  for (const el of allEls) {
-    const text = el.innerText?.trim().toLowerCase() || "";
-    if (text === queryLower) return el;
+    // Exact text match
+    for (const el of allEls) {
+      const text = el.innerText?.trim().toLowerCase() || "";
+      if (text === qLower) return el;
+    }
+
+    // Attribute matches (placeholder, aria-label, name, title)
+    for (const el of allEls) {
+      const attrs = [
+        el.getAttribute("placeholder"),
+        el.getAttribute("aria-label"),
+        el.getAttribute("name"),
+        el.getAttribute("title"),
+        el.getAttribute("data-testid"),
+      ]
+        .filter(Boolean)
+        .map((a) => a!.toLowerCase());
+      if (attrs.some((a) => a === qLower || a.includes(qLower))) return el;
+    }
+
+    // Partial text match (buttons, links)
+    for (const el of allEls) {
+      const text = el.innerText?.trim().toLowerCase() || "";
+      if (text.length > 0 && text.length < 80 && (text.includes(qLower) || qLower.includes(text))) return el;
+    }
+
+    // Match by associated label (for inputs with id matching a <label for="">)
+    const labels = Array.from(document.querySelectorAll("label")) as HTMLLabelElement[];
+    for (const label of labels) {
+      if (label.innerText?.toLowerCase().includes(qLower)) {
+        const forId = label.getAttribute("for");
+        if (forId) {
+          const target = document.getElementById(forId);
+          if (target) return target;
+        }
+        // Label wraps input
+        const inner = label.querySelector("input, textarea, select") as HTMLElement;
+        if (inner) return inner;
+      }
+    }
   }
-
-  // Partial text match
-  for (const el of allEls) {
-    const text = el.innerText?.trim().toLowerCase() || "";
-    if (text.includes(queryLower) || queryLower.includes(text)) return el;
-  }
-
-  // Match by placeholder or aria-label
-  for (const el of allEls) {
-    const placeholder = el.getAttribute("placeholder")?.toLowerCase() || "";
-    const ariaLabel = el.getAttribute("aria-label")?.toLowerCase() || "";
-    const name = el.getAttribute("name")?.toLowerCase() || "";
-    if (placeholder.includes(queryLower) || ariaLabel.includes(queryLower) || name.includes(queryLower)) return el;
-  }
-
-  // Match by id or data attributes
-  const byId = document.getElementById(query);
-  if (byId) return byId;
-
-  const byName = document.querySelector(`[name="${query}"]`) as HTMLElement;
-  if (byName) return byName;
 
   return null;
 }
@@ -437,8 +535,9 @@ function extractPageContext(): string {
   const buttons = Array.from(document.querySelectorAll("button, [role='button'], a.btn, a[href]"))
     .map((el) => {
       const text = (el as HTMLElement).innerText?.trim();
-      const href = el.getAttribute("href") || "";
-      return text && text.length > 1 && text.length < 60 ? (href ? `${text} (${href})` : text) : null;
+      if (!text || text.length <= 1 || text.length >= 60) return null;
+      // Show text and how to reference it in a CLICK action
+      return `"${text}" → use [[ACTION:CLICK|${text}]]`;
     })
     .filter(Boolean)
     .slice(0, 20);
@@ -451,8 +550,12 @@ function extractPageContext(): string {
       const type = el.getAttribute("type") || el.tagName.toLowerCase();
       const id = el.id || "";
       const value = (el as HTMLInputElement).value || "";
-      const identifier = name || id || placeholder || label;
-      return identifier ? `${type}[${identifier}]${value ? `="${value}"` : ""}` : null;
+      // Pick the best identifier for the AI to use in FILL actions
+      const fieldId = name || id || placeholder || label;
+      if (!fieldId) return null;
+      // Format: "type field — use FILL with 'fieldId'" so AI knows the exact string to use
+      const current = value ? ` (current: "${value}")` : "";
+      return `• ${type} field "${fieldId}"${current} → use [[ACTION:FILL|${fieldId}|value]]`;
     })
     .filter(Boolean)
     .slice(0, 15);
@@ -539,36 +642,41 @@ Embed action commands in your response using this exact format:
 - [[ACTION:CLOSE_MODAL|]] — Close the current modal/dialog
 - [[ACTION:SCROLL_PAGE|direction|amount]] — Scroll the page (up/down/top/bottom, optional pixel amount)
 
-### Rules for Actions
-1. ALWAYS include actions when the user asks you to DO something (open a page, click something, fill a form, etc.)
-2. You can include MULTIPLE actions in one response — they execute sequentially
-3. Combine text explanation WITH actions. Explain what you're doing while doing it.
-4. Use the Clickable Elements list from screen context to know exact button/link text to use
-5. Use the Form Fields list to know exact field names/placeholders to fill
-6. When navigating, use the route paths like /platform, /employers, /schools, /about, /contact, /blog, /help, /careers, /press, /privacy, /terms, /security
-7. For multi-step tasks (like filling a whole form), chain multiple FILL actions followed by SUBMIT_FORM
-8. If you cannot find an element, tell the user and suggest alternatives
-9. ALWAYS use actions proactively — if a user says "go to the platform page" just do it, don't just give instructions
+### CRITICAL Rules for Actions
+1. ALWAYS use [[ACTION:...]] tags for ANY interaction. NEVER write plain text like "Click Sign In" or "Navigate to /login" — those do nothing. You MUST use the tag syntax.
+2. For FILL actions, use the EXACT field identifier from the "Form Fields" list in screen context. The fields show the exact string to use, like: use [[ACTION:FILL|email|value]] where "email" is the field name/id/placeholder.
+3. You can chain MULTIPLE actions in one response — they execute in order with short pauses.
+4. For CLICK, use the exact visible button/link text from the "Clickable Elements" list.
+5. For multi-step tasks (login, form fill), chain FILL + CLICK/SUBMIT actions together.
+6. ALWAYS act proactively — if user says "sign me in" → fill fields + click submit. Don't just describe what to do.
+7. If you can't find an element, tell the user and offer alternatives.
+8. ALWAYS place action tags AFTER your text explanation, not inline mid-sentence.
 
 ### Example Responses with Actions
 
 User: "Open the platform page"
-Response: "Opening the Platform page for you now! [[ACTION:NAVIGATE|/platform]]"
+Assistant: "Opening the Platform page for you now! [[ACTION:NAVIGATE|/platform]]"
 
 User: "Click the Get Started button"
-Response: "Clicking Get Started now! [[ACTION:CLICK|Get Started]]"
+Assistant: "Clicking Get Started! [[ACTION:CLICK|Get Started]]"
 
-User: "Fill in the contact form with my name John"
-Response: "I'll fill that in for you. [[ACTION:FILL|name|John]] [[ACTION:FILL|email|]] Let me know your email and I'll fill that too!"
+User: "Sign me in, email is john@test.com password abc123"
+Assistant: "Signing you in now — filling email, password, and clicking Sign In. [[ACTION:FILL|email|john@test.com]] [[ACTION:FILL|password|abc123]] [[ACTION:CLICK|Sign In]]"
+
+User: "Fill the contact form with name John, email john@example.com"
+Assistant: "Filling the form for you! [[ACTION:FILL|name|John]] [[ACTION:FILL|email|john@example.com]]"
 
 User: "Scroll down to see more"
-Response: "Scrolling down for you. [[ACTION:SCROLL_PAGE|down|600]]"
+Assistant: "Scrolling down. [[ACTION:SCROLL_PAGE|down|600]]"
 
-User: "Show me where the MentorLink section is"
-Response: "Here's the MentorLink section! [[ACTION:SCROLL_TO|MentorLink]] [[ACTION:HIGHLIGHT|MentorLink]]"
+User: "Show me where MentorLink is"
+Assistant: "Here it is! [[ACTION:SCROLL_TO|MentorLink]] [[ACTION:HIGHLIGHT|MentorLink]]"
 
 User: "Submit the form"
-Response: "Submitting the form now! [[ACTION:SUBMIT_FORM|]]"`;
+Assistant: "Submitting now! [[ACTION:SUBMIT_FORM|]]"
+
+User: "Sign me out"
+Assistant: "Signing you out! [[ACTION:CLICK|Sign Out]]"`;
 
 const QUICK_REPLIES = [
   "What is The 3rd Academy?",
