@@ -136,7 +136,7 @@ test.describe("Employer Flows - Find Talent", () => {
 
     const tierSelect = page.locator("select").first();
     if (await tierSelect.isVisible().catch(() => false)) {
-      await tierSelect.selectOption("tier_1");
+      await tierSelect.selectOption("platinum");
       await page.waitForLoadState("networkidle");
       await page.waitForTimeout(1000);
 
