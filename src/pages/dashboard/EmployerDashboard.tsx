@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -49,6 +50,7 @@ import {
   Lock,
   Unlock,
   Target,
+  Bot,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -88,6 +90,7 @@ const navItems = [
   { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
   { name: "Messages", href: "/dashboard/employer/messages", icon: Send },
   { name: "Company", href: "/dashboard/employer/company", icon: Building2 },
+  { name: "AI Agent", href: "/dashboard/employer/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/employer/settings", icon: Settings },
 ];
 
@@ -3667,6 +3670,7 @@ const EmployerDashboard = () => {
             <Route path="feedback" element={<Feedback />} />
             <Route path="messages" element={<EmployerMessagesPage />} />
             <Route path="company" element={<Company />} />
+            <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
         </main>
