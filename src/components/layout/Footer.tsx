@@ -48,7 +48,7 @@ export function Footer() {
             <Link to="/" className="flex items-center mb-6">
               <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
                 <img
-                  src="https://api.a0.dev/assets/image?text=Futuristic AI-powered academy logo with glowing blue circuit patterns and neural networks&aspect=1:1&seed=academy_logo"
+                  src="/icon-192.png"
                   alt="The 3rd Academy Logo"
                   className="h-10 w-10 mr-2 rounded-full shadow-lg"
                 />
