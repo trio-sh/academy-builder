@@ -36,7 +36,7 @@ const AuthCallback = () => {
             const redirectTo = dashboardRoutes[profile.role] || '/';
             navigate(redirectTo);
           } else {
-            navigate('/join');
+            navigate('/get-started');
           }
         } else {
           navigate('/login');

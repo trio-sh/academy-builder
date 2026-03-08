@@ -1,4 +1,12 @@
 import { supabase } from "./supabase";
+import * as pdfjsLib from "pdfjs-dist";
+import mammoth from "mammoth";
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 // Common skills to detect in resumes
 const SKILL_KEYWORDS: Record<string, string[]> = {
@@ -78,72 +86,42 @@ export interface ParsedResume {
 }
 
 /**
- * Extract text from a PDF file using basic parsing
- * Note: For production, use a proper PDF library or backend service
+ * Extract text from a PDF file using pdf.js
  */
 async function extractTextFromPDF(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const uint8Array = new Uint8Array(arrayBuffer);
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const textParts: string[] = [];
 
-        // Basic PDF text extraction (simplified)
-        // In production, use pdf.js or a backend service for proper extraction
-        let text = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items
+        .map((item: { str?: string }) => item.str || "")
+        .join(" ");
+      textParts.push(pageText);
+    }
 
-        // Convert to string and try to extract text content
-        const decoder = new TextDecoder("utf-8", { fatal: false });
-        const rawText = decoder.decode(uint8Array);
+    return textParts.join("\n").replace(/\s+/g, " ").trim();
+  } catch (error) {
+    console.warn("PDF parsing failed:", error);
+    return "";
+  }
+}
 
-        // Look for text streams in PDF
-        const textMatches = rawText.match(/\((.*?)\)/g);
-        if (textMatches) {
-          text = textMatches
-            .map((match) => match.slice(1, -1))
-            .filter((t) => t.length > 2 && !/^[\x00-\x1F]+$/.test(t))
-            .join(" ");
-        }
-
-        // If no text found, try another method
-        if (!text || text.length < 50) {
-          // Look for text between BT and ET markers
-          const btMatches = rawText.match(/BT([\s\S]*?)ET/g);
-          if (btMatches) {
-            text = btMatches
-              .map((block) => {
-                const tjMatches = block.match(/\[(.*?)\]TJ|\((.*?)\)Tj/g);
-                if (tjMatches) {
-                  return tjMatches
-                    .map((m) => {
-                      const textMatch = m.match(/\((.*?)\)/g);
-                      return textMatch ? textMatch.map((t) => t.slice(1, -1)).join("") : "";
-                    })
-                    .join(" ");
-                }
-                return "";
-              })
-              .join(" ");
-          }
-        }
-
-        // Clean up the extracted text
-        text = text
-          .replace(/\\[nrt]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
-        resolve(text);
-      } catch (error) {
-        // If parsing fails, return empty string (user will need to enter skills manually)
-        console.warn("PDF parsing limited - manual skill entry recommended");
-        resolve("");
-      }
-    };
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsArrayBuffer(file);
-  });
+/**
+ * Extract text from a Word document using mammoth
+ */
+async function extractTextFromDocx(file: File): Promise<string> {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value.trim();
+  } catch (error) {
+    console.warn("DOCX parsing failed:", error);
+    return "";
+  }
 }
 
 /**
@@ -259,10 +237,7 @@ export async function parseResume(file: File): Promise<ParsedResume> {
     file.type === "application/msword" ||
     file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   ) {
-    // For Word documents, we'd need a backend service or library
-    // For now, return empty with a note
-    console.warn("Word document parsing requires backend service");
-    text = "";
+    text = await extractTextFromDocx(file);
   } else if (file.type === "text/plain") {
     text = await file.text();
   }

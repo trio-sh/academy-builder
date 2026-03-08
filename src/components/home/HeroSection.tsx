@@ -130,7 +130,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl"
                 asChild
               >
-                <Link to="/join">
+                <Link to="/get-started">
                   Start Your Journey
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
