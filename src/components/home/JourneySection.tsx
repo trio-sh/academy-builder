@@ -36,7 +36,7 @@ const journeySteps = [
     icon: FileText,
     gradient: "from-gray-600 to-gray-700",
     highlight: false,
-    image: "https://api.a0.dev/assets/image?text=professional%20creating%20digital%20profile%20on%20sleek%20interface%20with%20resume%20data%20flowing%20into%20structured%20format%20dark%20theme&aspect=16:9&seed=journey_profile",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=450&fit=crop&crop=faces",
   },
   {
     step: "02",
@@ -46,7 +46,7 @@ const journeySteps = [
     icon: BarChart3,
     gradient: "from-indigo-600 to-indigo-700",
     highlight: false,
-    image: "https://api.a0.dev/assets/image?text=data%20visualization%20dashboard%20showing%20growth%20metrics%20and%20behavioral%20trends%20over%20time%20with%20glowing%20charts%20dark%20UI&aspect=16:9&seed=journey_growth",
+    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=450&fit=crop&crop=faces",
   },
   {
     step: "03",
@@ -56,7 +56,7 @@ const journeySteps = [
     icon: Users,
     gradient: "from-purple-500 to-purple-600",
     highlight: true,
-    image: "https://api.a0.dev/assets/image?text=experienced%20mentor%20reviewing%20candidate%20performance%20on%20holographic%20display%20with%20behavioral%20assessment%20data%20professional%20setting&aspect=16:9&seed=journey_mentor",
+    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=450&fit=crop&crop=faces",
   },
   {
     step: "04",
@@ -66,7 +66,7 @@ const journeySteps = [
     icon: Award,
     gradient: "from-emerald-500 to-emerald-600",
     highlight: false,
-    image: "https://api.a0.dev/assets/image?text=digital%20credential%20badge%20with%20holographic%20verification%20seal%20showing%20behavioral%20scores%20and%20endorsements%20premium%20dark%20design&aspect=16:9&seed=journey_passport",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop&crop=faces",
   },
   {
     step: "05",
@@ -76,7 +76,7 @@ const journeySteps = [
     icon: GraduationCap,
     gradient: "from-amber-500 to-amber-600",
     highlight: false,
-    image: "https://api.a0.dev/assets/image?text=premium%20gold%20platinum%20digital%20credential%20tiers%20with%20exclusive%20badge%20design%20luxury%20dark%20aesthetic&aspect=16:9&seed=journey_visa",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&h=450&fit=crop&crop=faces",
   },
   {
     step: "06",
@@ -86,7 +86,7 @@ const journeySteps = [
     icon: Building2,
     gradient: "from-pink-500 to-pink-600",
     highlight: false,
-    image: "https://api.a0.dev/assets/image?text=talent%20marketplace%20interface%20where%20employers%20browse%20verified%20candidate%20profiles%20with%20trust%20scores%20modern%20dark%20UI&aspect=16:9&seed=journey_exchange",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=450&fit=crop&crop=faces",
   },
 ];
 
