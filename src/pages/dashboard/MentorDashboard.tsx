@@ -28,6 +28,8 @@ import {
   ExternalLink,
   Star,
   MessageSquare,
+  Send,
+  Plus,
   FileCheck,
   ThumbsUp,
   ArrowRight,
@@ -645,6 +647,7 @@ const navItems = [
   { name: "Observations", href: "/dashboard/mentor/observations", icon: ClipboardCheck },
   { name: "Endorsements", href: "/dashboard/mentor/endorsements", icon: Award },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
+  { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
   { name: "Settings", href: "/dashboard/mentor/settings", icon: Settings },
 ];
@@ -3136,6 +3139,262 @@ const ProfilePage = () => {
 };
 
 // Settings component
+// Messages Page for Mentor Dashboard
+const MentorMessagesPage = () => {
+  const { user } = useAuth();
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [activeConversation, setActiveConversation] = useState<any | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNewChat, setShowNewChat] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+
+  const searchUsers = async (query: string) => {
+    if (!query.trim() || query.length < 2) { setSearchResults([]); return; }
+    setIsSearching(true);
+    try {
+      const { data } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role").neq("id", user?.id).or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`).limit(20);
+      setSearchResults(data || []);
+    } catch { setSearchResults([]); } finally { setIsSearching(false); }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => { if (userSearchQuery) searchUsers(userSearchQuery); else setSearchResults([]); }, 300);
+    return () => clearTimeout(timer);
+  }, [userSearchQuery]);
+
+  const startConversation = async (targetUserId: string) => {
+    if (!user?.id || isCreatingConversation) return;
+    setIsCreatingConversation(true);
+    try {
+      const { data: myConvs } = await supabase.from("conversation_participants").select("conversation_id").eq("user_id", user.id);
+      if (myConvs && myConvs.length > 0) {
+        const myConvIds = myConvs.map((c) => c.conversation_id);
+        const { data: theirConvs } = await supabase.from("conversation_participants").select("conversation_id").eq("user_id", targetUserId).in("conversation_id", myConvIds);
+        if (theirConvs && theirConvs.length > 0) {
+          const existing = conversations.find((c) => c.id === theirConvs[0].conversation_id);
+          if (existing) { setActiveConversation(existing); setShowNewChat(false); setUserSearchQuery(""); setSearchResults([]); setIsCreatingConversation(false); return; }
+        }
+      }
+      const { data: conv } = await supabase.from("conversations").insert({ last_message_at: new Date().toISOString() }).select().single();
+      if (conv) {
+        await supabase.from("conversation_participants").insert([{ conversation_id: conv.id, user_id: user.id }, { conversation_id: conv.id, user_id: targetUserId }]);
+        const { data: targetProfile } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role").eq("id", targetUserId).single();
+        const newConv = { ...conv, other_user: targetProfile };
+        setConversations((prev) => [newConv, ...prev]);
+        setActiveConversation(newConv);
+        setShowNewChat(false); setUserSearchQuery(""); setSearchResults([]);
+      }
+    } catch (error) { console.error("Error creating conversation:", error); } finally { setIsCreatingConversation(false); }
+  };
+
+  useEffect(() => {
+    const fetchConversations = async () => {
+      if (!user?.id) return;
+      const { data: participantData } = await supabase.from("conversation_participants").select("conversation_id, last_read_at").eq("user_id", user.id);
+      if (participantData && participantData.length > 0) {
+        const conversationIds = participantData.map((p) => p.conversation_id);
+        const { data: convData } = await supabase.from("conversations").select("*").in("id", conversationIds).order("last_message_at", { ascending: false });
+        const enrichedConversations = await Promise.all((convData || []).map(async (conv) => {
+          const { data: participants } = await supabase.from("conversation_participants").select("user_id").eq("conversation_id", conv.id).neq("user_id", user.id);
+          let otherUser = null;
+          if (participants && participants.length > 0) {
+            const { data: profileData } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role").eq("id", participants[0].user_id).single();
+            otherUser = profileData;
+          }
+          const myParticipant = participantData.find((p) => p.conversation_id === conv.id);
+          return { ...conv, other_user: otherUser, last_read_at: myParticipant?.last_read_at };
+        }));
+        setConversations(enrichedConversations);
+      }
+      setIsLoading(false);
+    };
+    fetchConversations();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!activeConversation) { setMessages([]); return; }
+    const fetchMessages = async () => {
+      const { data } = await supabase.from("messages").select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)").eq("conversation_id", activeConversation.id).order("created_at", { ascending: true });
+      setMessages(data || []);
+      await supabase.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).eq("conversation_id", activeConversation.id).eq("user_id", user?.id);
+    };
+    fetchMessages();
+    const channel = supabase.channel(`messages:${activeConversation.id}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${activeConversation.id}` }, async (payload) => {
+      const { data: newMsg } = await supabase.from("messages").select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)").eq("id", payload.new.id).single();
+      if (newMsg) setMessages((prev) => [...prev, newMsg]);
+    }).subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [activeConversation?.id, user?.id]);
+
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !activeConversation || !user?.id) return;
+    setIsSending(true);
+    const messageContent = newMessage.trim();
+    setNewMessage("");
+    try {
+      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: "text" });
+      await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: messageContent.substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
+    } catch (error) { console.error("Error sending message:", error); setNewMessage(messageContent); } finally { setIsSending(false); }
+  };
+
+  const formatMessageTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return date.toLocaleDateString("en-US", { weekday: "short" });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  };
+
+  const filteredConversations = conversations.filter((c) => {
+    if (!searchQuery) return true;
+    const otherName = `${c.other_user?.first_name || ""} ${c.other_user?.last_name || ""}`.toLowerCase();
+    return otherName.includes(searchQuery.toLowerCase());
+  });
+
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
+
+  return (
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
+      <motion.div variants={itemVariants} className="mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
+        <p className="text-gray-400">Connect with candidates, employers, and other mentors.</p>
+      </motion.div>
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex">
+        {/* Conversations List */}
+        <div className="w-80 border-r border-white/30 flex flex-col">
+          <div className="p-4 border-b border-white/30 space-y-3">
+            <div className="flex items-center gap-2">
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+              <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-purple-600 hover:bg-purple-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
+            </div>
+            {showNewChat && (
+              <div className="bg-black/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
+                <p className="text-xs text-purple-400 font-medium">Find someone to message</p>
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-purple-500" /></div>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>}
+                  {searchResults.map((result) => (
+                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-purple-500/10 transition-colors text-left">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-purple-400" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate">{result.first_name} {result.last_name}</p>
+                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                      </div>
+                      <Send className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            {filteredConversations.length === 0 ? (
+              <div className="p-8 text-center">
+                <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400">No conversations yet</p>
+                <p className="text-sm text-gray-500 mt-1">Click the <span className="text-purple-400">+</span> button to find and message anyone</p>
+              </div>
+            ) : filteredConversations.map((conv) => {
+              const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
+              return (
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-purple-400" />}
+                    </div>
+                    {hasUnread && <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-purple-500" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className={`font-medium truncate ${hasUnread ? "text-white" : "text-gray-300"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
+                      <span className="text-xs text-gray-500">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-gray-600">·</span>
+                      <p className={`text-sm truncate ${hasUnread ? "text-gray-300" : "text-gray-500"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {activeConversation ? (
+            <>
+              <div className="p-4 border-b border-white/30 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                  {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-purple-400" />}
+                </div>
+                <div>
+                  <p className="font-medium text-white">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
+                  <p className="text-xs text-gray-500 capitalize">{activeConversation.other_user?.role}</p>
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((msg, idx) => {
+                  const isOwn = msg.sender_id === user?.id;
+                  const showAvatar = idx === 0 || messages[idx - 1]?.sender_id !== msg.sender_id;
+                  return (
+                    <div key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
+                      <div className={`flex gap-2 max-w-[70%] ${isOwn ? "flex-row-reverse" : ""}`}>
+                        {!isOwn && showAvatar && (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
+                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-purple-400" />}
+                          </div>
+                        )}
+                        {!isOwn && !showAvatar && <div className="w-8" />}
+                        <div>
+                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-purple-600 text-white rounded-br-md" : "bg-black/80 text-gray-200 rounded-bl-md"}`}>
+                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                          </div>
+                          <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="p-4 border-t border-white/30">
+                <div className="flex items-center gap-3">
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+                  <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
+                    {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
+                <p className="text-gray-400 max-w-sm mb-4">Choose a conversation or start a new one.</p>
+                <Button onClick={() => setShowNewChat(true)} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6"><Plus className="w-4 h-4 mr-2" />New Conversation</Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const SettingsPage = () => {
   const { user } = useAuth();
 
@@ -3366,6 +3625,7 @@ const MentorDashboardInner = () => {
             <Route path="observations" element={<Observations />} />
             <Route path="endorsements" element={<Endorsements />} />
             <Route path="schedule" element={<Schedule />} />
+            <Route path="messages" element={<MentorMessagesPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>

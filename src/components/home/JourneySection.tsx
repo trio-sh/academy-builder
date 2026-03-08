@@ -36,6 +36,7 @@ const journeySteps = [
     icon: FileText,
     gradient: "from-gray-600 to-gray-700",
     highlight: false,
+    image: "https://api.a0.dev/assets/image?text=professional%20creating%20digital%20profile%20on%20sleek%20interface%20with%20resume%20data%20flowing%20into%20structured%20format%20dark%20theme&aspect=16:9&seed=journey_profile",
   },
   {
     step: "02",
@@ -45,6 +46,7 @@ const journeySteps = [
     icon: BarChart3,
     gradient: "from-indigo-600 to-indigo-700",
     highlight: false,
+    image: "https://api.a0.dev/assets/image?text=data%20visualization%20dashboard%20showing%20growth%20metrics%20and%20behavioral%20trends%20over%20time%20with%20glowing%20charts%20dark%20UI&aspect=16:9&seed=journey_growth",
   },
   {
     step: "03",
@@ -54,6 +56,7 @@ const journeySteps = [
     icon: Users,
     gradient: "from-purple-500 to-purple-600",
     highlight: true,
+    image: "https://api.a0.dev/assets/image?text=experienced%20mentor%20reviewing%20candidate%20performance%20on%20holographic%20display%20with%20behavioral%20assessment%20data%20professional%20setting&aspect=16:9&seed=journey_mentor",
   },
   {
     step: "04",
@@ -63,6 +66,7 @@ const journeySteps = [
     icon: Award,
     gradient: "from-emerald-500 to-emerald-600",
     highlight: false,
+    image: "https://api.a0.dev/assets/image?text=digital%20credential%20badge%20with%20holographic%20verification%20seal%20showing%20behavioral%20scores%20and%20endorsements%20premium%20dark%20design&aspect=16:9&seed=journey_passport",
   },
   {
     step: "05",
@@ -72,6 +76,7 @@ const journeySteps = [
     icon: GraduationCap,
     gradient: "from-amber-500 to-amber-600",
     highlight: false,
+    image: "https://api.a0.dev/assets/image?text=premium%20gold%20platinum%20digital%20credential%20tiers%20with%20exclusive%20badge%20design%20luxury%20dark%20aesthetic&aspect=16:9&seed=journey_visa",
   },
   {
     step: "06",
@@ -81,6 +86,7 @@ const journeySteps = [
     icon: Building2,
     gradient: "from-pink-500 to-pink-600",
     highlight: false,
+    image: "https://api.a0.dev/assets/image?text=talent%20marketplace%20interface%20where%20employers%20browse%20verified%20candidate%20profiles%20with%20trust%20scores%20modern%20dark%20UI&aspect=16:9&seed=journey_exchange",
   },
 ];
 
@@ -107,21 +113,21 @@ export function JourneySection() {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1 }}
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
 
       {/* Animated background blobs */}
       <motion.div
-        className="absolute top-20 right-20 w-64 h-64 bg-purple-900 rounded-full opacity-10 blur-3xl"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 right-20 w-80 h-80 bg-purple-600 rounded-full opacity-10 blur-[100px]"
+        animate={{ scale: [1, 1.3, 1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-20 left-20 w-72 h-72 bg-indigo-900 rounded-full opacity-10 blur-3xl"
+        className="absolute bottom-20 left-20 w-96 h-96 bg-indigo-600 rounded-full opacity-10 blur-[100px]"
         animate={{ scale: [1.2, 1, 1.2] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -139,83 +145,79 @@ export function JourneySection() {
               Placement
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-50 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
             Every credential is earned through sustained mentor observation — no shortcuts,
             no self-assessments. Human judgment at every critical gate.
           </p>
         </motion.div>
 
-        {/* Journey Steps */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Connecting Line */}
-            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-600/50 via-purple-600/50 to-pink-600/50" />
+        {/* Journey Steps - Alternating Layout */}
+        <div className="max-w-6xl mx-auto space-y-6">
+          {journeySteps.map((step, index) => (
+            <motion.div
+              key={step.step}
+              variants={itemVariants}
+              className={cn(
+                "group relative flex flex-col md:flex-row gap-6 items-center",
+                index % 2 === 1 && "md:flex-row-reverse"
+              )}
+            >
+              {/* Image Side */}
+              <motion.div
+                className="w-full md:w-1/2 relative rounded-2xl overflow-hidden"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="relative h-48 md:h-56">
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+                  <div className={cn(
+                    "absolute top-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br shadow-lg",
+                    step.gradient,
+                    step.highlight && "shadow-purple-500/40"
+                  )}>
+                    <step.icon className="w-6 h-6 text-white" />
+                  </div>
+                  {step.highlight && (
+                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-500/30 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm">
+                      Required Gate
+                    </span>
+                  )}
+                </div>
+              </motion.div>
 
-            {/* Steps */}
-            <div className="space-y-8">
-              {journeySteps.map((step, index) => (
+              {/* Content Side */}
+              <div className="w-full md:w-1/2">
                 <motion.div
-                  key={step.step}
-                  variants={itemVariants}
-                  className={cn("relative flex gap-6 md:gap-8", step.highlight && "scale-[1.02]")}
-                  whileHover={{ x: 10 }}
-                  transition={{ duration: 0.3 }}
+                  className={cn(
+                    "relative p-6 md:p-8 rounded-2xl transition-all duration-500",
+                    step.highlight
+                      ? "bg-black/80 backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
+                      : "bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20"
+                  )}
+                  whileHover={{ y: -5 }}
                 >
-                  {/* Step Number Circle */}
-                  <motion.div
-                    className={cn(
-                      "relative z-10 flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br",
-                      step.gradient,
-                      step.highlight && "shadow-lg shadow-purple-500/40"
-                    )}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  >
-                    <step.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                  </motion.div>
-
-                  {/* Content Card */}
-                  <motion.div
-                    className={cn(
-                      "group relative flex-1"
-                    )}
-                    whileHover={{ y: -5 }}
-                  >
-                    {/* Glow effect on hover for highlighted items */}
-                    {step.highlight && (
-                      <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500" />
-                    )}
-
-                    <div
-                      className={cn(
-                        "relative p-6 rounded-2xl transition-all duration-500",
-                        step.highlight
-                          ? "bg-black/80 backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
-                          : "bg-black/80 backdrop-blur-xl border border-white/30 group-hover:border-white/30 group-hover:bg-black/80"
-                      )}
-                    >
-                      <div className="flex items-center gap-3 mb-2">
-                        <span
-                          className={cn(
-                            "text-xs font-bold uppercase tracking-wider",
-                            step.highlight ? "text-purple-400" : "text-gray-500"
-                          )}
-                        >
-                          Step {step.step}
-                        </span>
-                        {step.highlight && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-purple-500/20 text-purple-400 rounded-full">
-                            Required Gate
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                      <p className="text-gray-50 leading-relaxed">{step.description}</p>
-                    </div>
-                  </motion.div>
+                  {step.highlight && (
+                    <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
+                  )}
+                  <div className="relative">
+                    <span className={cn(
+                      "text-xs font-bold uppercase tracking-wider",
+                      step.highlight ? "text-purple-400" : "text-gray-500"
+                    )}>
+                      Step {step.step}
+                    </span>
+                    <h3 className="text-2xl font-bold text-white mt-1 mb-3">{step.title}</h3>
+                    <p className="text-gray-400 leading-relaxed">{step.description}</p>
+                  </div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Key Principles */}
@@ -224,10 +226,8 @@ export function JourneySection() {
           className="max-w-3xl mx-auto mt-20"
         >
           <div className="relative group">
-            {/* Glow effect */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500" />
-
-            <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30 group-hover:border-white/30 transition-all duration-500">
+            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
+            <div className="relative p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500">
               <h3 className="text-lg font-bold text-white mb-6 text-center">
                 Architectural Principles
               </h3>
@@ -247,7 +247,7 @@ export function JourneySection() {
                     transition={{ delay: index * 0.1 }}
                   >
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-50">{principle}</span>
+                    <span className="text-sm text-gray-300">{principle}</span>
                   </motion.div>
                 ))}
               </div>

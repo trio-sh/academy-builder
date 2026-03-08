@@ -5534,6 +5534,107 @@ const MessagesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showNewChat, setShowNewChat] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+
+  // Search for users to start new conversation
+  const searchUsers = async (query: string) => {
+    if (!query.trim() || query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, first_name, last_name, avatar_url, role")
+        .neq("id", user?.id)
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
+        .limit(20);
+      setSearchResults(data || []);
+    } catch (error) {
+      console.error("Error searching users:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (userSearchQuery) searchUsers(userSearchQuery);
+      else setSearchResults([]);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [userSearchQuery]);
+
+  const startConversation = async (targetUserId: string) => {
+    if (!user?.id || isCreatingConversation) return;
+    setIsCreatingConversation(true);
+    try {
+      // Check if conversation already exists
+      const { data: myConvs } = await supabase
+        .from("conversation_participants")
+        .select("conversation_id")
+        .eq("user_id", user.id);
+
+      if (myConvs && myConvs.length > 0) {
+        const myConvIds = myConvs.map((c) => c.conversation_id);
+        const { data: theirConvs } = await supabase
+          .from("conversation_participants")
+          .select("conversation_id")
+          .eq("user_id", targetUserId)
+          .in("conversation_id", myConvIds);
+
+        if (theirConvs && theirConvs.length > 0) {
+          // Existing conversation found — switch to it
+          const existingConvId = theirConvs[0].conversation_id;
+          const existing = conversations.find((c) => c.id === existingConvId);
+          if (existing) {
+            setActiveConversation(existing);
+            setShowNewChat(false);
+            setUserSearchQuery("");
+            setSearchResults([]);
+            setIsCreatingConversation(false);
+            return;
+          }
+        }
+      }
+
+      // Create new conversation
+      const { data: conv } = await supabase
+        .from("conversations")
+        .insert({ last_message_at: new Date().toISOString() })
+        .select()
+        .single();
+
+      if (conv) {
+        await supabase.from("conversation_participants").insert([
+          { conversation_id: conv.id, user_id: user.id },
+          { conversation_id: conv.id, user_id: targetUserId },
+        ]);
+
+        const { data: targetProfile } = await supabase
+          .from("profiles")
+          .select("id, first_name, last_name, avatar_url, role")
+          .eq("id", targetUserId)
+          .single();
+
+        const newConv = { ...conv, other_user: targetProfile };
+        setConversations((prev) => [newConv, ...prev]);
+        setActiveConversation(newConv);
+        setShowNewChat(false);
+        setUserSearchQuery("");
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+    } finally {
+      setIsCreatingConversation(false);
+    }
+  };
 
   // Fetch conversations
   useEffect(() => {
@@ -5731,17 +5832,77 @@ const MessagesPage = () => {
       >
         {/* Conversations List */}
         <div className="w-80 border-r border-white/30 flex flex-col">
-          {/* Search */}
-          <div className="p-4 border-b border-white/30">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search conversations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
-              />
+          {/* Search + New Chat */}
+          <div className="p-4 border-b border-white/30 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="Search conversations..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+              <Button
+                onClick={() => setShowNewChat(!showNewChat)}
+                className="bg-indigo-600 hover:bg-indigo-500 rounded-lg px-3 py-2 flex-shrink-0"
+                title="New conversation"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
+
+            {/* New Chat User Search */}
+            {showNewChat && (
+              <div className="bg-black/90 border border-indigo-500/30 rounded-xl p-3 space-y-3">
+                <p className="text-xs text-indigo-400 font-medium">Find someone to message</p>
+                <input
+                  type="text"
+                  placeholder="Search by name..."
+                  value={userSearchQuery}
+                  onChange={(e) => setUserSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                />
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {isSearching && (
+                    <div className="flex items-center justify-center py-3">
+                      <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
+                    </div>
+                  )}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && (
+                    <p className="text-xs text-gray-500 text-center py-2">No users found</p>
+                  )}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && (
+                    <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>
+                  )}
+                  {searchResults.map((result) => (
+                    <button
+                      key={result.id}
+                      onClick={() => startConversation(result.id)}
+                      disabled={isCreatingConversation}
+                      className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-500/10 transition-colors text-left"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                        {result.avatar_url ? (
+                          <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" />
+                        ) : (
+                          <User className="w-4 h-4 text-indigo-400" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate">
+                          {result.first_name} {result.last_name}
+                        </p>
+                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                      </div>
+                      <Send className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Conversation List */}
@@ -5751,7 +5912,7 @@ const MessagesPage = () => {
                 <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
                 <p className="text-gray-400">No conversations yet</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  Start a conversation from your connections
+                  Click the <span className="text-indigo-400">+</span> button to find and message anyone on the platform
                 </p>
               </div>
             ) : (
@@ -5912,9 +6073,16 @@ const MessagesPage = () => {
               <div className="text-center">
                 <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
-                <p className="text-gray-400 max-w-sm">
-                  Choose a conversation from the list or start a new one from your connections.
+                <p className="text-gray-400 max-w-sm mb-4">
+                  Choose a conversation from the list or start a new one.
                 </p>
+                <Button
+                  onClick={() => setShowNewChat(true)}
+                  className="bg-indigo-600 hover:bg-indigo-500 rounded-xl px-6"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Conversation
+                </Button>
               </div>
             </div>
           )}
