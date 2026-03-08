@@ -105,20 +105,18 @@ test.describe("Employer Flows - Find Talent", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
 
-    // Check for filter section
-    const hasFilters = await page.locator("text=Filters").isVisible().catch(() => false);
+    // Check for filter section - the text "Filters:" is inside a span
+    const hasFilters = await page.evaluate(() => document.body.innerText.includes("Filters"));
     expect(hasFilters).toBeTruthy();
 
     // Check for tier select dropdown
     const tierSelect = page.locator("select").first();
-    if (await tierSelect.isVisible().catch(() => false)) {
-      // Should contain tier options
-      const hasAllTiers = await page.locator("option").filter({ hasText: /All Tiers/i }).isVisible().catch(() => false);
-      const hasTier1 = await page.locator("option").filter({ hasText: /Tier 1/i }).isVisible().catch(() => false);
-      const hasTier2 = await page.locator("option").filter({ hasText: /Tier 2/i }).isVisible().catch(() => false);
+    const hasTierSelect = await tierSelect.isVisible().catch(() => false);
+    expect(hasTierSelect).toBeTruthy();
 
-      expect(hasAllTiers || hasTier1 || hasTier2).toBeTruthy();
-    }
+    // Verify options exist via DOM query (options not visible until dropdown opened)
+    const optionCount = await page.locator("select option").count();
+    expect(optionCount).toBeGreaterThanOrEqual(2); // At least "All Tiers" + 1 tier option
   });
 
   test("shows skill search input", async ({ page }) => {
