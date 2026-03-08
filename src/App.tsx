@@ -84,11 +84,7 @@ const App = () => (
             />
             <Route
               path="/get-started"
-              element={
-                <PublicOnlyRoute>
-                  <GetStarted />
-                </PublicOnlyRoute>
-              }
+              element={<GetStarted />}
             />
             <Route
               path="/join"

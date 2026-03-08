@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
@@ -79,6 +79,8 @@ const GetStarted = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  // Track whether the user just signed up in this session (don't redirect them away)
+  const [justSignedUp, setJustSignedUp] = useState(false);
 
   // Form state
   const [firstName, setFirstName] = useState("");
@@ -99,9 +101,23 @@ const GetStarted = () => {
   const [isCompletingSetup, setIsCompletingSetup] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { signUp, user } = useAuth();
+  const { signUp, user, isAuthenticated, profile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // If user is already authenticated and didn't just sign up, redirect to dashboard
+  useEffect(() => {
+    if (isAuthenticated && profile && !justSignedUp) {
+      const dashboardRoutes: Record<string, string> = {
+        candidate: "/dashboard/candidate",
+        mentor: "/dashboard/mentor",
+        employer: "/dashboard/employer",
+        school_admin: "/dashboard/school",
+        admin: "/dashboard/admin",
+      };
+      navigate(dashboardRoutes[profile.role] || "/dashboard/candidate", { replace: true });
+    }
+  }, [isAuthenticated, profile, justSignedUp, navigate]);
 
   // Map UI path IDs to database entry_path values
   const getEntryPath = (pathId: string | null): 'resume_upload' | 'liveworks' | 'civic_access' => {
@@ -132,6 +148,8 @@ const GetStarted = () => {
         setIsLoading(false);
         return;
       }
+
+      setJustSignedUp(true);
 
       toast({
         title: "Account created!",
