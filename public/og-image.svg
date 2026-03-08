@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f0a1e"/>
+      <stop offset="50%" stop-color="#1a1040"/>
+      <stop offset="100%" stop-color="#0d0820"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05" stroke="#6366f1" stroke-width="0.5">
+    <line x1="0" y1="0" x2="0" y2="630"/><line x1="60" y1="0" x2="60" y2="630"/>
+    <line x1="120" y1="0" x2="120" y2="630"/><line x1="180" y1="0" x2="180" y2="630"/>
+    <line x1="240" y1="0" x2="240" y2="630"/><line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="360" y1="0" x2="360" y2="630"/><line x1="420" y1="0" x2="420" y2="630"/>
+    <line x1="480" y1="0" x2="480" y2="630"/><line x1="540" y1="0" x2="540" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/><line x1="660" y1="0" x2="660" y2="630"/>
+    <line x1="720" y1="0" x2="720" y2="630"/><line x1="780" y1="0" x2="780" y2="630"/>
+    <line x1="840" y1="0" x2="840" y2="630"/><line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="960" y1="0" x2="960" y2="630"/><line x1="1020" y1="0" x2="1020" y2="630"/>
+    <line x1="1080" y1="0" x2="1080" y2="630"/><line x1="1140" y1="0" x2="1140" y2="630"/>
+    <line x1="0" y1="60" x2="1200" y2="60"/><line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/><line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/><line x1="0" y1="480" x2="1200" y2="480"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+  </g>
+
+  <!-- Decorative glow orbs -->
+  <circle cx="200" cy="500" r="200" fill="#6366f1" opacity="0.08" filter="url(#glow)"/>
+  <circle cx="1000" cy="150" r="180" fill="#a855f7" opacity="0.06" filter="url(#glow)"/>
+
+  <!-- Logo mark: T3A shield/passport icon -->
+  <g transform="translate(80, 180)">
+    <!-- Shield shape -->
+    <path d="M60 0 L120 30 L120 90 Q120 140 60 170 Q0 140 0 90 L0 30 Z" fill="url(#accent)" opacity="0.9"/>
+    <!-- Inner shield -->
+    <path d="M60 12 L110 38 L110 88 Q110 130 60 158 Q10 130 10 88 L10 38 Z" fill="#0f0a1e" opacity="0.6"/>
+    <!-- "3" inside shield -->
+    <text x="60" y="105" font-family="Poppins, Arial, sans-serif" font-size="60" font-weight="800" fill="white" text-anchor="middle">3</text>
+    <!-- Checkmark at bottom -->
+    <path d="M42 125 L55 138 L80 113" stroke="#10b981" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="230" y="240" font-family="Poppins, Arial, sans-serif" font-size="64" font-weight="800" fill="white" letter-spacing="-1">The 3rd Academy</text>
+
+  <!-- Tagline -->
+  <text x="230" y="295" font-family="Poppins, Arial, sans-serif" font-size="26" font-weight="400" fill="#a5b4fc" opacity="0.9">Beyond Credentials. Workplace Ready.</text>
+
+  <!-- Separator line -->
+  <rect x="230" y="320" width="120" height="3" rx="1.5" fill="url(#accent)"/>
+
+  <!-- Description -->
+  <text x="230" y="370" font-family="Poppins, Arial, sans-serif" font-size="20" fill="#94a3b8">Mentor-gated behavioral validation through sustained observation.</text>
+  <text x="230" y="400" font-family="Poppins, Arial, sans-serif" font-size="20" fill="#94a3b8">Earn your Skill Passport. Prove workplace readiness.</text>
+
+  <!-- Feature pills -->
+  <g transform="translate(230, 440)">
+    <rect x="0" y="0" width="160" height="36" rx="18" fill="#6366f1" opacity="0.2" stroke="#6366f1" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="80" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#a5b4fc" text-anchor="middle">Skill Passport</text>
+
+    <rect x="175" y="0" width="180" height="36" rx="18" fill="#a855f7" opacity="0.2" stroke="#a855f7" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="265" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#c084fc" text-anchor="middle">Mentor Validation</text>
+
+    <rect x="370" y="0" width="160" height="36" rx="18" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="450" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#6ee7b7" text-anchor="middle">BridgeFast</text>
+
+    <rect x="545" y="0" width="180" height="36" rx="18" fill="#f59e0b" opacity="0.2" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="635" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#fcd34d" text-anchor="middle">Talent Exchange</text>
+  </g>
+
+  <!-- URL -->
+  <text x="230" y="545" font-family="Poppins, Arial, sans-serif" font-size="16" font-weight="500" fill="#6366f1" opacity="0.8">the3rdacademy.com</text>
+
+  <!-- Bottom accent bar -->
+  <rect x="0" y="620" width="1200" height="10" fill="url(#accent)"/>
+</svg>
