@@ -374,7 +374,7 @@ const About = () => {
                 {
                   title: "For Candidates",
                   desc: "Earn validated credentials through mentor observation. Build a Skill Passport that proves workplace readiness.",
-                  link: "/join",
+                  link: "/get-started",
                   icon: Users,
                   gradient: "from-indigo-600 to-indigo-700",
                 },
@@ -465,7 +465,7 @@ const About = () => {
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>
-                  <Link to="/join">
+                  <Link to="/get-started">
                     Get Started Today
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>

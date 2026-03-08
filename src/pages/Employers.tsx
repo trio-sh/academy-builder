@@ -79,7 +79,7 @@ const tiers = [
       "Email support",
     ],
     cta: "Start Free",
-    href: "/join",
+    href: "/get-started",
     popular: false,
   },
   {
@@ -204,7 +204,7 @@ const Employers = () => {
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold shadow-2xl" asChild>
-                    <Link to="/join">
+                    <Link to="/get-started">
                       Start Hiring Today
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
@@ -569,7 +569,7 @@ const Employers = () => {
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>
-                  <Link to="/join">
+                  <Link to="/get-started">
                     Start Free Trial
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
