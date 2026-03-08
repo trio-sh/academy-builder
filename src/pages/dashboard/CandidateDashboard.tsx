@@ -432,12 +432,12 @@ const SkillPassport = () => {
         .single();
       setCandidateProfile(cp);
 
-      // If has passport, fetch passport data
+      // If has passport, fetch passport data (candidate_id = candidate_profiles.id)
       if (cp?.has_skill_passport) {
         const { data: passport } = await supabase
           .from("skill_passports")
           .select("*")
-          .eq("candidate_id", user.id)
+          .eq("candidate_id", cp.id)
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(1)
@@ -1020,16 +1020,25 @@ const GrowthLog = () => {
         .eq("candidate_id", user.id)
         .order("created_at", { ascending: false });
 
-      // Fetch passport for behavioral scores
-      const { data: passport } = await supabase
-        .from("skill_passports")
-        .select("*")
-        .eq("candidate_id", user.id)
-        .eq("is_active", true)
-        .limit(1)
+      // Get candidate_profiles.id for skill_passports FK
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
         .single();
 
-      setPassportData(passport);
+      // Fetch passport for behavioral scores (candidate_id = candidate_profiles.id)
+      if (cp) {
+        const { data: passport } = await supabase
+          .from("skill_passports")
+          .select("*")
+          .eq("candidate_id", cp.id)
+          .eq("is_active", true)
+          .limit(1)
+          .single();
+        setPassportData(passport);
+      }
+
       setEntries(data || []);
       setIsLoading(false);
     };
@@ -1520,11 +1529,19 @@ const ObservationPathway = () => {
       if (!user?.id) return;
 
       try {
+        // Get candidate_profiles.id (FK for mentor_assignments)
+        const { data: cp } = await supabase
+          .from("candidate_profiles")
+          .select("id")
+          .eq("profile_id", user.id)
+          .single();
+        if (!cp) { setIsLoading(false); return; }
+
         // Check for active mentor assignment
         const { data: assignments } = await supabase
           .from("mentor_assignments")
           .select("*")
-          .eq("candidate_id", user.id)
+          .eq("candidate_id", cp.id)
           .eq("status", "active")
           .limit(1);
 
@@ -1563,7 +1580,7 @@ const ObservationPathway = () => {
             .from("observation_feedback")
             .select("dimension_id, feedback_level, bars_score, status, final_feedback")
             .eq("assignment_id", assignment.id)
-            .eq("candidate_id", user.id);
+            .eq("candidate_id", cp.id);
 
           if (feedback) setObservationFeedback(feedback);
         }
@@ -2028,7 +2045,6 @@ const SelfAssessmentPage = () => {
       });
 
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
 
       // Refresh assessments
       const { data } = await supabase
@@ -2074,15 +2090,37 @@ const SelfAssessmentPage = () => {
         </div>
       </motion.div>
 
-      {/* Success Banner */}
+      {/* Success Banner with Mentor Recommendation */}
       {showSuccess && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3"
+          className="space-y-4"
         >
-          <CheckCircle className="w-5 h-5 text-emerald-400" />
-          <span className="text-emerald-300">Reflection saved.</span>
+          <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-400" />
+            <span className="text-emerald-300">Reflection saved successfully!</span>
+          </div>
+          <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shrink-0">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-white mb-1">Ready for the Next Step?</h3>
+                <p className="text-sm text-gray-400 mb-4">
+                  Now that you have completed your self-reflection, connect with a mentor to begin your formal Observation Pathway. Your mentor will guide you through behavioral assessments and help you earn your Skill Passport.
+                </p>
+                <Link to="/dashboard/candidate/mentors">
+                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Find a Mentor
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </motion.div>
       )}
 
@@ -4731,6 +4769,7 @@ const FindMentor = () => {
   const { user } = useAuth();
   const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
   const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
+  const [myCandidateProfileId, setMyCandidateProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
   const [requestMessage, setRequestMessage] = useState("");
@@ -4744,6 +4783,15 @@ const FindMentor = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       if (!user?.id) return;
+
+      // Get my candidate_profiles.id (needed for mentor_assignments FK)
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      const candidateProfileId = cp?.id || null;
+      setMyCandidateProfileId(candidateProfileId);
 
       // Fetch intelligent mentor matches
       try {
@@ -4776,13 +4824,15 @@ const FindMentor = () => {
         setMentors(enrichedMentors);
       }
 
-      // Fetch my current assignments
-      const { data: assignmentsData } = await supabase
-        .from("mentor_assignments")
-        .select("*")
-        .eq("candidate_id", user.id);
+      // Fetch my current assignments using candidate_profiles.id
+      if (candidateProfileId) {
+        const { data: assignmentsData } = await supabase
+          .from("mentor_assignments")
+          .select("*")
+          .eq("candidate_id", candidateProfileId);
 
-      setMyAssignments(assignmentsData || []);
+        setMyAssignments(assignmentsData || []);
+      }
 
       setIsLoading(false);
     };
@@ -4804,15 +4854,15 @@ const FindMentor = () => {
   };
 
   const requestMentor = async () => {
-    if (!user?.id || !selectedMentor) return;
+    if (!user?.id || !selectedMentor || !myCandidateProfileId) return;
 
     setIsRequesting(true);
 
-    // Create mentor assignment request
+    // Create mentor assignment request as pending (mentor must approve)
     const { error } = await supabase.from("mentor_assignments").insert({
       mentor_id: selectedMentor.id,
-      candidate_id: user.id,
-      status: "active",
+      candidate_id: myCandidateProfileId,
+      status: "pending",
       loop_number: 1,
     });
 
@@ -4824,6 +4874,13 @@ const FindMentor = () => {
         title: "New Mentee Request",
         message: requestMessage || "A candidate has requested you as their mentor.",
       });
+
+      // Refresh assignments
+      const { data: assignmentsData } = await supabase
+        .from("mentor_assignments")
+        .select("*")
+        .eq("candidate_id", myCandidateProfileId);
+      setMyAssignments(assignmentsData || []);
 
       setRequestSent((prev) => new Set(prev).add(selectedMentor.id));
       setSelectedMentor(null);
@@ -4840,6 +4897,7 @@ const FindMentor = () => {
       : mentors.filter((m) => m.industry === industryFilter);
 
   const activeMentor = myAssignments.find((a) => a.status === "active");
+  const pendingMentor = myAssignments.find((a) => a.status === "pending");
 
   if (isLoading) {
     return (
@@ -4882,8 +4940,24 @@ const FindMentor = () => {
         </motion.div>
       )}
 
+      {/* Pending Mentor Request Status */}
+      {pendingMentor && !activeMentor && (
+        <motion.div
+          variants={itemVariants}
+          className="p-6 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/20"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <Clock className="w-5 h-5 text-amber-400" />
+            <h3 className="font-semibold text-amber-400">Mentor Request Pending</h3>
+          </div>
+          <p className="text-gray-300">
+            Your mentor request has been sent and is awaiting approval. You will be notified once your mentor accepts.
+          </p>
+        </motion.div>
+      )}
+
       {/* Recommended Matches Section */}
-      {recommendedMatches.length > 0 && !activeMentor && (
+      {recommendedMatches.length > 0 && !activeMentor && !pendingMentor && (
         <motion.div variants={itemVariants} className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -5067,7 +5141,10 @@ const FindMentor = () => {
         {filteredMentors.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-4">
             {filteredMentors.map((mentor) => {
-              const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
+              const activeAssignment = myAssignments.find((a) => a.mentor_id === mentor.id && a.status === "active");
+              const pendingAssignment = myAssignments.find((a) => a.mentor_id === mentor.id && a.status === "pending");
+              const isAssigned = !!activeAssignment;
+              const isPending = !!pendingAssignment;
               const hasSentRequest = requestSent.has(mentor.id);
               const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
 
@@ -5078,6 +5155,8 @@ const FindMentor = () => {
                   className={`p-6 rounded-xl border transition-colors ${
                     isAssigned
                       ? "bg-emerald-500/30 border-emerald-500/30"
+                      : isPending
+                      ? "bg-amber-500/10 border-amber-500/30"
                       : "bg-black/80 border-white/30 hover:border-white/20"
                   }`}
                 >
@@ -5152,19 +5231,24 @@ const FindMentor = () => {
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Currently Assigned
                       </Button>
+                    ) : isPending ? (
+                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                        <Clock className="w-4 h-4 mr-2" />
+                        Pending Approval
+                      </Button>
                     ) : hasSentRequest ? (
-                      <Button disabled className="w-full bg-indigo-600/50 cursor-not-allowed">
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Request Sent
+                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                        <Clock className="w-4 h-4 mr-2" />
+                        Pending Approval
                       </Button>
                     ) : spotsAvailable > 0 ? (
                       <Button
                         onClick={() => setSelectedMentor(mentor)}
                         className="w-full bg-indigo-600 hover:bg-indigo-500"
-                        disabled={!!activeMentor}
+                        disabled={!!activeMentor || !!pendingMentor}
                       >
                         <Send className="w-4 h-4 mr-2" />
-                        {activeMentor ? "Complete Current Mentorship" : "Request Mentorship"}
+                        {activeMentor ? "Complete Current Mentorship" : pendingMentor ? "Awaiting Mentor Response" : "Request Mentorship"}
                       </Button>
                     ) : (
                       <Button disabled className="w-full bg-gray-600/50 cursor-not-allowed">
