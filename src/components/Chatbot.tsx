@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 import {
   MessageCircle,
@@ -9,6 +10,7 @@ import {
   User,
   Sparkles,
   Loader2,
+  Monitor,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +32,11 @@ const QUICK_REPLIES = [
   "What is The 3rd Academy?",
   "How does MentorLink work?",
   "What is a Skill Passport?",
+  "What am I looking at right now?",
   "How do I get started?",
 ];
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant for The 3rd Academy, a platform that bridges the gap between credentials and workplace readiness through mentor-gated behavioral validation.
+const BASE_SYSTEM_PROMPT = `You are a helpful AI assistant for The 3rd Academy, a platform that bridges the gap between credentials and workplace readiness through mentor-gated behavioral validation.
 
 Key platform components:
 - Skill Passport: Evidence-linked credential earned through mentor validation
@@ -45,7 +48,104 @@ Key platform components:
 - T3X Exchange: Employer marketplace for verified candidates
 - Civic Access Lab: School track for early career awareness
 
-Be friendly, concise, and helpful. Guide users to understand the platform and encourage them to get started on their credentialing journey.`;
+Be friendly, concise, and helpful. Guide users to understand the platform and encourage them to get started on their credentialing journey.
+
+You have screen awareness — you can see what the user is currently viewing on the page. Use the page context provided below to give contextual, relevant help. If the user asks about something visible on their screen, reference it directly. If they're on a dashboard, help them with that dashboard's features. If they're on the homepage, help them navigate.`;
+
+/** Extracts a snapshot of the current page DOM for contextual AI awareness */
+function extractPageContext(): string {
+  const loc = window.location;
+  const pageTitle = document.title;
+
+  // Current route / URL
+  const url = loc.pathname + loc.search;
+
+  // Grab all visible headings
+  const headings = Array.from(document.querySelectorAll("h1, h2, h3"))
+    .map((el) => {
+      const text = (el as HTMLElement).innerText?.trim();
+      return text ? `${el.tagName}: ${text}` : null;
+    })
+    .filter(Boolean)
+    .slice(0, 15);
+
+  // Active navigation items (links with active/current styling)
+  const activeNavItems = Array.from(document.querySelectorAll("nav a, aside a"))
+    .filter((el) => {
+      const classes = el.className || "";
+      return (
+        classes.includes("active") ||
+        classes.includes("text-white") ||
+        classes.includes("border-red") ||
+        classes.includes("border-indigo") ||
+        el.getAttribute("aria-current") === "page"
+      );
+    })
+    .map((el) => (el as HTMLElement).innerText?.trim())
+    .filter(Boolean)
+    .slice(0, 5);
+
+  // Visible buttons and actions
+  const buttons = Array.from(document.querySelectorAll("button, [role='button'], a.btn"))
+    .map((el) => (el as HTMLElement).innerText?.trim())
+    .filter((t) => t && t.length > 1 && t.length < 60)
+    .slice(0, 15);
+
+  // Form fields currently on screen
+  const formFields = Array.from(document.querySelectorAll("input[placeholder], textarea[placeholder], select"))
+    .map((el) => {
+      const placeholder = el.getAttribute("placeholder") || "";
+      const label = el.getAttribute("aria-label") || "";
+      const type = el.getAttribute("type") || el.tagName.toLowerCase();
+      return `${type}: ${placeholder || label}`.trim();
+    })
+    .filter((t) => t.length > 2)
+    .slice(0, 10);
+
+  // Visible data/stats cards — grab text from small card-like elements
+  const statCards = Array.from(document.querySelectorAll("[class*='rounded-xl'], [class*='rounded-2xl']"))
+    .map((el) => {
+      const text = (el as HTMLElement).innerText?.trim();
+      return text && text.length < 100 ? text.replace(/\n+/g, " | ") : null;
+    })
+    .filter(Boolean)
+    .slice(0, 10);
+
+  // Tables visible on page
+  const tables = Array.from(document.querySelectorAll("table"))
+    .map((table) => {
+      const headers = Array.from(table.querySelectorAll("th"))
+        .map((th) => (th as HTMLElement).innerText?.trim())
+        .filter(Boolean);
+      const rowCount = table.querySelectorAll("tbody tr").length;
+      return headers.length ? `Table [${headers.join(", ")}] — ${rowCount} rows` : null;
+    })
+    .filter(Boolean);
+
+  // Visible alerts or status messages
+  const alerts = Array.from(document.querySelectorAll("[role='alert'], [class*='alert'], [class*='bg-amber'], [class*='bg-red-500'], [class*='bg-emerald']"))
+    .map((el) => (el as HTMLElement).innerText?.trim())
+    .filter((t) => t && t.length > 5 && t.length < 200)
+    .slice(0, 5);
+
+  // Main content text (first 500 chars of the main area)
+  const mainContent = document.querySelector("main")?.innerText?.trim().slice(0, 500) || "";
+
+  const sections = [
+    `Page: ${pageTitle}`,
+    `URL: ${url}`,
+    headings.length ? `Headings:\n${headings.join("\n")}` : "",
+    activeNavItems.length ? `Active Nav: ${activeNavItems.join(", ")}` : "",
+    buttons.length ? `Buttons: ${buttons.join(", ")}` : "",
+    formFields.length ? `Form Fields:\n${formFields.join("\n")}` : "",
+    tables.length ? `Tables:\n${tables.join("\n")}` : "",
+    statCards.length ? `Visible Cards:\n${statCards.join("\n")}` : "",
+    alerts.length ? `Alerts:\n${alerts.join("\n")}` : "",
+    mainContent ? `Page Content Preview:\n${mainContent}` : "",
+  ].filter(Boolean);
+
+  return sections.join("\n\n");
+}
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,8 +153,18 @@ export function Chatbot() {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [db, setDb] = useState<IDBPDatabase<ChatbotDBSchema> | null>(null);
+  const [screenAware, setScreenAware] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
+
+  // Build the system prompt with optional page context
+  const buildSystemPrompt = useCallback(() => {
+    if (!screenAware) return BASE_SYSTEM_PROMPT;
+
+    const pageContext = extractPageContext();
+    return `${BASE_SYSTEM_PROMPT}\n\n--- CURRENT SCREEN CONTEXT ---\n${pageContext}\n--- END SCREEN CONTEXT ---`;
+  }, [screenAware, location.pathname]);
 
   // Initialize IndexedDB
   useEffect(() => {
@@ -123,7 +233,7 @@ export function Chatbot() {
         },
         body: JSON.stringify({
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: buildSystemPrompt() },
             ...messages.map((m) => ({ role: m.role, content: m.content })),
             { role: "user", content: messageContent },
           ],
@@ -224,7 +334,19 @@ export function Chatbot() {
                   <p className="text-xs text-gray-400">Powered by AI</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setScreenAware(!screenAware)}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors ${
+                    screenAware
+                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                      : "bg-black/80 text-gray-500 border border-white/10"
+                  }`}
+                  title={screenAware ? "Screen awareness ON — I can see your page" : "Screen awareness OFF"}
+                >
+                  <Monitor className="w-3 h-3" />
+                  {screenAware ? "Aware" : "Off"}
+                </button>
                 {messages.length > 0 && (
                   <Button
                     variant="ghost"
@@ -245,6 +367,17 @@ export function Chatbot() {
                 </motion.button>
               </div>
             </div>
+
+            {/* Screen Context Indicator */}
+            {screenAware && (
+              <div className="px-4 py-2 bg-indigo-500/10 border-b border-indigo-500/20 flex items-center gap-2">
+                <Monitor className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-xs text-indigo-300">
+                  Viewing: <span className="text-white font-medium">{location.pathname === "/" ? "Homepage" : location.pathname.split("/").filter(Boolean).pop()?.replace(/-/g, " ")}</span>
+                </span>
+                <span className="text-xs text-indigo-400/50 ml-auto">I can see your screen</span>
+              </div>
+            )}
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -285,48 +418,49 @@ export function Chatbot() {
               {messages.map((message, index) => (
                 <motion.div
                   key={index}
-                  className={`flex gap-3 ${
-                    message.role === "user" ? "flex-row-reverse" : ""
-                  }`}
+                  className="flex gap-3"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
                   <div
-                    className={`w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center ${
+                    className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5 ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-indigo-600 to-purple-600"
-                        : "bg-black/80"
+                        : "bg-black/80 border border-white/10"
                     }`}
                   >
                     {message.role === "user" ? (
-                      <User className="w-4 h-4 text-white" />
+                      <User className="w-3.5 h-3.5 text-white" />
                     ) : (
-                      <Bot className="w-4 h-4 text-indigo-400" />
+                      <Bot className="w-3.5 h-3.5 text-indigo-400" />
                     )}
                   </div>
-                  <div
-                    className={`max-w-[75%] p-3 rounded-2xl ${
-                      message.role === "user"
-                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-tr-sm"
-                        : "bg-black/80 border border-white/30 text-gray-300 rounded-tl-sm"
-                    }`}
-                  >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                    <p
-                      className={`text-xs mt-1 ${
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs font-medium ${
+                        message.role === "user" ? "text-indigo-300" : "text-purple-300"
+                      }`}>
+                        {message.role === "user" ? "You" : "Academy AI"}
+                      </span>
+                      <span className="text-xs text-gray-600">
+                        {message.timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                    <div
+                      className={`p-3 rounded-2xl rounded-tl-sm ${
                         message.role === "user"
-                          ? "text-indigo-200"
-                          : "text-gray-500"
+                          ? "bg-indigo-600/20 border border-indigo-500/20 text-gray-200"
+                          : "bg-black/60 border border-white/10 text-gray-300"
                       }`}
                     >
-                      {message.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               ))}
