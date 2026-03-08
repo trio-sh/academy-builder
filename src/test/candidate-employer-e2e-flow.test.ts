@@ -365,9 +365,9 @@ describe("Step 3: Candidate Completes BridgeFast Module", () => {
 
   it("should update candidate tier after completing module", () => {
     const candidate = db.candidate_profiles[0];
-    candidate.current_tier = "tier_1" as ReadinessTier;
+    candidate.current_tier = "platinum" as ReadinessTier;
 
-    expect(candidate.current_tier).toBe("tier_1");
+    expect(candidate.current_tier).toBe("platinum");
   });
 });
 
@@ -378,13 +378,13 @@ describe("Step 4: Candidate Profile Listed on T3X (Talent Exchange)", () => {
     const candidate = db.candidate_profiles[0];
 
     // Candidate meets criteria: has tier, completed BridgeFast
-    candidate.current_tier = "tier_1";
+    candidate.current_tier = "platinum";
     candidate.has_skill_passport = true;
     candidate.is_listed_on_t3x = true;
 
     expect(candidate.is_listed_on_t3x).toBe(true);
     expect(candidate.has_skill_passport).toBe(true);
-    expect(candidate.current_tier).toBe("tier_1");
+    expect(candidate.current_tier).toBe("platinum");
   });
 
   it("candidate should NOT be listed if requirements are not met", () => {
@@ -414,7 +414,7 @@ describe("Step 5: Employer Discovers Candidate on T3X", () => {
     // Set candidate as listed
     db.candidate_profiles[0].is_listed_on_t3x = true;
     db.candidate_profiles[0].has_skill_passport = true;
-    db.candidate_profiles[0].current_tier = "tier_1";
+    db.candidate_profiles[0].current_tier = "platinum";
   });
 
   it("employer should be able to query candidates listed on T3X", () => {
@@ -434,7 +434,7 @@ describe("Step 5: Employer Discovers Candidate on T3X", () => {
     expect(profile!.first_name).toBe("Jane");
     expect(profile!.last_name).toBe("Doe");
     expect(candidate.skills).toContain("communication");
-    expect(candidate.current_tier).toBe("tier_1");
+    expect(candidate.current_tier).toBe("platinum");
   });
 
   it("employer must be verified to browse T3X", () => {
@@ -814,7 +814,7 @@ describe("Full E2E Flow: Readiness Reflection → Connection → Messaging", () 
     expect(db.bridgefast_progress[0].status).toBe("completed");
 
     // Step 4: Profile gets listed on T3X
-    db.candidate_profiles[0].current_tier = "tier_1";
+    db.candidate_profiles[0].current_tier = "platinum";
     db.candidate_profiles[0].has_skill_passport = true;
     db.candidate_profiles[0].is_listed_on_t3x = true;
     expect(db.candidate_profiles[0].is_listed_on_t3x).toBe(true);

@@ -4,6 +4,8 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, updatePassword } from "@/lib/supabase";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
+import { parseResume } from "@/lib/resumeParser";
+import { analyzeResume } from "@/services/resumeEnhancer";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
 import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
@@ -191,9 +193,9 @@ const Overview = () => {
   const getTierDisplay = (tier: string | null | undefined) => {
     if (!tier) return "Not Assessed";
     const tierMap: Record<string, string> = {
-      tier_1: "Tier 1 - Ready",
-      tier_2: "Tier 2 - Developing",
-      tier_3: "Tier 3 - Emerging",
+      platinum: "Platinum",
+      gold: "Gold",
+      silver: "Silver",
     };
     return tierMap[tier] || tier;
   };
@@ -709,9 +711,9 @@ const SkillPassport = () => {
       developing: { label: "Developing", color: "text-amber-400" },
       emerging: { label: "Emerging", color: "text-blue-400" },
       ready: { label: "Job Ready", color: "text-emerald-400" },
-      tier_1: { label: "Tier 1 - Developing", color: "text-amber-400" },
-      tier_2: { label: "Tier 2 - Emerging", color: "text-blue-400" },
-      tier_3: { label: "Tier 3 - Ready", color: "text-emerald-400" },
+      silver: { label: "Silver", color: "text-gray-300" },
+      gold: { label: "Gold", color: "text-amber-400" },
+      platinum: { label: "Platinum", color: "text-emerald-400" },
     };
     return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
   };
@@ -3665,6 +3667,8 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [enhancerSummary, setEnhancerSummary] = useState<string | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [showResumeViewer, setShowResumeViewer] = useState(false);
@@ -3887,6 +3891,99 @@ const Profile = () => {
       });
 
       setUploadSuccess(true);
+
+      // Resume Enhancer: AI-powered analysis using a0.dev LLM API
+      // Parses resume text and sends to AI for behavioral dimension mapping
+      setIsEnhancing(true);
+      setEnhancerSummary(null);
+
+      try {
+        // Extract text from the uploaded file for AI analysis
+        const parsed = await parseResume(file);
+        const resumeText = parsed.rawText || "";
+
+        // Call AI to analyze resume and map to behavioral dimensions
+        const enhancerResult = await analyzeResume(resumeText);
+
+        // Update candidate profile with AI-generated Basic Profile data
+        const updateData: Record<string, unknown> = {
+          observation_areas: enhancerResult.observationDimensions,
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        };
+
+        // Merge AI-suggested skills with existing skills
+        if (enhancerResult.suggestedSkills.length > 0) {
+          const existingSkills = candidateProfile?.skills || [];
+          const mergedSkills = Array.from(new Set([...existingSkills, ...parsed.skills, ...enhancerResult.suggestedSkills]));
+          updateData.skills = mergedSkills;
+        }
+
+        await supabase
+          .from("candidate_profiles")
+          .update(updateData)
+          .eq("profile_id", user.id);
+
+        // Build rationale summary for growth log
+        const rationaleEntries = Object.entries(enhancerResult.dimensionRationale)
+          .map(([dim, reason]) => `• ${dim.replace(/_/g, " ")}: ${reason}`)
+          .join("\n");
+
+        // Create growth log entry for Resume Enhancer / Basic Profile creation
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Resume Enhancer — Basic Profile Created",
+          description: `AI-analyzed resume. ${enhancerResult.summary}\n\nObservation areas identified (${enhancerResult.observationDimensions.length} dimensions):\n${rationaleEntries}`,
+          source_component: "ResumeEnhancer",
+          metadata: {
+            experienceLevel: enhancerResult.experienceLevel,
+            industryFocus: enhancerResult.industryFocus,
+            strengthAreas: enhancerResult.strengthAreas,
+            suggestedSkills: enhancerResult.suggestedSkills,
+          },
+        });
+
+        setEnhancerSummary(enhancerResult.summary);
+
+        // Refresh candidate profile
+        const { data: refreshedProfile } = await supabase
+          .from("candidate_profiles")
+          .select("*")
+          .eq("profile_id", user.id)
+          .single();
+        if (refreshedProfile) setCandidateProfile(refreshedProfile);
+      } catch (enhancerError) {
+        console.error("Resume Enhancer error (non-blocking):", enhancerError);
+        // Fallback: still create basic profile with default dimensions
+        const fallbackDimensions = [
+          "integrity_ethics", "accountability_ownership", "execution_reliability",
+          "communication_pressure", "collaboration_conflict",
+        ];
+        await supabase.from("candidate_profiles").update({
+          observation_areas: fallbackDimensions,
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        }).eq("profile_id", user.id);
+
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Resume Enhancer — Basic Profile Created",
+          description: "Basic Profile created with default observation dimensions (AI analysis unavailable).",
+          source_component: "ResumeEnhancer",
+        });
+
+        // Refresh candidate profile
+        const { data: refreshedProfile } = await supabase
+          .from("candidate_profiles")
+          .select("*")
+          .eq("profile_id", user.id)
+          .single();
+        if (refreshedProfile) setCandidateProfile(refreshedProfile);
+      } finally {
+        setIsEnhancing(false);
+      }
 
       // Clear success message after 3 seconds
       setTimeout(() => setUploadSuccess(false), 3000);
@@ -4305,9 +4402,62 @@ const Profile = () => {
                   Resume uploaded successfully!
                 </div>
               )}
+
+              {isEnhancing && (
+                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                  <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Resume Enhancer AI is analyzing your resume...</p>
+                    <p className="text-xs text-gray-400 mt-1">Creating your Basic Profile and identifying observation areas</p>
+                  </div>
+                </div>
+              )}
+
+              {enhancerSummary && !isEnhancing && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                  <Sparkles className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-indigo-400">AI Analysis Complete</p>
+                    <p className="text-gray-300 mt-1">{enhancerSummary}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
+
+        {/* Resume Enhancer — Basic Profile */}
+        {candidateProfile?.has_basic_profile && (
+          <div className="p-6 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-indigo-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Basic Profile</h3>
+                <p className="text-xs text-gray-400">Created by Resume Enhancer AI (non-credentialed)</p>
+              </div>
+              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-medium">
+                Active
+              </span>
+            </div>
+            {candidateProfile.observation_areas && candidateProfile.observation_areas.length > 0 && (
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Observation Areas Identified</p>
+                <div className="flex flex-wrap gap-2">
+                  {candidateProfile.observation_areas.map((area: string, i: number) => (
+                    <span key={i} className="px-3 py-1 rounded-lg bg-black/60 text-sm text-indigo-300 border border-indigo-500/20">
+                      {area.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  These dimensions will be assessed by your assigned mentor through structured observations (BASD protocol).
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Headline and Bio */}
         <div className="p-6 rounded-xl bg-black/80 border border-white/30">

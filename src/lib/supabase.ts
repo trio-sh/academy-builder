@@ -123,6 +123,18 @@ export const createProfile = async (
 
   if (error) {
     console.error('createProfile error:', error);
+    return { error };
+  }
+
+  // Auto-create Growth Log entry for candidates on signup
+  if (role === 'candidate') {
+    await supabase.from('growth_log_entries').insert({
+      candidate_id: userId,
+      event_type: 'signup',
+      title: 'Journey Started — Welcome to The 3rd Academy',
+      description: 'Growth Log created. Your journey toward verified workplace readiness begins here.',
+      source_component: 'System',
+    });
   }
 
   return { error };

@@ -111,9 +111,9 @@ const VerifyPassport = () => {
       developing: { label: "Developing", color: "text-amber-400" },
       emerging: { label: "Emerging", color: "text-blue-400" },
       ready: { label: "Job Ready", color: "text-emerald-400" },
-      tier_1: { label: "Tier 1 - Developing", color: "text-amber-400" },
-      tier_2: { label: "Tier 2 - Emerging", color: "text-blue-400" },
-      tier_3: { label: "Tier 3 - Ready", color: "text-emerald-400" },
+      silver: { label: "Silver", color: "text-gray-300" },
+      gold: { label: "Gold", color: "text-amber-400" },
+      platinum: { label: "Platinum", color: "text-emerald-400" },
     };
     return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
   };
