@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -60,6 +60,16 @@ import {
   Mail,
   Send,
   MessageSquare,
+  Save,
+  ChevronDown,
+  MapPin,
+  User,
+  RefreshCw,
+  ToggleLeft,
+  ToggleRight,
+  Database,
+  Globe,
+  Palette,
 } from "lucide-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -68,6 +78,8 @@ type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
 type TalentVisaNomination = Database["public"]["Tables"]["talentvisa_nominations"]["Row"];
 type TalentVisaQuota = Database["public"]["Tables"]["talentvisa_quotas"]["Row"];
+type SchoolProfile = Database["public"]["Tables"]["school_profiles"]["Row"];
+type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 type TalentVisaTier = "gold" | "silver" | "bronze";
 
 // Tier configuration
@@ -560,6 +572,20 @@ const UsersManagement = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [selectedUser, setSelectedUser] = useState<UserWithProfile | null>(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    headline: "",
+    bio: "",
+    location: "",
+  });
+  const [newRole, setNewRole] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -593,6 +619,91 @@ const UsersManagement = () => {
     );
   };
 
+  const openViewModal = (user: UserWithProfile) => {
+    setSelectedUser(user);
+    setShowViewModal(true);
+  };
+
+  const openEditModal = (user: UserWithProfile) => {
+    setSelectedUser(user);
+    setEditForm({
+      first_name: user.first_name || "",
+      last_name: user.last_name || "",
+      email: user.email || "",
+      headline: user.headline || "",
+      bio: user.bio || "",
+      location: user.location || "",
+    });
+    setShowEditModal(true);
+  };
+
+  const openRoleModal = (user: UserWithProfile) => {
+    setSelectedUser(user);
+    setNewRole(user.role);
+    setShowRoleModal(true);
+  };
+
+  const saveProfile = async () => {
+    if (!selectedUser) return;
+    setIsSaving(true);
+
+    await supabase
+      .from("profiles")
+      .update({
+        first_name: editForm.first_name,
+        last_name: editForm.last_name,
+        email: editForm.email,
+        headline: editForm.headline || null,
+        bio: editForm.bio || null,
+        location: editForm.location || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", selectedUser.id);
+
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === selectedUser.id
+          ? { ...u, ...editForm, headline: editForm.headline || null, bio: editForm.bio || null, location: editForm.location || null }
+          : u
+      )
+    );
+
+    setIsSaving(false);
+    setShowEditModal(false);
+    setSelectedUser(null);
+  };
+
+  const changeRole = async () => {
+    if (!selectedUser || newRole === selectedUser.role) return;
+    setIsSaving(true);
+
+    await supabase
+      .from("profiles")
+      .update({ role: newRole, updated_at: new Date().toISOString() })
+      .eq("id", selectedUser.id);
+
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === selectedUser.id ? { ...u, role: newRole as Profile["role"] } : u
+      )
+    );
+
+    setIsSaving(false);
+    setShowRoleModal(false);
+    setSelectedUser(null);
+  };
+
+  const getRoleBadge = (role: string) => {
+    const styles: Record<string, string> = {
+      candidate: "bg-emerald-500/20 text-emerald-400",
+      mentor: "bg-purple-500/20 text-purple-400",
+      employer: "bg-amber-500/20 text-amber-400",
+      admin: "bg-red-500/20 text-red-400",
+      school_admin: "bg-blue-500/20 text-blue-400",
+    };
+    return styles[role] || "bg-gray-500/20 text-gray-400";
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -608,9 +719,14 @@ const UsersManagement = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
-        <p className="text-gray-400">View and manage all platform users.</p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
+          <p className="text-gray-400">View, edit, and manage all platform users.</p>
+        </div>
+        <div className="text-sm text-gray-400">
+          {filteredUsers.length} user{filteredUsers.length !== 1 ? "s" : ""}
+        </div>
       </motion.div>
 
       {/* Filters */}
@@ -649,19 +765,20 @@ const UsersManagement = () => {
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">User</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Role</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Status</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Location</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Joined</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-black/80">
+                  <tr key={user.id} className="hover:bg-white/5 transition-colors">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         {user.avatar_url ? (
-                          <img src={user.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+                          <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">
+                          <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">
                             {user.first_name?.[0]}{user.last_name?.[0]}
                           </div>
                         )}
@@ -672,14 +789,8 @@ const UsersManagement = () => {
                       </div>
                     </td>
                     <td className="px-4 py-4">
-                      <span className={`px-2 py-1 rounded text-xs ${
-                        user.role === "candidate" ? "bg-emerald-500/20 text-emerald-400" :
-                        user.role === "mentor" ? "bg-purple-500/20 text-purple-400" :
-                        user.role === "employer" ? "bg-amber-500/20 text-amber-400" :
-                        user.role === "admin" ? "bg-red-500/20 text-red-400" :
-                        "bg-blue-500/20 text-blue-400"
-                      }`}>
-                        {user.role}
+                      <span className={`px-2 py-1 rounded text-xs capitalize ${getRoleBadge(user.role)}`}>
+                        {user.role?.replace("_", " ")}
                       </span>
                     </td>
                     <td className="px-4 py-4">
@@ -690,22 +801,46 @@ const UsersManagement = () => {
                       </span>
                     </td>
                     <td className="px-4 py-4 text-sm text-gray-400">
+                      {user.location || "—"}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-400">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <Button
                           size="sm"
                           variant="ghost"
+                          onClick={() => openViewModal(user)}
                           className="text-gray-400 hover:text-white"
+                          title="View user"
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
+                          onClick={() => openEditModal(user)}
+                          className="text-blue-400 hover:text-blue-300"
+                          title="Edit profile"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => openRoleModal(user)}
+                          className="text-purple-400 hover:text-purple-300"
+                          title="Change role"
+                        >
+                          <Shield className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           onClick={() => toggleUserStatus(user.id, user.is_active)}
                           className={user.is_active ? "text-amber-400 hover:text-amber-300" : "text-emerald-400 hover:text-emerald-300"}
+                          title={user.is_active ? "Deactivate" : "Activate"}
                         >
                           {user.is_active ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                         </Button>
@@ -718,6 +853,294 @@ const UsersManagement = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* View User Modal */}
+      {showViewModal && selectedUser && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">User Details</h3>
+              <button onClick={() => { setShowViewModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 mb-6">
+              {selectedUser.avatar_url ? (
+                <img src={selectedUser.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover" />
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl">
+                  {selectedUser.first_name?.[0]}{selectedUser.last_name?.[0]}
+                </div>
+              )}
+              <div>
+                <p className="text-lg font-semibold text-white">{selectedUser.first_name} {selectedUser.last_name}</p>
+                <p className="text-sm text-gray-400">{selectedUser.email}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className={`px-2 py-0.5 rounded text-xs capitalize ${getRoleBadge(selectedUser.role)}`}>
+                    {selectedUser.role?.replace("_", " ")}
+                  </span>
+                  <span className={`px-2 py-0.5 rounded text-xs ${selectedUser.is_active ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                    {selectedUser.is_active ? "Active" : "Inactive"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {selectedUser.headline && (
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Headline</p>
+                  <p className="text-sm text-gray-300">{selectedUser.headline}</p>
+                </div>
+              )}
+              {selectedUser.bio && (
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Bio</p>
+                  <p className="text-sm text-gray-300">{selectedUser.bio}</p>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Location</p>
+                  <p className="text-sm text-gray-300">{selectedUser.location || "Not set"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Onboarding</p>
+                  <p className="text-sm text-gray-300">{selectedUser.onboarding_completed ? "Completed" : "Incomplete"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Joined</p>
+                  <p className="text-sm text-gray-300">{new Date(selectedUser.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Last Updated</p>
+                  <p className="text-sm text-gray-300">{new Date(selectedUser.updated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setShowViewModal(false); openEditModal(selectedUser); }}
+                className="flex-1 border-white/20 text-white hover:bg-white/5"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Profile
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => { setShowViewModal(false); openRoleModal(selectedUser); }}
+                className="flex-1 border-white/20 text-white hover:bg-white/5"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Change Role
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditModal && selectedUser && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">Edit Profile</h3>
+              <button onClick={() => { setShowEditModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">First Name</label>
+                  <input
+                    type="text"
+                    value={editForm.first_name}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, first_name: e.target.value }))}
+                    className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Last Name</label>
+                  <input
+                    type="text"
+                    value={editForm.last_name}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, last_name: e.target.value }))}
+                    className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Headline</label>
+                <input
+                  type="text"
+                  value={editForm.headline}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, headline: e.target.value }))}
+                  placeholder="e.g. Software Engineer"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Location</label>
+                <input
+                  type="text"
+                  value={editForm.location}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, location: e.target.value }))}
+                  placeholder="e.g. New York, NY"
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Bio</label>
+                <textarea
+                  value={editForm.bio}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, bio: e.target.value }))}
+                  rows={3}
+                  placeholder="Short bio..."
+                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500 resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
+                className="flex-1 border-white/20 text-white hover:bg-white/5"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={saveProfile}
+                disabled={isSaving || !editForm.first_name || !editForm.last_name || !editForm.email}
+                className="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-50"
+              >
+                {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                Save Changes
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Change Role Modal */}
+      {showRoleModal && selectedUser && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">Change Role</h3>
+              <button onClick={() => { setShowRoleModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-400 mb-4">
+              Change the role for <span className="text-white font-medium">{selectedUser.first_name} {selectedUser.last_name}</span>
+            </p>
+
+            <div className="space-y-2 mb-6">
+              {[
+                { value: "candidate", label: "Candidate", desc: "Job seeker building their profile", icon: UserCheck, color: "emerald" },
+                { value: "mentor", label: "Mentor", desc: "Guides and evaluates candidates", icon: GraduationCap, color: "purple" },
+                { value: "employer", label: "Employer", desc: "Hiring manager or recruiter", icon: Building2, color: "amber" },
+                { value: "school_admin", label: "School Admin", desc: "Manages school cohorts", icon: GraduationCap, color: "blue" },
+                { value: "admin", label: "Admin", desc: "Full platform access", icon: Shield, color: "red" },
+              ].map((role) => (
+                <button
+                  key={role.value}
+                  onClick={() => setNewRole(role.value)}
+                  className={`w-full p-3 rounded-xl border text-left transition-all flex items-center gap-3 ${
+                    newRole === role.value
+                      ? `bg-${role.color}-500/20 border-${role.color}-500/50`
+                      : "bg-black/80 border-white/10 hover:border-white/20"
+                  }`}
+                >
+                  <div className={`w-9 h-9 rounded-lg bg-${role.color}-500/20 flex items-center justify-center`}>
+                    <role.icon className={`w-4 h-4 text-${role.color}-400`} />
+                  </div>
+                  <div className="flex-1">
+                    <p className={`text-sm font-medium ${newRole === role.value ? "text-white" : "text-gray-300"}`}>{role.label}</p>
+                    <p className="text-xs text-gray-500">{role.desc}</p>
+                  </div>
+                  {newRole === role.value && <CheckCircle className="w-5 h-5 text-emerald-400" />}
+                  {selectedUser.role === role.value && newRole !== role.value && (
+                    <span className="text-xs text-gray-500">Current</span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {newRole !== selectedUser.role && (
+              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
+                <p className="text-xs text-amber-400">
+                  Changing role from <span className="font-bold capitalize">{selectedUser.role?.replace("_", " ")}</span> to <span className="font-bold capitalize">{newRole.replace("_", " ")}</span>. This will affect the user's dashboard and permissions.
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
+                className="flex-1 border-white/20 text-white hover:bg-white/5"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={changeRole}
+                disabled={isSaving || newRole === selectedUser.role}
+                className="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-50"
+              >
+                {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Shield className="w-4 h-4 mr-2" />}
+                Update Role
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -1344,6 +1767,65 @@ const EmployersManagement = () => {
 
 // Schools Management
 const SchoolsManagement = () => {
+  const [schools, setSchools] = useState<(SchoolProfile & { profile?: Profile })[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      const { data } = await supabase
+        .from("school_profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (data) {
+        const enriched = await Promise.all(
+          data.map(async (school) => {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", school.profile_id)
+              .single();
+            return { ...school, profile };
+          })
+        );
+        setSchools(enriched);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchSchools();
+  }, []);
+
+  const filteredSchools = schools.filter((s) => {
+    if (!searchQuery) return true;
+    return (
+      s.school_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.district?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.profile?.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
+  const verifySchool = async (schoolId: string, isVerified: boolean) => {
+    await supabase
+      .from("school_profiles")
+      .update({ is_verified: !isVerified })
+      .eq("id", schoolId);
+
+    setSchools((prev) =>
+      prev.map((s) => (s.id === schoolId ? { ...s, is_verified: !isVerified } : s))
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={containerVariants}
@@ -1351,14 +1833,99 @@ const SchoolsManagement = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Schools Management</h1>
-        <p className="text-gray-400">Manage and verify school accounts.</p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Schools Management</h1>
+          <p className="text-gray-400">Manage and verify school accounts.</p>
+        </div>
+        <div className="text-sm text-gray-400">{schools.length} school{schools.length !== 1 ? "s" : ""}</div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
-        <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-        <p className="text-gray-400">No schools registered yet</p>
+      {schools.length > 0 && (
+        <motion.div variants={itemVariants}>
+          <div className="relative max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search schools..."
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+            />
+          </div>
+        </motion.div>
+      )}
+
+      {/* Stats */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+          <p className="text-2xl font-bold text-white">{schools.length}</p>
+          <p className="text-xs text-gray-400">Total Schools</p>
+        </div>
+        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+          <p className="text-2xl font-bold text-emerald-400">{schools.filter((s) => s.is_verified).length}</p>
+          <p className="text-xs text-gray-400">Verified</p>
+        </div>
+        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+          <p className="text-2xl font-bold text-amber-400">{schools.filter((s) => !s.is_verified).length}</p>
+          <p className="text-xs text-gray-400">Pending Verification</p>
+        </div>
+        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+          <p className="text-2xl font-bold text-blue-400">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
+          <p className="text-xs text-gray-400">Total Students</p>
+        </div>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        {filteredSchools.length > 0 ? (
+          <div className="space-y-3">
+            {filteredSchools.map((school) => (
+              <div
+                key={school.id}
+                className="p-5 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg">
+                      {school.school_name?.[0]}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white text-lg">{school.school_name}</p>
+                      <p className="text-sm text-gray-400">
+                        {school.profile?.first_name} {school.profile?.last_name} &middot; {school.profile?.email}
+                      </p>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <span className="capitalize">{school.school_type?.replace("_", " ")}</span>
+                        {school.district && <span>{school.district}</span>}
+                        <span>{school.total_students || 0} students</span>
+                        <span>{school.active_cohorts || 0} cohorts</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      school.is_verified ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400"
+                    }`}>
+                      {school.is_verified ? "Verified" : "Unverified"}
+                    </span>
+                    <Button
+                      size="sm"
+                      onClick={() => verifySchool(school.id, school.is_verified)}
+                      className={school.is_verified ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"}
+                    >
+                      {school.is_verified ? "Unverify" : "Verify"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">{searchQuery ? "No schools match your search" : "No schools registered yet"}</p>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );
@@ -1366,6 +1933,97 @@ const SchoolsManagement = () => {
 
 // Reports component
 const Reports = () => {
+  const [reportStats, setReportStats] = useState({
+    passports: 0,
+    observations: 0,
+    projects: 0,
+    connections: 0,
+    candidates: 0,
+    mentors: 0,
+    employers: 0,
+    schools: 0,
+    totalUsers: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [roleData, setRoleData] = useState<{ name: string; value: number }[]>([]);
+  const [activityTrend, setActivityTrend] = useState<{ name: string; observations: number; connections: number }[]>([]);
+
+  useEffect(() => {
+    const fetchReportData = async () => {
+      const [
+        { count: passportCount },
+        { count: observationCount },
+        { count: projectCount },
+        { count: connectionCount },
+        { count: candidateCount },
+        { count: mentorCount },
+        { count: employerCount },
+        { count: schoolCount },
+        { count: userCount },
+      ] = await Promise.all([
+        supabase.from("skill_passports").select("*", { count: "exact", head: true }).eq("is_active", true),
+        supabase.from("mentor_observations").select("*", { count: "exact", head: true }),
+        supabase.from("liveworks_projects").select("*", { count: "exact", head: true }),
+        supabase.from("t3x_connections").select("*", { count: "exact", head: true }),
+        supabase.from("candidate_profiles").select("*", { count: "exact", head: true }),
+        supabase.from("mentor_profiles").select("*", { count: "exact", head: true }),
+        supabase.from("employer_profiles").select("*", { count: "exact", head: true }),
+        supabase.from("school_profiles").select("*", { count: "exact", head: true }),
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
+      ]);
+
+      setReportStats({
+        passports: passportCount || 0,
+        observations: observationCount || 0,
+        projects: projectCount || 0,
+        connections: connectionCount || 0,
+        candidates: candidateCount || 0,
+        mentors: mentorCount || 0,
+        employers: employerCount || 0,
+        schools: schoolCount || 0,
+        totalUsers: userCount || 0,
+      });
+
+      setRoleData([
+        { name: "Candidates", value: candidateCount || 0 },
+        { name: "Mentors", value: mentorCount || 0 },
+        { name: "Employers", value: employerCount || 0 },
+        { name: "Schools", value: schoolCount || 0 },
+      ]);
+
+      // Build a monthly trend for the last 6 months
+      const months: typeof activityTrend = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const label = d.toLocaleDateString("en-US", { month: "short" });
+        const start = new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
+        const end = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString();
+
+        const [{ count: obsC }, { count: conC }] = await Promise.all([
+          supabase.from("mentor_observations").select("*", { count: "exact", head: true }).gte("created_at", start).lte("created_at", end),
+          supabase.from("t3x_connections").select("*", { count: "exact", head: true }).gte("created_at", start).lte("created_at", end),
+        ]);
+        months.push({ name: label, observations: obsC || 0, connections: conC || 0 });
+      }
+      setActivityTrend(months);
+
+      setIsLoading(false);
+    };
+
+    fetchReportData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+      </div>
+    );
+  }
+
+  const total = reportStats.totalUsers || 1;
+
   return (
     <motion.div
       variants={containerVariants}
@@ -1375,62 +2033,84 @@ const Reports = () => {
     >
       <motion.div variants={itemVariants}>
         <h1 className="text-3xl font-bold text-white mb-2">Reports & Analytics</h1>
-        <p className="text-gray-400">Platform performance and insights.</p>
+        <p className="text-gray-400">Platform performance and real-time insights.</p>
+      </motion.div>
+
+      {/* Key Metrics */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "Skill Passports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
+          { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "text-purple-400" },
+          { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-cyan-400" },
+          { label: "Connections", value: reportStats.connections, icon: Activity, color: "text-pink-400" },
+        ].map((stat) => (
+          <div key={stat.label} className="p-5 rounded-xl bg-black/80 border border-white/30">
+            <stat.icon className={`w-6 h-6 ${stat.color} mb-2`} />
+            <p className="text-2xl font-bold text-white">{stat.value}</p>
+            <p className="text-sm text-gray-400">{stat.label}</p>
+          </div>
+        ))}
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+        {/* Activity Trend Chart */}
         <div className="p-6 rounded-xl bg-black/80 border border-white/30">
-          <h3 className="font-semibold text-white mb-4">User Growth (30 days)</h3>
-          <div className="h-48 flex items-end gap-2">
-            {Array.from({ length: 30 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-1 bg-gradient-to-t from-red-600 to-red-400 rounded-t"
-                style={{ height: `${20 + Math.random() * 80}%` }}
-              />
-            ))}
+          <h3 className="font-semibold text-white mb-4">Activity Trend (6 months)</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={activityTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" tick={{ fill: "#9ca3af", fontSize: 12 }} />
+                <YAxis tick={{ fill: "#9ca3af", fontSize: 12 }} />
+                <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px", color: "#fff" }} />
+                <Legend />
+                <Bar dataKey="observations" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Observations" />
+                <Bar dataKey="connections" fill="#ec4899" radius={[4, 4, 0, 0]} name="Connections" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
+        {/* Role Distribution */}
         <div className="p-6 rounded-xl bg-black/80 border border-white/30">
           <h3 className="font-semibold text-white mb-4">User Distribution</h3>
           <div className="space-y-4">
             {[
-              { role: "Candidates", percent: 60, color: "bg-emerald-500" },
-              { role: "Mentors", percent: 20, color: "bg-purple-500" },
-              { role: "Employers", percent: 15, color: "bg-amber-500" },
-              { role: "Schools", percent: 5, color: "bg-blue-500" },
-            ].map((item) => (
-              <div key={item.role}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-400">{item.role}</span>
-                  <span className="text-white">{item.percent}%</span>
+              { role: "Candidates", count: reportStats.candidates, color: "bg-emerald-500" },
+              { role: "Mentors", count: reportStats.mentors, color: "bg-purple-500" },
+              { role: "Employers", count: reportStats.employers, color: "bg-amber-500" },
+              { role: "Schools", count: reportStats.schools, color: "bg-blue-500" },
+            ].map((item) => {
+              const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+              return (
+                <div key={item.role}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-400">{item.role}</span>
+                    <span className="text-white">{item.count} ({pct}%)</span>
+                  </div>
+                  <div className="h-2 bg-black/80 rounded-full overflow-hidden">
+                    <div className={`h-full ${item.color} rounded-full transition-all`} style={{ width: `${Math.max(pct, 2)}%` }} />
+                  </div>
                 </div>
-                <div className="h-2 bg-black/80 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${item.color}`}
-                    style={{ width: `${item.percent}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={roleData} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={5} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={{ stroke: "#6b7280" }}>
+                    {roleData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px", color: "#fff" }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-      </motion.div>
-
-      <motion.div variants={itemVariants} className="grid md:grid-cols-4 gap-4">
-        {[
-          { label: "Skill Passports Issued", value: "1,234", change: "+12%" },
-          { label: "Mentor Observations", value: "3,456", change: "+8%" },
-          { label: "Project Completions", value: "567", change: "+15%" },
-          { label: "Employer Hires", value: "189", change: "+23%" },
-        ].map((stat) => (
-          <div key={stat.label} className="p-4 rounded-xl bg-black/80 border border-white/30">
-            <p className="text-2xl font-bold text-white">{stat.value}</p>
-            <p className="text-sm text-gray-400">{stat.label}</p>
-            <p className="text-xs text-emerald-400 mt-1">{stat.change} this month</p>
-          </div>
-        ))}
       </motion.div>
     </motion.div>
   );
@@ -1738,6 +2418,40 @@ const CommunicationsPage = () => {
 
 // Settings component
 const SettingsPage = () => {
+  const [platformName, setPlatformName] = useState("The 3rd Academy");
+  const [supportEmail, setSupportEmail] = useState("support@the3rdacademy.com");
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [registrationOpen, setRegistrationOpen] = useState(true);
+  const [autoApproveEmployers, setAutoApproveEmployers] = useState(false);
+  const [autoApproveSchools, setAutoApproveSchools] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    // Simulate save
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setIsSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const ToggleSwitch = ({ enabled, onToggle, label, description }: { enabled: boolean; onToggle: () => void; label: string; description: string }) => (
+    <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/10">
+      <div>
+        <p className="font-medium text-white">{label}</p>
+        <p className="text-sm text-gray-400">{description}</p>
+      </div>
+      <button onClick={onToggle} className="flex-shrink-0">
+        {enabled ? (
+          <ToggleRight className="w-10 h-10 text-emerald-400" />
+        ) : (
+          <ToggleLeft className="w-10 h-10 text-gray-500" />
+        )}
+      </button>
+    </div>
+  );
+
   return (
     <motion.div
       variants={containerVariants}
@@ -1745,13 +2459,124 @@ const SettingsPage = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Admin Settings</h1>
-        <p className="text-gray-400">Platform configuration and preferences.</p>
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Admin Settings</h1>
+          <p className="text-gray-400">Platform configuration and preferences.</p>
+        </div>
+        <Button
+          onClick={handleSave}
+          disabled={isSaving}
+          className={`${saved ? "bg-emerald-600" : "bg-red-600 hover:bg-red-500"}`}
+        >
+          {isSaving ? (
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+          ) : saved ? (
+            <><CheckCircle className="w-4 h-4 mr-2" /> Saved</>
+          ) : (
+            <><Save className="w-4 h-4 mr-2" /> Save Settings</>
+          )}
+        </Button>
       </motion.div>
 
+      {/* General Settings */}
       <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
-        <p className="text-gray-400">Admin settings will appear here.</p>
+        <div className="flex items-center gap-3 mb-6">
+          <Globe className="w-5 h-5 text-blue-400" />
+          <h2 className="text-lg font-semibold text-white">General</h2>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Platform Name</label>
+            <input
+              type="text"
+              value={platformName}
+              onChange={(e) => setPlatformName(e.target.value)}
+              className="w-full max-w-md bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Support Email</label>
+            <input
+              type="email"
+              value={supportEmail}
+              onChange={(e) => setSupportEmail(e.target.value)}
+              className="w-full max-w-md bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Access Control */}
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="flex items-center gap-3 mb-6">
+          <Shield className="w-5 h-5 text-red-400" />
+          <h2 className="text-lg font-semibold text-white">Access Control</h2>
+        </div>
+        <div className="space-y-3">
+          <ToggleSwitch
+            enabled={registrationOpen}
+            onToggle={() => setRegistrationOpen(!registrationOpen)}
+            label="Open Registration"
+            description="Allow new users to sign up for the platform"
+          />
+          <ToggleSwitch
+            enabled={maintenanceMode}
+            onToggle={() => setMaintenanceMode(!maintenanceMode)}
+            label="Maintenance Mode"
+            description="Temporarily disable platform access for non-admins"
+          />
+        </div>
+      </motion.div>
+
+      {/* Approvals */}
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="flex items-center gap-3 mb-6">
+          <CheckCircle className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-lg font-semibold text-white">Auto-Approval</h2>
+        </div>
+        <div className="space-y-3">
+          <ToggleSwitch
+            enabled={autoApproveEmployers}
+            onToggle={() => setAutoApproveEmployers(!autoApproveEmployers)}
+            label="Auto-Approve Employers"
+            description="Automatically verify employer accounts upon registration"
+          />
+          <ToggleSwitch
+            enabled={autoApproveSchools}
+            onToggle={() => setAutoApproveSchools(!autoApproveSchools)}
+            label="Auto-Approve Schools"
+            description="Automatically verify school accounts upon registration"
+          />
+        </div>
+      </motion.div>
+
+      {/* Danger Zone */}
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
+        <div className="flex items-center gap-3 mb-6">
+          <AlertTriangle className="w-5 h-5 text-red-400" />
+          <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
+        </div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+            <div>
+              <p className="font-medium text-white">Reset All Notifications</p>
+              <p className="text-sm text-gray-400">Clear all pending notifications across the platform</p>
+            </div>
+            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+              Reset
+            </Button>
+          </div>
+          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+            <div>
+              <p className="font-medium text-white">Purge Inactive Users</p>
+              <p className="text-sm text-gray-400">Remove users who haven't logged in for 6+ months</p>
+            </div>
+            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+              Purge
+            </Button>
+          </div>
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -1759,12 +2584,63 @@ const SettingsPage = () => {
 
 // Main Dashboard component
 const AdminDashboard = () => {
-  const { profile, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!user?.id) return;
+
+      const { data } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("is_read", false)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      setNotifications(data || []);
+    };
+
+    fetchNotifications();
+  }, [user?.id]);
+
+  const markAsRead = async (notificationId: string) => {
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("id", notificationId);
+
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    setNotifications([]);
+    setShowNotifications(false);
+  };
+
+  const unreadCount = notifications.length;
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  // Get current page title
+  const getCurrentPageTitle = () => {
+    const current = navItems.find((item) => location.pathname === item.href);
+    return current?.name || "Overview";
   };
 
   return (
@@ -1857,18 +2733,126 @@ const AdminDashboard = () => {
 
       {/* Main content */}
       <div className="lg:ml-64">
-        {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
+        {/* Enhanced Header */}
+        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
           >
             <Menu className="w-6 h-6" />
           </button>
-          <div className="flex-1" />
-          <button className="relative text-gray-400 hover:text-white">
-            <Bell className="w-5 h-5" />
-          </button>
+
+          {/* Page Title */}
+          <div className="flex-1">
+            <h2 className="text-lg font-semibold text-white hidden md:block">{getCurrentPageTitle()}</h2>
+          </div>
+
+          {/* Header Actions */}
+          <div className="flex items-center gap-3">
+            {/* Quick Search */}
+            <div className="hidden md:block relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Quick search..."
+                className="bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-red-500/50 w-48 focus:w-64 transition-all"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.currentTarget.value) {
+                    navigate("/dashboard/admin/users");
+                  }
+                }}
+              />
+            </div>
+
+            {/* Notifications */}
+            <div className="relative">
+              <button
+                className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center text-white font-bold">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-96 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden">
+                  <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                    <h3 className="font-semibold text-white">Notifications</h3>
+                    <div className="flex items-center gap-2">
+                      {notifications.length > 0 && (
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-xs text-red-400 hover:text-red-300"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setShowNotifications(false)}
+                        className="text-gray-500 hover:text-white p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  {notifications.length > 0 ? (
+                    <div className="max-h-96 overflow-y-auto">
+                      {notifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className="p-4 hover:bg-white/5 border-b border-white/5 flex items-start gap-3 transition-colors"
+                        >
+                          <div className="w-2 h-2 rounded-full bg-red-500 mt-2 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white">{notification.title}</p>
+                            <p className="text-xs text-gray-400 mt-1 line-clamp-2">{notification.message}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(notification.created_at).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => markAsRead(notification.id)}
+                            className="text-gray-500 hover:text-white p-1 flex-shrink-0"
+                            title="Dismiss"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center">
+                      <Bell className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+                      <p className="text-sm text-gray-400">No new notifications</p>
+                      <p className="text-xs text-gray-500 mt-1">You're all caught up</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Admin avatar */}
+            <div className="hidden md:flex items-center gap-2 pl-3 border-l border-white/10">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">
+                  {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+                </div>
+              )}
+              <span className="text-sm text-gray-300">{profile?.first_name}</span>
+            </div>
+          </div>
         </header>
 
         {/* Page content */}
