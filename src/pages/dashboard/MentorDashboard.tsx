@@ -124,13 +124,13 @@ const ObservationFormModal = () => {
             .eq("status", "active");
 
           if (assignmentData) {
-            // Fetch candidate profiles for each assignment
+            // Fetch candidate profiles for each assignment (candidate_id = candidate_profiles.id)
             const enrichedAssignments = await Promise.all(
               assignmentData.map(async (assignment) => {
                 const { data: candidateProfile } = await supabase
                   .from("candidate_profiles")
                   .select("*")
-                  .eq("profile_id", assignment.candidate_id)
+                  .eq("id", assignment.candidate_id)
                   .single();
 
                 if (candidateProfile) {
@@ -259,15 +259,24 @@ const ObservationFormModal = () => {
           })
           .eq("id", mentorProfile.id);
 
-        // Create growth log entry for candidate
-        await supabase.from("growth_log_entries").insert({
-          candidate_id: formData.candidateId,
-          event_type: "observation",
-          title: "Mentor Observation Completed",
-          description: `Behavioral observation recorded by mentor`,
-          source_component: "MentorLink",
-          source_id: observation.id,
-        });
+        // Get candidate's profile_id for growth log (formData.candidateId = candidate_profiles.id)
+        const { data: cpForLog } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
+          .eq("id", formData.candidateId)
+          .single();
+
+        // Create growth log entry for candidate (uses profiles.id)
+        if (cpForLog) {
+          await supabase.from("growth_log_entries").insert({
+            candidate_id: cpForLog.profile_id,
+            event_type: "observation",
+            title: "Mentor Observation Completed",
+            description: `Behavioral observation recorded by mentor`,
+            source_component: "MentorLink",
+            source_id: observation.id,
+          });
+        }
 
         // Check if this is the 3rd observation for this assignment (ready for endorsement)
         const { count } = await supabase
@@ -286,14 +295,14 @@ const ObservationFormModal = () => {
             })
             .eq("id", formData.assignmentId);
 
-          // Update candidate's mentor_loops count
+          // Update candidate's mentor_loops count (candidateId = candidate_profiles.id)
           await supabase
             .from("candidate_profiles")
             .update({
               mentor_loops: 3,
               updated_at: new Date().toISOString(),
             })
-            .eq("profile_id", formData.candidateId);
+            .eq("id", formData.candidateId);
         }
       }
 
@@ -644,6 +653,7 @@ const Overview = () => {
   const { profile, user } = useAuth();
   const [mentorProfile, setMentorProfile] = useState<MentorProfile | null>(null);
   const [activeMentees, setActiveMentees] = useState(0);
+  const [pendingRequests, setPendingRequests] = useState(0);
   const [pendingObservations, setPendingObservations] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -668,6 +678,14 @@ const Overview = () => {
             .eq("mentor_id", mp.id)
             .eq("status", "active");
           setActiveMentees(menteeCount || 0);
+
+          // Count pending requests
+          const { count: pendingCount } = await supabase
+            .from("mentor_assignments")
+            .select("*", { count: "exact", head: true })
+            .eq("mentor_id", mp.id)
+            .eq("status", "pending");
+          setPendingRequests(pendingCount || 0);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -803,18 +821,34 @@ const Overview = () => {
       {/* Pending Actions */}
       <motion.div variants={itemVariants}>
         <h2 className="text-xl font-semibold text-white mb-4">Pending Actions</h2>
-        {pendingObservations > 0 ? (
+        {pendingRequests > 0 || pendingObservations > 0 ? (
           <div className="space-y-3">
-            <div className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                <ClipboardCheck className="w-5 h-5 text-amber-400" />
+            {pendingRequests > 0 && (
+              <Link to="/dashboard/mentor/mentees" className="block">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 flex items-center gap-4 hover:border-amber-500/50 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-amber-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-white">{pendingRequests} mentee request{pendingRequests > 1 ? "s" : ""} awaiting approval</p>
+                    <p className="text-sm text-gray-400">Review and accept or decline</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-amber-400" />
+                </div>
+              </Link>
+            )}
+            {pendingObservations > 0 && (
+              <div className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                  <ClipboardCheck className="w-5 h-5 text-amber-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-white">{pendingObservations} pending observations</p>
+                  <p className="text-sm text-gray-400">Complete your scheduled observations</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-600" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-white">{pendingObservations} pending observations</p>
-                <p className="text-sm text-gray-400">Complete your scheduled observations</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-gray-600" />
-            </div>
+            )}
           </div>
         ) : (
           <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
@@ -836,72 +870,197 @@ const Mentees = () => {
   interface MenteeWithProfile extends MentorAssignment {
     candidate_profile?: {
       profile?: Profile;
+      current_tier?: string;
+      mentor_loops?: number;
     };
   }
   const [mentees, setMentees] = useState<MenteeWithProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState<string | null>(null);
+  const [bridgefastModules, setBridgefastModules] = useState<{ id: string; title: string; behavioral_dimension: string }[]>([]);
+  const [recommendModal, setRecommendModal] = useState<{ assignmentId: string; candidateProfileId: string; candidateName: string } | null>(null);
+  const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [recommendNote, setRecommendNote] = useState("");
 
-  useEffect(() => {
-    const fetchMentees = async () => {
-      if (!user?.id) return;
+  const fetchMentees = async () => {
+    if (!user?.id) return;
 
-      // First get mentor profile
-      const { data: mp } = await supabase
-        .from("mentor_profiles")
+    // First get mentor profile
+    const { data: mp } = await supabase
+      .from("mentor_profiles")
+      .select("*")
+      .eq("profile_id", user.id)
+      .single();
+
+    setMentorProfile(mp);
+
+    if (mp) {
+      // Get all assignments (including pending)
+      const { data: assignments } = await supabase
+        .from("mentor_assignments")
         .select("*")
-        .eq("profile_id", user.id)
-        .single();
+        .eq("mentor_id", mp.id)
+        .order("created_at", { ascending: false });
 
-      setMentorProfile(mp);
+      // For each assignment, look up candidate profile and user profile
+      if (assignments && assignments.length > 0) {
+        const enhancedAssignments = await Promise.all(
+          assignments.map(async (assignment) => {
+            // candidate_id references candidate_profiles.id
+            const { data: candidateProfile } = await supabase
+              .from("candidate_profiles")
+              .select("id, profile_id, current_tier, mentor_loops")
+              .eq("id", assignment.candidate_id)
+              .single();
 
-      if (mp) {
-        // Get assignments with candidate profiles
-        const { data: assignments } = await supabase
-          .from("mentor_assignments")
-          .select(`
-            *,
-            candidate_profiles!candidate_id(
-              id,
-              profile_id,
-              current_tier,
-              mentor_loops
-            )
-          `)
-          .eq("mentor_id", mp.id)
-          .order("created_at", { ascending: false });
-
-        // For each assignment, get the candidate's profile data
-        if (assignments && assignments.length > 0) {
-          const enhancedAssignments = await Promise.all(
-            assignments.map(async (assignment: MenteeWithProfile) => {
-              if (assignment.candidate_profiles) {
-                const { data: profileData } = await supabase
-                  .from("profiles")
-                  .select("*")
-                  .eq("id", (assignment.candidate_profiles as { profile_id?: string }).profile_id)
-                  .single();
-                return {
-                  ...assignment,
-                  candidate_profile: {
-                    ...assignment.candidate_profiles,
-                    profile: profileData,
-                  },
-                };
-              }
-              return assignment;
-            })
-          );
-          setMentees(enhancedAssignments);
-        } else {
-          setMentees([]);
-        }
+            if (candidateProfile) {
+              const { data: profileData } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", candidateProfile.profile_id)
+                .single();
+              return {
+                ...assignment,
+                candidate_profile: {
+                  ...candidateProfile,
+                  profile: profileData,
+                },
+              };
+            }
+            return assignment;
+          })
+        );
+        setMentees(enhancedAssignments);
+      } else {
+        setMentees([]);
       }
 
-      setIsLoading(false);
-    };
+      // Fetch BridgeFast modules for recommendations
+      const { data: modules } = await supabase
+        .from("bridgefast_modules")
+        .select("id, title, behavioral_dimension")
+        .eq("is_active", true);
+      setBridgefastModules(modules || []);
+    }
 
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     fetchMentees();
   }, [user?.id]);
+
+  const handleApproveRequest = async (assignmentId: string, candidateProfileId: string) => {
+    setIsProcessing(assignmentId);
+    try {
+      // Update status to active
+      await supabase
+        .from("mentor_assignments")
+        .update({ status: "active", updated_at: new Date().toISOString() })
+        .eq("id", assignmentId);
+
+      // Get the candidate's profile_id to send notification
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", candidateProfileId)
+        .single();
+
+      if (cp) {
+        await supabase.from("notifications").insert({
+          user_id: cp.profile_id,
+          type: "mentor_approved",
+          title: "Mentor Request Approved!",
+          message: "Your mentor request has been approved. You can now begin your Observation Pathway.",
+        });
+      }
+
+      await fetchMentees();
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
+    setIsProcessing(null);
+  };
+
+  const handleDeclineRequest = async (assignmentId: string, candidateProfileId: string) => {
+    setIsProcessing(assignmentId);
+    try {
+      await supabase
+        .from("mentor_assignments")
+        .update({ status: "declined", updated_at: new Date().toISOString() })
+        .eq("id", assignmentId);
+
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", candidateProfileId)
+        .single();
+
+      if (cp) {
+        await supabase.from("notifications").insert({
+          user_id: cp.profile_id,
+          type: "mentor_declined",
+          title: "Mentor Request Update",
+          message: "Your mentor request was not accepted. You can request a different mentor.",
+        });
+      }
+
+      await fetchMentees();
+    } catch (error) {
+      console.error("Error declining request:", error);
+    }
+    setIsProcessing(null);
+  };
+
+  const handleRecommendModules = async () => {
+    if (!recommendModal || selectedModules.length === 0) return;
+    setIsProcessing("recommend");
+
+    try {
+      // Get candidate's profile_id for notification
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", recommendModal.candidateProfileId)
+        .single();
+
+      if (cp) {
+        const moduleNames = selectedModules
+          .map((id) => bridgefastModules.find((m) => m.id === id)?.title)
+          .filter(Boolean)
+          .join(", ");
+
+        await supabase.from("notifications").insert({
+          user_id: cp.profile_id,
+          type: "bridgefast_recommendation",
+          title: "Mentor Recommended BridgeFast Modules",
+          message: `Your mentor recommends completing these BridgeFast modules: ${moduleNames}. ${recommendNote ? `Note: ${recommendNote}` : ""}`,
+          action_url: "/dashboard/candidate/training",
+        });
+
+        // Log to candidate's growth log
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: cp.profile_id,
+          event_type: "training",
+          title: "Mentor Recommended BridgeFast Modules",
+          description: `Your mentor recommended ${selectedModules.length} BridgeFast module(s): ${moduleNames}`,
+          source_component: "MentorRecommendation",
+          metadata: {
+            module_ids: selectedModules,
+            module_names: moduleNames,
+            mentor_note: recommendNote,
+          },
+        });
+      }
+
+      setRecommendModal(null);
+      setSelectedModules([]);
+      setRecommendNote("");
+    } catch (error) {
+      console.error("Error recommending modules:", error);
+    }
+    setIsProcessing(null);
+  };
 
   if (isLoading) {
     return (
@@ -910,6 +1069,9 @@ const Mentees = () => {
       </div>
     );
   }
+
+  const pendingRequests = mentees.filter((m) => m.status === "pending");
+  const activeMentees = mentees.filter((m) => m.status === "active");
 
   return (
     <motion.div
@@ -925,15 +1087,89 @@ const Mentees = () => {
         </p>
       </motion.div>
 
-      {mentees.length > 0 ? (
+      {/* Pending Requests Section */}
+      {pendingRequests.length > 0 && (
         <motion.div variants={itemVariants} className="space-y-4">
-          {mentees.map((assignment) => {
-            const candidateProfile = assignment.candidate_profiles as {
-              profile?: Profile;
-              current_tier?: string;
-              mentor_loops?: number;
-            } | undefined;
-            const profile = candidateProfile?.profile;
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+              <Bell className="w-4 h-4 text-amber-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-amber-400">
+              Pending Requests ({pendingRequests.length})
+            </h2>
+          </div>
+
+          {pendingRequests.map((assignment) => {
+            const profile = assignment.candidate_profile?.profile;
+            return (
+              <div
+                key={assignment.id}
+                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold">
+                    {profile?.first_name?.[0]}
+                    {profile?.last_name?.[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-white">
+                      {profile?.first_name} {profile?.last_name}
+                    </h3>
+                    <p className="text-sm text-gray-400">{profile?.email}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Requested {new Date(assignment.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-500"
+                      onClick={() => handleApproveRequest(assignment.id, assignment.candidate_id)}
+                      disabled={isProcessing === assignment.id}
+                    >
+                      {isProcessing === assignment.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          Accept
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      onClick={() => handleDeclineRequest(assignment.id, assignment.candidate_id)}
+                      disabled={isProcessing === assignment.id}
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      Decline
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
+      )}
+
+      {/* Active Mentees Section */}
+      {activeMentees.length > 0 ? (
+        <motion.div variants={itemVariants} className="space-y-4">
+          {pendingRequests.length > 0 && (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <Users className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h2 className="text-lg font-semibold text-emerald-400">
+                Active Mentees ({activeMentees.length})
+              </h2>
+            </div>
+          )}
+
+          {activeMentees.map((assignment) => {
+            const profile = assignment.candidate_profile?.profile;
 
             return (
               <div
@@ -950,12 +1186,8 @@ const Mentees = () => {
                       <h3 className="font-semibold text-white">
                         {profile?.first_name} {profile?.last_name}
                       </h3>
-                      <span className={`px-2 py-0.5 rounded text-xs ${
-                        assignment.status === "active"
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-gray-500/20 text-gray-400"
-                      }`}>
-                        {assignment.status}
+                      <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">
+                        active
                       </span>
                     </div>
                     <p className="text-sm text-gray-400">{profile?.email}</p>
@@ -964,18 +1196,23 @@ const Mentees = () => {
                         Loop {assignment.loop_number} of 3
                       </span>
                       <span className="text-gray-500">
-                        Tier: {candidateProfile?.current_tier?.replace("_", " ") || "Not assessed"}
+                        Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-black/80"
+                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                      onClick={() => setRecommendModal({
+                        assignmentId: assignment.id,
+                        candidateProfileId: assignment.candidate_id,
+                        candidateName: `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim(),
+                      })}
                     >
-                      <Eye className="w-4 h-4 mr-1" />
-                      View
+                      <Award className="w-4 h-4 mr-1" />
+                      Recommend
                     </Button>
                     <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
                       <Button
@@ -1002,15 +1239,106 @@ const Mentees = () => {
           })}
         </motion.div>
       ) : (
+        !pendingRequests.length && (
+          <motion.div
+            variants={itemVariants}
+            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+          >
+            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No mentees assigned yet</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Candidates will request you as their mentor
+            </p>
+          </motion.div>
+        )
+      )}
+
+      {/* BridgeFast Module Recommendation Modal */}
+      {recommendModal && (
         <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setRecommendModal(null)}
         >
-          <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No mentees assigned yet</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Candidates will be assigned to you by the platform
-          </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold text-white mb-2">
+              Recommend BridgeFast Modules
+            </h2>
+            <p className="text-sm text-gray-400 mb-6">
+              Select modules to recommend to {recommendModal.candidateName}.
+            </p>
+
+            <div className="space-y-2 mb-6">
+              {bridgefastModules.map((module) => (
+                <label
+                  key={module.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    selectedModules.includes(module.id)
+                      ? "bg-indigo-500/20 border-indigo-500/30"
+                      : "bg-black/80 border-white/10 hover:border-white/20"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedModules.includes(module.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedModules([...selectedModules, module.id]);
+                      } else {
+                        setSelectedModules(selectedModules.filter((id) => id !== module.id));
+                      }
+                    }}
+                    className="rounded border-gray-600"
+                  />
+                  <div>
+                    <p className="text-white text-sm">{module.title}</p>
+                    <p className="text-xs text-gray-500">{module.behavioral_dimension}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm text-gray-400 block mb-2">Note to Candidate (Optional)</label>
+              <textarea
+                value={recommendNote}
+                onChange={(e) => setRecommendNote(e.target.value)}
+                placeholder="Add a note about why you recommend these modules..."
+                rows={3}
+                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setRecommendModal(null); setSelectedModules([]); setRecommendNote(""); }}
+                className="flex-1 border-white/20 text-white hover:bg-black/80"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleRecommendModules}
+                disabled={selectedModules.length === 0 || isProcessing === "recommend"}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-500"
+              >
+                {isProcessing === "recommend" ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <Award className="w-4 h-4 mr-2" />
+                    Send Recommendation
+                  </>
+                )}
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </motion.div>
@@ -1037,13 +1365,20 @@ const AssignDimensions = () => {
       if (!user?.id || !assignmentId || !candidateId) return;
 
       try {
-        // Get candidate name
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("first_name, last_name")
+        // Get candidate name via candidate_profiles → profiles
+        const { data: cp } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
           .eq("id", candidateId)
           .single();
-        if (profile) setCandidateName(`${profile.first_name} ${profile.last_name}`);
+        if (cp) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("first_name, last_name")
+            .eq("id", cp.profile_id)
+            .single();
+          if (profile) setCandidateName(`${profile.first_name} ${profile.last_name}`);
+        }
 
         // Get existing assigned dimensions
         const { data: dims } = await supabase
@@ -1092,13 +1427,21 @@ const AssignDimensions = () => {
         }
       }
 
+      // Get mentor_profiles.id for the FK
+      const { data: mp } = await supabase
+        .from("mentor_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      const mentorProfileId = mp?.id || user.id;
+
       // Insert new dimensions
       const toInsert = selectedDimensions.filter(d => !existingDimensions.includes(d));
       if (toInsert.length > 0) {
         await supabase.from("mentor_assigned_dimensions").insert(
           toInsert.map(dimId => ({
             assignment_id: assignmentId,
-            mentor_id: user.id,
+            mentor_id: mentorProfileId,
             candidate_id: candidateId,
             dimension_id: dimId,
           }))
@@ -1107,14 +1450,23 @@ const AssignDimensions = () => {
 
       setExistingDimensions(selectedDimensions);
 
-      // Create growth log entry
-      await supabase.from("growth_log_entries").insert({
-        candidate_id: candidateId,
-        event_type: "observation",
-        title: "Observation Dimensions Assigned",
-        description: `Your mentor has assigned ${selectedDimensions.length} behavioral dimensions for observation.`,
-        source_component: "MentorLink",
-      });
+      // Get profiles.id for growth_log_entries (candidateId = candidate_profiles.id)
+      const { data: cpForLog } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", candidateId)
+        .single();
+
+      // Create growth log entry (FK to profiles.id)
+      if (cpForLog) {
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: cpForLog.profile_id,
+          event_type: "observation",
+          title: "Observation Dimensions Assigned",
+          description: `Your mentor has assigned ${selectedDimensions.length} behavioral dimensions for observation.`,
+          source_component: "MentorLink",
+        });
+      }
     } catch (error) {
       console.error("Error saving dimensions:", error);
     } finally {
@@ -1272,14 +1624,23 @@ const Observations = () => {
           .order("created_at", { ascending: false });
 
         if (obs) {
-          // Enrich with candidate info
+          // Enrich with candidate info (o.candidate_id = candidate_profiles.id)
           const enrichedObs = await Promise.all(
             obs.map(async (o) => {
-              const { data: profile } = await supabase
-                .from("profiles")
-                .select("*")
+              const { data: cp } = await supabase
+                .from("candidate_profiles")
+                .select("profile_id")
                 .eq("id", o.candidate_id)
                 .single();
+              let profile = null;
+              if (cp) {
+                const { data: p } = await supabase
+                  .from("profiles")
+                  .select("*")
+                  .eq("id", cp.profile_id)
+                  .single();
+                profile = p;
+              }
               return { ...o, candidate_profile: { profile } };
             })
           );
@@ -1445,11 +1806,11 @@ const Endorsements = () => {
                   .eq("assignment_id", assignment.id)
                   .eq("is_locked", true);
 
-                // Get candidate profile
+                // Get candidate profile (candidate_id = candidate_profiles.id)
                 const { data: candidateProfile } = await supabase
                   .from("candidate_profiles")
                   .select("*")
-                  .eq("profile_id", assignment.candidate_id)
+                  .eq("id", assignment.candidate_id)
                   .single();
 
                 let profile = null;
@@ -1485,11 +1846,21 @@ const Endorsements = () => {
             // Enrich with candidate info
             const enrichedEndorsements = await Promise.all(
               endorsements.map(async (e) => {
-                const { data: profile } = await supabase
-                  .from("profiles")
-                  .select("*")
+                // e.candidate_id = candidate_profiles.id, need to go through to get profile
+                const { data: cp } = await supabase
+                  .from("candidate_profiles")
+                  .select("profile_id")
                   .eq("id", e.candidate_id)
                   .single();
+                let profile = null;
+                if (cp) {
+                  const { data: p } = await supabase
+                    .from("profiles")
+                    .select("*")
+                    .eq("id", cp.profile_id)
+                    .single();
+                  profile = p;
+                }
                 return { ...e, profile };
               })
             );
@@ -1566,13 +1937,22 @@ const Endorsements = () => {
         newTier = tierProgression[newTier] || "tier_2";
       }
 
+      // candidate_id = candidate_profiles.id; look up profiles.id for growth_log_entries
       await supabase
         .from("candidate_profiles")
         .update({
           current_tier: newTier,
           updated_at: new Date().toISOString(),
         })
-        .eq("profile_id", assignment.candidate_id);
+        .eq("id", assignment.candidate_id);
+
+      // Get profiles.id for growth_log_entries (which has FK to profiles.id)
+      const { data: cpForGrowth } = await supabase
+        .from("candidate_profiles")
+        .select("profile_id")
+        .eq("id", assignment.candidate_id)
+        .single();
+      const growthCandidateId = cpForGrowth?.profile_id || assignment.candidate_id;
 
       // Create growth log entry
       const decisionLabels: Record<string, string> = {
@@ -1582,7 +1962,7 @@ const Endorsements = () => {
       };
 
       await supabase.from("growth_log_entries").insert({
-        candidate_id: assignment.candidate_id,
+        candidate_id: growthCandidateId,
         event_type: "endorsement",
         title: `Mentor Endorsement: ${endorsementForm.decision.charAt(0).toUpperCase() + endorsementForm.decision.slice(1)}`,
         description: decisionLabels[endorsementForm.decision],
@@ -1612,7 +1992,7 @@ const Endorsements = () => {
         // Generate unique verification code
         const verificationCode = `SKP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
-        // Create Skill Passport
+        // Create Skill Passport (FK to candidate_profiles.id)
         await supabase.from("skill_passports").insert({
           candidate_id: assignment.candidate_id,
           verification_code: verificationCode,
@@ -1629,11 +2009,11 @@ const Endorsements = () => {
             has_skill_passport: true,
             updated_at: new Date().toISOString(),
           })
-          .eq("profile_id", assignment.candidate_id);
+          .eq("id", assignment.candidate_id);
 
-        // Create growth log entry for passport
+        // Create growth log entry for passport (FK to profiles.id)
         await supabase.from("growth_log_entries").insert({
-          candidate_id: assignment.candidate_id,
+          candidate_id: growthCandidateId,
           event_type: "endorsement",
           title: "Skill Passport Earned",
           description: `Verification Code: ${verificationCode}`,
@@ -1650,9 +2030,9 @@ const Endorsements = () => {
         })
         .eq("id", selectedAssignment);
 
-      // Create notification for candidate
+      // Create notification for candidate (user_id = profiles.id)
       await supabase.from("notifications").insert({
-        user_id: assignment.candidate_id,
+        user_id: growthCandidateId,
         title: "New Endorsement Received",
         message: `Your mentor has submitted an endorsement: ${decisionLabels[endorsementForm.decision]}`,
         type: "endorsement",
