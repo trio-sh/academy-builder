@@ -11,8 +11,6 @@ import {
   CheckCircle2,
   Sparkles,
   TrendingUp,
-  Award,
-  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -63,20 +61,6 @@ const stats = [
   { value: "95%", label: "Satisfaction Rate" },
 ];
 
-const differentiators = [
-  {
-    title: "Mentor Decision Intelligence",
-    description: "Years of mentor proceed/redirect/pause decisions correlated with actual hiring outcomes. We've mapped which observations truly predict workplace success.",
-    highlight: "Cannot be replicated in months—requires years of real-world validation.",
-    gradient: "from-amber-500 to-orange-500",
-  },
-  {
-    title: "Behavioral Fingerprinting",
-    description: "Passive interaction patterns correlated with employment outcomes. Our system identifies success signals, dropout risks, and even gaming attempts before they happen.",
-    highlight: "Requires massive scale and longitudinal data—impossible to fake.",
-    gradient: "from-indigo-600 to-purple-600",
-  },
-];
 
 const About = () => {
   return (
@@ -257,82 +241,6 @@ const About = () => {
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Competitive Advantage */}
-        <section className="py-20 md:py-28 bg-black">
-          <div className="container px-4 md:px-6">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                Our Competitive Moat
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                What Makes Us Defensible
-              </h2>
-              <p className="text-lg text-white">
-                A competitor can copy our interface in weeks. They cannot replicate
-                years of judgment-outcome correlations and behavioral data.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              {differentiators.map((diff) => (
-                <motion.div
-                  key={diff.title}
-                  variants={itemVariants}
-                  className="group relative"
-                >
-                  <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${diff.gradient}`} />
-                  <div className={`relative p-8 rounded-2xl bg-black/85 backdrop-blur-xl border-2 transition-all duration-300 border-${diff.gradient.split(' ')[0].replace('from-', '')}/40 hover:border-${diff.gradient.split(' ')[0].replace('from-', '')}/60`}>
-                    <div className="flex items-start gap-4 mb-4">
-                      <Zap className={`w-8 h-8 text-${diff.gradient.split(' ')[0].replace('from-', '')}-400`} />
-                      <h3 className="text-2xl font-bold text-white">
-                        {diff.title}
-                      </h3>
-                    </div>
-                    <p className="text-white mb-4 leading-relaxed">
-                      {diff.description}
-                    </p>
-                    <div className={`inline-block px-4 py-2 rounded-lg bg-gradient-to-r ${diff.gradient} bg-opacity-10 border border-${diff.gradient.split(' ')[0].replace('from-', '')}-500/30`}>
-                      <p className={`text-sm font-bold text-${diff.gradient.split(' ')[0].replace('from-', '')}-400`}>
-                        {diff.highlight}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              className="max-w-3xl mx-auto mt-16 relative group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-10 rounded-3xl bg-black/85 border border-white/30 text-center backdrop-blur-xl">
-                <Award className="w-16 h-16 text-indigo-400 mx-auto mb-6" />
-                <blockquote className="text-2xl font-semibold text-white italic mb-4">
-                  "The flowchart is the map. The data is the territory.
-                  We share the map selectively. We never share the territory."
-                </blockquote>
-                <p className="text-white/70">
-                  — Core Philosophy, The 3rd Academy
-                </p>
-              </div>
             </motion.div>
           </div>
         </section>
