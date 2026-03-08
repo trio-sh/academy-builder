@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { parseResume } from "@/lib/resumeParser";
 import { analyzeResume } from "@/services/resumeEnhancer";
+import { findMentorMatches } from "@/lib/mentorMatching";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -85,11 +86,17 @@ const GetStarted = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // LiveWorks profile state
+  const [headline, setHeadline] = useState("");
+  const [skills, setSkills] = useState("");
+  const [yearsExperience, setYearsExperience] = useState("");
+
   // Resume upload state
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isCompletingSetup, setIsCompletingSetup] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { signUp, user } = useAuth();
@@ -139,12 +146,127 @@ const GetStarted = () => {
     }
   };
 
-  const handleCompleteSetup = () => {
-    toast({
-      title: "Setup complete!",
-      description: "Welcome to The 3rd Academy. Let's begin your journey.",
-    });
-    navigate("/dashboard/candidate");
+  const handleCompleteSetup = async () => {
+    if (!user?.id) {
+      navigate("/dashboard/candidate");
+      return;
+    }
+
+    setIsCompletingSetup(true);
+
+    try {
+      // If LiveWorks path, save the profile fields first
+      if (selectedPath === "liveworks") {
+        const skillsArray = skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        await supabase
+          .from("candidate_profiles")
+          .upsert(
+            {
+              profile_id: user.id,
+              headline: headline || null,
+              skills: skillsArray,
+              years_experience: yearsExperience ? parseInt(yearsExperience, 10) : null,
+              entry_path: "liveworks",
+              has_basic_profile: true,
+              observation_areas: [
+                "integrity_ethics",
+                "accountability_ownership",
+                "execution_reliability",
+                "communication_pressure",
+                "collaboration_conflict",
+              ],
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "profile_id" }
+          );
+
+        // Update the main profile headline too
+        if (headline) {
+          await supabase
+            .from("profiles")
+            .update({ headline, updated_at: new Date().toISOString() })
+            .eq("id", user.id);
+        }
+
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Profile Setup Complete",
+          description: `LiveWorks profile created with ${skillsArray.length} skills`,
+          source_component: "GetStarted",
+        });
+      }
+
+      // Auto-trigger mentor matching for both paths
+      try {
+        const matches = await findMentorMatches(user.id, 1);
+        if (matches.length > 0) {
+          const topMentor = matches[0];
+
+          // Get the candidate_profiles.id (PK) for the FK reference
+          const { data: cpRow } = await supabase
+            .from("candidate_profiles")
+            .select("id")
+            .eq("profile_id", user.id)
+            .single();
+
+          if (cpRow) {
+            // Create a mentor assignment using table PKs
+            await supabase.from("mentor_assignments").insert({
+              mentor_id: topMentor.mentor.id,
+              candidate_id: cpRow.id,
+              status: "active",
+            });
+          }
+
+          await supabase.from("growth_log_entries").insert({
+            candidate_id: user.id,
+            event_type: "training",
+            title: "Mentor Matched",
+            description: `Auto-matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match)`,
+            source_component: "MentorMatching",
+          });
+
+          toast({
+            title: "Setup complete!",
+            description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match).`,
+          });
+        } else {
+          // No mentors available yet
+          await supabase.from("growth_log_entries").insert({
+            candidate_id: user.id,
+            event_type: "training",
+            title: "Mentor Matching Queued",
+            description: "You'll be matched with a mentor as one becomes available.",
+            source_component: "MentorMatching",
+          });
+
+          toast({
+            title: "Setup complete!",
+            description: "Welcome! We'll match you with a mentor shortly.",
+          });
+        }
+      } catch (matchErr) {
+        console.error("Mentor matching error (non-blocking):", matchErr);
+        toast({
+          title: "Setup complete!",
+          description: "Welcome to The 3rd Academy. Let's begin your journey.",
+        });
+      }
+    } catch (err) {
+      console.error("Setup completion error:", err);
+      toast({
+        title: "Setup complete!",
+        description: "Welcome to The 3rd Academy. Let's begin your journey.",
+      });
+    } finally {
+      setIsCompletingSetup(false);
+      navigate("/dashboard/candidate");
+    }
   };
 
   const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -578,10 +700,13 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
-                        <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
-                          {uploadedFile ? "Go to Dashboard" : "Skip for Now"}
-                          <ArrowRight className="ml-2 h-4 w-4" />
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+                          {isCompletingSetup ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Matching mentor...</>
+                          ) : (
+                            <>{uploadedFile ? "Go to Dashboard" : "Skip for Now"}<ArrowRight className="ml-2 h-4 w-4" /></>
+                          )}
                         </Button>
                       </div>
                     </div>
@@ -599,15 +724,15 @@ const GetStarted = () => {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="headline" className="text-gray-50">Professional Headline</Label>
-                          <Input id="headline" placeholder="e.g., Full Stack Developer" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="skills" className="text-gray-50">Primary Skills</Label>
-                          <Input id="skills" placeholder="e.g., React, Node.js, Python" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="experience" className="text-gray-50">Years of Experience</Label>
-                          <Input id="experience" type="number" placeholder="e.g., 3" className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                       </div>
 
@@ -621,8 +746,14 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
-                        <Button onClick={handleCompleteSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+                          {isCompletingSetup ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
+                          ) : (
+                            <>Complete Setup<CheckCircle2 className="ml-2 h-4 w-4" /></>
+                          )}
+                        </Button>
                       </div>
                     </div>
                   </motion.div>
