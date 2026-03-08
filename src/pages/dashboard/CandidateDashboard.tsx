@@ -4,6 +4,8 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, updatePassword } from "@/lib/supabase";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
+import { parseResume } from "@/lib/resumeParser";
+import { analyzeResume } from "@/services/resumeEnhancer";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
 import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
@@ -3665,6 +3667,8 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [enhancerSummary, setEnhancerSummary] = useState<string | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [showResumeViewer, setShowResumeViewer] = useState(false);
@@ -3888,42 +3892,98 @@ const Profile = () => {
 
       setUploadSuccess(true);
 
-      // Resume Enhancer: Auto-create Basic Profile and identify observation areas
-      // This simulates AI analysis of the resume to map to behavioral dimensions
-      const observationDimensions = [
-        "integrity_ethics",
-        "accountability_ownership",
-        "execution_reliability",
-        "communication_pressure",
-        "collaboration_conflict",
-      ];
+      // Resume Enhancer: AI-powered analysis using a0.dev LLM API
+      // Parses resume text and sends to AI for behavioral dimension mapping
+      setIsEnhancing(true);
+      setEnhancerSummary(null);
 
-      // Update candidate profile with basic profile data and identified observation areas
-      await supabase
-        .from("candidate_profiles")
-        .update({
-          observation_areas: observationDimensions,
+      try {
+        // Extract text from the uploaded file for AI analysis
+        const parsed = await parseResume(file);
+        const resumeText = parsed.rawText || "";
+
+        // Call AI to analyze resume and map to behavioral dimensions
+        const enhancerResult = await analyzeResume(resumeText);
+
+        // Update candidate profile with AI-generated Basic Profile data
+        const updateData: Record<string, unknown> = {
+          observation_areas: enhancerResult.observationDimensions,
           has_basic_profile: true,
           updated_at: new Date().toISOString(),
-        })
-        .eq("profile_id", user.id);
+        };
 
-      // Create growth log entry for Resume Enhancer / Basic Profile creation
-      await supabase.from("growth_log_entries").insert({
-        candidate_id: user.id,
-        event_type: "assessment",
-        title: "Resume Enhancer — Basic Profile Created",
-        description: `Resume analyzed. Observation areas identified: ${observationDimensions.length} behavioral dimensions mapped for mentor assessment. Basic Profile created (non-credentialed).`,
-        source_component: "ResumeEnhancer",
-      });
+        // Merge AI-suggested skills with existing skills
+        if (enhancerResult.suggestedSkills.length > 0) {
+          const existingSkills = candidateProfile?.skills || [];
+          const mergedSkills = Array.from(new Set([...existingSkills, ...parsed.skills, ...enhancerResult.suggestedSkills]));
+          updateData.skills = mergedSkills;
+        }
 
-      // Refresh candidate profile
-      const { data: refreshedProfile } = await supabase
-        .from("candidate_profiles")
-        .select("*")
-        .eq("profile_id", user.id)
-        .single();
-      if (refreshedProfile) setCandidateProfile(refreshedProfile);
+        await supabase
+          .from("candidate_profiles")
+          .update(updateData)
+          .eq("profile_id", user.id);
+
+        // Build rationale summary for growth log
+        const rationaleEntries = Object.entries(enhancerResult.dimensionRationale)
+          .map(([dim, reason]) => `• ${dim.replace(/_/g, " ")}: ${reason}`)
+          .join("\n");
+
+        // Create growth log entry for Resume Enhancer / Basic Profile creation
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Resume Enhancer — Basic Profile Created",
+          description: `AI-analyzed resume. ${enhancerResult.summary}\n\nObservation areas identified (${enhancerResult.observationDimensions.length} dimensions):\n${rationaleEntries}`,
+          source_component: "ResumeEnhancer",
+          metadata: {
+            experienceLevel: enhancerResult.experienceLevel,
+            industryFocus: enhancerResult.industryFocus,
+            strengthAreas: enhancerResult.strengthAreas,
+            suggestedSkills: enhancerResult.suggestedSkills,
+          },
+        });
+
+        setEnhancerSummary(enhancerResult.summary);
+
+        // Refresh candidate profile
+        const { data: refreshedProfile } = await supabase
+          .from("candidate_profiles")
+          .select("*")
+          .eq("profile_id", user.id)
+          .single();
+        if (refreshedProfile) setCandidateProfile(refreshedProfile);
+      } catch (enhancerError) {
+        console.error("Resume Enhancer error (non-blocking):", enhancerError);
+        // Fallback: still create basic profile with default dimensions
+        const fallbackDimensions = [
+          "integrity_ethics", "accountability_ownership", "execution_reliability",
+          "communication_pressure", "collaboration_conflict",
+        ];
+        await supabase.from("candidate_profiles").update({
+          observation_areas: fallbackDimensions,
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        }).eq("profile_id", user.id);
+
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: user.id,
+          event_type: "assessment",
+          title: "Resume Enhancer — Basic Profile Created",
+          description: "Basic Profile created with default observation dimensions (AI analysis unavailable).",
+          source_component: "ResumeEnhancer",
+        });
+
+        // Refresh candidate profile
+        const { data: refreshedProfile } = await supabase
+          .from("candidate_profiles")
+          .select("*")
+          .eq("profile_id", user.id)
+          .single();
+        if (refreshedProfile) setCandidateProfile(refreshedProfile);
+      } finally {
+        setIsEnhancing(false);
+      }
 
       // Clear success message after 3 seconds
       setTimeout(() => setUploadSuccess(false), 3000);
@@ -4342,6 +4402,26 @@ const Profile = () => {
                   Resume uploaded successfully!
                 </div>
               )}
+
+              {isEnhancing && (
+                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                  <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Resume Enhancer AI is analyzing your resume...</p>
+                    <p className="text-xs text-gray-400 mt-1">Creating your Basic Profile and identifying observation areas</p>
+                  </div>
+                </div>
+              )}
+
+              {enhancerSummary && !isEnhancing && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                  <Sparkles className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-indigo-400">AI Analysis Complete</p>
+                    <p className="text-gray-300 mt-1">{enhancerSummary}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -4355,7 +4435,7 @@ const Profile = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-white">Basic Profile</h3>
-                <p className="text-xs text-gray-400">Created by Resume Enhancer (non-credentialed)</p>
+                <p className="text-xs text-gray-400">Created by Resume Enhancer AI (non-credentialed)</p>
               </div>
               <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-medium">
                 Active
