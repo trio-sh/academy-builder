@@ -152,6 +152,7 @@ const Overview = () => {
   const [growthLogCount, setGrowthLogCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [recentActivity, setRecentActivity] = useState<GrowthLogEntry[]>([]);
+  const [hasMentorAssignment, setHasMentorAssignment] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,6 +181,18 @@ const Overview = () => {
           .order("created_at", { ascending: false })
           .limit(5);
         setRecentActivity(recent || []);
+
+        // Check for mentor assignment (candidate_id references candidate_profiles.id)
+        if (cp?.id) {
+          const { data: assignment } = await supabase
+            .from("mentor_assignments")
+            .select("id")
+            .eq("candidate_id", cp.id)
+            .eq("status", "active")
+            .limit(1)
+            .maybeSingle();
+          setHasMentorAssignment(!!assignment);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -257,19 +270,27 @@ const Overview = () => {
       },
       {
         title: "Upload your resume",
-        description: "Start the observation process",
+        description: "AI analyzes your resume to identify observation areas",
         completed: !!candidateProfile?.resume_url,
         href: "/dashboard/candidate/profile"
       },
       {
         title: "Get matched with a mentor",
-        description: "Begin MentorLink observations",
-        completed: (candidateProfile?.mentor_loops || 0) > 0,
-        href: "/dashboard/candidate/passport"
+        description: hasMentorAssignment
+          ? "You've been matched! Your mentor will schedule observations."
+          : "We'll auto-match you based on your skills and goals",
+        completed: hasMentorAssignment || (candidateProfile?.mentor_loops || 0) > 0,
+        href: "/dashboard/candidate/mentors"
+      },
+      {
+        title: "Complete mentor observations",
+        description: "Your mentor submits L1/L2 behavioral observations (3 needed)",
+        completed: (candidateProfile?.mentor_loops || 0) >= 3,
+        href: "/dashboard/candidate/observations"
       },
       {
         title: "Earn your Skill Passport",
-        description: "Receive your behavioral readiness documentation",
+        description: "Mentor endorses you → Skill Passport issued → Employers can discover you on T3X",
         completed: candidateProfile?.has_skill_passport || false,
         href: "/dashboard/candidate/passport"
       },
