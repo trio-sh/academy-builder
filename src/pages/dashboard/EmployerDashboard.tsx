@@ -48,6 +48,7 @@ import {
   ArrowRight,
   Lock,
   Unlock,
+  Target,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -283,6 +284,7 @@ const Overview = () => {
 interface CandidateWithProfile extends CandidateProfile {
   profile?: Profile;
   connectionStatus?: string | null;
+  behavioralScores?: Record<string, number>;
 }
 
 const SearchTalent = () => {
@@ -294,6 +296,8 @@ const SearchTalent = () => {
   const [filters, setFilters] = useState({
     tier: "",
     skill: "",
+    dimension: "",
+    minScore: "",
   });
 
   // Connection modal state
@@ -343,7 +347,7 @@ const SearchTalent = () => {
       const { data: candidateData } = await query.limit(20);
 
       if (candidateData && candidateData.length > 0) {
-        // Get profile info for each candidate
+        // Get profile info and skill passport behavioral scores for each candidate
         const enhancedCandidates = await Promise.all(
           candidateData.map(async (cp) => {
             const { data: profileData } = await supabase
@@ -351,10 +355,32 @@ const SearchTalent = () => {
               .select("*")
               .eq("id", cp.profile_id)
               .single();
-            return { ...cp, profile: profileData || undefined };
+            // Get behavioral scores from skill passport
+            const { data: passport } = await supabase
+              .from("skill_passports")
+              .select("behavioral_scores")
+              .eq("candidate_id", cp.id)
+              .eq("is_active", true)
+              .order("created_at", { ascending: false })
+              .limit(1)
+              .maybeSingle();
+            return {
+              ...cp,
+              profile: profileData || undefined,
+              behavioralScores: (passport?.behavioral_scores as Record<string, number>) || undefined,
+            };
           })
         );
-        setCandidates(enhancedCandidates);
+        // Apply BehaviourMatch™ dimension filter client-side
+        let filtered = enhancedCandidates;
+        if (filters.dimension) {
+          const minScore = parseFloat(filters.minScore) || 2.5;
+          filtered = filtered.filter(c =>
+            c.behavioralScores &&
+            (c.behavioralScores[filters.dimension] || 0) >= minScore
+          );
+        }
+        setCandidates(filtered);
       } else {
         setCandidates([]);
       }
@@ -471,9 +497,9 @@ const SearchTalent = () => {
           className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
         >
           <option value="">All Tiers</option>
-          <option value="tier_1">Tier 1 - Ready</option>
-          <option value="tier_2">Tier 2 - Developing</option>
-          <option value="tier_3">Tier 3 - Emerging</option>
+          <option value="platinum">Platinum</option>
+          <option value="gold">Gold</option>
+          <option value="silver">Silver</option>
         </select>
         <input
           type="text"
@@ -482,6 +508,34 @@ const SearchTalent = () => {
           onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
           className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
         />
+        <div className="w-px h-6 bg-white/10" />
+        <div className="flex items-center gap-2">
+          <Target className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs text-emerald-400 font-medium">BehaviourMatch™</span>
+        </div>
+        <select
+          value={filters.dimension}
+          onChange={(e) => setFilters((prev) => ({ ...prev, dimension: e.target.value }))}
+          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
+        >
+          <option value="">All Dimensions</option>
+          <option value="integrity_ethics">Integrity & Ethics</option>
+          <option value="accountability_ownership">Accountability & Ownership</option>
+          <option value="execution_reliability">Execution & Reliability</option>
+          <option value="communication_pressure">Communication Under Pressure</option>
+          <option value="collaboration_conflict">Collaboration & Conflict</option>
+        </select>
+        {filters.dimension && (
+          <select
+            value={filters.minScore}
+            onChange={(e) => setFilters((prev) => ({ ...prev, minScore: e.target.value }))}
+            className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
+          >
+            <option value="2.5">Score ≥ 2.5 (Competent+)</option>
+            <option value="3">Score ≥ 3.0 (Proficient+)</option>
+            <option value="3.5">Score ≥ 3.5 (Near Exemplary)</option>
+          </select>
+        )}
       </motion.div>
 
       {/* Results */}
@@ -507,13 +561,13 @@ const SearchTalent = () => {
                   <p className="text-sm text-gray-400">{candidate.profile?.headline || "Skill Passport Holder"}</p>
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     <span className={`px-2 py-0.5 rounded ${
-                      candidate.current_tier === "tier_1"
+                      candidate.current_tier === "platinum"
                         ? "bg-emerald-500/20 text-emerald-400"
-                        : candidate.current_tier === "tier_2"
+                        : candidate.current_tier === "gold"
                         ? "bg-amber-500/20 text-amber-400"
                         : "bg-gray-500/20 text-gray-400"
                     }`}>
-                      {candidate.current_tier?.replace("_", " ").toUpperCase() || "TIER 3"}
+                      {candidate.current_tier ? candidate.current_tier.charAt(0).toUpperCase() + candidate.current_tier.slice(1) : "Silver"}
                     </span>
                     {candidate.experience_years && (
                       <span className="text-gray-500">{candidate.experience_years} years exp</span>
@@ -534,6 +588,37 @@ const SearchTalent = () => {
                       +{candidate.skills.length - 5} more
                     </span>
                   )}
+                </div>
+              )}
+
+              {/* BehaviourMatch™ Scores */}
+              {candidate.behavioralScores && Object.keys(candidate.behavioralScores).length > 0 && (
+                <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                  <p className="text-xs text-emerald-400 font-medium mb-2 flex items-center gap-1">
+                    <Target className="w-3 h-3" /> BehaviourMatch™
+                  </p>
+                  <div className="grid grid-cols-5 gap-1">
+                    {[
+                      { key: "integrity_ethics", label: "INT" },
+                      { key: "accountability_ownership", label: "ACC" },
+                      { key: "execution_reliability", label: "EXE" },
+                      { key: "communication_pressure", label: "COM" },
+                      { key: "collaboration_conflict", label: "COL" },
+                    ].map(dim => {
+                      const score = candidate.behavioralScores?.[dim.key] || 0;
+                      return (
+                        <div key={dim.key} className="text-center">
+                          <div className={`text-xs font-bold ${
+                            score >= 3.5 ? "text-emerald-400" :
+                            score >= 2.5 ? "text-amber-400" : "text-gray-500"
+                          }`}>
+                            {score > 0 ? score.toFixed(1) : "-"}
+                          </div>
+                          <div className="text-[10px] text-gray-600">{dim.label}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -2460,6 +2545,16 @@ const Feedback = () => {
     });
 
     if (!error) {
+      // Lock 1: Post-Hire Feedback Loop — log to candidate's growth log
+      const feedbackLabel = feedbackType === "30_day" ? "30-Day" : feedbackType === "60_day" ? "60-Day" : "90-Day";
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: selectedHire.connection.candidate_id,
+        event_type: "assessment",
+        title: `Post-Hire Feedback — ${feedbackLabel} Review (Lock 1)`,
+        description: `Employer feedback received: Performance ${feedbackForm.performanceRating}/5, Readiness Accuracy ${feedbackForm.readinessAccuracy}/5. ${feedbackForm.wouldHireAgain ? "Would hire again." : "Would not hire again."}`,
+        source_component: "PostHireFeedback",
+      });
+
       // Update local state
       setHires((prev) =>
         prev.map((h) =>

@@ -33,6 +33,7 @@ import {
   ArrowRight,
   Lock,
   Target,
+  AlertTriangle,
 } from "lucide-react";
 
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
@@ -1764,7 +1765,8 @@ const Endorsements = () => {
 
   // Endorsement form state
   const [endorsementForm, setEndorsementForm] = useState({
-    decision: "" as "" | "proceed" | "redirect" | "pause",
+    decision: "" as "" | "proceed" | "redirect" | "pause" | "escalate",
+    escalateConcern: "",
     justification: "",
     redirectModule: "",
     redirectToLiveworks: false,
@@ -1926,15 +1928,15 @@ const Endorsements = () => {
         .eq("id", mentorProfile.id);
 
       // Update candidate tier based on decision
-      let newTier = assignment.candidate_profile?.current_tier || "tier_3";
+      let newTier = assignment.candidate_profile?.current_tier || "silver";
       if (endorsementForm.decision === "proceed") {
-        // Promote candidate: tier_3 (Emerging) -> tier_2 (Developing) -> tier_1 (Ready)
+        // Promote candidate: silver → gold → platinum
         const tierProgression: Record<string, string> = {
-          tier_3: "tier_2",
-          tier_2: "tier_1",
-          tier_1: "tier_1", // Already at max
+          silver: "gold",
+          gold: "platinum",
+          platinum: "platinum", // Already at max
         };
-        newTier = tierProgression[newTier] || "tier_2";
+        newTier = tierProgression[newTier] || "gold";
       }
 
       // candidate_id = candidate_profiles.id; look up profiles.id for growth_log_entries
@@ -1959,6 +1961,7 @@ const Endorsements = () => {
         proceed: "Proceed - Ready to advance",
         redirect: "Redirect - Additional training needed",
         pause: "Pause - Not ready to continue",
+        escalate: "Escalate - Flagged for governance review",
       };
 
       await supabase.from("growth_log_entries").insert({
@@ -2021,11 +2024,23 @@ const Endorsements = () => {
         });
       }
 
+      // If escalate, create an escalation notification for admin/governance
+      if (endorsementForm.decision === "escalate") {
+        await supabase.from("growth_log_entries").insert({
+          candidate_id: growthCandidateId,
+          event_type: "escalation",
+          title: "Observation Escalated — Governance Review",
+          description: `Concern: ${endorsementForm.escalateConcern || endorsementForm.justification}. Awaiting governance review.`,
+          source_component: "MentorLink",
+          source_id: endorsement.id,
+        });
+      }
+
       // Update assignment status
       await supabase
         .from("mentor_assignments")
         .update({
-          status: endorsementForm.decision === "proceed" ? "completed" : "active",
+          status: endorsementForm.decision === "proceed" ? "completed" : endorsementForm.decision === "escalate" ? "completed" : "active",
           updated_at: new Date().toISOString(),
         })
         .eq("id", selectedAssignment);
@@ -2045,6 +2060,7 @@ const Endorsements = () => {
         justification: "",
         redirectModule: "",
         redirectToLiveworks: false,
+        escalateConcern: "",
       });
 
       // Refresh data
@@ -2137,11 +2153,12 @@ const Endorsements = () => {
                       {/* Decision Selector */}
                       <div>
                         <label className="text-sm text-gray-400 block mb-3">Decision</label>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {[
                             { value: "proceed", label: "Proceed", desc: "Ready to advance", color: "emerald" },
                             { value: "redirect", label: "Redirect", desc: "Needs more training", color: "amber" },
-                            { value: "pause", label: "Pause", desc: "Not ready yet", color: "red" },
+                            { value: "pause", label: "Pause", desc: "Not ready yet", color: "orange" },
+                            { value: "escalate", label: "Escalate", desc: "Governance review", color: "red" },
                           ].map((option) => (
                             <button
                               key={option.value}
@@ -2152,13 +2169,16 @@ const Endorsements = () => {
                                     ? "bg-emerald-500/20 border-emerald-500/50"
                                     : option.color === "amber"
                                     ? "bg-amber-500/20 border-amber-500/50"
+                                    : option.color === "orange"
+                                    ? "bg-orange-500/20 border-orange-500/50"
                                     : "bg-red-500/20 border-red-500/50"
                                   : "bg-black/80 border-white/30 hover:border-white/20"
                               }`}
                             >
                               <p className={`font-medium ${
                                 option.color === "emerald" ? "text-emerald-400" :
-                                option.color === "amber" ? "text-amber-400" : "text-red-400"
+                                option.color === "amber" ? "text-amber-400" :
+                                option.color === "orange" ? "text-orange-400" : "text-red-400"
                               }`}>
                                 {option.label}
                               </p>
@@ -2200,6 +2220,33 @@ const Endorsements = () => {
                               />
                               <span className="text-white">Redirect to LiveWorks project experience</span>
                             </label>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Escalate Options */}
+                      {endorsementForm.decision === "escalate" && (
+                        <div className="space-y-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                          <div className="flex items-start gap-3">
+                            <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm text-red-400 font-medium">Governance Review Flag</p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                This will flag a serious concern identified during observation. The candidate will be informed through a formal process and the case will be reviewed by governance.
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-sm text-gray-400 block mb-2">
+                              Nature of Concern <span className="text-red-400">*</span>
+                            </label>
+                            <textarea
+                              value={endorsementForm.escalateConcern}
+                              onChange={(e) => setEndorsementForm(prev => ({ ...prev, escalateConcern: e.target.value }))}
+                              placeholder="Document the specific concern observed during the observation period..."
+                              rows={3}
+                              className="w-full px-4 py-3 rounded-lg bg-black/80 border border-red-500/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none resize-none"
+                            />
                           </div>
                         </div>
                       )}
@@ -2285,14 +2332,18 @@ const Endorsements = () => {
                     ? "bg-emerald-500/20"
                     : endorsement.decision === "redirect"
                     ? "bg-amber-500/20"
-                    : "bg-red-500/20"
+                    : endorsement.decision === "escalate"
+                    ? "bg-red-500/20"
+                    : "bg-orange-500/20"
                 }`}>
                   {endorsement.decision === "proceed" ? (
                     <ThumbsUp className={`w-5 h-5 text-emerald-400`} />
                   ) : endorsement.decision === "redirect" ? (
                     <ArrowRight className={`w-5 h-5 text-amber-400`} />
+                  ) : endorsement.decision === "escalate" ? (
+                    <AlertTriangle className={`w-5 h-5 text-red-400`} />
                   ) : (
-                    <AlertCircle className={`w-5 h-5 text-red-400`} />
+                    <AlertCircle className={`w-5 h-5 text-orange-400`} />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -2305,7 +2356,9 @@ const Endorsements = () => {
                         ? "bg-emerald-500/20 text-emerald-400"
                         : endorsement.decision === "redirect"
                         ? "bg-amber-500/20 text-amber-400"
-                        : "bg-red-500/20 text-red-400"
+                        : endorsement.decision === "escalate"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-orange-500/20 text-orange-400"
                     }`}>
                       {endorsement.decision.charAt(0).toUpperCase() + endorsement.decision.slice(1)}
                     </span>

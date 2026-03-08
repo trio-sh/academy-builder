@@ -211,16 +211,16 @@ describe("Database Types - Enum Types", () => {
     expect(roles.length).toBe(5);
   });
 
-  it("EndorsementDecision should have 3 options", () => {
+  it("EndorsementDecision should have 4 options", () => {
     const decisions: import("@/types/database.types").EndorsementDecision[] = [
-      "proceed", "redirect", "pause",
+      "proceed", "redirect", "pause", "escalate",
     ];
-    expect(decisions.length).toBe(3);
+    expect(decisions.length).toBe(4);
   });
 
   it("ReadinessTier should have 3 tiers", () => {
     const tiers: import("@/types/database.types").ReadinessTier[] = [
-      "tier_1", "tier_2", "tier_3",
+      "platinum", "gold", "silver",
     ];
     expect(tiers.length).toBe(3);
   });

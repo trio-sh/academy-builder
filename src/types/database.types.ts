@@ -8,8 +8,8 @@ export type Json =
 
 export type UserRole = 'candidate' | 'mentor' | 'employer' | 'school_admin' | 'admin';
 export type EntryPath = 'resume_upload' | 'liveworks' | 'civic_access';
-export type EndorsementDecision = 'proceed' | 'redirect' | 'pause';
-export type ReadinessTier = 'tier_1' | 'tier_2' | 'tier_3';
+export type EndorsementDecision = 'proceed' | 'redirect' | 'pause' | 'escalate';
+export type ReadinessTier = 'platinum' | 'gold' | 'silver';
 export type GrowthLogEventType = 'assessment' | 'training' | 'project' | 'observation' | 'tier_change' | 'endorsement' | 'signup' | 'resume_upload';
 export type ProjectStatus = 'draft' | 'open' | 'in_progress' | 'completed' | 'cancelled';
 export type MilestoneStatus = 'pending' | 'in_progress' | 'submitted' | 'approved' | 'revision_requested';

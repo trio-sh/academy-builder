@@ -191,9 +191,9 @@ const Overview = () => {
   const getTierDisplay = (tier: string | null | undefined) => {
     if (!tier) return "Not Assessed";
     const tierMap: Record<string, string> = {
-      tier_1: "Tier 1 - Ready",
-      tier_2: "Tier 2 - Developing",
-      tier_3: "Tier 3 - Emerging",
+      platinum: "Platinum",
+      gold: "Gold",
+      silver: "Silver",
     };
     return tierMap[tier] || tier;
   };
@@ -709,9 +709,9 @@ const SkillPassport = () => {
       developing: { label: "Developing", color: "text-amber-400" },
       emerging: { label: "Emerging", color: "text-blue-400" },
       ready: { label: "Job Ready", color: "text-emerald-400" },
-      tier_1: { label: "Tier 1 - Developing", color: "text-amber-400" },
-      tier_2: { label: "Tier 2 - Emerging", color: "text-blue-400" },
-      tier_3: { label: "Tier 3 - Ready", color: "text-emerald-400" },
+      silver: { label: "Silver", color: "text-gray-300" },
+      gold: { label: "Gold", color: "text-amber-400" },
+      platinum: { label: "Platinum", color: "text-emerald-400" },
     };
     return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
   };
@@ -3888,6 +3888,43 @@ const Profile = () => {
 
       setUploadSuccess(true);
 
+      // Resume Enhancer: Auto-create Basic Profile and identify observation areas
+      // This simulates AI analysis of the resume to map to behavioral dimensions
+      const observationDimensions = [
+        "integrity_ethics",
+        "accountability_ownership",
+        "execution_reliability",
+        "communication_pressure",
+        "collaboration_conflict",
+      ];
+
+      // Update candidate profile with basic profile data and identified observation areas
+      await supabase
+        .from("candidate_profiles")
+        .update({
+          observation_areas: observationDimensions,
+          has_basic_profile: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("profile_id", user.id);
+
+      // Create growth log entry for Resume Enhancer / Basic Profile creation
+      await supabase.from("growth_log_entries").insert({
+        candidate_id: user.id,
+        event_type: "assessment",
+        title: "Resume Enhancer — Basic Profile Created",
+        description: `Resume analyzed. Observation areas identified: ${observationDimensions.length} behavioral dimensions mapped for mentor assessment. Basic Profile created (non-credentialed).`,
+        source_component: "ResumeEnhancer",
+      });
+
+      // Refresh candidate profile
+      const { data: refreshedProfile } = await supabase
+        .from("candidate_profiles")
+        .select("*")
+        .eq("profile_id", user.id)
+        .single();
+      if (refreshedProfile) setCandidateProfile(refreshedProfile);
+
       // Clear success message after 3 seconds
       setTimeout(() => setUploadSuccess(false), 3000);
     } catch (error) {
@@ -4308,6 +4345,39 @@ const Profile = () => {
             </div>
           )}
         </div>
+
+        {/* Resume Enhancer — Basic Profile */}
+        {candidateProfile?.has_basic_profile && (
+          <div className="p-6 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-indigo-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Basic Profile</h3>
+                <p className="text-xs text-gray-400">Created by Resume Enhancer (non-credentialed)</p>
+              </div>
+              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-medium">
+                Active
+              </span>
+            </div>
+            {candidateProfile.observation_areas && candidateProfile.observation_areas.length > 0 && (
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Observation Areas Identified</p>
+                <div className="flex flex-wrap gap-2">
+                  {candidateProfile.observation_areas.map((area: string, i: number) => (
+                    <span key={i} className="px-3 py-1 rounded-lg bg-black/60 text-sm text-indigo-300 border border-indigo-500/20">
+                      {area.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  These dimensions will be assessed by your assigned mentor through structured observations (BASD protocol).
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Headline and Bio */}
         <div className="p-6 rounded-xl bg-black/80 border border-white/30">
