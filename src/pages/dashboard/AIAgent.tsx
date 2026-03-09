@@ -316,14 +316,30 @@ async function executeTool(
         if (!allowedTables.includes(table)) return `Access denied: table "${table}" not queryable`;
         const userId = userContext.profile && (userContext.profile as Record<string, unknown>).id;
         if (!userId) return "Error: No user context available";
+        const roleProfileId = userContext.roleProfile && (userContext.roleProfile as Record<string, unknown>).id;
+        const userRole = userContext.profile && (userContext.profile as Record<string, unknown>).role;
         let query = supabase.from(table).select("*").limit(20);
-        // Auto-filter by user
-        const userFields = ["candidate_id", "user_id", "profile_id", "mentor_id", "employer_id"];
-        for (const field of userFields) {
-          if (filter.includes(field)) continue; // User specified their own filter
-          // We'll add the default user filter
-          query = query.or(`${userFields.map(f => `${f}.eq.${userId}`).join(",")}`);
-          break;
+        // Tables that use the role profile ID (candidate_profiles.id, mentor_profiles.id, etc.)
+        // vs tables that use the auth user ID (profiles.id)
+        const tablesUsingRoleProfileId = ["mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "liveworks_projects", "liveworks_applications"];
+        const tableUserColumn: Record<string, string> = {
+          growth_log_entries: "candidate_id",
+          bridgefast_progress: "candidate_id",
+          mentor_assignments: userRole === "mentor" ? "mentor_id" : "candidate_id",
+          mentor_observations: userRole === "mentor" ? "mentor_id" : "candidate_id",
+          endorsements: "candidate_id",
+          skill_passports: "candidate_id",
+          t3x_connections: userRole === "employer" ? "employer_id" : "candidate_id",
+          notifications: "user_id",
+          liveworks_projects: "employer_id",
+          liveworks_applications: "candidate_id",
+        };
+        if (!filter) {
+          const userCol = tableUserColumn[table] || "user_id";
+          const filterValue = tablesUsingRoleProfileId.includes(table) && roleProfileId
+            ? roleProfileId as string
+            : userId as string;
+          query = query.eq(userCol, filterValue);
         }
         const { data, error } = await query;
         if (error) return `Query error: ${error.message}`;
@@ -571,32 +587,40 @@ async function loadUserContext(userId: string, role: string): Promise<UserContex
     ctx.profile = profile;
 
     if (role === "candidate") {
-      const [cp, gl, ma, tp, sp, conn] = await Promise.all([
-        supabase.from("candidate_profiles").select("*").eq("profile_id", userId).single(),
-        supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).order("created_at", { ascending: false }).limit(20),
-        supabase.from("mentor_assignments").select("*, profiles!mentor_assignments_mentor_id_fkey(first_name, last_name, email)").eq("candidate_id", userId).eq("status", "active").maybeSingle(),
-        supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).eq("event_type", "training").order("created_at", { ascending: false }).limit(10),
-        supabase.from("skill_passports").select("*").eq("candidate_id", userId).eq("is_active", true).maybeSingle(),
-        supabase.from("t3x_connections").select("*, profiles!t3x_connections_employer_id_fkey(first_name, last_name)").eq("candidate_id", userId).order("created_at", { ascending: false }).limit(10),
-      ]);
-      ctx.roleProfile = cp.data;
-      ctx.growthLog = gl.data;
-      ctx.mentorAssignment = ma.data;
-      ctx.trainingProgress = tp.data;
-      ctx.skillPassport = sp.data;
-      ctx.connections = conn.data;
+      // First get the candidate_profiles.id (different from profiles.id / auth user ID)
+      const { data: cp } = await supabase.from("candidate_profiles").select("*").eq("profile_id", userId).single();
+      ctx.roleProfile = cp;
+      const cpId = cp?.id; // candidate_profiles.id used as FK in other tables
+      if (cpId) {
+        const [gl, ma, tp, sp, conn] = await Promise.all([
+          supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).order("created_at", { ascending: false }).limit(20),
+          supabase.from("mentor_assignments").select("*").eq("candidate_id", cpId).eq("status", "active").maybeSingle(),
+          supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).eq("event_type", "training").order("created_at", { ascending: false }).limit(10),
+          supabase.from("skill_passports").select("*").eq("candidate_id", cpId).eq("is_active", true).maybeSingle(),
+          supabase.from("t3x_connections").select("*").eq("candidate_id", cpId).order("created_at", { ascending: false }).limit(10),
+        ]);
+        ctx.growthLog = gl.data;
+        ctx.mentorAssignment = ma.data;
+        ctx.trainingProgress = tp.data;
+        ctx.skillPassport = sp.data;
+        ctx.connections = conn.data;
+      }
     } else if (role === "mentor") {
-      const [mp, ma] = await Promise.all([
-        supabase.from("mentor_profiles").select("*").eq("profile_id", userId).single(),
-        supabase.from("mentor_assignments").select("*, profiles!mentor_assignments_candidate_id_fkey(first_name, last_name, email)").eq("mentor_id", userId).order("created_at", { ascending: false }).limit(20),
-      ]);
-      ctx.roleProfile = mp.data;
-      ctx.mentorAssignment = ma.data as unknown as Record<string, unknown>;
+      const { data: mp } = await supabase.from("mentor_profiles").select("*").eq("profile_id", userId).single();
+      ctx.roleProfile = mp;
+      const mpId = mp?.id;
+      if (mpId) {
+        const { data: ma } = await supabase.from("mentor_assignments").select("*").eq("mentor_id", mpId).order("created_at", { ascending: false }).limit(20);
+        ctx.mentorAssignment = ma as unknown as Record<string, unknown>;
+      }
     } else if (role === "employer") {
       const { data: ep } = await supabase.from("employer_profiles").select("*").eq("profile_id", userId).single();
       ctx.roleProfile = ep;
-      const { data: conns } = await supabase.from("t3x_connections").select("*, profiles!t3x_connections_candidate_id_fkey(first_name, last_name)").eq("employer_id", userId).limit(20);
-      ctx.connections = conns;
+      const epId = ep?.id;
+      if (epId) {
+        const { data: conns } = await supabase.from("t3x_connections").select("*").eq("employer_id", epId).limit(20);
+        ctx.connections = conns;
+      }
     } else if (role === "school_admin") {
       const { data: sp } = await supabase.from("school_profiles").select("*").eq("profile_id", userId).single();
       ctx.roleProfile = sp;
