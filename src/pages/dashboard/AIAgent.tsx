@@ -1211,7 +1211,7 @@ export default function AIAgent() {
   }
 
   return (
-    <div className="-m-4 md:-m-8 flex flex-col h-screen max-w-none relative overflow-hidden">
+    <div className="flex flex-col h-full w-full relative">
 
       {/* Messages Area — scrollable, with bottom padding for fixed input */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-6">

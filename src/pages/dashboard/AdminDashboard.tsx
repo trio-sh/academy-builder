@@ -2735,9 +2735,9 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className={`lg:ml-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Enhanced Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
+        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -2859,7 +2859,7 @@ const AdminDashboard = () => {
         </header>
 
         {/* Page content */}
-        <main className="p-4 md:p-8">
+        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
           <Routes>
             <Route index element={<Overview />} />
             <Route path="users" element={<UsersManagement />} />
