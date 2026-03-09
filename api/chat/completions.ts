@@ -73,7 +73,11 @@ const VAGUE_WEB_PATTERN =
 const CODE_HINT_PATTERN =
   /\b(tailwind|bootstrap|css|styled|dark\s*theme|animated|responsive|modern|beautiful|sleek|minimal)\b/i;
 
-function enhanceUserPrompt(content: string): string {
+function enhanceUserPrompt(content: string, hasTaskAgent: boolean): string {
+  // When task_agent is available, let the system prompt guide A0 to delegate
+  // — don't rewrite the user prompt (it causes broken JSON in tool call args)
+  if (hasTaskAgent) return content;
+
   // Only enhance short-ish, vague prompts that look like web/code generation requests
   if (content.length > 500) return content; // already detailed enough
   if (!VAGUE_WEB_PATTERN.test(content)) return content; // not a web generation request
@@ -92,16 +96,16 @@ function enhanceUserPrompt(content: string): string {
 
 Build a complete, standalone HTML file for this. Requirements:
 - Full HTML5 document with <head> and <body>
-${wantsTailwind ? "- Use Tailwind CSS via CDN (<script src=\"https://cdn.tailwindcss.com\"></script>)" : "- Use embedded CSS or Tailwind CDN"}
-${wantsDark ? "- Dark theme: use bg-gray-950/900 backgrounds with white/gray text" : ""}
-${wantsAnimated ? "- Add smooth CSS transitions and hover animations (use Tailwind classes)" : ""}
+${wantsTailwind ? "- Use Tailwind CSS via CDN" : "- Use embedded CSS or Tailwind CDN"}
+${wantsDark ? "- Dark theme: use dark backgrounds with light text" : ""}
+${wantsAnimated ? "- Add smooth CSS transitions and hover animations" : ""}
 - Include a hero section with headline + CTA button
 - Include a features/benefits section with 3 cards
 - Keep it compact (under 150 lines) but visually polished
 - Use realistic placeholder text relevant to "${topic || "SaaS product"}"
 - Responsive layout that works on mobile
 
-Respond with the complete HTML code in a single \`\`\`html code block.`;
+Respond with the complete HTML code in a single code block.`;
 }
 
 // Built-in tool definitions (OpenAI function-calling format)
@@ -530,20 +534,113 @@ interface ParsedToolCall {
   arguments: Record<string, any>;
 }
 
+/**
+ * Try to parse a raw tool call JSON string. Handles common A0 quirks:
+ * - Whitespace around JSON
+ * - Unescaped quotes inside string values (e.g. HTML attributes in prompts)
+ */
+function tryParseToolCall(raw: string): ParsedToolCall | null {
+  const trimmed = raw.trim();
+
+  // Try parsing as-is first (fast path)
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (parsed.name && parsed.arguments) return parsed;
+  } catch {
+    // fall through to lenient parsing
+  }
+
+  // Lenient: extract name and arguments separately
+  try {
+    const nameMatch = trimmed.match(/"name"\s*:\s*"([^"]+)"/);
+    if (!nameMatch) return null;
+
+    // Find the arguments object: everything after "arguments": up to the end
+    const argsStart = trimmed.indexOf('"arguments"');
+    if (argsStart === -1) return null;
+
+    const colonAfterArgs = trimmed.indexOf(":", argsStart + 11);
+    if (colonAfterArgs === -1) return null;
+
+    // Extract from the first { after "arguments": to the last }
+    const afterColon = trimmed.slice(colonAfterArgs + 1);
+    const firstBrace = afterColon.indexOf("{");
+    if (firstBrace === -1) return null;
+
+    // Find matching closing brace by counting depth
+    let depth = 0;
+    let lastBrace = -1;
+    for (let i = firstBrace; i < afterColon.length; i++) {
+      if (afterColon[i] === "{") depth++;
+      else if (afterColon[i] === "}") {
+        depth--;
+        if (depth === 0) { lastBrace = i; break; }
+      }
+    }
+    if (lastBrace === -1) return null;
+
+    const argsStr = afterColon.slice(firstBrace, lastBrace + 1);
+
+    // Try parsing arguments JSON
+    let argsJson: any;
+    try {
+      argsJson = JSON.parse(argsStr);
+    } catch {
+      // Try fixing unescaped inner quotes: replace " that appears mid-value
+      // Strategy: parse key-value pairs individually
+      try {
+        // Simple approach: extract each key's value using a greedy pattern
+        const fixedStr = argsStr.replace(
+          /("(?:prompt|system_prompt|model|query|url|description)":\s*")([^]*?)("(?:,\s*"|}\s*$))/g,
+          (_m, pre, val, post) => pre + val.replace(/(?<!\\)"/g, '\\"') + post
+        );
+        argsJson = JSON.parse(fixedStr);
+      } catch {
+        // Last resort: extract fields by finding key positions and value boundaries
+        const result: Record<string, any> = {};
+        // Find all top-level keys and extract their values
+        const keyRegex = /"(\w+)"\s*:/g;
+        const keys: { key: string; start: number }[] = [];
+        let km;
+        while ((km = keyRegex.exec(argsStr)) !== null) {
+          keys.push({ key: km[1], start: km.index + km[0].length });
+        }
+        for (let ki = 0; ki < keys.length; ki++) {
+          const valueStart = keys[ki].start;
+          const valueEnd = ki + 1 < keys.length
+            ? argsStr.lastIndexOf(",", keys[ki + 1].start)
+            : argsStr.lastIndexOf("}");
+          const rawVal = argsStr.slice(valueStart, valueEnd !== -1 ? valueEnd : undefined).trim();
+          if (rawVal.startsWith('"')) {
+            // String value — strip outer quotes
+            result[keys[ki].key] = rawVal.slice(1, rawVal.lastIndexOf('"'));
+          } else if (/^\d+/.test(rawVal)) {
+            result[keys[ki].key] = Number(rawVal);
+          }
+        }
+        if (Object.keys(result).length > 0) {
+          argsJson = result;
+        }
+      }
+    }
+
+    if (argsJson) {
+      return { name: nameMatch[1], arguments: argsJson };
+    }
+  } catch {
+    // skip completely malformed tool calls
+  }
+
+  return null;
+}
+
 function parseToolCalls(text: string): ParsedToolCall[] {
   const calls: ParsedToolCall[] = [];
-  // Match both closed </tool_call> tags and unclosed <tool_call> at end of string
   const regex = /<tool_call>([\s\S]*?)(?:<\/tool_call>|$)/g;
   let match;
   while ((match = regex.exec(text)) !== null) {
-    try {
-      const parsed = JSON.parse(match[1].trim());
-      if (parsed.name && parsed.arguments) {
-        calls.push(parsed);
-      }
-    } catch {
-      // skip malformed tool calls
-    }
+    const parsed = tryParseToolCall(match[1]);
+    if (parsed) calls.push(parsed);
   }
   return calls;
 }
@@ -694,7 +791,7 @@ async function runAgentLoop(
       const isUser = msg.role !== "assistant";
       a0Messages.push({
         role: isUser ? "user" : "assistant",
-        content: isUser ? enhanceUserPrompt(msg.content || "") : (msg.content || ""),
+        content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
       });
     }
   }
@@ -1013,14 +1110,10 @@ function splitCompletionSegments(text: string): Array<
       segments.push({ type: "text", content: before });
     }
 
-    // Parse the tool call
-    try {
-      const parsed = JSON.parse(match[1].trim());
-      if (parsed.name && parsed.arguments) {
-        calls.push(parsed);
-      }
-    } catch {
-      // skip malformed
+    // Parse the tool call (uses lenient parser for A0 quirks)
+    const parsed = tryParseToolCall(match[1]);
+    if (parsed) {
+      calls.push(parsed);
     }
 
     lastIndex = match.index + match[0].length;
@@ -1089,7 +1182,7 @@ async function streamAgentLoop(
       const isUser = msg.role !== "assistant";
       a0Messages.push({
         role: isUser ? "user" : "assistant",
-        content: isUser ? enhanceUserPrompt(msg.content || "") : (msg.content || ""),
+        content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
       });
     }
   }
