@@ -41,6 +41,7 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 
@@ -1330,7 +1331,9 @@ export default function AIAgent() {
                     <Bot className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] leading-relaxed text-gray-200 whitespace-pre-wrap">{msg.content}</p>
+                    <div className="text-gray-200">
+                      <MarkdownRenderer content={msg.content} />
+                    </div>
 
                     {/* Tool Call Badges */}
                     {msg.toolCalls && msg.toolCalls.length > 0 && (

@@ -22,6 +22,7 @@ import Help from "./pages/Help";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Security from "./pages/Security";
+import ApiTestChat from "./pages/ApiTestChat";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
@@ -136,6 +137,9 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+
+            {/* API test chat page */}
+            <Route path="/test-chat" element={<ApiTestChat />} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
