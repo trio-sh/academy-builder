@@ -77,8 +77,13 @@ export function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
     );
   }
 
-  // If authenticated, redirect to dashboard
+  // If authenticated, redirect to appropriate page
   if (isAuthenticated && profile) {
+    // If onboarding not completed, send to get-started instead of dashboard
+    if (!profile.onboarding_completed) {
+      return <Navigate to="/get-started" replace />;
+    }
+
     const dashboardRoutes: Record<UserRole, string> = {
       candidate: '/dashboard/candidate',
       mentor: '/dashboard/mentor',
