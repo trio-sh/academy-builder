@@ -624,7 +624,7 @@ You have powerful tools you can invoke. Embed tool calls in your response using 
 - [[TOOL:query_data|table=growth_log_entries]] — Query user's data from database. Allowed tables: growth_log_entries, bridgefast_progress, mentor_assignments, mentor_observations, endorsements, skill_passports, t3x_connections, notifications, liveworks_projects, liveworks_applications.
 - [[TOOL:read_page|path=/dashboard/${role}/growth]] — Navigate to a page, extract ALL its content (headings, stats, tables, lists, text), then return to the current page. Results come back to you for synthesis. Use this when you need data from another page without staying there.
 
-**DOM Interaction Tools (execute on page):**
+**DOM Interaction Tools (execute on page, results come back to you):**
 - [[TOOL:navigate|path=/dashboard/${role}/growth]] — Navigate to a route and stay there
 - [[TOOL:click|target=button text]] — Click a button/link
 - [[TOOL:fill|field=email|value=user@example.com]] — Fill a form field
@@ -641,14 +641,14 @@ You have powerful tools you can invoke. Embed tool calls in your response using 
 
 ## CRITICAL Rules
 1. ALWAYS use [[TOOL:...]] syntax. Never write plain text like "Click here" or "I'll search" without the tool tag.
-2. Web search & extract results come BACK to you — use them to give informed answers.
-3. For DOM tools, results also come back (success/failure status).
+2. ALL tool results come BACK to you after execution — web search results, DOM action outcomes, data queries, everything.
+3. After receiving tool results, ALWAYS respond with a brief synthesis: confirm what happened, summarize data, or explain the outcome. Never leave the user without acknowledgement.
 4. You can use MULTIPLE tools in one response.
 5. Be proactive: if the user says "find me a mentor in tech" → search for mentors AND navigate to the mentor page.
 6. Reference the user's actual data when answering questions about their progress, scores, etc.
 7. For the current user role (${role}), navigate within /dashboard/${role === "school_admin" ? "school" : role}/...
 8. When you need to fill forms, use exact field names from "Form Fields" in the screen context.
-9. When you get web results back, SYNTHESIZE them into a clear answer — don't dump raw content.
+9. When you get results back, SYNTHESIZE them into a clear, concise answer — don't dump raw content.
 10. You have personality: be helpful, confident, proactive. You're the user's AI co-pilot for their Academy journey.
 
 ## Example Responses
@@ -886,25 +886,16 @@ export default function AIAgent() {
         const msgIdx = currentMessages.length - 1;
         const results = await processToolCalls(tools, msgIdx);
 
-        // Check if any tools return data that needs AI synthesis (web_search, web_extract, query_data)
-        const needsSynthesis = tools.some(t => ["web_search", "web_extract", "query_data", "read_page"].includes(t.type));
-
-        if (needsSynthesis) {
-          // Send results back to AI
-          const toolResultMsg: Message = {
-            role: "tool",
-            content: results.join("\n\n"),
-            timestamp: new Date(),
-          };
-          currentMessages = [...currentMessages, toolResultMsg];
-          setIsTyping(true);
-          setIsProcessing(false);
-          // Loop continues — AI will synthesize results
-        } else {
-          // DOM-only tools, no need for synthesis
-          setIsProcessing(false);
-          break;
-        }
+        // Always send tool results back to AI for synthesis
+        const toolResultMsg: Message = {
+          role: "tool",
+          content: results.join("\n\n"),
+          timestamp: new Date(),
+        };
+        currentMessages = [...currentMessages, toolResultMsg];
+        setIsTyping(true);
+        setIsProcessing(false);
+        // Loop continues — AI will synthesize results
       } catch (error) {
         console.error("Agent error:", error);
         setMessages(prev => [...prev, {
