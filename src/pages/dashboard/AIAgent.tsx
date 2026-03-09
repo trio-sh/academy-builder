@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
+import { openDB, type IDBPDatabase, type DBSchema } from "idb";
 import {
   Bot,
   Send,
@@ -42,6 +43,65 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+
+// ─── IndexedDB Schema ─────────────────────────────────────────────────────────
+
+interface AgentDBSchema extends DBSchema {
+  messages: {
+    key: string;
+    value: { id: string; messages: SerializedMessage[] };
+  };
+}
+
+interface SerializedMessage {
+  role: "user" | "assistant" | "tool";
+  content: string;
+  timestamp: string;
+  toolCalls?: ToolCall[];
+  isThinking?: boolean;
+}
+
+let dbInstance: IDBPDatabase<AgentDBSchema> | null = null;
+
+async function getDB(): Promise<IDBPDatabase<AgentDBSchema>> {
+  if (dbInstance) return dbInstance;
+  dbInstance = await openDB<AgentDBSchema>("AgentDB", 1, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains("messages")) {
+        db.createObjectStore("messages", { keyPath: "id" });
+      }
+    },
+  });
+  return dbInstance;
+}
+
+async function saveMessages(messages: Message[]): Promise<void> {
+  try {
+    const db = await getDB();
+    const serialized: SerializedMessage[] = messages.map(m => ({
+      ...m,
+      timestamp: m.timestamp.toISOString(),
+    }));
+    await db.put("messages", { id: "agent-chat", messages: serialized });
+  } catch (e) {
+    console.error("Failed to save agent messages:", e);
+  }
+}
+
+async function loadMessages(): Promise<Message[]> {
+  try {
+    const db = await getDB();
+    const stored = await db.get("messages", "agent-chat");
+    if (!stored?.messages) return [];
+    return stored.messages.map(m => ({
+      ...m,
+      timestamp: new Date(m.timestamp),
+    }));
+  } catch (e) {
+    console.error("Failed to load agent messages:", e);
+    return [];
+  }
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -284,41 +344,79 @@ async function executeTool(
     case "read_page": {
       const pagePath = tool.params.path || "";
       if (!pagePath) return "Error: No path specified";
-      // Save current path, navigate to target, extract content, navigate back
-      const currentPath = window.location.pathname;
-      navigate(pagePath);
-      // Wait for page to render
-      await delay(1500);
-      // Extract the page content
-      const pageHeadings = Array.from(document.querySelectorAll("h1, h2, h3"))
-        .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t ? `${el.tagName}: ${t}` : null; })
-        .filter(Boolean).slice(0, 20);
-      const pageStats = Array.from(document.querySelectorAll("[class*='rounded-xl'], [class*='rounded-2xl'], [class*='stat'], [class*='card']"))
-        .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t && t.length < 200 ? t.replace(/\n+/g, " | ") : null; })
-        .filter(Boolean).slice(0, 15);
-      const pageTables = Array.from(document.querySelectorAll("table")).map(table => {
-        const headers = Array.from(table.querySelectorAll("th")).map(th => (th as HTMLElement).innerText?.trim()).filter(Boolean);
-        const rows = Array.from(table.querySelectorAll("tbody tr")).slice(0, 10).map(row =>
-          Array.from(row.querySelectorAll("td")).map(td => (td as HTMLElement).innerText?.trim()).join(" | ")
-        );
-        return headers.length ? `Table [${headers.join(", ")}]:\n${rows.join("\n")}` : null;
-      }).filter(Boolean);
-      const pageLists = Array.from(document.querySelectorAll("ul, ol"))
-        .map(el => { const items = Array.from(el.querySelectorAll("li")).map(li => (li as HTMLElement).innerText?.trim()).slice(0, 10); return items.length > 0 ? items.join("\n- ") : null; })
-        .filter(Boolean).slice(0, 5);
-      const mainText = document.querySelector("main")?.innerText?.trim().slice(0, 2000) || document.body.innerText?.trim().slice(0, 2000) || "";
-      // Navigate back
-      navigate(currentPath);
-      await delay(300);
-      const extracted = [
-        `Page: ${pagePath}`,
-        pageHeadings.length ? `Headings:\n${pageHeadings.join("\n")}` : "",
-        pageStats.length ? `Stats/Cards:\n${pageStats.join("\n")}` : "",
-        pageTables.length ? `Tables:\n${pageTables.join("\n\n")}` : "",
-        pageLists.length ? `Lists:\n- ${pageLists.join("\n- ")}` : "",
-        mainText ? `Content:\n${mainText}` : "",
-      ].filter(Boolean).join("\n\n");
-      return extracted.slice(0, 5000) || "No content found on page";
+      // Use a hidden iframe to load the page without navigating away (preserves agent state)
+      try {
+        const fullUrl = `${window.location.origin}${pagePath}`;
+        const iframe = document.createElement("iframe");
+        iframe.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:1280px;height:900px;opacity:0;pointer-events:none;";
+        document.body.appendChild(iframe);
+
+        const extracted = await new Promise<string>((resolve) => {
+          const timeout = setTimeout(() => {
+            cleanup();
+            resolve("Error: Page load timed out after 8 seconds");
+          }, 8000);
+
+          const cleanup = () => {
+            clearTimeout(timeout);
+            try { document.body.removeChild(iframe); } catch { /* */ }
+          };
+
+          iframe.onload = () => {
+            // Wait a bit for React to render inside the iframe
+            setTimeout(() => {
+              try {
+                const doc = iframe.contentDocument;
+                if (!doc) { cleanup(); resolve("Error: Could not access page content"); return; }
+
+                const pageHeadings = Array.from(doc.querySelectorAll("h1, h2, h3"))
+                  .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t ? `${el.tagName}: ${t}` : null; })
+                  .filter(Boolean).slice(0, 20);
+                const pageStats = Array.from(doc.querySelectorAll("[class*='rounded-xl'], [class*='rounded-2xl'], [class*='stat'], [class*='card']"))
+                  .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t && t.length < 200 ? t.replace(/\n+/g, " | ") : null; })
+                  .filter(Boolean).slice(0, 15);
+                const pageTables = Array.from(doc.querySelectorAll("table")).map(table => {
+                  const headers = Array.from(table.querySelectorAll("th")).map(th => (th as HTMLElement).innerText?.trim()).filter(Boolean);
+                  const rows = Array.from(table.querySelectorAll("tbody tr")).slice(0, 10).map(row =>
+                    Array.from(row.querySelectorAll("td")).map(td => (td as HTMLElement).innerText?.trim()).join(" | ")
+                  );
+                  return headers.length ? `Table [${headers.join(", ")}]:\n${rows.join("\n")}` : null;
+                }).filter(Boolean);
+                const pageLists = Array.from(doc.querySelectorAll("ul, ol"))
+                  .map(el => { const items = Array.from(el.querySelectorAll("li")).map(li => (li as HTMLElement).innerText?.trim()).slice(0, 10); return items.length > 0 ? items.join("\n- ") : null; })
+                  .filter(Boolean).slice(0, 5);
+                const mainText = (doc.querySelector("main") || doc.body)?.innerText?.trim().slice(0, 2000) || "";
+
+                const result = [
+                  `Page: ${pagePath}`,
+                  pageHeadings.length ? `Headings:\n${pageHeadings.join("\n")}` : "",
+                  pageStats.length ? `Stats/Cards:\n${pageStats.join("\n")}` : "",
+                  pageTables.length ? `Tables:\n${pageTables.join("\n\n")}` : "",
+                  pageLists.length ? `Lists:\n- ${pageLists.join("\n- ")}` : "",
+                  mainText ? `Content:\n${mainText}` : "",
+                ].filter(Boolean).join("\n\n");
+
+                cleanup();
+                resolve(result.slice(0, 5000) || "No content found on page");
+              } catch (e) {
+                cleanup();
+                resolve(`Error reading page: ${(e as Error).message}`);
+              }
+            }, 2000); // Allow 2s for React rendering inside iframe
+          };
+
+          iframe.onerror = () => {
+            cleanup();
+            resolve("Error: Failed to load page");
+          };
+
+          iframe.src = fullUrl;
+        });
+
+        return extracted;
+      } catch (e) {
+        return `Error: ${(e as Error).message}`;
+      }
     }
 
     case "click": {
@@ -732,10 +830,32 @@ export default function AIAgent() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [userContext, setUserContext] = useState<UserContext | null>(null);
   const [contextLoading, setContextLoading] = useState(true);
+  const [messagesLoaded, setMessagesLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const role = profile?.role || "candidate";
   const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
+
+  // Load persisted messages from IndexedDB on mount
+  useEffect(() => {
+    loadMessages().then(stored => {
+      if (stored.length > 0) {
+        setMessages(stored);
+      }
+      setMessagesLoaded(true);
+    });
+  }, []);
+
+  // Persist messages to IndexedDB whenever they change
+  useEffect(() => {
+    if (messagesLoaded && messages.length > 0) {
+      saveMessages(messages);
+    }
+    // Also persist empty state (clear chat)
+    if (messagesLoaded && messages.length === 0) {
+      saveMessages([]);
+    }
+  }, [messages, messagesLoaded]);
 
   // Load user context on mount
   useEffect(() => {
