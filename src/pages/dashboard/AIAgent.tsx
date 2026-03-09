@@ -39,6 +39,8 @@ import {
   ScanSearch,
   Plus,
   ArrowUp,
+  Wrench,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
@@ -50,77 +52,92 @@ import { supabase } from "@/lib/supabase";
 interface AgentDBSchema extends DBSchema {
   messages: {
     key: string;
-    value: { id: string; messages: SerializedMessage[] };
+    value: { id: string; apiMessages: ApiMessage[]; uiMessages: SerializedUIMessage[] };
   };
 }
 
-interface SerializedMessage {
-  role: "user" | "assistant" | "tool";
+interface SerializedUIMessage {
+  role: "user" | "assistant" | "status";
   content: string;
   timestamp: string;
-  toolCalls?: ToolCall[];
-  isThinking?: boolean;
+  toolCalls?: OpenAIToolCall[];
+  statuses?: StatusEvent[];
 }
 
 let dbInstance: IDBPDatabase<AgentDBSchema> | null = null;
 
 async function getDB(): Promise<IDBPDatabase<AgentDBSchema>> {
   if (dbInstance) return dbInstance;
-  dbInstance = await openDB<AgentDBSchema>("AgentDB", 1, {
+  dbInstance = await openDB<AgentDBSchema>("AgentDB", 2, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains("messages")) {
-        db.createObjectStore("messages", { keyPath: "id" });
+      if (db.objectStoreNames.contains("messages")) {
+        db.deleteObjectStore("messages");
       }
+      db.createObjectStore("messages", { keyPath: "id" });
     },
   });
   return dbInstance;
 }
 
-async function saveMessages(messages: Message[]): Promise<void> {
+async function saveConversation(apiMessages: ApiMessage[], uiMessages: UIMessage[]): Promise<void> {
   try {
     const db = await getDB();
-    const serialized: SerializedMessage[] = messages.map(m => ({
+    const serialized: SerializedUIMessage[] = uiMessages.map(m => ({
       ...m,
       timestamp: m.timestamp.toISOString(),
     }));
-    await db.put("messages", { id: "agent-chat", messages: serialized });
+    await db.put("messages", { id: "agent-chat", apiMessages, uiMessages: serialized });
   } catch (e) {
     console.error("Failed to save agent messages:", e);
   }
 }
 
-async function loadMessages(): Promise<Message[]> {
+async function loadConversation(): Promise<{ apiMessages: ApiMessage[]; uiMessages: UIMessage[] }> {
   try {
     const db = await getDB();
     const stored = await db.get("messages", "agent-chat");
-    if (!stored?.messages) return [];
-    return stored.messages.map(m => ({
-      ...m,
-      timestamp: new Date(m.timestamp),
-    }));
+    if (!stored) return { apiMessages: [], uiMessages: [] };
+    return {
+      apiMessages: stored.apiMessages || [],
+      uiMessages: (stored.uiMessages || []).map(m => ({
+        ...m,
+        timestamp: new Date(m.timestamp),
+      })),
+    };
   } catch (e) {
     console.error("Failed to load agent messages:", e);
-    return [];
+    return { apiMessages: [], uiMessages: [] };
   }
 }
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-interface ToolCall {
+interface OpenAIToolCall {
   id: string;
-  type: "web_search" | "web_extract" | "navigate" | "click" | "fill" | "scroll_to" | "highlight" | "submit_form" | "scroll_page" | "toggle" | "select_option" | "clear_field" | "open_modal" | "close_modal" | "wait" | "query_data" | "read_page";
-  label: string;
-  params: Record<string, string>;
-  status: "pending" | "running" | "done" | "error";
-  result?: string;
+  type: "function";
+  function: { name: string; arguments: string };
 }
 
-interface Message {
-  role: "user" | "assistant" | "tool";
+interface ApiMessage {
+  role: "system" | "user" | "assistant" | "tool";
+  content: string | null;
+  tool_calls?: OpenAIToolCall[];
+  tool_call_id?: string;
+  name?: string;
+}
+
+interface UIMessage {
+  role: "user" | "assistant" | "status";
   content: string;
+  toolCalls?: OpenAIToolCall[];
+  statuses?: StatusEvent[];
   timestamp: Date;
-  toolCalls?: ToolCall[];
-  isThinking?: boolean;
+}
+
+interface StatusEvent {
+  type: "tool_start" | "tool_done";
+  name: string;
+  arguments?: Record<string, unknown>;
 }
 
 interface UserContext {
@@ -134,75 +151,260 @@ interface UserContext {
   connections: Record<string, unknown>[] | null;
 }
 
-// ─── Tool Protocol ──────────────────────────────────────────────────────────
-// AI embeds tool calls like [[TOOL:web_search|query=latest AI news]]
-// We parse, execute, collect results, and send back to AI for synthesis
-
-const TOOL_REGEX = /\[\[TOOL:(\w+)\|((?:[^\]]|\][^\]])*?)\]\]/g;
-
-interface ParsedTool {
-  type: string;
-  params: Record<string, string>;
-  raw: string;
+interface ContinuationState {
+  a0Messages: any[];
+  step: number;
+  id: string;
+  model: string;
+  contentSoFar: string;
 }
 
-function parseToolCalls(text: string): { cleanText: string; tools: ParsedTool[] } {
-  const tools: ParsedTool[] = [];
-  const cleanText = text.replace(TOOL_REGEX, (match, type, paramStr) => {
-    const params: Record<string, string> = {};
-    paramStr.split("|").forEach((p: string) => {
-      const eqIdx = p.indexOf("=");
-      if (eqIdx > 0) {
-        params[p.slice(0, eqIdx).trim()] = p.slice(eqIdx + 1).trim();
-      } else {
-        params["query"] = p.trim();
-      }
-    });
-    tools.push({ type, params, raw: match });
-    return "";
-  });
-  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), tools };
+interface StreamResult {
+  content: string;
+  toolCalls: OpenAIToolCall[];
+  finishReason: string | null;
+  statuses: StatusEvent[];
+  continuation?: ContinuationState;
 }
 
-function toolLabel(tool: ParsedTool): string {
-  switch (tool.type) {
-    case "web_search": return `Search: "${tool.params.query || ""}"`;
-    case "web_extract": return `Extract: ${tool.params.url || ""}`;
-    case "navigate": return `Navigate to ${tool.params.path || ""}`;
-    case "click": return `Click "${tool.params.target || ""}"`;
-    case "fill": return `Fill "${tool.params.field || ""}"`;
-    case "scroll_to": return `Scroll to "${tool.params.target || ""}"`;
-    case "highlight": return `Highlight "${tool.params.target || ""}"`;
-    case "submit_form": return `Submit form`;
-    case "scroll_page": return `Scroll ${tool.params.direction || "down"}`;
-    case "toggle": return `Toggle "${tool.params.target || ""}"`;
-    case "select_option": return `Select "${tool.params.value || ""}" in "${tool.params.field || ""}"`;
-    case "clear_field": return `Clear "${tool.params.field || ""}"`;
-    case "open_modal": return `Open "${tool.params.target || ""}"`;
-    case "close_modal": return `Close dialog`;
-    case "wait": return `Wait ${tool.params.seconds || "1"}s`;
-    case "query_data": return `Query: ${tool.params.table || ""} data`;
-    case "read_page": return `Read page: ${tool.params.path || ""}`;
-    default: return tool.type;
-  }
-}
+// ─── Custom Tools (OpenAI Function Schemas) ─────────────────────────────────
+// These are executed on the FRONTEND. Built-in tools (web_search, web_extract,
+// image_generation) are handled by the backend automatically.
 
-function toolIcon(type: string) {
-  switch (type) {
-    case "web_search": return Search;
-    case "web_extract": return Globe;
-    case "navigate": return Navigation;
-    case "click": case "open_modal": case "close_modal": return MousePointerClick;
-    case "fill": case "clear_field": case "select_option": return FormInput;
-    case "scroll_to": case "scroll_page": return ScrollText;
-    case "highlight": return Eye;
-    case "toggle": case "submit_form": return Zap;
-    case "wait": return Loader2;
-    case "query_data": return FileText;
-    case "read_page": return ScanSearch;
-    default: return Play;
-  }
-}
+const CUSTOM_TOOLS = [
+  {
+    type: "function" as const,
+    function: {
+      name: "navigate",
+      description: "Navigate to a route within the application and stay there. Use paths like /dashboard/candidate/growth, /dashboard/mentor/mentees, etc.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "The route path to navigate to, e.g. /dashboard/candidate/growth" },
+        },
+        required: ["path"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "read_page",
+      description: "Load a page in a hidden iframe, extract ALL its content (headings, stats, tables, lists, text), then return the extracted content. Use this to read data from another page without navigating away from the current page.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "The route path to read, e.g. /dashboard/candidate/growth" },
+        },
+        required: ["path"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "click",
+      description: "Click a button, link, or interactive element on the current page. Use the visible text, aria-label, id, or CSS selector to identify the element.",
+      parameters: {
+        type: "object",
+        properties: {
+          target: { type: "string", description: "The button text, link text, aria-label, id, or CSS selector of the element to click" },
+        },
+        required: ["target"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "fill",
+      description: "Fill a form input or textarea with a value. Identify the field by its name, id, placeholder, aria-label, or associated label text.",
+      parameters: {
+        type: "object",
+        properties: {
+          field: { type: "string", description: "The field name, id, placeholder, or label text" },
+          value: { type: "string", description: "The value to fill in" },
+        },
+        required: ["field", "value"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "clear_field",
+      description: "Clear a form input or textarea.",
+      parameters: {
+        type: "object",
+        properties: {
+          field: { type: "string", description: "The field name, id, placeholder, or label text" },
+        },
+        required: ["field"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "select_option",
+      description: "Select an option in a dropdown/select element.",
+      parameters: {
+        type: "object",
+        properties: {
+          field: { type: "string", description: "The select field name, id, or label text" },
+          value: { type: "string", description: "The option value or text to select" },
+        },
+        required: ["field", "value"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "toggle",
+      description: "Toggle a checkbox, switch, or similar element.",
+      parameters: {
+        type: "object",
+        properties: {
+          target: { type: "string", description: "The element text, label, id, or selector" },
+        },
+        required: ["target"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "submit_form",
+      description: "Submit a form on the page.",
+      parameters: {
+        type: "object",
+        properties: {
+          selector: { type: "string", description: "CSS selector for the form (defaults to 'form')", default: "form" },
+        },
+        required: [],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "scroll_to",
+      description: "Scroll to a specific element on the page and highlight it.",
+      parameters: {
+        type: "object",
+        properties: {
+          target: { type: "string", description: "The element text, id, or selector to scroll to" },
+        },
+        required: ["target"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "scroll_page",
+      description: "Scroll the page in a direction.",
+      parameters: {
+        type: "object",
+        properties: {
+          direction: { type: "string", enum: ["up", "down", "top", "bottom"], description: "Scroll direction", default: "down" },
+          amount: { type: "number", description: "Pixels to scroll (for up/down)", default: 400 },
+        },
+        required: [],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "highlight",
+      description: "Highlight an element on the page with a visual indicator and scroll it into view.",
+      parameters: {
+        type: "object",
+        properties: {
+          target: { type: "string", description: "The element text, id, or selector to highlight" },
+        },
+        required: ["target"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "open_modal",
+      description: "Open a modal/dialog by clicking its trigger element.",
+      parameters: {
+        type: "object",
+        properties: {
+          target: { type: "string", description: "The trigger element text, id, or selector" },
+        },
+        required: ["target"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "close_modal",
+      description: "Close the currently open modal/dialog.",
+      parameters: {
+        type: "object",
+        properties: {},
+        required: [],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "wait",
+      description: "Wait for a specified number of seconds before continuing.",
+      parameters: {
+        type: "object",
+        properties: {
+          seconds: { type: "number", description: "Number of seconds to wait", default: 1 },
+        },
+        required: [],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "query_data",
+      description: "Query the user's data from the database. Only allowed tables related to the user's data. Returns up to 10 rows.",
+      parameters: {
+        type: "object",
+        properties: {
+          table: {
+            type: "string",
+            enum: ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"],
+            description: "The database table to query",
+          },
+        },
+        required: ["table"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "get_current_time",
+      description: "Get the current date and time in various timezones.",
+      parameters: {
+        type: "object",
+        properties: {
+          timezone: { type: "string", description: 'IANA timezone string, e.g. "America/New_York", "UTC"', default: "UTC" },
+          format: { type: "string", enum: ["12h", "24h"], description: "Time format", default: "12h" },
+        },
+        required: [],
+      },
+    },
+  },
+];
+
+const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
 // ─── DOM Helpers ─────────────────────────────────────────────────────────────
 
@@ -264,55 +466,38 @@ function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement, value: strin
   el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-// ─── Tool Executor ───────────────────────────────────────────────────────────
+// ─── Custom Tool Executor ───────────────────────────────────────────────────
 
-async function executeTool(
-  tool: ParsedTool,
-  navigate: ReturnType<typeof useNavigate>,
+async function executeCustomTool(
+  name: string,
+  args: Record<string, unknown>,
+  navigateFn: ReturnType<typeof useNavigate>,
   userContext: UserContext
 ): Promise<string> {
   const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-  switch (tool.type) {
-    case "web_search": {
-      const query = tool.params.query || "";
-      if (!query) return "Error: No search query provided";
+  switch (name) {
+    case "get_current_time": {
+      const tz = (args.timezone as string) || "UTC";
+      const fmt = (args.format as string) || "12h";
       try {
-        const searchUrl = `https://r.jina.ai/https://html.duckduckgo.com/html?q=${encodeURIComponent(query)}`;
-        const res = await fetch(searchUrl, {
-          headers: { "Accept": "text/plain", "X-Return-Format": "text" },
-        });
-        if (!res.ok) return `Search failed (${res.status})`;
-        const text = await res.text();
-        // Trim to reasonable size
-        return text.slice(0, 3000) || "No results found";
-      } catch (e) {
-        return `Search error: ${(e as Error).message}`;
-      }
-    }
-
-    case "web_extract": {
-      const url = tool.params.url || "";
-      if (!url) return "Error: No URL provided";
-      try {
-        const extractUrl = `https://r.jina.ai/${url}`;
-        const res = await fetch(extractUrl, {
-          headers: { "Accept": "text/plain", "X-Return-Format": "text" },
-        });
-        if (!res.ok) return `Extraction failed (${res.status})`;
-        const text = await res.text();
-        return text.slice(0, 4000) || "No content extracted";
-      } catch (e) {
-        return `Extraction error: ${(e as Error).message}`;
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = {
+          timeZone: tz, weekday: "long", year: "numeric", month: "long",
+          day: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit",
+          hour12: fmt === "12h",
+        };
+        const formatted = new Intl.DateTimeFormat("en-US", options).format(now);
+        return JSON.stringify({ timezone: tz, formatted, iso: now.toISOString(), unix: Math.floor(now.getTime() / 1000) });
+      } catch {
+        return JSON.stringify({ error: `Invalid timezone: ${tz}` });
       }
     }
 
     case "query_data": {
-      const table = tool.params.table || "";
-      const filter = tool.params.filter || "";
+      const table = args.table as string || "";
       if (!table) return "Error: No table specified";
       try {
-        // For security, only allow reading specific tables related to the user
         const allowedTables = ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"];
         if (!allowedTables.includes(table)) return `Access denied: table "${table}" not queryable`;
         const userId = userContext.profile && (userContext.profile as Record<string, unknown>).id;
@@ -320,8 +505,6 @@ async function executeTool(
         const roleProfileId = userContext.roleProfile && (userContext.roleProfile as Record<string, unknown>).id;
         const userRole = userContext.profile && (userContext.profile as Record<string, unknown>).role;
         let query = supabase.from(table).select("*").limit(20);
-        // Tables that use the role profile ID (candidate_profiles.id, mentor_profiles.id, etc.)
-        // vs tables that use the auth user ID (profiles.id)
         const tablesUsingRoleProfileId = ["mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "liveworks_projects", "liveworks_applications"];
         const tableUserColumn: Record<string, string> = {
           growth_log_entries: "candidate_id",
@@ -335,13 +518,11 @@ async function executeTool(
           liveworks_projects: "employer_id",
           liveworks_applications: "candidate_id",
         };
-        if (!filter) {
-          const userCol = tableUserColumn[table] || "user_id";
-          const filterValue = tablesUsingRoleProfileId.includes(table) && roleProfileId
-            ? roleProfileId as string
-            : userId as string;
-          query = query.eq(userCol, filterValue);
-        }
+        const userCol = tableUserColumn[table] || "user_id";
+        const filterValue = tablesUsingRoleProfileId.includes(table) && roleProfileId
+          ? roleProfileId as string
+          : userId as string;
+        query = query.eq(userCol, filterValue);
         const { data, error } = await query;
         if (error) return `Query error: ${error.message}`;
         return JSON.stringify(data?.slice(0, 10) || [], null, 2);
@@ -351,17 +532,16 @@ async function executeTool(
     }
 
     case "navigate": {
-      const path = tool.params.path || "";
+      const path = args.path as string || "";
       if (!path) return "Error: No path specified";
-      navigate(path);
+      navigateFn(path);
       await delay(300);
       return `Navigated to ${path}`;
     }
 
     case "read_page": {
-      const pagePath = tool.params.path || "";
+      const pagePath = args.path as string || "";
       if (!pagePath) return "Error: No path specified";
-      // Use a hidden iframe to load the page without navigating away (preserves agent state)
       try {
         const fullUrl = `${window.location.origin}${pagePath}`;
         const iframe = document.createElement("iframe");
@@ -369,23 +549,14 @@ async function executeTool(
         document.body.appendChild(iframe);
 
         const extracted = await new Promise<string>((resolve) => {
-          const timeout = setTimeout(() => {
-            cleanup();
-            resolve("Error: Page load timed out after 8 seconds");
-          }, 8000);
-
-          const cleanup = () => {
-            clearTimeout(timeout);
-            try { document.body.removeChild(iframe); } catch { /* */ }
-          };
+          const timeout = setTimeout(() => { cleanup(); resolve("Error: Page load timed out after 8 seconds"); }, 8000);
+          const cleanup = () => { clearTimeout(timeout); try { document.body.removeChild(iframe); } catch { /* */ } };
 
           iframe.onload = () => {
-            // Wait a bit for React to render inside the iframe
             setTimeout(() => {
               try {
                 const doc = iframe.contentDocument;
                 if (!doc) { cleanup(); resolve("Error: Could not access page content"); return; }
-
                 const pageHeadings = Array.from(doc.querySelectorAll("h1, h2, h3"))
                   .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t ? `${el.tagName}: ${t}` : null; })
                   .filter(Boolean).slice(0, 20);
@@ -419,17 +590,11 @@ async function executeTool(
                 cleanup();
                 resolve(`Error reading page: ${(e as Error).message}`);
               }
-            }, 2000); // Allow 2s for React rendering inside iframe
+            }, 2000);
           };
-
-          iframe.onerror = () => {
-            cleanup();
-            resolve("Error: Failed to load page");
-          };
-
+          iframe.onerror = () => { cleanup(); resolve("Error: Failed to load page"); };
           iframe.src = fullUrl;
         });
-
         return extracted;
       } catch (e) {
         return `Error: ${(e as Error).message}`;
@@ -437,60 +602,60 @@ async function executeTool(
     }
 
     case "click": {
-      const el = findElement(tool.params.target || "");
-      if (!el) return `Element "${tool.params.target}" not found on page`;
+      const el = findElement(args.target as string || "");
+      if (!el) return `Element "${args.target}" not found on page`;
       highlightElement(el, 1000);
       await delay(400);
       el.click();
-      return `Clicked "${tool.params.target}"`;
+      return `Clicked "${args.target}"`;
     }
 
     case "scroll_to": {
-      const el = findElement(tool.params.target || "");
-      if (!el) return `Element "${tool.params.target}" not found`;
+      const el = findElement(args.target as string || "");
+      if (!el) return `Element "${args.target}" not found`;
       highlightElement(el, 2500);
-      return `Scrolled to "${tool.params.target}"`;
+      return `Scrolled to "${args.target}"`;
     }
 
     case "fill": {
-      const el = findElement(tool.params.field || "");
-      if (!el) return `Field "${tool.params.field}" not found`;
+      const el = findElement(args.field as string || "");
+      if (!el) return `Field "${args.field}" not found`;
       if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
         highlightElement(el, 1500);
         await delay(200);
         (el as HTMLInputElement).focus();
-        setNativeValue(el as HTMLInputElement, tool.params.value || "");
-        return `Filled "${tool.params.field}" with "${tool.params.value || ""}"`;
+        setNativeValue(el as HTMLInputElement, args.value as string || "");
+        return `Filled "${args.field}" with "${args.value || ""}"`;
       }
-      return `"${tool.params.field}" is not an input field`;
+      return `"${args.field}" is not an input field`;
     }
 
     case "clear_field": {
-      const el = findElement(tool.params.field || "");
-      if (!el || (el.tagName !== "INPUT" && el.tagName !== "TEXTAREA")) return `Field "${tool.params.field}" not found`;
+      const el = findElement(args.field as string || "");
+      if (!el || (el.tagName !== "INPUT" && el.tagName !== "TEXTAREA")) return `Field "${args.field}" not found`;
       setNativeValue(el as HTMLInputElement, "");
-      return `Cleared "${tool.params.field}"`;
+      return `Cleared "${args.field}"`;
     }
 
     case "select_option": {
-      const el = findElement(tool.params.field || "") as HTMLSelectElement | null;
-      if (!el || el.tagName !== "SELECT") return `Select "${tool.params.field}" not found`;
-      const opt = Array.from(el.options).find(o => o.value.toLowerCase() === (tool.params.value || "").toLowerCase() || o.text.toLowerCase() === (tool.params.value || "").toLowerCase());
-      if (!opt) return `Option "${tool.params.value}" not found`;
+      const el = findElement(args.field as string || "") as HTMLSelectElement | null;
+      if (!el || el.tagName !== "SELECT") return `Select "${args.field}" not found`;
+      const opt = Array.from(el.options).find(o => o.value.toLowerCase() === ((args.value as string) || "").toLowerCase() || o.text.toLowerCase() === ((args.value as string) || "").toLowerCase());
+      if (!opt) return `Option "${args.value}" not found`;
       el.value = opt.value;
       el.dispatchEvent(new Event("change", { bubbles: true }));
       return `Selected "${opt.text}"`;
     }
 
     case "toggle": {
-      const el = findElement(tool.params.target || "");
-      if (!el) return `"${tool.params.target}" not found`;
+      const el = findElement(args.target as string || "");
+      if (!el) return `"${args.target}" not found`;
       el.click();
-      return `Toggled "${tool.params.target}"`;
+      return `Toggled "${args.target}"`;
     }
 
     case "submit_form": {
-      const form = document.querySelector(tool.params.selector || "form") as HTMLFormElement;
+      const form = document.querySelector(args.selector as string || "form") as HTMLFormElement;
       if (!form) return "No form found on page";
       const submitBtn = form.querySelector("button[type='submit'], button:not([type]), input[type='submit']");
       if (submitBtn) { (submitBtn as HTMLElement).click(); return "Form submitted via button"; }
@@ -499,15 +664,15 @@ async function executeTool(
     }
 
     case "highlight": {
-      const el = findElement(tool.params.target || "");
-      if (!el) return `"${tool.params.target}" not found`;
+      const el = findElement(args.target as string || "");
+      if (!el) return `"${args.target}" not found`;
       highlightElement(el, 3000);
-      return `Highlighted "${tool.params.target}"`;
+      return `Highlighted "${args.target}"`;
     }
 
     case "scroll_page": {
-      const dir = (tool.params.direction || "down").toLowerCase();
-      const amt = parseInt(tool.params.amount || "400");
+      const dir = ((args.direction as string) || "down").toLowerCase();
+      const amt = Number(args.amount) || 400;
       if (dir === "top") window.scrollTo({ top: 0, behavior: "smooth" });
       else if (dir === "bottom") window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       else if (dir === "up") window.scrollBy({ top: -amt, behavior: "smooth" });
@@ -516,10 +681,10 @@ async function executeTool(
     }
 
     case "open_modal": {
-      const el = findElement(tool.params.target || "");
-      if (!el) return `"${tool.params.target}" not found`;
+      const el = findElement(args.target as string || "");
+      if (!el) return `"${args.target}" not found`;
       el.click();
-      return `Opened "${tool.params.target}"`;
+      return `Opened "${args.target}"`;
     }
 
     case "close_modal": {
@@ -530,14 +695,96 @@ async function executeTool(
     }
 
     case "wait": {
-      const s = parseFloat(tool.params.seconds || "1");
+      const s = Number(args.seconds) || 1;
       await delay(s * 1000);
       return `Waited ${s}s`;
     }
 
     default:
-      return `Unknown tool: ${tool.type}`;
+      return JSON.stringify({ error: `Unknown tool: ${name}` });
   }
+}
+
+// ─── SSE Stream Consumer ────────────────────────────────────────────────────
+
+async function consumeStream(
+  body: ReadableStream<Uint8Array>,
+  onToken: (token: string) => void,
+  onStatus: (status: StatusEvent) => void
+): Promise<StreamResult> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let content = "";
+  const toolCalls: (OpenAIToolCall & { _argFragments: string })[] = [];
+  let finishReason: string | null = null;
+  const statuses: StatusEvent[] = [];
+  let continuation: ContinuationState | undefined;
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() || "";
+
+    for (const line of lines) {
+      if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+
+      try {
+        const chunk = JSON.parse(line.slice(6));
+        const delta = chunk.choices?.[0]?.delta;
+        const reason = chunk.choices?.[0]?.finish_reason;
+
+        if (reason) finishReason = reason;
+
+        if (delta?.continuation) {
+          continuation = delta.continuation;
+        }
+
+        if (delta?.content) {
+          content += delta.content;
+          onToken(delta.content);
+        }
+
+        if (delta?.custom_status) {
+          statuses.push(delta.custom_status);
+          onStatus(delta.custom_status);
+        }
+
+        if (delta?.tool_calls) {
+          for (const tc of delta.tool_calls) {
+            const idx = tc.index ?? 0;
+            if (!toolCalls[idx]) {
+              toolCalls[idx] = {
+                id: tc.id || "",
+                type: tc.type || "function",
+                function: { name: tc.function?.name || "", arguments: "" },
+                _argFragments: "",
+              };
+            }
+            if (tc.id) toolCalls[idx].id = tc.id;
+            if (tc.function?.name) toolCalls[idx].function.name = tc.function.name;
+            if (tc.function?.arguments) {
+              toolCalls[idx]._argFragments += tc.function.arguments;
+              toolCalls[idx].function.arguments = toolCalls[idx]._argFragments;
+            }
+          }
+        }
+      } catch {
+        // skip malformed chunks
+      }
+    }
+  }
+
+  return {
+    content,
+    toolCalls: toolCalls.filter(Boolean).map(({ _argFragments, ...tc }) => tc),
+    finishReason,
+    statuses,
+    continuation,
+  };
 }
 
 // ─── Page Context ────────────────────────────────────────────────────────────
@@ -588,10 +835,9 @@ async function loadUserContext(userId: string, role: string): Promise<UserContex
     ctx.profile = profile;
 
     if (role === "candidate") {
-      // First get the candidate_profiles.id (different from profiles.id / auth user ID)
       const { data: cp } = await supabase.from("candidate_profiles").select("*").eq("profile_id", userId).single();
       ctx.roleProfile = cp;
-      const cpId = cp?.id; // candidate_profiles.id used as FK in other tables
+      const cpId = cp?.id;
       if (cpId) {
         const [gl, ma, tp, sp, conn] = await Promise.all([
           supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).order("created_at", { ascending: false }).limit(20),
@@ -626,7 +872,6 @@ async function loadUserContext(userId: string, role: string): Promise<UserContex
       const { data: sp } = await supabase.from("school_profiles").select("*").eq("profile_id", userId).single();
       ctx.roleProfile = sp;
     } else if (role === "admin") {
-      // Admin gets a summary
       const [users, candidates, mentors] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("candidate_profiles").select("*", { count: "exact", head: true }),
@@ -635,10 +880,8 @@ async function loadUserContext(userId: string, role: string): Promise<UserContex
       ctx.roleProfile = { totalUsers: users.count, totalCandidates: candidates.count, totalMentors: mentors.count } as Record<string, unknown>;
     }
 
-    // Notifications for all
     const { data: notifs } = await supabase.from("notifications").select("*").eq("user_id", userId).eq("is_read", false).order("created_at", { ascending: false }).limit(5);
     ctx.notifications = notifs;
-
   } catch (e) {
     console.error("Failed to load user context:", e);
   }
@@ -714,7 +957,8 @@ function summarizeUserContext(ctx: UserContext, role: string): string {
 // ─── System Prompt ───────────────────────────────────────────────────────────
 
 function buildAgentPrompt(userContextSummary: string, pageContext: string, role: string): string {
-  return `You are Academy Agent — a powerful AI assistant embedded in The 3rd Academy platform. You have full access to the user's data, can interact with the page, search the web, and extract web content. You are proactive, capable, and action-oriented.
+  const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
+  return `You are Academy Agent — a powerful AI assistant embedded in The 3rd Academy platform. You have full access to the user's data, can interact with the page DOM, search the web, and extract web content. You are proactive, capable, and action-oriented.
 
 ## Platform Knowledge
 The 3rd Academy bridges credentials and workplace readiness through mentor-gated behavioral validation.
@@ -733,65 +977,23 @@ ${userContextSummary}
 ## Current Screen
 ${pageContext}
 
-## Your Tools
-You have powerful tools you can invoke. Embed tool calls in your response using this EXACT syntax:
-[[TOOL:tool_name|param1=value1|param2=value2]]
+## Your Capabilities
+You have access to powerful tools that let you:
+- **Search the web** and **extract web pages** (built-in — just call web_search or web_extract)
+- **Navigate** the app, **read pages** without navigating, **interact with DOM** elements (click, fill, scroll, highlight, etc.)
+- **Query the user's database** for growth logs, training progress, mentor data, etc.
+- **Generate images** (built-in)
+- **Get current time** in any timezone
 
-### Available Tools
-
-**Web Tools (results are sent back to you for synthesis):**
-- [[TOOL:web_search|query=search terms]] — Search the web via DuckDuckGo. Results come back to you.
-- [[TOOL:web_extract|url=https://example.com]] — Extract and read a webpage's content. Results come back to you.
-
-**Data Tools (results come back to you):**
-- [[TOOL:query_data|table=growth_log_entries]] — Query user's data from database. Allowed tables: growth_log_entries, bridgefast_progress, mentor_assignments, mentor_observations, endorsements, skill_passports, t3x_connections, notifications, liveworks_projects, liveworks_applications.
-- [[TOOL:read_page|path=/dashboard/${role}/growth]] — Navigate to a page, extract ALL its content (headings, stats, tables, lists, text), then return to the current page. Results come back to you for synthesis. Use this when you need data from another page without staying there.
-
-**DOM Interaction Tools (execute on page, results come back to you):**
-- [[TOOL:navigate|path=/dashboard/${role}/growth]] — Navigate to a route and stay there
-- [[TOOL:click|target=button text]] — Click a button/link
-- [[TOOL:fill|field=email|value=user@example.com]] — Fill a form field
-- [[TOOL:clear_field|field=field name]] — Clear a field
-- [[TOOL:select_option|field=select name|value=option]] — Select dropdown
-- [[TOOL:toggle|target=element]] — Toggle checkbox/switch
-- [[TOOL:submit_form|selector=form]] — Submit a form
-- [[TOOL:scroll_to|target=element]] — Scroll to element
-- [[TOOL:scroll_page|direction=down|amount=400]] — Scroll page
-- [[TOOL:highlight|target=element]] — Highlight element
-- [[TOOL:open_modal|target=trigger text]] — Open modal
-- [[TOOL:close_modal|]] — Close modal
-- [[TOOL:wait|seconds=2]] — Wait
-
-## CRITICAL Rules
-1. ALWAYS use [[TOOL:...]] syntax. Never write plain text like "Click here" or "I'll search" without the tool tag.
-2. ALL tool results come BACK to you after execution — web search results, DOM action outcomes, data queries, everything.
-3. After receiving tool results, you MUST respond with a COMPLETE synthesis: confirm what happened, summarize data, or explain the outcome. NEVER leave the user without a final answer. NEVER stop mid-sentence or mid-thought.
-4. You can use MULTIPLE tools in one response. Combine tools when possible (e.g., search + extract in one message) to reduce round-trips.
-5. Be proactive: if the user says "find me a mentor in tech" → search for mentors AND navigate to the mentor page.
-6. Reference the user's actual data when answering questions about their progress, scores, etc.
-7. For the current user role (${role}), navigate within /dashboard/${role === "school_admin" ? "school" : role}/...
-8. When you need to fill forms, use exact field names from "Form Fields" in the screen context.
-9. When you get results back, SYNTHESIZE them into a clear, concise answer — don't dump raw content.
-10. You have personality: be helpful, confident, proactive. You're the user's AI co-pilot for their Academy journey.
-11. IMPORTANT: After tools run and results come back, always provide a COMPLETE, FINISHED response. Do NOT stop halfway. If you searched for something, fully explain the findings. If you extracted a page, fully summarize the content. Complete your entire answer in one response.
-12. When doing multi-step tasks (search → extract → analyze), plan ahead: use web_search first, then if needed [[TOOL:web_extract|url=...]] in the same response or the next one, and then synthesize ALL results into one final comprehensive answer.
-
-## Example Responses
-
-User: "What's the latest news on AI in hiring?"
-Assistant: "Let me search for that! [[TOOL:web_search|query=latest AI hiring news 2026]]"
-
-User: "Show me my growth log"
-Assistant: "Opening your Growth Log now! [[TOOL:navigate|path=/dashboard/${role === "school_admin" ? "school" : role}/growth]]"
-
-User: "Fill in my name on this form"
-Assistant: "Filling in your name. [[TOOL:fill|field=name|value=${(userContextSummary.match(/User: (\w+ \w+)/) || [])[1] || "User"}]]"
-
-User: "What's on this webpage?" (shares URL)
-Assistant: "Let me extract that page for you. [[TOOL:web_extract|url=<the url>]]"
-
-User: "How many growth log entries do I have?"
-Assistant: Based on your data, you have ${role === "candidate" ? "your growth log entries loaded" : "access to relevant data"}. Let me check the latest. [[TOOL:query_data|table=growth_log_entries]]`;
+## Important Guidelines
+1. Be proactive: if the user asks to find something, search AND navigate. Don't just describe — take action.
+2. Reference the user's actual data when answering questions about their progress.
+3. For this user role (${role}), navigate within ${dashboardBase}/...
+4. When you use read_page, synthesize the extracted content into a clear answer.
+5. After tool results come back, always provide a complete response. Never stop mid-thought.
+6. You can use MULTIPLE tools in one turn when needed.
+7. Be helpful, confident, and proactive. You're the user's AI co-pilot for their Academy journey.
+8. When doing multi-step tasks, plan ahead and chain tools efficiently.`;
 }
 
 // ─── Quick Actions by Role ───────────────────────────────────────────────────
@@ -845,46 +1047,94 @@ function getQuickActions(role: string): { label: string; icon: typeof Bot; messa
   }
 }
 
+// ─── Tool display helpers ────────────────────────────────────────────────────
+
+function toolDisplayName(name: string, args: Record<string, unknown>): string {
+  switch (name) {
+    case "web_search": return `Search: "${args.query || ""}"`;
+    case "web_extract": return `Extract: ${args.url || ""}`;
+    case "navigate": return `Navigate to ${args.path || ""}`;
+    case "read_page": return `Read page: ${args.path || ""}`;
+    case "click": return `Click "${args.target || ""}"`;
+    case "fill": return `Fill "${args.field || ""}"`;
+    case "clear_field": return `Clear "${args.field || ""}"`;
+    case "select_option": return `Select "${args.value || ""}" in "${args.field || ""}"`;
+    case "toggle": return `Toggle "${args.target || ""}"`;
+    case "submit_form": return `Submit form`;
+    case "scroll_to": return `Scroll to "${args.target || ""}"`;
+    case "scroll_page": return `Scroll ${args.direction || "down"}`;
+    case "highlight": return `Highlight "${args.target || ""}"`;
+    case "open_modal": return `Open "${args.target || ""}"`;
+    case "close_modal": return `Close dialog`;
+    case "wait": return `Wait ${args.seconds || "1"}s`;
+    case "query_data": return `Query: ${args.table || ""} data`;
+    case "get_current_time": return `Get time (${args.timezone || "UTC"})`;
+    case "image_generation": return `Generate image`;
+    default: return name;
+  }
+}
+
+function toolIcon(name: string) {
+  switch (name) {
+    case "web_search": return Search;
+    case "web_extract": return Globe;
+    case "navigate": return Navigation;
+    case "read_page": return ScanSearch;
+    case "click": case "open_modal": case "close_modal": return MousePointerClick;
+    case "fill": case "clear_field": case "select_option": return FormInput;
+    case "scroll_to": case "scroll_page": return ScrollText;
+    case "highlight": return Eye;
+    case "toggle": case "submit_form": return Zap;
+    case "wait": return Loader2;
+    case "query_data": return FileText;
+    case "get_current_time": return Clock;
+    default: return Play;
+  }
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function AIAgent() {
   const { profile, user } = useAuth();
-  const navigate = useNavigate();
+  const navigateFn = useNavigate();
   const location = useLocation();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [userContext, setUserContext] = useState<UserContext | null>(null);
-  const [contextLoading, setContextLoading] = useState(true);
-  const [messagesLoaded, setMessagesLoaded] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const role = profile?.role || "candidate";
   const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
 
-  // Load persisted messages from IndexedDB on mount
+  // State
+  const [uiMessages, setUiMessages] = useState<UIMessage[]>([]);
+  const [apiMessages, setApiMessages] = useState<ApiMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingContent, setStreamingContent] = useState("");
+  const [activeStatuses, setActiveStatuses] = useState<StatusEvent[]>([]);
+  const [userContext, setUserContext] = useState<UserContext | null>(null);
+  const [contextLoading, setContextLoading] = useState(true);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
+
+  // Load persisted conversation from IndexedDB
   useEffect(() => {
-    loadMessages().then(stored => {
-      if (stored.length > 0) {
-        setMessages(stored);
+    loadConversation().then(stored => {
+      if (stored.apiMessages.length > 0) {
+        setApiMessages(stored.apiMessages);
+        setUiMessages(stored.uiMessages);
       }
-      setMessagesLoaded(true);
+      setDataLoaded(true);
     });
   }, []);
 
-  // Persist messages to IndexedDB whenever they change
+  // Persist conversation
   useEffect(() => {
-    if (messagesLoaded && messages.length > 0) {
-      saveMessages(messages);
+    if (dataLoaded) {
+      saveConversation(apiMessages, uiMessages);
     }
-    // Also persist empty state (clear chat)
-    if (messagesLoaded && messages.length === 0) {
-      saveMessages([]);
-    }
-  }, [messages, messagesLoaded]);
+  }, [apiMessages, uiMessages, dataLoaded]);
 
-  // Load user context on mount
+  // Load user context
   useEffect(() => {
     if (user?.id && profile?.role) {
       setContextLoading(true);
@@ -898,178 +1148,167 @@ export default function AIAgent() {
   // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping, isProcessing]);
+  }, [uiMessages, streamingContent, activeStatuses, isStreaming]);
 
   // Focus input
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (!isStreaming) inputRef.current?.focus();
+  }, [isStreaming]);
 
-  // Execute tools and return results to AI
-  const processToolCalls = useCallback(async (tools: ParsedTool[], _messageIndex: number): Promise<string[]> => {
-    const results: string[] = [];
+  // ─── Core: send request via /api/chat/completions ────────────────────────
 
-    // Helper: find the last assistant message with toolCalls (the one we're processing)
-    const updateLastToolMessage = (updater: (toolCalls: ToolCall[]) => ToolCall[]) => {
-      setMessages(prev => {
-        const updated = [...prev];
-        // Find last assistant message with toolCalls
-        for (let j = updated.length - 1; j >= 0; j--) {
-          if (updated[j].role === "assistant" && updated[j].toolCalls) {
-            updated[j] = { ...updated[j], toolCalls: updater(updated[j].toolCalls!) };
-            break;
-          }
-        }
-        return updated;
+  const sendRequest = useCallback(
+    async (messages: ApiMessage[], continuationState?: ContinuationState) => {
+      setIsStreaming(true);
+      if (!continuationState) {
+        setStreamingContent("");
+        setActiveStatuses([]);
+      }
+
+      const res = await fetch("/api/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages,
+          stream: true,
+          multistep: true,
+          max_steps: 60,
+          max_tokens: 16384,
+          tools: CUSTOM_TOOLS,
+          temperature: 0.7,
+          ...(continuationState ? { _continuation: continuationState } : {}),
+        }),
       });
-    };
 
-    for (let i = 0; i < tools.length; i++) {
-      const tool = tools[i];
-
-      // Mark running
-      updateLastToolMessage(tcs => tcs.map((tc, idx) =>
-        idx === i ? { ...tc, status: "running" as const } : tc
-      ));
-
-      const result = await executeTool(tool, navigate, userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null });
-      results.push(`[${tool.type} result]: ${result}`);
-
-      // Mark done
-      updateLastToolMessage(tcs => tcs.map((tc, idx) =>
-        idx === i ? { ...tc, status: result.startsWith("Error") || result.includes("not found") ? "error" as const : "done" as const, result: result.slice(0, 200) } : tc
-      ));
-
-      // Brief pause between tools
-      if (i < tools.length - 1) {
-        await new Promise(r => setTimeout(r, 300));
+      if (!res.ok || !res.body) {
+        const errorText = await res.text();
+        setIsStreaming(false);
+        setUiMessages(prev => [
+          ...prev,
+          { role: "assistant", content: `Error: ${res.status} ${errorText}`, timestamp: new Date() },
+        ]);
+        return { messages, done: true };
       }
-    }
 
-    return results;
-  }, [navigate, userContext]);
+      const allStatuses: StatusEvent[] = [];
 
-  // Send message + handle tool loop
-  const sendMessage = useCallback(async (content: string) => {
-    if (!content.trim() || isTyping || isProcessing) return;
-
-    const userMsg: Message = { role: "user", content: content.trim(), timestamp: new Date() };
-    setMessages(prev => [...prev, userMsg]);
-    setInput("");
-    setIsTyping(true);
-
-    const userContextSummary = userContext ? summarizeUserContext(userContext, role) : "Loading user data...";
-    const pageContext = extractPageContext();
-    const systemPrompt = buildAgentPrompt(userContextSummary, pageContext, role);
-
-    // Build conversation for API
-    const buildApiMessages = (msgs: Message[]) => {
-      const apiMsgs: { role: string; content: string }[] = [
-        { role: "system", content: systemPrompt },
-      ];
-      // Only include the last 20 messages to prevent context overflow
-      const recentMsgs = msgs.slice(-20);
-      for (let i = 0; i < recentMsgs.length; i++) {
-        const m = recentMsgs[i];
-        if (m.role === "tool") {
-          // Truncate older tool results more aggressively; keep recent ones fuller
-          const isRecent = i >= recentMsgs.length - 4;
-          const maxLen = isRecent ? 3000 : 800;
-          const content = m.content.length > maxLen ? m.content.slice(0, maxLen) + "\n...[truncated]" : m.content;
-          apiMsgs.push({ role: "user", content: `[Tool Results]\n${content}` });
-        } else {
-          apiMsgs.push({ role: m.role, content: m.content });
+      const result = await consumeStream(
+        res.body,
+        (token) => setStreamingContent(prev => prev + token),
+        (status) => {
+          allStatuses.push(status);
+          setActiveStatuses([...allStatuses]);
         }
+      );
+
+      // Continuation: server timed out, seamlessly re-request
+      if (result.finishReason === "continuation" && result.continuation) {
+        return sendRequest(messages, result.continuation);
       }
-      return apiMsgs;
-    };
 
-    let currentMessages = [...messages, userMsg];
-    let loopCount = 0;
-    const maxLoops = 20; // Allow enough loops for complex multi-step tasks
+      setStreamingContent("");
+      setActiveStatuses([]);
+      setIsStreaming(false);
 
-    while (loopCount < maxLoops) {
-      loopCount++;
+      // Build assistant API message
+      const assistantApiMsg: ApiMessage = {
+        role: "assistant",
+        content: result.content || null,
+      };
+      if (result.toolCalls.length > 0) {
+        assistantApiMsg.tool_calls = result.toolCalls;
+      }
+      const updatedMessages = [...messages, assistantApiMsg];
 
-      try {
-        const response = await fetch("https://api.a0.dev/ai/llm", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: buildApiMessages(currentMessages),
-            temperature: 0.7,
-            max_tokens: 2500,
-          }),
-        });
-
-        if (!response.ok) throw new Error("Failed to get response");
-
-        const data = await response.json();
-        const rawContent = data.completion || "Sorry, I encountered an error.";
-
-        // Parse tool calls
-        const { cleanText, tools } = parseToolCalls(rawContent);
-
-        const toolCalls: ToolCall[] = tools.map((t, i) => ({
-          id: `${t.type}-${Date.now()}-${i}`,
-          type: t.type as ToolCall["type"],
-          label: toolLabel(t),
-          params: t.params,
-          status: "pending" as const,
-        }));
-
-        const assistantMsg: Message = {
+      // If tool_calls finish reason → execute custom tools on frontend, loop
+      if (result.finishReason === "tool_calls" && result.toolCalls.length > 0) {
+        // Add UI message for the assistant response + tool calls
+        const uiMsg: UIMessage = {
           role: "assistant",
-          content: cleanText,
-          timestamp: new Date(),
-          toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
-        };
-
-        currentMessages = [...currentMessages, assistantMsg];
-
-        if (tools.length === 0) {
-          // No tools — final response, add to state and break
-          setMessages(prev => [...prev, assistantMsg]);
-          setIsTyping(false);
-          break;
-        }
-
-        // Has tools — add assistant msg, then execute tools
-        setMessages(prev => [...prev, assistantMsg]);
-        setIsTyping(false);
-        setIsProcessing(true);
-
-        // Use the React state length for message index tracking
-        const msgIdx = currentMessages.length - 1;
-        const results = await processToolCalls(tools, msgIdx);
-
-        // Add tool results to conversation for next synthesis call
-        const toolResultMsg: Message = {
-          role: "tool",
-          content: results.join("\n\n"),
+          content: result.content || "",
+          toolCalls: result.toolCalls,
+          statuses: result.statuses.length > 0 ? result.statuses : undefined,
           timestamp: new Date(),
         };
-        currentMessages = [...currentMessages, toolResultMsg];
-        setMessages(prev => [...prev, toolResultMsg]);
-        setIsTyping(true);
-        setIsProcessing(false);
-        // Loop continues — AI will synthesize results
-      } catch (error) {
-        console.error("Agent error:", error);
-        setMessages(prev => [...prev, {
-          role: "assistant",
-          content: "Sorry, I encountered an error. Please try again.",
-          timestamp: new Date(),
-        }]);
-        setIsTyping(false);
-        setIsProcessing(false);
-        break;
-      }
-    }
+        setUiMessages(prev => [...prev, uiMsg]);
 
-    setIsTyping(false);
-    setIsProcessing(false);
-  }, [messages, isTyping, isProcessing, userContext, role, processToolCalls]);
+        // Execute custom tools on frontend
+        setIsStreaming(true);
+        setStreamingContent("");
+        setActiveStatuses([]);
+
+        const toolResultMessages: ApiMessage[] = [];
+        for (const tc of result.toolCalls) {
+          const args = JSON.parse(tc.function.arguments);
+          const toolResult = await executeCustomTool(
+            tc.function.name,
+            args,
+            navigateFn,
+            userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null }
+          );
+          toolResultMessages.push({
+            role: "tool",
+            tool_call_id: tc.id,
+            content: toolResult,
+          });
+        }
+
+        const messagesWithToolResults = [...updatedMessages, ...toolResultMessages];
+        setApiMessages(messagesWithToolResults);
+
+        // Continue the loop
+        return { messages: messagesWithToolResults, done: false };
+      }
+
+      // Normal stop — add to UI
+      const uiMsg: UIMessage = {
+        role: "assistant",
+        content: result.content || "",
+        statuses: result.statuses.length > 0 ? result.statuses : undefined,
+        timestamp: new Date(),
+      };
+      setUiMessages(prev => [...prev, uiMsg]);
+      setApiMessages(updatedMessages);
+
+      return { messages: updatedMessages, done: true };
+    },
+    [navigateFn, userContext]
+  );
+
+  // ─── Send message with tool loop ─────────────────────────────────────────
+
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isStreaming) return;
+
+      // Build system prompt with fresh page context
+      const userContextSummary = userContext ? summarizeUserContext(userContext, role) : "Loading user data...";
+      const pageContext = extractPageContext();
+      const systemPrompt = buildAgentPrompt(userContextSummary, pageContext, role);
+
+      const userApiMsg: ApiMessage = { role: "user", content: content.trim() };
+      const userUiMsg: UIMessage = { role: "user", content: content.trim(), timestamp: new Date() };
+
+      setUiMessages(prev => [...prev, userUiMsg]);
+      setInput("");
+
+      // Build API messages: system + recent conversation + new user message
+      // Only include the last 40 messages to prevent context overflow
+      const recentApiMessages = apiMessages.slice(-40);
+      const systemMsg: ApiMessage = { role: "system", content: systemPrompt };
+      let currentMessages: ApiMessage[] = [systemMsg, ...recentApiMessages, userApiMsg];
+      setApiMessages(prev => [...prev, userApiMsg]);
+
+      // Tool calling loop
+      let maxLoops = 30;
+      while (maxLoops-- > 0) {
+        const result = await sendRequest(currentMessages);
+        if (result.done) break;
+        currentMessages = [systemMsg, ...result.messages.slice(1)]; // keep system prompt at front
+      }
+    },
+    [apiMessages, isStreaming, sendRequest, userContext, role]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1083,10 +1322,14 @@ export default function AIAgent() {
     }
   };
 
-  const clearChat = () => setMessages([]);
+  const clearChat = () => {
+    setUiMessages([]);
+    setApiMessages([]);
+    setStreamingContent("");
+    setActiveStatuses([]);
+  };
+
   const quickActions = getQuickActions(role);
-  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
-  const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
 
   const copyMessage = (text: string, idx: number) => {
     navigator.clipboard.writeText(text);
@@ -1104,68 +1347,83 @@ export default function AIAgent() {
   };
 
   const retryMessage = (idx: number) => {
-    // Find the last user message before this assistant message
-    const visibleMessages = messages.filter(m => m.role !== "tool");
+    // Find the last user UI message before this assistant message
     let userMsgContent = "";
     for (let i = idx; i >= 0; i--) {
-      if (visibleMessages[i]?.role === "user") {
-        userMsgContent = visibleMessages[i].content;
+      if (uiMessages[i]?.role === "user") {
+        userMsgContent = uiMessages[i].content;
         break;
       }
     }
     if (userMsgContent) {
       // Remove messages from the retried assistant onward
-      const targetMsg = visibleMessages[idx];
-      const realIdx = messages.indexOf(targetMsg);
-      if (realIdx >= 0) {
-        setMessages(prev => prev.slice(0, realIdx));
-        setTimeout(() => sendMessage(userMsgContent), 100);
-      }
+      setUiMessages(prev => prev.slice(0, idx));
+      // Also trim apiMessages correspondingly — remove from the last few
+      setApiMessages(prev => {
+        // Find and remove trailing messages
+        const trimCount = uiMessages.length - idx;
+        return prev.slice(0, Math.max(0, prev.length - trimCount));
+      });
+      setTimeout(() => sendMessage(userMsgContent), 100);
     }
   };
 
   const wordCount = (text: string) => text.trim().split(/\s+/).length;
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 200) + "px";
+  };
+
   // ─── Tool Call Badge ─────────────────────────────────────────────────────
 
-  function ToolBadge({ tc }: { tc: ToolCall }) {
-    const Icon = toolIcon(tc.type);
-    const colors = {
-      pending: "bg-gray-800/80 border-gray-700 text-gray-400",
-      running: "bg-indigo-950/80 border-indigo-500/50 text-indigo-300",
-      done: "bg-emerald-950/80 border-emerald-500/30 text-emerald-300",
-      error: "bg-red-950/80 border-red-500/30 text-red-300",
-    };
+  function ToolBadge({ tc }: { tc: OpenAIToolCall; }) {
+    let args: Record<string, unknown> = {};
+    try { args = JSON.parse(tc.function.arguments); } catch { /* */ }
+    const Icon = toolIcon(tc.function.name);
+    const label = toolDisplayName(tc.function.name, args);
 
     return (
       <motion.div
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs ${colors[tc.status]}`}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-emerald-500/30 text-emerald-300"
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         layout
       >
-        {tc.status === "running" ? <Loader2 className="w-3 h-3 animate-spin" />
-          : tc.status === "done" ? <CheckCircle2 className="w-3 h-3" />
-          : tc.status === "error" ? <AlertCircle className="w-3 h-3" />
-          : <Icon className="w-3 h-3" />}
-        <span className="font-medium">{tc.label}</span>
-        {tc.status === "done" && tc.result && (
-          <span className="text-emerald-400/60 truncate max-w-[180px]">— {tc.result}</span>
-        )}
-        {tc.status === "error" && tc.result && (
-          <span className="text-red-400/60 truncate max-w-[180px]">— {tc.result}</span>
-        )}
+        <CheckCircle2 className="w-3 h-3" />
+        <span className="font-medium">{label}</span>
       </motion.div>
+    );
+  }
+
+  // ─── Status Badge (for built-in tools executed by backend) ────────────
+
+  function StatusBadge({ status }: { status: StatusEvent }) {
+    const Icon = toolIcon(status.name);
+    const isDone = status.type === "tool_done";
+    const label = toolDisplayName(status.name, status.arguments || {});
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
+        isDone
+          ? "bg-emerald-950/60 border border-emerald-500/20 text-emerald-300"
+          : "bg-amber-950/60 border border-amber-500/20 text-amber-300"
+      }`}>
+        {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
+        {label}
+      </span>
     );
   }
 
   // ─── Message Action Buttons ─────────────────────────────────────────────
 
-  function MessageActions({ msg, idx, isUser }: { msg: Message; idx: number; isUser: boolean }) {
+  function MessageActions({ content, idx, isUser }: { content: string; idx: number; isUser: boolean }) {
     return (
       <div className={`flex items-center gap-1 mt-1.5 ${isUser ? "justify-end" : ""}`}>
         <button
-          onClick={() => copyMessage(msg.content, idx)}
+          onClick={() => copyMessage(content, idx)}
           className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
           title="Copy"
         >
@@ -1224,16 +1482,6 @@ export default function AIAgent() {
     );
   }
 
-  // ─── Auto-resize textarea ──────────────────────────────────────────────
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-    // Auto resize
-    const el = e.target;
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 200) + "px";
-  };
-
   // ─── Render ──────────────────────────────────────────────────────────────
 
   if (contextLoading) {
@@ -1251,11 +1499,11 @@ export default function AIAgent() {
   return (
     <div className="flex flex-col h-full w-full relative">
 
-      {/* Messages Area — scrollable, with bottom padding for fixed input */}
+      {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-6">
 
         {/* Empty state */}
-        {messages.length === 0 && (
+        {uiMessages.length === 0 && !isStreaming && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1316,7 +1564,7 @@ export default function AIAgent() {
         )}
 
         {/* Message List */}
-        {messages.filter(m => m.role !== "tool").map((msg, idx) => (
+        {uiMessages.map((msg, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 8 }}
@@ -1324,68 +1572,93 @@ export default function AIAgent() {
             className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
           >
             {msg.role === "assistant" ? (
-              /* ── Assistant Message — transparent, no bg/border ── */
               <div className="group">
                 <div className="flex items-start gap-3">
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Bot className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-gray-200">
-                      <MarkdownRenderer content={msg.content} />
-                    </div>
+                    {msg.content && (
+                      <div className="text-gray-200">
+                        <MarkdownRenderer content={msg.content} />
+                      </div>
+                    )}
 
-                    {/* Tool Call Badges */}
+                    {/* Built-in tool statuses */}
+                    {msg.statuses && msg.statuses.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {msg.statuses.filter(s => s.type === "tool_start").map((s, i) => (
+                          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/20 text-[11px] text-emerald-300">
+                            <Globe className="w-3 h-3" />
+                            {toolDisplayName(s.name, s.arguments || {})}
+                            <CheckCircle2 className="w-3 h-3" />
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Custom tool call badges */}
                     {msg.toolCalls && msg.toolCalls.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-3">
-                        {msg.toolCalls.map((tc, tIdx) => (
-                          <ToolBadge key={tIdx} tc={tc} />
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {msg.toolCalls.map((tc, i) => (
+                          <ToolBadge key={i} tc={tc} />
                         ))}
                       </div>
                     )}
 
                     {/* Action buttons — visible on hover */}
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <MessageActions msg={msg} idx={idx} isUser={false} />
+                      <MessageActions content={msg.content} idx={idx} isUser={false} />
                     </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              /* ── User Message — right-aligned bubble ── */
+            ) : msg.role === "user" ? (
               <div className="group max-w-[85%] inline-block">
                 <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-gray-200">
                   <UserMessageContent content={msg.content} idx={idx} />
                 </div>
-                {/* Action buttons */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <MessageActions msg={msg} idx={idx} isUser={true} />
+                  <MessageActions content={msg.content} idx={idx} isUser={true} />
                 </div>
               </div>
-            )}
+            ) : null}
           </motion.div>
         ))}
 
-        {/* Typing / Processing Indicator */}
-        {isTyping && (
+        {/* Streaming indicator */}
+        {isStreaming && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="max-w-2xl mx-auto"
           >
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <Bot className="w-3.5 h-3.5 text-white" />
               </div>
-              <div className="flex items-center gap-2 py-2">
-                <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-                <span className="text-xs text-gray-500">
-                  {isProcessing ? "Running tools..." : "Thinking"}
-                </span>
+              <div className="flex-1 min-w-0 text-gray-200">
+                {streamingContent ? (
+                  <MarkdownRenderer content={streamingContent} />
+                ) : (
+                  <div className="flex items-center gap-2 py-2">
+                    <div className="flex gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                    <span className="text-xs text-gray-500">Thinking</span>
+                  </div>
+                )}
+
+                {/* Active status events during streaming */}
+                {activeStatuses.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {activeStatuses.map((s, i) => (
+                      <StatusBadge key={i} status={s} />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -1394,7 +1667,7 @@ export default function AIAgent() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* ─── Fixed Bottom Input ─── Claude-style ─────────────────────────────── */}
+      {/* ─── Fixed Bottom Input ─── */}
       <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <div className="relative bg-[#1a1a2e] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 focus-within:border-indigo-500/30 focus-within:shadow-indigo-500/5 transition-all">
@@ -1403,10 +1676,10 @@ export default function AIAgent() {
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder={isProcessing ? "Agent is working..." : "Reply..."}
+              placeholder={isStreaming ? "Agent is working..." : "Reply..."}
               className="w-full bg-transparent px-4 pt-3.5 pb-12 text-sm text-white placeholder:text-gray-500 focus:outline-none resize-none min-h-[52px] max-h-[200px]"
               rows={1}
-              disabled={isTyping || isProcessing}
+              disabled={isStreaming}
             />
             <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
@@ -1422,7 +1695,7 @@ export default function AIAgent() {
                 >
                   <Plus className="w-4 h-4" />
                 </button>
-                {messages.length > 0 && (
+                {uiMessages.length > 0 && (
                   <button
                     type="button"
                     onClick={clearChat}
@@ -1434,18 +1707,18 @@ export default function AIAgent() {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {(isTyping || isProcessing) && (
+                {isStreaming && (
                   <span className="text-[10px] text-gray-500 flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    {isProcessing ? "Running tools" : "Thinking"}
+                    Streaming
                   </span>
                 )}
                 <motion.button
                   type="submit"
-                  disabled={!input.trim() || isTyping || isProcessing}
+                  disabled={!input.trim() || isStreaming}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
-                  whileHover={!input.trim() || isTyping || isProcessing ? {} : { scale: 1.05 }}
-                  whileTap={!input.trim() || isTyping || isProcessing ? {} : { scale: 0.95 }}
+                  whileHover={!input.trim() || isStreaming ? {} : { scale: 1.05 }}
+                  whileTap={!input.trim() || isStreaming ? {} : { scale: 0.95 }}
                 >
                   <ArrowUp className="w-4 h-4" />
                 </motion.button>
