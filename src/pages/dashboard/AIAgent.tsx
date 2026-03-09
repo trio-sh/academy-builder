@@ -28,6 +28,16 @@ import {
   RotateCcw,
   Trash2,
   Play,
+  Copy,
+  Check,
+  ThumbsUp,
+  ThumbsDown,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  ScanSearch,
+  Plus,
+  ArrowUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,7 +47,7 @@ import { supabase } from "@/lib/supabase";
 
 interface ToolCall {
   id: string;
-  type: "web_search" | "web_extract" | "navigate" | "click" | "fill" | "scroll_to" | "highlight" | "submit_form" | "scroll_page" | "toggle" | "select_option" | "clear_field" | "open_modal" | "close_modal" | "wait" | "query_data";
+  type: "web_search" | "web_extract" | "navigate" | "click" | "fill" | "scroll_to" | "highlight" | "submit_form" | "scroll_page" | "toggle" | "select_option" | "clear_field" | "open_modal" | "close_modal" | "wait" | "query_data" | "read_page";
   label: string;
   params: Record<string, string>;
   status: "pending" | "running" | "done" | "error";
@@ -111,6 +121,7 @@ function toolLabel(tool: ParsedTool): string {
     case "close_modal": return `Close dialog`;
     case "wait": return `Wait ${tool.params.seconds || "1"}s`;
     case "query_data": return `Query: ${tool.params.table || ""} data`;
+    case "read_page": return `Read page: ${tool.params.path || ""}`;
     default: return tool.type;
   }
 }
@@ -127,6 +138,7 @@ function toolIcon(type: string) {
     case "toggle": case "submit_form": return Zap;
     case "wait": return Loader2;
     case "query_data": return FileText;
+    case "read_page": return ScanSearch;
     default: return Play;
   }
 }
@@ -267,6 +279,46 @@ async function executeTool(
       navigate(path);
       await delay(300);
       return `Navigated to ${path}`;
+    }
+
+    case "read_page": {
+      const pagePath = tool.params.path || "";
+      if (!pagePath) return "Error: No path specified";
+      // Save current path, navigate to target, extract content, navigate back
+      const currentPath = window.location.pathname;
+      navigate(pagePath);
+      // Wait for page to render
+      await delay(1500);
+      // Extract the page content
+      const pageHeadings = Array.from(document.querySelectorAll("h1, h2, h3"))
+        .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t ? `${el.tagName}: ${t}` : null; })
+        .filter(Boolean).slice(0, 20);
+      const pageStats = Array.from(document.querySelectorAll("[class*='rounded-xl'], [class*='rounded-2xl'], [class*='stat'], [class*='card']"))
+        .map(el => { const t = (el as HTMLElement).innerText?.trim(); return t && t.length < 200 ? t.replace(/\n+/g, " | ") : null; })
+        .filter(Boolean).slice(0, 15);
+      const pageTables = Array.from(document.querySelectorAll("table")).map(table => {
+        const headers = Array.from(table.querySelectorAll("th")).map(th => (th as HTMLElement).innerText?.trim()).filter(Boolean);
+        const rows = Array.from(table.querySelectorAll("tbody tr")).slice(0, 10).map(row =>
+          Array.from(row.querySelectorAll("td")).map(td => (td as HTMLElement).innerText?.trim()).join(" | ")
+        );
+        return headers.length ? `Table [${headers.join(", ")}]:\n${rows.join("\n")}` : null;
+      }).filter(Boolean);
+      const pageLists = Array.from(document.querySelectorAll("ul, ol"))
+        .map(el => { const items = Array.from(el.querySelectorAll("li")).map(li => (li as HTMLElement).innerText?.trim()).slice(0, 10); return items.length > 0 ? items.join("\n- ") : null; })
+        .filter(Boolean).slice(0, 5);
+      const mainText = document.querySelector("main")?.innerText?.trim().slice(0, 2000) || document.body.innerText?.trim().slice(0, 2000) || "";
+      // Navigate back
+      navigate(currentPath);
+      await delay(300);
+      const extracted = [
+        `Page: ${pagePath}`,
+        pageHeadings.length ? `Headings:\n${pageHeadings.join("\n")}` : "",
+        pageStats.length ? `Stats/Cards:\n${pageStats.join("\n")}` : "",
+        pageTables.length ? `Tables:\n${pageTables.join("\n\n")}` : "",
+        pageLists.length ? `Lists:\n- ${pageLists.join("\n- ")}` : "",
+        mainText ? `Content:\n${mainText}` : "",
+      ].filter(Boolean).join("\n\n");
+      return extracted.slice(0, 5000) || "No content found on page";
     }
 
     case "click": {
@@ -570,9 +622,10 @@ You have powerful tools you can invoke. Embed tool calls in your response using 
 
 **Data Tools (results come back to you):**
 - [[TOOL:query_data|table=growth_log_entries]] — Query user's data from database. Allowed tables: growth_log_entries, bridgefast_progress, mentor_assignments, mentor_observations, endorsements, skill_passports, t3x_connections, notifications, liveworks_projects, liveworks_applications.
+- [[TOOL:read_page|path=/dashboard/${role}/growth]] — Navigate to a page, extract ALL its content (headings, stats, tables, lists, text), then return to the current page. Results come back to you for synthesis. Use this when you need data from another page without staying there.
 
 **DOM Interaction Tools (execute on page):**
-- [[TOOL:navigate|path=/dashboard/${role}/growth]] — Navigate to a route
+- [[TOOL:navigate|path=/dashboard/${role}/growth]] — Navigate to a route and stay there
 - [[TOOL:click|target=button text]] — Click a button/link
 - [[TOOL:fill|field=email|value=user@example.com]] — Fill a form field
 - [[TOOL:clear_field|field=field name]] — Clear a field
@@ -834,7 +887,7 @@ export default function AIAgent() {
         const results = await processToolCalls(tools, msgIdx);
 
         // Check if any tools return data that needs AI synthesis (web_search, web_extract, query_data)
-        const needsSynthesis = tools.some(t => ["web_search", "web_extract", "query_data"].includes(t.type));
+        const needsSynthesis = tools.some(t => ["web_search", "web_extract", "query_data", "read_page"].includes(t.type));
 
         if (needsSynthesis) {
           // Send results back to AI
@@ -883,13 +936,53 @@ export default function AIAgent() {
 
   const clearChat = () => setMessages([]);
   const quickActions = getQuickActions(role);
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
+
+  const copyMessage = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIdx(idx);
+    setTimeout(() => setCopiedIdx(null), 2000);
+  };
+
+  const toggleExpand = (idx: number) => {
+    setExpandedMsgs(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
+
+  const retryMessage = (idx: number) => {
+    // Find the last user message before this assistant message
+    const visibleMessages = messages.filter(m => m.role !== "tool");
+    let userMsgContent = "";
+    for (let i = idx; i >= 0; i--) {
+      if (visibleMessages[i]?.role === "user") {
+        userMsgContent = visibleMessages[i].content;
+        break;
+      }
+    }
+    if (userMsgContent) {
+      // Remove messages from the retried assistant onward
+      const targetMsg = visibleMessages[idx];
+      const realIdx = messages.indexOf(targetMsg);
+      if (realIdx >= 0) {
+        setMessages(prev => prev.slice(0, realIdx));
+        setTimeout(() => sendMessage(userMsgContent), 100);
+      }
+    }
+  };
+
+  const wordCount = (text: string) => text.trim().split(/\s+/).length;
 
   // ─── Tool Call Badge ─────────────────────────────────────────────────────
 
   function ToolBadge({ tc }: { tc: ToolCall }) {
     const Icon = toolIcon(tc.type);
     const colors = {
-      pending: "bg-gray-800/80 border-gray-600 text-gray-400",
+      pending: "bg-gray-800/80 border-gray-700 text-gray-400",
       running: "bg-indigo-950/80 border-indigo-500/50 text-indigo-300",
       done: "bg-emerald-950/80 border-emerald-500/30 text-emerald-300",
       error: "bg-red-950/80 border-red-500/30 text-red-300",
@@ -897,25 +990,100 @@ export default function AIAgent() {
 
     return (
       <motion.div
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs ${colors[tc.status]}`}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs ${colors[tc.status]}`}
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         layout
       >
-        {tc.status === "running" ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          : tc.status === "done" ? <CheckCircle2 className="w-3.5 h-3.5" />
-          : tc.status === "error" ? <AlertCircle className="w-3.5 h-3.5" />
-          : <Icon className="w-3.5 h-3.5" />}
+        {tc.status === "running" ? <Loader2 className="w-3 h-3 animate-spin" />
+          : tc.status === "done" ? <CheckCircle2 className="w-3 h-3" />
+          : tc.status === "error" ? <AlertCircle className="w-3 h-3" />
+          : <Icon className="w-3 h-3" />}
         <span className="font-medium">{tc.label}</span>
         {tc.status === "done" && tc.result && (
-          <span className="text-emerald-400/60 truncate max-w-[200px]">— {tc.result}</span>
+          <span className="text-emerald-400/60 truncate max-w-[180px]">— {tc.result}</span>
         )}
         {tc.status === "error" && tc.result && (
-          <span className="text-red-400/60 truncate max-w-[200px]">— {tc.result}</span>
+          <span className="text-red-400/60 truncate max-w-[180px]">— {tc.result}</span>
         )}
       </motion.div>
     );
   }
+
+  // ─── Message Action Buttons ─────────────────────────────────────────────
+
+  function MessageActions({ msg, idx, isUser }: { msg: Message; idx: number; isUser: boolean }) {
+    return (
+      <div className={`flex items-center gap-1 mt-1.5 ${isUser ? "justify-end" : ""}`}>
+        <button
+          onClick={() => copyMessage(msg.content, idx)}
+          className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+          title="Copy"
+        >
+          {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+        </button>
+        {!isUser && (
+          <>
+            <button className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors" title="Good response">
+              <ThumbsUp className="w-3.5 h-3.5" />
+            </button>
+            <button className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors" title="Bad response">
+              <ThumbsDown className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => retryMessage(idx)}
+              className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+              title="Retry"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // ─── User Message Content (with show more) ─────────────────────────────
+
+  function UserMessageContent({ content, idx }: { content: string; idx: number }) {
+    const isLong = wordCount(content) > 20;
+    const isExpanded = expandedMsgs.has(idx);
+
+    if (!isLong) {
+      return <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>;
+    }
+
+    const words = content.split(/\s+/);
+    const preview = words.slice(0, 20).join(" ");
+
+    return (
+      <div>
+        {isExpanded ? (
+          <div className="max-h-[200px] overflow-y-auto pr-1 custom-scrollbar">
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+          </div>
+        ) : (
+          <p className="text-sm leading-relaxed whitespace-pre-wrap">{preview}...</p>
+        )}
+        <button
+          onClick={() => toggleExpand(idx)}
+          className="flex items-center gap-1 mt-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+        >
+          {isExpanded ? <><ChevronUp className="w-3 h-3" /> Show less</> : <><ChevronDown className="w-3 h-3" /> Show more</>}
+        </button>
+      </div>
+    );
+  }
+
+  // ─── Auto-resize textarea ──────────────────────────────────────────────
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    // Auto resize
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 200) + "px";
+  };
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
@@ -932,94 +1100,54 @@ export default function AIAgent() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-2rem)] max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Bot className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              Academy Agent
-              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wider">
-                AI
-              </span>
-            </h1>
-            <p className="text-sm text-gray-400">
-              {isProcessing ? (
-                <span className="text-indigo-300 flex items-center gap-1">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Executing tools...
-                </span>
-              ) : isTyping ? (
-                <span className="text-purple-300 flex items-center gap-1">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Thinking...
-                </span>
-              ) : (
-                `Your AI co-pilot • ${profile?.first_name || "User"}'s assistant`
-              )}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {messages.length > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearChat}
-              className="text-gray-400 hover:text-white gap-1.5"
-            >
-              <Trash2 className="w-4 h-4" />
-              Clear
-            </Button>
-          )}
-        </div>
-      </div>
+    <div className="flex flex-col h-[calc(100vh-2rem)] max-w-4xl mx-auto relative">
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+      {/* Messages Area — scrollable, with bottom padding for fixed input */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-44 space-y-6">
+
+        {/* Empty state */}
         {messages.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mx-auto"
+            className="max-w-2xl mx-auto"
           >
-            <div className="text-center mb-8 pt-8">
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20 flex items-center justify-center mx-auto mb-5 border border-indigo-500/20">
-                <Sparkles className="w-10 h-10 text-indigo-400" />
+            <div className="text-center mb-8 pt-12">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20 flex items-center justify-center mx-auto mb-5 border border-indigo-500/20">
+                <Sparkles className="w-8 h-8 text-indigo-400" />
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">
-                Hey {profile?.first_name || "there"}! I'm your Academy Agent.
+                Hey {profile?.first_name || "there"}!
               </h2>
-              <p className="text-gray-400 max-w-lg mx-auto">
-                I know your profile, can search the web, navigate pages, fill forms, and help you with anything on the platform. What would you like to do?
+              <p className="text-gray-400 max-w-md mx-auto text-sm">
+                I'm your Academy Agent. I can search the web, read pages across your dashboard, query your data, and help you with anything on the platform.
               </p>
             </div>
 
-            {/* Quick Actions Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
               {quickActions.map((qa) => (
                 <motion.button
                   key={qa.label}
                   onClick={() => sendMessage(qa.message)}
-                  className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-black/40 border border-white/10 hover:border-indigo-500/30 hover:bg-indigo-950/20 transition-all text-center group"
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="flex flex-col items-center gap-2 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-indigo-500/30 hover:bg-indigo-950/20 transition-all text-center group"
+                  whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <qa.icon className="w-5 h-5 text-gray-400 group-hover:text-indigo-400 transition-colors" />
-                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{qa.label}</span>
+                  <qa.icon className="w-4.5 h-4.5 text-gray-500 group-hover:text-indigo-400 transition-colors" />
+                  <span className="text-xs text-gray-400 group-hover:text-white transition-colors leading-tight">{qa.label}</span>
                 </motion.button>
               ))}
             </div>
 
-            {/* Context Summary Card */}
+            {/* Context Card */}
             {userContext && (
-              <div className="mt-8 p-4 rounded-2xl bg-black/30 border border-white/5">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 font-semibold">Your Context (what I know about you)</p>
-                <div className="text-xs text-gray-400 space-y-1">
+              <div className="mt-6 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-[10px] text-gray-600 uppercase tracking-wider mb-1.5 font-semibold">Your context</p>
+                <div className="text-xs text-gray-500 space-y-0.5">
                   {userContext.profile && (
                     <p>
-                      <span className="text-gray-300">{(userContext.profile as Record<string, unknown>).first_name} {(userContext.profile as Record<string, unknown>).last_name}</span>
+                      <span className="text-gray-400">{(userContext.profile as Record<string, unknown>).first_name} {(userContext.profile as Record<string, unknown>).last_name}</span>
                       {" — "}
                       <span className="capitalize">{role}</span>
                       {(userContext.profile as Record<string, unknown>).location && ` • ${(userContext.profile as Record<string, unknown>).location}`}
@@ -1027,13 +1155,11 @@ export default function AIAgent() {
                   )}
                   {role === "candidate" && userContext.roleProfile && (
                     <p>
-                      Tier: <span className="text-indigo-300 capitalize">{(userContext.roleProfile as Record<string, unknown>).current_tier || "None"}</span>
+                      Tier: <span className="text-indigo-400 capitalize">{(userContext.roleProfile as Record<string, unknown>).current_tier || "None"}</span>
                       {" • Skills: "}{((userContext.roleProfile as Record<string, unknown>).skills as string[] || []).slice(0, 5).join(", ") || "None set"}
-                      {" • Loops: "}{(userContext.roleProfile as Record<string, unknown>).mentor_loops || 0}
                     </p>
                   )}
                   {userContext.growthLog && <p>{userContext.growthLog.length} growth log entries</p>}
-                  {userContext.notifications?.length ? <p>{userContext.notifications.length} unread notifications</p> : null}
                 </div>
               </div>
             )}
@@ -1044,59 +1170,70 @@ export default function AIAgent() {
         {messages.filter(m => m.role !== "tool").map((msg, idx) => (
           <motion.div
             key={idx}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`flex gap-4 max-w-3xl ${msg.role === "user" ? "ml-auto" : ""}`}
+            className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
           >
-            {msg.role === "assistant" && (
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Bot className="w-4 h-4 text-white" />
-              </div>
-            )}
-            <div className={`flex-1 min-w-0 ${msg.role === "user" ? "max-w-[80%]" : ""}`}>
-              {msg.role === "assistant" && (
-                <span className="text-xs font-medium text-purple-400 mb-1 block">Academy Agent</span>
-              )}
-              <div className={`p-4 rounded-2xl ${
-                msg.role === "user"
-                  ? "bg-indigo-600/20 border border-indigo-500/20 text-gray-200 rounded-tr-sm"
-                  : "bg-black/40 border border-white/5 text-gray-300 rounded-tl-sm"
-              }`}>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-              </div>
+            {msg.role === "assistant" ? (
+              /* ── Assistant Message — transparent, no bg/border ── */
+              <div className="group">
+                <div className="flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Bot className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] leading-relaxed text-gray-200 whitespace-pre-wrap">{msg.content}</p>
 
-              {/* Tool Call Badges */}
-              {msg.toolCalls && msg.toolCalls.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {msg.toolCalls.map((tc, tIdx) => (
-                    <ToolBadge key={tIdx} tc={tc} />
-                  ))}
+                    {/* Tool Call Badges */}
+                    {msg.toolCalls && msg.toolCalls.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {msg.toolCalls.map((tc, tIdx) => (
+                          <ToolBadge key={tIdx} tc={tc} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Action buttons — visible on hover */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <MessageActions msg={msg} idx={idx} isUser={false} />
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-            {msg.role === "user" && (
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <User className="w-4 h-4 text-gray-300" />
+              </div>
+            ) : (
+              /* ── User Message — right-aligned bubble ── */
+              <div className="group max-w-[85%] inline-block">
+                <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-gray-200">
+                  <UserMessageContent content={msg.content} idx={idx} />
+                </div>
+                {/* Action buttons */}
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MessageActions msg={msg} idx={idx} isUser={true} />
+                </div>
               </div>
             )}
           </motion.div>
         ))}
 
-        {/* Typing Indicator */}
+        {/* Typing / Processing Indicator */}
         {isTyping && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex gap-4 max-w-3xl"
+            className="max-w-2xl mx-auto"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-white" />
-            </div>
-            <div className="p-4 rounded-2xl rounded-tl-sm bg-black/40 border border-white/5">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
-                <span className="text-sm text-gray-400">
-                  {isProcessing ? "Processing tool results..." : "Thinking..."}
+            <div className="flex items-start gap-3">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+                <Bot className="w-3.5 h-3.5 text-white" />
+              </div>
+              <div className="flex items-center gap-2 py-2">
+                <div className="flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                </div>
+                <span className="text-xs text-gray-500">
+                  {isProcessing ? "Running tools..." : "Thinking"}
                 </span>
               </div>
             </div>
@@ -1106,41 +1243,77 @@ export default function AIAgent() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="px-6 py-4 border-t border-white/10 bg-black/30">
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-          <div className="flex gap-3 items-end">
-            <div className="flex-1 relative">
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={isProcessing ? "Agent is working..." : "Ask me anything, tell me to do something, or paste a URL..."}
-                className="w-full bg-black/60 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 resize-none min-h-[48px] max-h-[120px]"
-                rows={1}
-                disabled={isTyping || isProcessing}
-              />
+      {/* ─── Fixed Bottom Input ─── Claude-style ─────────────────────────────── */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
+        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+          <div className="relative bg-[#1a1a2e] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 focus-within:border-indigo-500/30 focus-within:shadow-indigo-500/5 transition-all">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder={isProcessing ? "Agent is working..." : "Reply..."}
+              className="w-full bg-transparent px-4 pt-3.5 pb-12 text-sm text-white placeholder:text-gray-500 focus:outline-none resize-none min-h-[52px] max-h-[200px]"
+              rows={1}
+              disabled={isTyping || isProcessing}
+            />
+            <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.click();
+                  }}
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
+                  title="Attach file"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearChat}
+                    className="p-1.5 rounded-lg text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+                    title="Clear chat"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {(isTyping || isProcessing) && (
+                  <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    {isProcessing ? "Running tools" : "Thinking"}
+                  </span>
+                )}
+                <motion.button
+                  type="submit"
+                  disabled={!input.trim() || isTyping || isProcessing}
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                  whileHover={!input.trim() || isTyping || isProcessing ? {} : { scale: 1.05 }}
+                  whileTap={!input.trim() || isTyping || isProcessing ? {} : { scale: 0.95 }}
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </motion.button>
+              </div>
             </div>
-            <motion.button
-              type="submit"
-              disabled={!input.trim() || isTyping || isProcessing}
-              className="w-12 h-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isTyping || isProcessing ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
-            </motion.button>
           </div>
           <p className="text-center text-[10px] text-gray-600 mt-2">
-            Academy Agent can search the web, read pages, navigate, fill forms, and access your data.
+            Academy Agent can make mistakes. Verify important information.
           </p>
         </form>
       </div>
+
+      {/* Custom scrollbar styles */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+      `}</style>
     </div>
   );
 }
