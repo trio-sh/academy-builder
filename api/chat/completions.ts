@@ -72,7 +72,7 @@ const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const DEFAULT_MAX_TOKENS = 16384;
 const DEFAULT_TEMPERATURE = 0.7;
 const DEFAULT_MAX_STEPS = 1;
-const MAX_STEPS_LIMIT = 30;
+const MAX_STEPS_LIMIT = 60;
 
 // Vercel serverless function timeout handling
 // Vercel Pro allows 5 minutes (300s). We start continuation at 4 min to leave
@@ -360,7 +360,7 @@ const TASK_AGENT_TOOLS = [
 ];
 
 const TASK_AGENT_TOOL_NAMES = new Set(TASK_AGENT_TOOLS.map((t) => t.function.name));
-const MAX_TASK_AGENT_TOOL_STEPS = 8;
+const MAX_TASK_AGENT_TOOL_STEPS = 60;
 
 /**
  * Execute a tool call from the task agent. Reuses the same executors as the main brain.

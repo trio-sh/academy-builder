@@ -47,7 +47,7 @@ curl -X POST /api/chat/completions \
 | `tools` | `Tool[]` | `undefined` | Custom tool definitions |
 | `tool_choice` | `any` | `undefined` | Tool selection preference |
 | `multistep` | `boolean` | `false` | Enable multi-step agent loop |
-| `max_steps` | `number` | `10` | Max tool-use turns (when `multistep: true`, cap: 20) |
+| `max_steps` | `number` | `10` | Max tool-use turns (when `multistep: true`, cap: 60) |
 
 ### Message Format
 
