@@ -1211,10 +1211,10 @@ export default function AIAgent() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-2rem)] max-w-4xl mx-auto relative">
+    <div className="-m-4 md:-m-8 flex flex-col h-screen max-w-none relative overflow-hidden">
 
       {/* Messages Area — scrollable, with bottom padding for fixed input */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-44 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-6">
 
         {/* Empty state */}
         {messages.length === 0 && (
@@ -1355,7 +1355,7 @@ export default function AIAgent() {
       </div>
 
       {/* ─── Fixed Bottom Input ─── Claude-style ─────────────────────────────── */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <div className="relative bg-[#1a1a2e] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 focus-within:border-indigo-500/30 focus-within:shadow-indigo-500/5 transition-all">
             <textarea
