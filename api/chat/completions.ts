@@ -33,6 +33,22 @@ interface A0Response {
   completion: string;
 }
 
+// ─── Logger ─────────────────────────────────────────────────────────────────
+
+let _reqCounter = 0;
+
+function createLogger(prefix?: string) {
+  const reqId = `req-${++_reqCounter}-${Date.now().toString(36)}`;
+  const tag = prefix ? `[${reqId}][${prefix}]` : `[${reqId}]`;
+  return {
+    id: reqId,
+    info: (...args: any[]) => console.log(tag, ...args),
+    warn: (...args: any[]) => console.warn(tag, "⚠", ...args),
+    error: (...args: any[]) => console.error(tag, "✗", ...args),
+    debug: (...args: any[]) => console.log(tag, "·", ...args),
+  };
+}
+
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const A0_LLM_URL = "https://api.a0.dev/ai/llm";
@@ -169,18 +185,27 @@ function executeImageGeneration(
 
 async function executeTool(
   name: string,
-  args: Record<string, any>
+  args: Record<string, any>,
+  log?: ReturnType<typeof createLogger>
 ): Promise<string> {
+  log?.info(`⚙ Executing tool: ${name}(${JSON.stringify(args)})`);
+  const start = Date.now();
+  let result: string;
   switch (name) {
     case "web_search":
-      return executeWebSearch(args.query);
+      result = await executeWebSearch(args.query);
+      break;
     case "web_extract":
-      return executeWebExtract(args.url);
+      result = await executeWebExtract(args.url);
+      break;
     case "image_generation":
-      return executeImageGeneration(args.prompt, args.aspect, args.seed);
+      result = executeImageGeneration(args.prompt, args.aspect, args.seed);
+      break;
     default:
-      return `Unknown tool: ${name}`;
+      result = `Unknown tool: ${name}`;
   }
+  log?.info(`⚙ Tool ${name} done (${Date.now() - start}ms): ${result.length}ch, preview: ${JSON.stringify(result.slice(0, 150))}`);
+  return result;
 }
 
 // ─── A0 LLM Caller ──────────────────────────────────────────────────────────
@@ -193,8 +218,13 @@ interface A0Message {
 async function callA0(
   messages: A0Message[],
   temperature: number,
-  maxTokens: number
+  maxTokens: number,
+  log?: ReturnType<typeof createLogger>
 ): Promise<string> {
+  const msgSummary = messages.map(m => `${m.role}(${m.content.length}ch)`).join(", ");
+  log?.info(`→ A0 LLM call: ${messages.length} msgs [${msgSummary}], temp=${temperature}, max_tokens=${maxTokens}`);
+  const start = Date.now();
+
   const res = await fetch(A0_LLM_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -205,10 +235,14 @@ async function callA0(
     }),
   });
   if (!res.ok) {
-    throw new Error(`A0 API error: ${res.status} ${await res.text()}`);
+    const errText = await res.text();
+    log?.error(`← A0 error ${res.status} (${Date.now() - start}ms): ${errText.slice(0, 500)}`);
+    throw new Error(`A0 API error: ${res.status} ${errText}`);
   }
   const data: A0Response = await res.json();
-  return data.completion;
+  const completion = data.completion;
+  log?.info(`← A0 response (${Date.now() - start}ms): ${completion.length}ch, preview: ${JSON.stringify(completion.slice(0, 200))}`);
+  return completion;
 }
 
 // ─── Tool Call Parser ────────────────────────────────────────────────────────
@@ -299,8 +333,10 @@ async function runAgentLoop(
   temperature: number,
   maxTokens: number,
   maxSteps: number,
-  userTools?: any[]
+  userTools?: any[],
+  log?: ReturnType<typeof createLogger>
 ): Promise<AgentResult> {
+  log?.info(`Agent loop start: maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
   const customToolNames = new Set(
     (userTools || []).map((t: any) => (t.function || t).name)
   );
@@ -353,11 +389,14 @@ async function runAgentLoop(
 
   while (step < maxSteps) {
     step++;
+    log?.info(`── Step ${step}/${maxSteps} ──`);
 
-    const completion = await callA0(a0Messages, temperature, maxTokens);
+    const completion = await callA0(a0Messages, temperature, maxTokens, log);
     const toolCalls = parseToolCalls(completion);
+    log?.info(`Parsed ${toolCalls.length} tool calls: [${toolCalls.map(t => t.name).join(", ")}]`);
 
     if (toolCalls.length === 0) {
+      log?.info("No tool calls — final response");
       finalContent = completion;
       break;
     }
@@ -368,13 +407,15 @@ async function runAgentLoop(
     const unknownCalls = toolCalls.filter(
       (tc) => !isBuiltinTool(tc.name) && !customToolNames.has(tc.name)
     );
+    log?.info(`Builtin: ${builtinCalls.length}, Custom: ${customCalls.length}, Unknown: ${unknownCalls.length}`);
 
     // If there are custom tool calls, we must return them to the frontend
     if (customCalls.length > 0) {
+      log?.info("Custom tool calls detected — returning to frontend");
       // First, execute any built-in calls that came in the same turn
       const builtinResults = await Promise.all(
         builtinCalls.map(async (tc) => {
-          const result = await executeTool(tc.name, tc.arguments);
+          const result = await executeTool(tc.name, tc.arguments, log);
           allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
           return { name: tc.name, result };
         })
@@ -389,6 +430,7 @@ async function runAgentLoop(
           arguments: JSON.stringify(tc.arguments),
         },
       }));
+      log?.info(`Returning ${pendingToolCalls.length} pending tool calls: [${pendingToolCalls.map(t => t.function.name).join(", ")}]`);
 
       // Build the assistant content (stripped of tool_call blocks)
       const cleanedContent = stripToolCalls(completion) || null;
@@ -413,7 +455,7 @@ async function runAgentLoop(
     // All tool calls are built-in — execute them server-side
     const results = await Promise.all(
       [...builtinCalls, ...unknownCalls].map(async (tc) => {
-        const result = await executeTool(tc.name, tc.arguments);
+        const result = await executeTool(tc.name, tc.arguments, log);
         allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
         return { name: tc.name, result };
       })
@@ -434,20 +476,23 @@ async function runAgentLoop(
       .map((r) => `[Tool Result - ${r.name}]:\n${r.result.slice(0, 6000)}`)
       .join("\n\n");
     a0Messages.push({ role: "user", content: resultsText });
+    log?.debug(`Fed ${results.length} tool results back into conversation (${resultsText.length}ch total)`);
 
     // If this was the last allowed step, force a final response
     if (step >= maxSteps) {
+      log?.warn("Max steps reached — forcing final response");
       a0Messages.push({
         role: "user",
         content:
           "[System: You have reached the maximum number of tool steps. Please provide your final response now based on all the information gathered.]",
       });
-      finalContent = await callA0(a0Messages, temperature, maxTokens);
+      finalContent = await callA0(a0Messages, temperature, maxTokens, log);
       finalContent = stripToolCalls(finalContent);
       break;
     }
   }
 
+  log?.info(`Agent loop done: ${allToolCalls.length} total tool calls, content=${finalContent.length}ch`);
   return {
     content: finalContent,
     tool_calls_made: allToolCalls,
@@ -684,9 +729,11 @@ async function streamAgentLoop(
   maxTokens: number,
   maxSteps: number,
   model: string,
-  userTools?: any[]
+  userTools?: any[],
+  log?: ReturnType<typeof createLogger>
 ) {
   const id = generateId();
+  log?.info(`Stream agent loop start: id=${id}, maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
   const customToolNames = new Set(
     (userTools || []).map((t: any) => (t.function || t).name)
   );
@@ -736,9 +783,11 @@ async function streamAgentLoop(
 
   while (step < maxSteps) {
     step++;
+    log?.info(`── Stream step ${step}/${maxSteps} ──`);
 
-    const completion = await callA0(a0Messages, temperature, maxTokens);
+    const completion = await callA0(a0Messages, temperature, maxTokens, log);
     const segments = splitCompletionSegments(completion);
+    log?.debug(`Segments: ${segments.map(s => s.type === "text" ? `text(${s.content.length}ch)` : `tool_calls(${s.calls.length})`).join(", ")}`);
 
     // Check if there are any tool calls at all
     const toolSegment = segments.find((s) => s.type === "tool_calls") as
@@ -747,16 +796,19 @@ async function streamAgentLoop(
 
     if (!toolSegment) {
       // Pure text response — stream it and finish
+      log?.info(`No tool calls — streaming final text (${completion.length}ch)`);
       await streamTextTokens(res, id, model, completion);
       res.write(sseChunk(id, model, {}, "stop"));
       res.write("data: [DONE]\n\n");
       res.end();
+      log?.info("Stream ended (stop)");
       return;
     }
 
     // There are tool calls — stream any leading text first
     for (const seg of segments) {
       if (seg.type === "text") {
+        log?.debug(`Streaming leading text (${seg.content.length}ch)`);
         await streamTextTokens(res, id, model, seg.content);
       }
       if (seg.type === "tool_calls") break; // handle tool calls below
@@ -768,14 +820,16 @@ async function streamAgentLoop(
     const unknownCalls = allCalls.filter(
       (tc) => !isBuiltinTool(tc.name) && !customToolNames.has(tc.name)
     );
+    log?.info(`Tool calls: builtin=[${builtinCalls.map(t => t.name).join(",")}], custom=[${customCalls.map(t => t.name).join(",")}], unknown=[${unknownCalls.map(t => t.name).join(",")}]`);
 
     // ── Custom tool calls → stream as OpenAI tool_calls, then STOP ──
     if (customCalls.length > 0) {
+      log?.info("Custom tool calls — executing co-occurring builtins then returning to client");
       // Execute any co-occurring built-in calls silently first
       if (builtinCalls.length > 0) {
         for (const tc of builtinCalls) {
           sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
-          await executeTool(tc.name, tc.arguments);
+          await executeTool(tc.name, tc.arguments, log);
           sseToolStatus(res, id, model, "tool_done", tc.name);
         }
       }
@@ -787,6 +841,7 @@ async function streamAgentLoop(
       res.write(sseChunk(id, model, {}, "tool_calls"));
       res.write("data: [DONE]\n\n");
       res.end();
+      log?.info("Stream ended (tool_calls)");
       return;
     }
 
@@ -795,7 +850,7 @@ async function streamAgentLoop(
 
     for (const tc of [...builtinCalls, ...unknownCalls]) {
       sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
-      const result = await executeTool(tc.name, tc.arguments);
+      const result = await executeTool(tc.name, tc.arguments, log);
       sseToolStatus(res, id, model, "tool_done", tc.name);
       results.push({ name: tc.name, result });
     }
@@ -811,20 +866,23 @@ async function streamAgentLoop(
       .map((r) => `[Tool Result - ${r.name}]:\n${r.result.slice(0, 6000)}`)
       .join("\n\n");
     a0Messages.push({ role: "user", content: resultsText });
+    log?.debug(`Fed ${results.length} tool results back (${resultsText.length}ch), continuing loop`);
 
     // If last step, force final response
     if (step >= maxSteps) {
+      log?.warn("Max steps reached — forcing final response");
       a0Messages.push({
         role: "user",
         content:
           "[System: You have reached the maximum number of tool steps. Please provide your final response now based on all the information gathered.]",
       });
-      const finalCompletion = await callA0(a0Messages, temperature, maxTokens);
+      const finalCompletion = await callA0(a0Messages, temperature, maxTokens, log);
       const finalText = stripToolCalls(finalCompletion);
       await streamTextTokens(res, id, model, finalText);
       res.write(sseChunk(id, model, {}, "stop"));
       res.write("data: [DONE]\n\n");
       res.end();
+      log?.info("Stream ended (stop, max steps)");
       return;
     }
 
@@ -832,6 +890,7 @@ async function streamAgentLoop(
   }
 
   // Fallback: end stream if loop exits without returning
+  log?.warn("Stream loop exited without explicit return — fallback end");
   res.write(sseChunk(id, model, {}, "stop"));
   res.write("data: [DONE]\n\n");
   res.end();
@@ -855,10 +914,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .json({ error: { message: "Method not allowed", type: "invalid_request_error" } });
   }
 
+  const log = createLogger("chat");
+
   try {
     const body: OpenAIRequest = req.body;
+    const msgCount = body.messages?.length ?? 0;
+    const lastUserMsg = body.messages?.filter(m => m.role === "user").pop()?.content?.slice(0, 200) || "";
+    log.info(`Incoming request: ${msgCount} messages, stream=${body.stream}, multistep=${body.multistep}, max_tokens=${body.max_tokens}, tools=${body.tools?.length ?? 0}, max_steps=${body.max_steps}`);
+    log.debug(`Last user message: ${JSON.stringify(lastUserMsg)}`);
 
     if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+      log.warn("Bad request: empty messages");
       return res.status(400).json({
         error: {
           message: "messages is required and must be a non-empty array",
@@ -876,8 +942,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? Math.min(body.max_steps ?? 10, MAX_STEPS_LIMIT)
       : DEFAULT_MAX_STEPS;
 
+    log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}`);
+
     if (stream) {
       // Streaming: run the agent loop with live SSE output
+      log.info("Starting streaming agent loop");
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
@@ -888,22 +957,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         maxTokens,
         maxSteps,
         model,
-        body.tools
+        body.tools,
+        log
       );
     }
 
     // Non-streaming: run the agent loop and return complete response
+    log.info("Starting non-streaming agent loop");
     const result = await runAgentLoop(
       body.messages,
       temperature,
       maxTokens,
       maxSteps,
-      body.tools
+      body.tools,
+      log
     );
 
+    log.info(`Done: finish_reason=${result.finish_reason}, content=${result.content?.length ?? 0}ch, tools_made=${result.tool_calls_made.length}, pending=${result.pending_tool_calls?.length ?? 0}`);
     return res.status(200).json(formatNonStreamingResponse(result, model));
   } catch (err: any) {
-    console.error("API Error:", err);
+    log.error(`Unhandled error: ${err.message}`, err.stack?.slice(0, 500));
     return res.status(500).json({
       error: {
         message: err.message || "Internal server error",
