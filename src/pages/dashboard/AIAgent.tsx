@@ -764,14 +764,16 @@ You have powerful tools you can invoke. Embed tool calls in your response using 
 ## CRITICAL Rules
 1. ALWAYS use [[TOOL:...]] syntax. Never write plain text like "Click here" or "I'll search" without the tool tag.
 2. ALL tool results come BACK to you after execution — web search results, DOM action outcomes, data queries, everything.
-3. After receiving tool results, ALWAYS respond with a brief synthesis: confirm what happened, summarize data, or explain the outcome. Never leave the user without acknowledgement.
-4. You can use MULTIPLE tools in one response.
+3. After receiving tool results, you MUST respond with a COMPLETE synthesis: confirm what happened, summarize data, or explain the outcome. NEVER leave the user without a final answer. NEVER stop mid-sentence or mid-thought.
+4. You can use MULTIPLE tools in one response. Combine tools when possible (e.g., search + extract in one message) to reduce round-trips.
 5. Be proactive: if the user says "find me a mentor in tech" → search for mentors AND navigate to the mentor page.
 6. Reference the user's actual data when answering questions about their progress, scores, etc.
 7. For the current user role (${role}), navigate within /dashboard/${role === "school_admin" ? "school" : role}/...
 8. When you need to fill forms, use exact field names from "Form Fields" in the screen context.
 9. When you get results back, SYNTHESIZE them into a clear, concise answer — don't dump raw content.
 10. You have personality: be helpful, confident, proactive. You're the user's AI co-pilot for their Academy journey.
+11. IMPORTANT: After tools run and results come back, always provide a COMPLETE, FINISHED response. Do NOT stop halfway. If you searched for something, fully explain the findings. If you extracted a page, fully summarize the content. Complete your entire answer in one response.
+12. When doing multi-step tasks (search → extract → analyze), plan ahead: use web_search first, then if needed [[TOOL:web_extract|url=...]] in the same response or the next one, and then synthesize ALL results into one final comprehensive answer.
 
 ## Example Responses
 
@@ -903,43 +905,39 @@ export default function AIAgent() {
   }, []);
 
   // Execute tools and return results to AI
-  const processToolCalls = useCallback(async (tools: ParsedTool[], messageIndex: number): Promise<string[]> => {
+  const processToolCalls = useCallback(async (tools: ParsedTool[], _messageIndex: number): Promise<string[]> => {
     const results: string[] = [];
 
-    for (let i = 0; i < tools.length; i++) {
-      const tool = tools[i];
-      const toolId = `${tool.type}-${Date.now()}-${i}`;
-
-      // Mark running
+    // Helper: find the last assistant message with toolCalls (the one we're processing)
+    const updateLastToolMessage = (updater: (toolCalls: ToolCall[]) => ToolCall[]) => {
       setMessages(prev => {
         const updated = [...prev];
-        if (updated[messageIndex]?.toolCalls) {
-          updated[messageIndex] = {
-            ...updated[messageIndex],
-            toolCalls: updated[messageIndex].toolCalls!.map((tc, idx) =>
-              idx === i ? { ...tc, status: "running" as const } : tc
-            ),
-          };
+        // Find last assistant message with toolCalls
+        for (let j = updated.length - 1; j >= 0; j--) {
+          if (updated[j].role === "assistant" && updated[j].toolCalls) {
+            updated[j] = { ...updated[j], toolCalls: updater(updated[j].toolCalls!) };
+            break;
+          }
         }
         return updated;
       });
+    };
+
+    for (let i = 0; i < tools.length; i++) {
+      const tool = tools[i];
+
+      // Mark running
+      updateLastToolMessage(tcs => tcs.map((tc, idx) =>
+        idx === i ? { ...tc, status: "running" as const } : tc
+      ));
 
       const result = await executeTool(tool, navigate, userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null });
       results.push(`[${tool.type} result]: ${result}`);
 
       // Mark done
-      setMessages(prev => {
-        const updated = [...prev];
-        if (updated[messageIndex]?.toolCalls) {
-          updated[messageIndex] = {
-            ...updated[messageIndex],
-            toolCalls: updated[messageIndex].toolCalls!.map((tc, idx) =>
-              idx === i ? { ...tc, status: result.startsWith("Error") || result.includes("not found") ? "error" as const : "done" as const, result: result.slice(0, 200) } : tc
-            ),
-          };
-        }
-        return updated;
-      });
+      updateLastToolMessage(tcs => tcs.map((tc, idx) =>
+        idx === i ? { ...tc, status: result.startsWith("Error") || result.includes("not found") ? "error" as const : "done" as const, result: result.slice(0, 200) } : tc
+      ));
 
       // Brief pause between tools
       if (i < tools.length - 1) {
@@ -968,9 +966,16 @@ export default function AIAgent() {
       const apiMsgs: { role: string; content: string }[] = [
         { role: "system", content: systemPrompt },
       ];
-      for (const m of msgs) {
+      // Only include the last 20 messages to prevent context overflow
+      const recentMsgs = msgs.slice(-20);
+      for (let i = 0; i < recentMsgs.length; i++) {
+        const m = recentMsgs[i];
         if (m.role === "tool") {
-          apiMsgs.push({ role: "user", content: `[Tool Results]\n${m.content}` });
+          // Truncate older tool results more aggressively; keep recent ones fuller
+          const isRecent = i >= recentMsgs.length - 4;
+          const maxLen = isRecent ? 3000 : 800;
+          const content = m.content.length > maxLen ? m.content.slice(0, maxLen) + "\n...[truncated]" : m.content;
+          apiMsgs.push({ role: "user", content: `[Tool Results]\n${content}` });
         } else {
           apiMsgs.push({ role: m.role, content: m.content });
         }
@@ -980,7 +985,7 @@ export default function AIAgent() {
 
     let currentMessages = [...messages, userMsg];
     let loopCount = 0;
-    const maxLoops = 3; // Prevent infinite loops
+    const maxLoops = 8; // Allow enough loops for multi-step tasks (search → extract → synthesize → more)
 
     while (loopCount < maxLoops) {
       loopCount++;
@@ -992,7 +997,7 @@ export default function AIAgent() {
           body: JSON.stringify({
             messages: buildApiMessages(currentMessages),
             temperature: 0.7,
-            max_tokens: 1200,
+            max_tokens: 2500,
           }),
         });
 
@@ -1019,24 +1024,32 @@ export default function AIAgent() {
           toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
         };
 
-        setMessages(prev => [...prev, assistantMsg]);
-        setIsTyping(false);
         currentMessages = [...currentMessages, assistantMsg];
 
-        if (tools.length === 0) break; // No tools, we're done
+        if (tools.length === 0) {
+          // No tools — final response, add to state and break
+          setMessages(prev => [...prev, assistantMsg]);
+          setIsTyping(false);
+          break;
+        }
 
-        // Execute tools
+        // Has tools — add assistant msg, then execute tools
+        setMessages(prev => [...prev, assistantMsg]);
+        setIsTyping(false);
         setIsProcessing(true);
+
+        // Use the React state length for message index tracking
         const msgIdx = currentMessages.length - 1;
         const results = await processToolCalls(tools, msgIdx);
 
-        // Always send tool results back to AI for synthesis
+        // Add tool results to conversation for next synthesis call
         const toolResultMsg: Message = {
           role: "tool",
           content: results.join("\n\n"),
           timestamp: new Date(),
         };
         currentMessages = [...currentMessages, toolResultMsg];
+        setMessages(prev => [...prev, toolResultMsg]);
         setIsTyping(true);
         setIsProcessing(false);
         // Loop continues — AI will synthesize results
