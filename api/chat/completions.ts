@@ -61,6 +61,46 @@ const DEFAULT_TEMPERATURE = 0.7;
 const DEFAULT_MAX_STEPS = 1;
 const MAX_STEPS_LIMIT = 20;
 
+// ─── Prompt Enhancer ────────────────────────────────────────────────────────
+// Detects vague code/HTML generation prompts and restructures them so the A0
+// LLM produces actual output instead of timing out with an empty response.
+
+const VAGUE_WEB_PATTERN =
+  /\b(html|landing\s*page|website|web\s*page|webpage|portfolio|saas|dashboard|app\s*page)\b/i;
+const CODE_HINT_PATTERN =
+  /\b(tailwind|bootstrap|css|styled|dark\s*theme|animated|responsive|modern|beautiful|sleek|minimal)\b/i;
+
+function enhanceUserPrompt(content: string): string {
+  // Only enhance short-ish, vague prompts that look like web/code generation requests
+  if (content.length > 500) return content; // already detailed enough
+  if (!VAGUE_WEB_PATTERN.test(content)) return content; // not a web generation request
+  if (!CODE_HINT_PATTERN.test(content)) return content; // no styling hints
+
+  // Extract what the user wants
+  const wantsDark = /dark/i.test(content);
+  const wantsTailwind = /tailwind/i.test(content);
+  const wantsAnimated = /animat/i.test(content);
+  const topic = content
+    .replace(/\b(html|use|using|with|and|a|an|the|very|nice|modern|beautiful|create|make|build|write|generate|give me|show me|code|please)\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return `${content}
+
+Build a complete, standalone HTML file for this. Requirements:
+- Full HTML5 document with <head> and <body>
+${wantsTailwind ? "- Use Tailwind CSS via CDN (<script src=\"https://cdn.tailwindcss.com\"></script>)" : "- Use embedded CSS or Tailwind CDN"}
+${wantsDark ? "- Dark theme: use bg-gray-950/900 backgrounds with white/gray text" : ""}
+${wantsAnimated ? "- Add smooth CSS transitions and hover animations (use Tailwind classes)" : ""}
+- Include a hero section with headline + CTA button
+- Include a features/benefits section with 3 cards
+- Keep it compact (under 150 lines) but visually polished
+- Use realistic placeholder text relevant to "${topic || "SaaS product"}"
+- Responsive layout that works on mobile
+
+Respond with the complete HTML code in a single \`\`\`html code block.`;
+}
+
 // Built-in tool definitions (OpenAI function-calling format)
 const BUILTIN_TOOLS = [
   {
@@ -314,6 +354,44 @@ function isBuiltinTool(name: string): boolean {
   return BUILTIN_TOOL_NAMES.has(name);
 }
 
+// ─── Default System Prompt ──────────────────────────────────────────────────
+
+const DEFAULT_SYSTEM_PROMPT = `You are a helpful, creative, and knowledgeable AI assistant. You always respond with substantive, complete answers.
+
+## Core Behavior
+- ALWAYS provide a response. Never return an empty message. This is your most important rule.
+- When a request is vague or broad, interpret it generously and deliver your best result rather than refusing or asking too many clarifying questions.
+- If a request is ambiguous, pick the most likely interpretation and go with it. You can mention your assumptions briefly.
+- Match your response length to the complexity of the request. Short questions get concise answers; creative/coding tasks get thorough outputs.
+
+## Code Generation — CRITICAL
+When asked to write code, HTML, or build something:
+- ALWAYS produce complete, working, ready-to-use code — not fragments or pseudocode.
+- **Keep code compact and efficient.** Aim for under 200 lines. Use concise class names, combine similar elements, and avoid excessive whitespace or comments in the code.
+- For HTML/web requests: produce a full standalone HTML file with embedded styles and scripts.
+- For vague web/UI prompts (e.g. "build me a landing page", "make a portfolio site", "saas page"), you MUST interpret creatively and deliver a polished, working page. Include:
+  - Proper HTML5 structure with meta viewport tag
+  - Beautiful, modern styling — use Tailwind CSS via CDN (\`<script src="https://cdn.tailwindcss.com"></script>\`)
+  - Responsive design (mobile + desktop)
+  - Smooth CSS transitions/animations (use Tailwind classes like animate-pulse, transition-all, hover effects — avoid heavy JS animations)
+  - Realistic placeholder content relevant to the topic (not "Lorem ipsum")
+  - A dark theme if the user mentions "dark" — use dark backgrounds (gray-900/950, slate-900) with light text
+  - Key sections: hero, features/benefits, CTA — pick what fits
+- When the user's prompt is short or vague about a webpage, treat it as: "Build me a complete, beautiful, standalone HTML page for this concept."
+- **Do NOT produce a blank/empty response for code requests.** If you are unsure, produce a simpler version rather than nothing.
+
+## Formatting
+- Use Markdown formatting for readability: headings, code blocks (with language tags), lists, bold/italic.
+- For code responses, wrap the code in a single fenced code block with the correct language identifier.
+- When showing HTML, use \`\`\`html code fences.
+
+## Tone
+- Be direct and helpful. Skip unnecessary preamble like "Sure!" or "Of course!". Go straight to the answer.
+- Be conversational but professional.
+- If you use a tool, incorporate the results naturally into your response.`;
+
+// ─── Tool System Prompt Builder ─────────────────────────────────────────────
+
 function buildToolSystemPrompt(userTools?: any[]): string {
   let prompt = `You have access to tools. When you need to use a tool, respond with a JSON tool call block.
 
@@ -374,16 +452,13 @@ async function runAgentLoop(
   const a0Messages: A0Message[] = [];
   const toolSystemPrompt = buildToolSystemPrompt(userTools);
 
-  // Inject tool system prompt at the start
+  // Build combined system prompt: default base + user's system prompt + tool instructions
   const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
-  if (hasSystemMsg) {
-    a0Messages.push({
-      role: "system",
-      content: messages[0].content + "\n\n" + toolSystemPrompt,
-    });
-  } else {
-    a0Messages.push({ role: "system", content: toolSystemPrompt });
-  }
+  const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
+  const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+    .filter(Boolean)
+    .join("\n\n");
+  a0Messages.push({ role: "system", content: combinedSystem });
 
   // Add remaining messages
   const startIdx = hasSystemMsg ? 1 : 0;
@@ -405,9 +480,10 @@ async function runAgentLoop(
         content: (msg.content || "") + "\n" + toolInfo,
       });
     } else {
+      const isUser = msg.role !== "assistant";
       a0Messages.push({
-        role: msg.role === "assistant" ? "assistant" : "user",
-        content: msg.content || "",
+        role: isUser ? "user" : "assistant",
+        content: isUser ? enhanceUserPrompt(msg.content || "") : (msg.content || ""),
       });
     }
   }
@@ -776,14 +852,11 @@ async function streamAgentLoop(
   const toolSystemPrompt = buildToolSystemPrompt(userTools);
 
   const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
-  if (hasSystemMsg) {
-    a0Messages.push({
-      role: "system",
-      content: messages[0].content + "\n\n" + toolSystemPrompt,
-    });
-  } else {
-    a0Messages.push({ role: "system", content: toolSystemPrompt });
-  }
+  const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
+  const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+    .filter(Boolean)
+    .join("\n\n");
+  a0Messages.push({ role: "system", content: combinedSystem });
 
   const startIdx = hasSystemMsg ? 1 : 0;
   for (let i = startIdx; i < messages.length; i++) {
@@ -802,9 +875,10 @@ async function streamAgentLoop(
         content: (msg.content || "") + "\n" + toolInfo,
       });
     } else {
+      const isUser = msg.role !== "assistant";
       a0Messages.push({
-        role: msg.role === "assistant" ? "assistant" : "user",
-        content: msg.content || "",
+        role: isUser ? "user" : "assistant",
+        content: isUser ? enhanceUserPrompt(msg.content || "") : (msg.content || ""),
       });
     }
   }
