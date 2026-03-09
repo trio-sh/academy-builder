@@ -27,6 +27,16 @@ interface OpenAIRequest {
   // Custom extensions
   multistep?: boolean;
   max_steps?: number;
+  // Continuation support for Vercel timeout handling
+  _continuation?: ContinuationState;
+}
+
+interface ContinuationState {
+  a0Messages: A0Message[];
+  step: number;
+  id: string;
+  model: string;
+  contentSoFar: string;
 }
 
 interface A0Response {
@@ -62,7 +72,13 @@ const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const DEFAULT_MAX_TOKENS = 16384;
 const DEFAULT_TEMPERATURE = 0.7;
 const DEFAULT_MAX_STEPS = 1;
-const MAX_STEPS_LIMIT = 20;
+const MAX_STEPS_LIMIT = 30;
+
+// Vercel serverless function timeout handling
+// Vercel Pro allows 5 minutes (300s). We start continuation at 4 min to leave
+// buffer for serializing state + one final LLM call.
+const VERCEL_TIMEOUT_MS = 300_000;
+const CONTINUATION_THRESHOLD_MS = 240_000; // 4 minutes — trigger continuation
 
 // ─── Prompt Enhancer ────────────────────────────────────────────────────────
 // Detects vague code/HTML generation prompts and restructures them so the A0
@@ -959,7 +975,9 @@ interface AgentResult {
   tool_calls_made: { name: string; arguments: any; result: string }[];
   // When custom tools are requested, we return them as pending OpenAI tool_calls
   pending_tool_calls: ToolCall[] | null;
-  finish_reason: "stop" | "tool_calls";
+  finish_reason: "stop" | "tool_calls" | "continuation";
+  // Present when finish_reason is "continuation" — client should re-request with this
+  _continuation?: ContinuationState;
 }
 
 async function runAgentLoop(
@@ -968,60 +986,90 @@ async function runAgentLoop(
   maxTokens: number,
   maxSteps: number,
   userTools?: any[],
-  log?: ReturnType<typeof createLogger>
+  log?: ReturnType<typeof createLogger>,
+  continuation?: ContinuationState,
+  startTime: number = Date.now()
 ): Promise<AgentResult> {
-  log?.info(`Agent loop start: maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
+  let a0Messages: A0Message[];
+  let step: number;
+
+  if (continuation) {
+    // Resume from continuation
+    a0Messages = continuation.a0Messages;
+    step = continuation.step;
+    log?.info(`Agent loop RESUMED: step=${step}, a0Messages=${a0Messages.length}`);
+    a0Messages.push({
+      role: "user",
+      content: "[System: The previous response was interrupted due to a timeout. Continue EXACTLY where you left off. Do NOT repeat any content that was already generated.]",
+    });
+  } else {
+    // Fresh start
+    step = 0;
+    log?.info(`Agent loop start: maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
+
+    // Convert OpenAI messages to A0 format
+    a0Messages = [];
+    const toolSystemPrompt = buildToolSystemPrompt(userTools);
+
+    // Build combined system prompt: default base + user's system prompt + tool instructions
+    const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
+    const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
+    const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+      .filter(Boolean)
+      .join("\n\n");
+    a0Messages.push({ role: "system", content: combinedSystem });
+
+    // Add remaining messages
+    const startIdx = hasSystemMsg ? 1 : 0;
+    for (let i = startIdx; i < messages.length; i++) {
+      const msg = messages[i];
+      if (msg.role === "tool") {
+        // Tool results from external callers - embed as context
+        a0Messages.push({
+          role: "user",
+          content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
+        });
+      } else if (msg.role === "assistant" && msg.tool_calls) {
+        // Assistant message that had tool_calls - reconstruct context
+        const toolInfo = msg.tool_calls
+          .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
+          .join("\n");
+        a0Messages.push({
+          role: "assistant",
+          content: (msg.content || "") + "\n" + toolInfo,
+        });
+      } else {
+        const isUser = msg.role !== "assistant";
+        a0Messages.push({
+          role: isUser ? "user" : "assistant",
+          content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
+        });
+      }
+    }
+  }
+
   const customToolNames = new Set(
     (userTools || []).map((t: any) => (t.function || t).name)
   );
 
-  // Convert OpenAI messages to A0 format
-  const a0Messages: A0Message[] = [];
-  const toolSystemPrompt = buildToolSystemPrompt(userTools);
-
-  // Build combined system prompt: default base + user's system prompt + tool instructions
-  const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
-  const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
-  const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
-    .filter(Boolean)
-    .join("\n\n");
-  a0Messages.push({ role: "system", content: combinedSystem });
-
-  // Add remaining messages
-  const startIdx = hasSystemMsg ? 1 : 0;
-  for (let i = startIdx; i < messages.length; i++) {
-    const msg = messages[i];
-    if (msg.role === "tool") {
-      // Tool results from external callers - embed as context
-      a0Messages.push({
-        role: "user",
-        content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
-      });
-    } else if (msg.role === "assistant" && msg.tool_calls) {
-      // Assistant message that had tool_calls - reconstruct context
-      const toolInfo = msg.tool_calls
-        .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
-        .join("\n");
-      a0Messages.push({
-        role: "assistant",
-        content: (msg.content || "") + "\n" + toolInfo,
-      });
-    } else {
-      const isUser = msg.role !== "assistant";
-      a0Messages.push({
-        role: isUser ? "user" : "assistant",
-        content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
-      });
-    }
-  }
-
   const allToolCalls: { name: string; arguments: any; result: string }[] = [];
-  let step = 0;
   let finalContent = "";
 
   while (step < maxSteps) {
     step++;
-    log?.info(`── Step ${step}/${maxSteps} ──`);
+    log?.info(`── Step ${step}/${maxSteps} ── (elapsed: ${Math.round((Date.now() - startTime) / 1000)}s)`);
+
+    // ── Timeout check: return continuation state before Vercel kills us ──
+    if (shouldContinue(startTime)) {
+      log?.warn(`Approaching Vercel timeout (${Math.round((Date.now() - startTime) / 1000)}s) — returning continuation`);
+      return {
+        content: finalContent || null,
+        tool_calls_made: allToolCalls,
+        pending_tool_calls: null,
+        finish_reason: "continuation",
+        _continuation: { a0Messages, step, id: "", model: "", contentSoFar: finalContent },
+      };
+    }
 
     const completion = await callA0(a0Messages, temperature, maxTokens, log);
     const toolCalls = parseToolCalls(completion);
@@ -1030,7 +1078,7 @@ async function runAgentLoop(
     if (toolCalls.length === 0) {
       log?.info("No tool calls — final response");
       finalContent = completion;
-      if (!finalContent && step === 1) {
+      if (!finalContent && step === 1 && !continuation) {
         log?.warn("Empty completion on first step — the model may have timed out or failed to generate a response");
         finalContent = "I wasn't able to generate a response for that request. This can happen with very large code generation prompts. Try breaking it into smaller pieces, e.g.:\n\n- \"Create the HTML structure for a dark SaaS landing page\"\n- \"Add Tailwind CSS animations to this page\"\n- \"Write the hero section with a gradient background\"";
       }
@@ -1187,6 +1235,8 @@ function formatNonStreamingResponse(
         arguments: tc.arguments,
       })),
     },
+    // Continuation state — present when the function timed out mid-response
+    ...(result._continuation ? { _continuation: result._continuation } : {}),
   };
 }
 
@@ -1203,6 +1253,31 @@ function sseChunk(id: string, model: string, delta: any, finishReason: string | 
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Emit a continuation event — tells the client to re-request with saved state
+ * so the agent loop can seamlessly resume in a new serverless invocation.
+ */
+function sseContinuation(
+  res: VercelResponse,
+  id: string,
+  model: string,
+  state: ContinuationState
+): void {
+  // Send continuation state as a custom SSE event
+  res.write(`data: ${JSON.stringify({
+    id,
+    object: "chat.completion.chunk",
+    created: Math.floor(Date.now() / 1000),
+    model,
+    choices: [{ index: 0, delta: { continuation: state }, finish_reason: "continuation" }],
+  })}\n\n`);
+  res.write("data: [DONE]\n\n");
+}
+
+function shouldContinue(startTime: number): boolean {
+  return Date.now() - startTime >= CONTINUATION_THRESHOLD_MS;
+}
 
 /**
  * Simulate token-by-token streaming from a complete string.
@@ -1362,58 +1437,101 @@ async function streamAgentLoop(
   maxSteps: number,
   model: string,
   userTools?: any[],
-  log?: ReturnType<typeof createLogger>
+  log?: ReturnType<typeof createLogger>,
+  continuation?: ContinuationState,
+  startTime: number = Date.now()
 ) {
-  const id = generateId();
-  log?.info(`Stream agent loop start: id=${id}, maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
+  // ── Resume from continuation or start fresh ──
+  let id: string;
+  let a0Messages: A0Message[];
+  let step: number;
+  let contentSoFar: string;
+
+  if (continuation) {
+    // Resuming from a previous invocation that hit the timeout
+    id = continuation.id;
+    a0Messages = continuation.a0Messages;
+    step = continuation.step;
+    contentSoFar = continuation.contentSoFar;
+    log?.info(`Stream agent loop RESUMED: id=${id}, step=${step}, contentSoFar=${contentSoFar.length}ch`);
+
+    // Tell the AI we're continuing from where we left off
+    a0Messages.push({
+      role: "user",
+      content: "[System: The previous response was interrupted due to a timeout. Continue EXACTLY where you left off. Do NOT repeat any content that was already generated. Do NOT add any preamble like 'Continuing from where I left off' — just seamlessly continue the response.]",
+    });
+  } else {
+    // Fresh start
+    id = generateId();
+    step = 0;
+    contentSoFar = "";
+    log?.info(`Stream agent loop start: id=${id}, maxSteps=${maxSteps}, userTools=[${(userTools || []).map((t: any) => (t.function || t).name).join(",")}]`);
+
+    // Convert OpenAI messages to A0 format
+    a0Messages = [];
+    const toolSystemPrompt = buildToolSystemPrompt(userTools);
+
+    const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
+    const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
+    const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+      .filter(Boolean)
+      .join("\n\n");
+    a0Messages.push({ role: "system", content: combinedSystem });
+
+    const startIdx = hasSystemMsg ? 1 : 0;
+    for (let i = startIdx; i < messages.length; i++) {
+      const msg = messages[i];
+      if (msg.role === "tool") {
+        a0Messages.push({
+          role: "user",
+          content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
+        });
+      } else if (msg.role === "assistant" && msg.tool_calls) {
+        const toolInfo = msg.tool_calls
+          .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
+          .join("\n");
+        a0Messages.push({
+          role: "assistant",
+          content: (msg.content || "") + "\n" + toolInfo,
+        });
+      } else {
+        const isUser = msg.role !== "assistant";
+        a0Messages.push({
+          role: isUser ? "user" : "assistant",
+          content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
+        });
+      }
+    }
+  }
+
   const customToolNames = new Set(
     (userTools || []).map((t: any) => (t.function || t).name)
   );
 
-  // Convert OpenAI messages to A0 format
-  const a0Messages: A0Message[] = [];
-  const toolSystemPrompt = buildToolSystemPrompt(userTools);
-
-  const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
-  const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
-  const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
-    .filter(Boolean)
-    .join("\n\n");
-  a0Messages.push({ role: "system", content: combinedSystem });
-
-  const startIdx = hasSystemMsg ? 1 : 0;
-  for (let i = startIdx; i < messages.length; i++) {
-    const msg = messages[i];
-    if (msg.role === "tool") {
-      a0Messages.push({
-        role: "user",
-        content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
-      });
-    } else if (msg.role === "assistant" && msg.tool_calls) {
-      const toolInfo = msg.tool_calls
-        .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
-        .join("\n");
-      a0Messages.push({
-        role: "assistant",
-        content: (msg.content || "") + "\n" + toolInfo,
-      });
-    } else {
-      const isUser = msg.role !== "assistant";
-      a0Messages.push({
-        role: isUser ? "user" : "assistant",
-        content: isUser ? enhanceUserPrompt(msg.content || "", !!KILO_API_KEY) : (msg.content || ""),
-      });
-    }
+  // Send initial role chunk (only on fresh start, not continuation)
+  if (!continuation) {
+    res.write(sseChunk(id, model, { role: "assistant", content: "" }));
   }
-
-  // Send initial role chunk
-  res.write(sseChunk(id, model, { role: "assistant", content: "" }));
-
-  let step = 0;
 
   while (step < maxSteps) {
     step++;
-    log?.info(`── Stream step ${step}/${maxSteps} ──`);
+    log?.info(`── Stream step ${step}/${maxSteps} ── (elapsed: ${Math.round((Date.now() - startTime) / 1000)}s)`);
+
+    // ── Timeout check: trigger continuation before Vercel kills us ──
+    if (shouldContinue(startTime)) {
+      log?.warn(`Approaching Vercel timeout (${Math.round((Date.now() - startTime) / 1000)}s elapsed) — triggering continuation`);
+      const state: ContinuationState = {
+        a0Messages: a0Messages,
+        step,
+        id,
+        model,
+        contentSoFar,
+      };
+      sseContinuation(res, id, model, state);
+      res.end();
+      log?.info("Stream ended (continuation triggered)");
+      return;
+    }
 
     const completion = await callA0(a0Messages, temperature, maxTokens, log);
     const segments = splitCompletionSegments(completion);
@@ -1424,14 +1542,35 @@ async function streamAgentLoop(
       | { type: "tool_calls"; calls: ParsedToolCall[] }
       | undefined;
 
+    // ── Post-LLM-call timeout check ──
+    // The LLM call itself may have taken a long time. Check again.
+    if (shouldContinue(startTime)) {
+      log?.warn(`Post-LLM timeout (${Math.round((Date.now() - startTime) / 1000)}s) — adding completion to context and triggering continuation`);
+      // Add the completion we just got to conversation context so it's not lost
+      a0Messages.push({ role: "assistant", content: completion });
+      contentSoFar += stripToolCalls(completion);
+      const state: ContinuationState = {
+        a0Messages,
+        step,
+        id,
+        model,
+        contentSoFar,
+      };
+      sseContinuation(res, id, model, state);
+      res.end();
+      log?.info("Stream ended (continuation triggered post-LLM)");
+      return;
+    }
+
     if (!toolSegment) {
       // Pure text response — stream it and finish
       let textToStream = completion;
-      if (!textToStream && step === 1) {
+      if (!textToStream && step === 1 && !continuation) {
         log?.warn("Empty completion on first stream step — returning fallback message");
         textToStream = "I wasn't able to generate a response for that request. This can happen with very large code generation prompts. Try breaking it into smaller pieces, e.g.:\n\n- \"Create the HTML structure for a dark SaaS landing page\"\n- \"Add Tailwind CSS animations to this page\"\n- \"Write the hero section with a gradient background\"";
       }
       log?.info(`No tool calls — streaming final text (${textToStream.length}ch)`);
+      contentSoFar += textToStream;
       await streamTextTokens(res, id, model, textToStream);
       res.write(sseChunk(id, model, {}, "stop"));
       res.write("data: [DONE]\n\n");
@@ -1444,6 +1583,7 @@ async function streamAgentLoop(
     for (const seg of segments) {
       if (seg.type === "text") {
         log?.debug(`Streaming leading text (${seg.content.length}ch)`);
+        contentSoFar += seg.content;
         await streamTextTokens(res, id, model, seg.content);
       }
       if (seg.type === "tool_calls") break; // handle tool calls below
@@ -1527,6 +1667,22 @@ async function streamAgentLoop(
     a0Messages.push({ role: "user", content: resultsText });
     log?.debug(`Fed ${results.length} tool results back (${resultsText.length}ch), continuing loop`);
 
+    // ── Post-tool-execution timeout check ──
+    if (shouldContinue(startTime)) {
+      log?.warn(`Post-tool timeout (${Math.round((Date.now() - startTime) / 1000)}s) — triggering continuation with tool results in context`);
+      const state: ContinuationState = {
+        a0Messages,
+        step,
+        id,
+        model,
+        contentSoFar,
+      };
+      sseContinuation(res, id, model, state);
+      res.end();
+      log?.info("Stream ended (continuation triggered post-tools)");
+      return;
+    }
+
     // If last step, force final response
     if (step >= maxSteps) {
       log?.warn("Max steps reached — forcing final response");
@@ -1601,11 +1757,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? Math.min(body.max_steps ?? 10, MAX_STEPS_LIMIT)
       : DEFAULT_MAX_STEPS;
 
-    log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}`);
+    const startTime = Date.now();
+    const continuation = body._continuation || undefined;
+    log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}, continuation=${!!continuation}`);
 
     if (stream) {
       // Streaming: run the agent loop with live SSE output
-      log.info("Starting streaming agent loop");
+      log.info(continuation ? "Resuming streaming agent loop from continuation" : "Starting streaming agent loop");
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
@@ -1617,19 +1775,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         maxSteps,
         model,
         body.tools,
-        log
+        log,
+        continuation,
+        startTime
       );
     }
 
     // Non-streaming: run the agent loop and return complete response
-    log.info("Starting non-streaming agent loop");
+    log.info(continuation ? "Resuming non-streaming agent loop from continuation" : "Starting non-streaming agent loop");
     const result = await runAgentLoop(
       body.messages,
       temperature,
       maxTokens,
       maxSteps,
       body.tools,
-      log
+      log,
+      continuation,
+      startTime
     );
 
     log.info(`Done: finish_reason=${result.finish_reason}, content=${result.content?.length ?? 0}ch, tools_made=${result.tool_calls_made.length}, pending=${result.pending_tool_calls?.length ?? 0}`);

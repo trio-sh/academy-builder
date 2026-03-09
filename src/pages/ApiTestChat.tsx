@@ -116,11 +116,20 @@ function executeCustomTool(name: string, args: Record<string, unknown>): string 
 
 // ─── SSE Stream Consumer ────────────────────────────────────────────────────
 
+interface ContinuationState {
+  a0Messages: any[];
+  step: number;
+  id: string;
+  model: string;
+  contentSoFar: string;
+}
+
 interface StreamResult {
   content: string;
   toolCalls: ToolCall[];
   finishReason: string | null;
   statuses: StatusEvent[];
+  continuation?: ContinuationState;
 }
 
 async function consumeStream(
@@ -134,6 +143,7 @@ async function consumeStream(
   const toolCalls: (ToolCall & { _argFragments: string })[] = [];
   let finishReason: string | null = null;
   const statuses: StatusEvent[] = [];
+  let continuation: ContinuationState | undefined;
   let buffer = "";
 
   while (true) {
@@ -153,6 +163,11 @@ async function consumeStream(
         const reason = chunk.choices?.[0]?.finish_reason;
 
         if (reason) finishReason = reason;
+
+        // Continuation state — server is handing off due to timeout
+        if (delta?.continuation) {
+          continuation = delta.continuation;
+        }
 
         // Text content
         if (delta?.content) {
@@ -197,6 +212,7 @@ async function consumeStream(
     toolCalls: toolCalls.filter(Boolean).map(({ _argFragments, ...tc }) => tc),
     finishReason,
     statuses,
+    continuation,
   };
 }
 
@@ -227,12 +243,20 @@ export default function ApiTestChat() {
   }, []);
 
   const sendRequest = useCallback(
-    async (messages: Message[]) => {
+    async (messages: Message[], continuationState?: ContinuationState) => {
       setIsStreaming(true);
-      setStreamingContent("");
-      setActiveStatuses([]);
+      if (!continuationState) {
+        // Fresh request — clear streaming state
+        setStreamingContent("");
+        setActiveStatuses([]);
+      }
+      // On continuation, we keep the existing streaming content visible
 
-      log(`→ POST /api/chat/completions (${messages.length} messages, stream=true, multistep=true)`);
+      const isContinuation = !!continuationState;
+      log(isContinuation
+        ? `→ CONTINUATION POST /api/chat/completions (resuming from timeout)`
+        : `→ POST /api/chat/completions (${messages.length} messages, stream=true, multistep=true)`
+      );
 
       const res = await fetch("/api/chat/completions", {
         method: "POST",
@@ -241,10 +265,11 @@ export default function ApiTestChat() {
           messages,
           stream: true,
           multistep: true,
-          max_steps: 10,
+          max_steps: 30,
           max_tokens: 16384,
           tools: CUSTOM_TOOLS,
           temperature: 0.7,
+          ...(continuationState ? { _continuation: continuationState } : {}),
         }),
       });
 
@@ -276,6 +301,14 @@ export default function ApiTestChat() {
       );
 
       log(`← Stream done: finish_reason=${result.finishReason}, content=${result.content.length}ch, tools=${result.toolCalls.length}`);
+
+      // ── Continuation: server timed out, seamlessly re-request ──
+      if (result.finishReason === "continuation" && result.continuation) {
+        log(`↻ Continuation triggered — seamlessly re-requesting to continue where we left off`);
+        // Don't clear streaming content — the new request will append to it
+        // Recursively continue with the saved state
+        return sendRequest(messages, result.continuation);
+      }
 
       setStreamingContent("");
       setActiveStatuses([]);
