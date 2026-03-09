@@ -169,6 +169,36 @@ const GetStarted = () => {
     }
   }, [isAuthenticated, profile, navigate]);
 
+  // If user is authenticated but onboarding NOT completed (returning user), skip to step 3
+  useEffect(() => {
+    if (isAuthenticated && profile && !profile.onboarding_completed && !justSignedUpRef.current) {
+      // Pre-set their role from profile so step 3 renders correctly
+      const role = profile.role as UserRole;
+      if (role && role !== selectedRole) {
+        setSelectedRole(role);
+      }
+      // For candidates, try to detect their entry path from candidate_profiles
+      if (role === "candidate") {
+        supabase
+          .from("candidate_profiles")
+          .select("entry_path")
+          .eq("profile_id", profile.id)
+          .single()
+          .then(({ data }) => {
+            if (data?.entry_path === "liveworks") {
+              setSelectedPath("liveworks");
+            } else {
+              setSelectedPath("resume");
+            }
+          });
+      }
+      setStep(3);
+    }
+  }, [isAuthenticated, profile]);
+
+  // Returning user = authenticated but hasn't completed onboarding (skipped to step 3)
+  const isReturningUser = isAuthenticated && profile && !profile.onboarding_completed && !justSignedUpRef.current;
+
   // Map UI path IDs to database entry_path values
   const getEntryPath = (pathId: string | null): 'resume_upload' | 'liveworks' | 'civic_access' => {
     switch (pathId) {
@@ -893,7 +923,9 @@ const GetStarted = () => {
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
-                      <h2 className="text-2xl font-bold text-center text-white mb-8">Upload Your Resume</h2>
+                      <h2 className="text-2xl font-bold text-center text-white mb-8">
+                        {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
+                      </h2>
 
                       <input
                         ref={fileInputRef}
@@ -951,7 +983,9 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        {!isReturningUser && (
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        )}
                         <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
                             <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Matching mentor...</>
@@ -998,7 +1032,9 @@ const GetStarted = () => {
                       </div>
 
                       <div className="flex gap-4 pt-6">
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        {!isReturningUser && (
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                        )}
                         <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
                             <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
@@ -1022,9 +1058,14 @@ const GetStarted = () => {
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>
 
-                      <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
+                      <h2 className="text-2xl font-bold text-white mb-2">
+                        {isReturningUser ? "Welcome Back!" : "Welcome to The 3rd Academy!"}
+                      </h2>
                       <p className="text-gray-50 mb-6">
-                        Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
+                        {isReturningUser
+                          ? `Let's finish setting up your ${selectedRoleInfo?.title} account. Click below to complete your setup and access your dashboard.`
+                          : `Your ${selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.`
+                        }
                       </p>
 
                       <Button
