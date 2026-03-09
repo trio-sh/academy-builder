@@ -147,7 +147,7 @@ const GetStarted = () => {
   const [isCompletingSetup, setIsCompletingSetup] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { signUp, user, isAuthenticated, profile } = useAuth();
+  const { signUp, user, isAuthenticated, profile, refreshProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -323,6 +323,9 @@ const GetStarted = () => {
         .from("profiles")
         .update({ onboarding_completed: true, updated_at: new Date().toISOString() })
         .eq("id", user.id);
+
+      // Refresh the profile in AuthContext so ProtectedRoute sees onboarding_completed = true
+      await refreshProfile();
 
       // Auto-trigger mentor matching for candidate paths
       if (selectedRole === "candidate") {
