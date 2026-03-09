@@ -985,7 +985,7 @@ export default function AIAgent() {
 
     let currentMessages = [...messages, userMsg];
     let loopCount = 0;
-    const maxLoops = 8; // Allow enough loops for multi-step tasks (search → extract → synthesize → more)
+    const maxLoops = 20; // Allow enough loops for complex multi-step tasks
 
     while (loopCount < maxLoops) {
       loopCount++;
