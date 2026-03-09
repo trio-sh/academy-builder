@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -34,6 +35,7 @@ import {
   Send,
   Plus,
   User,
+  Bot,
 } from "lucide-react";
 
 type SchoolProfile = Database["public"]["Tables"]["school_profiles"]["Row"];
@@ -62,6 +64,7 @@ const navItems = [
   { name: "Observations", href: "/dashboard/school/observations", icon: ClipboardList },
   { name: "Analytics", href: "/dashboard/school/analytics", icon: TrendingUp },
   { name: "Messages", href: "/dashboard/school/messages", icon: MessageSquare },
+  { name: "AI Agent", href: "/dashboard/school/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/school/settings", icon: Settings },
 ];
 
@@ -1493,6 +1496,7 @@ const SchoolDashboard = () => {
             <Route path="observations" element={<Observations />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="messages" element={<SchoolMessagesPage />} />
+            <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
         </main>

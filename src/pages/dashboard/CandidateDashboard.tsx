@@ -12,6 +12,7 @@ import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
 import { InteractiveSkillAssessment } from "@/components/assessment/InteractiveSkillAssessment";
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
+import AIAgent from "@/pages/dashboard/AIAgent";
 import {
   LineChart,
   Line,
@@ -80,6 +81,7 @@ import {
   Mic,
   Brain,
   Zap,
+  Bot,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -142,6 +144,7 @@ const navItems = [
   { name: "Messages", href: "/dashboard/candidate/messages", icon: MessageSquare, section: "account" },
   { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell, section: "account" },
   { name: "Profile", href: "/dashboard/candidate/profile", icon: User, section: "account" },
+  { name: "AI Agent", href: "/dashboard/candidate/agent", icon: Bot, section: "account" },
   { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings, section: "account" },
 ];
 
@@ -6614,6 +6617,7 @@ const CandidateDashboard = () => {
             <Route path="messages" element={<MessagesPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
         </main>

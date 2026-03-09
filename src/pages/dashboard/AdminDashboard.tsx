@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -70,6 +71,7 @@ import {
   Database,
   Globe,
   Palette,
+  Bot,
 } from "lucide-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -134,6 +136,7 @@ const navItems = [
   { name: "Schools", href: "/dashboard/admin/schools", icon: GraduationCap },
   { name: "Communications", href: "/dashboard/admin/communications", icon: Mail },
   { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
+  { name: "AI Agent", href: "/dashboard/admin/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
 ];
 
@@ -2865,6 +2868,7 @@ const AdminDashboard = () => {
             <Route path="schools" element={<SchoolsManagement />} />
             <Route path="communications" element={<CommunicationsPage />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
         </main>

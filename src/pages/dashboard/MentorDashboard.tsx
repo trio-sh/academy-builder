@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -36,6 +37,7 @@ import {
   Lock,
   Target,
   AlertTriangle,
+  Bot,
 } from "lucide-react";
 
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
@@ -649,6 +651,7 @@ const navItems = [
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
+  { name: "AI Agent", href: "/dashboard/mentor/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/mentor/settings", icon: Settings },
 ];
 
@@ -3627,6 +3630,7 @@ const MentorDashboardInner = () => {
             <Route path="schedule" element={<Schedule />} />
             <Route path="messages" element={<MentorMessagesPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
           </Routes>
         </main>
