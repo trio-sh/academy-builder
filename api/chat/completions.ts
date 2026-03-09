@@ -181,7 +181,7 @@ const BUILTIN_TOOLS = [
     function: {
       name: "task_agent",
       description:
-        "Delegate a complex task to a more powerful AI model. Use this for: (1) generating long code (full HTML pages, multi-component apps), (2) complex creative writing, (3) detailed technical explanations, (4) any task that requires a large, thorough output. Pass the FULL user request as the prompt — do NOT summarize or shorten it. The task agent has no conversation context, so include ALL relevant details in the prompt.",
+        "Delegate a complex task to a more powerful AI model. The task agent has its own built-in tools: web_search, web_extract, and image_generation — so it can autonomously search the web, read pages, and generate images as part of its work. Use this for: (1) generating long code (full HTML pages, multi-component apps), (2) complex creative writing, (3) detailed technical explanations, (4) research-heavy tasks that need web lookup, (5) any task that requires a large, thorough output. Pass the FULL user request as the prompt — do NOT summarize or shorten it. The task agent has no conversation context, so include ALL relevant details in the prompt.",
       parameters: {
         type: "object",
         properties: {
@@ -273,8 +273,109 @@ interface TaskAgentArgs {
   max_tokens?: number;
 }
 
+// Tools available to the task agent (everything except task_agent itself to avoid recursion)
+const TASK_AGENT_TOOLS = [
+  {
+    type: "function" as const,
+    function: {
+      name: "web_search",
+      description:
+        "Search the web for real-time information. Returns top search results with snippets. Use when you need current events, facts, or any information that should be looked up.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "The search query to look up on the web.",
+          },
+        },
+        required: ["query"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "web_extract",
+      description:
+        "Extract and read the main content from a webpage URL. Returns the page text content. Use when you need to read an article, documentation, or any web page in detail.",
+      parameters: {
+        type: "object",
+        properties: {
+          url: {
+            type: "string",
+            description: "The full URL of the webpage to extract content from.",
+          },
+        },
+        required: ["url"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "image_generation",
+      description:
+        "Generate an image based on a text description. Returns the image URL. Use when asked to create, generate, or produce an image, illustration, icon, or visual.",
+      parameters: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+            description:
+              "A detailed text description of the image to generate. Be descriptive about style, colors, composition, subject, mood, lighting, etc.",
+          },
+          aspect: {
+            type: "string",
+            description:
+              'Aspect ratio. Examples: "1:1" (square), "16:9" (widescreen), "9:16" (portrait). Default: "1:1".',
+            default: "1:1",
+          },
+          seed: {
+            type: "number",
+            description:
+              "A numeric seed for reproducibility. If not provided, a random seed is used.",
+          },
+        },
+        required: ["prompt"],
+      },
+    },
+  },
+];
+
+const TASK_AGENT_TOOL_NAMES = new Set(TASK_AGENT_TOOLS.map((t) => t.function.name));
+const MAX_TASK_AGENT_TOOL_STEPS = 8;
+
 /**
- * Non-streaming: call Kilo Gateway, collect full response, return as string.
+ * Execute a tool call from the task agent. Reuses the same executors as the main brain.
+ */
+async function executeTaskAgentTool(
+  name: string,
+  args: Record<string, any>,
+  log?: ReturnType<typeof createLogger>
+): Promise<string> {
+  log?.info(`⚙ Task agent tool: ${name}(${JSON.stringify(args).slice(0, 200)})`);
+  const start = Date.now();
+  let result: string;
+  switch (name) {
+    case "web_search":
+      result = await executeWebSearch(args.query);
+      break;
+    case "web_extract":
+      result = await executeWebExtract(args.url);
+      break;
+    case "image_generation":
+      result = executeImageGeneration(args.prompt, args.aspect, args.seed);
+      break;
+    default:
+      result = `Unknown tool: ${name}`;
+  }
+  log?.info(`⚙ Task agent tool ${name} done (${Date.now() - start}ms): ${result.length}ch`);
+  return result;
+}
+
+/**
+ * Non-streaming: call Kilo Gateway with tool support, run a tool-calling loop.
  */
 async function executeTaskAgent(
   args: TaskAgentArgs,
@@ -285,54 +386,95 @@ async function executeTaskAgent(
     return "Error: Task agent is not configured. KILO_API_KEY environment variable is missing.";
   }
 
-  // Always use our configured default model — ignore whatever A0 passes
   const model = KILO_DEFAULT_MODEL;
   const maxTokens = args.max_tokens || 16384;
-  const messages: { role: string; content: string }[] = [];
+  const messages: { role: string; content: string | null; tool_calls?: any[]; tool_call_id?: string }[] = [];
 
   if (args.system_prompt) {
     messages.push({ role: "system", content: args.system_prompt });
   }
   messages.push({ role: "user", content: args.prompt });
 
-  log?.info(`⚙ Task agent call: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch`);
+  log?.info(`⚙ Task agent call: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch, tools=${TASK_AGENT_TOOLS.length}`);
   const start = Date.now();
 
-  try {
-    const res = await fetch(KILO_GATEWAY_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${KILO_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        max_tokens: maxTokens,
-        temperature: 0.7,
-        stream: false,
-      }),
-    });
+  for (let step = 0; step < MAX_TASK_AGENT_TOOL_STEPS; step++) {
+    try {
+      const res = await fetch(KILO_GATEWAY_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KILO_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          max_tokens: maxTokens,
+          temperature: 0.7,
+          stream: false,
+          tools: TASK_AGENT_TOOLS,
+        }),
+      });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      log?.error(`Task agent error ${res.status} (${Date.now() - start}ms): ${errText.slice(0, 500)}`);
-      return `Error from task agent: ${res.status} ${errText.slice(0, 200)}`;
+      if (!res.ok) {
+        const errText = await res.text();
+        log?.error(`Task agent error ${res.status} (${Date.now() - start}ms): ${errText.slice(0, 500)}`);
+        return `Error from task agent: ${res.status} ${errText.slice(0, 200)}`;
+      }
+
+      const data = await res.json();
+      const choice = data.choices?.[0];
+      const message = choice?.message;
+      const finishReason = choice?.finish_reason;
+
+      if (!message) {
+        log?.error("Task agent returned no message");
+        return "Error: Task agent returned no message.";
+      }
+
+      // If the model wants to call tools, execute them and loop
+      if (finishReason === "tool_calls" && message.tool_calls?.length > 0) {
+        log?.info(`⚙ Task agent step ${step + 1}: ${message.tool_calls.length} tool calls [${message.tool_calls.map((tc: any) => tc.function.name).join(", ")}]`);
+
+        // Add assistant message with tool_calls
+        messages.push({
+          role: "assistant",
+          content: message.content || null,
+          tool_calls: message.tool_calls,
+        });
+
+        // Execute each tool call and add results
+        for (const tc of message.tool_calls) {
+          const toolArgs = JSON.parse(tc.function.arguments || "{}");
+          const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
+          messages.push({
+            role: "tool",
+            tool_call_id: tc.id,
+            content: result,
+          });
+        }
+        continue; // next iteration of tool loop
+      }
+
+      // Normal stop — return the content
+      const content = message.content || "";
+      log?.info(`⚙ Task agent done (${Date.now() - start}ms, ${step + 1} steps): ${content.length}ch`);
+      return content;
+    } catch (err: any) {
+      log?.error(`Task agent fetch error: ${err.message}`);
+      return `Error calling task agent: ${err.message}`;
     }
-
-    const data = await res.json();
-    const content = data.choices?.[0]?.message?.content || "";
-    log?.info(`⚙ Task agent done (${Date.now() - start}ms): ${content.length}ch`);
-    return content;
-  } catch (err: any) {
-    log?.error(`Task agent fetch error: ${err.message}`);
-    return `Error calling task agent: ${err.message}`;
   }
+
+  log?.warn(`Task agent hit max tool steps (${MAX_TASK_AGENT_TOOL_STEPS})`);
+  return "Error: Task agent exceeded maximum tool steps.";
 }
 
 /**
- * Streaming: call Kilo Gateway with stream=true and pipe SSE tokens directly
- * into our own SSE response. Returns the full collected text for logging.
+ * Streaming: call Kilo Gateway with stream=true and tool support.
+ * Pipes text tokens directly to our SSE response. When Kilo requests tool calls,
+ * executes them server-side and continues the conversation (non-streaming for
+ * tool rounds, streaming for the final text response).
  */
 async function streamTaskAgent(
   args: TaskAgentArgs,
@@ -348,89 +490,160 @@ async function streamTaskAgent(
     return errMsg;
   }
 
-  // Always use our configured default model — ignore whatever A0 passes
   const model = KILO_DEFAULT_MODEL;
   const maxTokens = args.max_tokens || 16384;
-  const messages: { role: string; content: string }[] = [];
+  const messages: { role: string; content: string | null; tool_calls?: any[]; tool_call_id?: string }[] = [];
 
   if (args.system_prompt) {
     messages.push({ role: "system", content: args.system_prompt });
   }
   messages.push({ role: "user", content: args.prompt });
 
-  log?.info(`⚙ Task agent stream: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch`);
+  log?.info(`⚙ Task agent stream: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch, tools=${TASK_AGENT_TOOLS.length}`);
   const start = Date.now();
+  let totalCollected = "";
 
-  try {
-    const fetchRes = await fetch(KILO_GATEWAY_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${KILO_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        max_tokens: maxTokens,
-        temperature: 0.7,
-        stream: true,
-      }),
-    });
+  for (let step = 0; step < MAX_TASK_AGENT_TOOL_STEPS; step++) {
+    // Use non-streaming for tool-calling rounds (need to collect tool_calls),
+    // and streaming for the final text response.
+    // Strategy: always try streaming first. Collect tool_calls from the stream.
+    try {
+      const fetchRes = await fetch(KILO_GATEWAY_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KILO_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          max_tokens: maxTokens,
+          temperature: 0.7,
+          stream: true,
+          tools: TASK_AGENT_TOOLS,
+        }),
+      });
 
-    if (!fetchRes.ok) {
-      const errText = await fetchRes.text();
-      log?.error(`Task agent stream error ${fetchRes.status}: ${errText.slice(0, 500)}`);
-      const errMsg = `Error from task agent: ${fetchRes.status}`;
-      res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-      return errMsg;
-    }
+      if (!fetchRes.ok) {
+        const errText = await fetchRes.text();
+        log?.error(`Task agent stream error ${fetchRes.status}: ${errText.slice(0, 500)}`);
+        const errMsg = `Error from task agent: ${fetchRes.status}`;
+        res.write(sseChunk(sseId, sseModel, { content: errMsg }));
+        return totalCollected + errMsg;
+      }
 
-    if (!fetchRes.body) {
-      log?.error("Task agent stream: no response body");
-      const errMsg = "Error: Task agent returned no stream body.";
-      res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-      return errMsg;
-    }
+      if (!fetchRes.body) {
+        log?.error("Task agent stream: no response body");
+        const errMsg = "Error: Task agent returned no stream body.";
+        res.write(sseChunk(sseId, sseModel, { content: errMsg }));
+        return totalCollected + errMsg;
+      }
 
-    // Pipe Kilo SSE tokens → our SSE response in real-time
-    const reader = fetchRes.body.getReader();
-    const decoder = new TextDecoder();
-    let collected = "";
-    let buffer = "";
+      // Read the full stream, collecting content + tool_calls
+      const reader = fetchRes.body.getReader();
+      const decoder = new TextDecoder();
+      let collected = "";
+      const streamToolCalls: (any & { _argFragments: string })[] = [];
+      let finishReason: string | null = null;
+      let buffer = "";
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
 
-      for (const line of lines) {
-        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        for (const line of lines) {
+          if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
 
-        try {
-          const chunk = JSON.parse(line.slice(6));
-          const content = chunk.choices?.[0]?.delta?.content;
-          if (content) {
-            collected += content;
-            // Write directly to our SSE stream — true real-time piping
-            res.write(sseChunk(sseId, sseModel, { content }));
+          try {
+            const chunk = JSON.parse(line.slice(6));
+            const delta = chunk.choices?.[0]?.delta;
+            const reason = chunk.choices?.[0]?.finish_reason;
+
+            if (reason) finishReason = reason;
+
+            // Text content — pipe to client in real-time
+            if (delta?.content) {
+              collected += delta.content;
+              res.write(sseChunk(sseId, sseModel, { content: delta.content }));
+            }
+
+            // Tool call deltas — collect them
+            if (delta?.tool_calls) {
+              for (const tc of delta.tool_calls) {
+                const idx = tc.index ?? 0;
+                if (!streamToolCalls[idx]) {
+                  streamToolCalls[idx] = {
+                    id: tc.id || "",
+                    type: tc.type || "function",
+                    function: { name: tc.function?.name || "", arguments: "" },
+                    _argFragments: "",
+                  };
+                }
+                if (tc.id) streamToolCalls[idx].id = tc.id;
+                if (tc.function?.name) streamToolCalls[idx].function.name = tc.function.name;
+                if (tc.function?.arguments) {
+                  streamToolCalls[idx]._argFragments += tc.function.arguments;
+                  streamToolCalls[idx].function.arguments = streamToolCalls[idx]._argFragments;
+                }
+              }
+            }
+          } catch {
+            // skip malformed SSE chunks
           }
-        } catch {
-          // skip malformed SSE chunks
         }
       }
-    }
 
-    log?.info(`⚙ Task agent stream done (${Date.now() - start}ms): ${collected.length}ch piped`);
-    return collected;
-  } catch (err: any) {
-    log?.error(`Task agent stream fetch error: ${err.message}`);
-    const errMsg = `Error streaming from task agent: ${err.message}`;
-    res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-    return errMsg;
+      totalCollected += collected;
+
+      // Clean up tool calls
+      const parsedToolCalls = streamToolCalls
+        .filter(Boolean)
+        .map(({ _argFragments, ...tc }: any) => tc);
+
+      // If Kilo wants to call tools, execute them and continue
+      if (finishReason === "tool_calls" && parsedToolCalls.length > 0) {
+        log?.info(`⚙ Task agent stream step ${step + 1}: ${parsedToolCalls.length} tool calls [${parsedToolCalls.map((tc: any) => tc.function.name).join(", ")}]`);
+
+        // Add assistant message with tool_calls
+        messages.push({
+          role: "assistant",
+          content: collected || null,
+          tool_calls: parsedToolCalls,
+        });
+
+        // Execute each tool call, emit status events, add results
+        for (const tc of parsedToolCalls) {
+          sseToolStatus(res, sseId, sseModel, "tool_start", tc.function.name);
+          const toolArgs = JSON.parse(tc.function.arguments || "{}");
+          const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
+          sseToolStatus(res, sseId, sseModel, "tool_done", tc.function.name);
+
+          messages.push({
+            role: "tool",
+            tool_call_id: tc.id,
+            content: result,
+          });
+        }
+        continue; // next iteration — will stream the follow-up response
+      }
+
+      // Normal stop — we already piped all content
+      log?.info(`⚙ Task agent stream done (${Date.now() - start}ms, ${step + 1} steps): ${totalCollected.length}ch piped`);
+      return totalCollected;
+    } catch (err: any) {
+      log?.error(`Task agent stream fetch error: ${err.message}`);
+      const errMsg = `Error streaming from task agent: ${err.message}`;
+      res.write(sseChunk(sseId, sseModel, { content: errMsg }));
+      return totalCollected + errMsg;
+    }
   }
+
+  log?.warn(`Task agent stream hit max tool steps (${MAX_TASK_AGENT_TOOL_STEPS})`);
+  return totalCollected;
 }
 
 // ─── Tool Executor (dispatcher) ─────────────────────────────────────────────
@@ -673,15 +886,19 @@ const DEFAULT_SYSTEM_PROMPT = `You are a helpful, creative, and knowledgeable AI
 - Match your response length to the complexity of the request. Short questions get concise answers; creative/coding tasks get thorough outputs.
 
 ## Code Generation & Complex Tasks — IMPORTANT
-For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. USE IT when:
+For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. The task agent has its own built-in tools (web_search, web_extract, image_generation) — it can autonomously search the web, read pages, and generate images as part of its work. USE IT when:
 - The user asks you to generate a full HTML page, website, landing page, or multi-section UI
 - The user wants long-form code (more than ~50 lines expected)
 - The task requires detailed creative writing, long technical docs, or multi-file code
+- The user asks for research-heavy content that needs web lookups and thorough analysis
+- The user wants content with generated images embedded
 - Any request where a thorough, high-quality, long response is needed
 
 When calling task_agent:
 - Pass the user's FULL original request as the prompt — do NOT summarize or shorten it
 - Add relevant context, style preferences, and technical requirements to the prompt
+- If the task needs web research, tell the task agent to search the web in the prompt (it has web_search and web_extract tools)
+- If the task needs images, tell the task agent to generate them (it has image_generation tool)
 - If the user wants HTML/web pages, include in the prompt: "Produce a complete, standalone HTML file. Use Tailwind CSS via CDN. Include realistic content."
 - If the user mentions "dark theme", include that in the prompt
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
@@ -708,7 +925,7 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **task_agent** - Delegate complex tasks (full page generation, long code, detailed writing) to a powerful AI model. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
+4. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
