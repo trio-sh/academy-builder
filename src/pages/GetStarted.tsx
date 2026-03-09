@@ -162,9 +162,9 @@ const GetStarted = () => {
     return routes[role] || "/dashboard/candidate";
   };
 
-  // If user is already authenticated and didn't just sign up, redirect to dashboard
+  // If user is already authenticated with completed onboarding and didn't just sign up, redirect to dashboard
   useEffect(() => {
-    if (isAuthenticated && profile && !justSignedUpRef.current) {
+    if (isAuthenticated && profile && profile.onboarding_completed && !justSignedUpRef.current) {
       navigate(getDashboardRoute(profile.role), { replace: true });
     }
   }, [isAuthenticated, profile, navigate]);
