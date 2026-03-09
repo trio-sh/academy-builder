@@ -51,6 +51,8 @@ import {
   Unlock,
   Target,
   Bot,
+  PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -90,7 +92,7 @@ const navItems = [
   { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
   { name: "Messages", href: "/dashboard/employer/messages", icon: Send },
   { name: "Company", href: "/dashboard/employer/company", icon: Building2 },
-  { name: "AI Agent", href: "/dashboard/employer/agent", icon: Bot },
+  { name: "Praxis", href: "/dashboard/employer/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/employer/settings", icon: Settings },
 ];
 
@@ -3507,6 +3509,7 @@ const SettingsPage = () => {
 const EmployerDashboard = () => {
   const { profile, signOut, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notifications, setNotifications] = useState<{ id: string; title: string; message: string }[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
@@ -3545,22 +3548,24 @@ const EmployerDashboard = () => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-white/30">
-            <Link to="/" className="flex items-center gap-2">
-              <img
-                src="/icon-192.png"
-                alt="Logo"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                The 3rd Academy
-              </span>
-            </Link>
+          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
+            {sidebarCollapsed ? (
+              <Link to="/" className="flex items-center justify-center">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+              </Link>
+            ) : (
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <span className="font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                  The 3rd Academy
+                </span>
+              </Link>
+            )}
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-gray-400 hover:text-white"
@@ -3569,52 +3574,75 @@ const EmployerDashboard = () => {
             </button>
           </div>
 
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  title={sidebarCollapsed ? item.name : undefined}
+                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-emerald-600/20 to-teal-600/20 text-white border border-emerald-500/30"
                       : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  {!sidebarCollapsed && item.name}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/30">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-medium">
+          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+            </button>
+          </div>
+
+          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
+            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
+              <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-medium`}>
                 {profile?.first_name?.[0]}
                 {profile?.last_name?.[0]}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
-                  {profile?.first_name} {profile?.last_name}
-                </p>
-                <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
-              </div>
+              {!sidebarCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {profile?.first_name} {profile?.last_name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
+                </div>
+              )}
             </div>
-            <Button
-              variant="outline"
-              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
-              onClick={handleSignOut}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            {sidebarCollapsed ? (
+              <button
+                onClick={handleSignOut}
+                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            )}
           </div>
         </div>
       </aside>
 
-      <div className={`lg:pl-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
+      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}

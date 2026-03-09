@@ -36,6 +36,8 @@ import {
   Plus,
   User,
   Bot,
+  PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
 
 type SchoolProfile = Database["public"]["Tables"]["school_profiles"]["Row"];
@@ -64,7 +66,7 @@ const navItems = [
   { name: "Observations", href: "/dashboard/school/observations", icon: ClipboardList },
   { name: "Analytics", href: "/dashboard/school/analytics", icon: TrendingUp },
   { name: "Messages", href: "/dashboard/school/messages", icon: MessageSquare },
-  { name: "AI Agent", href: "/dashboard/school/agent", icon: Bot },
+  { name: "Praxis", href: "/dashboard/school/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/school/settings", icon: Settings },
 ];
 
@@ -1375,6 +1377,7 @@ const SettingsPage = () => {
 const SchoolDashboard = () => {
   const { profile, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
 
   const handleSignOut = async () => {
@@ -1393,23 +1396,25 @@ const SchoolDashboard = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between p-4 border-b border-white/30">
-            <Link to="/" className="flex items-center gap-2">
-              <img
-                src="/icon-192.png"
-                alt="Logo"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-                Civic Access Lab
-              </span>
-            </Link>
+          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
+            {sidebarCollapsed ? (
+              <Link to="/" className="flex items-center justify-center">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+              </Link>
+            ) : (
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <span className="font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                  Civic Access Lab
+                </span>
+              </Link>
+            )}
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-gray-400 hover:text-white"
@@ -1419,60 +1424,74 @@ const SchoolDashboard = () => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  title={sidebarCollapsed ? item.name : undefined}
+                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-teal-600/20 to-cyan-600/20 text-white border border-teal-500/30"
                       : "text-gray-400 hover:text-white hover:bg-black/80"
                   }`}
                 >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  {!sidebarCollapsed && item.name}
                 </Link>
               );
             })}
           </nav>
 
+          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+            </button>
+          </div>
+
           {/* User */}
-          <div className="p-4 border-t border-white/30">
-            <div className="flex items-center gap-3 mb-4">
+          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
+            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
               {profile?.avatar_url ? (
                 <img
                   src={profile.avatar_url}
                   alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
+                  className={`${sidebarCollapsed ? "w-8 h-8" : "w-10 h-10"} rounded-full object-cover`}
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold">
+                <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold`}>
                   {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-white truncate">
-                  {profile?.first_name} {profile?.last_name}
-                </p>
-                <p className="text-xs text-gray-400 truncate">School Admin</p>
-              </div>
+              {!sidebarCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-white truncate">
+                    {profile?.first_name} {profile?.last_name}
+                  </p>
+                  <p className="text-xs text-gray-400 truncate">School Admin</p>
+                </div>
+              )}
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 w-full px-4 py-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors`}
+              title={sidebarCollapsed ? "Sign Out" : undefined}
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              {!sidebarCollapsed && "Sign Out"}
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className={`lg:ml-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
+      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Header */}
         <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
