@@ -223,26 +223,55 @@ async function callA0(
 ): Promise<string> {
   const msgSummary = messages.map(m => `${m.role}(${m.content.length}ch)`).join(", ");
   log?.info(`→ A0 LLM call: ${messages.length} msgs [${msgSummary}], temp=${temperature}, max_tokens=${maxTokens}`);
-  const start = Date.now();
 
-  const res = await fetch(A0_LLM_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-    }),
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    log?.error(`← A0 error ${res.status} (${Date.now() - start}ms): ${errText.slice(0, 500)}`);
-    throw new Error(`A0 API error: ${res.status} ${errText}`);
+  const MAX_RETRIES = 2;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const start = Date.now();
+
+    const res = await fetch(A0_LLM_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      log?.error(`← A0 error ${res.status} (${Date.now() - start}ms): ${errText.slice(0, 500)}`);
+      throw new Error(`A0 API error: ${res.status} ${errText}`);
+    }
+    const data: A0Response = await res.json();
+    const completion = data.completion;
+    log?.info(`← A0 response (${Date.now() - start}ms, attempt ${attempt + 1}): ${completion.length}ch, preview: ${JSON.stringify(completion.slice(0, 200))}`);
+
+    if (completion.length > 0) {
+      return completion;
+    }
+
+    // Empty completion — retry with lower max_tokens and nudge
+    if (attempt < MAX_RETRIES) {
+      log?.warn(`Empty completion from A0 (attempt ${attempt + 1}/${MAX_RETRIES + 1}), retrying with reduced max_tokens and clarification`);
+      // Add a nudge to the last user message to help the LLM respond
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === "user" && !lastMsg.content.includes("[Please respond")) {
+        messages = [
+          ...messages.slice(0, -1),
+          {
+            role: "user",
+            content: lastMsg.content + "\n\n[Please respond with your full answer. Do not leave your response empty.]",
+          },
+        ];
+      }
+      // Reduce max_tokens to avoid timeout
+      maxTokens = Math.min(maxTokens, 8192);
+    }
   }
-  const data: A0Response = await res.json();
-  const completion = data.completion;
-  log?.info(`← A0 response (${Date.now() - start}ms): ${completion.length}ch, preview: ${JSON.stringify(completion.slice(0, 200))}`);
-  return completion;
+
+  // All retries exhausted — return empty (will show as empty response)
+  log?.error(`A0 returned empty completion after ${MAX_RETRIES + 1} attempts`);
+  return "";
 }
 
 // ─── Tool Call Parser ────────────────────────────────────────────────────────
@@ -398,6 +427,10 @@ async function runAgentLoop(
     if (toolCalls.length === 0) {
       log?.info("No tool calls — final response");
       finalContent = completion;
+      if (!finalContent && step === 1) {
+        log?.warn("Empty completion on first step — the model may have timed out or failed to generate a response");
+        finalContent = "I wasn't able to generate a response for that request. This can happen with very large code generation prompts. Try breaking it into smaller pieces, e.g.:\n\n- \"Create the HTML structure for a dark SaaS landing page\"\n- \"Add Tailwind CSS animations to this page\"\n- \"Write the hero section with a gradient background\"";
+      }
       break;
     }
 
@@ -796,8 +829,13 @@ async function streamAgentLoop(
 
     if (!toolSegment) {
       // Pure text response — stream it and finish
-      log?.info(`No tool calls — streaming final text (${completion.length}ch)`);
-      await streamTextTokens(res, id, model, completion);
+      let textToStream = completion;
+      if (!textToStream && step === 1) {
+        log?.warn("Empty completion on first stream step — returning fallback message");
+        textToStream = "I wasn't able to generate a response for that request. This can happen with very large code generation prompts. Try breaking it into smaller pieces, e.g.:\n\n- \"Create the HTML structure for a dark SaaS landing page\"\n- \"Add Tailwind CSS animations to this page\"\n- \"Write the hero section with a gradient background\"";
+      }
+      log?.info(`No tool calls — streaming final text (${textToStream.length}ch)`);
+      await streamTextTokens(res, id, model, textToStream);
       res.write(sseChunk(id, model, {}, "stop"));
       res.write("data: [DONE]\n\n");
       res.end();
