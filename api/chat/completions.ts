@@ -220,7 +220,8 @@ interface ParsedToolCall {
 
 function parseToolCalls(text: string): ParsedToolCall[] {
   const calls: ParsedToolCall[] = [];
-  const regex = /<tool_call>([\s\S]*?)<\/tool_call>/g;
+  // Match both closed </tool_call> tags and unclosed <tool_call> at end of string
+  const regex = /<tool_call>([\s\S]*?)(?:<\/tool_call>|$)/g;
   let match;
   while ((match = regex.exec(text)) !== null) {
     try {
@@ -236,7 +237,8 @@ function parseToolCalls(text: string): ParsedToolCall[] {
 }
 
 function stripToolCalls(text: string): string {
-  return text.replace(/<tool_call>[\s\S]*?<\/tool_call>/g, "").trim();
+  // Strip both closed and unclosed tool_call blocks
+  return text.replace(/<tool_call>[\s\S]*?(?:<\/tool_call>|$)/g, "").trim();
 }
 
 // ─── Multi-step Agent Loop ───────────────────────────────────────────────────
@@ -268,8 +270,10 @@ Built-in tools (executed automatically):
     });
   }
 
-  prompt += `\n\nTo call a tool, include EXACTLY this format in your response (you may include multiple):
+  prompt += `\n\nTo call a tool, include EXACTLY this format in your response (you MUST include both the opening AND closing tags):
 <tool_call>{"name": "tool_name", "arguments": {"param": "value"}}</tool_call>
+
+IMPORTANT: Always close with </tool_call>. Never omit the closing tag.
 
 After receiving tool results, synthesize them into a helpful response. Do NOT include tool_call blocks in your final answer to the user.`;
 
@@ -631,8 +635,8 @@ function splitCompletionSegments(text: string): Array<
     { type: "text"; content: string } | { type: "tool_calls"; calls: ParsedToolCall[] }
   > = [];
 
-  // Find all tool_call blocks and the text between them
-  const regex = /<tool_call>([\s\S]*?)<\/tool_call>/g;
+  // Find all tool_call blocks (closed or unclosed at end of string)
+  const regex = /<tool_call>([\s\S]*?)(?:<\/tool_call>|$)/g;
   let lastIndex = 0;
   let match;
   const calls: ParsedToolCall[] = [];
