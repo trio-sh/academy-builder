@@ -3747,7 +3747,7 @@ const Profile = () => {
     setIsSaving(true);
 
     try {
-      // Check if profile is reasonably complete
+      // Check if profile is reasonably complete — only promote to true, never demote
       const isProfileComplete = !!(
         formData.first_name &&
         formData.last_name &&
@@ -3755,18 +3755,23 @@ const Profile = () => {
         formData.skills.length > 0
       );
 
+      // Build update payload — never reset onboarding_completed back to false
+      const profileUpdate: Record<string, unknown> = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        headline: formData.headline,
+        bio: formData.bio,
+        location: formData.location,
+        updated_at: new Date().toISOString(),
+      };
+      if (isProfileComplete) {
+        profileUpdate.onboarding_completed = true;
+      }
+
       // Update profiles table
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          headline: formData.headline,
-          bio: formData.bio,
-          location: formData.location,
-          onboarding_completed: isProfileComplete,
-          updated_at: new Date().toISOString(),
-        })
+        .update(profileUpdate)
         .eq("id", user.id);
 
       if (profileError) {
