@@ -82,6 +82,8 @@ import {
   Brain,
   Zap,
   Bot,
+  PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
@@ -136,6 +138,7 @@ const navItems = [
   { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
   { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
+  { name: "Praxis", href: "/dashboard/candidate/agent", icon: Bot, section: "observation" },
   { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
   { name: "Readiness Reflection", href: "/dashboard/candidate/assessment", icon: Sliders, section: "preparation" },
   { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase, section: "liveworks" },
@@ -144,7 +147,6 @@ const navItems = [
   { name: "Messages", href: "/dashboard/candidate/messages", icon: MessageSquare, section: "account" },
   { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell, section: "account" },
   { name: "Profile", href: "/dashboard/candidate/profile", icon: User, section: "account" },
-  { name: "AI Agent", href: "/dashboard/candidate/agent", icon: Bot, section: "account" },
   { name: "Settings", href: "/dashboard/candidate/settings", icon: Settings, section: "account" },
 ];
 
@@ -6335,6 +6337,7 @@ const NotificationsPage = () => {
 const CandidateDashboard = () => {
   const { profile, signOut, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
@@ -6398,23 +6401,25 @@ const CandidateDashboard = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between p-4 border-b border-white/30">
-            <Link to="/" className="flex items-center gap-2">
-              <img
-                src="/icon-192.png"
-                alt="Logo"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                The 3rd Academy
-              </span>
-            </Link>
+          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
+            {sidebarCollapsed ? (
+              <Link to="/" className="flex items-center justify-center">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+              </Link>
+            ) : (
+              <Link to="/" className="flex items-center gap-2">
+                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <span className="font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  The 3rd Academy
+                </span>
+              </Link>
+            )}
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-gray-400 hover:text-white"
@@ -6424,7 +6429,7 @@ const CandidateDashboard = () => {
           </div>
 
           {/* Navigation - scrollable */}
-          <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent`}>
             {navItems.map((item, index) => {
               const isActive = location.pathname === item.href;
               const prevSection = index > 0 ? navItems[index - 1].section : null;
@@ -6433,12 +6438,12 @@ const CandidateDashboard = () => {
               return (
                 <div key={item.name}>
                   {/* Section divider labels */}
-                  {showSectionLabel && item.section === "observation" && (
+                  {!sidebarCollapsed && showSectionLabel && item.section === "observation" && (
                     <p className="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Observation Platform
                     </p>
                   )}
-                  {showSectionLabel && item.section === "preparation" && (
+                  {!sidebarCollapsed && showSectionLabel && item.section === "preparation" && (
                     <div className="mt-3 mb-1">
                       <div className="border-t border-white/30 mb-3" />
                       <div className="flex items-center gap-2 px-2 pb-1">
@@ -6451,7 +6456,7 @@ const CandidateDashboard = () => {
                       </div>
                     </div>
                   )}
-                  {showSectionLabel && item.section === "liveworks" && (
+                  {!sidebarCollapsed && showSectionLabel && item.section === "liveworks" && (
                     <div className="mt-3 mb-1">
                       <div className="border-t border-white/30 mb-3" />
                       <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -6459,7 +6464,7 @@ const CandidateDashboard = () => {
                       </p>
                     </div>
                   )}
-                  {showSectionLabel && item.section === "account" && (
+                  {!sidebarCollapsed && showSectionLabel && item.section === "account" && (
                     <div className="mt-3 mb-1">
                       <div className="border-t border-white/30 mb-3" />
                       <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -6467,9 +6472,13 @@ const CandidateDashboard = () => {
                       </p>
                     </div>
                   )}
+                  {sidebarCollapsed && showSectionLabel && index > 0 && (
+                    <div className="border-t border-white/10 my-2 mx-1" />
+                  )}
                   <Link
                     to={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors mb-0.5 ${
+                    title={sidebarCollapsed ? item.name : undefined}
+                    className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors mb-0.5 ${
                       isActive
                         ? item.section === "preparation"
                           ? "bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white border border-amber-500/30"
@@ -6477,50 +6486,73 @@ const CandidateDashboard = () => {
                         : "text-gray-400 hover:text-white hover:bg-black/80"
                     }`}
                   >
-                    <item.icon className={`w-5 h-5 ${item.section === "preparation" && isActive ? "text-amber-400" : ""}`} />
-                    {item.name}
+                    <item.icon className={`w-5 h-5 flex-shrink-0 ${item.section === "preparation" && isActive ? "text-amber-400" : ""}`} />
+                    {!sidebarCollapsed && item.name}
                   </Link>
                 </div>
               );
             })}
           </nav>
 
+          {/* Collapse toggle — desktop only */}
+          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+            </button>
+          </div>
+
           {/* User */}
-          <div className="p-4 border-t border-white/30">
-            <div className="flex items-center gap-3 mb-4">
+          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
+            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
               {profile?.avatar_url ? (
                 <img
                   src={profile.avatar_url}
                   alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
+                  className={`${sidebarCollapsed ? "w-8 h-8" : "w-10 h-10"} rounded-full object-cover`}
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium">
+                <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium`}>
                   {profile?.first_name?.[0]}
                   {profile?.last_name?.[0]}
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
-                  {profile?.first_name} {profile?.last_name}
-                </p>
-                <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
-              </div>
+              {!sidebarCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {profile?.first_name} {profile?.last_name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
+                </div>
+              )}
             </div>
-            <Button
-              variant="outline"
-              className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
-              onClick={handleSignOut}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            {sidebarCollapsed ? (
+              <button
+                onClick={handleSignOut}
+                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            )}
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className={`lg:pl-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
+      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button

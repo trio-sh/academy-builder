@@ -41,10 +41,13 @@ import {
   ArrowUp,
   Wrench,
   Clock,
+  X,
+  Paperclip,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { useAuth } from "@/contexts/AuthContext";
+import { parseResume } from "@/lib/resumeParser";
 import { supabase } from "@/lib/supabase";
 
 // ─── IndexedDB Schema ─────────────────────────────────────────────────────────
@@ -977,7 +980,7 @@ function summarizeUserContext(ctx: UserContext, role: string): string {
 
 function buildAgentPrompt(userContextSummary: string, pageContext: string, role: string): string {
   const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
-  return `You are Academy Agent — a powerful AI assistant embedded in The 3rd Academy platform. You have full access to the user's data, can interact with the page DOM, search the web, and extract web content. You are proactive, capable, and action-oriented.
+  return `You are Praxis — a powerful AI assistant embedded in The 3rd Academy platform. You have full access to the user's data, can interact with the page DOM, search the web, and extract web content. You are proactive, capable, and action-oriented.
 
 ## Platform Knowledge
 The 3rd Academy bridges credentials and workplace readiness through mentor-gated behavioral validation.
@@ -1142,6 +1145,9 @@ export default function AIAgent() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
+  const [attachedFiles, setAttachedFiles] = useState<{ name: string; text: string }[]>([]);
+  const [fileProcessing, setFileProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load persisted conversation from IndexedDB
   useEffect(() => {
@@ -1302,6 +1308,62 @@ export default function AIAgent() {
     [navigateFn, userContext]
   );
 
+  // ─── File attachment handler ──────────────────────────────────────────────
+
+  const ALLOWED_TYPES = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+
+  const handleFileAttach = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setFileProcessing(true);
+    const newAttachments: { name: string; text: string }[] = [];
+
+    for (const file of Array.from(files)) {
+      // Validate type
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        alert(`"${file.name}" is not supported. Please upload PDF, DOCX, DOC, or TXT files.`);
+        continue;
+      }
+      // Validate size
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`"${file.name}" is too large (max 10 MB).`);
+        continue;
+      }
+
+      try {
+        const parsed = await parseResume(file);
+        const text = parsed.rawText;
+
+        // Reject scanned / image-only docs — very little extractable text
+        if (file.type === "application/pdf" && text.replace(/\s/g, "").length < 50) {
+          alert(
+            `"${file.name}" appears to be a scanned document — Praxis cannot read image-based PDFs. Please upload a text-based (searchable) PDF or a DOCX file instead.`
+          );
+          continue;
+        }
+
+        newAttachments.push({ name: file.name, text });
+      } catch {
+        alert(`Failed to read "${file.name}". The file may be corrupted or password-protected.`);
+      }
+    }
+
+    if (newAttachments.length > 0) {
+      setAttachedFiles(prev => [...prev, ...newAttachments]);
+    }
+
+    setFileProcessing(false);
+    // Reset input so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, []);
+
   // ─── Send message with tool loop ─────────────────────────────────────────
 
   const sendMessage = useCallback(
@@ -1313,11 +1375,25 @@ export default function AIAgent() {
       const pageContext = extractPageContext();
       const systemPrompt = buildAgentPrompt(userContextSummary, pageContext, role);
 
-      const userApiMsg: ApiMessage = { role: "user", content: content.trim() };
-      const userUiMsg: UIMessage = { role: "user", content: content.trim(), timestamp: new Date() };
+      // Build full content including any attached files
+      let fullContent = content.trim();
+      if (attachedFiles.length > 0) {
+        const fileSection = attachedFiles
+          .map(f => `--- Attached file: ${f.name} ---\n${f.text.slice(0, 12000)}`)
+          .join("\n\n");
+        fullContent += `\n\n${fileSection}`;
+      }
+
+      const userApiMsg: ApiMessage = { role: "user", content: fullContent };
+      // Show the user message without the file dump
+      const displayContent = attachedFiles.length > 0
+        ? `${content.trim()}\n\n📎 ${attachedFiles.map(f => f.name).join(", ")}`
+        : content.trim();
+      const userUiMsg: UIMessage = { role: "user", content: displayContent, timestamp: new Date() };
 
       setUiMessages(prev => [...prev, userUiMsg]);
       setInput("");
+      setAttachedFiles([]);
 
       // Build API messages: system + recent conversation + new user message
       // Only include the last 40 messages to prevent context overflow
@@ -1334,7 +1410,7 @@ export default function AIAgent() {
         currentMessages = [systemMsg, ...result.messages.slice(1)]; // keep system prompt at front
       }
     },
-    [apiMessages, isStreaming, sendRequest, userContext, role]
+    [apiMessages, isStreaming, sendRequest, userContext, role, attachedFiles]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1516,7 +1592,7 @@ export default function AIAgent() {
       <div className="flex items-center justify-center h-[80vh]">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-4" />
-          <p className="text-gray-400">Loading your Academy Agent...</p>
+          <p className="text-gray-400">Loading Praxis...</p>
           <p className="text-xs text-gray-600 mt-1">Gathering your profile, progress, and context</p>
         </div>
       </div>
@@ -1544,7 +1620,7 @@ export default function AIAgent() {
                 Hey {profile?.first_name || "there"}!
               </h2>
               <p className="text-gray-400 max-w-md mx-auto text-sm">
-                I'm your Academy Agent. I can search the web, read pages across your dashboard, query your data, and help you with anything on the platform.
+                I'm Praxis, your AI co-pilot. I can search the web, read pages across your dashboard, query your data, and help you with anything on the platform.
               </p>
             </div>
 
@@ -1697,15 +1773,47 @@ export default function AIAgent() {
       {/* ─── Fixed Bottom Input ─── */}
       <div data-agent-own className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+            multiple
+            className="hidden"
+            onChange={handleFileAttach}
+          />
+
           <div className="relative bg-[#1a1a2e] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 focus-within:border-indigo-500/30 focus-within:shadow-indigo-500/5 transition-all">
+            {/* Attached files chips */}
+            {attachedFiles.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 px-3 pt-2.5">
+                {attachedFiles.map((f, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/15 border border-indigo-500/20 text-xs text-indigo-300"
+                  >
+                    <Paperclip className="w-3 h-3" />
+                    <span className="max-w-[140px] truncate">{f.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))}
+                      className="ml-0.5 text-indigo-400 hover:text-white"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
             <textarea
               ref={inputRef}
               data-agent-own
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder={isStreaming ? "Agent is working..." : "Reply..."}
-              className="w-full bg-transparent px-4 pt-3.5 pb-12 text-sm text-white placeholder:text-gray-500 focus:outline-none resize-none min-h-[52px] max-h-[200px]"
+              placeholder={isStreaming ? "Praxis is working..." : "Reply..."}
+              className={`w-full bg-transparent px-4 ${attachedFiles.length > 0 ? "pt-2" : "pt-3.5"} pb-12 text-sm text-white placeholder:text-gray-500 focus:outline-none resize-none min-h-[52px] max-h-[200px]`}
               rows={1}
               disabled={isStreaming}
             />
@@ -1713,15 +1821,12 @@ export default function AIAgent() {
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => {
-                    const input = document.createElement("input");
-                    input.type = "file";
-                    input.click();
-                  }}
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
-                  title="Attach file"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={fileProcessing}
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-40"
+                  title="Attach file (PDF, DOCX, TXT)"
                 >
-                  <Plus className="w-4 h-4" />
+                  {fileProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                 </button>
                 {uiMessages.length > 0 && (
                   <button
@@ -1754,7 +1859,7 @@ export default function AIAgent() {
             </div>
           </div>
           <p className="text-center text-[10px] text-gray-600 mt-2">
-            Academy Agent can make mistakes. Verify important information.
+            Praxis can make mistakes. Verify important information.
           </p>
         </form>
       </div>
