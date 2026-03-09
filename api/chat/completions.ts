@@ -55,7 +55,7 @@ const A0_LLM_URL = "https://api.a0.dev/ai/llm";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
-const KILO_GATEWAY_URL = "https://api.kilo.ai/v1/chat/completions";
+const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 
