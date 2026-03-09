@@ -505,56 +505,330 @@ function formatNonStreamingResponse(
   };
 }
 
-function formatSSEChunk(
-  id: string,
-  model: string,
-  content: string,
-  finishReason: string | null = null
-): string {
-  const chunk: any = {
+// ─── SSE Helpers ─────────────────────────────────────────────────────────────
+
+function sseChunk(id: string, model: string, delta: any, finishReason: string | null = null): string {
+  return `data: ${JSON.stringify({
     id,
     object: "chat.completion.chunk",
     created: Math.floor(Date.now() / 1000),
     model,
-    choices: [
-      {
-        index: 0,
-        delta: content ? { content } : {},
-        finish_reason: finishReason,
-      },
-    ],
-  };
-  return `data: ${JSON.stringify(chunk)}\n\n`;
+    choices: [{ index: 0, delta, finish_reason: finishReason }],
+  })}\n\n`;
 }
 
-// ─── Streaming Helpers ───────────────────────────────────────────────────────
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function streamResponse(
+/**
+ * Simulate token-by-token streaming from a complete string.
+ * Splits on word boundaries and punctuation, adds micro-delays.
+ */
+async function streamTextTokens(
   res: VercelResponse,
-  content: string,
-  model: string
+  id: string,
+  model: string,
+  text: string
 ) {
-  const id = generateId();
+  // Tokenize: split into word-ish chunks that feel like real tokens
+  // Match words, punctuation, whitespace runs, or individual chars
+  const tokens = text.match(/\s+|[.,!?;:—–\-()[\]{}""'']+|\S+/g) || [text];
 
-  // Initial chunk with role
-  const roleChunk = {
-    id,
-    object: "chat.completion.chunk",
-    created: Math.floor(Date.now() / 1000),
-    model,
-    choices: [{ index: 0, delta: { role: "assistant", content: "" }, finish_reason: null }],
-  };
-  res.write(`data: ${JSON.stringify(roleChunk)}\n\n`);
+  for (const token of tokens) {
+    res.write(sseChunk(id, model, { content: token }));
 
-  // Stream content in chunks of ~20 chars for smooth output
-  const chunkSize = 20;
-  for (let i = 0; i < content.length; i += chunkSize) {
-    const slice = content.slice(i, i + chunkSize);
-    res.write(formatSSEChunk(id, model, slice));
+    // Variable delay based on token type for natural feel
+    if (/^[.!?]/.test(token)) {
+      // Sentence-end punctuation: longer pause
+      await sleep(40 + Math.random() * 30);
+    } else if (/^[,;:—–]/.test(token)) {
+      // Mid-sentence punctuation: medium pause
+      await sleep(20 + Math.random() * 20);
+    } else if (/^\n/.test(token)) {
+      // Newlines: brief pause
+      await sleep(25 + Math.random() * 15);
+    } else if (token.length > 8) {
+      // Long words: slightly slower
+      await sleep(18 + Math.random() * 12);
+    } else {
+      // Regular tokens: fast
+      await sleep(8 + Math.random() * 14);
+    }
+  }
+}
+
+/**
+ * Stream custom tool_calls in OpenAI delta format.
+ * Fragments the arguments string to simulate incremental generation.
+ */
+function streamToolCallDeltas(
+  res: VercelResponse,
+  id: string,
+  model: string,
+  toolCalls: ParsedToolCall[],
+  customToolNames: Set<string>
+): ToolCall[] {
+  const pending: ToolCall[] = [];
+
+  toolCalls
+    .filter((tc) => customToolNames.has(tc.name))
+    .forEach((tc, index) => {
+      const callId = generateToolCallId();
+      const argsStr = JSON.stringify(tc.arguments);
+
+      // First chunk: id, type, function name, start of arguments
+      res.write(sseChunk(id, model, {
+        tool_calls: [{
+          index,
+          id: callId,
+          type: "function",
+          function: { name: tc.name, arguments: "" },
+        }],
+      }));
+
+      // Stream arguments in small fragments (4-12 chars)
+      const fragSize = 8;
+      for (let i = 0; i < argsStr.length; i += fragSize) {
+        const frag = argsStr.slice(i, i + fragSize);
+        res.write(sseChunk(id, model, {
+          tool_calls: [{ index, function: { arguments: frag } }],
+        }));
+      }
+
+      pending.push({
+        id: callId,
+        type: "function",
+        function: { name: tc.name, arguments: argsStr },
+      });
+    });
+
+  return pending;
+}
+
+/**
+ * Emit a custom_status event for built-in tool execution visibility.
+ */
+function sseToolStatus(
+  res: VercelResponse,
+  id: string,
+  model: string,
+  type: "tool_start" | "tool_done",
+  name: string,
+  args?: Record<string, any>
+) {
+  const status: any = { type, name };
+  if (args) status.arguments = args;
+  res.write(sseChunk(id, model, { custom_status: status }));
+}
+
+/**
+ * Parse a completion into text segments and tool call segments.
+ * Returns them in order so we can stream text, then handle tool calls.
+ */
+function splitCompletionSegments(text: string): Array<
+  { type: "text"; content: string } | { type: "tool_calls"; calls: ParsedToolCall[] }
+> {
+  const segments: Array<
+    { type: "text"; content: string } | { type: "tool_calls"; calls: ParsedToolCall[] }
+  > = [];
+
+  // Find all tool_call blocks and the text between them
+  const regex = /<tool_call>([\s\S]*?)<\/tool_call>/g;
+  let lastIndex = 0;
+  let match;
+  const calls: ParsedToolCall[] = [];
+
+  while ((match = regex.exec(text)) !== null) {
+    // Text before this tool_call
+    const before = text.slice(lastIndex, match.index).trim();
+    if (before) {
+      segments.push({ type: "text", content: before });
+    }
+
+    // Parse the tool call
+    try {
+      const parsed = JSON.parse(match[1].trim());
+      if (parsed.name && parsed.arguments) {
+        calls.push(parsed);
+      }
+    } catch {
+      // skip malformed
+    }
+
+    lastIndex = match.index + match[0].length;
   }
 
-  // Final chunk
-  res.write(formatSSEChunk(id, model, "", "stop"));
+  // Collect all tool calls into one segment
+  if (calls.length > 0) {
+    segments.push({ type: "tool_calls", calls });
+  }
+
+  // Text after all tool_calls
+  const after = text.slice(lastIndex).trim();
+  if (after) {
+    segments.push({ type: "text", content: after });
+  }
+
+  return segments;
+}
+
+// ─── Streaming Agent Loop ────────────────────────────────────────────────────
+
+async function streamAgentLoop(
+  res: VercelResponse,
+  messages: OpenAIMessage[],
+  temperature: number,
+  maxTokens: number,
+  maxSteps: number,
+  model: string,
+  userTools?: any[]
+) {
+  const id = generateId();
+  const customToolNames = new Set(
+    (userTools || []).map((t: any) => (t.function || t).name)
+  );
+
+  // Convert OpenAI messages to A0 format
+  const a0Messages: A0Message[] = [];
+  const toolSystemPrompt = buildToolSystemPrompt(userTools);
+
+  const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
+  if (hasSystemMsg) {
+    a0Messages.push({
+      role: "system",
+      content: messages[0].content + "\n\n" + toolSystemPrompt,
+    });
+  } else {
+    a0Messages.push({ role: "system", content: toolSystemPrompt });
+  }
+
+  const startIdx = hasSystemMsg ? 1 : 0;
+  for (let i = startIdx; i < messages.length; i++) {
+    const msg = messages[i];
+    if (msg.role === "tool") {
+      a0Messages.push({
+        role: "user",
+        content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
+      });
+    } else if (msg.role === "assistant" && msg.tool_calls) {
+      const toolInfo = msg.tool_calls
+        .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
+        .join("\n");
+      a0Messages.push({
+        role: "assistant",
+        content: (msg.content || "") + "\n" + toolInfo,
+      });
+    } else {
+      a0Messages.push({
+        role: msg.role === "assistant" ? "assistant" : "user",
+        content: msg.content || "",
+      });
+    }
+  }
+
+  // Send initial role chunk
+  res.write(sseChunk(id, model, { role: "assistant", content: "" }));
+
+  let step = 0;
+
+  while (step < maxSteps) {
+    step++;
+
+    const completion = await callA0(a0Messages, temperature, maxTokens);
+    const segments = splitCompletionSegments(completion);
+
+    // Check if there are any tool calls at all
+    const toolSegment = segments.find((s) => s.type === "tool_calls") as
+      | { type: "tool_calls"; calls: ParsedToolCall[] }
+      | undefined;
+
+    if (!toolSegment) {
+      // Pure text response — stream it and finish
+      await streamTextTokens(res, id, model, completion);
+      res.write(sseChunk(id, model, {}, "stop"));
+      res.write("data: [DONE]\n\n");
+      res.end();
+      return;
+    }
+
+    // There are tool calls — stream any leading text first
+    for (const seg of segments) {
+      if (seg.type === "text") {
+        await streamTextTokens(res, id, model, seg.content);
+      }
+      if (seg.type === "tool_calls") break; // handle tool calls below
+    }
+
+    const allCalls = toolSegment.calls;
+    const builtinCalls = allCalls.filter((tc) => isBuiltinTool(tc.name));
+    const customCalls = allCalls.filter((tc) => customToolNames.has(tc.name));
+    const unknownCalls = allCalls.filter(
+      (tc) => !isBuiltinTool(tc.name) && !customToolNames.has(tc.name)
+    );
+
+    // ── Custom tool calls → stream as OpenAI tool_calls, then STOP ──
+    if (customCalls.length > 0) {
+      // Execute any co-occurring built-in calls silently first
+      if (builtinCalls.length > 0) {
+        for (const tc of builtinCalls) {
+          sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
+          await executeTool(tc.name, tc.arguments);
+          sseToolStatus(res, id, model, "tool_done", tc.name);
+        }
+      }
+
+      // Stream custom tool call deltas
+      streamToolCallDeltas(res, id, model, allCalls, customToolNames);
+
+      // Finish with tool_calls reason
+      res.write(sseChunk(id, model, {}, "tool_calls"));
+      res.write("data: [DONE]\n\n");
+      res.end();
+      return;
+    }
+
+    // ── Only built-in tool calls → execute server-side, show status, continue loop ──
+    const results: { name: string; result: string }[] = [];
+
+    for (const tc of [...builtinCalls, ...unknownCalls]) {
+      sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
+      const result = await executeTool(tc.name, tc.arguments);
+      sseToolStatus(res, id, model, "tool_done", tc.name);
+      results.push({ name: tc.name, result });
+    }
+
+    // Feed results back into conversation for next LLM turn
+    const cleanedAssistant = stripToolCalls(completion);
+    a0Messages.push({
+      role: "assistant",
+      content: cleanedAssistant || `[Calling tools: ${allCalls.map((t) => t.name).join(", ")}]`,
+    });
+
+    const resultsText = results
+      .map((r) => `[Tool Result - ${r.name}]:\n${r.result.slice(0, 6000)}`)
+      .join("\n\n");
+    a0Messages.push({ role: "user", content: resultsText });
+
+    // If last step, force final response
+    if (step >= maxSteps) {
+      a0Messages.push({
+        role: "user",
+        content:
+          "[System: You have reached the maximum number of tool steps. Please provide your final response now based on all the information gathered.]",
+      });
+      const finalCompletion = await callA0(a0Messages, temperature, maxTokens);
+      const finalText = stripToolCalls(finalCompletion);
+      await streamTextTokens(res, id, model, finalText);
+      res.write(sseChunk(id, model, {}, "stop"));
+      res.write("data: [DONE]\n\n");
+      res.end();
+      return;
+    }
+
+    // Otherwise, loop continues — next LLM turn will stream more text
+  }
+
+  // Fallback: end stream if loop exits without returning
+  res.write(sseChunk(id, model, {}, "stop"));
   res.write("data: [DONE]\n\n");
   res.end();
 }
@@ -598,7 +872,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? Math.min(body.max_steps ?? 10, MAX_STEPS_LIMIT)
       : DEFAULT_MAX_STEPS;
 
-    // Run the agent loop (single-step or multi-step)
+    if (stream) {
+      // Streaming: run the agent loop with live SSE output
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+      return streamAgentLoop(
+        res,
+        body.messages,
+        temperature,
+        maxTokens,
+        maxSteps,
+        model,
+        body.tools
+      );
+    }
+
+    // Non-streaming: run the agent loop and return complete response
     const result = await runAgentLoop(
       body.messages,
       temperature,
@@ -606,19 +896,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       maxSteps,
       body.tools
     );
-
-    // If custom tool calls are pending, always return non-streaming
-    // so the caller can process tool_calls and send results back
-    if (result.pending_tool_calls && result.pending_tool_calls.length > 0) {
-      return res.status(200).json(formatNonStreamingResponse(result, model));
-    }
-
-    if (stream) {
-      res.setHeader("Content-Type", "text/event-stream");
-      res.setHeader("Cache-Control", "no-cache");
-      res.setHeader("Connection", "keep-alive");
-      return streamResponse(res, result.content || "", model);
-    }
 
     return res.status(200).json(formatNonStreamingResponse(result, model));
   } catch (err: any) {
