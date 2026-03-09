@@ -40,7 +40,7 @@ const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 
-const DEFAULT_MAX_TOKENS = 4096;
+const DEFAULT_MAX_TOKENS = 16384;
 const DEFAULT_TEMPERATURE = 0.7;
 const DEFAULT_MAX_STEPS = 1;
 const MAX_STEPS_LIMIT = 20;

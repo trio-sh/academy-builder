@@ -242,6 +242,7 @@ export default function ApiTestChat() {
           stream: true,
           multistep: true,
           max_steps: 10,
+          max_tokens: 16384,
           tools: CUSTOM_TOOLS,
           temperature: 0.7,
         }),
