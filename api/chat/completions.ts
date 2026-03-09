@@ -55,7 +55,7 @@ const A0_LLM_URL = "https://api.a0.dev/ai/llm";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
-const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/v1/chat/completions";
+const KILO_GATEWAY_URL = "https://api.kilo.ai/v1/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 
@@ -285,7 +285,8 @@ async function executeTaskAgent(
     return "Error: Task agent is not configured. KILO_API_KEY environment variable is missing.";
   }
 
-  const model = args.model || KILO_DEFAULT_MODEL;
+  // Always use our configured default model — ignore whatever A0 passes
+  const model = KILO_DEFAULT_MODEL;
   const maxTokens = args.max_tokens || 16384;
   const messages: { role: string; content: string }[] = [];
 
@@ -347,7 +348,8 @@ async function streamTaskAgent(
     return errMsg;
   }
 
-  const model = args.model || KILO_DEFAULT_MODEL;
+  // Always use our configured default model — ignore whatever A0 passes
+  const model = KILO_DEFAULT_MODEL;
   const maxTokens = args.max_tokens || 16384;
   const messages: { role: string; content: string }[] = [];
 
@@ -706,7 +708,7 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **task_agent** - Delegate complex tasks (full page generation, long code, detailed writing) to a powerful AI model. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "model": "optional model name", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, or any task needing a large output.`;
+4. **task_agent** - Delegate complex tasks (full page generation, long code, detailed writing) to a powerful AI model. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
