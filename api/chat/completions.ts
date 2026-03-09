@@ -185,18 +185,6 @@ async function executeTool(
 
 // ─── A0 LLM Caller ──────────────────────────────────────────────────────────
 
-const TOOL_SYSTEM_PROMPT = `You have access to the following built-in tools. When you need to use a tool, respond with a JSON tool call block.
-
-Available tools:
-1. **web_search** - Search the web. Params: { "query": "search terms" }
-2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
-3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-
-To call a tool, include EXACTLY this format in your response (you may include multiple):
-<tool_call>{"name": "tool_name", "arguments": {"param": "value"}}</tool_call>
-
-After receiving tool results, synthesize them into a helpful response. Do NOT include tool_call blocks in your final answer to the user.`;
-
 interface A0Message {
   role: string;
   content: string;
@@ -253,29 +241,79 @@ function stripToolCalls(text: string): string {
 
 // ─── Multi-step Agent Loop ───────────────────────────────────────────────────
 
+// ─── Tool Classification ─────────────────────────────────────────────────────
+
+const BUILTIN_TOOL_NAMES = new Set(["web_search", "web_extract", "image_generation"]);
+
+function isBuiltinTool(name: string): boolean {
+  return BUILTIN_TOOL_NAMES.has(name);
+}
+
+function buildToolSystemPrompt(userTools?: any[]): string {
+  let prompt = `You have access to tools. When you need to use a tool, respond with a JSON tool call block.
+
+Built-in tools (executed automatically):
+1. **web_search** - Search the web. Params: { "query": "search terms" }
+2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
+3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }`;
+
+  if (userTools && userTools.length > 0) {
+    prompt += `\n\nCustom tools (provided by the caller):`;
+    userTools.forEach((tool, i) => {
+      const fn = tool.function || tool;
+      const params = fn.parameters
+        ? ` Params: ${JSON.stringify(fn.parameters.properties ? Object.fromEntries(Object.entries(fn.parameters.properties).map(([k, v]: [string, any]) => [k, v.type || "any"])) : {})}`
+        : "";
+      prompt += `\n${i + 4}. **${fn.name}** - ${fn.description || "No description"}.${params}`;
+    });
+  }
+
+  prompt += `\n\nTo call a tool, include EXACTLY this format in your response (you may include multiple):
+<tool_call>{"name": "tool_name", "arguments": {"param": "value"}}</tool_call>
+
+After receiving tool results, synthesize them into a helpful response. Do NOT include tool_call blocks in your final answer to the user.`;
+
+  return prompt;
+}
+
+function generateToolCallId(): string {
+  return "call_" + Math.random().toString(36).substring(2, 14);
+}
+
+// ─── Multi-step Agent Loop ───────────────────────────────────────────────────
+
+interface AgentResult {
+  content: string | null;
+  tool_calls_made: { name: string; arguments: any; result: string }[];
+  // When custom tools are requested, we return them as pending OpenAI tool_calls
+  pending_tool_calls: ToolCall[] | null;
+  finish_reason: "stop" | "tool_calls";
+}
+
 async function runAgentLoop(
   messages: OpenAIMessage[],
   temperature: number,
   maxTokens: number,
   maxSteps: number,
   userTools?: any[]
-): Promise<{
-  content: string;
-  tool_calls_made: { name: string; arguments: any; result: string }[];
-  finish_reason: string;
-}> {
+): Promise<AgentResult> {
+  const customToolNames = new Set(
+    (userTools || []).map((t: any) => (t.function || t).name)
+  );
+
   // Convert OpenAI messages to A0 format
   const a0Messages: A0Message[] = [];
+  const toolSystemPrompt = buildToolSystemPrompt(userTools);
 
   // Inject tool system prompt at the start
   const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
   if (hasSystemMsg) {
     a0Messages.push({
       role: "system",
-      content: messages[0].content + "\n\n" + TOOL_SYSTEM_PROMPT,
+      content: messages[0].content + "\n\n" + toolSystemPrompt,
     });
   } else {
-    a0Messages.push({ role: "system", content: TOOL_SYSTEM_PROMPT });
+    a0Messages.push({ role: "system", content: toolSystemPrompt });
   }
 
   // Add remaining messages
@@ -283,10 +321,19 @@ async function runAgentLoop(
   for (let i = startIdx; i < messages.length; i++) {
     const msg = messages[i];
     if (msg.role === "tool") {
-      // Tool results from external callers - embed as assistant context
+      // Tool results from external callers - embed as context
       a0Messages.push({
         role: "user",
         content: `[Tool Result for ${msg.tool_call_id || msg.name}]: ${msg.content}`,
+      });
+    } else if (msg.role === "assistant" && msg.tool_calls) {
+      // Assistant message that had tool_calls - reconstruct context
+      const toolInfo = msg.tool_calls
+        .map((tc) => `[Called ${tc.function.name}(${tc.function.arguments})]`)
+        .join("\n");
+      a0Messages.push({
+        role: "assistant",
+        content: (msg.content || "") + "\n" + toolInfo,
       });
     } else {
       a0Messages.push({
@@ -307,25 +354,68 @@ async function runAgentLoop(
     const toolCalls = parseToolCalls(completion);
 
     if (toolCalls.length === 0) {
-      // No tool calls - this is the final response
       finalContent = completion;
       break;
     }
 
-    // Execute all tool calls in parallel
-    const results = await Promise.all(
-      toolCalls.map(async (tc) => {
-        const result = await executeTool(tc.name, tc.arguments);
-        allToolCalls.push({
+    // Separate built-in vs custom tool calls
+    const builtinCalls = toolCalls.filter((tc) => isBuiltinTool(tc.name));
+    const customCalls = toolCalls.filter((tc) => customToolNames.has(tc.name));
+    const unknownCalls = toolCalls.filter(
+      (tc) => !isBuiltinTool(tc.name) && !customToolNames.has(tc.name)
+    );
+
+    // If there are custom tool calls, we must return them to the frontend
+    if (customCalls.length > 0) {
+      // First, execute any built-in calls that came in the same turn
+      const builtinResults = await Promise.all(
+        builtinCalls.map(async (tc) => {
+          const result = await executeTool(tc.name, tc.arguments);
+          allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
+          return { name: tc.name, result };
+        })
+      );
+
+      // Format pending custom tool calls as OpenAI tool_calls
+      const pendingToolCalls: ToolCall[] = customCalls.map((tc) => ({
+        id: generateToolCallId(),
+        type: "function" as const,
+        function: {
           name: tc.name,
-          arguments: tc.arguments,
-          result,
-        });
+          arguments: JSON.stringify(tc.arguments),
+        },
+      }));
+
+      // Build the assistant content (stripped of tool_call blocks)
+      const cleanedContent = stripToolCalls(completion) || null;
+
+      // If we also resolved built-in tools, append their results as context
+      let assistantContent = cleanedContent;
+      if (builtinResults.length > 0) {
+        const builtinContext = builtinResults
+          .map((r) => `[${r.name} result]: ${r.result.slice(0, 3000)}`)
+          .join("\n");
+        assistantContent = (assistantContent || "") + "\n\n" + builtinContext;
+      }
+
+      return {
+        content: assistantContent,
+        tool_calls_made: allToolCalls,
+        pending_tool_calls: pendingToolCalls,
+        finish_reason: "tool_calls",
+      };
+    }
+
+    // All tool calls are built-in — execute them server-side
+    const results = await Promise.all(
+      [...builtinCalls, ...unknownCalls].map(async (tc) => {
+        const result = await executeTool(tc.name, tc.arguments);
+        allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
         return { name: tc.name, result };
       })
     );
 
-    // Add assistant message (with tool calls stripped) and tool results
+    // Add assistant message and tool results to conversation
     const cleanedAssistant = stripToolCalls(completion);
     if (cleanedAssistant) {
       a0Messages.push({ role: "assistant", content: cleanedAssistant });
@@ -336,12 +426,8 @@ async function runAgentLoop(
       });
     }
 
-    // Add tool results as a user message (since a0 doesn't support tool role)
     const resultsText = results
-      .map(
-        (r) =>
-          `[Tool Result - ${r.name}]:\n${r.result.slice(0, 6000)}`
-      )
+      .map((r) => `[Tool Result - ${r.name}]:\n${r.result.slice(0, 6000)}`)
       .join("\n\n");
     a0Messages.push({ role: "user", content: resultsText });
 
@@ -361,6 +447,7 @@ async function runAgentLoop(
   return {
     content: finalContent,
     tool_calls_made: allToolCalls,
+    pending_tool_calls: null,
     finish_reason: "stop",
   };
 }
@@ -372,12 +459,23 @@ function generateId(): string {
 }
 
 function formatNonStreamingResponse(
-  content: string,
-  model: string,
-  toolCallsMade: { name: string; arguments: any; result: string }[]
+  result: AgentResult,
+  model: string
 ) {
+  const content = result.content || "";
   const promptTokensEstimate = Math.ceil(content.length / 4);
   const completionTokensEstimate = Math.ceil(content.length / 4);
+
+  // Build the message object
+  const message: any = {
+    role: "assistant",
+    content: result.content,
+  };
+
+  // If there are pending custom tool calls, attach them (OpenAI format)
+  if (result.pending_tool_calls && result.pending_tool_calls.length > 0) {
+    message.tool_calls = result.pending_tool_calls;
+  }
 
   return {
     id: generateId(),
@@ -387,11 +485,8 @@ function formatNonStreamingResponse(
     choices: [
       {
         index: 0,
-        message: {
-          role: "assistant",
-          content,
-        },
-        finish_reason: "stop",
+        message,
+        finish_reason: result.finish_reason === "tool_calls" ? "tool_calls" : "stop",
       },
     ],
     usage: {
@@ -401,8 +496,8 @@ function formatNonStreamingResponse(
     },
     // Custom extension: expose internal tool usage metadata
     _meta: {
-      internal_tool_calls: toolCallsMade.length,
-      tools_used: toolCallsMade.map((tc) => ({
+      internal_tool_calls: result.tool_calls_made.length,
+      tools_used: result.tool_calls_made.map((tc) => ({
         name: tc.name,
         arguments: tc.arguments,
       })),
@@ -512,16 +607,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body.tools
     );
 
+    // If custom tool calls are pending, always return non-streaming
+    // so the caller can process tool_calls and send results back
+    if (result.pending_tool_calls && result.pending_tool_calls.length > 0) {
+      return res.status(200).json(formatNonStreamingResponse(result, model));
+    }
+
     if (stream) {
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
-      return streamResponse(res, result.content, model);
+      return streamResponse(res, result.content || "", model);
     }
 
-    return res
-      .status(200)
-      .json(formatNonStreamingResponse(result.content, model, result.tool_calls_made));
+    return res.status(200).json(formatNonStreamingResponse(result, model));
   } catch (err: any) {
     console.error("API Error:", err);
     return res.status(500).json({
