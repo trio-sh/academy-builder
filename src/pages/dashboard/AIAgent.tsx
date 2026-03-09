@@ -415,18 +415,27 @@ function normalizeFieldQuery(query: string): string[] {
   return [...new Set(candidates)];
 }
 
+/** Skip elements that belong to the agent itself (marked with data-agent-own) */
+function isAgentOwn(el: HTMLElement): boolean {
+  return el.hasAttribute("data-agent-own") || !!el.closest("[data-agent-own]");
+}
+
 function findElement(query: string): HTMLElement | null {
   const queries = normalizeFieldQuery(query);
   for (const q of queries) {
-    try { const el = document.querySelector(q) as HTMLElement; if (el) return el; } catch { /* */ }
+    try { const el = document.querySelector(q) as HTMLElement; if (el && !isAgentOwn(el)) return el; } catch { /* */ }
     const byId = document.getElementById(q);
-    if (byId) return byId;
-    try { const byName = document.querySelector(`[name="${q}"]`) as HTMLElement; if (byName) return byName; } catch { /* */ }
-    try { const byPlaceholder = document.querySelector(`[placeholder="${q}"], [placeholder*="${q}" i]`) as HTMLElement; if (byPlaceholder) return byPlaceholder; } catch { /* */ }
-    try { const byType = document.querySelector(`input[type="${q}"]`) as HTMLElement; if (byType) return byType; } catch { /* */ }
+    if (byId && !isAgentOwn(byId)) return byId;
+    try { const byName = document.querySelector(`[name="${q}"]`) as HTMLElement; if (byName && !isAgentOwn(byName)) return byName; } catch { /* */ }
+    try {
+      const byPlaceholder = Array.from(document.querySelectorAll(`[placeholder="${q}"], [placeholder*="${q}" i]`)) as HTMLElement[];
+      const match = byPlaceholder.find(el => !isAgentOwn(el));
+      if (match) return match;
+    } catch { /* */ }
+    try { const byType = document.querySelector(`input[type="${q}"]`) as HTMLElement; if (byType && !isAgentOwn(byType)) return byType; } catch { /* */ }
   }
 
-  const allEls = Array.from(document.querySelectorAll("button, a, [role='button'], h1, h2, h3, h4, label, [role='tab'], input, textarea, select, [role='checkbox'], [role='switch']")) as HTMLElement[];
+  const allEls = (Array.from(document.querySelectorAll("button, a, [role='button'], h1, h2, h3, h4, label, [role='tab'], input, textarea, select, [role='checkbox'], [role='switch']")) as HTMLElement[]).filter(el => !isAgentOwn(el));
   for (const q of queries) {
     const qLower = q.toLowerCase().trim();
     if (!qLower) continue;
@@ -440,9 +449,9 @@ function findElement(query: string): HTMLElement | null {
     for (const label of labels) {
       if (label.innerText?.toLowerCase().includes(qLower)) {
         const forId = label.getAttribute("for");
-        if (forId) { const t = document.getElementById(forId); if (t) return t; }
+        if (forId) { const t = document.getElementById(forId); if (t && !isAgentOwn(t)) return t; }
         const inner = label.querySelector("input, textarea, select") as HTMLElement;
-        if (inner) return inner;
+        if (inner && !isAgentOwn(inner)) return inner;
       }
     }
   }
@@ -460,8 +469,18 @@ function highlightElement(el: HTMLElement, durationMs = 2500) {
 }
 
 function setNativeValue(el: HTMLInputElement | HTMLTextAreaElement, value: string) {
-  const setter = Object.getOwnPropertyDescriptor(el.tagName === "TEXTAREA" ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype, "value")?.set;
+  // Use the native setter to bypass React's controlled component value lock
+  const proto = el.tagName === "TEXTAREA" ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
   if (setter) setter.call(el, value); else el.value = value;
+
+  // React 16+ uses an internal tracker; we need to update it so React sees the change
+  const tracker = (el as any)._valueTracker;
+  if (tracker) {
+    tracker.setValue(value === "" ? " " : ""); // set to something different so React detects a change
+  }
+
+  // Fire both native and React-compatible events
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
 }
@@ -1668,11 +1687,12 @@ export default function AIAgent() {
       </div>
 
       {/* ─── Fixed Bottom Input ─── */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
+      <div data-agent-own className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <div className="relative bg-[#1a1a2e] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 focus-within:border-indigo-500/30 focus-within:shadow-indigo-500/5 transition-all">
             <textarea
               ref={inputRef}
+              data-agent-own
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
