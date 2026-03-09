@@ -3614,8 +3614,8 @@ const EmployerDashboard = () => {
         </div>
       </aside>
 
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
+      <div className={`lg:pl-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3661,7 +3661,7 @@ const EmployerDashboard = () => {
           </div>
         </header>
 
-        <main className="p-4 md:p-8">
+        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
           <Routes>
             <Route index element={<Overview />} />
             <Route path="search" element={<SearchTalent />} />

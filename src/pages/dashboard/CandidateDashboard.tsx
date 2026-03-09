@@ -6515,9 +6515,9 @@ const CandidateDashboard = () => {
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className={`lg:pl-64 ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -6600,7 +6600,7 @@ const CandidateDashboard = () => {
         </header>
 
         {/* Page content */}
-        <main className="p-4 md:p-8">
+        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
           <Routes>
             <Route index element={<Overview />} />
             <Route path="observations" element={<ObservationPathway />} />
