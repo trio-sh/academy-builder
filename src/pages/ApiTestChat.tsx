@@ -265,7 +265,7 @@ export default function ApiTestChat() {
           messages,
           stream: true,
           multistep: true,
-          max_steps: 30,
+          max_steps: 60,
           max_tokens: 16384,
           tools: CUSTOM_TOOLS,
           temperature: 0.7,
