@@ -425,6 +425,94 @@ function isPdfMakeDefinition(obj: Record<string, unknown>): boolean {
   );
 }
 
+/**
+ * Heuristic check: does this raw string look like a pdfmake definition
+ * even if it can't be parsed as JSON?
+ */
+function looksLikePdfMake(raw: string): boolean {
+  return (
+    raw.includes('"content"') &&
+    raw.includes("[") &&
+    (raw.includes('"pageSize"') || raw.includes('"defaultStyle"') || raw.includes('"styles"'))
+  );
+}
+
+/**
+ * Attempt to repair common AI-garbled JSON patterns:
+ * - Corrupted string values like `"text":4 Alexandra Chen` → `"text":"4 Alexandra Chen"`
+ * - Missing quotes around values
+ * - Trailing commas before } or ]
+ * - Unescaped quotes inside strings
+ */
+function tryRepairJson(raw: string): Record<string, unknown> | null {
+  // First try parsing as-is
+  try {
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    // Continue to repair attempts
+  }
+
+  let repaired = raw;
+
+  // Fix: "key":unquoted value patterns (e.g. "text":4 Alexandra Chen")
+  // Matches "key": followed by a non-quote, non-bracket, non-brace, non-number-literal value
+  repaired = repaired.replace(
+    /"(\w+)"\s*:\s*(?!["{\[\]}\-\d]|true|false|null)([\s\S]*?)(?="|\}|\]|,\s*")/g,
+    (match, key, val) => {
+      const cleaned = val.trim().replace(/"/g, '\\"');
+      if (!cleaned) return match;
+      return `"${key}":"${cleaned}"`;
+    }
+  );
+
+  // Fix: doubled quotes like " " → remove stray quotes
+  repaired = repaired.replace(/"\s*"/g, (match) => {
+    // Only fix if it's not a proper empty string ""
+    if (match.trim() === '""') return match;
+    return '"';
+  });
+
+  // Fix: trailing commas before } or ]
+  repaired = repaired.replace(/,\s*([}\]])/g, "$1");
+
+  // Fix: missing commas between properties ("value" "key" → "value", "key")
+  repaired = repaired.replace(/"\s+"/g, '", "');
+
+  try {
+    return JSON.parse(repaired) as Record<string, unknown>;
+  } catch {
+    // Continue to more aggressive repair
+  }
+
+  // More aggressive: try to extract the outer structure and rebuild
+  // Find the content array and page properties
+  try {
+    // Strip everything after the last valid-looking closing structure
+    // Find matching braces
+    let depth = 0;
+    let lastValidEnd = -1;
+    for (let i = 0; i < repaired.length; i++) {
+      if (repaired[i] === "{") depth++;
+      else if (repaired[i] === "}") {
+        depth--;
+        if (depth === 0) { lastValidEnd = i; break; }
+      }
+    }
+    if (lastValidEnd > 0) {
+      const truncated = repaired.slice(0, lastValidEnd + 1);
+      try {
+        return JSON.parse(truncated) as Record<string, unknown>;
+      } catch {
+        // Still broken
+      }
+    }
+  } catch {
+    // Give up on aggressive repair
+  }
+
+  return null;
+}
+
 interface PdfParseResult {
   cleanText: string;
   docDefinitions: Record<string, unknown>[];
@@ -438,12 +526,20 @@ function parsePdfFromContent(text: string): PdfParseResult {
     try {
       const trimmed = jsonStr.trim();
       if (!trimmed.startsWith("{")) return _match;
-      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
-      if (isPdfMakeDefinition(parsed)) {
+
+      // Try direct parse first, then repair
+      const parsed = tryRepairJson(trimmed);
+      if (parsed && isPdfMakeDefinition(parsed)) {
         // Ensure Roboto default
         if (!parsed.defaultStyle) parsed.defaultStyle = {};
         (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
         docDefinitions.push(parsed);
+        rawJsonBlocks.push(trimmed);
+        return "";
+      }
+
+      // If it looks like pdfmake but can't be parsed, still strip it
+      if (looksLikePdfMake(trimmed)) {
         rawJsonBlocks.push(trimmed);
         return "";
       }
@@ -469,8 +565,16 @@ function cleanStreamingPdfContent(text: string): { cleaned: string; hasPdfBlock:
     try {
       const trimmed = jsonStr.trim();
       if (!trimmed.startsWith("{")) return _match;
-      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
-      if (isPdfMakeDefinition(parsed)) {
+
+      // Try direct parse first, then repair
+      const parsed = tryRepairJson(trimmed);
+      if (parsed && isPdfMakeDefinition(parsed)) {
+        hasPdfBlock = true;
+        return "";
+      }
+
+      // If it looks like pdfmake but can't be parsed, still strip it
+      if (looksLikePdfMake(trimmed)) {
         hasPdfBlock = true;
         return "";
       }
@@ -536,26 +640,33 @@ async function renderPdfDocDefinitions(
 
 function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?: string } }) {
   const [expanded, setExpanded] = useState(false);
+  const isError = !pdf.url;
 
   return (
-    <div className="rounded-xl border border-indigo-500/25 bg-indigo-950/30 overflow-hidden">
+    <div className={`rounded-xl border overflow-hidden ${isError ? "border-amber-500/25 bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
       {/* Download button row */}
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className="w-9 h-9 rounded-lg bg-indigo-600/30 flex items-center justify-center flex-shrink-0">
-          <FileText className="w-4.5 h-4.5 text-indigo-300" />
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-600/30"}`}>
+          {isError ? <AlertCircle className="w-4.5 h-4.5 text-amber-300" /> : <FileText className="w-4.5 h-4.5 text-indigo-300" />}
         </div>
         <div className="flex-1 min-w-0">
-          <span className="font-medium text-sm text-white truncate block">{pdf.title}.pdf</span>
-          <span className="text-[10px] text-indigo-400">PDF document ready</span>
+          <span className="font-medium text-sm text-white truncate block">
+            {isError ? "PDF Generation Failed" : `${pdf.title}.pdf`}
+          </span>
+          <span className={`text-[10px] ${isError ? "text-amber-400" : "text-indigo-400"}`}>
+            {isError ? "The AI produced invalid JSON — try regenerating" : "PDF document ready"}
+          </span>
         </div>
-        <a
-          href={pdf.url}
-          download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 hover:border-indigo-500/50 transition-all text-xs font-medium text-white"
-        >
-          <Download className="w-3.5 h-3.5" />
-          Download
-        </a>
+        {!isError && (
+          <a
+            href={pdf.url}
+            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 hover:border-indigo-500/50 transition-all text-xs font-medium text-white"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Download
+          </a>
+        )}
         {pdf.rawJson && (
           <button
             onClick={() => setExpanded(!expanded)}
@@ -569,7 +680,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
 
       {/* Collapsible JSON accordion */}
       {pdf.rawJson && expanded && (
-        <div className="border-t border-indigo-500/15 bg-black/30">
+        <div className={`border-t bg-black/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
           <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-gray-400">
             {pdf.rawJson}
           </pre>
@@ -1526,6 +1637,13 @@ export default function AIAgent() {
             const downloads = await renderPdfDocDefinitions(docDefinitions, rawJsonBlocks);
             if (downloads.length > 0) pdfDownloads = downloads;
           } catch { /* skip */ }
+        } else if (rawJsonBlocks.length > 0) {
+          // JSON was broken beyond repair but looked like pdfmake — show error card
+          pdfDownloads = rawJsonBlocks.map((raw, i) => ({
+            title: `PDF Document ${i + 1} (error)`,
+            url: "",
+            rawJson: raw,
+          }));
         }
 
         const uiMsg: UIMessage = {
@@ -1553,6 +1671,13 @@ export default function AIAgent() {
           const downloads = await renderPdfDocDefinitions(docDefinitions, rawJsonBlocks);
           if (downloads.length > 0) pdfDownloads = downloads;
         } catch { /* skip */ }
+      } else if (rawJsonBlocks.length > 0) {
+        // JSON was broken beyond repair but looked like pdfmake — show error card
+        pdfDownloads = rawJsonBlocks.map((raw, i) => ({
+          title: `PDF Document ${i + 1} (error)`,
+          url: "",
+          rawJson: raw,
+        }));
       }
 
       const uiMsg: UIMessage = {

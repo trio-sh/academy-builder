@@ -536,6 +536,71 @@ function isChatbotPdfDefinition(obj: Record<string, unknown>): boolean {
   );
 }
 
+function chatbotLooksLikePdfMake(raw: string): boolean {
+  return (
+    raw.includes('"content"') &&
+    raw.includes("[") &&
+    (raw.includes('"pageSize"') || raw.includes('"defaultStyle"') || raw.includes('"styles"'))
+  );
+}
+
+function chatbotTryRepairJson(raw: string): Record<string, unknown> | null {
+  try {
+    return JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    // Continue to repair
+  }
+
+  let repaired = raw;
+
+  // Fix: "key":unquoted value patterns
+  repaired = repaired.replace(
+    /"(\w+)"\s*:\s*(?!["{\[\]}\-\d]|true|false|null)([\s\S]*?)(?="|\}|\]|,\s*")/g,
+    (match, key, val) => {
+      const cleaned = val.trim().replace(/"/g, '\\"');
+      if (!cleaned) return match;
+      return `"${key}":"${cleaned}"`;
+    }
+  );
+
+  // Fix: stray doubled quotes
+  repaired = repaired.replace(/"\s*"/g, (match) => {
+    if (match.trim() === '""') return match;
+    return '"';
+  });
+
+  // Fix: trailing commas
+  repaired = repaired.replace(/,\s*([}\]])/g, "$1");
+
+  // Fix: missing commas between properties
+  repaired = repaired.replace(/"\s+"/g, '", "');
+
+  try {
+    return JSON.parse(repaired) as Record<string, unknown>;
+  } catch {
+    // Try truncating to matched braces
+  }
+
+  try {
+    let depth = 0;
+    let lastValidEnd = -1;
+    for (let i = 0; i < repaired.length; i++) {
+      if (repaired[i] === "{") depth++;
+      else if (repaired[i] === "}") {
+        depth--;
+        if (depth === 0) { lastValidEnd = i; break; }
+      }
+    }
+    if (lastValidEnd > 0) {
+      return JSON.parse(repaired.slice(0, lastValidEnd + 1)) as Record<string, unknown>;
+    }
+  } catch {
+    // Give up
+  }
+
+  return null;
+}
+
 function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[]; rawJsonBlocks: string[] } {
   const docDefinitions: Record<string, unknown>[] = [];
   const rawJsonBlocks: string[] = [];
@@ -543,11 +608,18 @@ function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefin
     try {
       const trimmed = jsonStr.trim();
       if (!trimmed.startsWith("{")) return _match;
-      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
-      if (isChatbotPdfDefinition(parsed)) {
+
+      const parsed = chatbotTryRepairJson(trimmed);
+      if (parsed && isChatbotPdfDefinition(parsed)) {
         if (!parsed.defaultStyle) parsed.defaultStyle = {};
         (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
         docDefinitions.push(parsed);
+        rawJsonBlocks.push(trimmed);
+        return "";
+      }
+
+      // If it looks like pdfmake but can't be parsed, still strip it
+      if (chatbotLooksLikePdfMake(trimmed)) {
         rawJsonBlocks.push(trimmed);
         return "";
       }
@@ -617,20 +689,29 @@ async function renderChatbotPdfDefinitions(
 
 function ChatbotPdfCard({ pdf }: { pdf: { title: string; url: string; rawJson?: string } }) {
   const [expanded, setExpanded] = useState(false);
+  const isError = !pdf.url;
 
   return (
-    <div className="rounded-lg border border-indigo-500/25 bg-indigo-950/30 overflow-hidden">
+    <div className={`rounded-lg border overflow-hidden ${isError ? "border-amber-500/25 bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
       <div className="flex items-center gap-2 px-3 py-2">
-        <FileText className="w-3.5 h-3.5 text-indigo-300 flex-shrink-0" />
-        <span className="flex-1 min-w-0 text-xs font-medium text-white truncate">{pdf.title}.pdf</span>
-        <a
-          href={pdf.url}
-          download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
-          className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 transition-all text-[10px] font-medium text-white"
-        >
-          <Download className="w-3 h-3" />
-          Download
-        </a>
+        {isError ? (
+          <AlertCircle className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
+        ) : (
+          <FileText className="w-3.5 h-3.5 text-indigo-300 flex-shrink-0" />
+        )}
+        <span className="flex-1 min-w-0 text-xs font-medium text-white truncate">
+          {isError ? "PDF failed — try again" : `${pdf.title}.pdf`}
+        </span>
+        {!isError && (
+          <a
+            href={pdf.url}
+            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 transition-all text-[10px] font-medium text-white"
+          >
+            <Download className="w-3 h-3" />
+            Download
+          </a>
+        )}
         {pdf.rawJson && (
           <button
             onClick={() => setExpanded(!expanded)}
@@ -641,7 +722,7 @@ function ChatbotPdfCard({ pdf }: { pdf: { title: string; url: string; rawJson?: 
         )}
       </div>
       {pdf.rawJson && expanded && (
-        <div className="border-t border-indigo-500/15 bg-black/30">
+        <div className={`border-t bg-black/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
           <pre className="p-2 overflow-x-auto max-h-48 overflow-y-auto text-[10px] font-mono leading-relaxed text-gray-400">
             {pdf.rawJson}
           </pre>
@@ -1035,6 +1116,13 @@ export function Chatbot() {
           const downloads = await renderChatbotPdfDefinitions(docDefinitions, rawJsonBlocks);
           if (downloads.length > 0) pdfDownloads = downloads;
         } catch { /* skip */ }
+      } else if (rawJsonBlocks.length > 0) {
+        // JSON was broken beyond repair but looked like pdfmake — show error card
+        pdfDownloads = rawJsonBlocks.map((raw, i) => ({
+          title: `PDF Document ${i + 1} (error)`,
+          url: "",
+          rawJson: raw,
+        }));
       }
 
       const assistantMessage: Message = {
