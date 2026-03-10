@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { openDB, type IDBPDatabase, type DBSchema } from "idb";
 import {
   Bot,
@@ -1220,6 +1220,7 @@ export default function AIAgent() {
   const { profile, user } = useAuth();
   const navigateFn = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const role = profile?.role || "candidate";
   const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
 
@@ -1525,6 +1526,19 @@ export default function AIAgent() {
     }
   };
 
+  // Auto-send a task delegated from the floating chatbot via ?task= query param
+  const delegatedTaskRef = useRef(false);
+  useEffect(() => {
+    const task = searchParams.get("task");
+    if (task && !delegatedTaskRef.current && dataLoaded && userContext) {
+      delegatedTaskRef.current = true;
+      // Clear the query param so it doesn't re-trigger
+      setSearchParams({}, { replace: true });
+      // Small delay to let the UI settle
+      setTimeout(() => sendMessage(task), 300);
+    }
+  }, [searchParams, setSearchParams, dataLoaded, userContext, sendMessage]);
+
   const clearChat = () => {
     setUiMessages([]);
     setApiMessages([]);
@@ -1700,10 +1714,10 @@ export default function AIAgent() {
   }
 
   return (
-    <div className="flex flex-col h-full w-full relative">
+    <div className="flex flex-col h-full w-full">
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6">
 
         {/* Empty state */}
         {uiMessages.length === 0 && !isStreaming && (
@@ -1894,7 +1908,7 @@ export default function AIAgent() {
       </div>
 
       {/* ─── Fixed Bottom Input ─── */}
-      <div data-agent-own className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
+      <div data-agent-own className="flex-shrink-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-4 pb-4 px-4 sm:px-6 border-t border-white/[0.04]">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           {/* Hidden file input */}
           <input

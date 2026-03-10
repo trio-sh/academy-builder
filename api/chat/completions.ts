@@ -192,6 +192,7 @@ const BUILTIN_TOOLS = [
       },
     },
   },
+  GENERATE_PDF_TOOL,
   {
     type: "function" as const,
     function: {
@@ -280,6 +281,27 @@ function executeImageGeneration(
   });
 }
 
+// ─── PDF Generation (server-side passthrough) ───────────────────────────────
+// The server can't render PDFs, so we return structured pdfmake JSON that the
+// client will render. The tool result gets embedded in the response and the
+// client-side AIAgent picks it up via the generate_pdf custom tool handler.
+
+function executeGeneratePdf(args: Record<string, any>): string {
+  const title = args.title || "Document";
+  const content = args.content || [];
+  const pageSize = args.pageSize || "A4";
+  const pageOrientation = args.pageOrientation || "portrait";
+
+  return JSON.stringify({
+    type: "pdf",
+    title,
+    content,
+    pageSize,
+    pageOrientation,
+    instruction: `PDF "${title}" has been prepared. The document will be rendered and offered as a download to the user.`,
+  });
+}
+
 // ─── Task Agent (Kilo Gateway) ──────────────────────────────────────────────
 
 interface TaskAgentArgs {
@@ -288,6 +310,40 @@ interface TaskAgentArgs {
   model?: string;
   max_tokens?: number;
 }
+
+// PDF generation tool definition (shared between main brain and task agent)
+const GENERATE_PDF_TOOL = {
+  type: "function" as const,
+  function: {
+    name: "generate_pdf",
+    description:
+      "Generate a PDF document for the user to download. Pass a title and an array of pdfmake content nodes. The PDF will be rendered client-side. Supported nodes: text (with fontSize, bold, italic, color, margin), table (with headerRows, widths, body), ul/ol lists, columns. For tables: { table: { headerRows: 1, widths: [\"*\",\"*\"], body: [[\"Col A\",\"Col B\"],[\"val1\",\"val2\"]] } }. For lists: { ul: [\"item 1\",\"item 2\"] }. Keep content structured and concise.",
+    parameters: {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+          description: "Document title (also used as filename)",
+        },
+        content: {
+          type: "array",
+          description:
+            "Array of pdfmake content nodes (text objects, tables, lists, columns, etc.)",
+        },
+        pageSize: {
+          type: "string",
+          description: "Page size: A4, LETTER, LEGAL. Default: A4",
+        },
+        pageOrientation: {
+          type: "string",
+          enum: ["portrait", "landscape"],
+          description: "Page orientation. Default: portrait",
+        },
+      },
+      required: ["title", "content"],
+    },
+  },
+};
 
 // Tools available to the task agent (everything except task_agent itself to avoid recursion)
 const TASK_AGENT_TOOLS = [
@@ -357,6 +413,7 @@ const TASK_AGENT_TOOLS = [
       },
     },
   },
+  GENERATE_PDF_TOOL,
 ];
 
 const TASK_AGENT_TOOL_NAMES = new Set(TASK_AGENT_TOOLS.map((t) => t.function.name));
@@ -382,6 +439,9 @@ async function executeTaskAgentTool(
       break;
     case "image_generation":
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
+      break;
+    case "generate_pdf":
+      result = executeGeneratePdf(args);
       break;
     default:
       result = `Unknown tool: ${name}`;
@@ -682,6 +742,9 @@ async function executeTool(
     case "image_generation":
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
       break;
+    case "generate_pdf":
+      result = executeGeneratePdf(args);
+      break;
     case "task_agent":
       result = await executeTaskAgent(args as TaskAgentArgs, log);
       break;
@@ -902,12 +965,13 @@ const DEFAULT_SYSTEM_PROMPT = `You are a helpful, creative, and knowledgeable AI
 - Match your response length to the complexity of the request. Short questions get concise answers; creative/coding tasks get thorough outputs.
 
 ## Code Generation & Complex Tasks — IMPORTANT
-For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. The task agent has its own built-in tools (web_search, web_extract, image_generation) — it can autonomously search the web, read pages, and generate images as part of its work. USE IT when:
+For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. The task agent has its own built-in tools (web_search, web_extract, image_generation, generate_pdf) — it can autonomously search the web, read pages, generate images, and create PDF documents as part of its work. USE IT when:
 - The user asks you to generate a full HTML page, website, landing page, or multi-section UI
 - The user wants long-form code (more than ~50 lines expected)
 - The task requires detailed creative writing, long technical docs, or multi-file code
 - The user asks for research-heavy content that needs web lookups and thorough analysis
 - The user wants content with generated images embedded
+- The user asks for a PDF that requires data gathering, research, or complex multi-section content
 - Any request where a thorough, high-quality, long response is needed
 
 When calling task_agent:
@@ -915,9 +979,13 @@ When calling task_agent:
 - Add relevant context, style preferences, and technical requirements to the prompt
 - If the task needs web research, tell the task agent to search the web in the prompt (it has web_search and web_extract tools)
 - If the task needs images, tell the task agent to generate them (it has image_generation tool)
+- If the task needs PDF generation, tell the task agent to use generate_pdf (it has the generate_pdf tool)
 - If the user wants HTML/web pages, include in the prompt: "Produce a complete, standalone HTML file. Use Tailwind CSS via CDN. Include realistic content."
 - If the user mentions "dark theme", include that in the prompt
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
+
+## PDF Generation
+You have a **generate_pdf** tool to create downloadable PDF documents. Use it directly for simple PDFs (short reports, summaries, certificates with known content). For complex PDFs that require research, data gathering, or long-form content — delegate to task_agent instead and tell it to use generate_pdf after gathering the needed information.
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -941,7 +1009,8 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
+4. **generate_pdf** - Generate a downloadable PDF document. Params: { "title": "Document Title", "content": [pdfmake content nodes], "pageSize": "A4", "pageOrientation": "portrait" }. Content nodes support: text objects ({ "text": "...", "fontSize": 16, "bold": true }), tables ({ "table": { "headerRows": 1, "widths": ["*","*"], "body": [["A","B"],["1","2"]] } }), lists ({ "ul": ["item1","item2"] }), columns. Use directly for simple PDFs. For complex PDFs needing research/data, delegate to task_agent.
+5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation, generate_pdf). It can autonomously search the web, read pages, generate images, and create PDFs during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, research tasks, complex PDF reports, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
