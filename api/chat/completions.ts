@@ -847,9 +847,11 @@ async function streamTaskAgent(
           if (tc.function.name === "generate_pdf") {
             try {
               const parsed = JSON.parse(result);
-              if (parsed.type === "pdf" && parsed.content) {
-                const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
-                const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+              if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
+                const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
+                const b64 = Buffer.from(payload).toString("base64");
+                const pdfType = parsed.type === "pdf_html" ? "html" : "json";
+                const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
                 res.write(sseChunk(sseId, sseModel, { content: actionTag }));
                 messages.push({
                   role: "tool",

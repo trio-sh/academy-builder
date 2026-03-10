@@ -412,9 +412,9 @@ const CUSTOM_TOOLS = [
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
 // ─── Action Tag Parser & PDF Renderer ────────────────────────────────────────
-// The backend streams [[ACTION:GENERATE_PDF|title|base64Content|pageSize|orientation]]
-// tags in the content. We parse them out, render the PDF client-side using pdfMake
-// (loaded via CDN in index.html), and show download buttons.
+// The backend streams [[ACTION:GENERATE_PDF|title|base64Content|pageSize|orientation|contentType]]
+// tags in the content. We parse them out, convert HTML to pdfmake nodes (or use
+// legacy JSON nodes directly), render the PDF client-side, and show download buttons.
 
 const PDF_ACTION_REGEX = /\[\[ACTION:GENERATE_PDF\|((?:[^\]]|\][^\]])*?)\]\]/g;
 
@@ -423,6 +423,7 @@ interface ParsedPdfAction {
   contentBase64: string;
   pageSize: string;
   pageOrientation: string;
+  contentType: "html" | "json";
 }
 
 function parsePdfActions(text: string): { cleanText: string; actions: ParsedPdfAction[] } {
@@ -434,6 +435,7 @@ function parsePdfActions(text: string): { cleanText: string; actions: ParsedPdfA
       contentBase64: params[1] || "",
       pageSize: params[2] || "A4",
       pageOrientation: params[3] || "portrait",
+      contentType: (params[4] === "html" ? "html" : "json") as "html" | "json",
     });
     return "";
   });
@@ -455,22 +457,44 @@ async function renderPdfActions(
     try {
       const title = action.title;
       let content: unknown[] = [];
-      try {
-        const decoded = atob(action.contentBase64);
-        content = JSON.parse(decoded);
-        if (!Array.isArray(content)) content = [content];
-      } catch {
-        // If base64 decode / JSON parse fails, try raw JSON
+
+      if (action.contentType === "html") {
+        // HTML-based approach: decode HTML and convert via html-to-pdfmake
         try {
-          content = JSON.parse(action.contentBase64);
+          const htmlToPdfmake = (await import("html-to-pdfmake")).default;
+          let html: string;
+          try {
+            html = atob(action.contentBase64);
+            if (!/<\w/.test(html)) html = action.contentBase64;
+          } catch {
+            html = action.contentBase64;
+          }
+          content = htmlToPdfmake(html);
           if (!Array.isArray(content)) content = [content];
-        } catch {
-          // Don't render raw JSON/base64 as text — show a friendly error instead
-          console.error("PDF content decode failed for:", title);
+        } catch (htmlErr) {
+          console.error("HTML-to-pdfmake conversion failed:", htmlErr);
           content = [
             { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
             { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
           ];
+        }
+      } else {
+        // Legacy JSON approach: decode pdfmake content nodes directly
+        try {
+          const decoded = atob(action.contentBase64);
+          content = JSON.parse(decoded);
+          if (!Array.isArray(content)) content = [content];
+        } catch {
+          try {
+            content = JSON.parse(action.contentBase64);
+            if (!Array.isArray(content)) content = [content];
+          } catch {
+            console.error("PDF content decode failed for:", title);
+            content = [
+              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
+              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
+            ];
+          }
         }
       }
 
