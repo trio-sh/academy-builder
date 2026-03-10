@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { openDB, type IDBPDatabase, type DBSchema } from "idb";
 import {
   Bot,
@@ -1220,6 +1220,7 @@ export default function AIAgent() {
   const { profile, user } = useAuth();
   const navigateFn = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const role = profile?.role || "candidate";
   const dashboardBase = `/dashboard/${role === "school_admin" ? "school" : role}`;
 
@@ -1524,6 +1525,19 @@ export default function AIAgent() {
       sendMessage(input);
     }
   };
+
+  // Auto-send a task delegated from the floating chatbot via ?task= query param
+  const delegatedTaskRef = useRef(false);
+  useEffect(() => {
+    const task = searchParams.get("task");
+    if (task && !delegatedTaskRef.current && dataLoaded && userContext) {
+      delegatedTaskRef.current = true;
+      // Clear the query param so it doesn't re-trigger
+      setSearchParams({}, { replace: true });
+      // Small delay to let the UI settle
+      setTimeout(() => sendMessage(task), 300);
+    }
+  }, [searchParams, setSearchParams, dataLoaded, userContext, sendMessage]);
 
   const clearChat = () => {
     setUiMessages([]);
