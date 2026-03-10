@@ -20,6 +20,8 @@ import {
   ScrollText,
   Eye,
   Zap,
+  FileText,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +40,7 @@ interface Message {
   content: string;
   timestamp: Date;
   actions?: ActionResult[];
+  pdfDownloads?: { title: string; url: string }[];
 }
 
 interface ChatbotDBSchema extends DBSchema {
@@ -64,7 +67,8 @@ type ActionType =
   | "WAIT"
   | "OPEN_MODAL"
   | "CLOSE_MODAL"
-  | "SCROLL_PAGE";
+  | "SCROLL_PAGE"
+  | "GENERATE_PDF";
 
 interface ParsedAction {
   type: ActionType;
@@ -151,6 +155,8 @@ function actionLabel(action: ParsedAction): string {
       return `Close dialog`;
     case "SCROLL_PAGE":
       return `Scroll ${action.params[0] || "down"}`;
+    case "GENERATE_PDF":
+      return `Generate PDF: ${action.params[0] || "Document"}`;
     default:
       return action.type;
   }
@@ -178,6 +184,8 @@ function actionIcon(type: ActionType) {
       return Eye;
     case "WAIT":
       return Loader2;
+    case "GENERATE_PDF":
+      return FileText;
     default:
       return Play;
   }
@@ -497,6 +505,60 @@ async function executeAction(
       return { ok: true, detail: `Scrolled ${direction}` };
     }
 
+    case "GENERATE_PDF": {
+      try {
+        const title = action.params[0] || "Document";
+        const contentJson = action.params.slice(1).join("|"); // Re-join in case content had | chars
+        let content: unknown[];
+        try {
+          content = JSON.parse(contentJson);
+          if (!Array.isArray(content)) content = [content];
+        } catch {
+          // If JSON parse fails, treat as simple text content
+          content = [{ text: contentJson || "No content provided", fontSize: 12 }];
+        }
+
+        const pdfMakeModule = await import("pdfmake/build/pdfmake");
+        const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+        const pdfMake = pdfMakeModule.default || pdfMakeModule;
+        if (pdfFontsModule?.pdfMake?.vfs) {
+          pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+        } else if ((pdfFontsModule as Record<string, unknown>).default) {
+          const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
+          if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
+        }
+
+        const docDefinition = {
+          pageSize: "A4",
+          pageOrientation: "portrait" as const,
+          content: [
+            { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
+            ...content,
+          ],
+          defaultStyle: { fontSize: 11 },
+          styles: {
+            header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
+            subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
+          },
+        };
+
+        const blob: Blob = await new Promise((resolve, reject) => {
+          try {
+            const pdf = pdfMake.createPdf(docDefinition);
+            pdf.getBlob((b: Blob) => resolve(b));
+          } catch (err) { reject(err); }
+        });
+
+        const url = URL.createObjectURL(blob);
+        chatbotPendingPdfs.push({ title, url });
+
+        return { ok: true, detail: `PDF "${title}" generated` };
+      } catch (err) {
+        console.error("Chatbot PDF generation failed:", err);
+        return { ok: false, detail: `PDF generation failed: ${err instanceof Error ? err.message : String(err)}` };
+      }
+    }
+
     default:
       return { ok: false, detail: `Unknown action: ${action.type}` };
   }
@@ -641,6 +703,7 @@ Embed action commands in your response using this exact format:
 - [[ACTION:OPEN_MODAL|trigger text]] — Click a trigger to open a modal/dialog
 - [[ACTION:CLOSE_MODAL|]] — Close the current modal/dialog
 - [[ACTION:SCROLL_PAGE|direction|amount]] — Scroll the page (up/down/top/bottom, optional pixel amount)
+- [[ACTION:GENERATE_PDF|title|jsonContentArray]] — Generate a PDF document for the user to download. Pass a title and a JSON array of pdfmake content nodes. Example: [[ACTION:GENERATE_PDF|My Report|[{"text":"Hello World","fontSize":16,"bold":true},{"text":"This is the body content."}]]]
 
 ### CRITICAL Rules for Actions
 1. ALWAYS use [[ACTION:...]] tags for ANY interaction. NEVER write plain text like "Click Sign In" or "Navigate to /login" — those do nothing. You MUST use the tag syntax.
@@ -685,6 +748,9 @@ const QUICK_REPLIES = [
   "What am I looking at right now?",
   "Show me how to get started",
 ];
+
+// Module-level queue for PDF downloads generated during action execution
+const chatbotPendingPdfs: { title: string; url: string }[] = [];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -797,6 +863,22 @@ export function Chatbot() {
         if (i < actions.length - 1) {
           await delay(500);
         }
+      }
+
+      // Drain any PDFs generated during action execution
+      if (chatbotPendingPdfs.length > 0) {
+        const pdfs = [...chatbotPendingPdfs];
+        chatbotPendingPdfs.length = 0;
+        setMessages((prev) => {
+          const updated = [...prev];
+          if (updated[messageIndex]) {
+            updated[messageIndex] = {
+              ...updated[messageIndex],
+              pdfDownloads: [...(updated[messageIndex].pdfDownloads || []), ...pdfs],
+            };
+          }
+          return updated;
+        });
       }
 
       setIsExecuting(false);
@@ -923,6 +1005,10 @@ export function Chatbot() {
   }
 
   // ─── Render ────────────────────────────────────────────────────────────────
+
+  // Hide chatbot on the AI Agent (Praxis) page to avoid duplicate AI assistants
+  const isAgentPage = /\/agent(\/|$)/.test(location.pathname);
+  if (isAgentPage) return null;
 
   return (
     <>
@@ -1130,6 +1216,29 @@ export function Chatbot() {
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {message.actions.map((actionResult, aIdx) => (
                           <ActionBadge key={aIdx} result={actionResult} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* PDF download buttons */}
+                    {message.pdfDownloads && message.pdfDownloads.length > 0 && (
+                      <div className="flex flex-col gap-2 mt-3">
+                        {message.pdfDownloads.map((pdf, i) => (
+                          <a
+                            key={i}
+                            href={pdf.url}
+                            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+                            className="inline-flex items-center gap-2.5 px-3 py-2 rounded-xl bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 hover:border-indigo-500/50 transition-all text-sm text-white group w-fit"
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-indigo-600/30 flex items-center justify-center group-hover:bg-indigo-600/50 transition-colors">
+                              <FileText className="w-3.5 h-3.5 text-indigo-300" />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-xs">{pdf.title}.pdf</span>
+                              <span className="text-[10px] text-indigo-400">Click to download</span>
+                            </div>
+                            <Download className="w-3.5 h-3.5 text-indigo-400 ml-1 group-hover:text-white transition-colors" />
+                          </a>
                         ))}
                       </div>
                     )}
