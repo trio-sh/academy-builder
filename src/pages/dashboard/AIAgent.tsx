@@ -411,7 +411,6 @@ const CUSTOM_TOOLS = [
 
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
-// ─── Action Tag Parser & PDF Renderer ────────────────────────────────────────
 // ─── PDF JSON Code Block Detection ───────────────────────────────────────────
 // The AI streams pdfmake document definitions as JSON code blocks (```json ... ```).
 // We detect valid pdfmake JSON, strip it from the visible text, render the PDF
@@ -1247,7 +1246,6 @@ function toolDisplayName(name: string, args: Record<string, unknown>): string {
     case "query_data": return `Query: ${args.table || ""} data`;
     case "get_current_time": return `Get time (${args.timezone || "UTC"})`;
     case "image_generation": return `Generate image`;
-    case "generate_pdf": return `Generate PDF: ${args.title || "Document"}`;
     default: return name;
   }
 }
@@ -1266,7 +1264,6 @@ function toolIcon(name: string) {
     case "wait": return Loader2;
     case "query_data": return FileText;
     case "get_current_time": return Clock;
-    case "generate_pdf": return FileText;
     default: return Play;
   }
 }

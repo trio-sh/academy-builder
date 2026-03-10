@@ -125,39 +125,6 @@ Respond with the complete HTML code in a single code block.`;
 }
 
 // PDF generation tool definition (shared between main brain and task agent)
-const GENERATE_PDF_TOOL = {
-  type: "function" as const,
-  function: {
-    name: "generate_pdf",
-    description:
-      "Generate a PDF document for the user to download. Pass a title and a description of what the PDF should contain. A powerful AI model will construct the PDF content automatically. Use this for any PDF request: reports, summaries, certificates, tables, etc.",
-    parameters: {
-      type: "object",
-      properties: {
-        title: {
-          type: "string",
-          description: "Document title (also used as filename)",
-        },
-        description: {
-          type: "string",
-          description:
-            "Detailed description of what the PDF should contain. Include all relevant information: sections, data, tables, formatting preferences, etc. The more detail you provide, the better the PDF will be.",
-        },
-        pageSize: {
-          type: "string",
-          description: "Page size: A4, LETTER, LEGAL. Default: A4",
-        },
-        pageOrientation: {
-          type: "string",
-          enum: ["portrait", "landscape"],
-          description: "Page orientation. Default: portrait",
-        },
-      },
-      required: ["title", "description"],
-    },
-  },
-};
-
 // Built-in tool definitions (OpenAI function-calling format)
 const BUILTIN_TOOLS = [
   {
@@ -226,7 +193,6 @@ const BUILTIN_TOOLS = [
       },
     },
   },
-  GENERATE_PDF_TOOL,
   {
     type: "function" as const,
     function: {
@@ -315,171 +281,6 @@ function executeImageGeneration(
   });
 }
 
-// ─── PDF Generation (Kilo-powered, HTML-based) ─────────────────────────────
-// Uses the Kilo Gateway to generate HTML with inline styles from a description.
-// The HTML is sent to the frontend where html-to-pdfmake converts it to
-// pdfmake content nodes for client-side PDF rendering.
-
-async function executeGeneratePdf(
-  args: Record<string, any>,
-  log?: ReturnType<typeof createLogger>
-): Promise<string> {
-  const title = args.title || "Document";
-  const description = args.description || args.content || "";
-  const pageSize = args.pageSize || "A4";
-  const pageOrientation = args.pageOrientation || "portrait";
-
-  // If content is already an array (pdfmake nodes), pass through directly
-  if (Array.isArray(args.content)) {
-    return JSON.stringify({
-      type: "pdf",
-      title,
-      content: args.content,
-      pageSize,
-      pageOrientation,
-    });
-  }
-
-  // Use Kilo to generate HTML from the description
-  if (!KILO_API_KEY) {
-    log?.error("KILO_API_KEY not configured for PDF generation");
-    return JSON.stringify({ error: "PDF generation is not configured." });
-  }
-
-  const kiloSystemPrompt = `You are a PDF document generator that outputs HTML with inline styles. You output ONLY the HTML body content — no <html>, <head>, <body>, or <DOCTYPE> tags. No markdown, no code fences, no explanation — just raw HTML.
-
-CRITICAL RULES:
-- Use ONLY inline style="" attributes for ALL styling. No CSS classes, no <style> tags, no external stylesheets.
-- Every visual property (color, font-size, padding, margin, background, border, etc.) must be in the style attribute.
-- Use semantic HTML: <h1>-<h6>, <p>, <table>, <tr>, <th>, <td>, <ul>, <ol>, <li>, <strong>, <em>, <hr>, <div>, <span>.
-- For tables: always include style on <table>, <th>, <td> for borders, padding, colors.
-- Do NOT include the document title as the first element — it will be added automatically.
-- Output clean, well-structured HTML that reads well when converted to PDF.`;
-
-  const kiloUserPrompt = `Generate HTML content (with inline styles only) for a PDF document.
-
-Title: "${title}"
-Description: ${description}
-Page size: ${pageSize}, Orientation: ${pageOrientation}
-
-Requirements:
-- Use inline styles on every element for colors, fonts, spacing, borders, backgrounds.
-- NO CSS classes or <style> tags — only style="" attributes.
-- Use a professional, clean design. Default to dark theme (background: #0b1020, text: #ffffff, accents: #00d4aa).
-- Use proper heading hierarchy (<h2>, <h3>) — do NOT include an <h1> (the title is added separately).
-- Use tables for tabular data with styled headers and borders.
-- Use <ul>/<ol> for lists.
-- Use <hr> for dividers.
-- Wrap sections in <div> with appropriate padding/margin.
-- Output ONLY the HTML content. No markdown fences, no explanation.`;
-
-  try {
-    log?.info(`⚙ PDF generation via Kilo (HTML): title="${title}", desc=${description.length}ch`);
-    const start = Date.now();
-
-    const res = await fetch(KILO_GATEWAY_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${KILO_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: KILO_DEFAULT_MODEL,
-        messages: [
-          { role: "system", content: kiloSystemPrompt },
-          { role: "user", content: kiloUserPrompt },
-        ],
-        max_tokens: 8192,
-        temperature: 0.5,
-      }),
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      log?.error(`Kilo PDF generation error ${res.status}: ${errText.slice(0, 300)}`);
-      return JSON.stringify({ error: `PDF generation failed: ${res.status}` });
-    }
-
-    const data = await res.json();
-    const rawContent = data.choices?.[0]?.message?.content || "";
-    log?.info(`⚙ Kilo PDF HTML response (${Date.now() - start}ms): ${rawContent.length}ch`);
-
-    // Clean up: strip markdown code fences if Kilo wraps the HTML
-    let html = rawContent.trim();
-    if (html.startsWith("```")) {
-      html = html.replace(/^```(?:html)?\s*\n?/, "").replace(/\n?```\s*$/, "");
-    }
-
-    // Strip any accidental full-document wrappers
-    html = html
-      .replace(/<!DOCTYPE[^>]*>/gi, "")
-      .replace(/<\/?html[^>]*>/gi, "")
-      .replace(/<\/?head[^>]*>/gi, "")
-      .replace(/<\/?body[^>]*>/gi, "")
-      .replace(/<style[\s\S]*?<\/style>/gi, "")
-      .replace(/<link[^>]*>/gi, "")
-      .trim();
-
-    if (!html) {
-      log?.warn("Kilo returned empty HTML content");
-      html = `<p style="color: #cc0000; font-weight: bold;">This PDF could not be generated. Please try again.</p>`;
-    }
-
-    return JSON.stringify({
-      type: "pdf_html",
-      title,
-      html,
-      pageSize,
-      pageOrientation,
-    });
-  } catch (err: any) {
-    log?.error(`PDF generation fetch error: ${err.message}`);
-    return JSON.stringify({ error: `PDF generation failed: ${err.message}` });
-  }
-}
-
-/**
- * Streaming PDF generation: calls Kilo, collects HTML, emits the
- * ACTION tag as an SSE chunk, and streams a brief success message.
- * Used as a special case in streamAgentLoop so it terminates immediately.
- */
-async function streamGeneratePdf(
-  args: Record<string, any>,
-  res: import("@vercel/node").VercelResponse,
-  sseId: string,
-  sseModel: string,
-  log?: ReturnType<typeof createLogger>
-): Promise<void> {
-  const title = args.title || "Document";
-
-  // Execute the PDF generation (calls Kilo internally)
-  const resultJson = await executeGeneratePdf(args, log);
-
-  try {
-    const parsed = JSON.parse(resultJson);
-    if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
-      // Encode either HTML string or legacy pdfmake content as base64
-      const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
-      const b64 = Buffer.from(payload).toString("base64");
-      const pdfType = parsed.type === "pdf_html" ? "html" : "json";
-      const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
-      res.write(sseChunk(sseId, sseModel, { content: actionTag }));
-
-      // Stream a brief success message
-      const successMsg = `Your PDF "${parsed.title || "Document"}" has been generated and is ready for download.`;
-      await streamTextTokens(res, sseId, sseModel, successMsg);
-    } else if (parsed.error) {
-      const errMsg = `I wasn't able to generate the PDF: ${parsed.error}`;
-      await streamTextTokens(res, sseId, sseModel, errMsg);
-    } else {
-      await streamTextTokens(res, sseId, sseModel, `PDF "${title}" generation completed.`);
-    }
-  } catch {
-    log?.error("Failed to parse executeGeneratePdf result");
-    await streamTextTokens(res, sseId, sseModel, `I encountered an error generating the PDF "${title}". Please try again.`);
-  }
-}
-
 // ─── Task Agent (Kilo Gateway) ──────────────────────────────────────────────
 
 interface TaskAgentArgs {
@@ -557,7 +358,6 @@ const TASK_AGENT_TOOLS = [
       },
     },
   },
-  GENERATE_PDF_TOOL,
 ];
 
 const TASK_AGENT_TOOL_NAMES = new Set(TASK_AGENT_TOOLS.map((t) => t.function.name));
@@ -583,9 +383,6 @@ async function executeTaskAgentTool(
       break;
     case "image_generation":
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
-      break;
-    case "generate_pdf":
-      result = await executeGeneratePdf(args, log);
       break;
     default:
       result = `Unknown tool: ${name}`;
@@ -842,35 +639,11 @@ async function streamTaskAgent(
           const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
           sseToolStatus(res, sseId, sseModel, "tool_done", tc.function.name);
 
-          // For generate_pdf: stream the PDF data as an action tag in the content
-          // and feed a simplified result back to task_agent conversation
-          if (tc.function.name === "generate_pdf") {
-            try {
-              const parsed = JSON.parse(result);
-              if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
-                const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
-                const b64 = Buffer.from(payload).toString("base64");
-                const pdfType = parsed.type === "pdf_html" ? "html" : "json";
-                const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
-                res.write(sseChunk(sseId, sseModel, { content: actionTag }));
-                messages.push({
-                  role: "tool",
-                  tool_call_id: tc.id,
-                  content: JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" generated and download button shown.` }),
-                });
-              } else {
-                messages.push({ role: "tool", tool_call_id: tc.id, content: result });
-              }
-            } catch {
-              messages.push({ role: "tool", tool_call_id: tc.id, content: result });
-            }
-          } else {
-            messages.push({
-              role: "tool",
-              tool_call_id: tc.id,
-              content: result,
-            });
-          }
+          messages.push({
+            role: "tool",
+            tool_call_id: tc.id,
+            content: result,
+          });
         }
         continue; // next iteration — will stream the follow-up response
       }
@@ -909,9 +682,6 @@ async function executeTool(
       break;
     case "image_generation":
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
-      break;
-    case "generate_pdf":
-      result = await executeGeneratePdf(args, log);
       break;
     case "task_agent":
       result = await executeTaskAgent(args as TaskAgentArgs, log);
@@ -1116,7 +886,7 @@ function stripToolCalls(text: string): string {
 
 // ─── Tool Classification ─────────────────────────────────────────────────────
 
-const BUILTIN_TOOL_NAMES = new Set(["web_search", "web_extract", "image_generation", "task_agent", "generate_pdf"]);
+const BUILTIN_TOOL_NAMES = new Set(["web_search", "web_extract", "image_generation", "task_agent"]);
 
 function isBuiltinTool(name: string): boolean {
   return BUILTIN_TOOL_NAMES.has(name);
@@ -1140,8 +910,6 @@ For complex or large outputs, you have a **task_agent** tool that delegates to a
 - The user asks for research-heavy content that needs web lookups and thorough analysis
 - The user wants content with generated images embedded
 - Any request where a thorough, high-quality, long response is needed
-NOTE: Do NOT use task_agent for PDF generation. Use the generate_pdf tool directly instead.
-
 When calling task_agent:
 - Pass the user's FULL original request as the prompt — do NOT summarize or shorten it
 - Add relevant context, style preferences, and technical requirements to the prompt
@@ -1151,9 +919,29 @@ When calling task_agent:
 - If the user mentions "dark theme", include that in the prompt
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
 
-## PDF Generation
-You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Pass a title and a DETAILED description with ALL the data to include. A powerful model generates styled HTML which is converted to PDF automatically. Include every detail in the description: names, dates, skills, scores, sections, table data, etc.
-Example: generate_pdf({ title: "Anye Happiness — Profile Snapshot", description: "Profile snapshot for Anye Happiness Ade, email hans@gmail.com. Candidate, remote, open to relocation. Skills: Typescript (Frontend, Beginner), PHP (Backend, Beginner), React (Frontend, Beginner). 3 modules completed out of 10. 0 of 3 mentor loops. Recent activity: 3/9/2026 training Mentor Matched, 3/9/2026 resume_upload Resume Uploaded. Next steps: Find a Mentor, Continue BridgeFast modules." })
+## PDF Generation — CRITICAL INSTRUCTIONS
+When the user asks you to create, generate, or export a PDF, you MUST respond with a valid pdfmake document definition JSON inside a \`\`\`json code block in your response text. Do NOT use any tool for PDF generation. The frontend will automatically detect the JSON code block and render the PDF for download.
+
+Return this structure inside a \`\`\`json code block:
+{
+  "pageSize": "A4",
+  "pageMargins": [40, 60, 40, 60],
+  "content": [ ...content nodes ],
+  "styles": { ...named styles },
+  "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+}
+
+Content node types: text, columns, stack, table ({ table: { headerRows, widths[], body[][] }, layout }), ul, ol, canvas, image.
+Table rules: "widths" length MUST match cells per row. "layout" goes alongside "table", NOT inside it. Use named layouts: "noBorders" | "headerLineOnly" | "lightHorizontalLines".
+Styles example: { "heading1": { "fontSize": 22, "bold": true, "color": "#1e293b", "margin": [0, 0, 0, 8] } }
+
+CRITICAL RULES:
+- NEVER use JavaScript functions in JSON — use static layout names or objects
+- NEVER use font-family or any font other than "Roboto"
+- ONLY use hex color strings like "#6c63ff" — never color names
+- ALWAYS include "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+- Must be valid JSON — no trailing commas, all keys double-quoted
+- You may include conversational text before/after the JSON code block
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -1177,8 +965,8 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Include ALL data: names, dates, skills, scores, sections, table rows, etc." }. A powerful model generates styled HTML which is converted to PDF. Include every detail in the description.
-5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT use task_agent for PDF generation — use generate_pdf directly instead. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
+4. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.
+NOTE: For PDF generation, do NOT use any tool. Instead, output a pdfmake document definition JSON inside a \`\`\`json code block directly in your response. The frontend renders it automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
@@ -1187,7 +975,7 @@ Built-in tools (executed automatically):
       const params = fn.parameters
         ? ` Params: ${JSON.stringify(fn.parameters.properties ? Object.fromEntries(Object.entries(fn.parameters.properties).map(([k, v]: [string, any]) => [k, v.type || "any"])) : {})}`
         : "";
-      prompt += `\n${i + 6}. **${fn.name}** - ${fn.description || "No description"}.${params}`;
+      prompt += `\n${i + 5}. **${fn.name}** - ${fn.description || "No description"}.${params}`;
     });
   }
 
@@ -1377,21 +1165,6 @@ async function runAgentLoop(
     const results = await Promise.all(
       [...builtinCalls, ...unknownCalls].map(async (tc) => {
         const result = await executeTool(tc.name, tc.arguments, log);
-        // For generate_pdf, embed action tag into finalContent and simplify result for A0
-        if (tc.name === "generate_pdf") {
-          try {
-            const parsed = JSON.parse(result);
-            if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
-              const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
-              const b64 = Buffer.from(payload).toString("base64");
-              const pdfType = parsed.type === "pdf_html" ? "html" : "json";
-              finalContent += `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
-              const simplified = JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" generated.` });
-              allToolCalls.push({ name: tc.name, arguments: tc.arguments, result: simplified });
-              return { name: tc.name, result: simplified };
-            }
-          } catch { /* fall through */ }
-        }
         allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
         return { name: tc.name, result };
       })
@@ -1849,30 +1622,6 @@ async function streamAgentLoop(
     );
     log?.info(`Tool calls: builtin=[${builtinCalls.map(t => t.name).join(",")}], custom=[${customCalls.map(t => t.name).join(",")}], unknown=[${unknownCalls.map(t => t.name).join(",")}]`);
 
-    // ── generate_pdf special case: generate PDF, emit action tag, terminate ──
-    const pdfCall = allCalls.find((tc) => tc.name === "generate_pdf");
-    if (pdfCall) {
-      log?.info("generate_pdf detected — generating PDF and terminating");
-      sseToolStatus(res, id, model, "tool_start", "generate_pdf", pdfCall.arguments);
-
-      // Execute any other co-occurring built-in calls first (silently)
-      for (const tc of builtinCalls.filter((t) => t.name !== "generate_pdf")) {
-        sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
-        await executeTool(tc.name, tc.arguments, log);
-        sseToolStatus(res, id, model, "tool_done", tc.name);
-      }
-
-      // Generate PDF, emit action tag, stream success message
-      await streamGeneratePdf(pdfCall.arguments as Record<string, any>, res, id, model, log);
-
-      sseToolStatus(res, id, model, "tool_done", "generate_pdf");
-      res.write(sseChunk(id, model, {}, "stop"));
-      res.write("data: [DONE]\n\n");
-      res.end();
-      log?.info("Stream ended (stop, generate_pdf)");
-      return;
-    }
-
     // ── task_agent special case: pipe Kilo stream directly to client ──
     const taskAgentCall = allCalls.find((tc) => tc.name === "task_agent");
     if (taskAgentCall) {
@@ -1928,29 +1677,7 @@ async function streamAgentLoop(
       const result = await executeTool(tc.name, tc.arguments, log);
       sseToolStatus(res, id, model, "tool_done", tc.name);
 
-      // For generate_pdf: stream the PDF data as an action tag in the content
-      // so the frontend can parse it and render client-side with pdfmake/html-to-pdfmake.
-      // Feed a simplified result back to A0 (not the full content).
-      if (tc.name === "generate_pdf") {
-        try {
-          const parsed = JSON.parse(result);
-          if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
-            const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
-            const b64 = Buffer.from(payload).toString("base64");
-            const pdfType = parsed.type === "pdf_html" ? "html" : "json";
-            const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
-            res.write(sseChunk(id, model, { content: actionTag }));
-            // Feed simplified result to A0 so it doesn't waste context
-            results.push({ name: tc.name, result: JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" has been generated and a download button is shown to the user.` }) });
-          } else {
-            results.push({ name: tc.name, result });
-          }
-        } catch {
-          results.push({ name: tc.name, result });
-        }
-      } else {
-        results.push({ name: tc.name, result });
-      }
+      results.push({ name: tc.name, result });
     }
 
     // Feed results back into conversation for next LLM turn
