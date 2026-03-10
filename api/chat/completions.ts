@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { buildPdfContent, buildKiloPrompt, type TemplateData } from "./pdf-templates";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -340,39 +341,16 @@ async function executeGeneratePdf(
     });
   }
 
-  // Use Kilo to generate pdfmake content from the description
+  // Use Kilo to generate structured data, then build pdfmake via templates
   if (!KILO_API_KEY) {
     log?.error("KILO_API_KEY not configured for PDF generation");
     return JSON.stringify({ error: "PDF generation is not configured." });
   }
 
-  const kiloPrompt = `Generate a pdfmake content array for a PDF document.
-
-Title: "${title}"
-Description: ${description}
-Page size: ${pageSize}, Orientation: ${pageOrientation}
-
-IMPORTANT: Respond with ONLY a valid JSON array of pdfmake content nodes. No markdown, no explanation, no code fences — just the raw JSON array.
-
-CRITICAL RULES:
-- Output MUST be valid JSON. No JavaScript expressions, no function literals, no comments.
-- For table layouts, use ONLY named layout strings: "noBorders", "lightHorizontalLines", "headerLineOnly", or omit the layout property entirely.
-- NEVER use "layout": { "hLineWidth": function(...) ... } or any function() expressions. These are NOT valid JSON and will break parsing.
-- Every property value must be a JSON primitive (string, number, boolean, null), array, or object. No functions.
-
-Supported node types:
-- Text: { "text": "string", "fontSize": 14, "bold": true, "italic": false, "color": "#333", "margin": [0, 5, 0, 5] }
-- Table: { "table": { "headerRows": 1, "widths": ["*", "*"], "body": [["Header1", "Header2"], ["val1", "val2"]] }, "layout": "lightHorizontalLines" }
-- Unordered list: { "ul": ["item 1", "item 2"] }
-- Ordered list: { "ol": ["item 1", "item 2"] }
-- Columns: { "columns": [{ "text": "Col 1", "width": "*" }, { "text": "Col 2", "width": "*" }] }
-- Canvas: { "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#ccc" }] }
-- Stack: { "stack": [ ...nodes ], "margin": [0, 0, 0, 10] }
-
-Create a well-structured, professional document. Use headings (large/bold text), paragraphs, tables where appropriate, and proper spacing with margins. Do NOT include the title as the first node — it will be added automatically.`;
+  const { system: kiloSystem, user: kiloUser } = buildKiloPrompt(title, description);
 
   try {
-    log?.info(`⚙ PDF generation via Kilo: title="${title}", desc=${description.length}ch`);
+    log?.info(`⚙ PDF generation via Kilo (template): title="${title}", desc=${description.length}ch`);
     const start = Date.now();
 
     const res = await fetch(KILO_GATEWAY_URL, {
@@ -384,14 +362,11 @@ Create a well-structured, professional document. Use headings (large/bold text),
       body: JSON.stringify({
         model: KILO_DEFAULT_MODEL,
         messages: [
-          {
-            role: "system",
-            content: "You are a PDF document generator. You output ONLY valid JSON arrays of pdfmake content nodes. No markdown, no code fences, no explanation — just the JSON array. NEVER use JavaScript function expressions anywhere in the output. For table layouts, use named strings like \"noBorders\" or \"lightHorizontalLines\" instead of objects with function properties. All output must be strictly valid JSON.",
-          },
-          { role: "user", content: kiloPrompt },
+          { role: "system", content: kiloSystem },
+          { role: "user", content: kiloUser },
         ],
         max_tokens: 8192,
-        temperature: 0.5,
+        temperature: 0.3,
       }),
     });
 
@@ -403,90 +378,61 @@ Create a well-structured, professional document. Use headings (large/bold text),
 
     const data = await res.json();
     const rawContent = data.choices?.[0]?.message?.content || "";
-    log?.info(`⚙ Kilo PDF response (${Date.now() - start}ms): ${rawContent.length}ch`);
+    log?.info(`⚙ Kilo PDF template response (${Date.now() - start}ms): ${rawContent.length}ch`);
 
-    // Parse the pdfmake content array from Kilo's response
-    // Strip any markdown code fences if Kilo wraps it
+    // Parse structured data from Kilo's response
     let cleanedContent = rawContent.trim();
+    // Strip markdown code fences if present
     if (cleanedContent.startsWith("```")) {
       cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
     }
-
-    // Extract the outermost JSON array if surrounded by extra text
-    const firstBracket = cleanedContent.indexOf("[");
-    const lastBracket = cleanedContent.lastIndexOf("]");
-    if (firstBracket !== -1 && lastBracket > firstBracket) {
-      cleanedContent = cleanedContent.slice(firstBracket, lastBracket + 1);
+    // Extract the JSON object if surrounded by extra text
+    const firstBrace = cleanedContent.indexOf("{");
+    const lastBrace = cleanedContent.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      cleanedContent = cleanedContent.slice(firstBrace, lastBrace + 1);
     }
-
-    // Sanitize: strip JavaScript function literals that Kilo sometimes generates.
-    // Uses balanced-brace matching to handle nested braces inside function bodies
-    // e.g. "hLineWidth": function(i, node) { return i === 0 ? 1 : 0; }
-    const funcPattern = /"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{/g;
-    let funcMatch: RegExpExecArray | null;
-    const removals: [number, number][] = [];
-    while ((funcMatch = funcPattern.exec(cleanedContent)) !== null) {
-      const start = funcMatch.index;
-      let depth = 1;
-      let i = start + funcMatch[0].length;
-      while (i < cleanedContent.length && depth > 0) {
-        if (cleanedContent[i] === "{") depth++;
-        else if (cleanedContent[i] === "}") depth--;
-        i++;
-      }
-      removals.push([start, i]);
-    }
-    // Apply removals in reverse order to preserve offsets
-    for (let r = removals.length - 1; r >= 0; r--) {
-      cleanedContent = cleanedContent.slice(0, removals[r][0]) + cleanedContent.slice(removals[r][1]);
-    }
-    // Also handle arrow functions: "hLineWidth": (i, node) => expr
-    cleanedContent = cleanedContent.replace(/"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+/g, "");
-    // Remove dangling commas around removed properties
-    cleanedContent = cleanedContent
-      .replace(/,\s*,/g, ",")
-      .replace(/,\s*([}\]])/g, "$1")
-      .replace(/\{\s*,/g, "{")
-      .replace(/\[\s*,/g, "[");
-
-    // Replace layout objects that are now empty {} with a named layout string
-    cleanedContent = cleanedContent.replace(/"layout"\s*:\s*\{\s*\}/g, '"layout": "lightHorizontalLines"');
 
     let pdfContent: unknown[];
     try {
-      pdfContent = JSON.parse(cleanedContent);
-      if (!Array.isArray(pdfContent)) {
-        // If it returned an object with a content key, extract it
-        if (pdfContent && typeof pdfContent === "object" && "content" in (pdfContent as any)) {
-          pdfContent = (pdfContent as any).content;
-        } else {
-          pdfContent = [pdfContent];
-        }
+      const templateInput = JSON.parse(cleanedContent) as TemplateData;
+      if (!templateInput.template || !templateInput.data) {
+        throw new Error("Missing template or data field");
       }
-    } catch (parseErr: any) {
-      log?.warn(`Failed to parse Kilo PDF content as JSON: ${parseErr.message}`);
-      // Attempt JSON repair: fix common issues (trailing commas, single quotes, etc.)
+      pdfContent = buildPdfContent(templateInput);
+      log?.info(`⚙ PDF template "${templateInput.template}" built successfully`);
+    } catch (templateErr: any) {
+      log?.warn(`Template parse failed: ${templateErr.message} — falling back to generic`);
+      // Try to salvage: if Kilo returned a flat object, wrap it in generic template
       try {
-        let repaired = cleanedContent
-          // Remove trailing commas before } or ]
-          .replace(/,\s*([}\]])/g, "$1")
-          // Replace single-quoted strings with double-quoted
-          .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, '"$1"')
-          // Remove JavaScript-style comments
-          .replace(/\/\/[^\n]*/g, "")
-          .replace(/\/\*[\s\S]*?\*\//g, "");
-        pdfContent = JSON.parse(repaired);
-        if (!Array.isArray(pdfContent)) pdfContent = [pdfContent];
-        log?.info("JSON repair succeeded for Kilo PDF content");
+        const rawData = JSON.parse(cleanedContent);
+        // If it has sections, treat as generic
+        if (rawData.sections) {
+          pdfContent = buildPdfContent({ template: "generic", data: rawData });
+        } else {
+          // Build a generic doc from whatever fields are present
+          const sections: { heading?: string; body?: string }[] = [];
+          for (const [key, value] of Object.entries(rawData)) {
+            if (typeof value === "string" && key !== "template") {
+              sections.push({ heading: key.charAt(0).toUpperCase() + key.slice(1), body: value });
+            }
+          }
+          pdfContent = buildPdfContent({
+            template: "generic",
+            data: { subtitle: rawData.subtitle, sections: sections.length > 0 ? sections : [{ body: description }] },
+          });
+        }
+        log?.info("Salvaged Kilo output into generic template");
       } catch {
-        // Last resort: try to extract any valid JSON array from the content
-        log?.error(`JSON repair also failed — PDF content (first 500ch): ${cleanedContent.slice(0, 500)}`);
-        // Instead of rendering raw JSON as text (which corrupts the PDF),
-        // create a readable error document
-        pdfContent = [
-          { text: "This PDF could not be generated correctly.", fontSize: 14, bold: true, color: "#cc0000", margin: [0, 0, 0, 10] },
-          { text: "The document content had formatting issues. Please try generating this PDF again.", fontSize: 11, color: "#666666" },
-        ];
+        // Last resort: generate a generic doc from the original description
+        log?.error(`Could not parse Kilo output at all — generating from description. Raw (500ch): ${cleanedContent.slice(0, 500)}`);
+        pdfContent = buildPdfContent({
+          template: "generic",
+          data: {
+            subtitle: description.slice(0, 120),
+            sections: [{ body: description }],
+          },
+        });
       }
     }
 
@@ -1212,8 +1158,9 @@ When calling task_agent:
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
 
 ## PDF Generation
-You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Just pass a title and a detailed description of what the PDF should contain. A powerful model will construct the PDF content automatically.
-Example: generate_pdf({ title: "Sample Report", description: "A professional sample report with an introduction section, a table of contents, a data table with columns ID/Name/Status and 3 sample rows, and a conclusion paragraph." })
+You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Pass a title and a DETAILED description with ALL the data to include. The system uses templates (profile_snapshot, report, certificate, table_report, generic) and an AI model extracts structured data from your description — so include every detail: names, dates, skills, scores, sections, table data, etc.
+Example: generate_pdf({ title: "Anye Happiness — Profile Snapshot", description: "Profile snapshot for Anye Happiness Ade, email hans@gmail.com. Candidate, remote, open to relocation. Skills: Typescript (Frontend, Beginner), PHP (Backend, Beginner), React (Frontend, Beginner). 3 modules completed out of 10. 0 of 3 mentor loops. Recent activity: 3/9/2026 training Mentor Matched, 3/9/2026 resume_upload Resume Uploaded. Next steps: Find a Mentor, Continue BridgeFast modules." })
+The more data you include in the description, the better the PDF. Include ALL relevant user data.
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -1237,7 +1184,7 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Detailed description of what the PDF should contain — sections, data, tables, etc." }. A powerful model auto-generates the PDF content from your description.
+4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Include ALL data: names, dates, skills, scores, sections, table rows, etc." }. Uses templates (profile_snapshot, report, certificate, table_report, generic) — include every detail in the description.
 5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT use task_agent for PDF generation — use generate_pdf directly instead. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
