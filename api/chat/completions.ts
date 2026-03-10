@@ -124,6 +124,40 @@ ${wantsAnimated ? "- Add smooth CSS transitions and hover animations" : ""}
 Respond with the complete HTML code in a single code block.`;
 }
 
+// PDF generation tool definition (shared between main brain and task agent)
+const GENERATE_PDF_TOOL = {
+  type: "function" as const,
+  function: {
+    name: "generate_pdf",
+    description:
+      "Generate a PDF document for the user to download. Pass a title and an array of pdfmake content nodes. The PDF will be rendered client-side. Supported nodes: text (with fontSize, bold, italic, color, margin), table (with headerRows, widths, body), ul/ol lists, columns. For tables: { table: { headerRows: 1, widths: [\"*\",\"*\"], body: [[\"Col A\",\"Col B\"],[\"val1\",\"val2\"]] } }. For lists: { ul: [\"item 1\",\"item 2\"] }. Keep content structured and concise.",
+    parameters: {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+          description: "Document title (also used as filename)",
+        },
+        content: {
+          type: "array",
+          description:
+            "Array of pdfmake content nodes (text objects, tables, lists, columns, etc.)",
+        },
+        pageSize: {
+          type: "string",
+          description: "Page size: A4, LETTER, LEGAL. Default: A4",
+        },
+        pageOrientation: {
+          type: "string",
+          enum: ["portrait", "landscape"],
+          description: "Page orientation. Default: portrait",
+        },
+      },
+      required: ["title", "content"],
+    },
+  },
+};
+
 // Built-in tool definitions (OpenAI function-calling format)
 const BUILTIN_TOOLS = [
   {
@@ -310,40 +344,6 @@ interface TaskAgentArgs {
   model?: string;
   max_tokens?: number;
 }
-
-// PDF generation tool definition (shared between main brain and task agent)
-const GENERATE_PDF_TOOL = {
-  type: "function" as const,
-  function: {
-    name: "generate_pdf",
-    description:
-      "Generate a PDF document for the user to download. Pass a title and an array of pdfmake content nodes. The PDF will be rendered client-side. Supported nodes: text (with fontSize, bold, italic, color, margin), table (with headerRows, widths, body), ul/ol lists, columns. For tables: { table: { headerRows: 1, widths: [\"*\",\"*\"], body: [[\"Col A\",\"Col B\"],[\"val1\",\"val2\"]] } }. For lists: { ul: [\"item 1\",\"item 2\"] }. Keep content structured and concise.",
-    parameters: {
-      type: "object",
-      properties: {
-        title: {
-          type: "string",
-          description: "Document title (also used as filename)",
-        },
-        content: {
-          type: "array",
-          description:
-            "Array of pdfmake content nodes (text objects, tables, lists, columns, etc.)",
-        },
-        pageSize: {
-          type: "string",
-          description: "Page size: A4, LETTER, LEGAL. Default: A4",
-        },
-        pageOrientation: {
-          type: "string",
-          enum: ["portrait", "landscape"],
-          description: "Page orientation. Default: portrait",
-        },
-      },
-      required: ["title", "content"],
-    },
-  },
-};
 
 // Tools available to the task agent (everything except task_agent itself to avoid recursion)
 const TASK_AGENT_TOOLS = [
