@@ -23,6 +23,7 @@ import {
   FileText,
   ArrowRight,
   Download,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +42,7 @@ interface Message {
   content: string;
   timestamp: Date;
   actions?: ActionResult[];
-  pdfDownloads?: { title: string; url: string }[];
+  pdfDownloads?: { title: string; url: string; rawJson?: string }[];
 }
 
 interface ChatbotDBSchema extends DBSchema {
@@ -526,7 +527,7 @@ async function executeAction(
 // The AI streams pdfmake document definitions as JSON code blocks.
 // We detect them, render the PDF client-side, and show download buttons.
 
-const CHATBOT_PDF_JSON_REGEX = /```(?:json)?\s*\n(\{[\s\S]*?"content"\s*:\s*\[[\s\S]*?\})\s*\n```/g;
+const CHATBOT_PDF_JSON_REGEX = /```(?:json)?\s*\n([\s\S]*?)\n```/g;
 
 function isChatbotPdfDefinition(obj: Record<string, unknown>): boolean {
   return (
@@ -535,15 +536,18 @@ function isChatbotPdfDefinition(obj: Record<string, unknown>): boolean {
   );
 }
 
-function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[] } {
+function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[]; rawJsonBlocks: string[] } {
   const docDefinitions: Record<string, unknown>[] = [];
+  const rawJsonBlocks: string[] = [];
   const cleanText = text.replace(CHATBOT_PDF_JSON_REGEX, (_match, jsonStr: string) => {
     try {
-      const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+      const trimmed = jsonStr.trim();
+      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
       if (isChatbotPdfDefinition(parsed)) {
         if (!parsed.defaultStyle) parsed.defaultStyle = {};
         (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
         docDefinitions.push(parsed);
+        rawJsonBlocks.push(trimmed);
         return "";
       }
     } catch {
@@ -551,12 +555,13 @@ function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefin
     }
     return _match;
   });
-  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions };
+  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions, rawJsonBlocks };
 }
 
 async function renderChatbotPdfDefinitions(
-  docDefinitions: Record<string, unknown>[]
-): Promise<{ title: string; url: string }[]> {
+  docDefinitions: Record<string, unknown>[],
+  rawJsonBlocks: string[] = []
+): Promise<{ title: string; url: string; rawJson?: string }[]> {
   const pdfMake = (window as any).pdfMake;
   if (!pdfMake) {
     // Try loading via dynamic import as fallback
@@ -578,9 +583,10 @@ async function renderChatbotPdfDefinitions(
   }
 
   const pm = (window as any).pdfMake;
-  const downloads: { title: string; url: string }[] = [];
+  const downloads: { title: string; url: string; rawJson?: string }[] = [];
 
-  for (const docDefinition of docDefinitions) {
+  for (let i = 0; i < docDefinitions.length; i++) {
+    const docDefinition = docDefinitions[i];
     try {
       const contentArr = docDefinition.content as unknown[];
       let title = "Document";
@@ -597,13 +603,51 @@ async function renderChatbotPdfDefinitions(
         } catch (err) { reject(err); }
       });
 
-      downloads.push({ title, url: URL.createObjectURL(blob) });
+      downloads.push({ title, url: URL.createObjectURL(blob), rawJson: rawJsonBlocks[i] });
     } catch (err) {
       console.error("PDF render failed:", err);
     }
   }
 
   return downloads;
+}
+
+// ─── PDF Download Card with Accordion ────────────────────────────────────────
+
+function ChatbotPdfCard({ pdf }: { pdf: { title: string; url: string; rawJson?: string } }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-lg border border-indigo-500/25 bg-indigo-950/30 overflow-hidden">
+      <div className="flex items-center gap-2 px-3 py-2">
+        <FileText className="w-3.5 h-3.5 text-indigo-300 flex-shrink-0" />
+        <span className="flex-1 min-w-0 text-xs font-medium text-white truncate">{pdf.title}.pdf</span>
+        <a
+          href={pdf.url}
+          download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+          className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 transition-all text-[10px] font-medium text-white"
+        >
+          <Download className="w-3 h-3" />
+          Download
+        </a>
+        {pdf.rawJson && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="inline-flex items-center gap-0.5 px-1.5 py-1 rounded-md hover:bg-white/5 transition-colors text-[10px] text-gray-400 hover:text-gray-300"
+          >
+            <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+          </button>
+        )}
+      </div>
+      {pdf.rawJson && expanded && (
+        <div className="border-t border-indigo-500/15 bg-black/30">
+          <pre className="p-2 overflow-x-auto max-h-48 overflow-y-auto text-[10px] font-mono leading-relaxed text-gray-400">
+            {pdf.rawJson}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── Page Context Extractor ──────────────────────────────────────────────────
@@ -972,7 +1016,7 @@ export function Chatbot() {
       const rawContent = data.completion || "Sorry, I encountered an error. Please try again.";
 
       // Parse pdfmake JSON code blocks from response
-      const { cleanText: textAfterPdf, docDefinitions } = parsePdfFromChatbotContent(rawContent);
+      const { cleanText: textAfterPdf, docDefinitions, rawJsonBlocks } = parsePdfFromChatbotContent(rawContent);
 
       // Parse DOM actions from the cleaned text
       const { cleanText, actions } = parseActions(textAfterPdf);
@@ -984,10 +1028,10 @@ export function Chatbot() {
       }));
 
       // Render any PDF definitions
-      let pdfDownloads: { title: string; url: string }[] | undefined;
+      let pdfDownloads: { title: string; url: string; rawJson?: string }[] | undefined;
       if (docDefinitions.length > 0) {
         try {
-          const downloads = await renderChatbotPdfDefinitions(docDefinitions);
+          const downloads = await renderChatbotPdfDefinitions(docDefinitions, rawJsonBlocks);
           if (downloads.length > 0) pdfDownloads = downloads;
         } catch { /* skip */ }
       }
@@ -1284,20 +1328,11 @@ export function Chatbot() {
                       </div>
                     )}
 
-                    {/* PDF Download Buttons */}
+                    {/* PDF download cards with accordion */}
                     {message.pdfDownloads && message.pdfDownloads.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2">
                         {message.pdfDownloads.map((pdf, pIdx) => (
-                          <a
-                            key={pIdx}
-                            href={pdf.url}
-                            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
-                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 hover:border-indigo-500/50 transition-all text-xs text-white group w-fit"
-                          >
-                            <FileText className="w-3.5 h-3.5 text-indigo-300" />
-                            <span className="font-medium">{pdf.title}.pdf</span>
-                            <Download className="w-3 h-3 text-indigo-400 group-hover:text-white transition-colors" />
-                          </a>
+                          <ChatbotPdfCard key={pIdx} pdf={pdf} />
                         ))}
                       </div>
                     )}

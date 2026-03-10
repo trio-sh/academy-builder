@@ -135,7 +135,7 @@ interface UIMessage {
   content: string;
   toolCalls?: OpenAIToolCall[];
   statuses?: StatusEvent[];
-  pdfDownloads?: { title: string; url: string }[];
+  pdfDownloads?: { title: string; url: string; rawJson?: string }[];
   timestamp: Date;
 }
 
@@ -416,7 +416,7 @@ const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 // We detect valid pdfmake JSON, strip it from the visible text, render the PDF
 // client-side, and show download buttons.
 
-const PDF_JSON_BLOCK_REGEX = /```(?:json)?\s*\n(\{[\s\S]*?"content"\s*:\s*\[[\s\S]*?\})\s*\n```/g;
+const PDF_JSON_BLOCK_REGEX = /```(?:json)?\s*\n([\s\S]*?)\n```/g;
 
 function isPdfMakeDefinition(obj: Record<string, unknown>): boolean {
   return (
@@ -425,16 +425,25 @@ function isPdfMakeDefinition(obj: Record<string, unknown>): boolean {
   );
 }
 
-function parsePdfFromContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[] } {
+interface PdfParseResult {
+  cleanText: string;
+  docDefinitions: Record<string, unknown>[];
+  rawJsonBlocks: string[];
+}
+
+function parsePdfFromContent(text: string): PdfParseResult {
   const docDefinitions: Record<string, unknown>[] = [];
+  const rawJsonBlocks: string[] = [];
   const cleanText = text.replace(PDF_JSON_BLOCK_REGEX, (_match, jsonStr: string) => {
     try {
-      const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+      const trimmed = jsonStr.trim();
+      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
       if (isPdfMakeDefinition(parsed)) {
         // Ensure Roboto default
         if (!parsed.defaultStyle) parsed.defaultStyle = {};
         (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
         docDefinitions.push(parsed);
+        rawJsonBlocks.push(trimmed);
         return "";
       }
     } catch {
@@ -442,21 +451,23 @@ function parsePdfFromContent(text: string): { cleanText: string; docDefinitions:
     }
     return _match;
   });
-  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions };
+  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions, rawJsonBlocks };
 }
 
 async function renderPdfDocDefinitions(
-  docDefinitions: Record<string, unknown>[]
-): Promise<{ title: string; url: string }[]> {
+  docDefinitions: Record<string, unknown>[],
+  rawJsonBlocks: string[] = []
+): Promise<{ title: string; url: string; rawJson?: string }[]> {
   const pdfMake = (window as any).pdfMake;
   if (!pdfMake) {
     console.error("pdfMake CDN not loaded");
     return [];
   }
 
-  const downloads: { title: string; url: string }[] = [];
+  const downloads: { title: string; url: string; rawJson?: string }[] = [];
 
-  for (const docDefinition of docDefinitions) {
+  for (let i = 0; i < docDefinitions.length; i++) {
+    const docDefinition = docDefinitions[i];
     try {
       // Extract title from the first text node in content, or use a default
       const contentArr = docDefinition.content as unknown[];
@@ -474,13 +485,60 @@ async function renderPdfDocDefinitions(
         } catch (err) { reject(err); }
       });
 
-      downloads.push({ title, url: URL.createObjectURL(blob) });
+      downloads.push({ title, url: URL.createObjectURL(blob), rawJson: rawJsonBlocks[i] });
     } catch (err) {
       console.error("PDF render failed:", err);
     }
   }
 
   return downloads;
+}
+
+// ─── PDF Download Card with Accordion ────────────────────────────────────────
+
+function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?: string } }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-indigo-500/25 bg-indigo-950/30 overflow-hidden">
+      {/* Download button row */}
+      <div className="flex items-center gap-3 px-4 py-3">
+        <div className="w-9 h-9 rounded-lg bg-indigo-600/30 flex items-center justify-center flex-shrink-0">
+          <FileText className="w-4.5 h-4.5 text-indigo-300" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <span className="font-medium text-sm text-white truncate block">{pdf.title}.pdf</span>
+          <span className="text-[10px] text-indigo-400">PDF document ready</span>
+        </div>
+        <a
+          href={pdf.url}
+          download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 hover:border-indigo-500/50 transition-all text-xs font-medium text-white"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Download
+        </a>
+        {pdf.rawJson && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-[11px] text-gray-400 hover:text-gray-300"
+          >
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+            JSON
+          </button>
+        )}
+      </div>
+
+      {/* Collapsible JSON accordion */}
+      {pdf.rawJson && expanded && (
+        <div className="border-t border-indigo-500/15 bg-black/30">
+          <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-gray-400">
+            {pdf.rawJson}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── DOM Helpers ─────────────────────────────────────────────────────────────
@@ -1423,11 +1481,11 @@ export default function AIAgent() {
         }
 
         // Parse pdfmake JSON code blocks from assistant content
-        const { cleanText, docDefinitions } = parsePdfFromContent(result.content || "");
-        let pdfDownloads: { title: string; url: string }[] | undefined;
+        const { cleanText, docDefinitions, rawJsonBlocks } = parsePdfFromContent(result.content || "");
+        let pdfDownloads: { title: string; url: string; rawJson?: string }[] | undefined;
         if (docDefinitions.length > 0) {
           try {
-            const downloads = await renderPdfDocDefinitions(docDefinitions);
+            const downloads = await renderPdfDocDefinitions(docDefinitions, rawJsonBlocks);
             if (downloads.length > 0) pdfDownloads = downloads;
           } catch { /* skip */ }
         }
@@ -1450,11 +1508,11 @@ export default function AIAgent() {
       }
 
       // Normal stop — parse pdfmake JSON code blocks from content
-      const { cleanText, docDefinitions } = parsePdfFromContent(result.content || "");
-      let pdfDownloads: { title: string; url: string }[] | undefined;
+      const { cleanText, docDefinitions, rawJsonBlocks } = parsePdfFromContent(result.content || "");
+      let pdfDownloads: { title: string; url: string; rawJson?: string }[] | undefined;
       if (docDefinitions.length > 0) {
         try {
-          const downloads = await renderPdfDocDefinitions(docDefinitions);
+          const downloads = await renderPdfDocDefinitions(docDefinitions, rawJsonBlocks);
           if (downloads.length > 0) pdfDownloads = downloads;
         } catch { /* skip */ }
       }
@@ -1888,25 +1946,11 @@ export default function AIAgent() {
                       </div>
                     )}
 
-                    {/* PDF download buttons */}
+                    {/* PDF download cards with accordion */}
                     {msg.pdfDownloads && msg.pdfDownloads.length > 0 && (
-                      <div className="flex flex-col gap-2 mt-3">
+                      <div className="flex flex-col gap-3 mt-3">
                         {msg.pdfDownloads.map((pdf, i) => (
-                          <a
-                            key={i}
-                            href={pdf.url}
-                            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
-                            className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 hover:border-indigo-500/50 transition-all text-sm text-white group w-fit"
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center group-hover:bg-indigo-600/50 transition-colors">
-                              <FileText className="w-4 h-4 text-indigo-300" />
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="font-medium text-sm">{pdf.title}.pdf</span>
-                              <span className="text-[10px] text-indigo-400">Click to download</span>
-                            </div>
-                            <Download className="w-4 h-4 text-indigo-400 ml-2 group-hover:text-white transition-colors" />
-                          </a>
+                          <PdfDownloadCard key={i} pdf={pdf} />
                         ))}
                       </div>
                     )}
