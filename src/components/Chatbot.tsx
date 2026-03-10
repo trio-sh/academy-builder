@@ -924,6 +924,9 @@ export function Chatbot() {
 
   // ─── Render ────────────────────────────────────────────────────────────────
 
+  // Hide the floating chatbot on the Praxis agent page to avoid duplication
+  if (location.pathname.endsWith("/agent")) return null;
+
   return (
     <>
       {/* Floating Action Button */}

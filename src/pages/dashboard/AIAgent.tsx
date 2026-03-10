@@ -1700,10 +1700,10 @@ export default function AIAgent() {
   }
 
   return (
-    <div className="flex flex-col h-full w-full relative">
+    <div className="flex flex-col h-full w-full">
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6">
 
         {/* Empty state */}
         {uiMessages.length === 0 && !isStreaming && (
@@ -1894,7 +1894,7 @@ export default function AIAgent() {
       </div>
 
       {/* ─── Fixed Bottom Input ─── */}
-      <div data-agent-own className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-8 pb-4 px-4 sm:px-6">
+      <div data-agent-own className="flex-shrink-0 z-10 bg-gradient-to-t from-black via-black/95 to-transparent pt-4 pb-4 px-4 sm:px-6 border-t border-white/[0.04]">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           {/* Hidden file input */}
           <input
