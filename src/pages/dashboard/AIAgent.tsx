@@ -43,6 +43,7 @@ import {
   Clock,
   X,
   Paperclip,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
@@ -134,6 +135,7 @@ interface UIMessage {
   content: string;
   toolCalls?: OpenAIToolCall[];
   statuses?: StatusEvent[];
+  pdfDownloads?: { title: string; url: string }[];
   timestamp: Date;
 }
 
@@ -405,9 +407,32 @@ const CUSTOM_TOOLS = [
       },
     },
   },
+  {
+    type: "function" as const,
+    function: {
+      name: "generate_pdf",
+      description: `Generate a PDF document and give the user a download button. Pass a pdfmake document-definition object. Supported nodes: text, table, ul/ol lists, columns, images (base64). Example: { title: "Report", content: [{ text: "Hello", fontSize: 18, bold: true }, { text: "World" }] }. For tables use: { table: { headerRows: 1, widths: ["*","*"], body: [["Col A","Col B"],["val1","val2"]] } }. For lists: { ul: ["item 1","item 2"] }. Keep it concise.`,
+      parameters: {
+        type: "object",
+        properties: {
+          title: { type: "string", description: "Document title (also used as filename)" },
+          content: {
+            type: "array",
+            description: "Array of pdfmake content nodes (text objects, tables, lists, etc.)",
+          },
+          pageSize: { type: "string", description: "Page size: A4, LETTER, LEGAL", default: "A4" },
+          pageOrientation: { type: "string", enum: ["portrait", "landscape"], default: "portrait" },
+        },
+        required: ["title", "content"],
+      },
+    },
+  },
 ];
 
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
+
+// Module-level queue for PDF downloads generated during tool execution
+const pendingPdfDownloads: { title: string; url: string }[] = [];
 
 // ─── DOM Helpers ─────────────────────────────────────────────────────────────
 
@@ -720,6 +745,54 @@ async function executeCustomTool(
       const s = Number(args.seconds) || 1;
       await delay(s * 1000);
       return `Waited ${s}s`;
+    }
+
+    case "generate_pdf": {
+      try {
+        const pdfMakeModule = await import("pdfmake/build/pdfmake");
+        const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+        const pdfMake = pdfMakeModule.default || pdfMakeModule;
+        if (pdfFontsModule?.pdfMake?.vfs) {
+          pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+        } else if ((pdfFontsModule as Record<string, unknown>).default) {
+          const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
+          if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
+        }
+
+        const title = String(args.title || "Document");
+        const content = args.content as unknown[];
+
+        // Build pdfmake document definition
+        const docDefinition = {
+          pageSize: args.pageSize || "A4",
+          pageOrientation: args.pageOrientation || "portrait",
+          content: [
+            { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
+            ...content,
+          ],
+          defaultStyle: { fontSize: 11 },
+          styles: {
+            header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
+            subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
+          },
+        };
+
+        // Generate the PDF as a blob
+        const blob: Blob = await new Promise((resolve, reject) => {
+          try {
+            const pdf = pdfMake.createPdf(docDefinition);
+            pdf.getBlob((b: Blob) => resolve(b));
+          } catch (err) { reject(err); }
+        });
+
+        const url = URL.createObjectURL(blob);
+        pendingPdfDownloads.push({ title, url });
+
+        return `PDF "${title}" generated successfully. A download button has been shown to the user.`;
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        return JSON.stringify({ error: `PDF generation failed: ${err instanceof Error ? err.message : String(err)}` });
+      }
     }
 
     default:
@@ -1100,6 +1173,7 @@ function toolDisplayName(name: string, args: Record<string, unknown>): string {
     case "query_data": return `Query: ${args.table || ""} data`;
     case "get_current_time": return `Get time (${args.timezone || "UTC"})`;
     case "image_generation": return `Generate image`;
+    case "generate_pdf": return `Generate PDF: ${args.title || "Document"}`;
     default: return name;
   }
 }
@@ -1118,6 +1192,7 @@ function toolIcon(name: string) {
     case "wait": return Loader2;
     case "query_data": return FileText;
     case "get_current_time": return Clock;
+    case "generate_pdf": return FileText;
     default: return Play;
   }
 }
@@ -1255,20 +1330,13 @@ export default function AIAgent() {
 
       // If tool_calls finish reason → execute custom tools on frontend, loop
       if (result.finishReason === "tool_calls" && result.toolCalls.length > 0) {
-        // Add UI message for the assistant response + tool calls
-        const uiMsg: UIMessage = {
-          role: "assistant",
-          content: result.content || "",
-          toolCalls: result.toolCalls,
-          statuses: result.statuses.length > 0 ? result.statuses : undefined,
-          timestamp: new Date(),
-        };
-        setUiMessages(prev => [...prev, uiMsg]);
-
         // Execute custom tools on frontend
         setIsStreaming(true);
         setStreamingContent("");
         setActiveStatuses([]);
+
+        // Clear any pending PDFs before execution
+        pendingPdfDownloads.length = 0;
 
         const toolResultMessages: ApiMessage[] = [];
         for (const tc of result.toolCalls) {
@@ -1285,6 +1353,21 @@ export default function AIAgent() {
             content: toolResult,
           });
         }
+
+        // Drain any PDFs generated during tool execution
+        const pdfDownloads = pendingPdfDownloads.length > 0 ? [...pendingPdfDownloads] : undefined;
+        pendingPdfDownloads.length = 0;
+
+        // Add UI message for the assistant response + tool calls + PDF downloads
+        const uiMsg: UIMessage = {
+          role: "assistant",
+          content: result.content || "",
+          toolCalls: result.toolCalls,
+          statuses: result.statuses.length > 0 ? result.statuses : undefined,
+          pdfDownloads,
+          timestamp: new Date(),
+        };
+        setUiMessages(prev => [...prev, uiMsg]);
 
         const messagesWithToolResults = [...updatedMessages, ...toolResultMessages];
         setApiMessages(messagesWithToolResults);
@@ -1705,6 +1788,29 @@ export default function AIAgent() {
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {msg.toolCalls.map((tc, i) => (
                           <ToolBadge key={i} tc={tc} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* PDF download buttons */}
+                    {msg.pdfDownloads && msg.pdfDownloads.length > 0 && (
+                      <div className="flex flex-col gap-2 mt-3">
+                        {msg.pdfDownloads.map((pdf, i) => (
+                          <a
+                            key={i}
+                            href={pdf.url}
+                            download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
+                            className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 hover:border-indigo-500/50 transition-all text-sm text-white group w-fit"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center group-hover:bg-indigo-600/50 transition-colors">
+                              <FileText className="w-4 h-4 text-indigo-300" />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-sm">{pdf.title}.pdf</span>
+                              <span className="text-[10px] text-indigo-400">Click to download</span>
+                            </div>
+                            <Download className="w-4 h-4 text-indigo-400 ml-2 group-hover:text-white transition-colors" />
+                          </a>
                         ))}
                       </div>
                     )}
