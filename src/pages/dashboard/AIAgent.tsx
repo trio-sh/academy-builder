@@ -412,38 +412,42 @@ const CUSTOM_TOOLS = [
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
 // ─── Action Tag Parser & PDF Renderer ────────────────────────────────────────
-// The backend streams [[ACTION:GENERATE_PDF|title|base64Content|pageSize|orientation|contentType]]
-// tags in the content. We parse them out, convert HTML to pdfmake nodes (or use
-// legacy JSON nodes directly), render the PDF client-side, and show download buttons.
+// ─── PDF JSON Code Block Detection ───────────────────────────────────────────
+// The AI streams pdfmake document definitions as JSON code blocks (```json ... ```).
+// We detect valid pdfmake JSON, strip it from the visible text, render the PDF
+// client-side, and show download buttons.
 
-const PDF_ACTION_REGEX = /\[\[ACTION:GENERATE_PDF\|((?:[^\]]|\][^\]])*?)\]\]/g;
+const PDF_JSON_BLOCK_REGEX = /```(?:json)?\s*\n(\{[\s\S]*?"content"\s*:\s*\[[\s\S]*?\})\s*\n```/g;
 
-interface ParsedPdfAction {
-  title: string;
-  contentBase64: string;
-  pageSize: string;
-  pageOrientation: string;
-  contentType: "html" | "json";
+function isPdfMakeDefinition(obj: Record<string, unknown>): boolean {
+  return (
+    Array.isArray(obj.content) &&
+    (obj.defaultStyle !== undefined || obj.pageSize !== undefined || obj.styles !== undefined)
+  );
 }
 
-function parsePdfActions(text: string): { cleanText: string; actions: ParsedPdfAction[] } {
-  const actions: ParsedPdfAction[] = [];
-  const cleanText = text.replace(PDF_ACTION_REGEX, (_match, paramStr: string) => {
-    const params = paramStr.split("|").map((p: string) => p.trim());
-    actions.push({
-      title: params[0] || "Document",
-      contentBase64: params[1] || "",
-      pageSize: params[2] || "A4",
-      pageOrientation: params[3] || "portrait",
-      contentType: (params[4] === "html" ? "html" : "json") as "html" | "json",
-    });
-    return "";
+function parsePdfFromContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[] } {
+  const docDefinitions: Record<string, unknown>[] = [];
+  const cleanText = text.replace(PDF_JSON_BLOCK_REGEX, (_match, jsonStr: string) => {
+    try {
+      const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+      if (isPdfMakeDefinition(parsed)) {
+        // Ensure Roboto default
+        if (!parsed.defaultStyle) parsed.defaultStyle = {};
+        (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
+        docDefinitions.push(parsed);
+        return "";
+      }
+    } catch {
+      // Not valid JSON — leave it in place
+    }
+    return _match;
   });
-  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), actions };
+  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions };
 }
 
-async function renderPdfActions(
-  actions: ParsedPdfAction[]
+async function renderPdfDocDefinitions(
+  docDefinitions: Record<string, unknown>[]
 ): Promise<{ title: string; url: string }[]> {
   const pdfMake = (window as any).pdfMake;
   if (!pdfMake) {
@@ -453,79 +457,17 @@ async function renderPdfActions(
 
   const downloads: { title: string; url: string }[] = [];
 
-  for (const action of actions) {
+  for (const docDefinition of docDefinitions) {
     try {
-      const title = action.title;
-      let content: unknown[] = [];
-
-      if (action.contentType === "html") {
-        // HTML-based approach: decode HTML and convert via html-to-pdfmake
-        try {
-          const htmlToPdfmake = (await import("html-to-pdfmake")).default;
-          let html: string;
-          try {
-            html = atob(action.contentBase64);
-            if (!/<\w/.test(html)) html = action.contentBase64;
-          } catch {
-            html = action.contentBase64;
-          }
-          content = htmlToPdfmake(html);
-          if (!Array.isArray(content)) content = [content];
-          // Strip any font references — pdfmake only ships Roboto
-          const stripFonts = (node: unknown): void => {
-            if (node && typeof node === "object") {
-              const obj = node as Record<string, unknown>;
-              delete obj.font;
-              if (typeof obj.style === "string" && /font-family/i.test(obj.style)) {
-                obj.style = (obj.style as string).replace(/font-family\s*:[^;]+;?/gi, "");
-              }
-              for (const v of Object.values(obj)) {
-                if (Array.isArray(v)) v.forEach(stripFonts);
-                else if (v && typeof v === "object") stripFonts(v);
-              }
-            }
-          };
-          content.forEach(stripFonts);
-        } catch (htmlErr) {
-          console.error("HTML-to-pdfmake conversion failed:", htmlErr);
-          content = [
-            { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
-            { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
-          ];
-        }
-      } else {
-        // Legacy JSON approach: decode pdfmake content nodes directly
-        try {
-          const decoded = atob(action.contentBase64);
-          content = JSON.parse(decoded);
-          if (!Array.isArray(content)) content = [content];
-        } catch {
-          try {
-            content = JSON.parse(action.contentBase64);
-            if (!Array.isArray(content)) content = [content];
-          } catch {
-            console.error("PDF content decode failed for:", title);
-            content = [
-              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
-              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
-            ];
-          }
+      // Extract title from the first text node in content, or use a default
+      const contentArr = docDefinition.content as unknown[];
+      let title = "Document";
+      if (Array.isArray(contentArr) && contentArr.length > 0) {
+        const first = contentArr[0] as Record<string, unknown> | undefined;
+        if (first && typeof first.text === "string") {
+          title = first.text;
         }
       }
-
-      const docDefinition = {
-        pageSize: action.pageSize || "A4",
-        pageOrientation: action.pageOrientation || "portrait",
-        content: [
-          { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
-          ...content,
-        ],
-        defaultStyle: { fontSize: 11, font: "Roboto" },
-        styles: {
-          header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
-          subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
-        },
-      };
 
       const blob: Blob = await new Promise((resolve, reject) => {
         try {
@@ -1153,8 +1095,63 @@ You can:
 - Interact with page elements (click, fill, scroll, highlight, etc.)
 - Look up the user's progress data (growth logs, training, mentor info, etc.)
 - Generate images
-- Generate PDF documents (IMPORTANT: never use font-family in PDF HTML content — the PDF renderer only supports Roboto. Do NOT specify Inter, Arial, Helvetica, or any other font in inline styles or CSS within PDF content.)
+- Generate PDF documents
 - Get current time in any timezone
+
+## PDF Generation — CRITICAL INSTRUCTIONS
+When the user asks you to create, generate, or export a PDF, you MUST respond with a valid pdfmake document definition JSON inside a \`\`\`json code block. The frontend will automatically detect it and render the PDF for download.
+
+RESPONSE FORMAT (strict):
+Embed the following structure in a \`\`\`json code block within your response:
+{
+  "pageSize": "A4",
+  "pageMargins": [40, 60, 40, 60],
+  "content": [ ...content nodes ],
+  "styles": { ...named styles },
+  "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+}
+
+PAGE SETUP:
+- Page sizes: "A4" | "LETTER" | "LEGAL" | "A3"
+- Page margins: [left, top, right, bottom] in points (72pt = 1 inch)
+- Header/Footer: Use static objects only — NO JavaScript functions
+
+CONTENT NODES REFERENCE:
+- Text: { "text": "Hello", "fontSize": 14, "bold": true, "color": "#1e293b" }
+- Inline rich text: { "text": [{ "text": "Bold ", "bold": true }, { "text": "normal" }] }
+- Columns: { "columns": [{ "text": "Left", "width": "*" }, { "text": "Right", "width": 200 }], "columnGap": 20 }
+- Stack: { "stack": [{ "text": "Item 1" }, { "text": "Item 2" }] }
+- Unordered list: { "ul": ["Item 1", "Item 2"] }
+- Ordered list: { "ol": ["Step 1", "Step 2"] }
+- Table: { "table": { "headerRows": 1, "widths": ["*", 80], "body": [["Header", "Value"], ["Row", "Data"]] }, "layout": "lightHorizontalLines" }
+- Canvas line: { "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#e2e8f0" }] }
+- Page break: { "text": "", "pageBreak": "before" }
+
+STYLES:
+"styles": {
+  "heading1": { "fontSize": 22, "bold": true, "color": "#1e293b", "margin": [0, 0, 0, 8] },
+  "heading2": { "fontSize": 16, "bold": true, "color": "#1e293b", "margin": [0, 16, 0, 8] },
+  "body": { "fontSize": 11, "color": "#475569", "lineHeight": 1.6 },
+  "muted": { "fontSize": 10, "color": "#94a3b8" },
+  "label": { "fontSize": 9, "bold": true, "color": "#94a3b8" }
+}
+
+TABLE RULES:
+1. "widths" array length MUST equal number of columns in every row
+2. Every row MUST have the same number of cells
+3. "layout" goes ALONGSIDE "table", NOT inside it
+4. Use named layouts: "noBorders" | "headerLineOnly" | "lightHorizontalLines"
+
+CRITICAL RULES — NEVER VIOLATE:
+- NEVER use JavaScript functions — footer/header/layout callbacks cannot be serialized in JSON
+- NEVER use font-family or any font property other than "Roboto" — pdfmake only ships Roboto
+- NEVER use color names — only hex strings like "#6c63ff"
+- NEVER add trailing commas — must be valid JSON
+- NEVER mismatch column count in tables
+- ALWAYS double-quote every key and string value
+- ALWAYS use margin arrays with exactly 2 or 4 numbers
+- ALWAYS include "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+- You may include conversational text before/after the JSON code block to explain what you created
 
 ## DOM Interaction Hints
 When interacting with the page, note these patterns:
@@ -1428,12 +1425,12 @@ export default function AIAgent() {
           });
         }
 
-        // Parse action tags (GENERATE_PDF) from assistant content
-        const { cleanText, actions: pdfActions } = parsePdfActions(result.content || "");
+        // Parse pdfmake JSON code blocks from assistant content
+        const { cleanText, docDefinitions } = parsePdfFromContent(result.content || "");
         let pdfDownloads: { title: string; url: string }[] | undefined;
-        if (pdfActions.length > 0) {
+        if (docDefinitions.length > 0) {
           try {
-            const downloads = await renderPdfActions(pdfActions);
+            const downloads = await renderPdfDocDefinitions(docDefinitions);
             if (downloads.length > 0) pdfDownloads = downloads;
           } catch { /* skip */ }
         }
@@ -1455,12 +1452,12 @@ export default function AIAgent() {
         return { messages: messagesWithToolResults, done: false };
       }
 
-      // Normal stop — parse action tags from content for PDF rendering
-      const { cleanText, actions: pdfActions } = parsePdfActions(result.content || "");
+      // Normal stop — parse pdfmake JSON code blocks from content
+      const { cleanText, docDefinitions } = parsePdfFromContent(result.content || "");
       let pdfDownloads: { title: string; url: string }[] | undefined;
-      if (pdfActions.length > 0) {
+      if (docDefinitions.length > 0) {
         try {
-          const downloads = await renderPdfActions(pdfActions);
+          const downloads = await renderPdfDocDefinitions(docDefinitions);
           if (downloads.length > 0) pdfDownloads = downloads;
         } catch { /* skip */ }
       }

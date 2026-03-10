@@ -69,7 +69,6 @@ type ActionType =
   | "OPEN_MODAL"
   | "CLOSE_MODAL"
   | "SCROLL_PAGE"
-  | "GENERATE_PDF"
   | "DELEGATE_TO_PRAXIS";
 
 interface ParsedAction {
@@ -157,8 +156,6 @@ function actionLabel(action: ParsedAction): string {
       return `Close dialog`;
     case "SCROLL_PAGE":
       return `Scroll ${action.params[0] || "down"}`;
-    case "GENERATE_PDF":
-      return `Generate PDF: ${action.params[0] || "Document"}`;
     case "DELEGATE_TO_PRAXIS":
       return `Handing off to Praxis...`;
     default:
@@ -188,8 +185,6 @@ function actionIcon(type: ActionType) {
       return Eye;
     case "WAIT":
       return Loader2;
-    case "GENERATE_PDF":
-      return FileText;
     case "DELEGATE_TO_PRAXIS":
       return ArrowRight;
     default:
@@ -511,123 +506,6 @@ async function executeAction(
       return { ok: true, detail: `Scrolled ${direction}` };
     }
 
-    case "GENERATE_PDF": {
-      try {
-        const pdfMakeModule = await import("pdfmake/build/pdfmake");
-        const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
-        const pdfMake = pdfMakeModule.default || pdfMakeModule;
-        if (pdfFontsModule?.pdfMake?.vfs) {
-          pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
-        } else if ((pdfFontsModule as Record<string, unknown>).default) {
-          const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
-          if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
-        }
-
-        const title = action.params[0] || "Document";
-        const pageSize = (action.params[2] || "A4") as string;
-        const pageOrientation = (action.params[3] || "portrait") as "portrait" | "landscape";
-        // params[4] indicates content type: "html" (new) or "json" (legacy pdfmake nodes)
-        const contentType = action.params[4] || "json";
-
-        let content: unknown[] = [];
-
-        if (contentType === "html") {
-          // New HTML-based approach: decode HTML and convert via html-to-pdfmake
-          try {
-            const htmlToPdfmake = (await import("html-to-pdfmake")).default;
-            const raw = action.params[1] || "";
-            let html: string;
-            try {
-              html = atob(raw);
-              // Verify it looks like HTML (contains < tag)
-              if (!/<\w/.test(html)) {
-                html = raw;
-              }
-            } catch {
-              html = raw;
-            }
-            content = htmlToPdfmake(html);
-            if (!Array.isArray(content)) content = [content];
-            // Strip any font references — pdfmake only ships Roboto
-            const stripFonts = (node: unknown): void => {
-              if (node && typeof node === "object") {
-                const obj = node as Record<string, unknown>;
-                delete obj.font;
-                if (typeof obj.style === "string" && /font-family/i.test(obj.style)) {
-                  obj.style = (obj.style as string).replace(/font-family\s*:[^;]+;?/gi, "");
-                }
-                for (const v of Object.values(obj)) {
-                  if (Array.isArray(v)) v.forEach(stripFonts);
-                  else if (v && typeof v === "object") stripFonts(v);
-                }
-              }
-            };
-            content.forEach(stripFonts);
-          } catch (htmlErr) {
-            console.error("HTML-to-pdfmake conversion failed:", htmlErr);
-            content = [
-              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
-              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
-            ];
-          }
-        } else {
-          // Legacy JSON approach: decode pdfmake content nodes directly
-          try {
-            const raw = action.params[1] || "[]";
-            let jsonStr: string;
-            try {
-              jsonStr = atob(raw);
-              if (!/^\s*[\[{]/.test(jsonStr)) {
-                jsonStr = raw;
-              }
-            } catch {
-              jsonStr = raw;
-            }
-            content = JSON.parse(jsonStr);
-          } catch {
-            console.error("PDF content decode failed for:", action.params[0]);
-            content = [
-              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
-              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
-            ];
-          }
-        }
-
-        // Ensure content is always an array
-        if (!Array.isArray(content)) {
-          content = [content];
-        }
-
-        const docDefinition = {
-          pageSize,
-          pageOrientation,
-          content: [
-            { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
-            ...content,
-          ],
-          defaultStyle: { fontSize: 11, font: "Roboto" },
-          styles: {
-            header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
-            subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
-          },
-        };
-
-        const blob: Blob = await new Promise((resolve, reject) => {
-          try {
-            const pdf = pdfMake.createPdf(docDefinition);
-            pdf.getBlob((b: Blob) => resolve(b));
-          } catch (err) { reject(err); }
-        });
-
-        const url = URL.createObjectURL(blob);
-        chatbotPdfDownloads.push({ title, url });
-
-        return { ok: true, detail: `PDF "${title}" generated` };
-      } catch (err) {
-        return { ok: false, detail: `PDF generation failed: ${err instanceof Error ? err.message : String(err)}` };
-      }
-    }
-
     case "DELEGATE_TO_PRAXIS": {
       const task = action.params.join("|");
       const currentPath = window.location.pathname;
@@ -644,8 +522,89 @@ async function executeAction(
   }
 }
 
-// Module-level storage for PDF downloads generated by the chatbot
-const chatbotPdfDownloads: { title: string; url: string }[] = [];
+// ─── PDF JSON Code Block Detection ───────────────────────────────────────────
+// The AI streams pdfmake document definitions as JSON code blocks.
+// We detect them, render the PDF client-side, and show download buttons.
+
+const CHATBOT_PDF_JSON_REGEX = /```(?:json)?\s*\n(\{[\s\S]*?"content"\s*:\s*\[[\s\S]*?\})\s*\n```/g;
+
+function isChatbotPdfDefinition(obj: Record<string, unknown>): boolean {
+  return (
+    Array.isArray(obj.content) &&
+    (obj.defaultStyle !== undefined || obj.pageSize !== undefined || obj.styles !== undefined)
+  );
+}
+
+function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefinitions: Record<string, unknown>[] } {
+  const docDefinitions: Record<string, unknown>[] = [];
+  const cleanText = text.replace(CHATBOT_PDF_JSON_REGEX, (_match, jsonStr: string) => {
+    try {
+      const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+      if (isChatbotPdfDefinition(parsed)) {
+        if (!parsed.defaultStyle) parsed.defaultStyle = {};
+        (parsed.defaultStyle as Record<string, unknown>).font = "Roboto";
+        docDefinitions.push(parsed);
+        return "";
+      }
+    } catch {
+      // Not valid JSON — leave in place
+    }
+    return _match;
+  });
+  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions };
+}
+
+async function renderChatbotPdfDefinitions(
+  docDefinitions: Record<string, unknown>[]
+): Promise<{ title: string; url: string }[]> {
+  const pdfMake = (window as any).pdfMake;
+  if (!pdfMake) {
+    // Try loading via dynamic import as fallback
+    try {
+      const pdfMakeModule = await import("pdfmake/build/pdfmake");
+      const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+      const pm = pdfMakeModule.default || pdfMakeModule;
+      if (pdfFontsModule?.pdfMake?.vfs) {
+        pm.vfs = pdfFontsModule.pdfMake.vfs;
+      } else if ((pdfFontsModule as Record<string, unknown>).default) {
+        const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
+        if (vfsDef.pdfMake) pm.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
+      }
+      (window as any).pdfMake = pm;
+    } catch {
+      console.error("pdfMake not available");
+      return [];
+    }
+  }
+
+  const pm = (window as any).pdfMake;
+  const downloads: { title: string; url: string }[] = [];
+
+  for (const docDefinition of docDefinitions) {
+    try {
+      const contentArr = docDefinition.content as unknown[];
+      let title = "Document";
+      if (Array.isArray(contentArr) && contentArr.length > 0) {
+        const first = contentArr[0] as Record<string, unknown> | undefined;
+        if (first && typeof first.text === "string") {
+          title = first.text;
+        }
+      }
+
+      const blob: Blob = await new Promise((resolve, reject) => {
+        try {
+          pm.createPdf(docDefinition).getBlob((b: Blob) => resolve(b));
+        } catch (err) { reject(err); }
+      });
+
+      downloads.push({ title, url: URL.createObjectURL(blob) });
+    } catch (err) {
+      console.error("PDF render failed:", err);
+    }
+  }
+
+  return downloads;
+}
 
 // ─── Page Context Extractor ──────────────────────────────────────────────────
 
@@ -786,7 +745,6 @@ Embed action commands in your response using this exact format:
 - [[ACTION:OPEN_MODAL|trigger text]] — Click a trigger to open a modal/dialog
 - [[ACTION:CLOSE_MODAL|]] — Close the current modal/dialog
 - [[ACTION:SCROLL_PAGE|direction|amount]] — Scroll the page (up/down/top/bottom, optional pixel amount)
-- [[ACTION:GENERATE_PDF|title|contentJSON]] — Generate a PDF document for download. The contentJSON is a JSON array of pdfmake nodes. IMPORTANT: Never use font-family or specify any font (Inter, Arial, Helvetica, etc.) in the content — the PDF renderer only supports Roboto. Do not include any font or font-family properties in style objects. Example: [[ACTION:GENERATE_PDF|My Report|[{"text":"Section 1","fontSize":16,"bold":true},{"text":"Details here..."}]]]
 - [[ACTION:DELEGATE_TO_PRAXIS|task description]] — Hand off a complex task to Praxis (the full AI agent). Use this for tasks that require: multi-step research, database queries, web searches, long document generation, or anything beyond simple page interactions.
 
 ### When to DELEGATE to Praxis
@@ -796,6 +754,24 @@ For complex tasks that need multiple tools, deep research, database access, or l
 - "Analyze my growth log and create a development plan" → DELEGATE
 - "Help me build a resume based on my Skill Passport" → DELEGATE
 Simple PDF generation (short docs with known content) can be handled directly. But if the task needs data queries or research first, delegate it.
+
+### PDF Generation
+When the user asks you to create a simple PDF, respond with a valid pdfmake document definition JSON inside a \`\`\`json code block. The frontend will automatically detect it and render the PDF for download.
+
+Format:
+\`\`\`json
+{
+  "pageSize": "A4",
+  "pageMargins": [40, 60, 40, 60],
+  "content": [ ...content nodes ],
+  "styles": { ...named styles },
+  "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+}
+\`\`\`
+
+Content nodes: text, columns, stack, table, ul, ol, canvas, image.
+Table rules: "widths" length must match cells per row. "layout" goes alongside "table", not inside it. Use named layouts: "noBorders" | "lightHorizontalLines".
+CRITICAL: Never use font-family or any font except Roboto. Only use hex colors like "#6c63ff". No JavaScript functions. Must be valid JSON.
 
 ### CRITICAL Rules for Actions
 1. ALWAYS use [[ACTION:...]] tags for ANY interaction. NEVER write plain text like "Click Sign In" or "Navigate to /login" — those do nothing. You MUST use the tag syntax.
@@ -954,22 +930,6 @@ export function Chatbot() {
         }
       }
 
-      // Attach any PDF downloads generated during execution
-      if (chatbotPdfDownloads.length > 0) {
-        const downloads = [...chatbotPdfDownloads];
-        chatbotPdfDownloads.length = 0;
-        setMessages((prev) => {
-          const updated = [...prev];
-          if (updated[messageIndex]) {
-            updated[messageIndex] = {
-              ...updated[messageIndex],
-              pdfDownloads: [...(updated[messageIndex].pdfDownloads || []), ...downloads],
-            };
-          }
-          return updated;
-        });
-      }
-
       setIsExecuting(false);
     },
     [navigate]
@@ -989,6 +949,9 @@ export function Chatbot() {
     setIsTyping(true);
 
     try {
+      // Detect if user is requesting a PDF to allow more tokens
+      const isPdfRequest = /\b(create|generate|make|build|export)\b.*\bpdf\b|\bpdf\b.*(create|generate|make|build|export)\b/i.test(messageContent);
+
       const response = await fetch("https://api.a0.dev/ai/llm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -999,7 +962,7 @@ export function Chatbot() {
             { role: "user", content: messageContent },
           ],
           temperature: 0.7,
-          max_tokens: 800,
+          max_tokens: isPdfRequest ? 4000 : 800,
         }),
       });
 
@@ -1008,8 +971,11 @@ export function Chatbot() {
       const data = await response.json();
       const rawContent = data.completion || "Sorry, I encountered an error. Please try again.";
 
-      // Parse actions from response
-      const { cleanText, actions } = parseActions(rawContent);
+      // Parse pdfmake JSON code blocks from response
+      const { cleanText: textAfterPdf, docDefinitions } = parsePdfFromChatbotContent(rawContent);
+
+      // Parse DOM actions from the cleaned text
+      const { cleanText, actions } = parseActions(textAfterPdf);
 
       const actionResults: ActionResult[] = actions.map((a) => ({
         action: a.type,
@@ -1017,11 +983,21 @@ export function Chatbot() {
         status: "pending" as const,
       }));
 
+      // Render any PDF definitions
+      let pdfDownloads: { title: string; url: string }[] | undefined;
+      if (docDefinitions.length > 0) {
+        try {
+          const downloads = await renderChatbotPdfDefinitions(docDefinitions);
+          if (downloads.length > 0) pdfDownloads = downloads;
+        } catch { /* skip */ }
+      }
+
       const assistantMessage: Message = {
         role: "assistant",
         content: cleanText,
         timestamp: new Date(),
         actions: actionResults.length > 0 ? actionResults : undefined,
+        pdfDownloads,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
