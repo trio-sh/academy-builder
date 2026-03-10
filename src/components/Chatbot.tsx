@@ -527,7 +527,7 @@ async function executeAction(
 // The AI streams pdfmake document definitions as JSON code blocks.
 // We detect them, render the PDF client-side, and show download buttons.
 
-const CHATBOT_PDF_JSON_REGEX = /```(?:json)?\s*\n([\s\S]*?)\n```/g;
+const CHATBOT_PDF_JSON_REGEX = /```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/g;
 
 function isChatbotPdfDefinition(obj: Record<string, unknown>): boolean {
   return (
@@ -542,6 +542,7 @@ function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefin
   const cleanText = text.replace(CHATBOT_PDF_JSON_REGEX, (_match, jsonStr: string) => {
     try {
       const trimmed = jsonStr.trim();
+      if (!trimmed.startsWith("{")) return _match;
       const parsed = JSON.parse(trimmed) as Record<string, unknown>;
       if (isChatbotPdfDefinition(parsed)) {
         if (!parsed.defaultStyle) parsed.defaultStyle = {};

@@ -416,7 +416,7 @@ const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 // We detect valid pdfmake JSON, strip it from the visible text, render the PDF
 // client-side, and show download buttons.
 
-const PDF_JSON_BLOCK_REGEX = /```(?:json)?\s*\n([\s\S]*?)\n```/g;
+const PDF_JSON_BLOCK_REGEX = /```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/g;
 
 function isPdfMakeDefinition(obj: Record<string, unknown>): boolean {
   return (
@@ -437,6 +437,7 @@ function parsePdfFromContent(text: string): PdfParseResult {
   const cleanText = text.replace(PDF_JSON_BLOCK_REGEX, (_match, jsonStr: string) => {
     try {
       const trimmed = jsonStr.trim();
+      if (!trimmed.startsWith("{")) return _match;
       const parsed = JSON.parse(trimmed) as Record<string, unknown>;
       if (isPdfMakeDefinition(parsed)) {
         // Ensure Roboto default
@@ -452,6 +453,43 @@ function parsePdfFromContent(text: string): PdfParseResult {
     return _match;
   });
   return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions, rawJsonBlocks };
+}
+
+/**
+ * Strip pdfmake JSON code blocks from streaming content to prevent
+ * the huge JSON from rendering in the chat during streaming.
+ * Replaces detected blocks with a placeholder, and detects partial
+ * (still-streaming) blocks.
+ */
+function cleanStreamingPdfContent(text: string): { cleaned: string; hasPdfBlock: boolean } {
+  let hasPdfBlock = false;
+
+  // Replace complete pdfmake JSON code blocks
+  let cleaned = text.replace(PDF_JSON_BLOCK_REGEX, (_match, jsonStr: string) => {
+    try {
+      const trimmed = jsonStr.trim();
+      if (!trimmed.startsWith("{")) return _match;
+      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
+      if (isPdfMakeDefinition(parsed)) {
+        hasPdfBlock = true;
+        return "";
+      }
+    } catch {
+      // Not valid JSON — leave in place
+    }
+    return _match;
+  });
+
+  // Detect a partial (still-streaming) pdfmake JSON code block:
+  // Starts with ```json\n{ ... "content": [ ... but no closing ```
+  const partialBlockMatch = cleaned.match(/```(?:json)?\s*\n\s*\{[\s\S]*?"content"\s*:\s*\[[\s\S]*$/);
+  if (partialBlockMatch) {
+    hasPdfBlock = true;
+    // Remove the partial block from display
+    cleaned = cleaned.slice(0, partialBlockMatch.index).trimEnd();
+  }
+
+  return { cleaned: cleaned.replace(/\n{3,}/g, "\n\n").trim(), hasPdfBlock };
 }
 
 async function renderPdfDocDefinitions(
@@ -1987,9 +2025,29 @@ export default function AIAgent() {
                 <Bot className="w-3.5 h-3.5 text-white" />
               </div>
               <div className="flex-1 min-w-0 text-gray-200">
-                {streamingContent ? (
-                  <MarkdownRenderer content={streamingContent} />
-                ) : (
+                {streamingContent ? (() => {
+                  const { cleaned, hasPdfBlock } = cleanStreamingPdfContent(streamingContent);
+                  return (
+                    <>
+                      {cleaned && <MarkdownRenderer content={cleaned} />}
+                      {hasPdfBlock && (
+                        <div className="flex items-center gap-2.5 mt-3 px-4 py-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
+                          <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center flex-shrink-0">
+                            <FileText className="w-4 h-4 text-indigo-300" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-sm font-medium text-white">Generating PDF document...</span>
+                            <div className="flex gap-1 mt-1">
+                              <span className="w-1 h-1 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                              <span className="w-1 h-1 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                              <span className="w-1 h-1 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })() : (
                   <div className="flex items-center gap-2 py-2">
                     <div className="flex gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
