@@ -693,27 +693,31 @@ async function streamTaskAgent(
 
         // Execute each tool call, emit status events, add results
         for (const tc of parsedToolCalls) {
-          sseToolStatus(res, sseId, sseModel, "tool_start", tc.function.name);
           const toolArgs = JSON.parse(tc.function.arguments || "{}");
+          sseToolStatus(res, sseId, sseModel, "tool_start", tc.function.name, toolArgs);
           const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
           sseToolStatus(res, sseId, sseModel, "tool_done", tc.function.name);
 
-          // When generate_pdf is called, emit the PDF data to the frontend
-          // so it can render the PDF client-side with pdfmake
-          if (tc.function.name === "generate_pdf") {
-            try {
-              const pdfData = JSON.parse(result);
-              if (pdfData.type === "pdf") {
-                res.write(sseChunk(sseId, sseModel, {
-                  pdf_data: {
-                    title: pdfData.title,
-                    content: pdfData.content,
-                    pageSize: pdfData.pageSize,
-                    pageOrientation: pdfData.pageOrientation,
-                  },
-                }));
-              }
-            } catch { /* skip if result isn't valid PDF JSON */ }
+          // Emit tool result data to frontend so it can render downloads, images, etc.
+          // This is critical: without this, task_agent's internal tool results never reach the client.
+          try {
+            const parsed = JSON.parse(result);
+            res.write(sseChunk(sseId, sseModel, {
+              tool_result: {
+                name: tc.function.name,
+                arguments: toolArgs,
+                result: parsed,
+              },
+            }));
+          } catch {
+            // Non-JSON result (e.g. web search text) — send as string
+            res.write(sseChunk(sseId, sseModel, {
+              tool_result: {
+                name: tc.function.name,
+                arguments: toolArgs,
+                result: result,
+              },
+            }));
           }
 
           messages.push({
@@ -1740,21 +1744,16 @@ async function streamAgentLoop(
       const result = await executeTool(tc.name, tc.arguments, log);
       sseToolStatus(res, id, model, "tool_done", tc.name);
 
-      // Emit PDF data to frontend for client-side rendering
-      if (tc.name === "generate_pdf") {
-        try {
-          const pdfData = JSON.parse(result);
-          if (pdfData.type === "pdf") {
-            res.write(sseChunk(id, model, {
-              pdf_data: {
-                title: pdfData.title,
-                content: pdfData.content,
-                pageSize: pdfData.pageSize,
-                pageOrientation: pdfData.pageOrientation,
-              },
-            }));
-          }
-        } catch { /* skip */ }
+      // Emit tool result to frontend for client-side rendering (PDF, images, etc.)
+      try {
+        const parsed = JSON.parse(result);
+        res.write(sseChunk(id, model, {
+          tool_result: { name: tc.name, arguments: tc.arguments, result: parsed },
+        }));
+      } catch {
+        res.write(sseChunk(id, model, {
+          tool_result: { name: tc.name, arguments: tc.arguments, result: result },
+        }));
       }
 
       results.push({ name: tc.name, result });

@@ -848,6 +848,20 @@ async function consumeStream(
           pdfDataItems.push(delta.pdf_data as PdfData);
         }
 
+        // tool_result events carry full results from task_agent's internal tool calls
+        if (delta?.tool_result) {
+          const tr = delta.tool_result;
+          // Extract PDF data from generate_pdf tool results
+          if (tr.name === "generate_pdf" && tr.result?.type === "pdf") {
+            pdfDataItems.push({
+              title: tr.result.title,
+              content: tr.result.content,
+              pageSize: tr.result.pageSize,
+              pageOrientation: tr.result.pageOrientation,
+            });
+          }
+        }
+
         if (delta?.tool_calls) {
           for (const tc of delta.tool_calls) {
             const idx = tc.index ?? 0;
