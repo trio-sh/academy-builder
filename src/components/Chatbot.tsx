@@ -547,6 +547,22 @@ async function executeAction(
               html = raw;
             }
             content = htmlToPdfmake(html);
+            if (!Array.isArray(content)) content = [content];
+            // Strip any font references — pdfmake only ships Roboto
+            const stripFonts = (node: unknown): void => {
+              if (node && typeof node === "object") {
+                const obj = node as Record<string, unknown>;
+                delete obj.font;
+                if (typeof obj.style === "string" && /font-family/i.test(obj.style)) {
+                  obj.style = (obj.style as string).replace(/font-family\s*:[^;]+;?/gi, "");
+                }
+                for (const v of Object.values(obj)) {
+                  if (Array.isArray(v)) v.forEach(stripFonts);
+                  else if (v && typeof v === "object") stripFonts(v);
+                }
+              }
+            };
+            content.forEach(stripFonts);
           } catch (htmlErr) {
             console.error("HTML-to-pdfmake conversion failed:", htmlErr);
             content = [
@@ -770,7 +786,7 @@ Embed action commands in your response using this exact format:
 - [[ACTION:OPEN_MODAL|trigger text]] — Click a trigger to open a modal/dialog
 - [[ACTION:CLOSE_MODAL|]] — Close the current modal/dialog
 - [[ACTION:SCROLL_PAGE|direction|amount]] — Scroll the page (up/down/top/bottom, optional pixel amount)
-- [[ACTION:GENERATE_PDF|title|contentJSON]] — Generate a PDF document for download. The contentJSON is a JSON array of pdfmake nodes. Example: [[ACTION:GENERATE_PDF|My Report|[{"text":"Section 1","fontSize":16,"bold":true},{"text":"Details here..."}]]]
+- [[ACTION:GENERATE_PDF|title|contentJSON]] — Generate a PDF document for download. The contentJSON is a JSON array of pdfmake nodes. IMPORTANT: Never use font-family or specify any font (Inter, Arial, Helvetica, etc.) in the content — the PDF renderer only supports Roboto. Do not include any font or font-family properties in style objects. Example: [[ACTION:GENERATE_PDF|My Report|[{"text":"Section 1","fontSize":16,"bold":true},{"text":"Details here..."}]]]
 - [[ACTION:DELEGATE_TO_PRAXIS|task description]] — Hand off a complex task to Praxis (the full AI agent). Use this for tasks that require: multi-step research, database queries, web searches, long document generation, or anything beyond simple page interactions.
 
 ### When to DELEGATE to Praxis

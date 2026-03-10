@@ -471,6 +471,21 @@ async function renderPdfActions(
           }
           content = htmlToPdfmake(html);
           if (!Array.isArray(content)) content = [content];
+          // Strip any font references — pdfmake only ships Roboto
+          const stripFonts = (node: unknown): void => {
+            if (node && typeof node === "object") {
+              const obj = node as Record<string, unknown>;
+              delete obj.font;
+              if (typeof obj.style === "string" && /font-family/i.test(obj.style)) {
+                obj.style = (obj.style as string).replace(/font-family\s*:[^;]+;?/gi, "");
+              }
+              for (const v of Object.values(obj)) {
+                if (Array.isArray(v)) v.forEach(stripFonts);
+                else if (v && typeof v === "object") stripFonts(v);
+              }
+            }
+          };
+          content.forEach(stripFonts);
         } catch (htmlErr) {
           console.error("HTML-to-pdfmake conversion failed:", htmlErr);
           content = [
@@ -1138,7 +1153,7 @@ You can:
 - Interact with page elements (click, fill, scroll, highlight, etc.)
 - Look up the user's progress data (growth logs, training, mentor info, etc.)
 - Generate images
-- Generate PDF documents
+- Generate PDF documents (IMPORTANT: never use font-family in PDF HTML content — the PDF renderer only supports Roboto. Do NOT specify Inter, Arial, Helvetica, or any other font in inline styles or CSS within PDF content.)
 - Get current time in any timezone
 
 ## DOM Interaction Hints
