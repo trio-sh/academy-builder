@@ -541,8 +541,12 @@ async function executeAction(
           }
           content = JSON.parse(jsonStr);
         } catch {
-          // If JSON parsing fails, treat the remaining params as plain text content
-          content = action.params.slice(1).map(p => ({ text: p, margin: [0, 0, 0, 6] }));
+          // Don't render raw JSON/base64 as text — show a friendly error instead
+          console.error("PDF content decode failed for:", action.params[0]);
+          content = [
+            { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
+            { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
+          ];
         }
 
         const docDefinition = {

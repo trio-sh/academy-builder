@@ -461,7 +461,17 @@ async function renderPdfActions(
         if (!Array.isArray(content)) content = [content];
       } catch {
         // If base64 decode / JSON parse fails, try raw JSON
-        try { content = JSON.parse(action.contentBase64); } catch { content = [{ text: action.contentBase64 }]; }
+        try {
+          content = JSON.parse(action.contentBase64);
+          if (!Array.isArray(content)) content = [content];
+        } catch {
+          // Don't render raw JSON/base64 as text — show a friendly error instead
+          console.error("PDF content decode failed for:", title);
+          content = [
+            { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
+            { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
+          ];
+        }
       }
 
       const docDefinition = {

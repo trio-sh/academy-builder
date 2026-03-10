@@ -412,18 +412,42 @@ Create a well-structured, professional document. Use headings (large/bold text),
       cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
     }
 
-    // Sanitize: strip JavaScript function literals that Kilo sometimes generates
-    // e.g. "hLineWidth": function(i, node) { return 0; } → remove the property
-    // Also handle arrow functions: "hLineWidth": (i, node) => 0
+    // Extract the outermost JSON array if surrounded by extra text
+    const firstBracket = cleanedContent.indexOf("[");
+    const lastBracket = cleanedContent.lastIndexOf("]");
+    if (firstBracket !== -1 && lastBracket > firstBracket) {
+      cleanedContent = cleanedContent.slice(firstBracket, lastBracket + 1);
+    }
+
+    // Sanitize: strip JavaScript function literals that Kilo sometimes generates.
+    // Uses balanced-brace matching to handle nested braces inside function bodies
+    // e.g. "hLineWidth": function(i, node) { return i === 0 ? 1 : 0; }
+    const funcPattern = /"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{/g;
+    let funcMatch: RegExpExecArray | null;
+    const removals: [number, number][] = [];
+    while ((funcMatch = funcPattern.exec(cleanedContent)) !== null) {
+      const start = funcMatch.index;
+      let depth = 1;
+      let i = start + funcMatch[0].length;
+      while (i < cleanedContent.length && depth > 0) {
+        if (cleanedContent[i] === "{") depth++;
+        else if (cleanedContent[i] === "}") depth--;
+        i++;
+      }
+      removals.push([start, i]);
+    }
+    // Apply removals in reverse order to preserve offsets
+    for (let r = removals.length - 1; r >= 0; r--) {
+      cleanedContent = cleanedContent.slice(0, removals[r][0]) + cleanedContent.slice(removals[r][1]);
+    }
+    // Also handle arrow functions: "hLineWidth": (i, node) => expr
+    cleanedContent = cleanedContent.replace(/"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+/g, "");
+    // Remove dangling commas around removed properties
     cleanedContent = cleanedContent
-      .replace(/,\s*"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{[^}]*\}/g, "")
-      .replace(/"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{[^}]*\}\s*,?/g, "")
-      .replace(/,\s*"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+/g, "")
-      .replace(/"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+\s*,?/g, "");
-    // Clean up trailing commas left by removal (e.g. {, "a": 1} or {"a": 1,})
-    cleanedContent = cleanedContent
+      .replace(/,\s*,/g, ",")
       .replace(/,\s*([}\]])/g, "$1")
-      .replace(/\{\s*,/g, "{");
+      .replace(/\{\s*,/g, "{")
+      .replace(/\[\s*,/g, "[");
 
     // Replace layout objects that are now empty {} with a named layout string
     cleanedContent = cleanedContent.replace(/"layout"\s*:\s*\{\s*\}/g, '"layout": "lightHorizontalLines"');
@@ -436,12 +460,34 @@ Create a well-structured, professional document. Use headings (large/bold text),
         if (pdfContent && typeof pdfContent === "object" && "content" in (pdfContent as any)) {
           pdfContent = (pdfContent as any).content;
         } else {
-          pdfContent = [{ text: cleanedContent }];
+          pdfContent = [pdfContent];
         }
       }
-    } catch {
-      log?.warn("Failed to parse Kilo PDF content as JSON — using as plain text");
-      pdfContent = [{ text: cleanedContent }];
+    } catch (parseErr: any) {
+      log?.warn(`Failed to parse Kilo PDF content as JSON: ${parseErr.message}`);
+      // Attempt JSON repair: fix common issues (trailing commas, single quotes, etc.)
+      try {
+        let repaired = cleanedContent
+          // Remove trailing commas before } or ]
+          .replace(/,\s*([}\]])/g, "$1")
+          // Replace single-quoted strings with double-quoted
+          .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, '"$1"')
+          // Remove JavaScript-style comments
+          .replace(/\/\/[^\n]*/g, "")
+          .replace(/\/\*[\s\S]*?\*\//g, "");
+        pdfContent = JSON.parse(repaired);
+        if (!Array.isArray(pdfContent)) pdfContent = [pdfContent];
+        log?.info("JSON repair succeeded for Kilo PDF content");
+      } catch {
+        // Last resort: try to extract any valid JSON array from the content
+        log?.error(`JSON repair also failed — PDF content (first 500ch): ${cleanedContent.slice(0, 500)}`);
+        // Instead of rendering raw JSON as text (which corrupts the PDF),
+        // create a readable error document
+        pdfContent = [
+          { text: "This PDF could not be generated correctly.", fontSize: 14, bold: true, color: "#cc0000", margin: [0, 0, 0, 10] },
+          { text: "The document content had formatting issues. Please try generating this PDF again.", fontSize: 11, color: "#666666" },
+        ];
+      }
     }
 
     return JSON.stringify({
