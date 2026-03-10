@@ -116,6 +116,9 @@ importers:
       framer-motion:
         specifier: ^12.29.2
         version: 12.34.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      html-to-pdfmake:
+        specifier: ^2.5.33
+        version: 2.5.33
       idb:
         specifier: ^8.0.3
         version: 8.0.3
@@ -2872,6 +2875,9 @@ packages:
   html-encoding-sniffer@3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
     engines: {node: '>=12'}
+
+  html-to-pdfmake@2.5.33:
+    resolution: {integrity: sha512-AyJwwpoLiI80Ha7yYJ+voTria72TXzu/CwuPPoSwRFned2vhIthXvfxAKj/S7fPFnj7Dexp9hrtuGumJ39+MYQ==}
 
   html-url-attributes@3.0.1:
     resolution: {integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==}
@@ -6674,6 +6680,8 @@ snapshots:
   html-encoding-sniffer@3.0.0:
     dependencies:
       whatwg-encoding: 2.0.0
+
+  html-to-pdfmake@2.5.33: {}
 
   html-url-attributes@3.0.1: {}
 
