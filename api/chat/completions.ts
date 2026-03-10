@@ -130,7 +130,7 @@ const GENERATE_PDF_TOOL = {
   function: {
     name: "generate_pdf",
     description:
-      "Generate a PDF document for the user to download. Pass a title and an array of pdfmake content nodes. The PDF will be rendered client-side. Supported nodes: text (with fontSize, bold, italic, color, margin), table (with headerRows, widths, body), ul/ol lists, columns. For tables: { table: { headerRows: 1, widths: [\"*\",\"*\"], body: [[\"Col A\",\"Col B\"],[\"val1\",\"val2\"]] } }. For lists: { ul: [\"item 1\",\"item 2\"] }. Keep content structured and concise.",
+      "Generate a PDF document for the user to download. Pass a title and a description of what the PDF should contain. A powerful AI model will construct the PDF content automatically. Use this for any PDF request: reports, summaries, certificates, tables, etc.",
     parameters: {
       type: "object",
       properties: {
@@ -138,10 +138,10 @@ const GENERATE_PDF_TOOL = {
           type: "string",
           description: "Document title (also used as filename)",
         },
-        content: {
-          type: "array",
+        description: {
+          type: "string",
           description:
-            "Array of pdfmake content nodes (text objects, tables, lists, columns, etc.)",
+            "Detailed description of what the PDF should contain. Include all relevant information: sections, data, tables, formatting preferences, etc. The more detail you provide, the better the PDF will be.",
         },
         pageSize: {
           type: "string",
@@ -153,7 +153,7 @@ const GENERATE_PDF_TOOL = {
           description: "Page orientation. Default: portrait",
         },
       },
-      required: ["title", "content"],
+      required: ["title", "description"],
     },
   },
 };
@@ -315,25 +315,122 @@ function executeImageGeneration(
   });
 }
 
-// ─── PDF Generation (server-side passthrough) ───────────────────────────────
-// The server can't render PDFs, so we return structured pdfmake JSON that the
-// client will render. The tool result gets embedded in the response and the
-// client-side AIAgent picks it up via the generate_pdf custom tool handler.
+// ─── PDF Generation (Kilo-powered) ──────────────────────────────────────────
+// Uses the Kilo Gateway (powerful model) to generate structured pdfmake content
+// nodes from a simple description. The result is returned as JSON that the
+// frontend renders client-side with pdfmake.
 
-function executeGeneratePdf(args: Record<string, any>): string {
+async function executeGeneratePdf(
+  args: Record<string, any>,
+  log?: ReturnType<typeof createLogger>
+): Promise<string> {
   const title = args.title || "Document";
-  const content = args.content || [];
+  const description = args.description || args.content || "";
   const pageSize = args.pageSize || "A4";
   const pageOrientation = args.pageOrientation || "portrait";
 
-  return JSON.stringify({
-    type: "pdf",
-    title,
-    content,
-    pageSize,
-    pageOrientation,
-    instruction: `PDF "${title}" has been prepared. The document will be rendered and offered as a download to the user.`,
-  });
+  // If content is already an array (pdfmake nodes), pass through directly
+  if (Array.isArray(args.content)) {
+    return JSON.stringify({
+      type: "pdf",
+      title,
+      content: args.content,
+      pageSize,
+      pageOrientation,
+    });
+  }
+
+  // Use Kilo to generate pdfmake content from the description
+  if (!KILO_API_KEY) {
+    log?.error("KILO_API_KEY not configured for PDF generation");
+    return JSON.stringify({ error: "PDF generation is not configured." });
+  }
+
+  const kiloPrompt = `Generate a pdfmake content array for a PDF document.
+
+Title: "${title}"
+Description: ${description}
+Page size: ${pageSize}, Orientation: ${pageOrientation}
+
+IMPORTANT: Respond with ONLY a valid JSON array of pdfmake content nodes. No markdown, no explanation, no code fences — just the raw JSON array.
+
+Supported node types:
+- Text: { "text": "string", "fontSize": 14, "bold": true, "italic": false, "color": "#333", "margin": [0, 5, 0, 5] }
+- Table: { "table": { "headerRows": 1, "widths": ["*", "*"], "body": [["Header1", "Header2"], ["val1", "val2"]] } }
+- Unordered list: { "ul": ["item 1", "item 2"] }
+- Ordered list: { "ol": ["item 1", "item 2"] }
+- Columns: { "columns": [{ "text": "Col 1", "width": "*" }, { "text": "Col 2", "width": "*" }] }
+
+Create a well-structured, professional document. Use headings (large/bold text), paragraphs, tables where appropriate, and proper spacing with margins. Do NOT include the title as the first node — it will be added automatically.`;
+
+  try {
+    log?.info(`⚙ PDF generation via Kilo: title="${title}", desc=${description.length}ch`);
+    const start = Date.now();
+
+    const res = await fetch(KILO_GATEWAY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${KILO_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: KILO_DEFAULT_MODEL,
+        messages: [
+          {
+            role: "system",
+            content: "You are a PDF document generator. You output ONLY valid JSON arrays of pdfmake content nodes. No markdown, no code fences, no explanation — just the JSON array.",
+          },
+          { role: "user", content: kiloPrompt },
+        ],
+        max_tokens: 8192,
+        temperature: 0.5,
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      log?.error(`Kilo PDF generation error ${res.status}: ${errText.slice(0, 300)}`);
+      return JSON.stringify({ error: `PDF generation failed: ${res.status}` });
+    }
+
+    const data = await res.json();
+    const rawContent = data.choices?.[0]?.message?.content || "";
+    log?.info(`⚙ Kilo PDF response (${Date.now() - start}ms): ${rawContent.length}ch`);
+
+    // Parse the pdfmake content array from Kilo's response
+    // Strip any markdown code fences if Kilo wraps it
+    let cleanedContent = rawContent.trim();
+    if (cleanedContent.startsWith("```")) {
+      cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    }
+
+    let pdfContent: unknown[];
+    try {
+      pdfContent = JSON.parse(cleanedContent);
+      if (!Array.isArray(pdfContent)) {
+        // If it returned an object with a content key, extract it
+        if (pdfContent && typeof pdfContent === "object" && "content" in (pdfContent as any)) {
+          pdfContent = (pdfContent as any).content;
+        } else {
+          pdfContent = [{ text: cleanedContent }];
+        }
+      }
+    } catch {
+      log?.warn("Failed to parse Kilo PDF content as JSON — using as plain text");
+      pdfContent = [{ text: cleanedContent }];
+    }
+
+    return JSON.stringify({
+      type: "pdf",
+      title,
+      content: pdfContent,
+      pageSize,
+      pageOrientation,
+    });
+  } catch (err: any) {
+    log?.error(`PDF generation fetch error: ${err.message}`);
+    return JSON.stringify({ error: `PDF generation failed: ${err.message}` });
+  }
 }
 
 // ─── Task Agent (Kilo Gateway) ──────────────────────────────────────────────
@@ -441,7 +538,7 @@ async function executeTaskAgentTool(
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
       break;
     case "generate_pdf":
-      result = executeGeneratePdf(args);
+      result = await executeGeneratePdf(args, log);
       break;
     default:
       result = `Unknown tool: ${name}`;
@@ -765,7 +862,7 @@ async function executeTool(
       result = executeImageGeneration(args.prompt, args.aspect, args.seed);
       break;
     case "generate_pdf":
-      result = executeGeneratePdf(args);
+      result = await executeGeneratePdf(args, log);
       break;
     case "task_agent":
       result = await executeTaskAgent(args as TaskAgentArgs, log);
@@ -987,28 +1084,27 @@ const DEFAULT_SYSTEM_PROMPT = `You are a helpful, creative, and knowledgeable AI
 - Match your response length to the complexity of the request. Short questions get concise answers; creative/coding tasks get thorough outputs.
 
 ## Code Generation & Complex Tasks — IMPORTANT
-For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. The task agent has its own built-in tools (web_search, web_extract, image_generation, generate_pdf) — it can autonomously search the web, read pages, generate images, and create PDF documents as part of its work. USE IT when:
+For complex or large outputs, you have a **task_agent** tool that delegates to a more powerful AI model. The task agent has its own built-in tools (web_search, web_extract, image_generation) — it can autonomously search the web, read pages, and generate images as part of its work. USE IT when:
 - The user asks you to generate a full HTML page, website, landing page, or multi-section UI
 - The user wants long-form code (more than ~50 lines expected)
 - The task requires detailed creative writing, long technical docs, or multi-file code
 - The user asks for research-heavy content that needs web lookups and thorough analysis
 - The user wants content with generated images embedded
-- The user asks for a PDF that requires data gathering, research, or complex multi-section content
 - Any request where a thorough, high-quality, long response is needed
+NOTE: Do NOT use task_agent for PDF generation. Use the generate_pdf tool directly instead.
 
 When calling task_agent:
 - Pass the user's FULL original request as the prompt — do NOT summarize or shorten it
 - Add relevant context, style preferences, and technical requirements to the prompt
 - If the task needs web research, tell the task agent to search the web in the prompt (it has web_search and web_extract tools)
 - If the task needs images, tell the task agent to generate them (it has image_generation tool)
-- If the task needs PDF generation, tell the task agent to use generate_pdf (it has the generate_pdf tool)
 - If the user wants HTML/web pages, include in the prompt: "Produce a complete, standalone HTML file. Use Tailwind CSS via CDN. Include realistic content."
 - If the user mentions "dark theme", include that in the prompt
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
 
-## PDF Generation — ALWAYS DELEGATE
-You have a **generate_pdf** tool, but you must NEVER call it directly. ALWAYS delegate PDF generation to **task_agent**. Tell the task_agent to use the generate_pdf tool. The task_agent is a more powerful model that can properly construct the pdfmake content nodes. Even for simple PDFs, delegate to task_agent — include the full user request and specify that the task_agent should call generate_pdf with structured pdfmake content.
-Example: To generate a sample PDF, call task_agent with prompt: "Generate a sample PDF document using the generate_pdf tool. Create a well-structured document with a title, introduction, table of contents, sample data table, and conclusion. Use the generate_pdf tool with title and content array of pdfmake nodes."
+## PDF Generation
+You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Just pass a title and a detailed description of what the PDF should contain. A powerful model will construct the PDF content automatically.
+Example: generate_pdf({ title: "Sample Report", description: "A professional sample report with an introduction section, a table of contents, a data table with columns ID/Name/Status and 3 sample rows, and a conclusion paragraph." })
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -1032,8 +1128,8 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **generate_pdf** - DO NOT call this tool directly. ALWAYS use task_agent for PDF generation instead. The task_agent has generate_pdf built in and is much better at constructing PDF content.
-5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation, generate_pdf). It can autonomously search the web, read pages, generate images, and create PDFs during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, ANY PDF generation, or any task needing a large output. For PDFs, tell the task_agent to use the generate_pdf tool with structured pdfmake content nodes. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
+4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Detailed description of what the PDF should contain — sections, data, tables, etc." }. A powerful model auto-generates the PDF content from your description.
+5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT use task_agent for PDF generation — use generate_pdf directly instead. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
