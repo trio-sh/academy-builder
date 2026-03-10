@@ -80,6 +80,97 @@ const MAX_STEPS_LIMIT = 60;
 const VERCEL_TIMEOUT_MS = 300_000;
 const CONTINUATION_THRESHOLD_MS = 240_000; // 4 minutes — trigger continuation
 
+// ─── PDF Intent Detection & Routing ─────────────────────────────────────────
+
+const PDF_INTENT_PATTERN =
+  /\b(pdf|document|report|resume|cv|invoice|certificate|letter|memo|proposal|brochure|flyer|receipt|contract|agreement|syllabus|transcript|diploma)\b/i;
+const PDF_ACTION_PATTERN =
+  /\b(generate|create|make|build|export|produce|write|draft|prepare|design|format)\b/i;
+
+/**
+ * Check if the user's last message is requesting PDF generation.
+ * Looks for PDF-related nouns combined with creation verbs.
+ */
+function isPdfRequest(messages: OpenAIMessage[]): boolean {
+  // Find the last user message
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === "user" && messages[i].content) {
+      const content = messages[i].content!;
+      // Direct PDF mention with action verb
+      if (/\bpdf\b/i.test(content) && PDF_ACTION_PATTERN.test(content)) return true;
+      // Document-type noun + action verb (e.g. "create a resume", "generate an invoice")
+      if (PDF_INTENT_PATTERN.test(content) && PDF_ACTION_PATTERN.test(content)) {
+        // Exclude false positives: if the message is about web pages, code, images, etc.
+        if (/\b(html|website|web\s*page|webpage|landing\s*page|image|photo|picture|app)\b/i.test(content)) return false;
+        return true;
+      }
+      break; // only check the last user message
+    }
+  }
+  return false;
+}
+
+const PDF_KILO_SYSTEM_PROMPT = `You are a PDF document generation expert. You MUST respond with a valid pdfmake document definition JSON inside a \`\`\`json code block.
+
+## pdfmake Document Definition Schema
+
+Return this structure inside a \`\`\`json code block:
+{
+  "pageSize": "A4",
+  "pageMargins": [40, 60, 40, 60],
+  "content": [ ...content nodes ],
+  "styles": { ...named styles },
+  "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+}
+
+### Content Node Types
+- **Text**: \`{ "text": "Hello", "style": "heading1" }\` or \`{ "text": [{ "text": "bold ", "bold": true }, "normal"] }\`
+- **Columns**: \`{ "columns": [{ "width": "*", "text": "Left" }, { "width": "auto", "text": "Right" }] }\`
+- **Stack**: \`{ "stack": [...nodes], "margin": [0, 10, 0, 0] }\`
+- **Table**: \`{ "table": { "headerRows": 1, "widths": ["*", "auto", 100], "body": [["H1","H2","H3"], ["a","b","c"]] }, "layout": "lightHorizontalLines" }\`
+- **Lists**: \`{ "ul": ["item1", "item2"] }\` or \`{ "ol": ["first", "second"] }\`
+- **Canvas**: \`{ "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#cccccc" }] }\`
+
+### Table Rules
+- "widths" array length MUST match the number of cells per row
+- "layout" goes ALONGSIDE "table", NOT inside it
+- Use named layouts: "noBorders" | "headerLineOnly" | "lightHorizontalLines"
+
+### Styles Example
+{
+  "heading1": { "fontSize": 22, "bold": true, "color": "#1e293b", "margin": [0, 0, 0, 8] },
+  "heading2": { "fontSize": 16, "bold": true, "color": "#334155", "margin": [0, 16, 0, 6] },
+  "subtext": { "fontSize": 9, "color": "#94a3b8" }
+}
+
+### CRITICAL RULES
+- NEVER use JavaScript functions in JSON — use static layout names or objects
+- NEVER use font-family or any font other than "Roboto"
+- ONLY use hex color strings like "#6c63ff" — never color names like "red" or "blue"
+- ALWAYS include "defaultStyle": { "fontSize": 11, "font": "Roboto" }
+- Must be valid JSON — no trailing commas, all keys double-quoted
+- You may include a brief conversational message before the JSON code block
+- Make documents visually polished: use colors, spacing, and layout effectively
+- Use real, detailed content — not lorem ipsum — based on the user's request`;
+
+/**
+ * Build the full user prompt for Kilo PDF routing, including conversation context.
+ */
+function buildPdfKiloPrompt(messages: OpenAIMessage[]): string {
+  // Include recent conversation context so Kilo understands what the user wants
+  const contextMessages: string[] = [];
+  // Take last 10 messages for context
+  const recent = messages.slice(-10);
+  for (const msg of recent) {
+    if (msg.role === "system") continue;
+    const role = msg.role === "user" ? "User" : "Assistant";
+    if (msg.content) {
+      contextMessages.push(`${role}: ${msg.content}`);
+    }
+  }
+  return contextMessages.join("\n\n");
+}
+
 // ─── Prompt Enhancer ────────────────────────────────────────────────────────
 // Detects vague code/HTML generation prompts and restructures them so the A0
 // LLM produces actual output instead of timing out with an empty response.
@@ -1786,6 +1877,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const startTime = Date.now();
     const continuation = body._continuation || undefined;
     log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}, continuation=${!!continuation}`);
+
+    // ── PDF Intent Routing: detect PDF requests and route to Kilo ──
+    if (!continuation && isPdfRequest(body.messages)) {
+      log.info("PDF intent detected — routing to Kilo Gateway");
+      const pdfPrompt = buildPdfKiloPrompt(body.messages);
+
+      if (stream) {
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+
+        const id = generateId();
+        res.write(sseChunk(id, model, { role: "assistant", content: "" }));
+
+        await streamTaskAgent(
+          { prompt: pdfPrompt, system_prompt: PDF_KILO_SYSTEM_PROMPT, max_tokens: maxTokens },
+          res,
+          id,
+          model,
+          log
+        );
+
+        res.write(sseChunk(id, model, {}, "stop"));
+        res.write("data: [DONE]\n\n");
+        res.end();
+        log.info("Stream ended (PDF routed to Kilo)");
+        return;
+      } else {
+        // Non-streaming PDF routing
+        const pdfContent = await executeTaskAgent(
+          { prompt: pdfPrompt, system_prompt: PDF_KILO_SYSTEM_PROMPT, max_tokens: maxTokens },
+          log
+        );
+        log.info(`PDF non-streaming done: ${pdfContent.length}ch`);
+        return res.status(200).json(formatNonStreamingResponse(
+          {
+            content: pdfContent,
+            tool_calls_made: [],
+            pending_tool_calls: null,
+            finish_reason: "stop",
+          },
+          model
+        ));
+      }
+    }
 
     if (stream) {
       // Streaming: run the agent loop with live SSE output
