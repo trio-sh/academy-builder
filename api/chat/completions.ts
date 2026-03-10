@@ -354,12 +354,20 @@ Page size: ${pageSize}, Orientation: ${pageOrientation}
 
 IMPORTANT: Respond with ONLY a valid JSON array of pdfmake content nodes. No markdown, no explanation, no code fences — just the raw JSON array.
 
+CRITICAL RULES:
+- Output MUST be valid JSON. No JavaScript expressions, no function literals, no comments.
+- For table layouts, use ONLY named layout strings: "noBorders", "lightHorizontalLines", "headerLineOnly", or omit the layout property entirely.
+- NEVER use "layout": { "hLineWidth": function(...) ... } or any function() expressions. These are NOT valid JSON and will break parsing.
+- Every property value must be a JSON primitive (string, number, boolean, null), array, or object. No functions.
+
 Supported node types:
 - Text: { "text": "string", "fontSize": 14, "bold": true, "italic": false, "color": "#333", "margin": [0, 5, 0, 5] }
-- Table: { "table": { "headerRows": 1, "widths": ["*", "*"], "body": [["Header1", "Header2"], ["val1", "val2"]] } }
+- Table: { "table": { "headerRows": 1, "widths": ["*", "*"], "body": [["Header1", "Header2"], ["val1", "val2"]] }, "layout": "lightHorizontalLines" }
 - Unordered list: { "ul": ["item 1", "item 2"] }
 - Ordered list: { "ol": ["item 1", "item 2"] }
 - Columns: { "columns": [{ "text": "Col 1", "width": "*" }, { "text": "Col 2", "width": "*" }] }
+- Canvas: { "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#ccc" }] }
+- Stack: { "stack": [ ...nodes ], "margin": [0, 0, 0, 10] }
 
 Create a well-structured, professional document. Use headings (large/bold text), paragraphs, tables where appropriate, and proper spacing with margins. Do NOT include the title as the first node — it will be added automatically.`;
 
@@ -378,7 +386,7 @@ Create a well-structured, professional document. Use headings (large/bold text),
         messages: [
           {
             role: "system",
-            content: "You are a PDF document generator. You output ONLY valid JSON arrays of pdfmake content nodes. No markdown, no code fences, no explanation — just the JSON array.",
+            content: "You are a PDF document generator. You output ONLY valid JSON arrays of pdfmake content nodes. No markdown, no code fences, no explanation — just the JSON array. NEVER use JavaScript function expressions anywhere in the output. For table layouts, use named strings like \"noBorders\" or \"lightHorizontalLines\" instead of objects with function properties. All output must be strictly valid JSON.",
           },
           { role: "user", content: kiloPrompt },
         ],
@@ -403,6 +411,22 @@ Create a well-structured, professional document. Use headings (large/bold text),
     if (cleanedContent.startsWith("```")) {
       cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
     }
+
+    // Sanitize: strip JavaScript function literals that Kilo sometimes generates
+    // e.g. "hLineWidth": function(i, node) { return 0; } → remove the property
+    // Also handle arrow functions: "hLineWidth": (i, node) => 0
+    cleanedContent = cleanedContent
+      .replace(/,\s*"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{[^}]*\}/g, "")
+      .replace(/"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{[^}]*\}\s*,?/g, "")
+      .replace(/,\s*"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+/g, "")
+      .replace(/"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+\s*,?/g, "");
+    // Clean up trailing commas left by removal (e.g. {, "a": 1} or {"a": 1,})
+    cleanedContent = cleanedContent
+      .replace(/,\s*([}\]])/g, "$1")
+      .replace(/\{\s*,/g, "{");
+
+    // Replace layout objects that are now empty {} with a named layout string
+    cleanedContent = cleanedContent.replace(/"layout"\s*:\s*\{\s*\}/g, '"layout": "lightHorizontalLines"');
 
     let pdfContent: unknown[];
     try {
@@ -430,6 +454,45 @@ Create a well-structured, professional document. Use headings (large/bold text),
   } catch (err: any) {
     log?.error(`PDF generation fetch error: ${err.message}`);
     return JSON.stringify({ error: `PDF generation failed: ${err.message}` });
+  }
+}
+
+/**
+ * Streaming PDF generation: calls Kilo, collects pdfmake JSON, emits the
+ * ACTION tag as an SSE chunk, and streams a brief success message.
+ * Used as a special case in streamAgentLoop so it terminates immediately.
+ */
+async function streamGeneratePdf(
+  args: Record<string, any>,
+  res: import("@vercel/node").VercelResponse,
+  sseId: string,
+  sseModel: string,
+  log?: ReturnType<typeof createLogger>
+): Promise<void> {
+  const title = args.title || "Document";
+
+  // Execute the PDF generation (calls Kilo internally)
+  const resultJson = await executeGeneratePdf(args, log);
+
+  try {
+    const parsed = JSON.parse(resultJson);
+    if (parsed.type === "pdf" && parsed.content) {
+      const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
+      const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+      res.write(sseChunk(sseId, sseModel, { content: actionTag }));
+
+      // Stream a brief success message
+      const successMsg = `Your PDF "${parsed.title || "Document"}" has been generated and is ready for download.`;
+      await streamTextTokens(res, sseId, sseModel, successMsg);
+    } else if (parsed.error) {
+      const errMsg = `I wasn't able to generate the PDF: ${parsed.error}`;
+      await streamTextTokens(res, sseId, sseModel, errMsg);
+    } else {
+      await streamTextTokens(res, sseId, sseModel, `PDF "${title}" generation completed.`);
+    }
+  } catch {
+    log?.error("Failed to parse executeGeneratePdf result");
+    await streamTextTokens(res, sseId, sseModel, `I encountered an error generating the PDF "${title}". Please try again.`);
   }
 }
 
@@ -1797,6 +1860,30 @@ async function streamAgentLoop(
       (tc) => !isBuiltinTool(tc.name) && !customToolNames.has(tc.name)
     );
     log?.info(`Tool calls: builtin=[${builtinCalls.map(t => t.name).join(",")}], custom=[${customCalls.map(t => t.name).join(",")}], unknown=[${unknownCalls.map(t => t.name).join(",")}]`);
+
+    // ── generate_pdf special case: generate PDF, emit action tag, terminate ──
+    const pdfCall = allCalls.find((tc) => tc.name === "generate_pdf");
+    if (pdfCall) {
+      log?.info("generate_pdf detected — generating PDF and terminating");
+      sseToolStatus(res, id, model, "tool_start", "generate_pdf", pdfCall.arguments);
+
+      // Execute any other co-occurring built-in calls first (silently)
+      for (const tc of builtinCalls.filter((t) => t.name !== "generate_pdf")) {
+        sseToolStatus(res, id, model, "tool_start", tc.name, tc.arguments);
+        await executeTool(tc.name, tc.arguments, log);
+        sseToolStatus(res, id, model, "tool_done", tc.name);
+      }
+
+      // Generate PDF, emit action tag, stream success message
+      await streamGeneratePdf(pdfCall.arguments as Record<string, any>, res, id, model, log);
+
+      sseToolStatus(res, id, model, "tool_done", "generate_pdf");
+      res.write(sseChunk(id, model, {}, "stop"));
+      res.write("data: [DONE]\n\n");
+      res.end();
+      log?.info("Stream ended (stop, generate_pdf)");
+      return;
+    }
 
     // ── task_agent special case: pipe Kilo stream directly to client ──
     const taskAgentCall = allCalls.find((tc) => tc.name === "task_agent");

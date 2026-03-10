@@ -524,18 +524,30 @@ async function executeAction(
         }
 
         const title = action.params[0] || "Document";
-        // params[1] is a JSON string of pdfmake content nodes
+        // params[1] is base64-encoded JSON of pdfmake content nodes (or raw JSON for backward compat)
         let content: unknown[] = [];
         try {
-          content = JSON.parse(action.params[1] || "[]");
+          const raw = action.params[1] || "[]";
+          // Try base64 decode first (backend encodes with Buffer.from(...).toString("base64"))
+          let jsonStr: string;
+          try {
+            jsonStr = atob(raw);
+            // Verify it looks like JSON (starts with [ or {)
+            if (!/^\s*[\[{]/.test(jsonStr)) {
+              jsonStr = raw; // Not base64-encoded JSON, use raw
+            }
+          } catch {
+            jsonStr = raw; // Not valid base64, assume raw JSON string
+          }
+          content = JSON.parse(jsonStr);
         } catch {
           // If JSON parsing fails, treat the remaining params as plain text content
           content = action.params.slice(1).map(p => ({ text: p, margin: [0, 0, 0, 6] }));
         }
 
         const docDefinition = {
-          pageSize: "A4",
-          pageOrientation: "portrait" as const,
+          pageSize: (action.params[2] || "A4") as string,
+          pageOrientation: (action.params[3] || "portrait") as "portrait" | "landscape",
           content: [
             { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
             ...content,
