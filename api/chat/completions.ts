@@ -315,10 +315,10 @@ function executeImageGeneration(
   });
 }
 
-// ─── PDF Generation (Kilo-powered) ──────────────────────────────────────────
-// Uses the Kilo Gateway (powerful model) to generate structured pdfmake content
-// nodes from a simple description. The result is returned as JSON that the
-// frontend renders client-side with pdfmake.
+// ─── PDF Generation (Kilo-powered, HTML-based) ─────────────────────────────
+// Uses the Kilo Gateway to generate HTML with inline styles from a description.
+// The HTML is sent to the frontend where html-to-pdfmake converts it to
+// pdfmake content nodes for client-side PDF rendering.
 
 async function executeGeneratePdf(
   args: Record<string, any>,
@@ -340,39 +340,41 @@ async function executeGeneratePdf(
     });
   }
 
-  // Use Kilo to generate pdfmake content from the description
+  // Use Kilo to generate HTML from the description
   if (!KILO_API_KEY) {
     log?.error("KILO_API_KEY not configured for PDF generation");
     return JSON.stringify({ error: "PDF generation is not configured." });
   }
 
-  const kiloPrompt = `Generate a pdfmake content array for a PDF document.
+  const kiloSystemPrompt = `You are a PDF document generator that outputs HTML with inline styles. You output ONLY the HTML body content — no <html>, <head>, <body>, or <DOCTYPE> tags. No markdown, no code fences, no explanation — just raw HTML.
+
+CRITICAL RULES:
+- Use ONLY inline style="" attributes for ALL styling. No CSS classes, no <style> tags, no external stylesheets.
+- Every visual property (color, font-size, padding, margin, background, border, etc.) must be in the style attribute.
+- Use semantic HTML: <h1>-<h6>, <p>, <table>, <tr>, <th>, <td>, <ul>, <ol>, <li>, <strong>, <em>, <hr>, <div>, <span>.
+- For tables: always include style on <table>, <th>, <td> for borders, padding, colors.
+- Do NOT include the document title as the first element — it will be added automatically.
+- Output clean, well-structured HTML that reads well when converted to PDF.`;
+
+  const kiloUserPrompt = `Generate HTML content (with inline styles only) for a PDF document.
 
 Title: "${title}"
 Description: ${description}
 Page size: ${pageSize}, Orientation: ${pageOrientation}
 
-IMPORTANT: Respond with ONLY a valid JSON array of pdfmake content nodes. No markdown, no explanation, no code fences — just the raw JSON array.
-
-CRITICAL RULES:
-- Output MUST be valid JSON. No JavaScript expressions, no function literals, no comments.
-- For table layouts, use ONLY named layout strings: "noBorders", "lightHorizontalLines", "headerLineOnly", or omit the layout property entirely.
-- NEVER use "layout": { "hLineWidth": function(...) ... } or any function() expressions. These are NOT valid JSON and will break parsing.
-- Every property value must be a JSON primitive (string, number, boolean, null), array, or object. No functions.
-
-Supported node types:
-- Text: { "text": "string", "fontSize": 14, "bold": true, "italic": false, "color": "#333", "margin": [0, 5, 0, 5] }
-- Table: { "table": { "headerRows": 1, "widths": ["*", "*"], "body": [["Header1", "Header2"], ["val1", "val2"]] }, "layout": "lightHorizontalLines" }
-- Unordered list: { "ul": ["item 1", "item 2"] }
-- Ordered list: { "ol": ["item 1", "item 2"] }
-- Columns: { "columns": [{ "text": "Col 1", "width": "*" }, { "text": "Col 2", "width": "*" }] }
-- Canvas: { "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#ccc" }] }
-- Stack: { "stack": [ ...nodes ], "margin": [0, 0, 0, 10] }
-
-Create a well-structured, professional document. Use headings (large/bold text), paragraphs, tables where appropriate, and proper spacing with margins. Do NOT include the title as the first node — it will be added automatically.`;
+Requirements:
+- Use inline styles on every element for colors, fonts, spacing, borders, backgrounds.
+- NO CSS classes or <style> tags — only style="" attributes.
+- Use a professional, clean design. Default to dark theme (background: #0b1020, text: #ffffff, accents: #00d4aa).
+- Use proper heading hierarchy (<h2>, <h3>) — do NOT include an <h1> (the title is added separately).
+- Use tables for tabular data with styled headers and borders.
+- Use <ul>/<ol> for lists.
+- Use <hr> for dividers.
+- Wrap sections in <div> with appropriate padding/margin.
+- Output ONLY the HTML content. No markdown fences, no explanation.`;
 
   try {
-    log?.info(`⚙ PDF generation via Kilo: title="${title}", desc=${description.length}ch`);
+    log?.info(`⚙ PDF generation via Kilo (HTML): title="${title}", desc=${description.length}ch`);
     const start = Date.now();
 
     const res = await fetch(KILO_GATEWAY_URL, {
@@ -384,11 +386,8 @@ Create a well-structured, professional document. Use headings (large/bold text),
       body: JSON.stringify({
         model: KILO_DEFAULT_MODEL,
         messages: [
-          {
-            role: "system",
-            content: "You are a PDF document generator. You output ONLY valid JSON arrays of pdfmake content nodes. No markdown, no code fences, no explanation — just the JSON array. NEVER use JavaScript function expressions anywhere in the output. For table layouts, use named strings like \"noBorders\" or \"lightHorizontalLines\" instead of objects with function properties. All output must be strictly valid JSON.",
-          },
-          { role: "user", content: kiloPrompt },
+          { role: "system", content: kiloSystemPrompt },
+          { role: "user", content: kiloUserPrompt },
         ],
         max_tokens: 8192,
         temperature: 0.5,
@@ -403,97 +402,33 @@ Create a well-structured, professional document. Use headings (large/bold text),
 
     const data = await res.json();
     const rawContent = data.choices?.[0]?.message?.content || "";
-    log?.info(`⚙ Kilo PDF response (${Date.now() - start}ms): ${rawContent.length}ch`);
+    log?.info(`⚙ Kilo PDF HTML response (${Date.now() - start}ms): ${rawContent.length}ch`);
 
-    // Parse the pdfmake content array from Kilo's response
-    // Strip any markdown code fences if Kilo wraps it
-    let cleanedContent = rawContent.trim();
-    if (cleanedContent.startsWith("```")) {
-      cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+    // Clean up: strip markdown code fences if Kilo wraps the HTML
+    let html = rawContent.trim();
+    if (html.startsWith("```")) {
+      html = html.replace(/^```(?:html)?\s*\n?/, "").replace(/\n?```\s*$/, "");
     }
 
-    // Extract the outermost JSON array if surrounded by extra text
-    const firstBracket = cleanedContent.indexOf("[");
-    const lastBracket = cleanedContent.lastIndexOf("]");
-    if (firstBracket !== -1 && lastBracket > firstBracket) {
-      cleanedContent = cleanedContent.slice(firstBracket, lastBracket + 1);
-    }
+    // Strip any accidental full-document wrappers
+    html = html
+      .replace(/<!DOCTYPE[^>]*>/gi, "")
+      .replace(/<\/?html[^>]*>/gi, "")
+      .replace(/<\/?head[^>]*>/gi, "")
+      .replace(/<\/?body[^>]*>/gi, "")
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
+      .replace(/<link[^>]*>/gi, "")
+      .trim();
 
-    // Sanitize: strip JavaScript function literals that Kilo sometimes generates.
-    // Uses balanced-brace matching to handle nested braces inside function bodies
-    // e.g. "hLineWidth": function(i, node) { return i === 0 ? 1 : 0; }
-    const funcPattern = /"[^"]+"\s*:\s*function\s*\([^)]*\)\s*\{/g;
-    let funcMatch: RegExpExecArray | null;
-    const removals: [number, number][] = [];
-    while ((funcMatch = funcPattern.exec(cleanedContent)) !== null) {
-      const start = funcMatch.index;
-      let depth = 1;
-      let i = start + funcMatch[0].length;
-      while (i < cleanedContent.length && depth > 0) {
-        if (cleanedContent[i] === "{") depth++;
-        else if (cleanedContent[i] === "}") depth--;
-        i++;
-      }
-      removals.push([start, i]);
-    }
-    // Apply removals in reverse order to preserve offsets
-    for (let r = removals.length - 1; r >= 0; r--) {
-      cleanedContent = cleanedContent.slice(0, removals[r][0]) + cleanedContent.slice(removals[r][1]);
-    }
-    // Also handle arrow functions: "hLineWidth": (i, node) => expr
-    cleanedContent = cleanedContent.replace(/"[^"]+"\s*:\s*\([^)]*\)\s*=>[^,}\]]+/g, "");
-    // Remove dangling commas around removed properties
-    cleanedContent = cleanedContent
-      .replace(/,\s*,/g, ",")
-      .replace(/,\s*([}\]])/g, "$1")
-      .replace(/\{\s*,/g, "{")
-      .replace(/\[\s*,/g, "[");
-
-    // Replace layout objects that are now empty {} with a named layout string
-    cleanedContent = cleanedContent.replace(/"layout"\s*:\s*\{\s*\}/g, '"layout": "lightHorizontalLines"');
-
-    let pdfContent: unknown[];
-    try {
-      pdfContent = JSON.parse(cleanedContent);
-      if (!Array.isArray(pdfContent)) {
-        // If it returned an object with a content key, extract it
-        if (pdfContent && typeof pdfContent === "object" && "content" in (pdfContent as any)) {
-          pdfContent = (pdfContent as any).content;
-        } else {
-          pdfContent = [pdfContent];
-        }
-      }
-    } catch (parseErr: any) {
-      log?.warn(`Failed to parse Kilo PDF content as JSON: ${parseErr.message}`);
-      // Attempt JSON repair: fix common issues (trailing commas, single quotes, etc.)
-      try {
-        let repaired = cleanedContent
-          // Remove trailing commas before } or ]
-          .replace(/,\s*([}\]])/g, "$1")
-          // Replace single-quoted strings with double-quoted
-          .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, '"$1"')
-          // Remove JavaScript-style comments
-          .replace(/\/\/[^\n]*/g, "")
-          .replace(/\/\*[\s\S]*?\*\//g, "");
-        pdfContent = JSON.parse(repaired);
-        if (!Array.isArray(pdfContent)) pdfContent = [pdfContent];
-        log?.info("JSON repair succeeded for Kilo PDF content");
-      } catch {
-        // Last resort: try to extract any valid JSON array from the content
-        log?.error(`JSON repair also failed — PDF content (first 500ch): ${cleanedContent.slice(0, 500)}`);
-        // Instead of rendering raw JSON as text (which corrupts the PDF),
-        // create a readable error document
-        pdfContent = [
-          { text: "This PDF could not be generated correctly.", fontSize: 14, bold: true, color: "#cc0000", margin: [0, 0, 0, 10] },
-          { text: "The document content had formatting issues. Please try generating this PDF again.", fontSize: 11, color: "#666666" },
-        ];
-      }
+    if (!html) {
+      log?.warn("Kilo returned empty HTML content");
+      html = `<p style="color: #cc0000; font-weight: bold;">This PDF could not be generated. Please try again.</p>`;
     }
 
     return JSON.stringify({
-      type: "pdf",
+      type: "pdf_html",
       title,
-      content: pdfContent,
+      html,
       pageSize,
       pageOrientation,
     });
@@ -504,7 +439,7 @@ Create a well-structured, professional document. Use headings (large/bold text),
 }
 
 /**
- * Streaming PDF generation: calls Kilo, collects pdfmake JSON, emits the
+ * Streaming PDF generation: calls Kilo, collects HTML, emits the
  * ACTION tag as an SSE chunk, and streams a brief success message.
  * Used as a special case in streamAgentLoop so it terminates immediately.
  */
@@ -522,9 +457,12 @@ async function streamGeneratePdf(
 
   try {
     const parsed = JSON.parse(resultJson);
-    if (parsed.type === "pdf" && parsed.content) {
-      const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
-      const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+    if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
+      // Encode either HTML string or legacy pdfmake content as base64
+      const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
+      const b64 = Buffer.from(payload).toString("base64");
+      const pdfType = parsed.type === "pdf_html" ? "html" : "json";
+      const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
       res.write(sseChunk(sseId, sseModel, { content: actionTag }));
 
       // Stream a brief success message
@@ -1212,8 +1150,8 @@ When calling task_agent:
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
 
 ## PDF Generation
-You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Just pass a title and a detailed description of what the PDF should contain. A powerful model will construct the PDF content automatically.
-Example: generate_pdf({ title: "Sample Report", description: "A professional sample report with an introduction section, a table of contents, a data table with columns ID/Name/Status and 3 sample rows, and a conclusion paragraph." })
+You have a **generate_pdf** tool. Call it DIRECTLY — do NOT delegate PDF generation to task_agent. Pass a title and a DETAILED description with ALL the data to include. A powerful model generates styled HTML which is converted to PDF automatically. Include every detail in the description: names, dates, skills, scores, sections, table data, etc.
+Example: generate_pdf({ title: "Anye Happiness — Profile Snapshot", description: "Profile snapshot for Anye Happiness Ade, email hans@gmail.com. Candidate, remote, open to relocation. Skills: Typescript (Frontend, Beginner), PHP (Backend, Beginner), React (Frontend, Beginner). 3 modules completed out of 10. 0 of 3 mentor loops. Recent activity: 3/9/2026 training Mentor Matched, 3/9/2026 resume_upload Resume Uploaded. Next steps: Find a Mentor, Continue BridgeFast modules." })
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -1237,7 +1175,7 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Detailed description of what the PDF should contain — sections, data, tables, etc." }. A powerful model auto-generates the PDF content from your description.
+4. **generate_pdf** - Generate a downloadable PDF document. Call this DIRECTLY (not via task_agent). Params: { "title": "Document Title", "description": "Include ALL data: names, dates, skills, scores, sections, table rows, etc." }. A powerful model generates styled HTML which is converted to PDF. Include every detail in the description.
 5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT use task_agent for PDF generation — use generate_pdf directly instead. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
@@ -1441,9 +1379,11 @@ async function runAgentLoop(
         if (tc.name === "generate_pdf") {
           try {
             const parsed = JSON.parse(result);
-            if (parsed.type === "pdf" && parsed.content) {
-              const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
-              finalContent += `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+            if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
+              const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
+              const b64 = Buffer.from(payload).toString("base64");
+              const pdfType = parsed.type === "pdf_html" ? "html" : "json";
+              finalContent += `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
               const simplified = JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" generated.` });
               allToolCalls.push({ name: tc.name, arguments: tc.arguments, result: simplified });
               return { name: tc.name, result: simplified };
@@ -1987,16 +1927,18 @@ async function streamAgentLoop(
       sseToolStatus(res, id, model, "tool_done", tc.name);
 
       // For generate_pdf: stream the PDF data as an action tag in the content
-      // so the frontend can parse it and render client-side with pdfmake CDN.
-      // Feed a simplified result back to A0 (not the full pdfmake JSON).
+      // so the frontend can parse it and render client-side with pdfmake/html-to-pdfmake.
+      // Feed a simplified result back to A0 (not the full content).
       if (tc.name === "generate_pdf") {
         try {
           const parsed = JSON.parse(result);
-          if (parsed.type === "pdf" && parsed.content) {
-            const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
-            const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+          if ((parsed.type === "pdf_html" && parsed.html) || (parsed.type === "pdf" && parsed.content)) {
+            const payload = parsed.type === "pdf_html" ? parsed.html : JSON.stringify(parsed.content);
+            const b64 = Buffer.from(payload).toString("base64");
+            const pdfType = parsed.type === "pdf_html" ? "html" : "json";
+            const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}|${pdfType}]]\n\n`;
             res.write(sseChunk(id, model, { content: actionTag }));
-            // Feed simplified result to A0 so it doesn't waste context on pdfmake JSON
+            // Feed simplified result to A0 so it doesn't waste context
             results.push({ name: tc.name, result: JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" has been generated and a download button is shown to the user.` }) });
           } else {
             results.push({ name: tc.name, result });

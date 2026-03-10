@@ -524,34 +524,67 @@ async function executeAction(
         }
 
         const title = action.params[0] || "Document";
-        // params[1] is base64-encoded JSON of pdfmake content nodes (or raw JSON for backward compat)
+        const pageSize = (action.params[2] || "A4") as string;
+        const pageOrientation = (action.params[3] || "portrait") as "portrait" | "landscape";
+        // params[4] indicates content type: "html" (new) or "json" (legacy pdfmake nodes)
+        const contentType = action.params[4] || "json";
+
         let content: unknown[] = [];
-        try {
-          const raw = action.params[1] || "[]";
-          // Try base64 decode first (backend encodes with Buffer.from(...).toString("base64"))
-          let jsonStr: string;
+
+        if (contentType === "html") {
+          // New HTML-based approach: decode HTML and convert via html-to-pdfmake
           try {
-            jsonStr = atob(raw);
-            // Verify it looks like JSON (starts with [ or {)
-            if (!/^\s*[\[{]/.test(jsonStr)) {
-              jsonStr = raw; // Not base64-encoded JSON, use raw
+            const htmlToPdfmake = (await import("html-to-pdfmake")).default;
+            const raw = action.params[1] || "";
+            let html: string;
+            try {
+              html = atob(raw);
+              // Verify it looks like HTML (contains < tag)
+              if (!/<\w/.test(html)) {
+                html = raw;
+              }
+            } catch {
+              html = raw;
             }
-          } catch {
-            jsonStr = raw; // Not valid base64, assume raw JSON string
+            content = htmlToPdfmake(html);
+          } catch (htmlErr) {
+            console.error("HTML-to-pdfmake conversion failed:", htmlErr);
+            content = [
+              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
+              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
+            ];
           }
-          content = JSON.parse(jsonStr);
-        } catch {
-          // Don't render raw JSON/base64 as text — show a friendly error instead
-          console.error("PDF content decode failed for:", action.params[0]);
-          content = [
-            { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
-            { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
-          ];
+        } else {
+          // Legacy JSON approach: decode pdfmake content nodes directly
+          try {
+            const raw = action.params[1] || "[]";
+            let jsonStr: string;
+            try {
+              jsonStr = atob(raw);
+              if (!/^\s*[\[{]/.test(jsonStr)) {
+                jsonStr = raw;
+              }
+            } catch {
+              jsonStr = raw;
+            }
+            content = JSON.parse(jsonStr);
+          } catch {
+            console.error("PDF content decode failed for:", action.params[0]);
+            content = [
+              { text: "This PDF could not be rendered correctly.", fontSize: 13, bold: true, color: "#cc0000", margin: [0, 0, 0, 8] },
+              { text: "Please try generating this document again.", fontSize: 11, color: "#666666" },
+            ];
+          }
+        }
+
+        // Ensure content is always an array
+        if (!Array.isArray(content)) {
+          content = [content];
         }
 
         const docDefinition = {
-          pageSize: (action.params[2] || "A4") as string,
-          pageOrientation: (action.params[3] || "portrait") as "portrait" | "landscape",
+          pageSize,
+          pageOrientation,
           content: [
             { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
             ...content,
@@ -571,7 +604,6 @@ async function executeAction(
         });
 
         const url = URL.createObjectURL(blob);
-        // Store the download for the UI to render
         chatbotPdfDownloads.push({ title, url });
 
         return { ok: true, detail: `PDF "${title}" generated` };
