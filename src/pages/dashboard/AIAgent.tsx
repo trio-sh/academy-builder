@@ -164,12 +164,20 @@ interface ContinuationState {
   contentSoFar: string;
 }
 
+interface PdfData {
+  title: string;
+  content: unknown[];
+  pageSize?: string;
+  pageOrientation?: string;
+}
+
 interface StreamResult {
   content: string;
   toolCalls: OpenAIToolCall[];
   finishReason: string | null;
   statuses: StatusEvent[];
   continuation?: ContinuationState;
+  pdfDataItems: PdfData[];
 }
 
 // ─── Custom Tools (OpenAI Function Schemas) ─────────────────────────────────
@@ -415,46 +423,35 @@ const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 const pendingPdfDownloads: { title: string; url: string }[] = [];
 
 /**
- * Extract PDF data from streamed response content. When the backend's task_agent
- * calls generate_pdf, the result JSON gets embedded in the LLM's text response.
- * This function finds those JSON blocks, renders them client-side with pdfmake,
- * and returns download links.
+ * Render PDF data items received from backend SSE pdf_data events.
+ * Uses pdfmake to generate downloadable PDF blobs client-side.
  */
-async function extractAndRenderPdfsFromContent(
-  content: string
-): Promise<{ cleanedContent: string; downloads: { title: string; url: string }[] }> {
-  const downloads: { title: string; url: string }[] = [];
+async function renderPdfDataItems(
+  items: PdfData[]
+): Promise<{ title: string; url: string }[]> {
+  if (items.length === 0) return [];
 
-  // Match JSON objects that look like PDF results: {"type":"pdf",...}
-  const pdfJsonRegex = /\{[^{}]*"type"\s*:\s*"pdf"[^{}]*"content"\s*:\s*\[[\s\S]*?\]\s*[^{}]*\}/g;
-  const matches = content.match(pdfJsonRegex);
-
-  if (!matches || matches.length === 0) {
-    return { cleanedContent: content, downloads: [] };
+  const pdfMakeModule = await import("pdfmake/build/pdfmake");
+  const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+  const pdfMake = pdfMakeModule.default || pdfMakeModule;
+  if (pdfFontsModule?.pdfMake?.vfs) {
+    pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+  } else if ((pdfFontsModule as Record<string, unknown>).default) {
+    const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
+    if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
   }
 
-  for (const match of matches) {
+  const downloads: { title: string; url: string }[] = [];
+
+  for (const pdfData of items) {
     try {
-      const pdfData = JSON.parse(match);
-      if (pdfData.type !== "pdf" || !pdfData.content) continue;
-
-      const pdfMakeModule = await import("pdfmake/build/pdfmake");
-      const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
-      const pdfMake = pdfMakeModule.default || pdfMakeModule;
-      if (pdfFontsModule?.pdfMake?.vfs) {
-        pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
-      } else if ((pdfFontsModule as Record<string, unknown>).default) {
-        const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
-        if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
-      }
-
       const title = String(pdfData.title || "Document");
       const docDefinition = {
         pageSize: pdfData.pageSize || "A4",
         pageOrientation: pdfData.pageOrientation || "portrait",
         content: [
           { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
-          ...pdfData.content,
+          ...(pdfData.content || []),
         ],
         defaultStyle: { fontSize: 11 },
         styles: {
@@ -473,19 +470,11 @@ async function extractAndRenderPdfsFromContent(
       const url = URL.createObjectURL(blob);
       downloads.push({ title, url });
     } catch {
-      // Skip malformed PDF JSON
+      // Skip failed PDF renders
     }
   }
 
-  // Clean the PDF JSON from the displayed content
-  let cleanedContent = content;
-  for (const match of matches) {
-    cleanedContent = cleanedContent.replace(match, "");
-  }
-  // Clean up leftover whitespace/newlines from removed JSON
-  cleanedContent = cleanedContent.replace(/\n{3,}/g, "\n\n").trim();
-
-  return { cleanedContent, downloads };
+  return downloads;
 }
 
 // ─── DOM Helpers ─────────────────────────────────────────────────────────────
@@ -819,6 +808,7 @@ async function consumeStream(
   const toolCalls: (OpenAIToolCall & { _argFragments: string })[] = [];
   let finishReason: string | null = null;
   const statuses: StatusEvent[] = [];
+  const pdfDataItems: PdfData[] = [];
   let continuation: ContinuationState | undefined;
   let buffer = "";
 
@@ -854,6 +844,10 @@ async function consumeStream(
           onStatus(delta.custom_status);
         }
 
+        if (delta?.pdf_data) {
+          pdfDataItems.push(delta.pdf_data as PdfData);
+        }
+
         if (delta?.tool_calls) {
           for (const tc of delta.tool_calls) {
             const idx = tc.index ?? 0;
@@ -885,6 +879,7 @@ async function consumeStream(
     finishReason,
     statuses,
     continuation,
+    pdfDataItems,
   };
 }
 
@@ -1400,22 +1395,22 @@ export default function AIAgent() {
         return { messages: messagesWithToolResults, done: false };
       }
 
-      // Normal stop — check for embedded PDF data from backend generate_pdf tool
-      let finalContent = result.content || "";
+      // Normal stop — render any PDF data received via SSE pdf_data events
       let pdfDownloads: { title: string; url: string }[] | undefined;
-      try {
-        const pdfResult = await extractAndRenderPdfsFromContent(finalContent);
-        if (pdfResult.downloads.length > 0) {
-          finalContent = pdfResult.cleanedContent;
-          pdfDownloads = pdfResult.downloads;
+      if (result.pdfDataItems.length > 0) {
+        try {
+          const downloads = await renderPdfDataItems(result.pdfDataItems);
+          if (downloads.length > 0) {
+            pdfDownloads = downloads;
+          }
+        } catch {
+          // If PDF rendering fails, skip downloads
         }
-      } catch {
-        // If PDF extraction fails, show original content
       }
 
       const uiMsg: UIMessage = {
         role: "assistant",
-        content: finalContent,
+        content: result.content || "",
         statuses: result.statuses.length > 0 ? result.statuses : undefined,
         pdfDownloads,
         timestamp: new Date(),
