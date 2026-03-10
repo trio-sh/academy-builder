@@ -130,28 +130,104 @@ Return this structure inside a \`\`\`json code block:
 - **Table**: \`{ "table": { "headerRows": 1, "widths": ["*", "auto", 100], "body": [["H1","H2","H3"], ["a","b","c"]] }, "layout": "lightHorizontalLines" }\`
 - **Lists**: \`{ "ul": ["item1", "item2"] }\` or \`{ "ol": ["first", "second"] }\`
 - **Canvas**: \`{ "canvas": [{ "type": "line", "x1": 0, "y1": 0, "x2": 515, "y2": 0, "lineWidth": 1, "lineColor": "#cccccc" }] }\`
+- **Image**: \`{ "image": "data:image/png;base64,...", "width": 120 }\` or \`{ "image": "https://...", "fit": [200, 100] }\`
+- **Page Break**: \`{ "text": "", "pageBreak": "before" }\`
 
 ### Table Rules
-- "widths" array length MUST match the number of cells per row
-- "layout" goes ALONGSIDE "table", NOT inside it
-- Use named layouts: "noBorders" | "headerLineOnly" | "lightHorizontalLines"
+- "widths" array length MUST exactly match the number of cells in every row — no exceptions
+- Every row in "body" MUST have the same number of cells
+- "layout" goes ALONGSIDE "table" as a sibling key, NEVER inside "table"
+- Use named layouts only: "noBorders" | "headerLineOnly" | "lightHorizontalLines"
+- NEVER define custom layout objects with functions — they cannot be serialized to JSON
+- NEVER use a "layouts" root key — pdfmake does not support it
+- To color a cell background use "fillColor" on the cell object, not in layout
+- colSpan cells MUST be followed by the correct number of empty {} placeholder cells to keep row length consistent
+
+### Canvas Rules
+- "canvas" value is ALWAYS an array of shape objects
+- Valid shape types: "line" | "rect" | "ellipse" — NEVER "circle" (does not exist)
+- Rect rounded corners use key "r", NEVER "radius": \`{ "type": "rect", "r": 6, ... }\`
+- To overlay text on a canvas shape, place the canvas node first, then use a negative top margin on the text node that follows:
+  \`{ "canvas": [{ "type": "rect", "x": 0, "y": 0, "w": 200, "h": 80, "r": 8, "color": "#6366f1" }] }\`
+  \`{ "text": "Value", "fontSize": 24, "bold": true, "color": "#fff", "margin": [16, -64, 0, 0] }\`
+- Canvas coordinates are relative to the canvas element's own space, not the page
+- Ellipse shape: \`{ "type": "ellipse", "x": 50, "y": 50, "r1": 40, "r2": 40, "color": "#6366f1" }\`
+
+### Columns Rules
+- Valid "width" values: "*" (fill), "auto" (shrink to content), or a number in points
+- NEVER mix "*" and percentage widths in the same columns node
+- Add "columnGap" at the columns level for spacing: \`{ "columns": [...], "columnGap": 16 }\`
+
+### Margin Rules
+- Margin is ALWAYS an array — NEVER a single number
+- Format: [left, top, right, bottom] (4 values) or [horizontal, vertical] (2 values)
+- Example: "margin": [0, 12, 0, 24]
 
 ### Styles Example
 {
   "heading1": { "fontSize": 22, "bold": true, "color": "#1e293b", "margin": [0, 0, 0, 8] },
   "heading2": { "fontSize": 16, "bold": true, "color": "#334155", "margin": [0, 16, 0, 6] },
-  "subtext": { "fontSize": 9, "color": "#94a3b8" }
+  "body": { "fontSize": 11, "color": "#475569", "lineHeight": 1.6 },
+  "muted": { "fontSize": 9, "color": "#94a3b8" },
+  "label": { "fontSize": 9, "bold": true, "color": "#94a3b8" },
+  "tableHeader": { "fontSize": 11, "bold": true, "color": "#ffffff" }
 }
 
-### CRITICAL RULES
-- NEVER use JavaScript functions in JSON — use static layout names or objects
-- NEVER use font-family or any font other than "Roboto"
-- ONLY use hex color strings like "#6c63ff" — never color names like "red" or "blue"
-- ALWAYS include "defaultStyle": { "fontSize": 11, "font": "Roboto" }
-- Must be valid JSON — no trailing commas, all keys double-quoted
+### Header & Footer (Static Only)
+- NEVER use JavaScript callback functions for header/footer — JSON cannot serialize functions
+- Use static objects only: \`"header": { "columns": [ { "text": "Company Name", "fontSize": 9, "color": "#94a3b8", "margin": [40, 15, 0, 0] }, { "text": "Document Title", "fontSize": 9, "color": "#94a3b8", "alignment": "right", "margin": [0, 15, 40, 0] } ] }\`
+- For page numbers, use the static text "Page 1" — dynamic page numbers require functions and are not allowed in JSON
+
+### Page Setup
+- Valid page sizes: "A4" | "LETTER" | "LEGAL" | "A3"
+- pageMargins format: [left, top, right, bottom] in points (72 points = 1 inch)
+- Standard margins: [40, 60, 40, 60] | Comfortable: [50, 70, 50, 70] | Tight: [30, 40, 30, 40]
+
+### CRITICAL RULES — NEVER VIOLATE
+
+**JSON validity:**
+- Must be 100% valid JSON — no trailing commas, all keys double-quoted, no JavaScript syntax
+- NEVER wrap output in anything other than a single \`\`\`json code block
+- NEVER add explanatory text inside the JSON itself
+
+**Functions — strictly forbidden:**
+- NEVER use JavaScript functions anywhere in the JSON
+- NEVER use a "layouts" root-level key (pdfmake ignores it entirely)
+- NEVER define custom layout objects — only use named layout strings: "noBorders" | "headerLineOnly" | "lightHorizontalLines"
+- NEVER use function-style header/footer — static objects only
+
+**Canvas:**
+- NEVER use "type": "circle" — use "type": "ellipse" instead
+- NEVER use "radius" on rect shapes — use "r" instead
+
+**Colors:**
+- ONLY hex color strings: "#6c63ff" — NEVER color names ("red", "blue", "purple") or rgb()/hsl() values
+
+**Fonts:**
+- NEVER use any font other than "Roboto" — it is the only font available in pdfmake's default vfs
+- ALWAYS include "defaultStyle": { "fontSize": 11, "font": "Roboto" } at root level
+
+**Tables:**
+- NEVER let widths array length differ from cell count per row
+- NEVER put "layout" inside the "table" object — it is always a sibling
+- NEVER omit placeholder {} cells after a colSpan
+
+**Text:**
+- NEVER use raw "\\n" line breaks inside a styled text node — use separate text nodes in a stack instead
+- Inline rich text uses an array: \`{ "text": [{ "text": "bold", "bold": true }, " normal"] }\`
+
+**Structure:**
+- NEVER place content outside the "content" array
+- NEVER use undefined, null, or missing values in style properties
+- "stack" and "columns" are container nodes — they do not take "text" directly
+
+### Design Quality Standards
 - You may include a brief conversational message before the JSON code block
-- Make documents visually polished: use colors, spacing, and layout effectively
-- Use real, detailed content — not lorem ipsum — based on the user's request`;
+- Make documents visually polished: use colors, spacing, canvas shapes, and layout effectively
+- Use real, detailed content — not lorem ipsum — based on the user's request
+- Use section dividers (canvas lines), color-coded headers, and consistent spacing
+- Prefer dark backgrounds with light text for modern premium look, or clean white for professional documents
+- Always use margin to create breathing room between sections`;
 
 /**
  * Build the full user prompt for Kilo PDF routing, including conversation context.
