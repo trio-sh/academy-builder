@@ -795,33 +795,33 @@ async function streamTaskAgent(
           const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
           sseToolStatus(res, sseId, sseModel, "tool_done", tc.function.name);
 
-          // Emit tool result data to frontend so it can render downloads, images, etc.
-          // This is critical: without this, task_agent's internal tool results never reach the client.
-          try {
-            const parsed = JSON.parse(result);
-            res.write(sseChunk(sseId, sseModel, {
-              tool_result: {
-                name: tc.function.name,
-                arguments: toolArgs,
-                result: parsed,
-              },
-            }));
-          } catch {
-            // Non-JSON result (e.g. web search text) — send as string
-            res.write(sseChunk(sseId, sseModel, {
-              tool_result: {
-                name: tc.function.name,
-                arguments: toolArgs,
-                result: result,
-              },
-            }));
+          // For generate_pdf: stream the PDF data as an action tag in the content
+          // and feed a simplified result back to task_agent conversation
+          if (tc.function.name === "generate_pdf") {
+            try {
+              const parsed = JSON.parse(result);
+              if (parsed.type === "pdf" && parsed.content) {
+                const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
+                const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+                res.write(sseChunk(sseId, sseModel, { content: actionTag }));
+                messages.push({
+                  role: "tool",
+                  tool_call_id: tc.id,
+                  content: JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" generated and download button shown.` }),
+                });
+              } else {
+                messages.push({ role: "tool", tool_call_id: tc.id, content: result });
+              }
+            } catch {
+              messages.push({ role: "tool", tool_call_id: tc.id, content: result });
+            }
+          } else {
+            messages.push({
+              role: "tool",
+              tool_call_id: tc.id,
+              content: result,
+            });
           }
-
-          messages.push({
-            role: "tool",
-            tool_call_id: tc.id,
-            content: result,
-          });
         }
         continue; // next iteration — will stream the follow-up response
       }
@@ -1328,6 +1328,19 @@ async function runAgentLoop(
     const results = await Promise.all(
       [...builtinCalls, ...unknownCalls].map(async (tc) => {
         const result = await executeTool(tc.name, tc.arguments, log);
+        // For generate_pdf, embed action tag into finalContent and simplify result for A0
+        if (tc.name === "generate_pdf") {
+          try {
+            const parsed = JSON.parse(result);
+            if (parsed.type === "pdf" && parsed.content) {
+              const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
+              finalContent += `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+              const simplified = JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" generated.` });
+              allToolCalls.push({ name: tc.name, arguments: tc.arguments, result: simplified });
+              return { name: tc.name, result: simplified };
+            }
+          } catch { /* fall through */ }
+        }
         allToolCalls.push({ name: tc.name, arguments: tc.arguments, result });
         return { name: tc.name, result };
       })
@@ -1840,19 +1853,27 @@ async function streamAgentLoop(
       const result = await executeTool(tc.name, tc.arguments, log);
       sseToolStatus(res, id, model, "tool_done", tc.name);
 
-      // Emit tool result to frontend for client-side rendering (PDF, images, etc.)
-      try {
-        const parsed = JSON.parse(result);
-        res.write(sseChunk(id, model, {
-          tool_result: { name: tc.name, arguments: tc.arguments, result: parsed },
-        }));
-      } catch {
-        res.write(sseChunk(id, model, {
-          tool_result: { name: tc.name, arguments: tc.arguments, result: result },
-        }));
+      // For generate_pdf: stream the PDF data as an action tag in the content
+      // so the frontend can parse it and render client-side with pdfmake CDN.
+      // Feed a simplified result back to A0 (not the full pdfmake JSON).
+      if (tc.name === "generate_pdf") {
+        try {
+          const parsed = JSON.parse(result);
+          if (parsed.type === "pdf" && parsed.content) {
+            const b64 = Buffer.from(JSON.stringify(parsed.content)).toString("base64");
+            const actionTag = `\n\n[[ACTION:GENERATE_PDF|${parsed.title || "Document"}|${b64}|${parsed.pageSize || "A4"}|${parsed.pageOrientation || "portrait"}]]\n\n`;
+            res.write(sseChunk(id, model, { content: actionTag }));
+            // Feed simplified result to A0 so it doesn't waste context on pdfmake JSON
+            results.push({ name: tc.name, result: JSON.stringify({ success: true, title: parsed.title, message: `PDF "${parsed.title}" has been generated and a download button is shown to the user.` }) });
+          } else {
+            results.push({ name: tc.name, result });
+          }
+        } catch {
+          results.push({ name: tc.name, result });
+        }
+      } else {
+        results.push({ name: tc.name, result });
       }
-
-      results.push({ name: tc.name, result });
     }
 
     // Feed results back into conversation for next LLM turn

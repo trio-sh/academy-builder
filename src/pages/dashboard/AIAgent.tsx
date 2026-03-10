@@ -164,20 +164,12 @@ interface ContinuationState {
   contentSoFar: string;
 }
 
-interface PdfData {
-  title: string;
-  content: unknown[];
-  pageSize?: string;
-  pageOrientation?: string;
-}
-
 interface StreamResult {
   content: string;
   toolCalls: OpenAIToolCall[];
   finishReason: string | null;
   statuses: StatusEvent[];
   continuation?: ContinuationState;
-  pdfDataItems: PdfData[];
 }
 
 // ─── Custom Tools (OpenAI Function Schemas) ─────────────────────────────────
@@ -419,39 +411,65 @@ const CUSTOM_TOOLS = [
 
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
-// Module-level queue for PDF downloads generated during tool execution
-const pendingPdfDownloads: { title: string; url: string }[] = [];
+// ─── Action Tag Parser & PDF Renderer ────────────────────────────────────────
+// The backend streams [[ACTION:GENERATE_PDF|title|base64Content|pageSize|orientation]]
+// tags in the content. We parse them out, render the PDF client-side using pdfMake
+// (loaded via CDN in index.html), and show download buttons.
 
-/**
- * Render PDF data items received from backend SSE pdf_data events.
- * Uses pdfmake to generate downloadable PDF blobs client-side.
- */
-async function renderPdfDataItems(
-  items: PdfData[]
+const PDF_ACTION_REGEX = /\[\[ACTION:GENERATE_PDF\|((?:[^\]]|\][^\]])*?)\]\]/g;
+
+interface ParsedPdfAction {
+  title: string;
+  contentBase64: string;
+  pageSize: string;
+  pageOrientation: string;
+}
+
+function parsePdfActions(text: string): { cleanText: string; actions: ParsedPdfAction[] } {
+  const actions: ParsedPdfAction[] = [];
+  const cleanText = text.replace(PDF_ACTION_REGEX, (_match, paramStr: string) => {
+    const params = paramStr.split("|").map((p: string) => p.trim());
+    actions.push({
+      title: params[0] || "Document",
+      contentBase64: params[1] || "",
+      pageSize: params[2] || "A4",
+      pageOrientation: params[3] || "portrait",
+    });
+    return "";
+  });
+  return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), actions };
+}
+
+async function renderPdfActions(
+  actions: ParsedPdfAction[]
 ): Promise<{ title: string; url: string }[]> {
-  if (items.length === 0) return [];
-
-  const pdfMakeModule = await import("pdfmake/build/pdfmake");
-  const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
-  const pdfMake = pdfMakeModule.default || pdfMakeModule;
-  if (pdfFontsModule?.pdfMake?.vfs) {
-    pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
-  } else if ((pdfFontsModule as Record<string, unknown>).default) {
-    const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
-    if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
+  const pdfMake = (window as any).pdfMake;
+  if (!pdfMake) {
+    console.error("pdfMake CDN not loaded");
+    return [];
   }
 
   const downloads: { title: string; url: string }[] = [];
 
-  for (const pdfData of items) {
+  for (const action of actions) {
     try {
-      const title = String(pdfData.title || "Document");
+      const title = action.title;
+      let content: unknown[] = [];
+      try {
+        const decoded = atob(action.contentBase64);
+        content = JSON.parse(decoded);
+        if (!Array.isArray(content)) content = [content];
+      } catch {
+        // If base64 decode / JSON parse fails, try raw JSON
+        try { content = JSON.parse(action.contentBase64); } catch { content = [{ text: action.contentBase64 }]; }
+      }
+
       const docDefinition = {
-        pageSize: pdfData.pageSize || "A4",
-        pageOrientation: pdfData.pageOrientation || "portrait",
+        pageSize: action.pageSize || "A4",
+        pageOrientation: action.pageOrientation || "portrait",
         content: [
           { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
-          ...(pdfData.content || []),
+          ...content,
         ],
         defaultStyle: { fontSize: 11 },
         styles: {
@@ -462,15 +480,13 @@ async function renderPdfDataItems(
 
       const blob: Blob = await new Promise((resolve, reject) => {
         try {
-          const pdf = pdfMake.createPdf(docDefinition);
-          pdf.getBlob((b: Blob) => resolve(b));
+          pdfMake.createPdf(docDefinition).getBlob((b: Blob) => resolve(b));
         } catch (err) { reject(err); }
       });
 
-      const url = URL.createObjectURL(blob);
-      downloads.push({ title, url });
-    } catch {
-      // Skip failed PDF renders
+      downloads.push({ title, url: URL.createObjectURL(blob) });
+    } catch (err) {
+      console.error("PDF render failed:", err);
     }
   }
 
@@ -808,7 +824,6 @@ async function consumeStream(
   const toolCalls: (OpenAIToolCall & { _argFragments: string })[] = [];
   let finishReason: string | null = null;
   const statuses: StatusEvent[] = [];
-  const pdfDataItems: PdfData[] = [];
   let continuation: ContinuationState | undefined;
   let buffer = "";
 
@@ -844,24 +859,6 @@ async function consumeStream(
           onStatus(delta.custom_status);
         }
 
-        if (delta?.pdf_data) {
-          pdfDataItems.push(delta.pdf_data as PdfData);
-        }
-
-        // tool_result events carry full results from task_agent's internal tool calls
-        if (delta?.tool_result) {
-          const tr = delta.tool_result;
-          // Extract PDF data from generate_pdf tool results
-          if (tr.name === "generate_pdf" && tr.result?.type === "pdf") {
-            pdfDataItems.push({
-              title: tr.result.title,
-              content: tr.result.content,
-              pageSize: tr.result.pageSize,
-              pageOrientation: tr.result.pageOrientation,
-            });
-          }
-        }
-
         if (delta?.tool_calls) {
           for (const tc of delta.tool_calls) {
             const idx = tc.index ?? 0;
@@ -893,7 +890,6 @@ async function consumeStream(
     finishReason,
     statuses,
     continuation,
-    pdfDataItems,
   };
 }
 
@@ -1363,13 +1359,9 @@ export default function AIAgent() {
 
       // If tool_calls finish reason → execute custom tools on frontend, loop
       if (result.finishReason === "tool_calls" && result.toolCalls.length > 0) {
-        // Execute custom tools on frontend
         setIsStreaming(true);
         setStreamingContent("");
         setActiveStatuses([]);
-
-        // Clear any pending PDFs before execution
-        pendingPdfDownloads.length = 0;
 
         const toolResultMessages: ApiMessage[] = [];
         for (const tc of result.toolCalls) {
@@ -1387,14 +1379,19 @@ export default function AIAgent() {
           });
         }
 
-        // Drain any PDFs generated during tool execution
-        const pdfDownloads = pendingPdfDownloads.length > 0 ? [...pendingPdfDownloads] : undefined;
-        pendingPdfDownloads.length = 0;
+        // Parse action tags (GENERATE_PDF) from assistant content
+        const { cleanText, actions: pdfActions } = parsePdfActions(result.content || "");
+        let pdfDownloads: { title: string; url: string }[] | undefined;
+        if (pdfActions.length > 0) {
+          try {
+            const downloads = await renderPdfActions(pdfActions);
+            if (downloads.length > 0) pdfDownloads = downloads;
+          } catch { /* skip */ }
+        }
 
-        // Add UI message for the assistant response + tool calls + PDF downloads
         const uiMsg: UIMessage = {
           role: "assistant",
-          content: result.content || "",
+          content: cleanText,
           toolCalls: result.toolCalls,
           statuses: result.statuses.length > 0 ? result.statuses : undefined,
           pdfDownloads,
@@ -1409,22 +1406,19 @@ export default function AIAgent() {
         return { messages: messagesWithToolResults, done: false };
       }
 
-      // Normal stop — render any PDF data received via SSE pdf_data events
+      // Normal stop — parse action tags from content for PDF rendering
+      const { cleanText, actions: pdfActions } = parsePdfActions(result.content || "");
       let pdfDownloads: { title: string; url: string }[] | undefined;
-      if (result.pdfDataItems.length > 0) {
+      if (pdfActions.length > 0) {
         try {
-          const downloads = await renderPdfDataItems(result.pdfDataItems);
-          if (downloads.length > 0) {
-            pdfDownloads = downloads;
-          }
-        } catch {
-          // If PDF rendering fails, skip downloads
-        }
+          const downloads = await renderPdfActions(pdfActions);
+          if (downloads.length > 0) pdfDownloads = downloads;
+        } catch { /* skip */ }
       }
 
       const uiMsg: UIMessage = {
         role: "assistant",
-        content: result.content || "",
+        content: cleanText,
         statuses: result.statuses.length > 0 ? result.statuses : undefined,
         pdfDownloads,
         timestamp: new Date(),
