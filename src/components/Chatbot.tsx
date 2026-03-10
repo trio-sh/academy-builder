@@ -589,7 +589,7 @@ async function executeAction(
             { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
             ...content,
           ],
-          defaultStyle: { fontSize: 11 },
+          defaultStyle: { fontSize: 11, font: "Roboto" },
           styles: {
             header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
             subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
