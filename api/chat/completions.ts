@@ -948,7 +948,7 @@ function stripToolCalls(text: string): string {
 
 // ─── Tool Classification ─────────────────────────────────────────────────────
 
-const BUILTIN_TOOL_NAMES = new Set(["web_search", "web_extract", "image_generation", "task_agent"]);
+const BUILTIN_TOOL_NAMES = new Set(["web_search", "web_extract", "image_generation", "task_agent", "generate_pdf"]);
 
 function isBuiltinTool(name: string): boolean {
   return BUILTIN_TOOL_NAMES.has(name);
@@ -984,8 +984,9 @@ When calling task_agent:
 - If the user mentions "dark theme", include that in the prompt
 - Set a system_prompt like "You are an expert frontend developer" for code tasks
 
-## PDF Generation
-You have a **generate_pdf** tool to create downloadable PDF documents. Use it directly for simple PDFs (short reports, summaries, certificates with known content). For complex PDFs that require research, data gathering, or long-form content — delegate to task_agent instead and tell it to use generate_pdf after gathering the needed information.
+## PDF Generation — ALWAYS DELEGATE
+You have a **generate_pdf** tool, but you must NEVER call it directly. ALWAYS delegate PDF generation to **task_agent**. Tell the task_agent to use the generate_pdf tool. The task_agent is a more powerful model that can properly construct the pdfmake content nodes. Even for simple PDFs, delegate to task_agent — include the full user request and specify that the task_agent should call generate_pdf with structured pdfmake content.
+Example: To generate a sample PDF, call task_agent with prompt: "Generate a sample PDF document using the generate_pdf tool. Create a well-structured document with a title, introduction, table of contents, sample data table, and conclusion. Use the generate_pdf tool with title and content array of pdfmake nodes."
 
 For SIMPLE code questions (explain a function, fix a bug, short snippet), answer directly without task_agent.
 **Do NOT produce a blank/empty response.** If unsure whether to use task_agent, use it — it's better to delegate than return nothing.
@@ -1009,8 +1010,8 @@ Built-in tools (executed automatically):
 1. **web_search** - Search the web. Params: { "query": "search terms" }
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
-4. **generate_pdf** - Generate a downloadable PDF document. Params: { "title": "Document Title", "content": [pdfmake content nodes], "pageSize": "A4", "pageOrientation": "portrait" }. Content nodes support: text objects ({ "text": "...", "fontSize": 16, "bold": true }), tables ({ "table": { "headerRows": 1, "widths": ["*","*"], "body": [["A","B"],["1","2"]] } }), lists ({ "ul": ["item1","item2"] }), columns. Use directly for simple PDFs. For complex PDFs needing research/data, delegate to task_agent.
-5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation, generate_pdf). It can autonomously search the web, read pages, generate images, and create PDFs during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for HTML pages, landing pages, full websites, long code, research tasks, complex PDF reports, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
+4. **generate_pdf** - DO NOT call this tool directly. ALWAYS use task_agent for PDF generation instead. The task_agent has generate_pdf built in and is much better at constructing PDF content.
+5. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation, generate_pdf). It can autonomously search the web, read pages, generate images, and create PDFs during its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, ANY PDF generation, or any task needing a large output. For PDFs, tell the task_agent to use the generate_pdf tool with structured pdfmake content nodes. Do NOT pass a "model" parameter — the system selects the best model automatically.`;
 
   if (userTools && userTools.length > 0) {
     prompt += `\n\nCustom tools (provided by the caller):`;
@@ -1019,7 +1020,7 @@ Built-in tools (executed automatically):
       const params = fn.parameters
         ? ` Params: ${JSON.stringify(fn.parameters.properties ? Object.fromEntries(Object.entries(fn.parameters.properties).map(([k, v]: [string, any]) => [k, v.type || "any"])) : {})}`
         : "";
-      prompt += `\n${i + 5}. **${fn.name}** - ${fn.description || "No description"}.${params}`;
+      prompt += `\n${i + 6}. **${fn.name}** - ${fn.description || "No description"}.${params}`;
     });
   }
 

@@ -407,32 +407,86 @@ const CUSTOM_TOOLS = [
       },
     },
   },
-  {
-    type: "function" as const,
-    function: {
-      name: "generate_pdf",
-      description: `Generate a PDF document and give the user a download button. Pass a pdfmake document-definition object. Supported nodes: text, table, ul/ol lists, columns, images (base64). Example: { title: "Report", content: [{ text: "Hello", fontSize: 18, bold: true }, { text: "World" }] }. For tables use: { table: { headerRows: 1, widths: ["*","*"], body: [["Col A","Col B"],["val1","val2"]] } }. For lists: { ul: ["item 1","item 2"] }. Keep it concise.`,
-      parameters: {
-        type: "object",
-        properties: {
-          title: { type: "string", description: "Document title (also used as filename)" },
-          content: {
-            type: "array",
-            description: "Array of pdfmake content nodes (text objects, tables, lists, etc.)",
-          },
-          pageSize: { type: "string", description: "Page size: A4, LETTER, LEGAL", default: "A4" },
-          pageOrientation: { type: "string", enum: ["portrait", "landscape"], default: "portrait" },
-        },
-        required: ["title", "content"],
-      },
-    },
-  },
 ];
 
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
 
 // Module-level queue for PDF downloads generated during tool execution
 const pendingPdfDownloads: { title: string; url: string }[] = [];
+
+/**
+ * Extract PDF data from streamed response content. When the backend's task_agent
+ * calls generate_pdf, the result JSON gets embedded in the LLM's text response.
+ * This function finds those JSON blocks, renders them client-side with pdfmake,
+ * and returns download links.
+ */
+async function extractAndRenderPdfsFromContent(
+  content: string
+): Promise<{ cleanedContent: string; downloads: { title: string; url: string }[] }> {
+  const downloads: { title: string; url: string }[] = [];
+
+  // Match JSON objects that look like PDF results: {"type":"pdf",...}
+  const pdfJsonRegex = /\{[^{}]*"type"\s*:\s*"pdf"[^{}]*"content"\s*:\s*\[[\s\S]*?\]\s*[^{}]*\}/g;
+  const matches = content.match(pdfJsonRegex);
+
+  if (!matches || matches.length === 0) {
+    return { cleanedContent: content, downloads: [] };
+  }
+
+  for (const match of matches) {
+    try {
+      const pdfData = JSON.parse(match);
+      if (pdfData.type !== "pdf" || !pdfData.content) continue;
+
+      const pdfMakeModule = await import("pdfmake/build/pdfmake");
+      const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+      const pdfMake = pdfMakeModule.default || pdfMakeModule;
+      if (pdfFontsModule?.pdfMake?.vfs) {
+        pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+      } else if ((pdfFontsModule as Record<string, unknown>).default) {
+        const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
+        if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
+      }
+
+      const title = String(pdfData.title || "Document");
+      const docDefinition = {
+        pageSize: pdfData.pageSize || "A4",
+        pageOrientation: pdfData.pageOrientation || "portrait",
+        content: [
+          { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
+          ...pdfData.content,
+        ],
+        defaultStyle: { fontSize: 11 },
+        styles: {
+          header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
+          subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
+        },
+      };
+
+      const blob: Blob = await new Promise((resolve, reject) => {
+        try {
+          const pdf = pdfMake.createPdf(docDefinition);
+          pdf.getBlob((b: Blob) => resolve(b));
+        } catch (err) { reject(err); }
+      });
+
+      const url = URL.createObjectURL(blob);
+      downloads.push({ title, url });
+    } catch {
+      // Skip malformed PDF JSON
+    }
+  }
+
+  // Clean the PDF JSON from the displayed content
+  let cleanedContent = content;
+  for (const match of matches) {
+    cleanedContent = cleanedContent.replace(match, "");
+  }
+  // Clean up leftover whitespace/newlines from removed JSON
+  cleanedContent = cleanedContent.replace(/\n{3,}/g, "\n\n").trim();
+
+  return { cleanedContent, downloads };
+}
 
 // ─── DOM Helpers ─────────────────────────────────────────────────────────────
 
@@ -745,54 +799,6 @@ async function executeCustomTool(
       const s = Number(args.seconds) || 1;
       await delay(s * 1000);
       return `Waited ${s}s`;
-    }
-
-    case "generate_pdf": {
-      try {
-        const pdfMakeModule = await import("pdfmake/build/pdfmake");
-        const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
-        const pdfMake = pdfMakeModule.default || pdfMakeModule;
-        if (pdfFontsModule?.pdfMake?.vfs) {
-          pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
-        } else if ((pdfFontsModule as Record<string, unknown>).default) {
-          const vfsDef = (pdfFontsModule as Record<string, unknown>).default as Record<string, unknown>;
-          if (vfsDef.pdfMake) pdfMake.vfs = (vfsDef.pdfMake as Record<string, unknown>).vfs;
-        }
-
-        const title = String(args.title || "Document");
-        const content = args.content as unknown[];
-
-        // Build pdfmake document definition
-        const docDefinition = {
-          pageSize: args.pageSize || "A4",
-          pageOrientation: args.pageOrientation || "portrait",
-          content: [
-            { text: title, fontSize: 20, bold: true, margin: [0, 0, 0, 12] as number[] },
-            ...content,
-          ],
-          defaultStyle: { fontSize: 11 },
-          styles: {
-            header: { fontSize: 16, bold: true, margin: [0, 10, 0, 5] as number[] },
-            subheader: { fontSize: 13, bold: true, margin: [0, 8, 0, 4] as number[] },
-          },
-        };
-
-        // Generate the PDF as a blob
-        const blob: Blob = await new Promise((resolve, reject) => {
-          try {
-            const pdf = pdfMake.createPdf(docDefinition);
-            pdf.getBlob((b: Blob) => resolve(b));
-          } catch (err) { reject(err); }
-        });
-
-        const url = URL.createObjectURL(blob);
-        pendingPdfDownloads.push({ title, url });
-
-        return `PDF "${title}" generated successfully. A download button has been shown to the user.`;
-      } catch (err) {
-        console.error("PDF generation failed:", err);
-        return JSON.stringify({ error: `PDF generation failed: ${err instanceof Error ? err.message : String(err)}` });
-      }
     }
 
     default:
@@ -1394,11 +1400,24 @@ export default function AIAgent() {
         return { messages: messagesWithToolResults, done: false };
       }
 
-      // Normal stop — add to UI
+      // Normal stop — check for embedded PDF data from backend generate_pdf tool
+      let finalContent = result.content || "";
+      let pdfDownloads: { title: string; url: string }[] | undefined;
+      try {
+        const pdfResult = await extractAndRenderPdfsFromContent(finalContent);
+        if (pdfResult.downloads.length > 0) {
+          finalContent = pdfResult.cleanedContent;
+          pdfDownloads = pdfResult.downloads;
+        }
+      } catch {
+        // If PDF extraction fails, show original content
+      }
+
       const uiMsg: UIMessage = {
         role: "assistant",
-        content: result.content || "",
+        content: finalContent,
         statuses: result.statuses.length > 0 ? result.statuses : undefined,
+        pdfDownloads,
         timestamp: new Date(),
       };
       setUiMessages(prev => [...prev, uiMsg]);
