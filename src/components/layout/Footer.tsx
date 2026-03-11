@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Github, Twitter, Linkedin } from "lucide-react";
 
 const footerLinks = {
@@ -39,13 +40,13 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-gray-800">
+    <footer className="relative z-10 bg-black/95 backdrop-blur-xl border-t border-white/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center mb-6">
-              <div className="flex items-center">
+              <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
                 <img
                   src="/icon-192.png"
                   alt="The 3rd Academy Logo"
@@ -54,7 +55,7 @@ export function Footer() {
                 <span className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                   The 3rd Academy
                 </span>
-              </div>
+              </motion.div>
             </Link>
             <p className="text-sm text-gray-300 leading-relaxed mb-6">
               Bridging the gap between credentials and workplace readiness through
@@ -63,14 +64,16 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex items-center gap-3">
               {socialLinks.map((social) => (
-                <a
+                <motion.a
                   key={social.name}
                   href={social.href}
-                  className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800"
+                  className="w-9 h-9 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-black transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <social.icon className="w-4 h-4" />
                   <span className="sr-only">{social.name}</span>
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -83,7 +86,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-300 hover:text-white"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -100,7 +103,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-300 hover:text-white"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -117,7 +120,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-300 hover:text-white"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -134,7 +137,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-gray-300 hover:text-white"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -145,12 +148,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-16 pt-8 border-t border-white/30 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} The 3rd Academy. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-xs text-gray-400 bg-gray-900 px-3 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-black px-3 py-1 rounded-full">
               Behavioral Readiness Platform
             </span>
           </div>
