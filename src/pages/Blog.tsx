@@ -238,7 +238,7 @@ const Blog = () => {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
         <motion.div
           className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
           animate={{ scale: [1, 1.2, 1] }}
@@ -258,7 +258,7 @@ const Blog = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-white text-sm">
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
@@ -293,7 +293,7 @@ const Blog = () => {
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                className="w-full pl-12 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-indigo-500"
               />
               {searchQuery && (
                 <button
@@ -309,7 +309,7 @@ const Blog = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-8 border-b border-white/30">
+      <section className="py-8 border-b border-gray-700">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-3">
             {categories.map((category) => (
@@ -319,7 +319,7 @@ const Blog = () => {
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   selectedCategory === category
                     ? "bg-indigo-600 border border-indigo-500 text-white"
-                    : "bg-gray-900 border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
+                    : "bg-gray-900 border border-gray-700 text-gray-50 hover:border-gray-600 hover:text-white"
                 }`}
               >
                 {category}
@@ -346,7 +346,7 @@ const Blog = () => {
               <button onClick={() => setExpandedPost(featuredPost)} className="group block w-full text-left">
                 <div className="relative rounded-2xl overflow-hidden">
                   <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                  <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-gray-950 border border-gray-800">
                     <div className="aspect-video rounded-xl overflow-hidden">
                       <img
                         src={featuredPost.image}
@@ -392,7 +392,7 @@ const Blog = () => {
 
       {/* Blog Posts Grid */}
       <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950 to-black" />
         <div className="container mx-auto px-4 relative z-10">
           {filteredPosts.length === 0 ? (
             <motion.div
@@ -423,7 +423,7 @@ const Blog = () => {
                 >
                   <div className="relative h-full">
                     <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                    <div className="relative h-full rounded-2xl bg-black backdrop-blur-xl border border-white/30 overflow-hidden hover:border-indigo-500/30 transition-colors">
+                    <div className="relative h-full rounded-2xl bg-gray-950 border border-gray-800 overflow-hidden hover:border-indigo-500 transition-colors">
                       <div className="aspect-video overflow-hidden">
                         <img
                           src={post.image}
@@ -470,7 +470,7 @@ const Blog = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-black backdrop-blur-xl border border-white/30 text-center">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-gray-950 border border-gray-800 text-center">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                     Stay Updated
@@ -484,7 +484,7 @@ const Blog = () => {
                   <Input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                    className="flex-1 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   />
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">
@@ -511,7 +511,7 @@ const Blog = () => {
           >
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 bg-black"
               onClick={() => setExpandedPost(null)}
             />
 
@@ -523,11 +523,11 @@ const Blog = () => {
               exit={{ opacity: 0, y: 40, scale: 0.95 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
             >
-              <div className="relative rounded-2xl bg-gray-950 border border-white/10 overflow-hidden shadow-2xl">
+              <div className="relative rounded-2xl bg-gray-950 border border-gray-800 overflow-hidden shadow-2xl">
                 {/* Close button */}
                 <button
                   onClick={() => setExpandedPost(null)}
-                  className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -559,7 +559,7 @@ const Blog = () => {
                     {expandedPost.title}
                   </h2>
 
-                  <div className="flex items-center gap-3 mb-8 pb-8 border-b border-white/10">
+                  <div className="flex items-center gap-3 mb-8 pb-8 border-b border-gray-800">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
                       <User className="w-5 h-5 text-white" />
                     </div>
