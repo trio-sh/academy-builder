@@ -728,11 +728,11 @@ export const TrainingModuleViewer = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/training')}
-                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-black/80 hidden md:block" />
+              <div className="h-8 w-px bg-black hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
                 <h1 className="hidden md:block font-semibold text-lg text-white">
@@ -763,7 +763,7 @@ export const TrainingModuleViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={toggleMute}
-                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80`}
+                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black`}
                     title={isMuted ? 'Unmute narration' : 'Mute narration'}
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -777,7 +777,7 @@ export const TrainingModuleViewer = () => {
                   </div>
                 )}
               </div>
-              <div className="h-6 w-px bg-black/80 hidden md:block" />
+              <div className="h-6 w-px bg-black hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/30 border border-amber-500/20">
@@ -791,7 +791,7 @@ export const TrainingModuleViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
-                      : 'bg-black/80 border border-white/30'
+                      : 'bg-black border border-white/30'
                 }`}>
                   <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -811,7 +811,7 @@ export const TrainingModuleViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30'
-                      : 'bg-black/80 border border-white/30'
+                      : 'bg-black border border-white/30'
                 }`}>
                   <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -1002,7 +1002,7 @@ export const TrainingModuleViewer = () => {
                                   ? 'bg-emerald-500/20 border-emerald-500/50'
                                   : 'bg-red-500/20 border-red-500/50'
                                 : 'bg-indigo-500/20 border-indigo-500/50'
-                              : 'bg-black/80 border-white/30 hover:bg-black/80 hover:border-white/20'
+                              : 'bg-black border-white/30 hover:bg-black hover:border-white/20'
                           } ${showFeedback && choice.isCorrect ? 'bg-emerald-500/20 border-emerald-500/50' : ''}`}
                         >
                           <div className="flex items-start gap-3">
@@ -1089,7 +1089,7 @@ export const TrainingModuleViewer = () => {
                       value={reflectionText}
                       onChange={(e) => setReflectionText(e.target.value)}
                       placeholder="Write your reflection here..."
-                      className="w-full h-40 p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder-gray-500 focus:border-indigo-500/50 focus:outline-none resize-none"
+                      className="w-full h-40 p-4 rounded-xl bg-black border border-white/30 text-white placeholder-gray-500 focus:border-indigo-500/50 focus:outline-none resize-none"
                     />
                     <div className="flex items-center justify-between mt-2">
                       <span className={`text-sm ${
@@ -1123,7 +1123,7 @@ export const TrainingModuleViewer = () => {
                     <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
                     <div className="space-y-6">
                       {currentSceneWithAI.quiz?.map((q, qIndex) => (
-                        <div key={qIndex} className="p-4 rounded-xl bg-black/80 border border-white/30">
+                        <div key={qIndex} className="p-4 rounded-xl bg-black border border-white/30">
                           <p className="font-medium text-white mb-3">
                             {qIndex + 1}. {q.question}
                           </p>
@@ -1148,7 +1148,7 @@ export const TrainingModuleViewer = () => {
                                       : 'bg-indigo-500/20 border border-indigo-500/50'
                                     : quizSubmitted && oIndex === q.correctIndex
                                     ? 'bg-emerald-500/20 border border-emerald-500/50'
-                                    : 'bg-black/80 border border-white/30 hover:bg-black/80'
+                                    : 'bg-black border border-white/30 hover:bg-black'
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
@@ -1207,11 +1207,11 @@ export const TrainingModuleViewer = () => {
                     <h3 className="text-3xl font-bold text-white mb-4">{currentScene.content}</h3>
 
                     <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8">
-                      <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+                      <div className="p-4 rounded-xl bg-black border border-white/30">
                         <p className="text-2xl font-bold text-emerald-400">{totalScore}</p>
                         <p className="text-sm text-gray-400">Points Earned</p>
                       </div>
-                      <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+                      <div className="p-4 rounded-xl bg-black border border-white/30">
                         <p className="text-2xl font-bold text-indigo-400">{completedScenes}</p>
                         <p className="text-sm text-gray-400">Scenes Completed</p>
                       </div>
@@ -1278,7 +1278,7 @@ export const TrainingModuleViewer = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/30 text-gray-300 hover:bg-black/80 hover:text-white disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black hover:text-white disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

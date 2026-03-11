@@ -219,7 +219,7 @@ const Overview = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-6 rounded-xl bg-black/80 border border-white/30"
+            className="p-6 rounded-xl bg-black border border-white/30"
           >
             <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
             <p className="text-3xl font-bold text-white">{stat.value}</p>
@@ -277,7 +277,7 @@ const Overview = () => {
             {recentObservations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
+                className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
@@ -299,7 +299,7 @@ const Overview = () => {
             ))}
           </div>
         ) : (
-          <div className="p-8 rounded-xl bg-black/80 border border-white/30 text-center">
+          <div className="p-8 rounded-xl bg-black border border-white/30 text-center">
             <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No observations recorded yet</p>
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
@@ -438,7 +438,7 @@ const Students = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search students by name or ID..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
           />
         </div>
       </motion.div>
@@ -450,7 +450,7 @@ const Students = () => {
             {filteredStudents.map((student) => (
               <div
                 key={student.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-4 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -477,7 +477,7 @@ const Students = () => {
                           <span>Grade: {student.grade_level}</span>
                         )}
                         {student.cohort && (
-                          <span className="px-2 py-0.5 rounded bg-black/80">
+                          <span className="px-2 py-0.5 rounded bg-black">
                             {student.cohort.name}
                           </span>
                         )}
@@ -501,7 +501,7 @@ const Students = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-black/80"
+                      className="border-white/20 text-white hover:bg-black"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -511,7 +511,7 @@ const Students = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No students found</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -630,7 +630,7 @@ const Cohorts = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-black/80 border border-white/30"
+          className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Cohort</h2>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
@@ -641,7 +641,7 @@ const Cohorts = () => {
                 value={newCohort.name}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, name: e.target.value }))}
                 placeholder="e.g., Spring 2024"
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
@@ -651,7 +651,7 @@ const Cohorts = () => {
                 value={newCohort.program}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, program: e.target.value }))}
                 placeholder="e.g., Career Readiness"
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
@@ -660,7 +660,7 @@ const Cohorts = () => {
                 type="date"
                 value={newCohort.startDate}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, startDate: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-teal-500 focus:outline-none"
               />
             </div>
           </div>
@@ -668,7 +668,7 @@ const Cohorts = () => {
             <Button
               variant="outline"
               onClick={() => setShowNewCohort(false)}
-              className="border-white/20 text-white hover:bg-black/80"
+              className="border-white/20 text-white hover:bg-black"
             >
               Cancel
             </Button>
@@ -690,7 +690,7 @@ const Cohorts = () => {
             {cohorts.map((cohort) => (
               <div
                 key={cohort.id}
-                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -714,7 +714,7 @@ const Cohorts = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full mt-4 border-white/20 text-white hover:bg-black/80"
+                  className="w-full mt-4 border-white/20 text-white hover:bg-black"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   View Details
@@ -723,7 +723,7 @@ const Cohorts = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No cohorts created yet</p>
             <p className="text-sm text-gray-500 mt-1">Create cohorts to organize your students</p>
@@ -883,7 +883,7 @@ const Observations = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowNewObservation(false)}
         >
           <motion.div
@@ -903,7 +903,7 @@ const Observations = () => {
                 <select
                   value={selectedStudent?.id || ""}
                   onChange={(e) => setSelectedStudent(students.find(s => s.id === e.target.value) || null)}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-teal-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-teal-500 focus:outline-none"
                 >
                   <option value="">Choose a student...</option>
                   {students.map((student) => (
@@ -924,7 +924,7 @@ const Observations = () => {
                       value={observationForm.context}
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, context: e.target.value }))}
                       placeholder="e.g., Class project presentation"
-                      className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
                     />
                   </div>
 
@@ -948,7 +948,7 @@ const Observations = () => {
                                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                                   observationForm.scores[dimension] === score
                                     ? "bg-teal-600 text-white"
-                                    : "bg-black/80 text-gray-400 hover:bg-black/80"
+                                    : "bg-black text-gray-400 hover:bg-black"
                                 }`}
                               >
                                 {score}
@@ -968,7 +968,7 @@ const Observations = () => {
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Additional observations..."
                       rows={3}
-                      className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none resize-none"
                     />
                   </div>
                 </>
@@ -979,7 +979,7 @@ const Observations = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowNewObservation(false)}
-                className="flex-1 border-white/20 text-white hover:bg-black/80"
+                className="flex-1 border-white/20 text-white hover:bg-black"
               >
                 Cancel
               </Button>
@@ -1002,7 +1002,7 @@ const Observations = () => {
             {observations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30"
+                className="p-4 rounded-xl bg-black border border-white/30"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -1029,7 +1029,7 @@ const Observations = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No observations recorded yet</p>
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
@@ -1055,7 +1055,7 @@ const Analytics = () => {
       </motion.div>
 
       {/* Behavioral Dimension Overview */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <h2 className="text-lg font-semibold text-white mb-4">Behavioral Dimensions Average</h2>
         <div className="space-y-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension, index) => {
@@ -1063,7 +1063,7 @@ const Analytics = () => {
             return (
               <div key={dimension} className="flex items-center gap-4">
                 <span className="text-sm text-gray-400 w-40">{dimension}</span>
-                <div className="flex-1 h-3 bg-black/80 rounded-full overflow-hidden">
+                <div className="flex-1 h-3 bg-black rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-teal-500 to-cyan-500"
                     style={{ width: `${score}%` }}
@@ -1228,17 +1228,17 @@ const SchoolMessagesPage = () => {
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with mentors, candidates, employers, and other schools.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
               <div className="bg-black/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-teal-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-teal-500" /></div>}
                   {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
@@ -1269,7 +1269,7 @@ const SchoolMessagesPage = () => {
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-teal-500/30 border-l-2 border-teal-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-teal-500/30 border-l-2 border-teal-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-teal-400" />}
@@ -1318,7 +1318,7 @@ const SchoolMessagesPage = () => {
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
-                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-teal-600 text-white rounded-br-md" : "bg-black/80 text-gray-200 rounded-bl-md"}`}>
+                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-teal-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
@@ -1330,7 +1330,7 @@ const SchoolMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-white/30">
                 <div className="flex items-center gap-3">
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
                   <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-teal-600 hover:bg-teal-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -1366,7 +1366,7 @@ const SettingsPage = () => {
         <p className="text-gray-400">Manage your school profile and preferences.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <p className="text-gray-400">School settings will appear here.</p>
       </motion.div>
     </motion.div>
@@ -1435,7 +1435,7 @@ const SchoolDashboard = () => {
                   className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-teal-600/20 to-cyan-600/20 text-white border border-teal-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black/80"
+                      : "text-gray-400 hover:text-white hover:bg-black"
                   }`}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -1480,7 +1480,7 @@ const SchoolDashboard = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors`}
+              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors`}
               title={sidebarCollapsed ? "Sign Out" : undefined}
             >
               <LogOut className="w-4 h-4" />
@@ -1493,7 +1493,7 @@ const SchoolDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"

@@ -167,7 +167,7 @@ const Press = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="text-center p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
+                className="text-center p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
               >
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   {stat.value}
@@ -213,7 +213,7 @@ const Press = () => {
                 className="group block relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                     <Calendar className="w-4 h-4" />
                     {release.date}
@@ -266,7 +266,7 @@ const Press = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 h-full">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-semibold text-indigo-400">
                       {feature.outlet}
@@ -295,7 +295,7 @@ const Press = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 text-center md:text-left">
                     <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -325,7 +325,7 @@ const Press = () => {
                     ].map((item, index) => (
                       <div
                         key={index}
-                        className="w-24 h-24 rounded-xl bg-black/80 border border-white/30 flex flex-col items-center justify-center gap-2"
+                        className="w-24 h-24 rounded-xl bg-black border border-white/30 flex flex-col items-center justify-center gap-2"
                       >
                         <item.icon className="w-6 h-6 text-indigo-400" />
                         <span className="text-xs text-gray-50">{item.label}</span>
@@ -377,7 +377,7 @@ const Press = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-black/80"
+                className="border-white/20 text-white hover:bg-black"
                 asChild
               >
                 <Link to="/contact">

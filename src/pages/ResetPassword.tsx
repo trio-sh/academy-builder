@@ -107,7 +107,7 @@ const ResetPassword = () => {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        <div className="p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+        <div className="p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
           {isValidSession === null ? (
             <div className="text-center py-8">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mx-auto mb-4" />
@@ -133,7 +133,7 @@ const ResetPassword = () => {
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-black/80">
+                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-black">
                     Return to Login
                   </Button>
                 </Link>
@@ -195,7 +195,7 @@ const ResetPassword = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter new password"
                       required
-                      className="bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
+                      className="bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
                     />
                     <button
                       type="button"
@@ -213,7 +213,7 @@ const ResetPassword = () => {
                           <div
                             key={i}
                             className={`h-1 flex-1 rounded-full ${
-                              i <= passwordStrength.strength ? passwordStrength.color : "bg-black/80"
+                              i <= passwordStrength.strength ? passwordStrength.color : "bg-black"
                             }`}
                           />
                         ))}
@@ -239,7 +239,7 @@ const ResetPassword = () => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm new password"
                       required
-                      className="bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
+                      className="bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
                     />
                     <button
                       type="button"
@@ -257,7 +257,7 @@ const ResetPassword = () => {
                   )}
                 </div>
 
-                <div className="p-3 rounded-lg bg-black/80 border border-white/30">
+                <div className="p-3 rounded-lg bg-black border border-white/30">
                   <p className="text-xs text-gray-400">Password requirements:</p>
                   <ul className="text-xs text-gray-500 mt-1 space-y-0.5">
                     <li className={password.length >= 8 ? "text-emerald-400" : ""}>

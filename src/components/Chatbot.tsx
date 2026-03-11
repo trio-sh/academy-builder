@@ -1321,7 +1321,7 @@ export function Chatbot() {
                   className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors ${
                     screenAware
                       ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                      : "bg-black/80 text-gray-500 border border-white/10"
+                      : "bg-black text-gray-500 border border-white/10"
                   }`}
                   title={screenAware ? "Screen awareness ON" : "Screen awareness OFF"}
                 >
@@ -1333,14 +1333,14 @@ export function Chatbot() {
                     variant="ghost"
                     size="sm"
                     onClick={clearChat}
-                    className="text-gray-400 hover:text-white hover:bg-black/80 text-xs"
+                    className="text-gray-400 hover:text-white hover:bg-black text-xs"
                   >
                     Clear
                   </Button>
                 )}
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-black/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -1397,7 +1397,7 @@ export function Chatbot() {
                       <motion.button
                         key={reply}
                         onClick={() => sendMessage(reply)}
-                        className="px-3 py-2 text-sm rounded-xl bg-black/80 border border-white/30 text-gray-300 hover:bg-black/80 hover:border-white/20 transition-colors"
+                        className="px-3 py-2 text-sm rounded-xl bg-black border border-white/30 text-gray-300 hover:bg-black hover:border-white/20 transition-colors"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -1420,7 +1420,7 @@ export function Chatbot() {
                     className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5 ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-indigo-600 to-purple-600"
-                        : "bg-black/80 border border-white/10"
+                        : "bg-black border border-white/10"
                     }`}
                   >
                     {message.role === "user" ? (
@@ -1485,10 +1485,10 @@ export function Chatbot() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-black/80 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center">
                     <Bot className="w-4 h-4 text-indigo-400" />
                   </div>
-                  <div className="p-3 rounded-2xl rounded-tl-sm bg-black/80 border border-white/30">
+                  <div className="p-3 rounded-2xl rounded-tl-sm bg-black border border-white/30">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
@@ -1512,7 +1512,7 @@ export function Chatbot() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={isExecuting ? "Executing actions..." : "Ask me anything or tell me to do something..."}
-                  className="flex-1 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                  className="flex-1 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   disabled={isTyping || isExecuting}
                 />
                 <motion.button

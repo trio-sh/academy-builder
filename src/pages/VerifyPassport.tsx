@@ -143,7 +143,7 @@ const VerifyPassport = () => {
           <h1 className="text-2xl font-bold text-white mb-2">Verification Failed</h1>
           <p className="text-gray-400 mb-6">{error || "This Skill Passport could not be verified."}</p>
           <Link to="/">
-            <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
+            <Button variant="outline" className="border-white/20 text-white hover:bg-black">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Return Home
             </Button>
@@ -295,13 +295,13 @@ const VerifyPassport = () => {
               return (
                 <div
                   key={dimension.id}
-                  className="p-4 rounded-xl bg-black/80 border border-white/30"
+                  className="p-4 rounded-xl bg-black border border-white/30"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-white">{dimension.label}</span>
                     <span className="text-lg font-bold text-white">{score.toFixed(1)}/5</span>
                   </div>
-                  <div className="h-2 bg-black/80 rounded-full overflow-hidden">
+                  <div className="h-2 bg-black rounded-full overflow-hidden">
                     <div
                       className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
                       style={{ width: `${percentage}%` }}
@@ -344,7 +344,7 @@ const VerifyPassport = () => {
               {candidateProfile.skills.map((skill, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1.5 rounded-full bg-black/80 text-gray-300 text-sm"
+                  className="px-3 py-1.5 rounded-full bg-black text-gray-300 text-sm"
                 >
                   {skill}
                 </span>
@@ -358,7 +358,7 @@ const VerifyPassport = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="p-4 rounded-xl bg-black/80 border border-white/30 text-center"
+          className="p-4 rounded-xl bg-black border border-white/30 text-center"
         >
           <p className="text-sm text-gray-400 mb-1">Verification Code</p>
           <p className="text-lg font-mono font-bold text-white tracking-wider">
@@ -372,7 +372,7 @@ const VerifyPassport = () => {
         {/* Footer */}
         <div className="mt-8 text-center">
           <Link to="/">
-            <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
+            <Button variant="outline" className="border-white/20 text-white hover:bg-black">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Return to The 3rd Academy
             </Button>

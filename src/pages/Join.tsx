@@ -179,7 +179,7 @@ const Join = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -218,13 +218,13 @@ const Join = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-black/80 text-gray-50 border border-white/30"
+                          : "bg-black text-gray-50 border border-white/30"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
                     </motion.div>
                     {s < 3 && (
-                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black/80")} />
+                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black")} />
                     )}
                   </div>
                 ))}
@@ -246,8 +246,8 @@ const Join = () => {
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
                           selectedRole === role.id
-                            ? "bg-black/80 border-2 border-indigo-500/50"
-                            : "bg-black/80 border border-white/30 hover:border-white/30"
+                            ? "bg-black border-2 border-indigo-500/50"
+                            : "bg-black border border-white/30 hover:border-white/30"
                         )}
                         whileHover={{ y: -5 }}
                       >
@@ -311,7 +311,7 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -339,7 +339,7 @@ const Join = () => {
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white"
+                              className="bg-black border-white/20 text-white"
                             />
                           </div>
                           <div className="space-y-2">
@@ -349,7 +349,7 @@ const Join = () => {
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white"
+                              className="bg-black border-white/20 text-white"
                             />
                           </div>
                         </div>
@@ -362,7 +362,7 @@ const Join = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black/80 border-white/20 text-white"
+                            className="bg-black border-white/20 text-white"
                           />
                         </div>
 
@@ -375,7 +375,7 @@ const Join = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black/80 border-white/20 text-white"
+                            className="bg-black border-white/20 text-white"
                           />
                         </div>
 
@@ -389,7 +389,7 @@ const Join = () => {
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white"
+                                className="bg-black border-white/20 text-white"
                               />
                             </div>
                             <div className="space-y-2">
@@ -400,7 +400,7 @@ const Join = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white"
+                                className="bg-black border-white/20 text-white"
                               />
                             </div>
                           </>
@@ -414,7 +414,7 @@ const Join = () => {
                               value={schoolName}
                               onChange={(e) => setSchoolName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white"
+                              className="bg-black border-white/20 text-white"
                             />
                           </div>
                         )}
@@ -429,7 +429,7 @@ const Join = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white"
+                                className="bg-black border-white/20 text-white"
                               />
                             </div>
                             <div className="space-y-2">
@@ -440,7 +440,7 @@ const Join = () => {
                                 value={yearsExperience}
                                 onChange={(e) => setYearsExperience(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white"
+                                className="bg-black border-white/20 text-white"
                               />
                             </div>
                           </>
@@ -452,7 +452,7 @@ const Join = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-black/80"
+                          className="flex-1 border-white/20 text-white hover:bg-black"
                         >
                           Back
                         </Button>
@@ -484,7 +484,7 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>

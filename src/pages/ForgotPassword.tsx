@@ -54,7 +54,7 @@ const ForgotPassword = () => {
           Back to Login
         </Link>
 
-        <div className="p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+        <div className="p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
           {success ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -79,7 +79,7 @@ const ForgotPassword = () => {
                     setEmail("");
                   }}
                   variant="outline"
-                  className="w-full border-white/20 text-white hover:bg-black/80"
+                  className="w-full border-white/20 text-white hover:bg-black"
                 >
                   Try Another Email
                 </Button>
@@ -123,7 +123,7 @@ const ForgotPassword = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                    className="bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   />
                 </div>
 

@@ -344,7 +344,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity" />
             <div className="relative">
@@ -366,12 +366,12 @@ const Overview = () => {
             <Link
               key={index}
               to={step.href}
-              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 step.completed
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-black/80 text-gray-400"
+                  : "bg-black text-gray-400"
               }`}>
                 {step.completed ? (
                   <CheckCircle className="w-5 h-5" />
@@ -403,7 +403,7 @@ const Overview = () => {
               return (
                 <div
                   key={entry.id}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-black/80 border border-white/30"
+                  className="flex items-start gap-4 p-4 rounded-xl bg-black border border-white/30"
                 >
                   <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
                     <Icon className="w-5 h-5 text-indigo-400" />
@@ -427,7 +427,7 @@ const Overview = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
             <AlertCircle className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No recent activity</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -824,7 +824,7 @@ const SkillPassport = () => {
             ].map((item) => (
               <div
                 key={item.step}
-                className="p-6 rounded-xl bg-black/80 border border-white/30"
+                className="p-6 rounded-xl bg-black border border-white/30"
               >
                 <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold mb-4">
                   {item.step}
@@ -858,7 +858,7 @@ const SkillPassport = () => {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-black/80"
+            className="border-white/20 text-white hover:bg-black"
             onClick={sharePassport}
           >
             <Share2 className="w-4 h-4 mr-2" />
@@ -975,13 +975,13 @@ const SkillPassport = () => {
             return (
               <div
                 key={dimension.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30"
+                className="p-4 rounded-xl bg-black border border-white/30"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-white">{dimension.label}</span>
                   <span className="text-lg font-bold text-white">{score.toFixed(1)}/4</span>
                 </div>
-                <div className="h-2 bg-black/80 rounded-full overflow-hidden">
+                <div className="h-2 bg-black rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -1014,7 +1014,7 @@ const SkillPassport = () => {
 
       {/* Verification Info */}
       <motion.div variants={itemVariants}>
-        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-4 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-emerald-400" />
             <p className="text-sm text-gray-400">
@@ -1246,7 +1246,7 @@ const GrowthLog = () => {
       {viewMode === "charts" && (
         <>
           {/* Activity Trends Chart */}
-          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
             <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -1291,7 +1291,7 @@ const GrowthLog = () => {
 
           {/* Behavioral Dimensions Radar */}
           <div className="grid md:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1327,7 +1327,7 @@ const GrowthLog = () => {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
               <div className="space-y-3">
                 {eventDistribution.map((item) => {
@@ -1339,7 +1339,7 @@ const GrowthLog = () => {
                         <span className="text-gray-400">{item.type}</span>
                         <span className="text-white font-medium">{item.count}</span>
                       </div>
-                      <div className="h-2 bg-black/80 rounded-full overflow-hidden">
+                      <div className="h-2 bg-black rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
@@ -1380,7 +1380,7 @@ const GrowthLog = () => {
                         <Icon className="w-5 h-5 text-white" />
                       </div>
 
-                      <div className="p-5 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors">
+                      <div className="p-5 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors">
                         <div className="flex items-start justify-between mb-2">
                           <h3 className="font-semibold text-white">{entry.title}</h3>
                           <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
@@ -1395,7 +1395,7 @@ const GrowthLog = () => {
                           <p className="text-sm text-gray-400">{entry.description}</p>
                         )}
                         {entry.source_component && (
-                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-black/80 text-gray-400">
+                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-black text-gray-400">
                             {entry.source_component}
                           </span>
                         )}
@@ -1408,7 +1408,7 @@ const GrowthLog = () => {
           ) : (
             <motion.div
               variants={itemVariants}
-              className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+              className="p-8 rounded-2xl bg-black border border-white/30 text-center"
             >
               <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400">No entries yet</p>
@@ -1694,7 +1694,7 @@ const ObservationPathway = () => {
               { step: "2", title: "Dimensions Assigned", desc: "Your mentor selects behavioral dimensions for observation" },
               { step: "3", title: "Begin Observations", desc: "Complete L1–L4 observation sessions on assigned dimensions" },
             ].map((item) => (
-              <div key={item.step} className="p-4 rounded-xl bg-black/80 border border-white/10">
+              <div key={item.step} className="p-4 rounded-xl bg-black border border-white/10">
                 <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm mb-3">
                   {item.step}
                 </div>
@@ -1724,7 +1724,7 @@ const ObservationPathway = () => {
           </p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black/80 border border-white/10 text-center">
+        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black border border-white/10 text-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
             <Clock className="w-8 h-8 text-amber-400" />
           </div>
@@ -1800,7 +1800,7 @@ const ObservationPathway = () => {
                   { icon: Clock, text: "Timed Scenarios" },
                   { icon: ClipboardCheck, text: "Evidence Documented" },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 text-sm text-gray-300">
+                  <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-sm text-gray-300">
                     <item.icon className="w-4 h-4 text-emerald-400" />
                     {item.text}
                   </div>
@@ -1830,7 +1830,7 @@ const ObservationPathway = () => {
             const completedLevels = dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').length;
 
             return (
-              <div key={dim.id} className="p-5 rounded-xl bg-black/80 border border-white/10">
+              <div key={dim.id} className="p-5 rounded-xl bg-black border border-white/10">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold text-white">{dim.label}</h3>
@@ -1891,7 +1891,7 @@ const ObservationPathway = () => {
               .map((fb, i) => {
                 const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === fb.dimension_id);
                 return (
-                  <div key={i} className="p-4 rounded-xl bg-black/80 border border-white/10">
+                  <div key={i} className="p-4 rounded-xl bg-black border border-white/10">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-400">
@@ -1915,7 +1915,7 @@ const ObservationPathway = () => {
 
       {/* BARS Scale Reference */}
       <motion.div variants={itemVariants}>
-        <div className="p-4 rounded-xl bg-black/80 border border-white/10">
+        <div className="p-4 rounded-xl bg-black border border-white/10">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">4-Point BARS Scoring Reference</h3>
           <div className="grid grid-cols-4 gap-3">
             {[
@@ -2163,13 +2163,13 @@ const SelfAssessmentPage = () => {
                   ? "bg-indigo-600 text-white"
                   : activeStep > index
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-black/80 text-gray-400 hover:bg-black/80"
+                  : "bg-black text-gray-400 hover:bg-black"
               }`}
             >
               {activeStep > index ? (
                 <CheckCircle className="w-4 h-4" />
               ) : (
-                <span className="w-5 h-5 rounded-full bg-black/80 flex items-center justify-center text-xs">
+                <span className="w-5 h-5 rounded-full bg-black flex items-center justify-center text-xs">
                   {index + 1}
                 </span>
               )}
@@ -2230,7 +2230,7 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Quick Reflection */}
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <div className="flex flex-col md:flex-row items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center">
                   <Sliders className="w-7 h-7 text-gray-400" />
@@ -2243,7 +2243,7 @@ const SelfAssessmentPage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="border-white/20 text-gray-300 hover:bg-black/80"
+                    className="border-white/20 text-gray-300 hover:bg-black"
                     onClick={() => setActiveStep(1)}
                   >
                     Start Quick Reflection
@@ -2261,7 +2261,7 @@ const SelfAssessmentPage = () => {
                 { icon: Users, text: "Prepare for mentor observations", color: "text-purple-400" },
                 { icon: Award, text: "Personal development only", color: "text-amber-400" },
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-black/80 border border-white/30 text-center">
+                <div key={i} className="p-4 rounded-xl bg-black border border-white/30 text-center">
                   <item.icon className={`w-6 h-6 ${item.color} mx-auto mb-2`} />
                   <span className="text-sm text-gray-400">{item.text}</span>
                 </div>
@@ -2270,14 +2270,14 @@ const SelfAssessmentPage = () => {
 
             {/* Readiness Reflection History */}
             {assessments.length > 0 && (
-              <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+              <div className="p-6 rounded-2xl bg-black border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">Your Readiness Reflections</h3>
                 <div className="space-y-3">
                   {assessments.slice(0, 3).map((assessment, i) => {
                     const scores = assessment.behavioral_scores as Record<string, number>;
                     const overall = scores ? Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 0;
                     return (
-                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-black/80">
+                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-black">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
                             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
@@ -2305,7 +2305,7 @@ const SelfAssessmentPage = () => {
         {/* Rate Skills Step */}
         {activeStep === 1 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Rate Your Behavioral Skills</h2>
               <p className="text-gray-400 mb-6">
                 Use the sliders to rate yourself on each dimension from 1 (Beginning) to 5 (Excellent).
@@ -2317,7 +2317,7 @@ const SelfAssessmentPage = () => {
                   const score = currentScores[dim.id] || 3;
 
                   return (
-                    <div key={dim.id} className="p-4 rounded-xl bg-black/80 border border-white/30">
+                    <div key={dim.id} className="p-4 rounded-xl bg-black border border-white/30">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h3 className="font-semibold text-white">{info.title}</h3>
@@ -2336,7 +2336,7 @@ const SelfAssessmentPage = () => {
                         step="0.5"
                         value={score}
                         onChange={(e) => setCurrentScores({ ...currentScores, [dim.id]: parseFloat(e.target.value) })}
-                        className="w-full h-2 bg-black/80 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                        className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-indigo-500"
                       />
 
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -2349,7 +2349,7 @@ const SelfAssessmentPage = () => {
 
                       <div className="mt-3 flex flex-wrap gap-2">
                         {info.examples.map((ex) => (
-                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-black/80 text-gray-400">
+                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-black text-gray-400">
                             {ex}
                           </span>
                         ))}
@@ -2361,7 +2361,7 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Radar Preview */}
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h3 className="text-lg font-semibold text-white mb-4">Your Skills Profile</h3>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
@@ -2403,7 +2403,7 @@ const SelfAssessmentPage = () => {
         {/* Reflect Step */}
         {activeStep === 2 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Identify Your Strengths</h2>
               <p className="text-gray-400 mb-6">
                 Select up to 3 dimensions that you consider your strongest areas.
@@ -2417,13 +2417,13 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       strengths.includes(dim.id)
                         ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
-                        : "bg-black/80 border-white/30 hover:border-white/20"
+                        : "bg-black border-white/30 hover:border-white/20"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-black/80"
+                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-black"
                         }`}
                       >
                         {strengths.includes(dim.id) ? (
@@ -2446,7 +2446,7 @@ const SelfAssessmentPage = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Areas for Improvement</h2>
               <p className="text-gray-400 mb-6">
                 Select up to 3 dimensions you want to focus on improving.
@@ -2460,13 +2460,13 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       improvements.includes(dim.id)
                         ? "bg-amber-500/20 border-amber-500/50 ring-2 ring-amber-500/30"
-                        : "bg-black/80 border-white/30 hover:border-white/20"
+                        : "bg-black border-white/30 hover:border-white/20"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-black/80"
+                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-black"
                         }`}
                       >
                         {improvements.includes(dim.id) ? (
@@ -2489,13 +2489,13 @@ const SelfAssessmentPage = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-4">Additional Notes</h2>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add any reflections on your current skill levels..."
-                className="w-full p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={4}
               />
             </div>
@@ -2518,7 +2518,7 @@ const SelfAssessmentPage = () => {
         {/* Goals Step */}
         {activeStep === 3 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-2">Set Your Goals</h2>
               <p className="text-gray-400 mb-6">
                 What do you want to achieve in your professional development journey?
@@ -2528,13 +2528,13 @@ const SelfAssessmentPage = () => {
                 value={goals}
                 onChange={(e) => setGoals(e.target.value)}
                 placeholder="Example: I want to improve my communication skills by actively participating in team meetings and seeking feedback from my mentor. I also aim to develop better time management habits by using task prioritization techniques..."
-                className="w-full p-4 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={6}
               />
             </div>
 
             {improvements.length > 0 && (
-              <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+              <div className="p-6 rounded-2xl bg-black border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">Suggested Focus Areas</h3>
                 <p className="text-gray-400 mb-4">Based on your areas for improvement:</p>
 
@@ -2542,7 +2542,7 @@ const SelfAssessmentPage = () => {
                   {improvements.map((imp) => {
                     const info = ASSESSMENT_DESCRIPTIONS[imp];
                     return (
-                      <div key={imp} className="p-4 rounded-xl bg-black/80 border border-white/30">
+                      <div key={imp} className="p-4 rounded-xl bg-black border border-white/30">
                         <h4 className="font-medium text-white mb-2">{info.title}</h4>
                         <ul className="text-sm text-gray-400 space-y-1">
                           {info.examples.map((ex) => (
@@ -2577,7 +2577,7 @@ const SelfAssessmentPage = () => {
         {/* Review Step */}
         {activeStep === 4 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black/80 border border-white/30">
+            <div className="p-6 rounded-2xl bg-black border border-white/30">
               <h2 className="text-xl font-semibold text-white mb-6">Review Your Readiness Reflection</h2>
 
               {/* Readiness Profile */}
@@ -2595,7 +2595,7 @@ const SelfAssessmentPage = () => {
               {/* Skills Grid */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {BEHAVIORAL_DIMENSIONS.map((dim) => (
-                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-black/80">
+                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-black">
                     <span className="text-gray-300">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
                     <span className={`font-semibold ${getScoreColor(currentScores[dim.id])}`}>
                       {currentScores[dim.id].toFixed(1)}
@@ -2687,7 +2687,7 @@ const SelfAssessmentPage = () => {
 
       {/* Previous Readiness Reflections */}
       {assessments.length > 0 && (
-        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-black/80 border border-white/30">
+        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-black border border-white/30">
           <h2 className="text-xl font-semibold text-white mb-4">Reflection History</h2>
           <div className="space-y-3">
             {assessments.slice(0, 5).map((assessment) => {
@@ -2697,7 +2697,7 @@ const SelfAssessmentPage = () => {
               return (
                 <div
                   key={assessment.id}
-                  className="flex items-center justify-between p-4 rounded-xl bg-black/80 hover:bg-black/80 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-black hover:bg-black transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
@@ -2846,17 +2846,17 @@ const Training = () => {
 
       {/* Progress Overview */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <BookOpen className="w-8 h-8 text-indigo-400 mb-3" />
           <p className="text-3xl font-bold text-white">{INTERACTIVE_MODULES.length}</p>
           <p className="text-sm text-gray-400">Total Programs</p>
         </div>
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <Play className="w-8 h-8 text-amber-400 mb-3" />
           <p className="text-3xl font-bold text-white">{inProgressCount}</p>
           <p className="text-sm text-gray-400">In Progress</p>
         </div>
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <CheckCircle className="w-8 h-8 text-emerald-400 mb-3" />
           <p className="text-3xl font-bold text-white">{completedCount}</p>
           <p className="text-sm text-gray-400">Completed</p>
@@ -2882,7 +2882,7 @@ const Training = () => {
                     ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
                     : isCompleted
                     ? 'bg-emerald-500/30 border-emerald-500/30 hover:border-emerald-500/50'
-                    : 'bg-black/80 border-white/30 hover:border-white/30'
+                    : 'bg-black border-white/30 hover:border-white/30'
                 }`}
                 onClick={() => !locked && openModule(module.slug)}
               >
@@ -2943,13 +2943,13 @@ const Training = () => {
                     {module.competencies.slice(0, 3).map((comp, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400"
+                        className="px-2 py-0.5 rounded text-xs bg-black text-gray-400"
                       >
                         {comp}
                       </span>
                     ))}
                     {module.competencies.length > 3 && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
                         +{module.competencies.length - 3}
                       </span>
                     )}
@@ -2962,7 +2962,7 @@ const Training = () => {
                         <span className="text-gray-400">Progress</span>
                         <span className="text-amber-400">{moduleProgress.progress_percent}%</span>
                       </div>
-                      <div className="h-1.5 bg-black/80 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-black rounded-full overflow-hidden">
                         <div
                           className={`h-full bg-gradient-to-r ${module.color} transition-all`}
                           style={{ width: `${moduleProgress.progress_percent}%` }}
@@ -3176,7 +3176,7 @@ const Projects = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "browse"
               ? "bg-indigo-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           Browse Projects
@@ -3186,7 +3186,7 @@ const Projects = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "applied"
               ? "bg-indigo-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           My Applications
@@ -3208,7 +3208,7 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                  className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -3265,7 +3265,7 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No open projects available</p>
@@ -3282,7 +3282,7 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-black/80 border border-white/30"
+                  className="p-6 rounded-xl bg-black border border-white/30"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -3314,7 +3314,7 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No applications yet</p>
@@ -3335,7 +3335,7 @@ const Projects = () => {
       {showApplyModal && selectedProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/80"
+            className="absolute inset-0 bg-black"
             onClick={() => !isSubmitting && setShowApplyModal(false)}
           />
           <motion.div
@@ -3367,7 +3367,7 @@ const Projects = () => {
                 </div>
 
                 {/* Project Preview */}
-                <div className="p-4 rounded-xl bg-black/80 mb-6">
+                <div className="p-4 rounded-xl bg-black mb-6">
                   <h3 className="font-semibold text-white">{selectedProject.title}</h3>
                   <div className="flex items-center gap-3 mt-2 text-sm">
                     <span className="text-purple-400">{selectedProject.category}</span>
@@ -3394,7 +3394,7 @@ const Projects = () => {
                     onChange={(e) => setCoverLetter(e.target.value)}
                     placeholder="Tell the employer why you're a great fit for this project..."
                     rows={5}
-                    className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -3404,7 +3404,7 @@ const Projects = () => {
                     variant="outline"
                     onClick={() => setShowApplyModal(false)}
                     disabled={isSubmitting}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Cancel
                   </Button>
@@ -3613,7 +3613,7 @@ const Connections = () => {
                     variant="outline"
                     onClick={() => respondToConnection(connection.id, false)}
                     disabled={respondingTo === connection.id}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     <ThumbsDown className="w-4 h-4 mr-2" />
                     Decline
@@ -3633,7 +3633,7 @@ const Connections = () => {
             {respondedConnections.map((connection) => (
               <div
                 key={connection.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4"
+                className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   connection.status === "accepted"
@@ -3669,7 +3669,7 @@ const Connections = () => {
             ))}
           </div>
         ) : pendingConnections.length === 0 ? (
-          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No connection requests yet</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -4228,7 +4228,7 @@ const Profile = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Avatar and basic info */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative group">
               {profile?.avatar_url ? (
@@ -4292,7 +4292,7 @@ const Profile = () => {
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.first_name}</p>
@@ -4305,7 +4305,7 @@ const Profile = () => {
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.last_name}</p>
@@ -4315,7 +4315,7 @@ const Profile = () => {
         </div>
 
         {/* Resume Upload */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-white">Resume</h3>
@@ -4350,7 +4350,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-4 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4359,7 +4359,7 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
@@ -4375,7 +4375,7 @@ const Profile = () => {
 
               {/* Replace option */}
               <div className="pt-2 border-t border-white/30">
-                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-black/80 transition-colors text-sm">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-black transition-colors text-sm">
                   <Upload className="w-4 h-4" />
                   Replace Resume
                   <input
@@ -4491,7 +4491,7 @@ const Profile = () => {
         )}
 
         {/* Headline and Bio */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="mb-4">
             <label className="text-sm text-gray-400 block mb-2">Headline</label>
             {isEditing ? (
@@ -4500,7 +4500,7 @@ const Profile = () => {
                 value={formData.headline}
                 onChange={(e) => setFormData((prev) => ({ ...prev, headline: e.target.value }))}
                 placeholder="e.g., Software Developer | Career Changer"
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
               />
             ) : (
               <p className="text-white">{formData.headline || "No headline set"}</p>
@@ -4514,7 +4514,7 @@ const Profile = () => {
                 onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
                 placeholder="Tell us about yourself..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
               />
             ) : (
               <p className="text-white whitespace-pre-wrap">{formData.bio || "No bio set"}</p>
@@ -4523,7 +4523,7 @@ const Profile = () => {
         </div>
 
         {/* Location */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <label className="text-sm text-gray-400 block mb-2">Location</label>
           {isEditing ? (
             <input
@@ -4531,7 +4531,7 @@ const Profile = () => {
               value={formData.location}
               onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
               placeholder="City, State"
-              className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
             />
           ) : (
             <p className="text-white">{formData.location || "Not specified"}</p>
@@ -4539,7 +4539,7 @@ const Profile = () => {
         </div>
 
         {/* Skills */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <label className="text-sm text-gray-400 block mb-3">Skills</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.skills.map((skill) => (
@@ -4567,7 +4567,7 @@ const Profile = () => {
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                 placeholder="Add a skill..."
-                className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
               />
               <Button onClick={addSkill} size="sm" className="bg-indigo-600 hover:bg-indigo-500">
                 <Plus className="w-4 h-4" />
@@ -4606,7 +4606,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-3 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4615,14 +4615,14 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2 rounded-lg bg-black/80 text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
                 </a>
                 <button
                   onClick={() => setShowResumeViewer(false)}
-                  className="p-2 rounded-lg hover:bg-black/80 text-gray-400 hover:text-white transition-colors"
+                  className="p-2 rounded-lg hover:bg-black text-gray-400 hover:text-white transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -4660,7 +4660,7 @@ const Profile = () => {
                       href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl bg-black/80 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-black hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
                     >
                       <ExternalLink className="w-5 h-5" />
                       Open with Google Docs
@@ -4752,7 +4752,7 @@ const SettingsPage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -4769,11 +4769,11 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-black/80"
+            className="border-white/20 text-white hover:bg-black"
             onClick={() => {
               setPasswordForm({ newPassword: "", confirmPassword: "" });
               setPasswordError(null);
@@ -4787,20 +4787,20 @@ const SettingsPage = () => {
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Progress updates</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Project opportunities</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
           </div>
         </div>
@@ -4825,7 +4825,7 @@ const SettingsPage = () => {
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/80"
+            className="absolute inset-0 bg-black"
             onClick={() => !isChangingPassword && setShowPasswordModal(false)}
           />
           <motion.div
@@ -4872,7 +4872,7 @@ const SettingsPage = () => {
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
                         placeholder="Enter new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -4891,7 +4891,7 @@ const SettingsPage = () => {
                         value={passwordForm.confirmPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
                         placeholder="Confirm new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -4913,7 +4913,7 @@ const SettingsPage = () => {
                     variant="outline"
                     onClick={() => setShowPasswordModal(false)}
                     disabled={isChangingPassword}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Cancel
                   </Button>
@@ -5206,7 +5206,7 @@ const FindMentor = () => {
                         </p>
                         <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                           <span>{mentor.years_experience} years exp</span>
-                          <span className="px-2 py-0.5 rounded bg-black/80">
+                          <span className="px-2 py-0.5 rounded bg-black">
                             {mentor.industry}
                           </span>
                           {mentor.avg_rating && (
@@ -5225,7 +5225,7 @@ const FindMentor = () => {
                         {match.matchReasons.map((reason, i) => (
                           <span
                             key={i}
-                            className="px-2 py-1 rounded-full text-xs bg-black/80 text-gray-300 border border-white/30"
+                            className="px-2 py-1 rounded-full text-xs bg-black text-gray-300 border border-white/30"
                           >
                             {reason}
                           </span>
@@ -5243,7 +5243,7 @@ const FindMentor = () => {
                         { label: "Rating", value: match.score.ratingScore, color: "bg-rose-500" },
                       ].map((item) => (
                         <div key={item.label} className="text-center">
-                          <div className="h-1 rounded-full bg-black/80 mb-1">
+                          <div className="h-1 rounded-full bg-black mb-1">
                             <div
                               className={`h-full rounded-full ${item.color}`}
                               style={{ width: `${item.value}%` }}
@@ -5297,7 +5297,7 @@ const FindMentor = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             industryFilter === "all"
               ? "bg-indigo-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           All Industries
@@ -5309,7 +5309,7 @@ const FindMentor = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               industryFilter === industry
                 ? "bg-indigo-600 text-white"
-                : "bg-black/80 text-gray-400 hover:text-white"
+                : "bg-black text-gray-400 hover:text-white"
             }`}
           >
             {industry}
@@ -5338,7 +5338,7 @@ const FindMentor = () => {
                       ? "bg-emerald-500/30 border-emerald-500/30"
                       : isPending
                       ? "bg-amber-500/10 border-amber-500/30"
-                      : "bg-black/80 border-white/30 hover:border-white/20"
+                      : "bg-black border-white/30 hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -5362,7 +5362,7 @@ const FindMentor = () => {
                       </p>
                       <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                         <span>{mentor.years_experience} years exp</span>
-                        <span className="px-2 py-0.5 rounded bg-black/80">
+                        <span className="px-2 py-0.5 rounded bg-black">
                           {mentor.industry}
                         </span>
                       </div>
@@ -5386,7 +5386,7 @@ const FindMentor = () => {
                         </span>
                       ))}
                       {mentor.specializations.length > 3 && (
-                        <span className="px-2 py-1 rounded text-xs bg-black/80 text-gray-400">
+                        <span className="px-2 py-1 rounded text-xs bg-black text-gray-400">
                           +{mentor.specializations.length - 3}
                         </span>
                       )}
@@ -5442,7 +5442,7 @@ const FindMentor = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No mentors available</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -5457,7 +5457,7 @@ const FindMentor = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedMentor(null)}
         >
           <motion.div
@@ -5497,7 +5497,7 @@ const FindMentor = () => {
                 onChange={(e) => setRequestMessage(e.target.value)}
                 placeholder="Tell the mentor why you'd like them to guide you..."
                 rows={4}
-                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -5505,7 +5505,7 @@ const FindMentor = () => {
               <Button
                 variant="outline"
                 onClick={() => setSelectedMentor(null)}
-                className="flex-1 border-white/20 text-white hover:bg-black/80"
+                className="flex-1 border-white/20 text-white hover:bg-black"
               >
                 Cancel
               </Button>
@@ -5838,7 +5838,7 @@ const MessagesPage = () => {
 
       <motion.div
         variants={itemVariants}
-        className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex"
+        className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex"
       >
         {/* Conversations List */}
         <div className="w-80 border-r border-white/30 flex flex-col">
@@ -5851,7 +5851,7 @@ const MessagesPage = () => {
                   placeholder="Search conversations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
                 />
               </div>
               <Button
@@ -5873,7 +5873,7 @@ const MessagesPage = () => {
                   value={userSearchQuery}
                   onChange={(e) => setUserSearchQuery(e.target.value)}
                   autoFocus
-                  className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
                 />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && (
@@ -5933,7 +5933,7 @@ const MessagesPage = () => {
                   <button
                     key={conv.id}
                     onClick={() => setActiveConversation(conv)}
-                    className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${
+                    className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${
                       activeConversation?.id === conv.id ? "bg-indigo-500/30 border-l-2 border-indigo-500" : ""
                     }`}
                   >
@@ -6031,7 +6031,7 @@ const MessagesPage = () => {
                             className={`px-4 py-2 rounded-2xl ${
                               isOwn
                                 ? "bg-indigo-600 text-white rounded-br-md"
-                                : "bg-black/80 text-gray-200 rounded-bl-md"
+                                : "bg-black text-gray-200 rounded-bl-md"
                             }`}
                           >
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -6061,7 +6061,7 @@ const MessagesPage = () => {
                           sendMessage();
                         }
                       }}
-                      className="w-full bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <Button
@@ -6231,7 +6231,7 @@ const NotificationsPage = () => {
           <Button
             onClick={markAllAsRead}
             variant="outline"
-            className="border-white/20 text-white hover:bg-black/80"
+            className="border-white/20 text-white hover:bg-black"
           >
             <CheckCircle className="w-4 h-4 mr-2" />
             Mark all as read
@@ -6248,7 +6248,7 @@ const NotificationsPage = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
                 ? "bg-indigo-600 text-white"
-                : "bg-black/80 text-gray-400 hover:text-white"
+                : "bg-black text-gray-400 hover:text-white"
             }`}
           >
             {f}
@@ -6270,7 +6270,7 @@ const NotificationsPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 className={`p-4 rounded-xl border transition-colors ${
                   notification.is_read
-                    ? "bg-black/80 border-white/30"
+                    ? "bg-black border-white/30"
                     : "bg-gradient-to-r from-indigo-500/30 to-purple-500/30 border-indigo-500/20"
                 }`}
               >
@@ -6317,7 +6317,7 @@ const NotificationsPage = () => {
             );
           })
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No notifications</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -6483,7 +6483,7 @@ const CandidateDashboard = () => {
                         ? item.section === "preparation"
                           ? "bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white border border-amber-500/30"
                           : "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-white border border-indigo-500/30"
-                        : "text-gray-400 hover:text-white hover:bg-black/80"
+                        : "text-gray-400 hover:text-white hover:bg-black"
                     }`}
                   >
                     <item.icon className={`w-5 h-5 flex-shrink-0 ${item.section === "preparation" && isActive ? "text-amber-400" : ""}`} />
@@ -6532,7 +6532,7 @@ const CandidateDashboard = () => {
             {sidebarCollapsed ? (
               <button
                 onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
                 title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />
@@ -6540,7 +6540,7 @@ const CandidateDashboard = () => {
             ) : (
               <Button
                 variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
+                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
                 onClick={handleSignOut}
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -6554,7 +6554,7 @@ const CandidateDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -6594,7 +6594,7 @@ const CandidateDashboard = () => {
                     {notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="p-3 hover:bg-black/80 border-b border-white/5 flex items-start gap-3"
+                        className="p-3 hover:bg-black border-b border-white/5 flex items-start gap-3"
                       >
                         <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
@@ -6626,7 +6626,7 @@ const CandidateDashboard = () => {
                       setShowNotifications(false);
                       navigate("/dashboard/candidate/notifications");
                     }}
-                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-black/80 rounded-lg"
+                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-black rounded-lg"
                   >
                     View all notifications
                   </button>

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
@@ -17,7 +16,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const containerVariants = {
@@ -227,20 +226,6 @@ const components = [
 ];
 
 const Platform = () => {
-  const location = useLocation();
-
-  // Scroll to hash anchor on navigation (e.g. /platform#t3x)
-  useEffect(() => {
-    if (location.hash) {
-      const timer = setTimeout(() => {
-        const el = document.getElementById(location.hash.slice(1));
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [location]);
   return (
     <div className="min-h-screen bg-black">
       <BackgroundVideo />
@@ -327,7 +312,7 @@ const Platform = () => {
                       component.gradient
                     )} />
 
-                    <div className="relative rounded-3xl border border-white/30 overflow-hidden bg-black/80 backdrop-blur-xl group-hover:border-white/20 transition-all duration-500">
+                    <div className="relative rounded-3xl border border-white/30 overflow-hidden bg-black backdrop-blur-xl group-hover:border-white/20 transition-all duration-500">
                       {/* Header */}
                       <div className={cn(
                         "p-8 md:p-10 bg-gradient-to-r",
@@ -354,7 +339,7 @@ const Platform = () => {
                       {/* Content */}
                       <div className="p-8 md:p-10">
                         {/* Purpose */}
-                        <div className="mb-8 p-6 rounded-2xl bg-black/80 border border-white/30">
+                        <div className="mb-8 p-6 rounded-2xl bg-black border border-white/30">
                           <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wider mb-2">
                             Flowchart Position
                           </h3>
@@ -404,7 +389,7 @@ const Platform = () => {
                             {component.userTypes.map((user) => (
                               <span
                                 key={user}
-                                className="px-3 py-1.5 text-sm rounded-full bg-black/80 text-gray-50"
+                                className="px-3 py-1.5 text-sm rounded-full bg-black text-gray-50"
                               >
                                 {user}
                               </span>

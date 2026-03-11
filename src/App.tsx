@@ -7,16 +7,22 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute, PublicOnlyRoute } from "@/components/ProtectedRoute";
 
-/** Scroll to top on route change; respect hash anchors */
+/** Scroll to top on every navigation; respect hash anchors */
 function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const location = useLocation();
   useEffect(() => {
-    if (hash) {
-      // Let the target page handle hash scrolling
-      return;
+    if (location.hash) {
+      // Hash links: scroll to the target element after a brief render delay
+      const timer = setTimeout(() => {
+        const el = document.getElementById(location.hash.slice(1));
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
     }
     window.scrollTo(0, 0);
-  }, [pathname, hash]);
+  }, [location.pathname, location.key]);
   return null;
 }
 

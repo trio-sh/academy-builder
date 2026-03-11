@@ -620,7 +620,7 @@ export const AssessmentViewer = () => {
             const scoreInfo = getScoreLabel(score);
 
             return (
-              <div key={dimId} className="p-5 rounded-xl bg-black/80 border border-white/30">
+              <div key={dimId} className="p-5 rounded-xl bg-black border border-white/30">
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`p-2 rounded-lg bg-gradient-to-br ${dimension.color}`}>
                     <IconComponent className="w-5 h-5 text-white" />
@@ -700,7 +700,7 @@ export const AssessmentViewer = () => {
                   className={`p-4 rounded-xl border text-left transition-all ${
                     isSelected
                       ? 'bg-indigo-500/20 border-indigo-500/50'
-                      : 'bg-black/80 border-white/30 hover:bg-black/80 disabled:opacity-40'
+                      : 'bg-black border-white/30 hover:bg-black disabled:opacity-40'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -759,7 +759,7 @@ export const AssessmentViewer = () => {
               value={goals}
               onChange={(e) => setGoals(e.target.value)}
               placeholder="Example: Over the next 3 months, I will practice presenting to small groups at least twice a week to improve my communication confidence..."
-              className="min-h-[150px] bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
+              className="min-h-[150px] bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
             />
             <div className="flex items-center justify-between text-sm">
               <span className={goals.length >= 20 ? 'text-emerald-400' : 'text-gray-500'}>
@@ -773,7 +773,7 @@ export const AssessmentViewer = () => {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Any other reflections or context you want to capture..."
-                className="min-h-[80px] bg-black/80 border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
+                className="min-h-[80px] bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500/50"
               />
             </div>
           </div>
@@ -825,7 +825,7 @@ export const AssessmentViewer = () => {
               const IconComponent = getDimensionIcon(dim.icon);
 
               return (
-                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
+                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black">
                   <div className={`p-1.5 rounded-lg bg-gradient-to-br ${dim.color}`}>
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
@@ -895,15 +895,15 @@ export const AssessmentViewer = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
-            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+            <div className="p-4 rounded-xl bg-black border border-white/30">
               <p className={`text-2xl font-bold ${overallInfo.color}`}>{overall.toFixed(1)}</p>
               <p className="text-xs text-gray-400">Overall Score</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+            <div className="p-4 rounded-xl bg-black border border-white/30">
               <p className="text-2xl font-bold text-emerald-400">{strengths.length}</p>
               <p className="text-xs text-gray-400">Strengths</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+            <div className="p-4 rounded-xl bg-black border border-white/30">
               <p className="text-2xl font-bold text-amber-400">{improvements.length}</p>
               <p className="text-xs text-gray-400">Growth Areas</p>
             </div>
@@ -1016,11 +1016,11 @@ export const AssessmentViewer = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-black/80 hidden md:block" />
+              <div className="h-8 w-px bg-black hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
                 <h1 className="hidden md:block font-semibold text-lg text-white">
@@ -1051,7 +1051,7 @@ export const AssessmentViewer = () => {
                     variant="ghost"
                     size="sm"
                     onClick={toggleMute}
-                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80`}
+                    className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black`}
                     title={isMuted ? 'Unmute narration' : 'Mute narration'}
                   >
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -1065,7 +1065,7 @@ export const AssessmentViewer = () => {
                   </div>
                 )}
               </div>
-              <div className="h-6 w-px bg-black/80 hidden md:block" />
+              <div className="h-6 w-px bg-black hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
@@ -1079,7 +1079,7 @@ export const AssessmentViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
-                      : 'bg-black/80 border border-white/30'
+                      : 'bg-black border border-white/30'
                 }`}>
                   <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -1099,7 +1099,7 @@ export const AssessmentViewer = () => {
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
                       ? 'bg-amber-500/20 border border-amber-500/30'
-                      : 'bg-black/80 border border-white/30'
+                      : 'bg-black border border-white/30'
                 }`}>
                   <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
                   <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
@@ -1189,7 +1189,7 @@ export const AssessmentViewer = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/30 text-gray-300 hover:bg-black/80 hover:text-white disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black hover:text-white disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

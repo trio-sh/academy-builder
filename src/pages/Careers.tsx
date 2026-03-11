@@ -222,7 +222,7 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 h-full">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {value.title}
                   </h3>
@@ -268,7 +268,7 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 h-full">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                     <benefit.icon className="w-6 h-6 text-indigo-400" />
                   </div>
@@ -316,7 +316,7 @@ const Careers = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
@@ -381,7 +381,7 @@ const Careers = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-black/80"
+                className="border-white/20 text-white hover:bg-black"
                 asChild
               >
                 <Link to="/contact">

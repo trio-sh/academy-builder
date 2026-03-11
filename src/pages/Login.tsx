@@ -123,7 +123,7 @@ const Login = () => {
                 {/* Glow effect */}
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                   <h1 className="text-2xl font-bold text-center mb-2">
                     <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Welcome Back
@@ -143,7 +143,7 @@ const Login = () => {
 
                   {/* User Type Tabs */}
                   <Tabs value={userType} onValueChange={setUserType} className="mb-6">
-                    <TabsList className="grid w-full grid-cols-3 bg-black/80 border border-white/30">
+                    <TabsList className="grid w-full grid-cols-3 bg-black border border-white/30">
                       <TabsTrigger
                         value="candidate"
                         className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-gray-400"
@@ -177,7 +177,7 @@ const Login = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                        className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
 
@@ -196,7 +196,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                        className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                       />
                     </div>
 

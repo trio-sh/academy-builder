@@ -196,7 +196,7 @@ export function JourneySection() {
                   className={cn(
                     "relative p-6 md:p-8 rounded-2xl transition-all duration-500",
                     step.highlight
-                      ? "bg-black/80 backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
+                      ? "bg-black backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
                       : "bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20"
                   )}
                   whileHover={{ y: -5 }}

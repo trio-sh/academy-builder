@@ -341,7 +341,7 @@ const Overview = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl bg-black/80 border border-white/30"
+            className="p-4 rounded-xl bg-black border border-white/30"
           >
             <div className="flex items-center gap-3">
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
@@ -357,7 +357,7 @@ const Overview = () => {
       {/* Analytics Charts */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         {/* User Growth Chart */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Growth (12 Weeks)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -399,7 +399,7 @@ const Overview = () => {
         </div>
 
         {/* Role Distribution Pie Chart */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Role Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -434,7 +434,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Platform Activity Bar Chart */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <h3 className="text-lg font-semibold text-white mb-4">Platform Activity Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -487,7 +487,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/admin/users"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
           >
             <Users className="w-8 h-8 text-blue-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Manage Users</h3>
@@ -497,7 +497,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/admin/talentvisa"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
           >
             <Award className="w-8 h-8 text-yellow-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">TalentVisa Review</h3>
@@ -507,7 +507,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/admin/reports"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
           >
             <FileText className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">View Reports</h3>
@@ -529,7 +529,7 @@ const Overview = () => {
           {recentActivity.map((user) => (
             <div
               key={user.id}
-              className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
+              className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
             >
               <div className="flex items-center gap-4">
                 {user.avatar_url ? (
@@ -743,13 +743,13 @@ const UsersManagement = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search users..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
           />
         </div>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="px-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white focus:border-red-500 focus:outline-none"
+          className="px-4 py-3 rounded-xl bg-black border border-white/30 text-white focus:border-red-500 focus:outline-none"
         >
           <option value="all">All Roles</option>
           <option value="candidate">Candidates</option>
@@ -765,7 +765,7 @@ const UsersManagement = () => {
         <div className="rounded-xl border border-white/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-black/80">
+              <thead className="bg-black">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">User</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Role</th>
@@ -864,7 +864,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -962,7 +962,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -986,7 +986,7 @@ const UsersManagement = () => {
                     type="text"
                     value={editForm.first_name}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, first_name: e.target.value }))}
-                    className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                    className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
                   />
                 </div>
                 <div>
@@ -995,7 +995,7 @@ const UsersManagement = () => {
                     type="text"
                     value={editForm.last_name}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, last_name: e.target.value }))}
-                    className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                    className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -1005,7 +1005,7 @@ const UsersManagement = () => {
                   type="email"
                   value={editForm.email}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
@@ -1015,7 +1015,7 @@ const UsersManagement = () => {
                   value={editForm.headline}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, headline: e.target.value }))}
                   placeholder="e.g. Software Engineer"
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
@@ -1025,7 +1025,7 @@ const UsersManagement = () => {
                   value={editForm.location}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, location: e.target.value }))}
                   placeholder="e.g. New York, NY"
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
@@ -1035,7 +1035,7 @@ const UsersManagement = () => {
                   onChange={(e) => setEditForm((prev) => ({ ...prev, bio: e.target.value }))}
                   rows={3}
                   placeholder="Short bio..."
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500 resize-none"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500 resize-none"
                 />
               </div>
             </div>
@@ -1066,7 +1066,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -1100,7 +1100,7 @@ const UsersManagement = () => {
                   className={`w-full p-3 rounded-xl border text-left transition-all flex items-center gap-3 ${
                     newRole === role.value
                       ? `bg-${role.color}-500/20 border-${role.color}-500/50`
-                      : "bg-black/80 border-white/10 hover:border-white/20"
+                      : "bg-black border-white/10 hover:border-white/20"
                   }`}
                 >
                   <div className={`w-9 h-9 rounded-lg bg-${role.color}-500/20 flex items-center justify-center`}>
@@ -1356,7 +1356,7 @@ const TalentVisaReview = () => {
         <Button
           variant="outline"
           onClick={() => setShowQuotaSettings(!showQuotaSettings)}
-          className="border-white/20 text-white hover:bg-black/80"
+          className="border-white/20 text-white hover:bg-black"
         >
           <Target className="w-4 h-4 mr-2" />
           Quota Settings
@@ -1422,7 +1422,7 @@ const TalentVisaReview = () => {
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
                 ? "bg-red-600 text-white"
-                : "bg-black/80 text-gray-400 hover:text-white"
+                : "bg-black text-gray-400 hover:text-white"
             }`}
           >
             {f}
@@ -1509,7 +1509,7 @@ const TalentVisaReview = () => {
 
                   {nomination.status === "pending" && (
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 p-3 rounded-lg bg-black/80 border border-white/30">
+                      <div className="flex-1 p-3 rounded-lg bg-black border border-white/30">
                         <p className="text-xs text-gray-400 mb-1">Suggested Tier</p>
                         <p className={`font-medium ${TIER_CONFIG[suggestedTier].color}`}>
                           {TIER_CONFIG[suggestedTier].label} (min score: {TIER_CONFIG[suggestedTier].minScore})
@@ -1537,7 +1537,7 @@ const TalentVisaReview = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <Award className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No {filter !== "all" ? filter : ""} nominations</p>
           </div>
@@ -1549,7 +1549,7 @@ const TalentVisaReview = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowApprovalModal(false);
             setSelectedNomination(null);
@@ -1584,7 +1584,7 @@ const TalentVisaReview = () => {
                         ? "opacity-50 cursor-not-allowed bg-gray-800/50 border-gray-700"
                         : isSelected
                         ? `${config.bgColor} ${config.borderColor} border-2`
-                        : "bg-black/80 border-white/30 hover:border-white/30"
+                        : "bg-black border-white/30 hover:border-white/30"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -1630,7 +1630,7 @@ const TalentVisaReview = () => {
                   setShowApprovalModal(false);
                   setSelectedNomination(null);
                 }}
-                className="flex-1 border-white/20 text-white hover:bg-black/80"
+                className="flex-1 border-white/20 text-white hover:bg-black"
               >
                 Cancel
               </Button>
@@ -1719,7 +1719,7 @@ const EmployersManagement = () => {
             {employers.map((employer) => (
               <div
                 key={employer.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center justify-between"
+                className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   {employer.company_logo_url ? (
@@ -1760,7 +1760,7 @@ const EmployersManagement = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <Building2 className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No employers registered yet</p>
           </div>
@@ -1855,7 +1855,7 @@ const SchoolsManagement = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search schools..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
             />
           </div>
         </motion.div>
@@ -1863,19 +1863,19 @@ const SchoolsManagement = () => {
 
       {/* Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-white">{schools.length}</p>
           <p className="text-xs text-gray-400">Total Schools</p>
         </div>
-        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-emerald-400">{schools.filter((s) => s.is_verified).length}</p>
           <p className="text-xs text-gray-400">Verified</p>
         </div>
-        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-amber-400">{schools.filter((s) => !s.is_verified).length}</p>
           <p className="text-xs text-gray-400">Pending Verification</p>
         </div>
-        <div className="p-4 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-blue-400">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
           <p className="text-xs text-gray-400">Total Students</p>
         </div>
@@ -1887,7 +1887,7 @@ const SchoolsManagement = () => {
             {filteredSchools.map((school) => (
               <div
                 key={school.id}
-                className="p-5 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-5 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -1926,7 +1926,7 @@ const SchoolsManagement = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">{searchQuery ? "No schools match your search" : "No schools registered yet"}</p>
           </div>
@@ -2049,7 +2049,7 @@ const Reports = () => {
           { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-cyan-400" },
           { label: "Connections", value: reportStats.connections, icon: Activity, color: "text-pink-400" },
         ].map((stat) => (
-          <div key={stat.label} className="p-5 rounded-xl bg-black/80 border border-white/30">
+          <div key={stat.label} className="p-5 rounded-xl bg-black border border-white/30">
             <stat.icon className={`w-6 h-6 ${stat.color} mb-2`} />
             <p className="text-2xl font-bold text-white">{stat.value}</p>
             <p className="text-sm text-gray-400">{stat.label}</p>
@@ -2059,7 +2059,7 @@ const Reports = () => {
 
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         {/* Activity Trend Chart */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Activity Trend (6 months)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -2077,7 +2077,7 @@ const Reports = () => {
         </div>
 
         {/* Role Distribution */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">User Distribution</h3>
           <div className="space-y-4">
             {[
@@ -2093,7 +2093,7 @@ const Reports = () => {
                     <span className="text-gray-400">{item.role}</span>
                     <span className="text-white">{item.count} ({pct}%)</span>
                   </div>
-                  <div className="h-2 bg-black/80 rounded-full overflow-hidden">
+                  <div className="h-2 bg-black rounded-full overflow-hidden">
                     <div className={`h-full ${item.color} rounded-full transition-all`} style={{ width: `${Math.max(pct, 2)}%` }} />
                   </div>
                 </div>
@@ -2245,7 +2245,7 @@ const CommunicationsPage = () => {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* User Selection */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
 
           {/* Filters */}
@@ -2253,7 +2253,7 @@ const CommunicationsPage = () => {
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
             >
               <option value="all" className="bg-gray-900">All Roles</option>
               <option value="candidate" className="bg-gray-900">Candidates</option>
@@ -2268,7 +2268,7 @@ const CommunicationsPage = () => {
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/80 border border-white/30 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
+                className="w-full bg-black border border-white/30 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
               />
             </div>
           </div>
@@ -2294,7 +2294,7 @@ const CommunicationsPage = () => {
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                   selectedUsers.includes(user.id)
                     ? "bg-red-500/30 border border-red-500/30"
-                    : "bg-black/80 hover:bg-black/80"
+                    : "bg-black hover:bg-black"
                 }`}
               >
                 <input
@@ -2309,7 +2309,7 @@ const CommunicationsPage = () => {
                   </p>
                   <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-black/80 text-gray-400 capitalize">
+                <span className="text-xs px-2 py-1 rounded-full bg-black text-gray-400 capitalize">
                   {user.role}
                 </span>
               </label>
@@ -2318,7 +2318,7 @@ const CommunicationsPage = () => {
         </motion.div>
 
         {/* Message Composition */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
 
           {/* Send Type */}
@@ -2336,7 +2336,7 @@ const CommunicationsPage = () => {
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-colors ${
                     sendType === option.value
                       ? "bg-red-500/20 border-red-500/50 text-white"
-                      : "border-white/30 text-gray-400 hover:bg-black/80"
+                      : "border-white/30 text-gray-400 hover:bg-black"
                   }`}
                 >
                   <option.icon className="w-4 h-4" />
@@ -2356,7 +2356,7 @@ const CommunicationsPage = () => {
                   value={notificationTitle}
                   onChange={(e) => setNotificationTitle(e.target.value)}
                   placeholder="Important Update"
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
               </div>
               <div>
@@ -2366,7 +2366,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setNotificationMessage(e.target.value)}
                   placeholder="Enter your notification message..."
                   rows={3}
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
                 />
               </div>
             </div>
@@ -2382,7 +2382,7 @@ const CommunicationsPage = () => {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Subject line"
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
               </div>
               <div>
@@ -2392,7 +2392,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Enter your email message..."
                   rows={5}
-                  className="w-full bg-black/80 border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
                 />
               </div>
             </div>
@@ -2485,7 +2485,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* General Settings */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Globe className="w-5 h-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-white">General</h2>
@@ -2497,7 +2497,7 @@ const SettingsPage = () => {
               type="text"
               value={platformName}
               onChange={(e) => setPlatformName(e.target.value)}
-              className="w-full max-w-md bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+              className="w-full max-w-md bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
             />
           </div>
           <div>
@@ -2506,14 +2506,14 @@ const SettingsPage = () => {
               type="email"
               value={supportEmail}
               onChange={(e) => setSupportEmail(e.target.value)}
-              className="w-full max-w-md bg-black/80 border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+              className="w-full max-w-md bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
             />
           </div>
         </div>
       </motion.div>
 
       {/* Access Control */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="w-5 h-5 text-red-400" />
           <h2 className="text-lg font-semibold text-white">Access Control</h2>
@@ -2535,7 +2535,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Approvals */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <CheckCircle className="w-5 h-5 text-emerald-400" />
           <h2 className="text-lg font-semibold text-white">Auto-Approval</h2>
@@ -2704,7 +2704,7 @@ const AdminDashboard = () => {
                   className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-red-600/20 to-orange-600/20 text-white border border-red-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black/80"
+                      : "text-gray-400 hover:text-white hover:bg-black"
                   }`}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -2749,7 +2749,7 @@ const AdminDashboard = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors`}
+              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors`}
               title={sidebarCollapsed ? "Sign Out" : undefined}
             >
               <LogOut className="w-4 h-4" />
@@ -2762,7 +2762,7 @@ const AdminDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Enhanced Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"

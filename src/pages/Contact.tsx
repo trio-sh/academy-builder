@@ -158,7 +158,7 @@ const Contact = () => {
             >
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                   {isSubmitted ? (
                     <motion.div
                       className="text-center py-12"
@@ -177,7 +177,7 @@ const Contact = () => {
                       </p>
                       <Button
                         variant="outline"
-                        className="border-white/20 text-white hover:bg-black/80"
+                        className="border-white/20 text-white hover:bg-black"
                         onClick={() => {
                           setIsSubmitted(false);
                           setFormData({
@@ -211,7 +211,7 @@ const Contact = () => {
                               className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
                                 selectedReason === reason.id
                                   ? "bg-indigo-600/20 border-indigo-500/50 text-white"
-                                  : "bg-black/80 border-white/30 text-gray-50 hover:border-white/20"
+                                  : "bg-black border-white/30 text-gray-50 hover:border-white/20"
                               }`}
                             >
                               <reason.icon className="w-4 h-4" />
@@ -233,7 +233,7 @@ const Contact = () => {
                               onChange={handleChange}
                               placeholder="Your name"
                               required
-                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                              className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                             />
                           </div>
                           <div>
@@ -247,7 +247,7 @@ const Contact = () => {
                               onChange={handleChange}
                               placeholder="you@example.com"
                               required
-                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                              className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                             />
                           </div>
                         </div>
@@ -261,7 +261,7 @@ const Contact = () => {
                             value={formData.organization}
                             onChange={handleChange}
                             placeholder="Company or school name"
-                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                            className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                           />
                         </div>
 
@@ -276,7 +276,7 @@ const Contact = () => {
                             placeholder="How can we help you?"
                             required
                             rows={5}
-                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 resize-none"
+                            className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 resize-none"
                           />
                         </div>
 
@@ -334,7 +334,7 @@ const Contact = () => {
                     className="group block"
                     whileHover={{ x: 5 }}
                   >
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-indigo-500/30 transition-colors">
+                    <div className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-indigo-500/30 transition-colors">
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center">
                         <info.icon className="w-5 h-5 text-indigo-400" />
                       </div>
@@ -350,7 +350,7 @@ const Contact = () => {
               </div>
 
               {/* Office Hours */}
-              <div className="p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+              <div className="p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Office Hours
                 </h3>
@@ -411,7 +411,7 @@ const Contact = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-black/80"
+                className="border-white/20 text-white hover:bg-black"
                 asChild
               >
                 <a href="/help">Visit Help Center</a>

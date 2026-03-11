@@ -733,7 +733,7 @@ export const InteractiveSkillAssessment = () => {
 
                 {/* Transcript display */}
                 {(transcript || interimTranscript) && (
-                  <div className="w-full p-4 rounded-xl bg-black/80 border border-white/30">
+                  <div className="w-full p-4 rounded-xl bg-black border border-white/30">
                     <p className="text-sm text-gray-400 mb-2">Transcript:</p>
                     <p className="text-gray-300">
                       {transcript}
@@ -807,7 +807,7 @@ export const InteractiveSkillAssessment = () => {
             value={writtenResponse}
             onChange={(e) => setWrittenResponse(e.target.value)}
             placeholder={`Write your ${challenge.type} here...`}
-            className="min-h-[200px] bg-black/80 border-white/30 text-white placeholder:text-gray-500"
+            className="min-h-[200px] bg-black border-white/30 text-white placeholder:text-gray-500"
             disabled={writtenAnalysis !== null}
           />
 
@@ -891,17 +891,17 @@ export const InteractiveSkillAssessment = () => {
                   }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-black/80 flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-bold">
                       {index + 1}
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-white">{task.title}</p>
                       <p className="text-sm text-gray-400">{task.description}</p>
                       <div className="flex gap-2 mt-2 text-xs">
-                        <span className="px-2 py-0.5 rounded bg-black/80 text-gray-300">
+                        <span className="px-2 py-0.5 rounded bg-black text-gray-300">
                           {task.deadline}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-black/80 text-gray-300">
+                        <span className="px-2 py-0.5 rounded bg-black text-gray-300">
                           {task.estimatedTime}
                         </span>
                       </div>
@@ -970,7 +970,7 @@ export const InteractiveSkillAssessment = () => {
                       <button
                         key={option.id}
                         onClick={() => handleDialogueChoice(option)}
-                        className="w-full p-3 text-left rounded-xl bg-black/80 border border-white/30 hover:bg-black/80 hover:border-indigo-500/50 transition-all"
+                        className="w-full p-3 text-left rounded-xl bg-black border border-white/30 hover:bg-black hover:border-indigo-500/50 transition-all"
                       >
                         <p className="text-gray-300">{option.text}</p>
                       </button>
@@ -1012,7 +1012,7 @@ export const InteractiveSkillAssessment = () => {
               key={i}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-3 rounded-lg bg-black/80 border-l-4 border-indigo-500"
+              className="p-3 rounded-lg bg-black border-l-4 border-indigo-500"
             >
               <p className="text-gray-400 text-sm">{choice.consequence}</p>
             </motion.div>
@@ -1026,7 +1026,7 @@ export const InteractiveSkillAssessment = () => {
                 <button
                   key={choice.id}
                   onClick={() => handleProblemChoice(choice)}
-                  className="w-full p-4 text-left rounded-xl bg-black/80 border border-white/30 hover:bg-black/80 hover:border-amber-500/50 transition-all"
+                  className="w-full p-4 text-left rounded-xl bg-black border border-white/30 hover:bg-black hover:border-amber-500/50 transition-all"
                 >
                   <p className="text-gray-300">{choice.text}</p>
                 </button>
@@ -1080,7 +1080,7 @@ export const InteractiveSkillAssessment = () => {
               <p className="text-emerald-400 text-sm">Audio completed. Answer the questions below:</p>
 
               {scene.comprehensionQuestions?.map((q, qIndex) => (
-                <div key={qIndex} className="p-4 rounded-xl bg-black/80 border border-white/30">
+                <div key={qIndex} className="p-4 rounded-xl bg-black border border-white/30">
                   <p className="text-white font-medium mb-3">{qIndex + 1}. {q.question}</p>
                   <div className="space-y-2">
                     {q.options.map((option, oIndex) => (
@@ -1097,7 +1097,7 @@ export const InteractiveSkillAssessment = () => {
                         className={`w-full p-3 text-left rounded-lg transition-all ${
                           listeningAnswers[qIndex] === oIndex
                             ? 'bg-indigo-500/20 border border-indigo-500/50'
-                            : 'bg-black/80 border border-white/30 hover:bg-black/80'
+                            : 'bg-black border border-white/30 hover:bg-black'
                         }`}
                       >
                         <span className="text-gray-300">{option}</span>
@@ -1136,7 +1136,7 @@ export const InteractiveSkillAssessment = () => {
             <p className="font-medium mb-2">Stakeholders affected:</p>
             <div className="flex flex-wrap gap-2">
               {judgment.stakeholders.map((s, i) => (
-                <span key={i} className="px-2 py-1 rounded bg-black/80">{s}</span>
+                <span key={i} className="px-2 py-1 rounded bg-black">{s}</span>
               ))}
             </div>
           </div>
@@ -1150,7 +1150,7 @@ export const InteractiveSkillAssessment = () => {
                 className={`w-full p-4 text-left rounded-xl border transition-all ${
                   judgmentChoice === option.id
                     ? 'bg-indigo-500/20 border-indigo-500/50'
-                    : 'bg-black/80 border-white/30 hover:bg-black/80'
+                    : 'bg-black border-white/30 hover:bg-black'
                 }`}
               >
                 <p className="text-white font-medium mb-1">{option.action}</p>
@@ -1198,7 +1198,7 @@ export const InteractiveSkillAssessment = () => {
             value={quickResponse}
             onChange={(e) => setQuickResponse(e.target.value)}
             placeholder="Type your response quickly..."
-            className="min-h-[120px] bg-black/80 border-white/30 text-white"
+            className="min-h-[120px] bg-black border-white/30 text-white"
             disabled={quickResponseSubmitted}
           />
 
@@ -1260,7 +1260,7 @@ export const InteractiveSkillAssessment = () => {
               const IconComponent = DimensionIcons[dim.icon] || Star;
 
               return (
-                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
+                <div key={dim.id} className="flex items-center gap-3 p-3 rounded-lg bg-black">
                   <div className={`p-1.5 rounded-lg bg-gradient-to-br ${dim.color}`}>
                     <IconComponent className="w-4 h-4 text-white" />
                   </div>
@@ -1381,7 +1381,7 @@ export const InteractiveSkillAssessment = () => {
               variant="ghost"
               size="sm"
               onClick={() => navigate('/dashboard/candidate/assessment')}
-              className="text-gray-400 hover:text-white hover:bg-black/80"
+              className="text-gray-400 hover:text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -1439,11 +1439,11 @@ export const InteractiveSkillAssessment = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard/candidate/assessment')}
-                className="text-gray-400 hover:text-white hover:bg-black/80 flex-shrink-0"
+                className="text-gray-400 hover:text-white hover:bg-black flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </Button>
-              <div className="h-8 w-px bg-black/80 hidden md:block" />
+              <div className="h-8 w-px bg-black hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
                 <h1 className="hidden md:block font-semibold text-lg text-white">L1 Observation Session</h1>
@@ -1459,7 +1459,7 @@ export const InteractiveSkillAssessment = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMuted(!isMuted)}
-                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black/80 hidden md:flex`}
+                className={`${isMuted ? 'text-gray-500' : 'text-indigo-400'} hover:bg-black hidden md:flex`}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </Button>
@@ -1506,7 +1506,7 @@ export const InteractiveSkillAssessment = () => {
                 {/* Scene header */}
                 <div className="px-8 pt-8 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-xl bg-black/80">
+                    <div className="p-2 rounded-xl bg-black">
                       {getSceneIcon()}
                     </div>
                     <span className="text-sm text-gray-400 capitalize font-medium">
@@ -1545,7 +1545,7 @@ export const InteractiveSkillAssessment = () => {
               variant="outline"
               onClick={goToPreviousScene}
               disabled={currentSceneIndex === 0}
-              className="border-white/30 text-gray-300 hover:bg-black/80 disabled:opacity-30 px-5"
+              className="border-white/30 text-gray-300 hover:bg-black disabled:opacity-30 px-5"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous

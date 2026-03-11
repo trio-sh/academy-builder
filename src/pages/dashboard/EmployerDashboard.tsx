@@ -214,7 +214,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-emerald-600 to-teal-600 transition-opacity" />
             <div className="relative">
@@ -234,7 +234,7 @@ const Overview = () => {
           <div className="space-y-3">
             <Link
               to="/dashboard/employer/search"
-              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-emerald-500/30 transition-colors group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
                 <Search className="w-5 h-5 text-white" />
@@ -247,7 +247,7 @@ const Overview = () => {
             </Link>
             <Link
               to="/dashboard/employer/projects"
-              className="flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-emerald-500/30 transition-colors group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center">
                 <Briefcase className="w-5 h-5 text-white" />
@@ -492,7 +492,7 @@ const SearchTalent = () => {
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-black/80 border border-white/30">
+      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-400">Filters:</span>
@@ -500,7 +500,7 @@ const SearchTalent = () => {
         <select
           value={filters.tier}
           onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
+          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
         >
           <option value="">All Tiers</option>
           <option value="platinum">Platinum</option>
@@ -512,7 +512,7 @@ const SearchTalent = () => {
           placeholder="Search skills..."
           value={filters.skill}
           onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
         />
         <div className="w-px h-6 bg-white/10" />
         <div className="flex items-center gap-2">
@@ -522,7 +522,7 @@ const SearchTalent = () => {
         <select
           value={filters.dimension}
           onChange={(e) => setFilters((prev) => ({ ...prev, dimension: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
+          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
         >
           <option value="">All Dimensions</option>
           <option value="integrity_ethics">Integrity & Ethics</option>
@@ -535,7 +535,7 @@ const SearchTalent = () => {
           <select
             value={filters.minScore}
             onChange={(e) => setFilters((prev) => ({ ...prev, minScore: e.target.value }))}
-            className="px-3 py-1.5 rounded-lg bg-black/80 border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
           >
             <option value="2.5">Score ≥ 2.5 (Competent+)</option>
             <option value="3">Score ≥ 3.0 (Proficient+)</option>
@@ -550,7 +550,7 @@ const SearchTalent = () => {
           {candidates.map((candidate) => (
             <div
               key={candidate.id}
-              className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+              className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
@@ -585,12 +585,12 @@ const SearchTalent = () => {
               {candidate.skills && candidate.skills.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1">
                   {candidate.skills.slice(0, 5).map((skill, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
+                    <span key={i} className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
                       {skill}
                     </span>
                   ))}
                   {candidate.skills.length > 5 && (
-                    <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
+                    <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
                       +{candidate.skills.length - 5} more
                     </span>
                   )}
@@ -632,7 +632,7 @@ const SearchTalent = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="flex-1 border-white/20 text-white hover:bg-black/80"
+                  className="flex-1 border-white/20 text-white hover:bg-black"
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   View Profile
@@ -673,7 +673,7 @@ const SearchTalent = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No candidates found</p>
@@ -687,7 +687,7 @@ const SearchTalent = () => {
       {showConnectModal && selectedCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/80"
+            className="absolute inset-0 bg-black"
             onClick={() => !isSendingConnection && setShowConnectModal(false)}
           />
           <motion.div
@@ -719,7 +719,7 @@ const SearchTalent = () => {
                 </div>
 
                 {/* Candidate Preview */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-black/80 mb-6">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-black mb-6">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold">
                     {selectedCandidate.profile?.first_name?.[0]}
                     {selectedCandidate.profile?.last_name?.[0]}
@@ -744,7 +744,7 @@ const SearchTalent = () => {
                     onChange={(e) => setConnectionMessage(e.target.value)}
                     placeholder="Introduce yourself and explain why you'd like to connect..."
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -754,7 +754,7 @@ const SearchTalent = () => {
                     variant="outline"
                     onClick={() => setShowConnectModal(false)}
                     disabled={isSendingConnection}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Cancel
                   </Button>
@@ -910,7 +910,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "all"
               ? "bg-emerald-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           All ({connections.length})
@@ -920,7 +920,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "accepted"
               ? "bg-emerald-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           Accepted
@@ -935,7 +935,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "pending"
               ? "bg-emerald-600 text-white"
-              : "bg-black/80 text-gray-400 hover:text-white"
+              : "bg-black text-gray-400 hover:text-white"
           }`}
         >
           Pending
@@ -960,7 +960,7 @@ const Connections = () => {
                 className={`p-6 rounded-xl border transition-colors ${
                   connection.status === "accepted"
                     ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-emerald-500/20"
-                    : "bg-black/80 border-white/30 hover:border-white/20"
+                    : "bg-black border-white/30 hover:border-white/20"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -986,12 +986,12 @@ const Connections = () => {
                       {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {candidateProfile.skills.slice(0, 4).map((skill, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
+                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
                               {skill}
                             </span>
                           ))}
                           {candidateProfile.skills.length > 4 && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-black/80 text-gray-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
                               +{candidateProfile.skills.length - 4}
                             </span>
                           )}
@@ -1025,7 +1025,7 @@ const Connections = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-black/80"
+                      className="border-white/20 text-white hover:bg-black"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View Full Profile
@@ -1046,7 +1046,7 @@ const Connections = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No connections yet</p>
@@ -1502,7 +1502,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-black/80 border border-white/30"
+          className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Project</h2>
           <div className="space-y-4">
@@ -1513,7 +1513,7 @@ const Projects = () => {
                 value={newProject.title}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g., Build a Landing Page"
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
               />
             </div>
             <div>
@@ -1523,7 +1523,7 @@ const Projects = () => {
                 onChange={(e) => setNewProject((prev) => ({ ...prev, description: e.target.value }))}
                 placeholder="Describe the project requirements..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
             <div className="grid md:grid-cols-3 gap-4">
@@ -1534,7 +1534,7 @@ const Projects = () => {
                   value={newProject.category}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, category: e.target.value }))}
                   placeholder="e.g., Web Development"
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -1545,7 +1545,7 @@ const Projects = () => {
                   onChange={(e) => setNewProject((prev) => ({ ...prev, duration_days: parseInt(e.target.value) || 14 }))}
                   min={7}
                   max={90}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -1553,7 +1553,7 @@ const Projects = () => {
                 <select
                   value={newProject.skill_level}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, skill_level: e.target.value as "beginner" | "intermediate" | "advanced" }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -1577,7 +1577,7 @@ const Projects = () => {
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_min: e.target.value }))}
                     placeholder="e.g., 500"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -1588,7 +1588,7 @@ const Projects = () => {
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_max: e.target.value }))}
                     placeholder="e.g., 1000"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1624,7 +1624,7 @@ const Projects = () => {
             return (
               <div
                 key={project.id}
-                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -1654,7 +1654,7 @@ const Projects = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/20 text-white hover:bg-black/80"
+                        className="border-white/20 text-white hover:bg-black"
                         onClick={() => setShowStatusMenu(showStatusMenu === project.id ? null : project.id)}
                       >
                         <Edit className="w-4 h-4 mr-1" />
@@ -1667,7 +1667,7 @@ const Projects = () => {
                             <button
                               key={action.status}
                               onClick={() => updateProjectStatus(project.id, action.status)}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-black/80 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-black flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
                             >
                               <action.icon className="w-4 h-4" />
                               {action.label}
@@ -1696,7 +1696,7 @@ const Projects = () => {
                       {project.applications.slice(0, 4).map((app) => (
                         <div
                           key={app.id}
-                          className="flex items-center gap-2 px-2 py-1 rounded bg-black/80"
+                          className="flex items-center gap-2 px-2 py-1 rounded bg-black"
                         >
                           {app.candidate?.profile?.avatar_url ? (
                             <img
@@ -1739,7 +1739,7 @@ const Projects = () => {
         !showNewProject && (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No projects yet</p>
@@ -1755,7 +1755,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedProject(null)}
         >
           <motion.div
@@ -1793,15 +1793,15 @@ const Projects = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-black/80">
+                <div className="p-3 rounded-lg bg-black">
                   <p className="text-xs text-gray-500">Duration</p>
                   <p className="text-white font-medium">{selectedProject.duration_days} days</p>
                 </div>
-                <div className="p-3 rounded-lg bg-black/80">
+                <div className="p-3 rounded-lg bg-black">
                   <p className="text-xs text-gray-500">Skill Level</p>
                   <p className="text-white font-medium capitalize">{selectedProject.skill_level}</p>
                 </div>
-                <div className="p-3 rounded-lg bg-black/80">
+                <div className="p-3 rounded-lg bg-black">
                   <p className="text-xs text-gray-500">Applicants</p>
                   <p className="text-white font-medium">{selectedProject.applications?.length || 0}</p>
                 </div>
@@ -1815,7 +1815,7 @@ const Projects = () => {
                     {selectedProject.applications.map((app) => (
                       <div
                         key={app.id}
-                        className="p-4 rounded-lg bg-black/80 border border-white/30"
+                        className="p-4 rounded-lg bg-black border border-white/30"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
@@ -1947,7 +1947,7 @@ const Projects = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-black/80 text-center">
+                  <div className="p-6 rounded-lg bg-black text-center">
                     <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
                     <p className="text-gray-400">No applicants yet</p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -1965,7 +1965,7 @@ const Projects = () => {
                     size="sm"
                     onClick={() => setShowMilestoneForm(!showMilestoneForm)}
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-black/80"
+                    className="border-white/20 text-white hover:bg-black"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Milestone
@@ -1974,28 +1974,28 @@ const Projects = () => {
 
                 {/* Add Milestone Form */}
                 {showMilestoneForm && (
-                  <div className="mb-4 p-4 rounded-lg bg-black/80 border border-white/30">
+                  <div className="mb-4 p-4 rounded-lg bg-black border border-white/30">
                     <div className="space-y-3">
                       <input
                         type="text"
                         value={newMilestone.title}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, title: e.target.value }))}
                         placeholder="Milestone title..."
-                        className="w-full px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <input
                         type="text"
                         value={newMilestone.description}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Description (optional)..."
-                        className="w-full px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="date"
                           value={newMilestone.dueDate}
                           onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
-                          className="px-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                          className="px-3 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none text-sm"
                         />
                         <div className="relative">
                           <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -2004,7 +2004,7 @@ const Projects = () => {
                             value={newMilestone.paymentAmount}
                             onChange={(e) => setNewMilestone(prev => ({ ...prev, paymentAmount: e.target.value }))}
                             placeholder="Payment amount"
-                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
                           />
                         </div>
                       </div>
@@ -2056,7 +2056,7 @@ const Projects = () => {
                           className={`p-4 rounded-lg border transition-colors ${
                             milestone.status === "approved"
                               ? "bg-emerald-500/5 border-emerald-500/20"
-                              : "bg-black/80 border-white/30"
+                              : "bg-black border-white/30"
                           }`}
                         >
                           <div className="flex items-start justify-between">
@@ -2064,7 +2064,7 @@ const Projects = () => {
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
                                 milestone.status === "approved"
                                   ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-black/80 text-gray-400"
+                                  : "bg-black text-gray-400"
                               }`}>
                                 {index + 1}
                               </div>
@@ -2176,7 +2176,7 @@ const Projects = () => {
                     })}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-black/80 text-center">
+                  <div className="p-6 rounded-lg bg-black text-center">
                     <Briefcase className="w-8 h-8 text-gray-600 mx-auto mb-2" />
                     <p className="text-gray-400">No milestones yet</p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -2195,7 +2195,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-[60] p-4"
           onClick={() => {
             setShowEscrowModal(false);
             setSelectedMilestone(null);
@@ -2221,7 +2221,7 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
+                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-white/30">
@@ -2238,7 +2238,7 @@ const Projects = () => {
                     <select
                       value={paymentDetails.method}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, method: e.target.value }))}
-                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
                     >
                       <option value="paypal">PayPal</option>
                       <option value="bank_transfer">Bank Transfer</option>
@@ -2269,7 +2269,7 @@ const Projects = () => {
                           : "Enter payment details..."
                       }
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
                     />
                   </div>
 
@@ -2280,7 +2280,7 @@ const Projects = () => {
                       value={paymentDetails.notes}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Any special instructions..."
-                      className="w-full px-4 py-2.5 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2302,7 +2302,7 @@ const Projects = () => {
                       setSelectedMilestone(null);
                       setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Cancel
                   </Button>
@@ -2329,7 +2329,7 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
+                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-white/30">
@@ -2347,7 +2347,7 @@ const Projects = () => {
                 </div>
 
                 {selectedMilestone.payment_proof_url && (
-                  <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
+                  <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
                     <p className="text-sm text-gray-400 mb-2">Payment Proof Submitted</p>
                     <a
                       href={selectedMilestone.payment_proof_url}
@@ -2377,7 +2377,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Cancel
                   </Button>
@@ -2403,7 +2403,7 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black/80 border border-white/30 mb-4">
+                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
                   <p className="text-sm text-gray-400 mb-1">Milestone</p>
                   <p className="text-white font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-white/30">
@@ -2433,7 +2433,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black/80"
+                    className="flex-1 border-white/20 text-white hover:bg-black"
                   >
                     Close
                   </Button>
@@ -2666,7 +2666,7 @@ const Feedback = () => {
               return (
                 <div
                   key={hire.connection.id}
-                  className="p-6 rounded-xl bg-black/80 border border-white/30"
+                  className="p-6 rounded-xl bg-black border border-white/30"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -2711,7 +2711,7 @@ const Feedback = () => {
                             className={`px-3 py-2 rounded-lg text-center ${
                               feedback
                                 ? "bg-emerald-500/20 border border-emerald-500/30"
-                                : "bg-black/80 border border-white/30"
+                                : "bg-black border border-white/30"
                             }`}
                           >
                             <p className="text-xs text-gray-500">{typeLabel}</p>
@@ -2793,7 +2793,7 @@ const Feedback = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No hires yet</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -2808,7 +2808,7 @@ const Feedback = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowFeedbackModal(false)}
         >
           <motion.div
@@ -2839,7 +2839,7 @@ const Feedback = () => {
                     className={`p-3 rounded-lg transition-colors ${
                       feedbackForm.performanceRating >= rating
                         ? "bg-amber-500/20 text-amber-400"
-                        : "bg-black/80 text-gray-500 hover:bg-black/80"
+                        : "bg-black text-gray-500 hover:bg-black"
                     }`}
                   >
                     <Star
@@ -2867,7 +2867,7 @@ const Feedback = () => {
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                       feedbackForm.readinessAccuracy === rating
                         ? "bg-emerald-600 text-white"
-                        : "bg-black/80 text-gray-400 hover:bg-black/80"
+                        : "bg-black text-gray-400 hover:bg-black"
                     }`}
                   >
                     {rating}
@@ -2893,7 +2893,7 @@ const Feedback = () => {
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     feedbackForm.wouldHireAgain
                       ? "bg-emerald-600 text-white"
-                      : "bg-black/80 text-gray-400 hover:bg-black/80"
+                      : "bg-black text-gray-400 hover:bg-black"
                   }`}
                 >
                   <ThumbsUp className="w-5 h-5" />
@@ -2906,7 +2906,7 @@ const Feedback = () => {
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     !feedbackForm.wouldHireAgain
                       ? "bg-red-600 text-white"
-                      : "bg-black/80 text-gray-400 hover:bg-black/80"
+                      : "bg-black text-gray-400 hover:bg-black"
                   }`}
                 >
                   <ThumbsDown className="w-5 h-5" />
@@ -2927,7 +2927,7 @@ const Feedback = () => {
                 }
                 placeholder="Share specific observations about their work..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -2936,7 +2936,7 @@ const Feedback = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowFeedbackModal(false)}
-                className="flex-1 border-white/20 text-white hover:bg-black/80"
+                className="flex-1 border-white/20 text-white hover:bg-black"
               >
                 Cancel
               </Button>
@@ -3096,17 +3096,17 @@ const EmployerMessagesPage = () => {
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, mentors, and other employers.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-emerald-600 hover:bg-emerald-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
               <div className="bg-black/90 border border-emerald-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-emerald-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-emerald-500" /></div>}
                   {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
@@ -3137,7 +3137,7 @@ const EmployerMessagesPage = () => {
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-emerald-400" />}
@@ -3186,7 +3186,7 @@ const EmployerMessagesPage = () => {
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
-                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black/80 text-gray-200 rounded-bl-md"}`}>
+                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
@@ -3198,7 +3198,7 @@ const EmployerMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-white/30">
                 <div className="flex items-center gap-3">
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
                   <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -3325,7 +3325,7 @@ const Company = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Contact Info */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Contact Information</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -3340,7 +3340,7 @@ const Company = () => {
         </div>
 
         {/* Company Info */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Company Details</h3>
           <div className="space-y-4">
             <div>
@@ -3351,7 +3351,7 @@ const Company = () => {
                   value={formData.company_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_name: e.target.value }))}
                   placeholder="Your company name"
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.company_name || "Not set"}</p>
@@ -3366,7 +3366,7 @@ const Company = () => {
                     value={formData.industry}
                     onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                     placeholder="e.g., Technology"
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                   />
                 ) : (
                   <p className="text-white">{formData.industry || "Not set"}</p>
@@ -3378,7 +3378,7 @@ const Company = () => {
                   <select
                     value={formData.company_size}
                     onChange={(e) => setFormData((prev) => ({ ...prev, company_size: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
                   >
                     <option value="">Select size</option>
                     <option value="1-10">1-10 employees</option>
@@ -3400,7 +3400,7 @@ const Company = () => {
                   value={formData.company_website}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_website: e.target.value }))}
                   placeholder="https://yourcompany.com"
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
                 />
               ) : formData.company_website ? (
                 <a href={formData.company_website} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
@@ -3461,7 +3461,7 @@ const SettingsPage = () => {
       </motion.div>
 
       <motion.div variants={itemVariants} className="space-y-4">
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -3477,27 +3477,27 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
+          <Button variant="outline" className="border-white/20 text-white hover:bg-black">
             Change Password
           </Button>
         </div>
 
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">New candidate matches</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Connection responses</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
           </div>
         </div>
@@ -3585,7 +3585,7 @@ const EmployerDashboard = () => {
                   className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-emerald-600/20 to-teal-600/20 text-white border border-emerald-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black/80"
+                      : "text-gray-400 hover:text-white hover:bg-black"
                   }`}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -3623,7 +3623,7 @@ const EmployerDashboard = () => {
             {sidebarCollapsed ? (
               <button
                 onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
                 title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />
@@ -3631,7 +3631,7 @@ const EmployerDashboard = () => {
             ) : (
               <Button
                 variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
+                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
                 onClick={handleSignOut}
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -3643,7 +3643,7 @@ const EmployerDashboard = () => {
       </aside>
 
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3672,7 +3672,7 @@ const EmployerDashboard = () => {
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-black/80 border-b border-white/5">
+                      <div key={notification.id} className="p-3 hover:bg-black border-b border-white/5">
                         <p className="text-sm font-medium text-white">{notification.title}</p>
                         <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
                       </div>

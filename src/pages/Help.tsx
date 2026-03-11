@@ -223,7 +223,7 @@ const Help = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for help articles..."
-                className="w-full pl-12 pr-4 py-6 text-lg bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 rounded-xl"
+                className="w-full pl-12 pr-4 py-6 text-lg bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 rounded-xl"
               />
             </motion.div>
           </motion.div>
@@ -260,7 +260,7 @@ const Help = () => {
               >
                 <div className="relative h-full">
                   <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors h-full">
+                  <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors h-full">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                       <category.icon className="w-6 h-6 text-indigo-400" />
                     </div>
@@ -301,7 +301,7 @@ const Help = () => {
                   <motion.a
                     key={index}
                     href="#"
-                    className="group flex items-center gap-4 p-4 rounded-xl bg-black/80 border border-white/30 hover:border-indigo-500/30 transition-colors"
+                    className="group flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-indigo-500/30 transition-colors"
                     whileHover={{ x: 5 }}
                   >
                     <div className="w-8 h-8 rounded-lg bg-indigo-600/20 flex items-center justify-center flex-shrink-0">
@@ -328,7 +328,7 @@ const Help = () => {
               </h2>
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-2xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-black/80 border border-white/30">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/30">
                   <img
                     src="https://api.a0.dev/assets/image?text=Video tutorial thumbnail showing platform walkthrough&aspect=16:9&seed=help_video"
                     alt="Platform Tutorial"
@@ -388,7 +388,7 @@ const Help = () => {
                     return (
                       <div
                         key={faqId}
-                        className="rounded-xl bg-black/80 border border-white/30 overflow-hidden"
+                        className="rounded-xl bg-black border border-white/30 overflow-hidden"
                       >
                         <button
                           onClick={() => toggleFaq(faqId)}
@@ -463,7 +463,7 @@ const Help = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-black/80"
+                className="border-white/20 text-white hover:bg-black"
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Live Chat

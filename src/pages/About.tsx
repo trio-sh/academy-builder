@@ -91,7 +91,7 @@ const About = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-white mb-6"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-white mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -228,7 +228,7 @@ const About = () => {
                 >
                   <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
+                  <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-600/30">
                       <value.icon className="w-7 h-7 text-white" />
                     </div>
@@ -303,7 +303,7 @@ const About = () => {
               ].map((item) => (
                 <motion.div key={item.title} variants={itemVariants} className="group relative">
                   <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${item.gradient}`} />
-                  <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300 h-full flex flex-col">
+                  <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300 h-full flex flex-col">
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-5 shadow-lg`}>
                       <item.icon className="w-7 h-7 text-white" />
                     </div>

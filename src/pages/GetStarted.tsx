@@ -527,7 +527,7 @@ const GetStarted = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/80 backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -579,7 +579,7 @@ const GetStarted = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-black/80 text-gray-50 border border-white/30"
+                          : "bg-black text-gray-50 border border-white/30"
                       )}
                       whileHover={{ scale: 1.05 }}
                     >
@@ -588,7 +588,7 @@ const GetStarted = () => {
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
-                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black/80"
+                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black"
                       )} />
                     )}
                   </div>
@@ -616,8 +616,8 @@ const GetStarted = () => {
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
                           selectedRole === role.id
-                            ? "bg-black/80 border-2 border-indigo-500/50"
-                            : "bg-black/80 border border-white/30 hover:border-white/30"
+                            ? "bg-black border-2 border-indigo-500/50"
+                            : "bg-black border border-white/30 hover:border-white/30"
                         )}
                         whileHover={{ y: -5 }}
                       >
@@ -672,8 +672,8 @@ const GetStarted = () => {
                             className={cn(
                               "group relative p-8 rounded-3xl text-left transition-all duration-500",
                               selectedPath === path.id
-                                ? "bg-black/80 border-2 border-indigo-500/50"
-                                : "bg-black/80 border border-white/30 hover:border-white/30"
+                                ? "bg-black border-2 border-indigo-500/50"
+                                : "bg-black border border-white/30 hover:border-white/30"
                             )}
                             whileHover={{ y: -5 }}
                           >
@@ -749,7 +749,7 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -779,7 +779,7 @@ const GetStarted = () => {
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
                             />
                           </div>
                           <div className="space-y-2">
@@ -790,7 +790,7 @@ const GetStarted = () => {
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
                             />
                           </div>
                         </div>
@@ -803,7 +803,7 @@ const GetStarted = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-black border-white/20 text-white placeholder:text-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
@@ -815,7 +815,7 @@ const GetStarted = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-black border-white/20 text-white placeholder:text-gray-500"
                           />
                         </div>
 
@@ -829,7 +829,7 @@ const GetStarted = () => {
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
                               />
                             </div>
                             <div className="space-y-2">
@@ -840,7 +840,7 @@ const GetStarted = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
                               />
                             </div>
                           </>
@@ -854,7 +854,7 @@ const GetStarted = () => {
                               value={schoolName}
                               onChange={(e) => setSchoolName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
                             />
                           </div>
                         )}
@@ -869,7 +869,7 @@ const GetStarted = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
                               />
                             </div>
                             <div className="space-y-2">
@@ -880,7 +880,7 @@ const GetStarted = () => {
                                 value={yearsExperience}
                                 onChange={(e) => setYearsExperience(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black/80 border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
                               />
                             </div>
                           </>
@@ -892,7 +892,7 @@ const GetStarted = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-black/80"
+                          className="flex-1 border-white/20 text-white hover:bg-black"
                         >
                           Back
                         </Button>
@@ -930,7 +930,7 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">
                         {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
                       </h2>
@@ -969,7 +969,7 @@ const GetStarted = () => {
                               <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
                               <p className="text-white font-medium mb-2">Click to upload your resume</p>
                               <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                              <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black/80" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                              <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                             </>
                           )}
                         </motion.div>
@@ -992,7 +992,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         {!isReturningUser && (
-                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black">Back</Button>
                         )}
                         <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
@@ -1012,21 +1012,21 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
 
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="headline" className="text-gray-50">Professional Headline</Label>
-                          <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="skills" className="text-gray-50">Primary Skills</Label>
-                          <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="experience" className="text-gray-50">Years of Experience</Label>
-                          <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-black/80 border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
                         </div>
                       </div>
 
@@ -1041,7 +1041,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         {!isReturningUser && (
-                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black/80">Back</Button>
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black">Back</Button>
                         )}
                         <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
@@ -1061,7 +1061,7 @@ const GetStarted = () => {
                 <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>

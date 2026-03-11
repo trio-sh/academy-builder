@@ -221,7 +221,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
       />
 
       {/* Glass card */}
-      <div className="relative h-full bg-black/80 backdrop-blur-xl border border-white/30 rounded-3xl p-8 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
+      <div className="relative h-full bg-black backdrop-blur-xl border border-white/30 rounded-3xl p-8 group-hover:border-white/30 transition-all duration-500 overflow-hidden">
         {/* Icon */}
         <div
           className={cn(
@@ -252,7 +252,7 @@ function ComponentCard({ component, index }: ComponentCardProps) {
           {component.features.slice(0, 2).map((feature) => (
             <span
               key={feature}
-              className="px-3 py-1 text-xs rounded-full bg-black/80 text-gray-50 group-hover:bg-white/20 group-hover:text-white transition-colors"
+              className="px-3 py-1 text-xs rounded-full bg-black text-gray-50 group-hover:bg-white/20 group-hover:text-white transition-colors"
             >
               {feature}
             </span>

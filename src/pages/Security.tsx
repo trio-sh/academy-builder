@@ -218,7 +218,7 @@ const Security = () => {
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 h-full">
+                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 h-full">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                     <feature.icon className="w-6 h-6 text-indigo-400" />
                   </div>
@@ -264,7 +264,7 @@ const Security = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="text-center p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
+                className="text-center p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
               >
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-600/20 to-emerald-600/20 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-6 h-6 text-green-400" />
@@ -309,7 +309,7 @@ const Security = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30"
+                className="p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
               >
                 <h3 className="text-lg font-semibold text-white mb-4">
                   {practice.title}
@@ -343,7 +343,7 @@ const Security = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                 <div className="flex flex-col md:flex-row items-start gap-8">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-600/20 flex items-center justify-center flex-shrink-0">
                     <AlertTriangle className="w-8 h-8 text-amber-400" />
@@ -413,7 +413,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-black/80"
+                  className="border-white/20 text-white hover:bg-black"
                   asChild
                 >
                   <Link to="/privacy">
@@ -425,7 +425,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-black/80"
+                  className="border-white/20 text-white hover:bg-black"
                   asChild
                 >
                   <Link to="/terms">
@@ -437,7 +437,7 @@ const Security = () => {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-black/80"
+                  className="border-white/20 text-white hover:bg-black"
                   asChild
                 >
                   <Link to="/help">

@@ -293,7 +293,7 @@ const Blog = () => {
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                className="w-full pl-12 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
               />
               {searchQuery && (
                 <button
@@ -322,7 +322,7 @@ const Blog = () => {
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   selectedCategory === category
                     ? "bg-indigo-600/20 border border-indigo-500/50 text-white"
-                    : "bg-black/80 border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
+                    : "bg-black border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
                 }`}
               >
                 {category}
@@ -349,7 +349,7 @@ const Blog = () => {
               <button onClick={() => setExpandedPost(featuredPost)} className="group block w-full text-left">
                 <div className="relative rounded-2xl overflow-hidden">
                   <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30">
+                  <div className="relative grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
                     <div className="aspect-video rounded-xl overflow-hidden">
                       <img
                         src={featuredPost.image}
@@ -426,7 +426,7 @@ const Blog = () => {
                 >
                   <div className="relative h-full">
                     <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                    <div className="relative h-full rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 overflow-hidden hover:border-indigo-500/30 transition-colors">
+                    <div className="relative h-full rounded-2xl bg-black backdrop-blur-xl border border-white/30 overflow-hidden hover:border-indigo-500/30 transition-colors">
                       <div className="aspect-video overflow-hidden">
                         <img
                           src={post.image}
@@ -473,7 +473,7 @@ const Blog = () => {
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 text-center">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-black backdrop-blur-xl border border-white/30 text-center">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                     Stay Updated
@@ -487,7 +487,7 @@ const Blog = () => {
                   <Input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 bg-black/80 border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                    className="flex-1 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   />
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">

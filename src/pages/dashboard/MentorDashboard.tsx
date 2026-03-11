@@ -332,7 +332,7 @@ const ObservationFormModal = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={closeModal}
       >
         <motion.div
@@ -362,7 +362,7 @@ const ObservationFormModal = () => {
                 <div
                   key={s}
                   className={`h-1 flex-1 rounded-full transition-colors ${
-                    s <= step ? "bg-purple-500" : "bg-black/80"
+                    s <= step ? "bg-purple-500" : "bg-black"
                   }`}
                 />
               ))}
@@ -386,7 +386,7 @@ const ObservationFormModal = () => {
                       <button
                         key={assignment.id}
                         onClick={() => selectCandidate(assignment.id, assignment.candidate_id)}
-                        className="w-full p-4 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
+                        className="w-full p-4 rounded-xl bg-black border border-white/30 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
                       >
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
                           {profile?.first_name?.[0]}{profile?.last_name?.[0]}
@@ -410,7 +410,7 @@ const ObservationFormModal = () => {
               // Step 2: Behavioral Scoring
               <div className="space-y-6">
                 {selectedAssignment && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-black/80">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-black">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-sm">
                       {selectedAssignment.candidate_profile?.profile?.first_name?.[0]}
                       {selectedAssignment.candidate_profile?.profile?.last_name?.[0]}
@@ -430,7 +430,7 @@ const ObservationFormModal = () => {
                     type="date"
                     value={formData.sessionDate}
                     onChange={e => setFormData(prev => ({ ...prev, sessionDate: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                   />
                 </div>
 
@@ -444,7 +444,7 @@ const ObservationFormModal = () => {
                   </div>
                   <div className="space-y-4">
                     {BEHAVIORAL_DIMENSIONS.map(dimension => (
-                      <div key={dimension.id} className="p-4 rounded-lg bg-black/80 border border-white/30">
+                      <div key={dimension.id} className="p-4 rounded-lg bg-black border border-white/30">
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <p className="font-medium text-white">{dimension.label}</p>
@@ -464,7 +464,7 @@ const ObservationFormModal = () => {
                               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 formData.scores[dimension.id] === score
                                   ? `${color} text-white`
-                                  : "bg-black/80 text-gray-400 hover:bg-white/20"
+                                  : "bg-black text-gray-400 hover:bg-white/20"
                               }`}
                               title={label}
                             >
@@ -500,7 +500,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewStrength(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addStrength())}
                       placeholder="Add a strength..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addStrength} size="sm" className="bg-emerald-600 hover:bg-emerald-500">
                       <Plus className="w-4 h-4" />
@@ -528,7 +528,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewImprovement(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImprovement())}
                       placeholder="Add an area for improvement..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addImprovement} size="sm" className="bg-amber-600 hover:bg-amber-500">
                       <Plus className="w-4 h-4" />
@@ -544,7 +544,7 @@ const ObservationFormModal = () => {
                     onChange={e => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                     placeholder="Any additional observations or context..."
                     rows={4}
-                    className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -578,7 +578,7 @@ const ObservationFormModal = () => {
               <Button
                 variant="outline"
                 onClick={() => setStep(s => s - 1)}
-                className="border-white/20 text-white hover:bg-black/80"
+                className="border-white/20 text-white hover:bg-black"
               >
                 Back
               </Button>
@@ -591,7 +591,7 @@ const ObservationFormModal = () => {
                   variant="outline"
                   onClick={() => handleSubmit(true)}
                   disabled={isSaving}
-                  className="border-white/20 text-white hover:bg-black/80"
+                  className="border-white/20 text-white hover:bg-black"
                 >
                   Save as Draft
                 </Button>
@@ -777,7 +777,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-purple-600 to-pink-600 transition-opacity" />
             <div className="relative">
@@ -797,7 +797,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/mentor/mentees"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <Users className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">View Mentees</h3>
@@ -807,7 +807,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/mentor/observations"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <ClipboardCheck className="w-8 h-8 text-emerald-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Record Observation</h3>
@@ -817,7 +817,7 @@ const Overview = () => {
 
           <Link
             to="/dashboard/mentor/schedule"
-            className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
           >
             <Calendar className="w-8 h-8 text-amber-400 mb-3" />
             <h3 className="font-semibold text-white mb-1">Manage Schedule</h3>
@@ -847,7 +847,7 @@ const Overview = () => {
               </Link>
             )}
             {pendingObservations > 0 && (
-              <div className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4">
+              <div className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                   <ClipboardCheck className="w-5 h-5 text-amber-400" />
                 </div>
@@ -860,7 +860,7 @@ const Overview = () => {
             )}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
             <p className="text-gray-400">No pending actions</p>
             <p className="text-sm text-gray-500 mt-1">You're all caught up!</p>
@@ -1183,7 +1183,7 @@ const Mentees = () => {
             return (
               <div
                 key={assignment.id}
-                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
@@ -1251,7 +1251,7 @@ const Mentees = () => {
         !pendingRequests.length && (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No mentees assigned yet</p>
@@ -1267,7 +1267,7 @@ const Mentees = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setRecommendModal(null)}
         >
           <motion.div
@@ -1290,7 +1290,7 @@ const Mentees = () => {
                   className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     selectedModules.includes(module.id)
                       ? "bg-indigo-500/20 border-indigo-500/30"
-                      : "bg-black/80 border-white/10 hover:border-white/20"
+                      : "bg-black border-white/10 hover:border-white/20"
                   }`}
                 >
                   <input
@@ -1320,7 +1320,7 @@ const Mentees = () => {
                 onChange={(e) => setRecommendNote(e.target.value)}
                 placeholder="Add a note about why you recommend these modules..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -1328,7 +1328,7 @@ const Mentees = () => {
               <Button
                 variant="outline"
                 onClick={() => { setRecommendModal(null); setSelectedModules([]); setRecommendNote(""); }}
-                className="flex-1 border-white/20 text-white hover:bg-black/80"
+                className="flex-1 border-white/20 text-white hover:bg-black"
               >
                 Cancel
               </Button>
@@ -1523,7 +1523,7 @@ const AssignDimensions = () => {
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
                   ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
-                  : "bg-black/80 border-white/10 hover:border-white/20"
+                  : "bg-black border-white/10 hover:border-white/20"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -1557,7 +1557,7 @@ const AssignDimensions = () => {
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
                   ? "bg-indigo-500/20 border-indigo-500/50 ring-2 ring-indigo-500/30"
-                  : "bg-black/80 border-white/10 hover:border-white/20"
+                  : "bg-black border-white/10 hover:border-white/20"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -1581,7 +1581,7 @@ const AssignDimensions = () => {
       </motion.div>
 
       {/* Save */}
-      <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-xl bg-black/80 border border-white/10">
+      <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
         <div>
           <p className="text-sm text-gray-400">
             {selectedDimensions.length} dimension{selectedDimensions.length !== 1 ? "s" : ""} selected
@@ -1694,7 +1694,7 @@ const Observations = () => {
           {observations.map((observation) => (
             <div
               key={observation.id}
-              className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+              className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -1716,7 +1716,7 @@ const Observations = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-black/80"
+                  className="border-white/20 text-white hover:bg-black"
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   View
@@ -1745,7 +1745,7 @@ const Observations = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center"
+          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <ClipboardCheck className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400">No observations recorded yet</p>
@@ -2120,7 +2120,7 @@ const Endorsements = () => {
                   className={`p-6 rounded-xl border transition-colors ${
                     isSelected
                       ? "bg-purple-500/30 border-purple-500/30"
-                      : "bg-black/80 border-white/30 hover:border-white/20"
+                      : "bg-black border-white/30 hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -2180,7 +2180,7 @@ const Endorsements = () => {
                                     : option.color === "orange"
                                     ? "bg-orange-500/20 border-orange-500/50"
                                     : "bg-red-500/20 border-red-500/50"
-                                  : "bg-black/80 border-white/30 hover:border-white/20"
+                                  : "bg-black border-white/30 hover:border-white/20"
                               }`}
                             >
                               <p className={`font-medium ${
@@ -2224,7 +2224,7 @@ const Endorsements = () => {
                                 type="checkbox"
                                 checked={endorsementForm.redirectToLiveworks}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectToLiveworks: e.target.checked, redirectModule: "" }))}
-                                className="w-5 h-5 rounded bg-black/80 border-white/20"
+                                className="w-5 h-5 rounded bg-black border-white/20"
                               />
                               <span className="text-white">Redirect to LiveWorks project experience</span>
                             </label>
@@ -2253,7 +2253,7 @@ const Endorsements = () => {
                               onChange={(e) => setEndorsementForm(prev => ({ ...prev, escalateConcern: e.target.value }))}
                               placeholder="Document the specific concern observed during the observation period..."
                               rows={3}
-                              className="w-full px-4 py-3 rounded-lg bg-black/80 border border-red-500/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none resize-none"
+                              className="w-full px-4 py-3 rounded-lg bg-black border border-red-500/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none resize-none"
                             />
                           </div>
                         </div>
@@ -2269,7 +2269,7 @@ const Endorsements = () => {
                           onChange={(e) => setEndorsementForm(prev => ({ ...prev, justification: e.target.value }))}
                           placeholder="Explain your decision and provide feedback for the candidate..."
                           rows={4}
-                          className="w-full px-4 py-3 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                          className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
                         />
                       </div>
 
@@ -2286,7 +2286,7 @@ const Endorsements = () => {
                               redirectToLiveworks: false,
                             });
                           }}
-                          className="border-white/20 text-white hover:bg-black/80"
+                          className="border-white/20 text-white hover:bg-black"
                         >
                           Cancel
                         </Button>
@@ -2315,7 +2315,7 @@ const Endorsements = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black/80 border border-white/30 text-center">
+          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-400">No candidates ready for endorsement</p>
             <p className="text-sm text-gray-500 mt-1">
@@ -2333,7 +2333,7 @@ const Endorsements = () => {
             {pastEndorsements.map((endorsement) => (
               <div
                 key={endorsement.id}
-                className="p-4 rounded-xl bg-black/80 border border-white/30 flex items-center gap-4"
+                className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   endorsement.decision === "proceed"
@@ -2380,7 +2380,7 @@ const Endorsements = () => {
             ))}
           </div>
         ) : (
-          <div className="p-6 rounded-xl bg-black/80 border border-white/30 text-center">
+          <div className="p-6 rounded-xl bg-black border border-white/30 text-center">
             <Award className="w-10 h-10 text-gray-600 mx-auto mb-3" />
             <p className="text-gray-400 text-sm">No endorsements given yet</p>
           </div>
@@ -2590,7 +2590,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "availability" ? "default" : "outline"}
           onClick={() => setActiveTab("availability")}
-          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black/80"}
+          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black"}
         >
           <Clock className="w-4 h-4 mr-2" />
           Availability
@@ -2598,7 +2598,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "sessions" ? "default" : "outline"}
           onClick={() => setActiveTab("sessions")}
-          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black/80"}
+          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black"}
         >
           <Calendar className="w-4 h-4 mr-2" />
           Sessions ({sessions.length})
@@ -2606,7 +2606,7 @@ const Schedule = () => {
       </motion.div>
 
       {activeTab === "availability" && (
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-6">Weekly Availability</h2>
           <p className="text-sm text-gray-400 mb-6">
             Set your available hours for each day. Candidates can book sessions during these times.
@@ -2623,7 +2623,7 @@ const Schedule = () => {
                   className={`p-4 rounded-lg border transition-colors ${
                     isActive
                       ? "bg-purple-500/30 border-purple-500/30"
-                      : "bg-black/80 border-white/30"
+                      : "bg-black border-white/30"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -2635,7 +2635,7 @@ const Schedule = () => {
                           checked={isActive || false}
                           onChange={() => toggleDayAvailability(day.value)}
                         />
-                        <div className="w-11 h-6 bg-black/80 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        <div className="w-11 h-6 bg-black peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                       </label>
                       <span className={`font-medium ${isActive ? "text-white" : "text-gray-500"}`}>
                         {day.label}
@@ -2647,7 +2647,7 @@ const Schedule = () => {
                         <select
                           value={dayAvail?.startTime || "09:00"}
                           onChange={(e) => updateDayTime(day.value, "startTime", e.target.value)}
-                          className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
                             <option key={t} value={t} className="bg-gray-900">
@@ -2659,7 +2659,7 @@ const Schedule = () => {
                         <select
                           value={dayAvail?.endTime || "17:00"}
                           onChange={(e) => updateDayTime(day.value, "endTime", e.target.value)}
-                          className="bg-black/80 border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
                             <option key={t} value={t} className="bg-gray-900">
@@ -2698,7 +2698,7 @@ const Schedule = () => {
       {activeTab === "sessions" && (
         <motion.div variants={itemVariants} className="space-y-4">
           {sessions.length === 0 ? (
-            <div className="p-12 rounded-xl bg-black/80 border border-white/30 text-center">
+            <div className="p-12 rounded-xl bg-black border border-white/30 text-center">
               <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">No Upcoming Sessions</h3>
               <p className="text-gray-400 max-w-md mx-auto">
@@ -2709,7 +2709,7 @@ const Schedule = () => {
             sessions.map((session) => (
               <div
                 key={session.id}
-                className="p-6 rounded-xl bg-black/80 border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -2752,7 +2752,7 @@ const Schedule = () => {
                 </div>
 
                 {session.notes && (
-                  <div className="mt-4 p-3 rounded-lg bg-black/80">
+                  <div className="mt-4 p-3 rounded-lg bg-black">
                     <p className="text-sm text-gray-400">{session.notes}</p>
                   </div>
                 )}
@@ -2783,7 +2783,7 @@ const Schedule = () => {
                         rel="noopener noreferrer"
                         className="ml-auto"
                       >
-                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black/80">
+                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Join Meeting
                         </Button>
@@ -2961,7 +2961,7 @@ const ProfilePage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Basic Info */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-3xl text-white font-bold">
               {formData.first_name?.[0]}{formData.last_name?.[0]}
@@ -2985,7 +2985,7 @@ const ProfilePage = () => {
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.first_name}</p>
@@ -2998,7 +2998,7 @@ const ProfilePage = () => {
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.last_name}</p>
@@ -3008,7 +3008,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Professional Info */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Professional Information</h3>
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -3019,7 +3019,7 @@ const ProfilePage = () => {
                   value={formData.company}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                   placeholder="Your company"
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.company || "Not set"}</p>
@@ -3033,7 +3033,7 @@ const ProfilePage = () => {
                   value={formData.job_title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, job_title: e.target.value }))}
                   placeholder="Your title"
-                  className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.job_title || "Not set"}</p>
@@ -3048,7 +3048,7 @@ const ProfilePage = () => {
                 value={formData.industry}
                 onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                 placeholder="e.g., Technology, Healthcare, Finance"
-                className="w-full px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
               />
             ) : (
               <p className="text-white">{formData.industry || "Not set"}</p>
@@ -3057,7 +3057,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Specializations */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <label className="text-sm text-gray-400 block mb-3">Specializations</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.specializations.map((spec) => (
@@ -3085,7 +3085,7 @@ const ProfilePage = () => {
                 onChange={(e) => setNewSpec(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSpec())}
                 placeholder="Add a specialization..."
-                className="flex-1 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
               />
               <Button onClick={addSpec} size="sm" className="bg-purple-600 hover:bg-purple-500">
                 <Plus className="w-4 h-4" />
@@ -3095,7 +3095,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Mentor Settings */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Mentor Settings</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -3111,7 +3111,7 @@ const ProfilePage = () => {
                     onChange={(e) => setFormData((prev) => ({ ...prev, is_accepting: e.target.checked }))}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-black/80 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  <div className="w-11 h-6 bg-black peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                 </label>
               ) : (
                 <span className={`px-2 py-1 rounded text-xs ${
@@ -3130,7 +3130,7 @@ const ProfilePage = () => {
                   onChange={(e) => setFormData((prev) => ({ ...prev, max_mentees: parseInt(e.target.value) || 5 }))}
                   min={1}
                   max={20}
-                  className="w-24 px-4 py-2 rounded-lg bg-black/80 border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-24 px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
                 />
               ) : (
                 <p className="text-white">{formData.max_mentees}</p>
@@ -3273,18 +3273,18 @@ const MentorMessagesPage = () => {
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, employers, and other mentors.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black/80 border border-white/30 overflow-hidden flex">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         {/* Conversations List */}
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black/80 border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-purple-600 hover:bg-purple-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
               <div className="bg-black/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-purple-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black/80 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-purple-500" /></div>}
                   {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
@@ -3315,7 +3315,7 @@ const MentorMessagesPage = () => {
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black/80 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-purple-400" />}
@@ -3365,7 +3365,7 @@ const MentorMessagesPage = () => {
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
-                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-purple-600 text-white rounded-br-md" : "bg-black/80 text-gray-200 rounded-bl-md"}`}>
+                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-purple-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
@@ -3377,7 +3377,7 @@ const MentorMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-white/30">
                 <div className="flex items-center gap-3">
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black/80 border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
                   <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -3417,7 +3417,7 @@ const SettingsPage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
             <div>
@@ -3434,28 +3434,28 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-black/80">
+          <Button variant="outline" className="border-white/20 text-white hover:bg-black">
             Change Password
           </Button>
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-black/80 border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">New mentee assignments</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
             <label className="flex items-center justify-between">
               <span className="text-gray-400">Session reminders</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black/80 border-white/20" />
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
             </label>
           </div>
         </div>
@@ -3544,7 +3544,7 @@ const MentorDashboardInner = () => {
                   className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
                     isActive
                       ? "bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border border-purple-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black/80"
+                      : "text-gray-400 hover:text-white hover:bg-black"
                   }`}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -3583,7 +3583,7 @@ const MentorDashboardInner = () => {
             {sidebarCollapsed ? (
               <button
                 onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black/80 rounded-lg transition-colors"
+                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
                 title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />
@@ -3591,7 +3591,7 @@ const MentorDashboardInner = () => {
             ) : (
               <Button
                 variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black/80"
+                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
                 onClick={handleSignOut}
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -3603,7 +3603,7 @@ const MentorDashboardInner = () => {
       </aside>
 
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black/80 backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3632,7 +3632,7 @@ const MentorDashboardInner = () => {
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-black/80 border-b border-white/5">
+                      <div key={notification.id} className="p-3 hover:bg-black border-b border-white/5">
                         <p className="text-sm font-medium text-white">{notification.title}</p>
                         <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
                       </div>

@@ -112,7 +112,7 @@ export function DifferentiatorSection() {
 
               <div className="relative rounded-3xl border border-white/10 overflow-hidden bg-black/60 backdrop-blur-xl">
                 {/* Header */}
-                <div className="grid grid-cols-3 bg-black/80">
+                <div className="grid grid-cols-3 bg-black">
                   <div className="p-4 border-r border-white/10">
                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria</span>
                   </div>

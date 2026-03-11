@@ -299,7 +299,7 @@ function EntryPointCard({ icon, title, description, entry, image, delay }: Entry
       <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500" />
 
       {/* Glass card */}
-      <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
+      <div className="relative bg-black backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
         {/* Image */}
         <div className="relative h-36 overflow-hidden">
           <img
