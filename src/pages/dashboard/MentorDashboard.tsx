@@ -725,10 +725,10 @@ const Overview = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome back, {profile?.first_name || "Mentor"}
         </h1>
@@ -739,7 +739,7 @@ const Overview = () => {
 
       {/* Alert if not accepting mentees */}
       {mentorProfile && !mentorProfile.is_accepting && (
-        <motion.div
+        <div
           className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 text-amber-400" />
@@ -752,7 +752,7 @@ const Overview = () => {
         </motion.div>
       )}
 
-      <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
@@ -771,7 +771,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
@@ -807,7 +807,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Pending Actions */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Pending Actions</h2>
         {pendingRequests > 0 || pendingObservations > 0 ? (
           <div className="space-y-3">
@@ -1062,10 +1062,10 @@ const Mentees = () => {
   const activeMentees = mentees.filter((m) => m.status === "active");
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">My Mentees</h1>
         <p className="text-gray-400">
           View and manage your assigned candidates.
@@ -1074,7 +1074,7 @@ const Mentees = () => {
 
       {/* Pending Requests Section */}
       {pendingRequests.length > 0 && (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
               <Bell className="w-4 h-4 text-amber-400" />
@@ -1141,7 +1141,7 @@ const Mentees = () => {
 
       {/* Active Mentees Section */}
       {activeMentees.length > 0 ? (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           {pendingRequests.length > 0 && (
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-emerald-950 flex items-center justify-center">
@@ -1225,7 +1225,7 @@ const Mentees = () => {
         </motion.div>
       ) : (
         !pendingRequests.length && (
-          <motion.div
+          <div
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1239,11 +1239,11 @@ const Mentees = () => {
 
       {/* BridgeFast Module Recommendation Modal */}
       {recommendModal && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setRecommendModal(null)}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1467,10 +1467,10 @@ const AssignDimensions = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="max-w-4xl mx-auto space-y-8"
     >
-      <motion.div>
+      <div>
         <Link to="/dashboard/mentor/mentees" className="text-sm text-indigo-400 hover:text-indigo-300 mb-4 inline-block">
           &larr; Back to Mentees
         </Link>
@@ -1481,7 +1481,7 @@ const AssignDimensions = () => {
       </motion.div>
 
       {/* MVP Dimensions */}
-      <motion.div>
+      <div>
         <h2 className="text-lg font-semibold text-white mb-3">MVP Dimensions (Active)</h2>
         <div className="grid md:grid-cols-2 gap-3">
           {mvpDimensions.map(dim => (
@@ -1515,7 +1515,7 @@ const AssignDimensions = () => {
       </motion.div>
 
       {/* Future Dimensions */}
-      <motion.div>
+      <div>
         <h2 className="text-lg font-semibold text-white mb-3">Additional Dimensions (Post-MVP)</h2>
         <div className="grid md:grid-cols-2 gap-3">
           {futureDimensions.map(dim => (
@@ -1549,7 +1549,7 @@ const AssignDimensions = () => {
       </motion.div>
 
       {/* Save */}
-      <motion.div className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
+      <div className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
         <div>
           <p className="text-sm text-gray-400">
             {selectedDimensions.length} dimension{selectedDimensions.length !== 1 ? "s" : ""} selected
@@ -1640,10 +1640,10 @@ const Observations = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Observations</h1>
           <p className="text-gray-400">Record and review behavioral observations.</p>
@@ -1655,7 +1655,7 @@ const Observations = () => {
       </motion.div>
 
       {observations.length > 0 ? (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           {observations.map((observation) => (
             <div
               key={observation.id}
@@ -1708,7 +1708,7 @@ const Observations = () => {
           ))}
         </motion.div>
       ) : (
-        <motion.div
+        <div
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <ClipboardCheck className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -2056,10 +2056,10 @@ const Endorsements = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Endorsements</h1>
         <p className="text-gray-400">
           Issue endorsements for candidates who have completed 3 mentor observations.
@@ -2067,7 +2067,7 @@ const Endorsements = () => {
       </motion.div>
 
       {/* Ready for Endorsement */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Ready for Endorsement</h2>
         {readyForEndorsement.length > 0 ? (
           <div className="space-y-4">
@@ -2114,7 +2114,7 @@ const Endorsements = () => {
 
                   {/* Endorsement Form */}
                   {isSelected && (
-                    <motion.div
+                    <div
                       className="mt-6 pt-6 border-t border-white/30 space-y-6"
                     >
                       {/* Decision Selector */}
@@ -2285,7 +2285,7 @@ const Endorsements = () => {
       </motion.div>
 
       {/* Past Endorsements */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Endorsement History</h2>
         {pastEndorsements.length > 0 ? (
           <div className="space-y-3">
@@ -2533,16 +2533,16 @@ const Schedule = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Schedule</h1>
         <p className="text-gray-400">Manage your availability and upcoming sessions.</p>
       </motion.div>
 
       {/* Tabs */}
-      <motion.div className="flex gap-2">
+      <div className="flex gap-2">
         <Button
           variant={activeTab === "availability" ? "default" : "outline"}
           onClick={() => setActiveTab("availability")}
@@ -2562,7 +2562,7 @@ const Schedule = () => {
       </motion.div>
 
       {activeTab === "availability" && (
-        <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-6">Weekly Availability</h2>
           <p className="text-sm text-gray-400 mb-6">
             Set your available hours for each day. Candidates can book sessions during these times.
@@ -2652,7 +2652,7 @@ const Schedule = () => {
       )}
 
       {activeTab === "sessions" && (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           {sessions.length === 0 ? (
             <div className="p-12 rounded-xl bg-black border border-white/30 text-center">
               <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -2887,10 +2887,10 @@ const ProfilePage = () => {
   };
 
   return (
-    <motion.div
+    <div
       className="max-w-2xl space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Your Profile</h1>
           <p className="text-gray-400">Manage your mentor profile</p>
@@ -2912,7 +2912,7 @@ const ProfilePage = () => {
         )}
       </motion.div>
 
-      <motion.div className="space-y-4">
+      <div className="space-y-4">
         {/* Basic Info */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-4 mb-6">
@@ -3221,12 +3221,12 @@ const MentorMessagesPage = () => {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
 
   return (
-    <motion.div className="h-[calc(100vh-12rem)]">
-      <motion.div className="mb-6">
+    <div className="h-[calc(100vh-12rem)]">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, employers, and other mentors.</p>
       </motion.div>
-      <motion.div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      <div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         {/* Conversations List */}
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
@@ -3357,15 +3357,15 @@ const SettingsPage = () => {
   const { user } = useAuth();
 
   return (
-    <motion.div
+    <div
       className="max-w-2xl space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
       </motion.div>
 
-      <motion.div className="space-y-4">
+      <div className="space-y-4">
         {/* Account */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>

@@ -80,7 +80,7 @@ export function HeroSection() {
       />
 
       {/* Content */}
-      <motion.div
+      <div
         className="relative container px-4 md:px-6 pt-32 pb-20"
       >
         <div className="max-w-6xl mx-auto">
@@ -88,7 +88,7 @@ export function HeroSection() {
             {/* Left: Text Content */}
             <div className="text-left">
               {/* Badge */}
-              <motion.div
+              <div
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-sm text-indigo-300 mb-8"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
@@ -114,16 +114,16 @@ export function HeroSection() {
               </motion.h1>
 
               {/* Subheadline */}
-              <motion.p
+              <p
                 className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
               >
                 The 3rd Academy bridges the gap between what your resume says and what
                 employers actually need — through sustained mentor observation and
                 evidence-based behavioral validation.
-              </motion.p>
+              </p>
 
               {/* CTAs */}
-              <motion.div
+              <div
                 className="flex flex-col sm:flex-row items-start gap-4"
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -154,7 +154,7 @@ export function HeroSection() {
               </motion.div>
 
               {/* Trust indicators */}
-              <motion.div
+              <div
                 className="flex items-center gap-6 mt-10 text-sm text-gray-400"
               >
                 <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export function HeroSection() {
             </div>
 
             {/* Right: Hero Image + Stats */}
-            <motion.div
+            <div
               className="relative hidden lg:block"
             >
               {/* Main hero image */}
@@ -212,7 +212,7 @@ export function HeroSection() {
           </div>
 
           {/* Entry Points Cards */}
-          <motion.div
+          <div
             className="grid md:grid-cols-3 gap-6 mt-20"
           >
             <EntryPointCard

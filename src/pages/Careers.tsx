@@ -131,16 +131,16 @@ const Careers = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Sparkles className="w-4 h-4" />
                 We're Hiring
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -150,14 +150,14 @@ const Careers = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Credentialing
               </span>
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="text-lg text-gray-50 mb-8"
             >
               Join our mission to bridge the gap between credentials and workplace readiness.
               We're building technology that validates real human capability.
-            </motion.p>
-            <motion.div>
+            </p>
+            <div>
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
@@ -174,7 +174,7 @@ const Careers = () => {
       {/* Values Section */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -187,11 +187,11 @@ const Careers = () => {
             </p>
           </motion.div>
 
-          <motion.div
+          <div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {values.map((value, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="group relative"
               >
@@ -212,7 +212,7 @@ const Careers = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -225,11 +225,11 @@ const Careers = () => {
             </p>
           </motion.div>
 
-          <motion.div
+          <div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {benefits.map((benefit, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="group relative"
               >
@@ -252,7 +252,7 @@ const Careers = () => {
       {/* Open Positions */}
       <section id="positions" className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -265,11 +265,11 @@ const Careers = () => {
             </p>
           </motion.div>
 
-          <motion.div
+          <div
             className="max-w-4xl mx-auto space-y-4"
           >
             {openPositions.map((position, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="group relative"
               >
@@ -317,7 +317,7 @@ const Careers = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">

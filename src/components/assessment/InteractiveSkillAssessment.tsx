@@ -752,7 +752,7 @@ export const InteractiveSkillAssessment = () => {
 
                 {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
                 {voiceAnalysis && (
-                  <motion.div
+                  <div
                     className="w-full space-y-4"
                   >
                     <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
@@ -831,7 +831,7 @@ export const InteractiveSkillAssessment = () => {
 
           {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
           {writtenAnalysis && (
-            <motion.div
+            <div
               className="space-y-4"
             >
               <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
@@ -946,7 +946,7 @@ export const InteractiveSkillAssessment = () => {
 
           <div className="space-y-4">
             {displayTurns.map((turn, i) => (
-              <motion.div
+              <div
                 key={i}
                 className={`flex ${turn.speaker === 'ai' ? 'justify-start' : 'justify-end'}`}
               >
@@ -1002,7 +1002,7 @@ export const InteractiveSkillAssessment = () => {
 
           {/* Show consequences of previous choices */}
           {problemChoices.map((choice, i) => (
-            <motion.div
+            <div
               key={i}
               className="p-3 rounded-lg bg-black border-l-4 border-indigo-500"
             >
@@ -1148,7 +1148,7 @@ export const InteractiveSkillAssessment = () => {
                 <p className="text-white font-medium mb-1">{option.action}</p>
                 <p className="text-gray-400 text-sm">{option.reasoning}</p>
                 {judgmentChoice === option.id && (
-                  <motion.div
+                  <div
                     className="mt-3 pt-3 border-t border-white/30"
                   >
                     <p className="text-emerald-400 text-sm">Response recorded.</p>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -166,21 +165,21 @@ const Overview = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome back, {profile?.first_name || "Employer"}
         </h1>
         <p className="text-gray-400">
           Find verified talent and manage your hiring pipeline.
         </p>
-      </motion.div>
+      </div>
 
       {/* Verification status */}
       {employerProfile && !employerProfile.is_verified && (
-        <motion.div
+        <div
           className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 text-amber-400" />
@@ -190,10 +189,10 @@ const Overview = () => {
               Update profile
             </Link>
           </p>
-        </motion.div>
+        </div>
       )}
 
-      <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
@@ -209,9 +208,9 @@ const Overview = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
-      <motion.div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="space-y-3">
@@ -264,8 +263,8 @@ const Overview = () => {
             </ul>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -461,18 +460,18 @@ const SearchTalent = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">T3X Talent Exchange</h1>
         <p className="text-gray-400">
           Search for verified Skill Passport holders.
         </p>
-      </motion.div>
+      </div>
 
       {/* Filters */}
-      <motion.div className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
+      <div className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-400">Filters:</span>
@@ -522,11 +521,11 @@ const SearchTalent = () => {
             <option value="3.5">Score ≥ 3.5 (Near Exemplary)</option>
           </select>
         )}
-      </motion.div>
+      </div>
 
       {/* Results */}
       {candidates.length > 0 ? (
-        <motion.div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           {candidates.map((candidate) => (
             <div
               key={candidate.id}
@@ -649,9 +648,9 @@ const SearchTalent = () => {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       ) : (
-        <motion.div
+        <div
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -659,7 +658,7 @@ const SearchTalent = () => {
           <p className="text-sm text-gray-500 mt-1">
             Try adjusting your filters or check back later
           </p>
-        </motion.div>
+        </div>
       )}
 
       {/* Connection Request Modal */}
@@ -669,7 +668,7 @@ const SearchTalent = () => {
             className="absolute inset-0 bg-black"
             onClick={() => !isSendingConnection && setShowConnectModal(false)}
           />
-          <motion.div
+          <div
             className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {connectionSuccess ? (
@@ -755,10 +754,10 @@ const SearchTalent = () => {
                 </div>
               </>
             )}
-          </motion.div>
+          </div>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -869,16 +868,16 @@ const Connections = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Connections</h1>
         <p className="text-gray-400">Manage your candidate connections.</p>
-      </motion.div>
+      </div>
 
       {/* Tabs */}
-      <motion.div className="flex gap-2">
+      <div className="flex gap-2">
         <button
           onClick={() => setActiveTab("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -919,10 +918,10 @@ const Connections = () => {
             </span>
           )}
         </button>
-      </motion.div>
+      </div>
 
       {filteredConnections.length > 0 ? (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           {filteredConnections.map((connection) => {
             const StatusIcon = getStatusIcon(connection.status);
             const candidateProfile = connection.candidate_profile;
@@ -1016,9 +1015,9 @@ const Connections = () => {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       ) : (
-        <motion.div
+        <div
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1032,9 +1031,9 @@ const Connections = () => {
               Find Talent
             </Button>
           </Link>
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -1450,10 +1449,10 @@ const Projects = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">LiveWorks Projects</h1>
           <p className="text-gray-400">Create and manage project postings.</p>
@@ -1465,11 +1464,11 @@ const Projects = () => {
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>
-      </motion.div>
+      </div>
 
       {/* New Project Form */}
       {showNewProject && (
-        <motion.div
+        <div
           className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Project</h2>
@@ -1578,12 +1577,12 @@ const Projects = () => {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Projects List */}
       {projects.length > 0 ? (
-        <motion.div className="space-y-4">
+        <div className="space-y-4">
           {projects.map((project) => {
             const applicationCount = project.applications?.length || 0;
             const pendingApps = project.applications?.filter((a) => a.status === "pending").length || 0;
@@ -1702,10 +1701,10 @@ const Projects = () => {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       ) : (
         !showNewProject && (
-          <motion.div
+          <div
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1713,17 +1712,17 @@ const Projects = () => {
             <p className="text-sm text-gray-500 mt-1">
               Create a LiveWorks project to find candidates
             </p>
-          </motion.div>
+          </div>
         )
       )}
 
       {/* Project Details Modal */}
       {selectedProject && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedProject(null)}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-3xl max-h-[80vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -2149,13 +2148,13 @@ const Projects = () => {
                 )}
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Manual Payment Modal */}
       {showEscrowModal && selectedMilestone && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-[60] p-4"
           onClick={() => {
             setShowEscrowModal(false);
@@ -2163,7 +2162,7 @@ const Projects = () => {
             setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
           }}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -2399,10 +2398,10 @@ const Projects = () => {
                 </div>
               </>
             )}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -2586,18 +2585,18 @@ const Feedback = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Hire Feedback</h1>
         <p className="text-gray-400">
           Provide 30/60/90 day performance feedback for your hires.
         </p>
-      </motion.div>
+      </div>
 
       {/* Info Banner */}
-      <motion.div
+      <div
         className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-4"
       >
         <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -2608,10 +2607,10 @@ const Feedback = () => {
             quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
           </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Hires List */}
-      <motion.div>
+      <div>
         {hires.length > 0 ? (
           <div className="space-y-4">
             {hires.map((hire) => {
@@ -2756,15 +2755,15 @@ const Feedback = () => {
             </p>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Feedback Modal */}
       {showFeedbackModal && selectedHire && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowFeedbackModal(false)}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -2910,10 +2909,10 @@ const Feedback = () => {
                 )}
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -3042,12 +3041,12 @@ const EmployerMessagesPage = () => {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
 
   return (
-    <motion.div className="h-[calc(100vh-12rem)]">
-      <motion.div className="mb-6">
+    <div className="h-[calc(100vh-12rem)]">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, mentors, and other employers.</p>
-      </motion.div>
-      <motion.div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      </div>
+      <div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
@@ -3167,8 +3166,8 @@ const EmployerMessagesPage = () => {
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -3246,10 +3245,10 @@ const Company = () => {
   };
 
   return (
-    <motion.div
+    <div
       className="max-w-2xl space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Company Profile</h1>
           <p className="text-gray-400">Manage your company information</p>
@@ -3269,9 +3268,9 @@ const Company = () => {
             </Button>
           </div>
         )}
-      </motion.div>
+      </div>
 
-      <motion.div className="space-y-4">
+      <div className="space-y-4">
         {/* Contact Info */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Contact Information</h3>
@@ -3387,8 +3386,8 @@ const Company = () => {
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -3397,15 +3396,15 @@ const SettingsPage = () => {
   const { user } = useAuth();
 
   return (
-    <motion.div
+    <div
       className="max-w-2xl space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
-      </motion.div>
+      </div>
 
-      <motion.div className="space-y-4">
+      <div className="space-y-4">
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">
@@ -3446,8 +3445,8 @@ const SettingsPage = () => {
             </label>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

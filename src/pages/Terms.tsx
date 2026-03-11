@@ -217,16 +217,16 @@ const Terms = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <FileText className="w-4 h-4" />
                 Legal
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -236,8 +236,8 @@ const Terms = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Service
               </span>
-            </motion.h1>
-            <motion.div
+            </h1>
+            <div
               className="flex items-center justify-center gap-4 text-sm text-gray-50"
             >
               <span className="flex items-center gap-1">
@@ -252,11 +252,11 @@ const Terms = () => {
       {/* Content */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto"
           >
             {/* Introduction */}
-            <motion.div
+            <div
               className="mb-12 p-6 rounded-2xl bg-black border border-white/30"
             >
               <p className="text-gray-50 leading-relaxed">
@@ -271,7 +271,7 @@ const Terms = () => {
             {/* Sections */}
             <div className="space-y-8">
               {sections.map((section, index) => (
-                <motion.div
+                <div
                   key={index}
                   className="group"
                 >
@@ -298,7 +298,7 @@ const Terms = () => {
             </div>
 
             {/* Contact Box */}
-            <motion.div
+            <div
               className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 text-center"
             >
               <Mail className="w-8 h-8 text-indigo-400 mx-auto mb-4" />

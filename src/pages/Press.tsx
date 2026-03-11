@@ -105,16 +105,16 @@ const Press = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -124,13 +124,13 @@ const Press = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Media Coverage
               </span>
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="text-lg text-gray-50 mb-8"
             >
               Stay updated on The 3rd Academy's mission to transform credentialing
               through mentor-validated behavioral assessment.
-            </motion.p>
+            </p>
           </motion.div>
         </div>
       </section>
@@ -138,11 +138,11 @@ const Press = () => {
       {/* Stats Section */}
       <section className="py-12 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="grid grid-cols-2 md:grid-cols-4 gap-6"
           >
             {stats.map((stat, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="text-center p-6 rounded-2xl bg-black border border-white/30"
               >
@@ -159,7 +159,7 @@ const Press = () => {
       {/* Press Releases */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -172,11 +172,11 @@ const Press = () => {
             </p>
           </motion.div>
 
-          <motion.div
+          <div
             className="max-w-4xl mx-auto space-y-4"
           >
             {pressReleases.map((release, index) => (
-              <motion.a
+              <a
                 key={index}
                 href={release.link}
                 className="group block relative"
@@ -195,7 +195,7 @@ const Press = () => {
                     Read More <ArrowRight className="ml-1 w-4 h-4" />
                   </span>
                 </div>
-              </motion.a>
+              </a>
             ))}
           </motion.div>
         </div>
@@ -205,7 +205,7 @@ const Press = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -218,11 +218,11 @@ const Press = () => {
             </p>
           </motion.div>
 
-          <motion.div
+          <div
             className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
           >
             {mediaFeatures.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
                 className="group relative"
               >
@@ -248,7 +248,7 @@ const Press = () => {
       {/* Media Kit */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="max-w-4xl mx-auto"
           >
             <div className="relative group">
@@ -301,7 +301,7 @@ const Press = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">

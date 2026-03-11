@@ -98,16 +98,16 @@ const Contact = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <MessageSquare className="w-4 h-4" />
                 Get in Touch
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -117,13 +117,13 @@ const Contact = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Conversation
               </span>
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="text-lg text-gray-50 mb-8"
             >
               Have questions about The 3rd Academy? We'd love to hear from you.
               Our team is here to help.
-            </motion.p>
+            </p>
           </motion.div>
         </div>
       </section>
@@ -133,13 +133,13 @@ const Contact = () => {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Form */}
-            <motion.div
+            <div
             >
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
                 <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                   {isSubmitted ? (
-                    <motion.div
+                    <div
                       className="text-center py-12"
                     >
                       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-600/20 to-emerald-600/20 flex items-center justify-center mx-auto mb-6">
@@ -287,7 +287,7 @@ const Contact = () => {
             </motion.div>
 
             {/* Contact Info */}
-            <motion.div
+            <div
               className="space-y-8"
             >
               <div>
@@ -366,7 +366,7 @@ const Contact = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">

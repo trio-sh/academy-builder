@@ -32,7 +32,7 @@ const comparisons = [
 
 export function DifferentiatorSection() {
   return (
-    <motion.section
+    <section
       className="py-32 relative overflow-hidden bg-black"
     >
       {/* Background gradient */}
@@ -52,7 +52,7 @@ export function DifferentiatorSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div className="max-w-3xl mx-auto text-center mb-20">
+        <div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             Why We're Different
           </span>
@@ -73,7 +73,7 @@ export function DifferentiatorSection() {
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Left: Image */}
-          <motion.div className="relative">
+          <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-emerald-600/20 to-indigo-600/20 rounded-3xl blur-2xl" />
             <div className="relative rounded-3xl overflow-hidden border border-white/10">
               <img
@@ -86,7 +86,7 @@ export function DifferentiatorSection() {
           </motion.div>
 
           {/* Right: Comparison Table */}
-          <motion.div>
+          <div>
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500" />
 
@@ -133,7 +133,7 @@ export function DifferentiatorSection() {
         </div>
 
         {/* Quote */}
-        <motion.div className="max-w-2xl mx-auto mt-20 text-center">
+        <div className="max-w-2xl mx-auto mt-20 text-center">
           <blockquote className="text-2xl md:text-3xl font-medium text-white italic leading-relaxed">
             "The flowchart is the map. The data is the territory.
             <br />
@@ -144,6 +144,6 @@ export function DifferentiatorSection() {
           </blockquote>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

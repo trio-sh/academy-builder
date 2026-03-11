@@ -163,13 +163,13 @@ const Join = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
-              <motion.div
+              <div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-white/30 text-sm text-gray-50 mb-6"
               >
                 <UserPlus className="w-4 h-4 text-indigo-400" />
                 Join The 3rd Academy
               </motion.div>
-              <motion.h1
+              <h1
                 className="text-4xl md:text-5xl font-bold mb-4"
               >
                 <span className="text-white">
@@ -178,10 +178,10 @@ const Join = () => {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Account
                 </span>
-              </motion.h1>
-              <motion.p className="text-lg text-gray-50">
+              </h1>
+              <p className="text-lg text-gray-50">
                 Choose how you want to participate in the behavioral credentialing ecosystem.
-              </motion.p>
+              </p>
             </div>
           </div>
         </motion.section>
@@ -191,10 +191,10 @@ const Join = () => {
           <div className="container px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
               {/* Progress */}
-              <motion.div className="flex items-center justify-center gap-4 mb-12">
+              <div className="flex items-center justify-center gap-4 mb-12">
                 {[1, 2, 3].map((s) => (
                   <div key={s} className="flex items-center gap-2">
-                    <motion.div
+                    <div
                       className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
@@ -213,14 +213,14 @@ const Join = () => {
 
               {/* Step 1: Role Selection */}
               {step === 1 && (
-                <motion.div className="space-y-8">
-                  <motion.h2 className="text-2xl font-bold text-center text-white mb-8">
+                <div className="space-y-8">
+                  <h2 className="text-2xl font-bold text-center text-white mb-8">
                     I want to join as...
-                  </motion.h2>
+                  </h2>
 
-                  <motion.div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-6">
                     {roleOptions.map((role) => (
-                      <motion.button
+                      <button
                         key={role.id}
                         onClick={() => setSelectedRole(role.id)}
                         className={cn(
@@ -261,11 +261,11 @@ const Join = () => {
                             ))}
                           </ul>
                         </div>
-                      </motion.button>
+                      </button>
                     ))}
                   </motion.div>
 
-                  <motion.div className="flex justify-center pt-6">
+                  <div className="flex justify-center pt-6">
                     <Button
                       size="lg"
                       onClick={() => setStep(2)}
@@ -277,19 +277,19 @@ const Join = () => {
                     </Button>
                   </motion.div>
 
-                  <motion.p className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
                     <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                       Sign In
                     </Link>
-                  </motion.p>
+                  </p>
                 </motion.div>
               )}
 
               {/* Step 2: Account Details */}
               {step === 2 && (
-                <motion.div className="max-w-md mx-auto">
-                  <motion.div className="relative">
+                <div className="max-w-md mx-auto">
+                  <div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
@@ -461,8 +461,8 @@ const Join = () => {
 
               {/* Step 3: Success */}
               {step === 3 && (
-                <motion.div className="max-w-md mx-auto text-center">
-                  <motion.div className="relative">
+                <div className="max-w-md mx-auto text-center">
+                  <div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">

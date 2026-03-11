@@ -146,13 +146,13 @@ const Employers = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <motion.div
+              <div
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black border border-white/30 text-sm text-white mb-6"
               >
                 <Building2 className="w-4 h-4 text-indigo-400" />
                 T3X Talent Exchange
               </motion.div>
-              <motion.h1
+              <h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               >
                 <span className="text-white">
@@ -162,14 +162,14 @@ const Employers = () => {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Scale Faster.
                 </span>
-              </motion.h1>
-              <motion.p
+              </h1>
+              <p
                 className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
               >
                 Access a curated marketplace of pre-validated, workplace-ready candidates.
                 Every profile backed by mentor observations and behavioral evidence—not just resumes.
-              </motion.p>
-              <motion.div
+              </p>
+              <div
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -194,7 +194,7 @@ const Employers = () => {
         {/* Stats */}
         <section className="py-12 bg-black border-y border-white/10">
           <div className="container px-4 md:px-6">
-            <motion.div
+            <div
               className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
             >
               {stats.map((stat, index) => (
@@ -212,7 +212,7 @@ const Employers = () => {
         {/* Benefits */}
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -227,11 +227,11 @@ const Employers = () => {
               </p>
             </motion.div>
 
-            <motion.div
+            <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
             >
               {benefits.map((benefit) => (
-                <motion.div
+                <div
                   key={benefit.title}
                   className="group relative"
                 >
@@ -264,7 +264,7 @@ const Employers = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -275,7 +275,7 @@ const Employers = () => {
               </h2>
             </motion.div>
 
-            <motion.div
+            <div
               className="max-w-5xl mx-auto"
             >
               <div className="grid md:grid-cols-4 gap-8">
@@ -285,7 +285,7 @@ const Employers = () => {
                   { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
                   { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
                 ].map((item, index) => (
-                  <motion.div key={item.step} className="relative text-center">
+                  <div key={item.step} className="relative text-center">
                     <div className="relative mb-6">
                       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/30">
                         <item.icon className="w-8 h-8 text-white" />
@@ -309,7 +309,7 @@ const Employers = () => {
         {/* Pricing */}
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -323,11 +323,11 @@ const Employers = () => {
               </p>
             </motion.div>
 
-            <motion.div
+            <div
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             >
               {tiers.map((tier) => (
-                <motion.div
+                <div
                   key={tier.name}
                   className="group relative"
                 >
@@ -408,7 +408,7 @@ const Employers = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -421,11 +421,11 @@ const Employers = () => {
               </p>
             </motion.div>
 
-            <motion.div
+            <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
             >
               {testimonials.map((testimonial) => (
-                <motion.div
+                <div
                   key={testimonial.author}
                   className="group relative"
                 >
@@ -459,7 +459,7 @@ const Employers = () => {
         </section>
 
         {/* CTA */}
-        <motion.section
+        <section
           className="py-24 md:py-32 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
@@ -470,7 +470,7 @@ const Employers = () => {
           />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
-            <motion.h2
+            <h2
               className="text-5xl md:text-6xl font-bold mb-6"
             >
               <span className="text-white">
@@ -480,13 +480,13 @@ const Employers = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Your Hiring Process?
               </span>
-            </motion.h2>
-            <motion.p
+            </h2>
+            <p
               className="text-xl text-white max-w-2xl mx-auto mb-12"
             >
               Join 500+ companies hiring smarter with evidence-based talent validation.
-            </motion.p>
-            <motion.div
+            </p>
+            <div
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

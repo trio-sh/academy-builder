@@ -56,7 +56,7 @@ const stakeholders = [
 
 export function StakeholdersSection() {
   return (
-    <motion.section
+    <section
       className="py-32 relative overflow-hidden bg-black"
     >
       {/* Background gradient */}
@@ -76,7 +76,7 @@ export function StakeholdersSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div className="max-w-3xl mx-auto text-center mb-20">
+        <div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             Who We Serve
           </span>
@@ -96,7 +96,7 @@ export function StakeholdersSection() {
         </motion.div>
 
         {/* Stakeholder Cards */}
-        <motion.div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {stakeholders.map((stakeholder) => (
             <motion.div
               key={stakeholder.title}
@@ -169,6 +169,6 @@ export function StakeholdersSection() {
           ))}
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

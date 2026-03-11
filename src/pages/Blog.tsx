@@ -238,16 +238,16 @@ const Blog = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/50 text-indigo-400 text-sm">
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -257,16 +257,16 @@ const Blog = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Credentialing & Careers
               </span>
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="text-lg text-gray-50 mb-8"
             >
               Explore articles on behavioral validation, career readiness, and the
               future of work from our team of experts.
-            </motion.p>
+            </p>
 
             {/* Search */}
-            <motion.div
+            <div
               className="max-w-md mx-auto relative"
             >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -315,7 +315,7 @@ const Blog = () => {
       {showFeatured && (
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
-            <motion.div
+            <div
             >
               <div className="flex items-center gap-2 mb-8">
                 <TrendingUp className="w-5 h-5 text-indigo-400" />
@@ -374,7 +374,7 @@ const Blog = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
           {filteredPosts.length === 0 ? (
-            <motion.div
+            <div
               className="text-center py-20"
             >
               <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -384,11 +384,11 @@ const Blog = () => {
               </p>
             </motion.div>
           ) : (
-            <motion.div
+            <div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {filteredPosts.map((post, index) => (
-                <motion.button
+                <button
                   key={index}
                   onClick={() => setExpandedPost(post)}
                   className="group block text-left"
@@ -434,7 +434,7 @@ const Blog = () => {
       {/* Newsletter CTA */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto"
           >
             <div className="relative group">

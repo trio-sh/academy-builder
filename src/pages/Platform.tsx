@@ -235,12 +235,12 @@ const Platform = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <motion.span
+              <span
                 className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4"
               >
                 Platform Architecture
-              </motion.span>
-              <motion.h1
+              </span>
+              <h1
                 className="text-5xl md:text-7xl font-bold mb-6"
               >
                 <span className="text-white">
@@ -250,14 +250,14 @@ const Platform = () => {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   One Ecosystem.
                 </span>
-              </motion.h1>
-              <motion.p
+              </h1>
+              <p
                 className="text-xl text-gray-50 leading-relaxed"
               >
                 Every component serves two purposes: a visible function for users
                 and an invisible function for system intelligence. The defensibility
                 is in the connections, not the boxes.
-              </motion.p>
+              </p>
             </div>
           </div>
         </motion.section>
@@ -265,11 +265,11 @@ const Platform = () => {
         {/* Components */}
         <section className="py-16 md:py-24 bg-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
+            <div
               className="space-y-16"
             >
               {components.map((component, index) => (
-                <motion.div
+                <div
                   key={component.id}
                   id={component.id}
                   className="scroll-mt-24"
@@ -375,7 +375,7 @@ const Platform = () => {
         </section>
 
         {/* CTA */}
-        <motion.section
+        <section
           className="py-24 md:py-32 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
@@ -386,7 +386,7 @@ const Platform = () => {
           />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
-            <motion.h2
+            <h2
               className="text-4xl md:text-5xl font-bold mb-6"
             >
               <span className="text-white">
@@ -396,12 +396,12 @@ const Platform = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 the Platform?
               </span>
-            </motion.h2>
-            <motion.p
+            </h2>
+            <p
               className="text-xl text-gray-50 max-w-2xl mx-auto mb-10"
             >
               Join The 3rd Academy and start your mentor-gated credentialing journey today.
-            </motion.p>
+            </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

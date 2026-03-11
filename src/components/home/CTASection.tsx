@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 
 export function CTASection() {
   return (
-    <motion.section
+    <section
       className="py-32 bg-black relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div className="relative max-w-5xl mx-auto">
+        <div className="relative max-w-5xl mx-auto">
           {/* Outer glow */}
           <div className="absolute -inset-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[40px] opacity-20 blur-3xl" />
 
@@ -40,7 +40,7 @@ export function CTASection() {
             {/* Content */}
             <div className="relative z-10 p-12 md:p-20 text-center">
               {/* Badge */}
-              <motion.div
+              <div
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
@@ -48,7 +48,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Headline */}
-              <motion.h2
+              <h2
                 className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
               >
                 <span className="text-white">
@@ -58,18 +58,18 @@ export function CTASection() {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Workplace Readiness?
                 </span>
-              </motion.h2>
+              </h2>
 
               {/* Description */}
-              <motion.p
+              <p
                 className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
                 and start building your Skill Passport through evidence-based observation.
-              </motion.p>
+              </p>
 
               {/* CTAs */}
-              <motion.div
+              <div
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <motion.div
@@ -103,13 +103,13 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p className="mt-10 text-gray-400 text-sm">
+              <p className="mt-10 text-gray-400 text-sm">
                 No credit card required · Mentor-matched within 48 hours
-              </motion.p>
+              </p>
             </div>
           </div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

@@ -107,7 +107,7 @@ const components = [
 
 export function ComponentsSection() {
   return (
-    <motion.section
+    <section
       className="py-32 relative overflow-hidden bg-black"
     >
       {/* Background gradient */}
@@ -127,7 +127,7 @@ export function ComponentsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div className="max-w-3xl mx-auto text-center mb-20">
+        <div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             Platform Components
           </span>
@@ -147,7 +147,7 @@ export function ComponentsSection() {
         </motion.div>
 
         {/* Components Grid */}
-        <motion.div
+        <div
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {components.map((component, index) => (
@@ -156,7 +156,7 @@ export function ComponentsSection() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div className="text-center mt-16">
+        <div className="text-center mt-16">
           <motion.div
             whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(99, 102, 241, 0.4)" }}
             whileTap={{ scale: 0.95 }}
@@ -174,7 +174,7 @@ export function ComponentsSection() {
           </motion.div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

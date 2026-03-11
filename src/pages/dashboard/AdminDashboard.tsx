@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -288,16 +287,16 @@ const Overview = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
         <p className="text-gray-400">Platform management and analytics overview.</p>
-      </motion.div>
+      </div>
 
       {/* Stats Grid */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/30 to-cyan-500/30" },
           { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/30 to-teal-500/30" },
@@ -313,10 +312,10 @@ const Overview = () => {
             <p className="text-sm text-gray-400">{stat.label}</p>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Secondary Stats */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Active Passports", value: stats.totalPassports, icon: Shield, color: "text-indigo-400" },
           { label: "Pending TalentVisa", value: stats.pendingTalentVisas, icon: Award, color: "text-yellow-400" },
@@ -336,10 +335,10 @@ const Overview = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Analytics Charts */}
-      <motion.div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* User Growth Chart */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Growth (12 Weeks)</h3>
@@ -415,10 +414,10 @@ const Overview = () => {
             </ResponsiveContainer>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Platform Activity Bar Chart */}
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <h3 className="text-lg font-semibold text-white mb-4">Platform Activity Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -443,11 +442,11 @@ const Overview = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </motion.div>
+      </div>
 
       {/* Alerts */}
       {stats.pendingTalentVisas > 0 && (
-        <motion.div>
+        <div>
           <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-4">
             <AlertTriangle className="w-6 h-6 text-amber-400" />
             <div className="flex-1">
@@ -462,11 +461,11 @@ const Overview = () => {
               </Button>
             </Link>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Quick Actions */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
@@ -499,10 +498,10 @@ const Overview = () => {
             <ChevronRight className="w-5 h-5 text-purple-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-      </motion.div>
+      </div>
 
       {/* Recent Users */}
-      <motion.div>
+      <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Recent Users</h2>
           <Link to="/dashboard/admin/users" className="text-sm text-red-400 hover:text-red-300">
@@ -544,8 +543,8 @@ const Overview = () => {
             </div>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -702,10 +701,10 @@ const UsersManagement = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
           <p className="text-gray-400">View, edit, and manage all platform users.</p>
@@ -713,10 +712,10 @@ const UsersManagement = () => {
         <div className="text-sm text-gray-400">
           {filteredUsers.length} user{filteredUsers.length !== 1 ? "s" : ""}
         </div>
-      </motion.div>
+      </div>
 
       {/* Filters */}
-      <motion.div className="flex gap-4 flex-wrap">
+      <div className="flex gap-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
@@ -739,10 +738,10 @@ const UsersManagement = () => {
           <option value="school_admin">School Admins</option>
           <option value="admin">Admins</option>
         </select>
-      </motion.div>
+      </div>
 
       {/* Users Table */}
-      <motion.div>
+      <div>
         <div className="rounded-xl border border-white/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -838,15 +837,15 @@ const UsersManagement = () => {
             </table>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* View User Modal */}
       {showViewModal && selectedUser && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -930,17 +929,17 @@ const UsersManagement = () => {
                 Change Role
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Edit User Modal */}
       {showEditModal && selectedUser && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1030,17 +1029,17 @@ const UsersManagement = () => {
                 Save Changes
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Change Role Modal */}
       {showRoleModal && selectedUser && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1112,10 +1111,10 @@ const UsersManagement = () => {
                 Update Role
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -1311,10 +1310,10 @@ const TalentVisaReview = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">TalentVisa Review</h1>
           <p className="text-gray-400">Review and approve TalentVisa nominations with tier assignment.</p>
@@ -1327,10 +1326,10 @@ const TalentVisaReview = () => {
           <Target className="w-4 h-4 mr-2" />
           Quota Settings
         </Button>
-      </motion.div>
+      </div>
 
       {/* Quota Overview */}
-      <motion.div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         {(["gold", "silver", "bronze"] as TalentVisaTier[]).map((tier) => {
           const config = TIER_CONFIG[tier];
           const quota = getQuotaForTier(tier);
@@ -1377,10 +1376,10 @@ const TalentVisaReview = () => {
             </div>
           );
         })}
-      </motion.div>
+      </div>
 
       {/* Filter Tabs */}
-      <motion.div className="flex gap-2">
+      <div className="flex gap-2">
         {(["pending", "approved", "rejected", "all"] as const).map((f) => (
           <button
             key={f}
@@ -1394,10 +1393,10 @@ const TalentVisaReview = () => {
             {f}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Nominations List */}
-      <motion.div>
+      <div>
         {nominations.length > 0 ? (
           <div className="space-y-4">
             {nominations.map((nomination) => {
@@ -1508,18 +1507,18 @@ const TalentVisaReview = () => {
             <p className="text-gray-400">No {filter !== "all" ? filter : ""} nominations</p>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Tier Selection Modal */}
       {showApprovalModal && selectedNomination && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowApprovalModal(false);
             setSelectedNomination(null);
           }}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1605,10 +1604,10 @@ const TalentVisaReview = () => {
                 Approve as {TIER_CONFIG[selectedTier].label}
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -1664,15 +1663,15 @@ const EmployersManagement = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Employer Management</h1>
         <p className="text-gray-400">Verify and manage employer accounts.</p>
-      </motion.div>
+      </div>
 
-      <motion.div>
+      <div>
         {employers.length > 0 ? (
           <div className="space-y-3">
             {employers.map((employer) => (
@@ -1724,8 +1723,8 @@ const EmployersManagement = () => {
             <p className="text-gray-400">No employers registered yet</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1791,19 +1790,19 @@ const SchoolsManagement = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Schools Management</h1>
           <p className="text-gray-400">Manage and verify school accounts.</p>
         </div>
         <div className="text-sm text-gray-400">{schools.length} school{schools.length !== 1 ? "s" : ""}</div>
-      </motion.div>
+      </div>
 
       {schools.length > 0 && (
-        <motion.div>
+        <div>
           <div className="relative max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <input
@@ -1814,11 +1813,11 @@ const SchoolsManagement = () => {
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
             />
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Stats */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-white">{schools.length}</p>
           <p className="text-xs text-gray-400">Total Schools</p>
@@ -1835,9 +1834,9 @@ const SchoolsManagement = () => {
           <p className="text-2xl font-bold text-blue-400">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
           <p className="text-xs text-gray-400">Total Students</p>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div>
+      <div>
         {filteredSchools.length > 0 ? (
           <div className="space-y-3">
             {filteredSchools.map((school) => (
@@ -1887,8 +1886,8 @@ const SchoolsManagement = () => {
             <p className="text-gray-400">{searchQuery ? "No schools match your search" : "No schools registered yet"}</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1986,16 +1985,16 @@ const Reports = () => {
   const total = reportStats.totalUsers || 1;
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Reports & Analytics</h1>
         <p className="text-gray-400">Platform performance and real-time insights.</p>
-      </motion.div>
+      </div>
 
       {/* Key Metrics */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Skill Passports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
           { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "text-purple-400" },
@@ -2008,9 +2007,9 @@ const Reports = () => {
             <p className="text-sm text-gray-400">{stat.label}</p>
           </div>
         ))}
-      </motion.div>
+      </div>
 
-      <motion.div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* Activity Trend Chart */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Activity Trend (6 months)</h3>
@@ -2069,8 +2068,8 @@ const Reports = () => {
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -2185,17 +2184,17 @@ const CommunicationsPage = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Communications</h1>
         <p className="text-gray-400">Send emails and notifications to users.</p>
-      </motion.div>
+      </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* User Selection */}
-        <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
 
           {/* Filters */}
@@ -2265,10 +2264,10 @@ const CommunicationsPage = () => {
               </label>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Message Composition */}
-        <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
 
           {/* Send Type */}
@@ -2365,9 +2364,9 @@ const CommunicationsPage = () => {
               </>
             )}
           </Button>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -2408,10 +2407,10 @@ const SettingsPage = () => {
   );
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Settings</h1>
           <p className="text-gray-400">Platform configuration and preferences.</p>
@@ -2429,10 +2428,10 @@ const SettingsPage = () => {
             <><Save className="w-4 h-4 mr-2" /> Save Settings</>
           )}
         </Button>
-      </motion.div>
+      </div>
 
       {/* General Settings */}
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Globe className="w-5 h-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-white">General</h2>
@@ -2457,10 +2456,10 @@ const SettingsPage = () => {
             />
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Access Control */}
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="w-5 h-5 text-red-400" />
           <h2 className="text-lg font-semibold text-white">Access Control</h2>
@@ -2479,10 +2478,10 @@ const SettingsPage = () => {
             description="Temporarily disable platform access for non-admins"
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Approvals */}
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <CheckCircle className="w-5 h-5 text-emerald-400" />
           <h2 className="text-lg font-semibold text-white">Auto-Approval</h2>
@@ -2501,10 +2500,10 @@ const SettingsPage = () => {
             description="Automatically verify school accounts upon registration"
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Danger Zone */}
-      <motion.div className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
+      <div className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
         <div className="flex items-center gap-3 mb-6">
           <AlertTriangle className="w-5 h-5 text-red-400" />
           <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
@@ -2529,8 +2528,8 @@ const SettingsPage = () => {
             </Button>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

@@ -1129,7 +1129,7 @@ export const AssessmentViewer = () => {
         <div className="min-h-full flex items-center justify-center px-4 py-12">
           <div className="w-full max-w-3xl" ref={sceneRef}>
             <AnimatePresence mode="wait">
-              <motion.div
+              <div
                 key={currentScene?.id}
                 ref={contentRef}
                 className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden shadow-2xl shadow-black/20"

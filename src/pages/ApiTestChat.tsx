@@ -459,7 +459,7 @@ export default function ApiTestChat() {
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-48 space-y-5">
             {/* Empty state */}
             {uiMessages.length === 0 && !isStreaming && (
-              <motion.div
+              <div
                 className="max-w-2xl mx-auto text-center pt-20"
               >
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20 flex items-center justify-center mx-auto mb-4 border border-indigo-500/20">
@@ -506,7 +506,7 @@ export default function ApiTestChat() {
 
             {/* Messages */}
             {uiMessages.map((msg, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
               >
@@ -576,7 +576,7 @@ export default function ApiTestChat() {
 
             {/* Streaming indicator */}
             {isStreaming && (
-              <motion.div
+              <div
                 className="max-w-2xl mx-auto"
               >
                 <div className="flex items-start gap-3">

@@ -168,16 +168,16 @@ const Help = () => {
         />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.div className="mb-6">
+            <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <HelpCircle className="w-4 h-4" />
                 Help Center
               </span>
             </motion.div>
-            <motion.h1
+            <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -187,16 +187,16 @@ const Help = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Help You?
               </span>
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="text-lg text-gray-50 mb-8"
             >
               Search our knowledge base or browse categories to find answers
               to your questions about The 3rd Academy.
-            </motion.p>
+            </p>
 
             {/* Search */}
-            <motion.div
+            <div
               className="max-w-xl mx-auto relative"
             >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -214,7 +214,7 @@ const Help = () => {
       {/* Categories */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="text-center mb-12"
           >
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
@@ -222,11 +222,11 @@ const Help = () => {
             </h2>
           </motion.div>
 
-          <motion.div
+          <div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
             {helpCategories.map((category, index) => (
-              <motion.a
+              <a
                 key={index}
                 href="#"
                 className="group block"
@@ -260,7 +260,7 @@ const Help = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Popular Articles */}
-            <motion.div
+            <div
             >
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-indigo-400" />
@@ -287,7 +287,7 @@ const Help = () => {
             </motion.div>
 
             {/* Video Tutorials */}
-            <motion.div
+            <div
             >
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Play className="w-5 h-5 text-indigo-400" />
@@ -323,7 +323,7 @@ const Help = () => {
       {/* FAQs */}
       <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div
+          <div
             className="text-center mb-12"
           >
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
@@ -389,7 +389,7 @@ const Help = () => {
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <div
             className="max-w-3xl mx-auto text-center"
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">

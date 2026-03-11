@@ -72,13 +72,13 @@ const About = () => {
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <motion.div
+              <div
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black border border-white/30 text-sm text-white mb-6"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 The 3rd Academy
               </motion.div>
-              <motion.h1
+              <h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               >
                 <span className="text-white">
@@ -88,13 +88,13 @@ const About = () => {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Credentials and Readiness
                 </span>
-              </motion.h1>
-              <motion.p
+              </h1>
+              <p
                 className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
               >
                 Education tells employers what you studied. Certifications show what you passed.
                 <span className="font-bold"> We prove what you can actually do.</span>
-              </motion.p>
+              </p>
             </div>
           </div>
         </motion.section>
@@ -102,7 +102,7 @@ const About = () => {
         {/* Stats */}
         <section className="py-12 bg-black border-y border-white/10">
           <div className="container px-4 md:px-6">
-            <motion.div
+            <div
               className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
             >
               {stats.map((stat) => (
@@ -121,7 +121,7 @@ const About = () => {
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
-              <motion.div
+              <div
                 className="text-center mb-12 p-10 rounded-3xl bg-black border border-white/30"
               >
                 <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -163,7 +163,7 @@ const About = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -177,11 +177,11 @@ const About = () => {
               </p>
             </motion.div>
 
-            <motion.div
+            <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
             >
               {values.map((value) => (
-                <motion.div
+                <div
                   key={value.title}
                   className="group relative"
                 >
@@ -214,7 +214,7 @@ const About = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
+            <div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -227,7 +227,7 @@ const About = () => {
               </p>
             </motion.div>
 
-            <motion.div
+            <div
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             >
               {[
@@ -253,7 +253,7 @@ const About = () => {
                   gradient: "from-pink-600 to-pink-700",
                 },
               ].map((item) => (
-                <motion.div key={item.title} className="group relative">
+                <div key={item.title} className="group relative">
                   <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${item.gradient}`} />
                   <div className="relative p-8 rounded-2xl bg-black border border-white/30 hover:border-white/50 transition-all duration-300 h-full flex flex-col">
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-5 shadow-lg`}>
@@ -278,7 +278,7 @@ const About = () => {
         </section>
 
         {/* CTA */}
-        <motion.section
+        <section
           className="py-24 md:py-32 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
@@ -289,7 +289,7 @@ const About = () => {
           />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
-            <motion.h2
+            <h2
               className="text-5xl md:text-6xl font-bold mb-6"
             >
               <span className="text-white">
@@ -299,14 +299,14 @@ const About = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 The Movement?
               </span>
-            </motion.h2>
-            <motion.p
+            </h2>
+            <p
               className="text-xl text-white max-w-2xl mx-auto mb-12"
             >
               Whether you're seeking validation, hiring talent, or educating students—
               there's a place for you in our ecosystem.
-            </motion.p>
-            <motion.div
+            </p>
+            <div
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

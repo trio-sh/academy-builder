@@ -87,12 +87,12 @@ function AnimatedStat({ to }: { to: number }) {
     }
   }, [inView, count, to]);
 
-  return <motion.span ref={ref}>{rounded}</motion.span>;
+  return <span ref={ref}>{rounded}</span>;
 }
 
 export function JourneySection() {
   return (
-    <motion.section
+    <section
       className="py-32 relative overflow-hidden bg-black"
     >
       {/* Background gradient */}
@@ -112,7 +112,7 @@ export function JourneySection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div className="max-w-3xl mx-auto text-center mb-20">
+        <div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             The Credentialing Journey
           </span>
@@ -134,7 +134,7 @@ export function JourneySection() {
         {/* Journey Steps - Alternating Layout */}
         <div className="max-w-6xl mx-auto space-y-6">
           {journeySteps.map((step, index) => (
-            <motion.div
+            <div
               key={step.step}
               className={cn(
                 "group relative flex flex-col md:flex-row gap-6 items-center",
@@ -200,7 +200,7 @@ export function JourneySection() {
         </div>
 
         {/* Key Principles */}
-        <motion.div
+        <div
           className="max-w-3xl mx-auto mt-20"
         >
           <div className="relative group">
@@ -230,6 +230,6 @@ export function JourneySection() {
           </div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

@@ -81,11 +81,11 @@ const Login = () => {
           />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
+            <div
               className="max-w-md mx-auto"
             >
               {/* Logo */}
-              <motion.div
+              <div
                 className="flex items-center justify-center gap-2 mb-8"
               >
                 <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
@@ -99,7 +99,7 @@ const Login = () => {
               </motion.div>
 
               {/* Card */}
-              <motion.div className="relative group">
+              <div className="relative group">
                 {/* Glow effect */}
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 

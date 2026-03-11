@@ -32,7 +32,7 @@ const NotFound = () => {
           </motion.div>
 
           {/* Card */}
-          <motion.div
+          <div
             className="relative group"
           >
             {/* Glow effect */}
@@ -82,7 +82,7 @@ const NotFound = () => {
           </motion.div>
 
           {/* Suggested Links */}
-          <motion.div
+          <div
             className="mt-8"
           >
             <p className="text-gray-500 text-sm mb-4">Or try one of these:</p>

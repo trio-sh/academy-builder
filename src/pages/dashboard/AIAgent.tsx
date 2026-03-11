@@ -1946,13 +1946,13 @@ export default function AIAgent() {
     const label = toolDisplayName(tc.function.name, args);
 
     return (
-      <motion.div
+      <div
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-emerald-500/30 text-emerald-300"
         layout
       >
         <CheckCircle2 className="w-3 h-3" />
         <span className="font-medium">{label}</span>
-      </motion.div>
+      </div>
     );
   }
 
@@ -2062,7 +2062,7 @@ export default function AIAgent() {
 
         {/* Empty state */}
         {uiMessages.length === 0 && !isStreaming && (
-          <motion.div
+          <div
             className="max-w-2xl mx-auto"
           >
             <div className="text-center mb-8 pt-12">
@@ -2080,7 +2080,7 @@ export default function AIAgent() {
             {/* Quick Actions */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
               {quickActions.map((qa) => (
-                <motion.button
+                <button
                   key={qa.label}
                   onClick={() => sendMessage(qa.message)}
                   className="flex flex-col items-center gap-2 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-indigo-500/30 hover:bg-indigo-950/20 transition-all text-center group"
@@ -2116,12 +2116,12 @@ export default function AIAgent() {
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
 
         {/* Message List */}
         {uiMessages.map((msg, idx) => (
-          <motion.div
+          <div
             key={idx}
             className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
           >
@@ -2186,12 +2186,12 @@ export default function AIAgent() {
                 </div>
               </div>
             ) : null}
-          </motion.div>
+          </div>
         ))}
 
         {/* Streaming indicator */}
         {isStreaming && (
-          <motion.div
+          <div
             className="max-w-2xl mx-auto"
           >
             <div className="flex items-start gap-3">
@@ -2242,7 +2242,7 @@ export default function AIAgent() {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         <div ref={messagesEndRef} />

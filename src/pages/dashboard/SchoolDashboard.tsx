@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -181,20 +180,20 @@ const Overview = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome, {schoolProfile?.school_name || "School Admin"}
         </h1>
         <p className="text-gray-400">
           Manage your students and track their behavioral development.
         </p>
-      </motion.div>
+      </div>
 
       {/* Stats Grid */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Students", value: stats.totalStudents, icon: Users, color: "text-teal-400" },
           { label: "Active Cohorts", value: stats.activeCohorts, icon: GraduationCap, color: "text-blue-400" },
@@ -210,10 +209,10 @@ const Overview = () => {
             <p className="text-sm text-gray-400">{stat.label}</p>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Quick Actions */}
-      <motion.div>
+      <div>
         <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
@@ -246,10 +245,10 @@ const Overview = () => {
             <ChevronRight className="w-5 h-5 text-blue-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-      </motion.div>
+      </div>
 
       {/* Recent Observations */}
-      <motion.div>
+      <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Recent Observations</h2>
           <Link to="/dashboard/school/observations" className="text-sm text-teal-400 hover:text-teal-300">
@@ -289,8 +288,8 @@ const Overview = () => {
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -393,10 +392,10 @@ const Students = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Students</h1>
           <p className="text-gray-400">Manage enrolled students and track their progress.</p>
@@ -408,10 +407,10 @@ const Students = () => {
           <Plus className="w-4 h-4 mr-2" />
           Add Student
         </Button>
-      </motion.div>
+      </div>
 
       {/* Search */}
-      <motion.div>
+      <div>
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
@@ -422,10 +421,10 @@ const Students = () => {
             className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Students List */}
-      <motion.div>
+      <div>
         {filteredStudents.length > 0 ? (
           <div className="space-y-3">
             {filteredStudents.map((student) => (
@@ -500,8 +499,8 @@ const Students = () => {
             </p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -586,10 +585,10 @@ const Cohorts = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Cohorts</h1>
           <p className="text-gray-400">Manage student cohorts and programs.</p>
@@ -601,11 +600,11 @@ const Cohorts = () => {
           <Plus className="w-4 h-4 mr-2" />
           New Cohort
         </Button>
-      </motion.div>
+      </div>
 
       {/* New Cohort Form */}
       {showNewCohort && (
-        <motion.div
+        <div
           className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Cohort</h2>
@@ -656,11 +655,11 @@ const Cohorts = () => {
               Create Cohort
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Cohorts List */}
-      <motion.div>
+      <div>
         {cohorts.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-4">
             {cohorts.map((cohort) => (
@@ -705,8 +704,8 @@ const Cohorts = () => {
             <p className="text-sm text-gray-500 mt-1">Create cohorts to organize your students</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -834,10 +833,10 @@ const Observations = () => {
   }
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Observations</h1>
           <p className="text-gray-400">Record and review student behavioral observations.</p>
@@ -849,15 +848,15 @@ const Observations = () => {
           <Plus className="w-4 h-4 mr-2" />
           New Observation
         </Button>
-      </motion.div>
+      </div>
 
       {/* New Observation Form */}
       {showNewObservation && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowNewObservation(false)}
         >
-          <motion.div
+          <div
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-2xl max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -960,12 +959,12 @@ const Observations = () => {
                 Submit Observation
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Observations List */}
-      <motion.div>
+      <div>
         {observations.length > 0 ? (
           <div className="space-y-3">
             {observations.map((obs) => (
@@ -1004,24 +1003,24 @@ const Observations = () => {
             <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
 // Analytics component
 const Analytics = () => {
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Analytics</h1>
         <p className="text-gray-400">Track cohort performance and behavioral trends.</p>
-      </motion.div>
+      </div>
 
       {/* Behavioral Dimension Overview */}
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <h2 className="text-lg font-semibold text-white mb-4">Behavioral Dimensions Average</h2>
         <div className="space-y-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension, index) => {
@@ -1040,10 +1039,10 @@ const Analytics = () => {
             );
           })}
         </div>
-      </motion.div>
+      </div>
 
       {/* Stats Cards */}
-      <motion.div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
           <TrendingUp className="w-8 h-8 text-teal-400 mb-3" />
           <p className="text-3xl font-bold text-white">+12%</p>
@@ -1059,8 +1058,8 @@ const Analytics = () => {
           <p className="text-3xl font-bold text-white">78%</p>
           <p className="text-sm text-gray-400">Goal Completion Rate</p>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1189,12 +1188,12 @@ const SchoolMessagesPage = () => {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-teal-500" /></div>;
 
   return (
-    <motion.div className="h-[calc(100vh-12rem)]">
-      <motion.div className="mb-6">
+    <div className="h-[calc(100vh-12rem)]">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with mentors, candidates, employers, and other schools.</p>
-      </motion.div>
-      <motion.div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      </div>
+      <div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
@@ -1314,25 +1313,25 @@ const SchoolMessagesPage = () => {
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
 const SettingsPage = () => {
   return (
-    <motion.div
+    <div
       className="space-y-8"
     >
-      <motion.div>
+      <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your school profile and preferences.</p>
-      </motion.div>
+      </div>
 
-      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
+      <div className="p-6 rounded-xl bg-black border border-white/30">
         <p className="text-gray-400">School settings will appear here.</p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
