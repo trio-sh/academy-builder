@@ -596,6 +596,71 @@ function cleanStreamingPdfContent(text: string): { cleaned: string; hasPdfBlock:
   return { cleaned: cleaned.replace(/\n{3,}/g, "\n\n").trim(), hasPdfBlock };
 }
 
+/**
+ * Extract a meaningful title from a pdfmake document definition.
+ * Checks: info.title → first text node in content (recursing into stacks/columns).
+ * Truncates to 60 chars and sanitizes for use as a filename.
+ */
+function extractPdfTitle(doc: Record<string, unknown>): string {
+  // 1. Check info.title (explicit metadata)
+  const info = doc.info as Record<string, unknown> | undefined;
+  if (info && typeof info.title === "string" && info.title.trim()) {
+    return sanitizePdfTitle(info.title.trim());
+  }
+
+  // 2. Walk content nodes to find the first meaningful text
+  const contentArr = doc.content as unknown[];
+  if (Array.isArray(contentArr)) {
+    const found = findFirstText(contentArr);
+    if (found) return sanitizePdfTitle(found);
+  }
+
+  return "Document";
+}
+
+function findFirstText(nodes: unknown[]): string | null {
+  for (const node of nodes) {
+    if (typeof node === "string" && node.trim()) return node.trim();
+    if (!node || typeof node !== "object") continue;
+    const n = node as Record<string, unknown>;
+
+    // Direct text property
+    if (typeof n.text === "string" && n.text.trim()) return n.text.trim();
+
+    // Inline rich text array: { text: [{ text: "Bold" }, " normal"] }
+    if (Array.isArray(n.text)) {
+      const parts = n.text as unknown[];
+      let combined = "";
+      for (const p of parts) {
+        if (typeof p === "string") combined += p;
+        else if (p && typeof p === "object" && typeof (p as Record<string, unknown>).text === "string")
+          combined += (p as Record<string, unknown>).text;
+      }
+      if (combined.trim()) return combined.trim();
+    }
+
+    // Recurse into stack/columns
+    if (Array.isArray(n.stack)) {
+      const found = findFirstText(n.stack as unknown[]);
+      if (found) return found;
+    }
+    if (Array.isArray(n.columns)) {
+      const found = findFirstText(n.columns as unknown[]);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function sanitizePdfTitle(raw: string): string {
+  return raw
+    .replace(/[^\w\s\-().&,]/g, "")  // strip unsafe filename chars
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60)
+    || "Document";
+}
+
 async function renderPdfDocDefinitions(
   docDefinitions: Record<string, unknown>[],
   rawJsonBlocks: string[] = []
@@ -611,15 +676,7 @@ async function renderPdfDocDefinitions(
   for (let i = 0; i < docDefinitions.length; i++) {
     const docDefinition = docDefinitions[i];
     try {
-      // Extract title from the first text node in content, or use a default
-      const contentArr = docDefinition.content as unknown[];
-      let title = "Document";
-      if (Array.isArray(contentArr) && contentArr.length > 0) {
-        const first = contentArr[0] as Record<string, unknown> | undefined;
-        if (first && typeof first.text === "string") {
-          title = first.text;
-        }
-      }
+      const title = extractPdfTitle(docDefinition);
 
       const blob: Blob = await new Promise((resolve, reject) => {
         try {

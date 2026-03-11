@@ -631,6 +631,50 @@ function parsePdfFromChatbotContent(text: string): { cleanText: string; docDefin
   return { cleanText: cleanText.replace(/\n{3,}/g, "\n\n").trim(), docDefinitions, rawJsonBlocks };
 }
 
+function chatbotExtractPdfTitle(doc: Record<string, unknown>): string {
+  const info = doc.info as Record<string, unknown> | undefined;
+  if (info && typeof info.title === "string" && info.title.trim()) {
+    return chatbotSanitizeTitle(info.title.trim());
+  }
+  const contentArr = doc.content as unknown[];
+  if (Array.isArray(contentArr)) {
+    const found = chatbotFindFirstText(contentArr);
+    if (found) return chatbotSanitizeTitle(found);
+  }
+  return "Document";
+}
+
+function chatbotFindFirstText(nodes: unknown[]): string | null {
+  for (const node of nodes) {
+    if (typeof node === "string" && node.trim()) return node.trim();
+    if (!node || typeof node !== "object") continue;
+    const n = node as Record<string, unknown>;
+    if (typeof n.text === "string" && n.text.trim()) return n.text.trim();
+    if (Array.isArray(n.text)) {
+      let combined = "";
+      for (const p of n.text as unknown[]) {
+        if (typeof p === "string") combined += p;
+        else if (p && typeof p === "object" && typeof (p as Record<string, unknown>).text === "string")
+          combined += (p as Record<string, unknown>).text;
+      }
+      if (combined.trim()) return combined.trim();
+    }
+    if (Array.isArray(n.stack)) {
+      const found = chatbotFindFirstText(n.stack as unknown[]);
+      if (found) return found;
+    }
+    if (Array.isArray(n.columns)) {
+      const found = chatbotFindFirstText(n.columns as unknown[]);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function chatbotSanitizeTitle(raw: string): string {
+  return raw.replace(/[^\w\s\-().&,]/g, "").replace(/\s+/g, " ").trim().slice(0, 60) || "Document";
+}
+
 async function renderChatbotPdfDefinitions(
   docDefinitions: Record<string, unknown>[],
   rawJsonBlocks: string[] = []
@@ -661,14 +705,7 @@ async function renderChatbotPdfDefinitions(
   for (let i = 0; i < docDefinitions.length; i++) {
     const docDefinition = docDefinitions[i];
     try {
-      const contentArr = docDefinition.content as unknown[];
-      let title = "Document";
-      if (Array.isArray(contentArr) && contentArr.length > 0) {
-        const first = contentArr[0] as Record<string, unknown> | undefined;
-        if (first && typeof first.text === "string") {
-          title = first.text;
-        }
-      }
+      const title = chatbotExtractPdfTitle(docDefinition);
 
       const blob: Blob = await new Promise((resolve, reject) => {
         try {
