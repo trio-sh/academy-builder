@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
@@ -19,22 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
 
 const benefits = [
   {
@@ -143,42 +126,16 @@ const Employers = () => {
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <motion.section
-          className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
-          <motion.div
-            className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
-            animate={{ scale: [1.2, 1, 1.2] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          />
+        <section className="py-24 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <motion.div
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-white mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Building2 className="w-4 h-4 text-indigo-400" />
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-sm text-white mb-6">
+                <Building2 className="w-4 h-4" />
                 T3X Talent Exchange
-              </motion.div>
-              <motion.h1
-                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="text-white">
                   Hire Smarter.
                 </span>
@@ -186,146 +143,97 @@ const Employers = () => {
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Scale Faster.
                 </span>
-              </motion.h1>
-              <motion.p
-                className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
+              </h1>
+              <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
                 Access a curated marketplace of pre-validated, workplace-ready candidates.
                 Every profile backed by mentor observations and behavioral evidence—not just resumes.
-              </motion.p>
-              <motion.div
-                className="flex flex-col sm:flex-row items-center justify-center gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold shadow-2xl" asChild>
-                    <Link to="/get-started">
-                      Start Hiring Today
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                </motion.div>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-10 py-6 text-base" asChild>
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold" asChild>
+                  <Link to="/get-started">
+                    Start Hiring Today
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto border-gray-700 text-white hover:bg-gray-900 px-10 py-6 text-base" asChild>
                   <Link to="/contact">
                     <Clock className="mr-2 h-5 w-5" />
                     Schedule Demo
                   </Link>
                 </Button>
-              </motion.div>
+              </div>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Stats */}
-        <section className="py-12 bg-black/40 backdrop-blur-sm border-y border-white/10">
+        <section className="py-12 border-y border-gray-800">
           <div className="container px-4 md:px-6">
-            <motion.div
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {stats.map((stat, index) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+              {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-white">{stat.label}</div>
+                  <div className="text-sm text-gray-400">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Benefits */}
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Why Leading Companies Choose T3X
               </span>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
                 The Future of Talent Acquisition
               </h2>
-              <p className="text-lg text-white max-w-2xl mx-auto">
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
                 Traditional hiring relies on resumes and gut feelings. We deliver
                 data-backed insights from real-world behavioral validation.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {benefits.map((benefit) => (
-                <motion.div
+                <div
                   key={benefit.title}
-                  variants={itemVariants}
-                  className="group relative"
+                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
                 >
-                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
-
-                  <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-600/30">
-                      <benefit.icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">
-                      {benefit.title}
-                    </h3>
-                    <p className="text-white leading-relaxed text-base">
-                      {benefit.description}
-                    </p>
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5">
+                    <benefit.icon className="w-7 h-7 text-white" />
                   </div>
-                </motion.div>
+                  <h3 className="text-2xl font-bold text-white mb-3">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed text-base">
+                    {benefit.description}
+                  </p>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* How It Works */}
-        <section className="py-20 md:py-28 relative overflow-hidden">
+        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
-          <motion.div
-            className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-900/30 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Simple & Streamlined
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-white">
                 Your Hiring Journey
               </h2>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="max-w-5xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
+            <div className="max-w-5xl mx-auto">
               <div className="grid md:grid-cols-4 gap-8">
                 {[
                   { step: "1", icon: Target, title: "Search & Filter", desc: "Use advanced filters to find candidates matching your exact requirements" },
@@ -333,9 +241,9 @@ const Employers = () => {
                   { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
                   { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
                 ].map((item, index) => (
-                  <motion.div key={item.step} variants={itemVariants} className="relative text-center">
+                  <div key={item.step} className="relative text-center">
                     <div className="relative mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/30">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto">
                         <item.icon className="w-8 h-8 text-white" />
                       </div>
                       <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
@@ -343,63 +251,47 @@ const Employers = () => {
                       </div>
                     </div>
                     <h3 className="font-bold text-white mb-3 text-lg">{item.title}</h3>
-                    <p className="text-sm text-white leading-relaxed">{item.desc}</p>
+                    <p className="text-sm text-gray-300 leading-relaxed">{item.desc}</p>
                     {index < 3 && (
                       <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Pricing */}
-        <section className="py-20 md:py-28 bg-black">
+        <section className="py-20 md:py-28 bg-black border-t border-gray-800">
           <div className="container px-4 md:px-6">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Transparent Pricing
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Plans That Scale With You
               </h2>
-              <p className="text-lg text-white">
+              <p className="text-lg text-gray-300">
                 Start free, upgrade when ready. No hidden fees, cancel anytime.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {tiers.map((tier) => (
-                <motion.div
+                <div
                   key={tier.name}
-                  variants={itemVariants}
                   className="group relative"
                 >
-                  {tier.popular && (
-                    <div className="absolute -inset-2 rounded-3xl opacity-40 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                  )}
-
                   <div className={cn(
-                    "relative p-8 rounded-2xl border transition-all duration-300 h-full flex flex-col",
+                    "p-8 rounded-2xl border h-full flex flex-col",
                     tier.popular
-                      ? "border-indigo-500/60 bg-black/90 backdrop-blur-xl"
-                      : "border-white/30 bg-black backdrop-blur-xl hover:border-white/50"
+                      ? "border-indigo-500 bg-gray-950"
+                      : "border-gray-800 bg-gray-950 hover:border-indigo-500"
                   )}>
                     {tier.popular && (
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                        <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg">
+                        <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
                           MOST POPULAR
                         </span>
                       </div>
@@ -409,7 +301,7 @@ const Employers = () => {
                       <h3 className="text-2xl font-bold text-white mb-2">
                         {tier.name}
                       </h3>
-                      <p className="text-white/80 text-sm">
+                      <p className="text-gray-400 text-sm">
                         {tier.description}
                       </p>
                     </div>
@@ -419,7 +311,7 @@ const Employers = () => {
                         {tier.price}
                       </span>
                       {tier.period && (
-                        <span className="text-white/70 text-lg">{tier.period}</span>
+                        <span className="text-gray-400 text-lg">{tier.period}</span>
                       )}
                     </div>
 
@@ -427,7 +319,7 @@ const Employers = () => {
                       {tier.features.map((feature) => (
                         <li key={feature} className="flex items-start gap-3">
                           <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-white text-sm">{feature}</span>
+                          <span className="text-gray-300 text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -436,8 +328,8 @@ const Employers = () => {
                       className={cn(
                         "w-full text-base font-semibold py-6",
                         tier.popular
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-                          : "border-white/30 text-white hover:bg-white/10"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                          : "border-gray-700 text-white hover:bg-gray-900"
                       )}
                       variant={tier.popular ? "default" : "outline"}
                       asChild
@@ -448,101 +340,65 @@ const Employers = () => {
                       </Link>
                     </Button>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Testimonials */}
-        <section className="py-20 md:py-28 relative overflow-hidden">
+        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
 
           <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black/90 backdrop-blur-xl border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Trusted by Industry Leaders
                 </span>
               </h2>
-              <p className="text-lg text-white">
+              <p className="text-lg text-gray-300">
                 See what hiring professionals are saying about T3X
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {testimonials.map((testimonial) => (
-                <motion.div
+                <div
                   key={testimonial.author}
-                  variants={itemVariants}
-                  className="group relative"
+                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
                 >
-                  <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
-
-                  <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/50 transition-all duration-300">
-                    <div className="flex gap-1 mb-6">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                      ))}
+                  <div className="flex gap-1 mb-6">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <blockquote className="text-lg text-gray-300 mb-6 leading-relaxed">
+                    "{testimonial.quote}"
+                  </blockquote>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                      {testimonial.author.split(' ').map(n => n[0]).join('')}
                     </div>
-                    <blockquote className="text-lg text-white mb-6 leading-relaxed">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                        {testimonial.author.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <div>
-                        <p className="font-bold text-white">{testimonial.author}</p>
-                        <p className="text-sm text-white/70">
-                          {testimonial.role}, {testimonial.company}
-                        </p>
-                      </div>
+                    <div>
+                      <p className="font-bold text-white">{testimonial.author}</p>
+                      <p className="text-sm text-gray-400">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* CTA */}
-        <motion.section
-          className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <section className="py-24 md:py-32 relative overflow-hidden border-t border-gray-800">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
 
           <div className="container px-4 md:px-6 text-center relative z-10">
-            <motion.h2
-              className="text-5xl md:text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="text-white">
                 Ready to Transform
               </span>
@@ -550,40 +406,26 @@ const Employers = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Your Hiring Process?
               </span>
-            </motion.h2>
-            <motion.p
-              className="text-xl text-white max-w-2xl mx-auto mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
               Join 500+ companies hiring smarter with evidence-based talent validation.
-            </motion.p>
-            <motion.div
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>
-                  <Link to="/get-started">
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-              </motion.div>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-12 py-7 rounded-xl text-lg" asChild>
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg" asChild>
+                <Link to="/get-started">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="border-gray-700 text-white hover:bg-gray-900 px-12 py-7 rounded-xl text-lg" asChild>
                 <Link to="/contact">
                   <Clock className="mr-2 h-5 w-5" />
                   Schedule Demo
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
       <Footer />
     </div>

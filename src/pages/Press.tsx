@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
@@ -15,19 +14,6 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
 
 const pressReleases = [
   {
@@ -105,35 +91,17 @@ const Press = () => {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
-        <motion.div
-          className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
-          animate={{ scale: [1.2, 1, 1.2] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-indigo-100 text-sm">
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>
-            </motion.div>
-            <motion.h1
-              variants={itemVariants}
-              className="text-3xl md:text-4xl font-display font-normal mb-6"
-            >
+            </div>
+            <h1 className="text-3xl md:text-4xl font-display font-normal mb-6">
               <span className="text-white">
                 News &
               </span>
@@ -141,161 +109,117 @@ const Press = () => {
               <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Media Coverage
               </span>
-            </motion.h1>
-            <motion.p
-              variants={itemVariants}
-              className="text-lg text-gray-50 mb-8"
-            >
+            </h1>
+            <p className="text-lg text-gray-300 mb-8">
               Stay updated on The 3rd Academy's mission to transform credentialing
               through mentor-validated behavioral assessment.
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Stats Section */}
       <section className="py-12 relative">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={itemVariants}
-                className="text-center p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
+                className="text-center p-6 rounded-2xl bg-gray-950 border border-gray-800"
               >
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-50">{stat.label}</div>
-              </motion.div>
+                <div className="text-sm text-gray-300">{stat.label}</div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Press Releases */}
-      <section className="py-20 relative">
+      <section className="py-20 relative border-t border-gray-800">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 Press Releases
               </span>
             </h2>
-            <p className="text-gray-50 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Official announcements from The 3rd Academy.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="max-w-4xl mx-auto space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <div className="max-w-4xl mx-auto space-y-4">
             {pressReleases.map((release, index) => (
-              <motion.a
+              <a
                 key={index}
                 href={release.link}
-                variants={itemVariants}
                 className="group block relative"
               >
-                <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors">
+                <div className="relative p-6 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500">
                   <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                     <Calendar className="w-4 h-4" />
                     {release.date}
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">
+                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-indigo-400">
                     {release.title}
                   </h3>
-                  <p className="text-gray-50 text-sm mb-4">{release.excerpt}</p>
+                  <p className="text-gray-300 text-sm mb-4">{release.excerpt}</p>
                   <span className="inline-flex items-center text-sm text-indigo-400">
                     Read More <ArrowRight className="ml-1 w-4 h-4" />
                   </span>
                 </div>
-              </motion.a>
+              </a>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Media Features */}
-      <section className="py-20 relative">
+      <section className="py-20 relative border-t border-gray-800">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 Featured In
               </span>
             </h2>
-            <p className="text-gray-50 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Media coverage and thought leadership features.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {mediaFeatures.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={itemVariants}
-                className="group relative"
+                className="p-6 rounded-2xl bg-gray-950 border border-gray-800 h-full hover:border-indigo-500"
               >
-                <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 h-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-semibold text-indigo-400">
-                      {feature.outlet}
-                    </span>
-                    <ExternalLink className="w-4 h-4 text-gray-500" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{feature.date}</p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-semibold text-indigo-400">
+                    {feature.outlet}
+                  </span>
+                  <ExternalLink className="w-4 h-4 text-gray-500" />
                 </div>
-              </motion.div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-500">{feature.date}</p>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Media Kit */}
-      <section className="py-20 relative">
+      <section className="py-20 relative border-t border-gray-800">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div className="max-w-4xl mx-auto">
             <div className="relative group">
-              <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-              <div className="relative p-8 md:p-12 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+              <div className="relative p-8 md:p-12 rounded-2xl bg-gray-950 border border-gray-800">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 text-center md:text-left">
                     <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -303,18 +227,16 @@ const Press = () => {
                         Media Kit
                       </span>
                     </h2>
-                    <p className="text-gray-50 mb-6">
+                    <p className="text-gray-300 mb-6">
                       Download our press kit including logos, brand guidelines,
                       executive headshots, and fact sheets.
                     </p>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700" asChild>
-                        <Link to="/contact">
-                          <Download className="mr-2 h-4 w-4" />
-                          Download Media Kit
-                        </Link>
-                      </Button>
-                    </motion.div>
+                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700" asChild>
+                      <Link to="/contact">
+                        <Download className="mr-2 h-4 w-4" />
+                        Download Media Kit
+                      </Link>
+                    </Button>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {[
@@ -325,31 +247,26 @@ const Press = () => {
                     ].map((item, index) => (
                       <div
                         key={index}
-                        className="w-24 h-24 rounded-xl bg-black border border-white/30 flex flex-col items-center justify-center gap-2"
+                        className="w-24 h-24 rounded-xl bg-gray-900 border border-gray-800 flex flex-col items-center justify-center gap-2"
                       >
                         <item.icon className="w-6 h-6 text-indigo-400" />
-                        <span className="text-xs text-gray-50">{item.label}</span>
+                        <span className="text-xs text-gray-300">{item.label}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 relative">
+      <section className="py-20 relative border-t border-gray-800">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 flex items-center justify-center mx-auto mb-6">
               <Mail className="w-8 h-8 text-indigo-400" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -357,27 +274,25 @@ const Press = () => {
                 Media Inquiries
               </span>
             </h2>
-            <p className="text-gray-50 mb-8">
+            <p className="text-gray-300 mb-8">
               For press inquiries, interview requests, or media partnerships,
               please contact our communications team.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                  asChild
-                >
-                  <a href="mailto:press@the3rdacademy.com">
-                    <Mail className="mr-2 h-4 w-4" />
-                    press@the3rdacademy.com
-                  </a>
-                </Button>
-              </motion.div>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                asChild
+              >
+                <a href="mailto:press@the3rdacademy.com">
+                  <Mail className="mr-2 h-4 w-4" />
+                  press@the3rdacademy.com
+                </a>
+              </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-black"
+                className="border-gray-700 text-white hover:bg-gray-900"
                 asChild
               >
                 <Link to="/contact">
@@ -386,7 +301,7 @@ const Press = () => {
                 </Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
