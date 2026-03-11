@@ -1260,14 +1260,8 @@ export function Chatbot() {
       <AnimatePresence>
         {!isOpen && (
           <button
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-2xl"
+            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform"
             onClick={() => setIsOpen(true)}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1, rotate: 10 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{
-              boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-            }}
           >
             <MessageCircle size={28} />
           </button>
@@ -1327,8 +1321,6 @@ export function Chatbot() {
                 <button
                   onClick={() => setIsOpen(false)}
                   className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/15 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
                 >
                   <X size={18} />
                 </button>
@@ -1382,8 +1374,6 @@ export function Chatbot() {
                         key={reply}
                         onClick={() => sendMessage(reply)}
                         className="px-3 py-2 text-sm rounded-xl bg-black border border-white/30 text-gray-300 hover:bg-black hover:border-white/20 transition-colors"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
                       >
                         {reply}
                       </button>

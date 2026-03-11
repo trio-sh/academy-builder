@@ -294,9 +294,8 @@ const Blog = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-3">
             {categories.map((category, index) => (
-              <motion.button
+              <button
                 key={category}
-                transition={{ delay: index * 0.05 }}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   selectedCategory === category
@@ -305,7 +304,7 @@ const Blog = () => {
                 }`}
               >
                 {category}
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
@@ -455,11 +454,9 @@ const Blog = () => {
                     placeholder="Enter your email"
                     className="flex-1 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
                   />
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">
-                      Subscribe
-                    </Button>
-                  </motion.div>
+                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">
+                    Subscribe
+                  </Button>
                 </div>
               </div>
             </div>

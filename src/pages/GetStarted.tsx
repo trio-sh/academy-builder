@@ -495,9 +495,8 @@ const GetStarted = () => {
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <motion.section
+        <section
           className="py-16 md:py-24 relative overflow-hidden"
-          transition={{ duration: 0.8 }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
           <motion.div
@@ -532,7 +531,7 @@ const GetStarted = () => {
               </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Main Content */}
         <section className="py-12 md:py-16 bg-black">
@@ -551,14 +550,13 @@ const GetStarted = () => {
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
                           : "bg-black text-gray-50 border border-white/30"
                       )}
-                      whileHover={{ scale: 1.05 }}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
                     </div>
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
-                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black"
+                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-gray-700"
                       )} />
                     )}
                   </div>
@@ -585,7 +583,6 @@ const GetStarted = () => {
                             ? "bg-black border-2 border-indigo-500/50"
                             : "bg-black border border-white/30 hover:border-white/30"
                         )}
-                        whileHover={{ y: -5 }}
                       >
                         {selectedRole === role.id && (
                           <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
@@ -623,9 +620,8 @@ const GetStarted = () => {
 
                   {/* Entry Path Selection - only for candidates */}
                   {selectedRole === "candidate" && (
-                    <motion.div
+                    <div
                       className="space-y-6 mt-8"
-                      transition={{ duration: 0.3 }}
                     >
                       <h3 className="text-xl font-bold text-center text-white">Choose Your Entry Point</h3>
                       <div className="grid md:grid-cols-2 gap-6">
@@ -639,7 +635,6 @@ const GetStarted = () => {
                                 ? "bg-black border-2 border-indigo-500/50"
                                 : "bg-black border border-white/30 hover:border-white/30"
                             )}
-                            whileHover={{ y: -5 }}
                           >
                             {selectedPath === path.id && (
                               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
@@ -677,11 +672,11 @@ const GetStarted = () => {
                           </button>
                         ))}
                       </div>
-                    </motion.div>
+                    </div>
                   )}
 
                   <div className="flex justify-center pt-6">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <div>
                       <Button
                         size="lg"
                         onClick={() => setStep(2)}
@@ -689,14 +684,14 @@ const GetStarted = () => {
                         className={cn(
                           "px-10 py-6 rounded-xl font-bold text-lg text-white transition-all duration-300",
                           !selectedRole || (selectedRole === "candidate" && !selectedPath)
-                            ? "bg-gray-700/60 border border-white/10 text-gray-400 shadow-none cursor-not-allowed"
+                            ? "bg-gray-700 border border-gray-600 text-gray-400 shadow-none cursor-not-allowed"
                             : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-2xl shadow-indigo-600/30 active:from-indigo-700 active:to-purple-700 ring-2 ring-indigo-400/50"
                         )}
                       >
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
-                    </motion.div>
+                    </div>
                   </div>
 
                   <p className="text-center text-sm text-gray-500">
@@ -915,9 +910,8 @@ const GetStarted = () => {
                       )}
 
                       {!uploadedFile ? (
-                        <motion.div
+                        <div
                           className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer"
-                          whileHover={{ scale: 1.02 }}
                           onClick={() => fileInputRef.current?.click()}
                         >
                           {isUploading || isEnhancing ? (
@@ -936,7 +930,7 @@ const GetStarted = () => {
                               <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                             </>
                           )}
-                        </motion.div>
+                        </div>
                       ) : (
                         <div className="border-2 border-emerald-500/30 rounded-2xl p-8 text-center bg-emerald-500/5">
                           <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />

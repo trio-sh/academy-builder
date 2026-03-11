@@ -2084,8 +2084,6 @@ export default function AIAgent() {
                   key={qa.label}
                   onClick={() => sendMessage(qa.message)}
                   className="flex flex-col items-center gap-2 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-indigo-500/30 hover:bg-indigo-950/20 transition-all text-center group"
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   <qa.icon className="w-4.5 h-4.5 text-gray-500 group-hover:text-indigo-400 transition-colors" />
                   <span className="text-xs text-gray-400 group-hover:text-white transition-colors leading-tight">{qa.label}</span>

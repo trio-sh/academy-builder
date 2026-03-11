@@ -229,7 +229,6 @@ const Join = () => {
                             ? "bg-black border-2 border-indigo-500/50"
                             : "bg-black border border-white/30 hover:border-white/30"
                         )}
-                        whileHover={{ y: -5 }}
                       >
                         {selectedRole === role.id && (
                           <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
