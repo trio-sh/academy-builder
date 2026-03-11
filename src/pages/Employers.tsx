@@ -1,5 +1,4 @@
 import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import {
   CheckCircle2,
@@ -122,14 +121,11 @@ const testimonials = [
 const Employers = () => {
   return (
     <div className="min-h-screen bg-black">
-      <BackgroundVideo />
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <section className="py-24 md:py-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
-
-          <div className="container px-4 md:px-6 relative z-10">
+        <section className="py-24 md:py-32">
+          <div className="container px-4 md:px-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-sm text-white mb-6">
                 <Building2 className="w-4 h-4" />
@@ -185,7 +181,7 @@ const Employers = () => {
         {/* Benefits */}
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Why Leading Companies Choose T3X
               </span>
@@ -220,11 +216,9 @@ const Employers = () => {
         </section>
 
         {/* How It Works */}
-        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+        <section className="py-20 md:py-28 border-t border-gray-800">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Simple & Streamlined
               </span>
@@ -240,7 +234,7 @@ const Employers = () => {
                   { step: "2", icon: Award, title: "Review Evidence", desc: "Explore detailed Skill Passports with mentor endorsements and behavioral data" },
                   { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
                   { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
-                ].map((item, index) => (
+                ].map((item) => (
                   <div key={item.step} className="relative text-center">
                     <div className="relative mb-6">
                       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto">
@@ -252,9 +246,6 @@ const Employers = () => {
                     </div>
                     <h3 className="font-bold text-white mb-3 text-lg">{item.title}</h3>
                     <p className="text-sm text-gray-300 leading-relaxed">{item.desc}</p>
-                    {index < 3 && (
-                      <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
-                    )}
                   </div>
                 ))}
               </div>
@@ -265,7 +256,7 @@ const Employers = () => {
         {/* Pricing */}
         <section className="py-20 md:py-28 bg-black border-t border-gray-800">
           <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Transparent Pricing
               </span>
@@ -281,65 +272,63 @@ const Employers = () => {
               {tiers.map((tier) => (
                 <div
                   key={tier.name}
-                  className="group relative"
-                >
-                  <div className={cn(
+                  className={cn(
                     "p-8 rounded-2xl border h-full flex flex-col",
                     tier.popular
                       ? "border-indigo-500 bg-gray-950"
                       : "border-gray-800 bg-gray-950 hover:border-indigo-500"
-                  )}>
-                    {tier.popular && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                        <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
-                          MOST POPULAR
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-white mb-2">
-                        {tier.name}
-                      </h3>
-                      <p className="text-gray-400 text-sm">
-                        {tier.description}
-                      </p>
-                    </div>
-
-                    <div className="mb-8">
-                      <span className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        {tier.price}
+                  )}
+                >
+                  {tier.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
+                        MOST POPULAR
                       </span>
-                      {tier.period && (
-                        <span className="text-gray-400 text-lg">{tier.period}</span>
-                      )}
                     </div>
+                  )}
 
-                    <ul className="space-y-4 mb-8 flex-grow">
-                      {tier.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-3">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-300 text-sm">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Button
-                      className={cn(
-                        "w-full text-base font-semibold py-6",
-                        tier.popular
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-                          : "border-gray-700 text-white hover:bg-gray-900"
-                      )}
-                      variant={tier.popular ? "default" : "outline"}
-                      asChild
-                    >
-                      <Link to={tier.href}>
-                        {tier.cta}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {tier.name}
+                    </h3>
+                    <p className="text-gray-400 text-sm">
+                      {tier.description}
+                    </p>
                   </div>
+
+                  <div className="mb-8">
+                    <span className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {tier.price}
+                    </span>
+                    {tier.period && (
+                      <span className="text-gray-400 text-lg">{tier.period}</span>
+                    )}
+                  </div>
+
+                  <ul className="space-y-4 mb-8 flex-grow">
+                    {tier.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-300 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    className={cn(
+                      "w-full text-base font-semibold py-6",
+                      tier.popular
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                        : "border-gray-700 text-white hover:bg-gray-900"
+                    )}
+                    variant={tier.popular ? "default" : "outline"}
+                    asChild
+                  >
+                    <Link to={tier.href}>
+                      {tier.cta}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -347,11 +336,9 @@ const Employers = () => {
         </section>
 
         {/* Testimonials */}
-        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+        <section className="py-20 md:py-28 border-t border-gray-800">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Trusted by Industry Leaders
@@ -394,10 +381,8 @@ const Employers = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-24 md:py-32 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-
-          <div className="container px-4 md:px-6 text-center relative z-10">
+        <section className="py-24 md:py-32 border-t border-gray-800">
+          <div className="container px-4 md:px-6 text-center">
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="text-white">
                 Ready to Transform

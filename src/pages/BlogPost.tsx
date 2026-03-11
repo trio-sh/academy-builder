@@ -1,6 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,6 @@ const BlogPost = () => {
   if (!post) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <BackgroundVideo />
         <Header />
         <section className="min-h-[calc(100vh-64px)] flex items-center justify-center">
           <div className="text-center">
@@ -58,14 +56,11 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <BackgroundVideo />
       <Header />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="pt-32 pb-12">
+        <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <Link
               to="/blog"

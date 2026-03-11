@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -225,14 +224,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <BackgroundVideo />
       <Header />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="pt-32 pb-20">
+        <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-white text-sm">
@@ -294,8 +290,8 @@ const Blog = () => {
 
       {/* Featured Post */}
       {showFeatured && (
-        <section className="py-20 relative">
-          <div className="container mx-auto px-4 relative z-10">
+        <section className="py-20">
+          <div className="container mx-auto px-4">
             <div className="flex items-center gap-2 mb-8">
               <TrendingUp className="w-5 h-5 text-indigo-400" />
               <h2 className="text-xl font-semibold text-white">Featured</h2>
@@ -339,8 +335,8 @@ const Blog = () => {
       )}
 
       {/* Blog Posts Grid */}
-      <section className="py-20 relative">
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-20">
+        <div className="container mx-auto px-4">
           {filteredPosts.length === 0 ? (
             <div className="text-center py-20">
               <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -405,8 +401,8 @@ const Blog = () => {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-20 relative">
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-20">
+        <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <div className="p-8 md:p-12 rounded-2xl bg-gray-950 border border-gray-800 text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">

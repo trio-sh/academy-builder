@@ -1,5 +1,4 @@
 import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import {
   Target,
@@ -46,12 +45,10 @@ const stats = [
 const About = () => {
   return (
     <div className="min-h-screen bg-black">
-      <BackgroundVideo />
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <section className="py-24 md:py-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
+        <section className="py-24 md:py-32">
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
@@ -96,7 +93,7 @@ const About = () => {
         <section className="py-20 md:py-28 bg-black">
           <div className="container px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+              <div className="text-center mb-12">
                 <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                   Our Mission
                 </span>
@@ -105,33 +102,29 @@ const About = () => {
                 </h2>
               </div>
 
-              <div className="relative p-10 rounded-2xl bg-gray-950 border border-gray-800">
-                <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-                  <p>
-                    Traditional credentials tell employers what you studied. Certifications show what tests you passed.
-                    But <strong className="text-white">neither reveals how you'll actually perform in the workplace.</strong>
-                  </p>
-                  <p>
-                    The 3rd Academy fills this gap with a mentor-gated validation system that observes, documents,
-                    and certifies behavioral readiness over time. Not through AI scores or self-assessments—
-                    <strong className="text-white"> through sustained human observation by experienced professionals.</strong>
-                  </p>
-                  <p>
-                    The result? <strong className="text-white">Candidates with evidence-backed credentials.</strong> Employers with confidence in their hires.
-                    Schools with tools to prepare students from day one.
-                  </p>
-                </div>
+              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+                <p>
+                  Traditional credentials tell employers what you studied. Certifications show what tests you passed.
+                  But <strong className="text-white">neither reveals how you'll actually perform in the workplace.</strong>
+                </p>
+                <p>
+                  The 3rd Academy fills this gap with a mentor-gated validation system that observes, documents,
+                  and certifies behavioral readiness over time. Not through AI scores or self-assessments—
+                  <strong className="text-white"> through sustained human observation by experienced professionals.</strong>
+                </p>
+                <p>
+                  The result? <strong className="text-white">Candidates with evidence-backed credentials.</strong> Employers with confidence in their hires.
+                  Schools with tools to prepare students from day one.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Values */}
-        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+        <section className="py-20 md:py-28 border-t border-gray-800">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Our Principles
               </span>
@@ -165,11 +158,9 @@ const About = () => {
         </section>
 
         {/* Who We Serve */}
-        <section className="py-20 md:py-28 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-2xl bg-gray-950 border border-gray-800">
+        <section className="py-20 md:py-28 border-t border-gray-800">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-3xl mx-auto text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Built for Everyone
@@ -229,10 +220,8 @@ const About = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-24 md:py-32 relative overflow-hidden border-t border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
-
-          <div className="container px-4 md:px-6 text-center relative z-10">
+        <section className="py-24 md:py-32 border-t border-gray-800">
+          <div className="container px-4 md:px-6 text-center">
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="text-white">
                 Ready to Join
