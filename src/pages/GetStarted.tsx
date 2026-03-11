@@ -511,115 +511,77 @@ const GetStarted = () => {
       <Header />
       <main className="pt-16">
         {/* Hero */}
-        <motion.section
-          className="py-16 md:py-24 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
-          <motion.div
-            className="absolute top-20 right-20 w-64 h-64 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-900 border border-gray-700 text-sm text-white mb-6">
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 Start Your Journey
-              </motion.div>
-              <motion.h1
-                className="text-4xl md:text-5xl font-bold mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 <span className="text-white">
                   Begin Your
                 </span>{" "}
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Credentialing Path
                 </span>
-              </motion.h1>
-              <motion.p
-                className="text-lg text-gray-50"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
+              </h1>
+              <p className="text-lg text-gray-50">
                 Choose your role and start building your evidence-based
                 behavioral profile with mentor guidance.
-              </motion.p>
+              </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Main Content */}
         <section className="py-12 md:py-16 bg-black">
           <div className="container px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
               {/* Progress */}
-              <motion.div
-                className="flex items-center justify-center gap-4 mb-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
+              <div className="flex items-center justify-center gap-4 mb-12">
                 {[1, 2, 3].map((s) => (
                   <div key={s} className="flex items-center gap-2">
-                    <motion.div
+                    <div
                       className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
+                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-300",
                         step >= s
                           ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-black text-gray-50 border border-white/30"
+                          : "bg-gray-900 text-gray-50 border border-gray-700"
                       )}
-                      whileHover={{ scale: 1.05 }}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
-                    </motion.div>
+                    </div>
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
-                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black"
+                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-gray-800"
                       )} />
                     )}
                   </div>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Step 1: Role Selection + Entry Path for candidates */}
               {step === 1 && (
-                <motion.div
-                  className="space-y-8"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-white mb-8">
+                <div className="space-y-8">
+                  <h2 className="text-2xl font-bold text-center text-white mb-8">
                     I want to join as...
-                  </motion.h2>
+                  </h2>
 
-                  <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-6">
                     {roleOptions.map((role) => (
-                      <motion.button
+                      <button
                         key={role.id}
-                        variants={itemVariants}
                         onClick={() => setSelectedRole(role.id)}
                         className={cn(
-                          "group relative p-6 rounded-2xl text-left transition-all duration-500",
+                          "group relative p-6 rounded-2xl text-left transition-colors duration-300",
                           selectedRole === role.id
-                            ? "bg-black border-2 border-indigo-500/50"
-                            : "bg-black border border-white/30 hover:border-white/30"
+                            ? "bg-gray-950 border-2 border-indigo-500"
+                            : "bg-gray-950 border border-gray-700 hover:border-gray-600"
                         )}
-                        whileHover={{ y: -5 }}
                       >
                         {selectedRole === role.id && (
                           <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
@@ -651,31 +613,25 @@ const GetStarted = () => {
                             ))}
                           </ul>
                         </div>
-                      </motion.button>
+                      </button>
                     ))}
-                  </motion.div>
+                  </div>
 
                   {/* Entry Path Selection - only for candidates */}
                   {selectedRole === "candidate" && (
-                    <motion.div
-                      className="space-y-6 mt-8"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    <div className="space-y-6 mt-8">
                       <h3 className="text-xl font-bold text-center text-white">Choose Your Entry Point</h3>
                       <div className="grid md:grid-cols-2 gap-6">
                         {entryPaths.map((path) => (
-                          <motion.button
+                          <button
                             key={path.id}
                             onClick={() => setSelectedPath(path.id)}
                             className={cn(
-                              "group relative p-8 rounded-3xl text-left transition-all duration-500",
+                              "group relative p-8 rounded-3xl text-left transition-colors duration-300",
                               selectedPath === path.id
-                                ? "bg-black border-2 border-indigo-500/50"
-                                : "bg-black border border-white/30 hover:border-white/30"
+                                ? "bg-gray-950 border-2 border-indigo-500"
+                                : "bg-gray-950 border border-gray-700 hover:border-gray-600"
                             )}
-                            whileHover={{ y: -5 }}
                           >
                             {selectedPath === path.id && (
                               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
@@ -710,10 +666,10 @@ const GetStarted = () => {
                                 ))}
                               </ul>
                             </div>
-                          </motion.button>
+                          </button>
                         ))}
                       </div>
-                    </motion.div>
+                    </div>
                   )}
 
                   <div className="flex justify-center pt-6">
@@ -724,8 +680,8 @@ const GetStarted = () => {
                       className={cn(
                         "px-10 py-6 rounded-xl font-bold text-lg text-white transition-colors duration-300",
                         !selectedRole || (selectedRole === "candidate" && !selectedPath)
-                          ? "bg-gray-800 border border-white/10 text-gray-400 shadow-none cursor-not-allowed"
-                          : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-2xl shadow-indigo-600/30"
+                          ? "bg-gray-800 cursor-not-allowed opacity-50"
+                          : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-600/30"
                       )}
                     >
                       Continue
@@ -733,21 +689,21 @@ const GetStarted = () => {
                     </Button>
                   </div>
 
-                  <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
                     <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                       Sign In
                     </Link>
-                  </motion.p>
-                </motion.div>
+                  </p>
+                </div>
               )}
 
               {/* Step 2: Account Details */}
               {step === 2 && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <div className="max-w-md mx-auto">
+                  <div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -761,7 +717,7 @@ const GetStarted = () => {
 
                       {/* Error Message */}
                       {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-3">
+                        <div className="mb-6 p-4 rounded-xl bg-red-950 border border-red-800 flex items-start gap-3">
                           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-red-400">{error}</p>
                         </div>
@@ -777,7 +733,7 @@ const GetStarted = () => {
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                           <div className="space-y-2">
@@ -788,7 +744,7 @@ const GetStarted = () => {
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                         </div>
@@ -801,7 +757,7 @@ const GetStarted = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
@@ -813,7 +769,7 @@ const GetStarted = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                           />
                         </div>
 
@@ -827,7 +783,7 @@ const GetStarted = () => {
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                               />
                             </div>
                             <div className="space-y-2">
@@ -838,7 +794,7 @@ const GetStarted = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                               />
                             </div>
                           </>
@@ -852,7 +808,7 @@ const GetStarted = () => {
                               value={schoolName}
                               onChange={(e) => setSchoolName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                         )}
@@ -867,7 +823,7 @@ const GetStarted = () => {
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                               />
                             </div>
                             <div className="space-y-2">
@@ -878,7 +834,7 @@ const GetStarted = () => {
                                 value={yearsExperience}
                                 onChange={(e) => setYearsExperience(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white placeholder:text-gray-500"
+                                className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                               />
                             </div>
                           </>
@@ -890,7 +846,7 @@ const GetStarted = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-black"
+                          className="flex-1 border-gray-700 text-white hover:bg-gray-900"
                         >
                           Back
                         </Button>
@@ -919,16 +875,16 @@ const GetStarted = () => {
                         <a href="/privacy" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>.
                       </p>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Candidates: Resume Upload */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <div className="max-w-md mx-auto">
+                  <div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">
                         {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
                       </h2>
@@ -942,16 +898,15 @@ const GetStarted = () => {
                       />
 
                       {uploadError && (
-                        <div className="mb-4 p-3 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-2">
+                        <div className="mb-4 p-3 rounded-xl bg-red-950 border border-red-800 flex items-start gap-2">
                           <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-red-400">{uploadError}</p>
                         </div>
                       )}
 
                       {!uploadedFile ? (
-                        <motion.div
-                          className="border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer"
-                          whileHover={{ scale: 1.02 }}
+                        <div
+                          className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-indigo-500 transition-colors cursor-pointer"
                           onClick={() => fileInputRef.current?.click()}
                         >
                           {isUploading || isEnhancing ? (
@@ -967,19 +922,19 @@ const GetStarted = () => {
                               <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
                               <p className="text-white font-medium mb-2">Click to upload your resume</p>
                               <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                              <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-black" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                              <Button variant="outline" size="sm" className="border-gray-700 text-white hover:bg-gray-900" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                             </>
                           )}
-                        </motion.div>
+                        </div>
                       ) : (
-                        <div className="border-2 border-emerald-500/30 rounded-2xl p-8 text-center bg-emerald-500/5">
+                        <div className="border-2 border-emerald-500 rounded-2xl p-8 text-center bg-emerald-950">
                           <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
                           <p className="text-white font-medium mb-1">Resume uploaded & analyzed!</p>
                           <p className="text-sm text-gray-400">{uploadedFile}</p>
                         </div>
                       )}
 
-                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-indigo-950 border border-indigo-800">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
                         <ul className="space-y-2 text-sm text-gray-50">
                           {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
@@ -990,7 +945,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         {!isReturningUser && (
-                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black">Back</Button>
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-white hover:bg-gray-900">Back</Button>
                         )}
                         <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
@@ -1001,34 +956,34 @@ const GetStarted = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Candidates: LiveWorks Profile */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <div className="max-w-md mx-auto">
+                  <div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-3xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
 
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="headline" className="text-gray-50">Professional Headline</Label>
-                          <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="skills" className="text-gray-50">Primary Skills</Label>
-                          <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="experience" className="text-gray-50">Years of Experience</Label>
-                          <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-black border-white/20 text-white placeholder:text-gray-500" />
+                          <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                         </div>
                       </div>
 
-                      <div className="mt-6 p-4 rounded-xl bg-purple-500/30 border border-purple-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-purple-950 border border-purple-800">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
                         <ul className="space-y-2 text-sm text-gray-50">
                           {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Skill Passport"].map((item) => (
@@ -1039,7 +994,7 @@ const GetStarted = () => {
 
                       <div className="flex gap-4 pt-6">
                         {!isReturningUser && (
-                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-white/20 text-white hover:bg-black">Back</Button>
+                          <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-white hover:bg-gray-900">Back</Button>
                         )}
                         <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
                           {isCompletingSetup ? (
@@ -1050,16 +1005,16 @@ const GetStarted = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Non-Candidate Roles: Welcome / Success */}
               {step === 3 && selectedRole !== "candidate" && (
-                <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative">
+                <div className="max-w-md mx-auto text-center">
+                  <div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-gray-950 border border-gray-800">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>
@@ -1077,7 +1032,7 @@ const GetStarted = () => {
                       <Button
                         onClick={handleNonCandidateComplete}
                         disabled={isCompletingSetup}
-                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-600/30"
                       >
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
@@ -1086,8 +1041,8 @@ const GetStarted = () => {
                         )}
                       </Button>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
