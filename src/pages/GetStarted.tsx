@@ -683,12 +683,12 @@ const GetStarted = () => {
 
                             <div className="relative">
                               {path.recommended && (
-                                <span className="absolute -top-4 left-0 px-3 py-1 text-xs font-medium bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full">
+                                <span className="inline-block mb-3 px-3 py-1 text-xs font-medium bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full">
                                   Recommended
                                 </span>
                               )}
 
-                              <div className="flex items-center gap-3 mb-4 mt-2">
+                              <div className={cn("flex items-center gap-3 mb-4", !path.recommended && "mt-2")}>
                                 <div className={cn(
                                   "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br",
                                   selectedPath === path.id ? path.gradient : "from-white/10 to-white/5"
@@ -722,7 +722,12 @@ const GetStarted = () => {
                         size="lg"
                         onClick={() => setStep(2)}
                         disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
-                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-10 py-6 rounded-xl font-bold text-lg shadow-2xl shadow-indigo-600/30"
+                        className={cn(
+                          "px-10 py-6 rounded-xl font-bold text-lg text-white transition-all duration-300",
+                          !selectedRole || (selectedRole === "candidate" && !selectedPath)
+                            ? "bg-gray-700/60 border border-white/10 text-gray-400 shadow-none cursor-not-allowed"
+                            : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-2xl shadow-indigo-600/30 active:from-indigo-700 active:to-purple-700 ring-2 ring-indigo-400/50"
+                        )}
                       >
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
@@ -16,7 +17,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const containerVariants = {
@@ -226,6 +227,23 @@ const components = [
 ];
 
 const Platform = () => {
+  const location = useLocation();
+
+  // Scroll to hash anchor on navigation (e.g. /platform#t3x)
+  useEffect(() => {
+    if (location.hash) {
+      // Small delay to let the page render before scrolling
+      const timer = setTimeout(() => {
+        const el = document.getElementById(location.hash.slice(1));
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
   return (
     <div className="min-h-screen bg-black">
       <BackgroundVideo />

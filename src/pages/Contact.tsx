@@ -377,7 +377,10 @@ const Contact = () => {
                 </h3>
                 <p className="text-gray-50 text-sm">
                   We aim to respond to all inquiries within 24-48 business hours.
-                  For urgent matters, please call us directly.
+                  For urgent matters, call us directly at{" "}
+                  <a href="tel:+15551234567" className="text-indigo-400 hover:text-indigo-300 font-medium underline underline-offset-2">
+                    +1 (555) 123-4567
+                  </a>.
                 </p>
               </div>
             </motion.div>
