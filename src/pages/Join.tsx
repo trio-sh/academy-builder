@@ -24,19 +24,6 @@ import { useToast } from "@/hooks/use-toast";
 
 type UserRole = "candidate" | "mentor" | "employer" | "school_admin";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const roleOptions = [
   {
     id: "candidate" as UserRole,
@@ -165,8 +152,6 @@ const Join = () => {
         {/* Hero */}
         <motion.section
           className="py-12 md:py-16 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
@@ -180,16 +165,12 @@ const Join = () => {
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-white/30 text-sm text-gray-50 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
               >
                 <UserPlus className="w-4 h-4 text-indigo-400" />
                 Join The 3rd Academy
               </motion.div>
               <motion.h1
                 className="text-4xl md:text-5xl font-bold mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
               >
                 <span className="text-white">
                   Create Your
@@ -210,7 +191,7 @@ const Join = () => {
           <div className="container px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
               {/* Progress */}
-              <motion.div className="flex items-center justify-center gap-4 mb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <motion.div className="flex items-center justify-center gap-4 mb-12">
                 {[1, 2, 3].map((s) => (
                   <div key={s} className="flex items-center gap-2">
                     <motion.div
@@ -232,16 +213,15 @@ const Join = () => {
 
               {/* Step 1: Role Selection */}
               {step === 1 && (
-                <motion.div className="space-y-8" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-white mb-8">
+                <motion.div className="space-y-8">
+                  <motion.h2 className="text-2xl font-bold text-center text-white mb-8">
                     I want to join as...
                   </motion.h2>
 
-                  <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-6">
+                  <motion.div className="grid md:grid-cols-2 gap-6">
                     {roleOptions.map((role) => (
                       <motion.button
                         key={role.id}
-                        variants={itemVariants}
                         onClick={() => setSelectedRole(role.id)}
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
@@ -285,7 +265,7 @@ const Join = () => {
                     ))}
                   </motion.div>
 
-                  <motion.div variants={itemVariants} className="flex justify-center pt-6">
+                  <motion.div className="flex justify-center pt-6">
                     <Button
                       size="lg"
                       onClick={() => setStep(2)}
@@ -297,7 +277,7 @@ const Join = () => {
                     </Button>
                   </motion.div>
 
-                  <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
+                  <motion.p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
                     <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                       Sign In
@@ -308,8 +288,8 @@ const Join = () => {
 
               {/* Step 2: Account Details */}
               {step === 2 && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative">
+                <motion.div className="max-w-md mx-auto">
+                  <motion.div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
@@ -481,8 +461,8 @@ const Join = () => {
 
               {/* Step 3: Success */}
               {step === 3 && (
-                <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative">
+                <motion.div className="max-w-md mx-auto text-center">
+                  <motion.div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">

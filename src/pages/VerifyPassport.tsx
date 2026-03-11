@@ -133,8 +133,6 @@ const VerifyPassport = () => {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
           className="max-w-md w-full text-center"
         >
           <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-6">
@@ -182,8 +180,6 @@ const VerifyPassport = () => {
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Verification Status Banner */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           className={`p-4 rounded-xl mb-8 flex items-center gap-4 ${
             isValid
               ? "bg-emerald-950 border border-emerald-500/30"
@@ -215,9 +211,6 @@ const VerifyPassport = () => {
 
         {/* Candidate Info */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
           className="p-8 rounded-2xl bg-gradient-to-br from-emerald-500/30 via-teal-500/30 to-cyan-500/30 border border-emerald-500/30 mb-8"
         >
           <div className="flex items-start justify-between mb-8">
@@ -278,9 +271,6 @@ const VerifyPassport = () => {
 
         {/* Behavioral Scores */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
           className="mb-8"
         >
           <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
@@ -315,9 +305,6 @@ const VerifyPassport = () => {
 
         {/* Overall Score */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
           className="p-6 rounded-xl bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/20 mb-8"
         >
           <div className="flex items-center justify-between">
@@ -334,9 +321,6 @@ const VerifyPassport = () => {
         {/* Skills */}
         {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
             className="mb-8"
           >
             <h3 className="text-xl font-semibold text-white mb-4">Skills</h3>
@@ -355,9 +339,6 @@ const VerifyPassport = () => {
 
         {/* Verification Code */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
           className="p-4 rounded-xl bg-black border border-white/30 text-center"
         >
           <p className="text-sm text-gray-400 mb-1">Verification Code</p>

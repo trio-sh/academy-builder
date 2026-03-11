@@ -1028,8 +1028,6 @@ export const TrainingModuleViewer = () => {
                     {/* Feedback */}
                     {showFeedback && selectedChoice && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
                         className={`mt-6 p-4 rounded-xl ${
                           currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
                             ? 'bg-emerald-950 border border-emerald-500/30'

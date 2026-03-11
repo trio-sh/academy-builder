@@ -16,19 +16,6 @@ import {
   X,
 } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 interface BlogPost {
   title: string;
   excerpt: string;
@@ -253,18 +240,14 @@ const Blog = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/50 text-indigo-400 text-sm">
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -276,7 +259,6 @@ const Blog = () => {
               </span>
             </motion.h1>
             <motion.p
-              variants={itemVariants}
               className="text-lg text-gray-50 mb-8"
             >
               Explore articles on behavioral validation, career readiness, and the
@@ -285,7 +267,6 @@ const Blog = () => {
 
             {/* Search */}
             <motion.div
-              variants={itemVariants}
               className="max-w-md mx-auto relative"
             >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -315,8 +296,6 @@ const Blog = () => {
             {categories.map((category, index) => (
               <motion.button
                 key={category}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
@@ -337,9 +316,6 @@ const Blog = () => {
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <div className="flex items-center gap-2 mb-8">
                 <TrendingUp className="w-5 h-5 text-indigo-400" />
@@ -400,8 +376,6 @@ const Blog = () => {
           {filteredPosts.length === 0 ? (
             <motion.div
               className="text-center py-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
             >
               <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400 text-lg mb-2">No articles found</p>
@@ -412,16 +386,11 @@ const Blog = () => {
           ) : (
             <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
             >
               {filteredPosts.map((post, index) => (
                 <motion.button
                   key={index}
                   onClick={() => setExpandedPost(post)}
-                  variants={itemVariants}
                   className="group block text-left"
                 >
                   <div className="relative h-full">
@@ -467,9 +436,6 @@ const Blog = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
@@ -508,8 +474,6 @@ const Blog = () => {
         {expandedPost && (
           <motion.div
             className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             {/* Backdrop */}
@@ -521,8 +485,6 @@ const Blog = () => {
             {/* Modal content */}
             <motion.div
               className="relative w-full max-w-3xl mx-4 my-8 sm:my-16"
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 40, scale: 0.95 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
             >

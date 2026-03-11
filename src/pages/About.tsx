@@ -15,22 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const values = [
   {
     icon: Users,
@@ -71,8 +55,6 @@ const About = () => {
         {/* Hero */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           {/* Background */}
@@ -92,18 +74,12 @@ const About = () => {
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black border border-white/30 text-sm text-white mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 The 3rd Academy
               </motion.div>
               <motion.h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
                   Bridging the Gap Between
@@ -115,9 +91,6 @@ const About = () => {
               </motion.h1>
               <motion.p
                 className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
               >
                 Education tells employers what you studied. Certifications show what you passed.
                 <span className="font-bold"> We prove what you can actually do.</span>
@@ -131,9 +104,6 @@ const About = () => {
           <div className="container px-4 md:px-6">
             <motion.div
               className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
@@ -152,9 +122,6 @@ const About = () => {
           <div className="container px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 className="text-center mb-12 p-10 rounded-3xl bg-black border border-white/30"
               >
                 <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -198,9 +165,6 @@ const About = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Our Principles
@@ -215,15 +179,10 @@ const About = () => {
 
             <motion.div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
             >
               {values.map((value) => (
                 <motion.div
                   key={value.title}
-                  variants={itemVariants}
                   className="group relative"
                 >
                   <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-indigo-600 to-purple-600" />
@@ -257,9 +216,6 @@ const About = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -273,10 +229,6 @@ const About = () => {
 
             <motion.div
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
             >
               {[
                 {
@@ -301,7 +253,7 @@ const About = () => {
                   gradient: "from-pink-600 to-pink-700",
                 },
               ].map((item) => (
-                <motion.div key={item.title} variants={itemVariants} className="group relative">
+                <motion.div key={item.title} className="group relative">
                   <div className={`absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r ${item.gradient}`} />
                   <div className="relative p-8 rounded-2xl bg-black border border-white/30 hover:border-white/50 transition-all duration-300 h-full flex flex-col">
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-5 shadow-lg`}>
@@ -328,9 +280,6 @@ const About = () => {
         {/* CTA */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
@@ -342,9 +291,6 @@ const About = () => {
           <div className="container px-4 md:px-6 text-center relative z-10">
             <motion.h2
               className="text-5xl md:text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="text-white">
                 Ready to Join
@@ -356,20 +302,12 @@ const About = () => {
             </motion.h2>
             <motion.p
               className="text-xl text-white max-w-2xl mx-auto mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
             >
               Whether you're seeking validation, hiring talent, or educating students—
               there's a place for you in our ecosystem.
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>

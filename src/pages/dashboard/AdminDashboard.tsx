@@ -117,19 +117,6 @@ const TIER_CONFIG = {
   },
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const navItems = [
   { name: "Overview", href: "/dashboard/admin", icon: BarChart3 },
   { name: "Users", href: "/dashboard/admin/users", icon: Users },
@@ -302,18 +289,15 @@ const Overview = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
         <p className="text-gray-400">Platform management and analytics overview.</p>
       </motion.div>
 
       {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/30 to-cyan-500/30" },
           { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/30 to-teal-500/30" },
@@ -332,7 +316,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Secondary Stats */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Active Passports", value: stats.totalPassports, icon: Shield, color: "text-indigo-400" },
           { label: "Pending TalentVisa", value: stats.pendingTalentVisas, icon: Award, color: "text-yellow-400" },
@@ -355,7 +339,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Analytics Charts */}
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+      <motion.div className="grid md:grid-cols-2 gap-6">
         {/* User Growth Chart */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="text-lg font-semibold text-white mb-4">User Growth (12 Weeks)</h3>
@@ -434,7 +418,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Platform Activity Bar Chart */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <h3 className="text-lg font-semibold text-white mb-4">Platform Activity Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -463,7 +447,7 @@ const Overview = () => {
 
       {/* Alerts */}
       {stats.pendingTalentVisas > 0 && (
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-4">
             <AlertTriangle className="w-6 h-6 text-amber-400" />
             <div className="flex-1">
@@ -482,7 +466,7 @@ const Overview = () => {
       )}
 
       {/* Quick Actions */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
@@ -518,7 +502,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Recent Users */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Recent Users</h2>
           <Link to="/dashboard/admin/users" className="text-sm text-red-400 hover:text-red-300">
@@ -719,12 +703,9 @@ const UsersManagement = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
           <p className="text-gray-400">View, edit, and manage all platform users.</p>
@@ -735,7 +716,7 @@ const UsersManagement = () => {
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="flex gap-4 flex-wrap">
+      <motion.div className="flex gap-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
@@ -761,7 +742,7 @@ const UsersManagement = () => {
       </motion.div>
 
       {/* Users Table */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="rounded-xl border border-white/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -862,14 +843,10 @@ const UsersManagement = () => {
       {/* View User Modal */}
       {showViewModal && selectedUser && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -960,14 +937,10 @@ const UsersManagement = () => {
       {/* Edit User Modal */}
       {showEditModal && selectedUser && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1064,14 +1037,10 @@ const UsersManagement = () => {
       {/* Change Role Modal */}
       {showRoleModal && selectedUser && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1343,12 +1312,9 @@ const TalentVisaReview = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">TalentVisa Review</h1>
           <p className="text-gray-400">Review and approve TalentVisa nominations with tier assignment.</p>
@@ -1364,7 +1330,7 @@ const TalentVisaReview = () => {
       </motion.div>
 
       {/* Quota Overview */}
-      <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
+      <motion.div className="grid md:grid-cols-3 gap-4">
         {(["gold", "silver", "bronze"] as TalentVisaTier[]).map((tier) => {
           const config = TIER_CONFIG[tier];
           const quota = getQuotaForTier(tier);
@@ -1414,7 +1380,7 @@ const TalentVisaReview = () => {
       </motion.div>
 
       {/* Filter Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-2">
+      <motion.div className="flex gap-2">
         {(["pending", "approved", "rejected", "all"] as const).map((f) => (
           <button
             key={f}
@@ -1431,7 +1397,7 @@ const TalentVisaReview = () => {
       </motion.div>
 
       {/* Nominations List */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {nominations.length > 0 ? (
           <div className="space-y-4">
             {nominations.map((nomination) => {
@@ -1547,8 +1513,6 @@ const TalentVisaReview = () => {
       {/* Tier Selection Modal */}
       {showApprovalModal && selectedNomination && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowApprovalModal(false);
@@ -1556,8 +1520,6 @@ const TalentVisaReview = () => {
           }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1703,17 +1665,14 @@ const EmployersManagement = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Employer Management</h1>
         <p className="text-gray-400">Verify and manage employer accounts.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {employers.length > 0 ? (
           <div className="space-y-3">
             {employers.map((employer) => (
@@ -1833,12 +1792,9 @@ const SchoolsManagement = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Schools Management</h1>
           <p className="text-gray-400">Manage and verify school accounts.</p>
@@ -1847,7 +1803,7 @@ const SchoolsManagement = () => {
       </motion.div>
 
       {schools.length > 0 && (
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <div className="relative max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <input
@@ -1862,7 +1818,7 @@ const SchoolsManagement = () => {
       )}
 
       {/* Stats */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-black border border-white/30">
           <p className="text-2xl font-bold text-white">{schools.length}</p>
           <p className="text-xs text-gray-400">Total Schools</p>
@@ -1881,7 +1837,7 @@ const SchoolsManagement = () => {
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {filteredSchools.length > 0 ? (
           <div className="space-y-3">
             {filteredSchools.map((school) => (
@@ -2031,18 +1987,15 @@ const Reports = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Reports & Analytics</h1>
         <p className="text-gray-400">Platform performance and real-time insights.</p>
       </motion.div>
 
       {/* Key Metrics */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Skill Passports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
           { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "text-purple-400" },
@@ -2057,7 +2010,7 @@ const Reports = () => {
         ))}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+      <motion.div className="grid md:grid-cols-2 gap-6">
         {/* Activity Trend Chart */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Activity Trend (6 months)</h3>
@@ -2233,19 +2186,16 @@ const CommunicationsPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Communications</h1>
         <p className="text-gray-400">Send emails and notifications to users.</p>
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* User Selection */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+        <motion.div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
 
           {/* Filters */}
@@ -2318,7 +2268,7 @@ const CommunicationsPage = () => {
         </motion.div>
 
         {/* Message Composition */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+        <motion.div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
 
           {/* Send Type */}
@@ -2459,12 +2409,9 @@ const SettingsPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Settings</h1>
           <p className="text-gray-400">Platform configuration and preferences.</p>
@@ -2485,7 +2432,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* General Settings */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Globe className="w-5 h-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-white">General</h2>
@@ -2513,7 +2460,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Access Control */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="w-5 h-5 text-red-400" />
           <h2 className="text-lg font-semibold text-white">Access Control</h2>
@@ -2535,7 +2482,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Approvals */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-3 mb-6">
           <CheckCircle className="w-5 h-5 text-emerald-400" />
           <h2 className="text-lg font-semibold text-white">Auto-Approval</h2>
@@ -2557,7 +2504,7 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Danger Zone */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
+      <motion.div className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
         <div className="flex items-center gap-3 mb-6">
           <AlertTriangle className="w-5 h-5 text-red-400" />
           <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>

@@ -19,22 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 const components = [
   {
     id: "skill-passport",
@@ -234,8 +218,6 @@ const Platform = () => {
         {/* Hero */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           {/* Background */}
@@ -255,17 +237,11 @@ const Platform = () => {
             <div className="max-w-3xl mx-auto text-center">
               <motion.span
                 className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 Platform Architecture
               </motion.span>
               <motion.h1
                 className="text-5xl md:text-7xl font-bold mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
                   8 Components.
@@ -277,9 +253,6 @@ const Platform = () => {
               </motion.h1>
               <motion.p
                 className="text-xl text-gray-50 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
               >
                 Every component serves two purposes: a visible function for users
                 and an invisible function for system intelligence. The defensibility
@@ -294,16 +267,12 @@ const Platform = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="space-y-16"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
             >
               {components.map((component, index) => (
                 <motion.div
                   key={component.id}
                   id={component.id}
                   className="scroll-mt-24"
-                  variants={itemVariants}
                 >
                   <div className="group relative">
                     {/* Glow effect */}
@@ -408,9 +377,6 @@ const Platform = () => {
         {/* CTA */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
@@ -422,9 +388,6 @@ const Platform = () => {
           <div className="container px-4 md:px-6 text-center relative z-10">
             <motion.h2
               className="text-4xl md:text-5xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="text-white">
                 Ready to Experience
@@ -436,18 +399,10 @@ const Platform = () => {
             </motion.h2>
             <motion.p
               className="text-xl text-gray-50 max-w-2xl mx-auto mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
             >
               Join The 3rd Academy and start your mentor-gated credentialing journey today.
             </motion.p>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

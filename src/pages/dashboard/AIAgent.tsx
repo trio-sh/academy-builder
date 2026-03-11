@@ -1948,8 +1948,6 @@ export default function AIAgent() {
     return (
       <motion.div
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-emerald-500/30 text-emerald-300"
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
         layout
       >
         <CheckCircle2 className="w-3 h-3" />
@@ -2065,8 +2063,6 @@ export default function AIAgent() {
         {/* Empty state */}
         {uiMessages.length === 0 && !isStreaming && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
             className="max-w-2xl mx-auto"
           >
             <div className="text-center mb-8 pt-12">
@@ -2127,8 +2123,6 @@ export default function AIAgent() {
         {uiMessages.map((msg, idx) => (
           <motion.div
             key={idx}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
             className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
           >
             {msg.role === "assistant" ? (
@@ -2198,8 +2192,6 @@ export default function AIAgent() {
         {/* Streaming indicator */}
         {isStreaming && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
             className="max-w-2xl mx-auto"
           >
             <div className="flex items-start gap-3">

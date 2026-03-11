@@ -120,19 +120,6 @@ const BEHAVIORAL_DIMENSIONS = [
   { id: "relationship_building", label: "Relationship Building", color: "from-indigo-500 to-violet-500" },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const navItems = [
   { name: "Overview", href: "/dashboard/candidate", icon: BarChart3, section: "observation" },
   { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
@@ -324,13 +311,10 @@ const Overview = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
       {/* Welcome */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome back, {profile?.first_name || "Candidate"}
         </h1>
@@ -340,7 +324,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
@@ -359,7 +343,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Next Steps */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Your Journey</h2>
         <div className="space-y-3">
           {getNextSteps().map((step, index) => (
@@ -394,7 +378,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Recent Activity */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Recent Activity</h2>
         {recentActivity.length > 0 ? (
           <div className="space-y-3">
@@ -755,12 +739,9 @@ const SkillPassport = () => {
   if (!candidateProfile?.has_skill_passport) {
     return (
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
         className="space-y-8"
       >
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <h1 className="text-3xl font-bold text-white mb-2">Skill Passport</h1>
           <p className="text-gray-400">
             Your behavioral readiness documentation for the workplace.
@@ -768,7 +749,6 @@ const SkillPassport = () => {
         </motion.div>
 
         <motion.div
-          variants={itemVariants}
           className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 border border-indigo-500/20 text-center"
         >
           <div className="w-20 h-20 rounded-full bg-indigo-950 flex items-center justify-center mx-auto mb-6">
@@ -802,7 +782,7 @@ const SkillPassport = () => {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <h2 className="text-xl font-semibold text-white mb-4">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {[
@@ -845,12 +825,9 @@ const SkillPassport = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
           <p className="text-gray-400">Your documented behavioral readiness assessment for employers.</p>
@@ -877,7 +854,6 @@ const SkillPassport = () => {
 
       {/* Passport Card */}
       <motion.div
-        variants={itemVariants}
         className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/30 via-teal-500/30 to-cyan-500/30 border border-emerald-500/30"
       >
         {/* Background Pattern */}
@@ -965,7 +941,7 @@ const SkillPassport = () => {
       </motion.div>
 
       {/* Behavioral Scores */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Behavioral Dimensions</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension) => {
@@ -994,7 +970,7 @@ const SkillPassport = () => {
       </motion.div>
 
       {/* Average Score */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/20">
           <div className="flex items-center justify-between">
             <div>
@@ -1013,7 +989,7 @@ const SkillPassport = () => {
       </motion.div>
 
       {/* Verification Info */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="p-4 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-emerald-400" />
@@ -1187,12 +1163,9 @@ const GrowthLog = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
           <p className="text-gray-400">
@@ -1222,7 +1195,7 @@ const GrowthLog = () => {
       </motion.div>
 
       {/* Stats Overview */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
           <p className="text-sm text-gray-400 mb-1">Total Activities</p>
           <p className="text-2xl font-bold text-white">{entries.length}</p>
@@ -1246,7 +1219,7 @@ const GrowthLog = () => {
       {viewMode === "charts" && (
         <>
           {/* Activity Trends Chart */}
-          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+          <motion.div className="p-6 rounded-xl bg-black border border-white/30">
             <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -1291,7 +1264,7 @@ const GrowthLog = () => {
 
           {/* Behavioral Dimensions Radar */}
           <div className="grid md:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+            <motion.div className="p-6 rounded-xl bg-black border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1327,7 +1300,7 @@ const GrowthLog = () => {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+            <motion.div className="p-6 rounded-xl bg-black border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
               <div className="space-y-3">
                 {eventDistribution.map((item) => {
@@ -1360,7 +1333,7 @@ const GrowthLog = () => {
       {viewMode === "timeline" && (
         <>
           {entries.length > 0 ? (
-            <motion.div variants={itemVariants} className="relative">
+            <motion.div className="relative">
               {/* Timeline line */}
               <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
 
@@ -1370,8 +1343,6 @@ const GrowthLog = () => {
                   return (
                     <motion.div
                       key={entry.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                       className="relative pl-14"
                     >
@@ -1407,7 +1378,6 @@ const GrowthLog = () => {
             </motion.div>
           ) : (
             <motion.div
-              variants={itemVariants}
               className="p-8 rounded-2xl bg-black border border-white/30 text-center"
             >
               <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1654,12 +1624,9 @@ const ObservationPathway = () => {
   if (!mentorAssignment) {
     return (
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
         className="max-w-3xl mx-auto space-y-8"
       >
-        <motion.div variants={itemVariants} className="text-center py-12">
+        <motion.div className="text-center py-12">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
             <Lock className="w-10 h-10 text-indigo-400" />
           </div>
@@ -1712,19 +1679,16 @@ const ObservationPathway = () => {
   if (assignedDimensions.length === 0) {
     return (
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
         className="max-w-3xl mx-auto space-y-8"
       >
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <h1 className="text-3xl font-bold text-white mb-2">Observation Pathway</h1>
           <p className="text-gray-400">
             You are assigned to mentor {mentorProfile?.first_name} {mentorProfile?.last_name}.
           </p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black border border-white/10 text-center">
+        <motion.div className="p-8 rounded-2xl bg-black border border-white/10 text-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
             <Clock className="w-8 h-8 text-amber-400" />
           </div>
@@ -1737,7 +1701,7 @@ const ObservationPathway = () => {
           </p>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-sm text-indigo-300">
               While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Skill Passport.
@@ -1753,13 +1717,10 @@ const ObservationPathway = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-5xl mx-auto space-y-8"
     >
       {/* Header */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Your Observation Pathway</h1>
         <p className="text-gray-400">
           Observation sessions on your mentor-assigned dimensions. All feedback is documented and assessed by your mentor.
@@ -1777,7 +1738,7 @@ const ObservationPathway = () => {
       </motion.div>
 
       {/* L1 Observation Session — Only on assigned dimensions */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
           <div className="absolute top-4 right-4">
             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
@@ -1821,7 +1782,7 @@ const ObservationPathway = () => {
       </motion.div>
 
       {/* Assigned Dimensions */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Assigned Dimensions</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {mvpDimensions.map((dim) => {
@@ -1883,7 +1844,7 @@ const ObservationPathway = () => {
 
       {/* Feedback History */}
       {observationFeedback.filter(f => f.final_feedback).length > 0 && (
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <h2 className="text-xl font-semibold text-white mb-4">Observation Feedback</h2>
           <div className="space-y-3">
             {observationFeedback
@@ -1914,7 +1875,7 @@ const ObservationPathway = () => {
       )}
 
       {/* BARS Scale Reference */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="p-4 rounded-xl bg-black border border-white/10">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">4-Point BARS Scoring Reference</h3>
           <div className="grid grid-cols-4 gap-3">
@@ -2099,13 +2060,10 @@ const SelfAssessmentPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-5xl mx-auto space-y-8"
     >
       {/* Header */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Readiness Reflection</h1>
         <p className="text-gray-400">
           A personal reflection tool to help you prepare for your formal observation sessions.
@@ -2121,8 +2079,6 @@ const SelfAssessmentPage = () => {
       {/* Success Banner with Mentor Recommendation */}
       {showSuccess && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
           <div className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/30 flex items-center gap-3">
@@ -2153,7 +2109,7 @@ const SelfAssessmentPage = () => {
       )}
 
       {/* Progress Steps */}
-      <motion.div variants={itemVariants} className="flex items-center justify-center gap-2">
+      <motion.div className="flex items-center justify-center gap-2">
         {["Introduction", "Rate Skills", "Reflect", "Goals", "Review"].map((step, index) => (
           <div key={step} className="flex items-center">
             <button
@@ -2183,8 +2139,6 @@ const SelfAssessmentPage = () => {
       {/* Step Content */}
       <motion.div
         key={activeStep}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
         className="space-y-6"
       >
         {/* Introduction Step */}
@@ -2687,7 +2641,7 @@ const SelfAssessmentPage = () => {
 
       {/* Previous Readiness Reflections */}
       {assessments.length > 0 && (
-        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-black border border-white/30">
+        <motion.div className="p-6 rounded-2xl bg-black border border-white/30">
           <h2 className="text-xl font-semibold text-white mb-4">Reflection History</h2>
           <div className="space-y-3">
             {assessments.slice(0, 5).map((assessment) => {
@@ -2825,13 +2779,10 @@ const Training = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
       {/* Header */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">BridgeFast</h1>
         <p className="text-gray-400">
           Skill development programs to build workplace readiness before or between your observation sessions.
@@ -2845,7 +2796,7 @@ const Training = () => {
       </motion.div>
 
       {/* Progress Overview */}
-      <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
+      <motion.div className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <BookOpen className="w-8 h-8 text-indigo-400 mb-3" />
           <p className="text-3xl font-bold text-white">{INTERACTIVE_MODULES.length}</p>
@@ -2864,7 +2815,7 @@ const Training = () => {
       </motion.div>
 
       {/* Modules Grid */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">BridgeFast Programs</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {INTERACTIVE_MODULES.map((module, index) => {
@@ -3013,7 +2964,7 @@ const Training = () => {
       </motion.div>
 
       {/* Info section */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-950 border border-indigo-500/30">
+      <motion.div className="p-6 rounded-xl bg-indigo-950 border border-indigo-500/30">
         <div className="flex items-start gap-4">
           <div className="p-3 rounded-xl bg-indigo-950">
             <Sparkles className="w-6 h-6 text-indigo-400" />
@@ -3157,12 +3108,9 @@ const Projects = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">LiveWorks Projects</h1>
         <p className="text-gray-400">
           Apply to real projects with employer partners to build experience.
@@ -3170,7 +3118,7 @@ const Projects = () => {
       </motion.div>
 
       {/* Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-2">
+      <motion.div className="flex gap-2">
         <button
           onClick={() => setActiveTab("browse")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -3200,7 +3148,7 @@ const Projects = () => {
 
       {activeTab === "browse" ? (
         projects.length > 0 ? (
-          <motion.div variants={itemVariants} className="grid gap-4">
+          <motion.div className="grid gap-4">
             {projects.map((project) => {
               const application = getApplicationStatus(project.id);
               const hasApplied = !!application;
@@ -3264,7 +3212,6 @@ const Projects = () => {
           </motion.div>
         ) : (
           <motion.div
-            variants={itemVariants}
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -3276,7 +3223,7 @@ const Projects = () => {
         )
       ) : (
         appliedProjects.length > 0 ? (
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div className="space-y-4">
             {appliedProjects.map((project) => {
               const application = getApplicationStatus(project.id)!;
               return (
@@ -3313,7 +3260,6 @@ const Projects = () => {
           </motion.div>
         ) : (
           <motion.div
-            variants={itemVariants}
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -3339,8 +3285,6 @@ const Projects = () => {
             onClick={() => !isSubmitting && setShowApplyModal(false)}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {applicationSuccess ? (
@@ -3546,12 +3490,9 @@ const Connections = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Employer Connections</h1>
         <p className="text-gray-400">
           Manage connection requests from employers interested in your profile.
@@ -3560,7 +3501,7 @@ const Connections = () => {
 
       {/* Pending Requests */}
       {pendingConnections.length > 0 && (
-        <motion.div variants={itemVariants}>
+        <motion.div>
           <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-amber-400" />
             Pending Requests ({pendingConnections.length})
@@ -3626,7 +3567,7 @@ const Connections = () => {
       )}
 
       {/* Connection History */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Connection History</h2>
         {respondedConnections.length > 0 ? (
           <div className="space-y-3">
@@ -4191,12 +4132,9 @@ const Profile = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-2xl space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Your Profile</h1>
           <p className="text-gray-400">Manage your personal information</p>
@@ -4226,7 +4164,7 @@ const Profile = () => {
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-4">
+      <motion.div className="space-y-4">
         {/* Avatar and basic info */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <div className="flex items-center gap-4 mb-6">
@@ -4580,14 +4518,10 @@ const Profile = () => {
       {/* Resume Viewer Modal */}
       {showResumeViewer && candidateProfile?.resume_url && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowResumeViewer(false)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-5xl h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
@@ -4740,17 +4674,14 @@ const SettingsPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-2xl space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-4">
+      <motion.div className="space-y-4">
         {/* Account */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
@@ -4829,8 +4760,6 @@ const SettingsPage = () => {
             onClick={() => !isChangingPassword && setShowPasswordModal(false)}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {passwordSuccess ? (
@@ -5090,12 +5019,9 @@ const FindMentor = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Find a Mentor</h1>
         <p className="text-gray-400">
           Connect with experienced professionals who can guide your career growth.
@@ -5105,7 +5031,6 @@ const FindMentor = () => {
       {/* Active Mentor Status */}
       {activeMentor && (
         <motion.div
-          variants={itemVariants}
           className="p-6 rounded-xl bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border border-emerald-500/20"
         >
           <div className="flex items-center gap-3 mb-2">
@@ -5124,7 +5049,6 @@ const FindMentor = () => {
       {/* Pending Mentor Request Status */}
       {pendingMentor && !activeMentor && (
         <motion.div
-          variants={itemVariants}
           className="p-6 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/20"
         >
           <div className="flex items-center gap-3 mb-2">
@@ -5139,7 +5063,7 @@ const FindMentor = () => {
 
       {/* Recommended Matches Section */}
       {recommendedMatches.length > 0 && !activeMentor && !pendingMentor && (
-        <motion.div variants={itemVariants} className="space-y-4">
+        <motion.div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
@@ -5169,8 +5093,6 @@ const FindMentor = () => {
                 return (
                   <motion.div
                     key={mentor.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
                     className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
                   >
                     {/* Match Score Badge */}
@@ -5291,7 +5213,7 @@ const FindMentor = () => {
       )}
 
       {/* Industry Filter */}
-      <motion.div variants={itemVariants} className="flex flex-wrap gap-2">
+      <motion.div className="flex flex-wrap gap-2">
         <button
           onClick={() => setIndustryFilter("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -5318,7 +5240,7 @@ const FindMentor = () => {
       </motion.div>
 
       {/* Mentors Grid */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {filteredMentors.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-4">
             {filteredMentors.map((mentor) => {
@@ -5455,14 +5377,10 @@ const FindMentor = () => {
       {/* Request Mentor Modal */}
       {selectedMentor && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedMentor(null)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -5826,18 +5744,14 @@ const MessagesPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="h-[calc(100vh-12rem)]"
     >
-      <motion.div variants={itemVariants} className="mb-6">
+      <motion.div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with mentors and employers.</p>
       </motion.div>
 
       <motion.div
-        variants={itemVariants}
         className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex"
       >
         {/* Conversations List */}
@@ -6210,12 +6124,9 @@ const NotificationsPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
           <p className="text-gray-400">
@@ -6240,7 +6151,7 @@ const NotificationsPage = () => {
       </motion.div>
 
       {/* Filter tabs */}
-      <motion.div variants={itemVariants} className="flex gap-2">
+      <motion.div className="flex gap-2">
         {(["all", "unread", "read"] as const).map((f) => (
           <button
             key={f}
@@ -6257,7 +6168,7 @@ const NotificationsPage = () => {
       </motion.div>
 
       {/* Notifications List */}
-      <motion.div variants={itemVariants} className="space-y-3">
+      <motion.div className="space-y-3">
         {allNotifications.length > 0 ? (
           allNotifications.map((notification) => {
             const IconComponent = getNotificationIcon(notification.type);
@@ -6266,8 +6177,6 @@ const NotificationsPage = () => {
             return (
               <motion.div
                 key={notification.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
                 className={`p-4 rounded-xl border transition-colors ${
                   notification.is_read
                     ? "bg-black border-white/30"

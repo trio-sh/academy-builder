@@ -16,19 +16,6 @@ import {
   Users,
 } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const pressReleases = [
   {
     date: "January 15, 2026",
@@ -120,18 +107,14 @@ const Press = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -143,7 +126,6 @@ const Press = () => {
               </span>
             </motion.h1>
             <motion.p
-              variants={itemVariants}
               className="text-lg text-gray-50 mb-8"
             >
               Stay updated on The 3rd Academy's mission to transform credentialing
@@ -158,15 +140,10 @@ const Press = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="grid grid-cols-2 md:grid-cols-4 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="text-center p-6 rounded-2xl bg-black border border-white/30"
               >
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
@@ -184,9 +161,6 @@ const Press = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -200,16 +174,11 @@ const Press = () => {
 
           <motion.div
             className="max-w-4xl mx-auto space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {pressReleases.map((release, index) => (
               <motion.a
                 key={index}
                 href={release.link}
-                variants={itemVariants}
                 className="group block relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -238,9 +207,6 @@ const Press = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -254,15 +220,10 @@ const Press = () => {
 
           <motion.div
             className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {mediaFeatures.map((feature, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -289,9 +250,6 @@ const Press = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
@@ -345,9 +303,6 @@ const Press = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
               <Mail className="w-8 h-8 text-indigo-400" />

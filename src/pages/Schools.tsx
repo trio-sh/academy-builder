@@ -19,22 +19,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const features = [
   {
     icon: Lightbulb,
@@ -93,8 +77,6 @@ const Schools = () => {
         {/* Hero */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           {/* Background */}
@@ -114,18 +96,12 @@ const Schools = () => {
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black border border-white/30 text-sm text-white mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 <GraduationCap className="w-4 h-4 text-cyan-400" />
                 Civic Access Lab
               </motion.div>
               <motion.h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
                   Prepare Students.
@@ -137,18 +113,12 @@ const Schools = () => {
               </motion.h1>
               <motion.p
                 className="text-xl text-white mb-10 max-w-3xl mx-auto leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
               >
                 Build career awareness early with tools that engage students, empower teachers,
                 and create pathways from classroom to workplace.
               </motion.p>
               <motion.div
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold shadow-2xl" asChild>
@@ -171,9 +141,6 @@ const Schools = () => {
         {/* Important Note */}
         <motion.section
           className="py-8 relative border-y border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
         >
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto flex items-start gap-4">
@@ -193,9 +160,6 @@ const Schools = () => {
           <div className="container px-4 md:px-6">
             <motion.div
               className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
@@ -214,9 +178,6 @@ const Schools = () => {
           <div className="container px-4 md:px-6">
             <motion.div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 Comprehensive Platform
@@ -232,15 +193,10 @@ const Schools = () => {
 
             <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
             >
               {features.map((feature) => (
                 <motion.div
                   key={feature.title}
-                  variants={itemVariants}
                   className="group relative"
                 >
                   <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 bg-gradient-to-r from-cyan-600 to-indigo-600" />
@@ -274,9 +230,6 @@ const Schools = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
               className="max-w-3xl mx-auto text-center mb-16 p-10 rounded-3xl bg-black border border-white/30"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
                 For Everyone
@@ -288,10 +241,6 @@ const Schools = () => {
 
             <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
             >
               {[
                 {
@@ -319,7 +268,7 @@ const Schools = () => {
                   gradient: "from-pink-600 to-pink-700",
                 },
               ].map((user) => (
-                <motion.div key={user.title} variants={itemVariants} className="text-center p-8">
+                <motion.div key={user.title} className="text-center p-8">
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${user.gradient} flex items-center justify-center mx-auto mb-5 shadow-lg`}>
                     <user.icon className="w-8 h-8 text-white" />
                   </div>
@@ -336,14 +285,8 @@ const Schools = () => {
           <div className="container px-4 md:px-6">
             <motion.div
               className="grid md:grid-cols-2 gap-16 items-center max-w-6xl mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
             >
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
                 className="relative p-10 rounded-3xl bg-black border border-white/30"
               >
                 <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
@@ -378,9 +321,6 @@ const Schools = () => {
 
               <motion.div
                 className="relative"
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
               >
                 <div className="absolute -inset-4 rounded-3xl opacity-40 blur-xl bg-gradient-to-r from-cyan-600 to-indigo-600" />
                 <div className="relative rounded-3xl bg-gradient-to-br from-cyan-600/20 to-indigo-600/20 border border-white/30 p-12">
@@ -413,9 +353,6 @@ const Schools = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
               className="max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <div className="relative p-12 rounded-3xl bg-black border border-white/30">
                 <div className="absolute -top-8 left-1/2 -translate-x-1/2">
@@ -442,9 +379,6 @@ const Schools = () => {
         {/* CTA */}
         <motion.section
           className="py-24 md:py-32 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
@@ -456,9 +390,6 @@ const Schools = () => {
           <div className="container px-4 md:px-6 text-center relative z-10">
             <motion.h2
               className="text-5xl md:text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
             >
               <span className="text-white">
                 Ready to Empower
@@ -470,20 +401,12 @@ const Schools = () => {
             </motion.h2>
             <motion.p
               className="text-xl text-white max-w-2xl mx-auto mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
             >
               Join 200+ schools building the workforce of tomorrow with
               evidence-based career readiness education.
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg shadow-2xl" asChild>

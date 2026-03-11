@@ -753,8 +753,6 @@ export const InteractiveSkillAssessment = () => {
                 {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
                 {voiceAnalysis && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
                     className="w-full space-y-4"
                   >
                     <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
@@ -834,8 +832,6 @@ export const InteractiveSkillAssessment = () => {
           {/* Response recorded confirmation — no scores or feedback shown per spec Rule 1 & 2 */}
           {writtenAnalysis && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
               <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
@@ -952,8 +948,6 @@ export const InteractiveSkillAssessment = () => {
             {displayTurns.map((turn, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
                 className={`flex ${turn.speaker === 'ai' ? 'justify-start' : 'justify-end'}`}
               >
                 {turn.speaker === 'ai' && turn.message && (
@@ -1010,8 +1004,6 @@ export const InteractiveSkillAssessment = () => {
           {problemChoices.map((choice, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
               className="p-3 rounded-lg bg-black border-l-4 border-indigo-500"
             >
               <p className="text-gray-400 text-sm">{choice.consequence}</p>
@@ -1157,8 +1149,6 @@ export const InteractiveSkillAssessment = () => {
                 <p className="text-gray-400 text-sm">{option.reasoning}</p>
                 {judgmentChoice === option.id && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
                     className="mt-3 pt-3 border-t border-white/30"
                   >
                     <p className="text-emerald-400 text-sm">Response recorded.</p>
@@ -1498,8 +1488,6 @@ export const InteractiveSkillAssessment = () => {
               <motion.div
                 key={currentScene?.id}
                 ref={contentRef}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden shadow-2xl"
               >

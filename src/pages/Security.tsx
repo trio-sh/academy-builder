@@ -19,19 +19,6 @@ import {
   UserCheck,
 } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const securityFeatures = [
   {
     icon: Lock,
@@ -152,18 +139,14 @@ const Security = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Shield className="w-4 h-4" />
                 Security
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -175,7 +158,6 @@ const Security = () => {
               </span>
             </motion.h1>
             <motion.p
-              variants={itemVariants}
               className="text-lg text-gray-50 mb-8"
             >
               We implement industry-leading security measures to protect your
@@ -190,9 +172,6 @@ const Security = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -206,15 +185,10 @@ const Security = () => {
 
           <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {securityFeatures.map((feature, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -239,9 +213,6 @@ const Security = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -255,15 +226,10 @@ const Security = () => {
 
           <motion.div
             className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {certifications.map((cert, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="text-center p-6 rounded-2xl bg-black border border-white/30"
               >
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-600/20 to-emerald-600/20 flex items-center justify-center mx-auto mb-4">
@@ -284,9 +250,6 @@ const Security = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -300,15 +263,10 @@ const Security = () => {
 
           <motion.div
             className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {securityPractices.map((practice, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="p-6 rounded-2xl bg-black border border-white/30"
               >
                 <h3 className="text-lg font-semibold text-white mb-4">
@@ -337,9 +295,6 @@ const Security = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="relative group">
               <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
@@ -400,9 +355,6 @@ const Security = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-8">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">

@@ -46,19 +46,6 @@ type Student = Database["public"]["Tables"]["students"]["Row"];
 type TeacherObservation = Database["public"]["Tables"]["teacher_observations"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const navItems = [
   { name: "Overview", href: "/dashboard/school", icon: BarChart3 },
   { name: "Students", href: "/dashboard/school/students", icon: Users },
@@ -195,12 +182,9 @@ const Overview = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome, {schoolProfile?.school_name || "School Admin"}
         </h1>
@@ -210,7 +194,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Students", value: stats.totalStudents, icon: Users, color: "text-teal-400" },
           { label: "Active Cohorts", value: stats.activeCohorts, icon: GraduationCap, color: "text-blue-400" },
@@ -229,7 +213,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
@@ -265,7 +249,7 @@ const Overview = () => {
       </motion.div>
 
       {/* Recent Observations */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Recent Observations</h2>
           <Link to="/dashboard/school/observations" className="text-sm text-teal-400 hover:text-teal-300">
@@ -410,12 +394,9 @@ const Students = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Students</h1>
           <p className="text-gray-400">Manage enrolled students and track their progress.</p>
@@ -430,7 +411,7 @@ const Students = () => {
       </motion.div>
 
       {/* Search */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
@@ -444,7 +425,7 @@ const Students = () => {
       </motion.div>
 
       {/* Students List */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {filteredStudents.length > 0 ? (
           <div className="space-y-3">
             {filteredStudents.map((student) => (
@@ -606,12 +587,9 @@ const Cohorts = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Cohorts</h1>
           <p className="text-gray-400">Manage student cohorts and programs.</p>
@@ -628,8 +606,6 @@ const Cohorts = () => {
       {/* New Cohort Form */}
       {showNewCohort && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Cohort</h2>
@@ -684,7 +660,7 @@ const Cohorts = () => {
       )}
 
       {/* Cohorts List */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {cohorts.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-4">
             {cohorts.map((cohort) => (
@@ -859,12 +835,9 @@ const Observations = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Observations</h1>
           <p className="text-gray-400">Record and review student behavioral observations.</p>
@@ -881,14 +854,10 @@ const Observations = () => {
       {/* New Observation Form */}
       {showNewObservation && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowNewObservation(false)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-2xl max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -996,7 +965,7 @@ const Observations = () => {
       )}
 
       {/* Observations List */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {observations.length > 0 ? (
           <div className="space-y-3">
             {observations.map((obs) => (
@@ -1044,18 +1013,15 @@ const Observations = () => {
 const Analytics = () => {
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Analytics</h1>
         <p className="text-gray-400">Track cohort performance and behavioral trends.</p>
       </motion.div>
 
       {/* Behavioral Dimension Overview */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <h2 className="text-lg font-semibold text-white mb-4">Behavioral Dimensions Average</h2>
         <div className="space-y-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension, index) => {
@@ -1077,7 +1043,7 @@ const Analytics = () => {
       </motion.div>
 
       {/* Stats Cards */}
-      <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
+      <motion.div className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
           <TrendingUp className="w-8 h-8 text-teal-400 mb-3" />
           <p className="text-3xl font-bold text-white">+12%</p>
@@ -1223,12 +1189,12 @@ const SchoolMessagesPage = () => {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-teal-500" /></div>;
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
-      <motion.div variants={itemVariants} className="mb-6">
+    <motion.div className="h-[calc(100vh-12rem)]">
+      <motion.div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with mentors, candidates, employers, and other schools.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      <motion.div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
@@ -1356,17 +1322,14 @@ const SchoolMessagesPage = () => {
 const SettingsPage = () => {
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your school profile and preferences.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div className="p-6 rounded-xl bg-black border border-white/30">
         <p className="text-gray-400">School settings will appear here.</p>
       </motion.div>
     </motion.div>

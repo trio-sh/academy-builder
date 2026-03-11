@@ -11,22 +11,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 const journeySteps = [
   {
     step: "01",
@@ -110,10 +94,6 @@ export function JourneySection() {
   return (
     <motion.section
       className="py-32 relative overflow-hidden bg-black"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
@@ -132,7 +112,7 @@ export function JourneySection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
+        <motion.div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             The Credentialing Journey
           </span>
@@ -156,7 +136,6 @@ export function JourneySection() {
           {journeySteps.map((step, index) => (
             <motion.div
               key={step.step}
-              variants={itemVariants}
               className={cn(
                 "group relative flex flex-col md:flex-row gap-6 items-center",
                 index % 2 === 1 && "md:flex-row-reverse"
@@ -222,7 +201,6 @@ export function JourneySection() {
 
         {/* Key Principles */}
         <motion.div
-          variants={itemVariants}
           className="max-w-3xl mx-auto mt-20"
         >
           <div className="relative group">
@@ -241,9 +219,6 @@ export function JourneySection() {
                   <motion.div
                     key={principle}
                     className="flex items-center gap-3"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                   >
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />

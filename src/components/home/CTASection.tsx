@@ -3,33 +3,13 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 export function CTASection() {
   return (
     <motion.section
       className="py-32 bg-black relative overflow-hidden"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div variants={itemVariants} className="relative max-w-5xl mx-auto">
+        <motion.div className="relative max-w-5xl mx-auto">
           {/* Outer glow */}
           <div className="absolute -inset-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[40px] opacity-20 blur-3xl" />
 
@@ -61,7 +41,6 @@ export function CTASection() {
             <div className="relative z-10 p-12 md:p-20 text-center">
               {/* Badge */}
               <motion.div
-                variants={itemVariants}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
@@ -70,7 +49,6 @@ export function CTASection() {
 
               {/* Headline */}
               <motion.h2
-                variants={itemVariants}
                 className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
               >
                 <span className="text-white">
@@ -84,7 +62,6 @@ export function CTASection() {
 
               {/* Description */}
               <motion.p
-                variants={itemVariants}
                 className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
               >
                 Join The 3rd Academy today. Upload your resume, get matched with a mentor,
@@ -93,7 +70,6 @@ export function CTASection() {
 
               {/* CTAs */}
               <motion.div
-                variants={itemVariants}
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <motion.div
@@ -127,7 +103,7 @@ export function CTASection() {
               </motion.div>
 
               {/* Trust Signal */}
-              <motion.p variants={itemVariants} className="mt-10 text-gray-400 text-sm">
+              <motion.p className="mt-10 text-gray-400 text-sm">
                 No credit card required · Mentor-matched within 48 hours
               </motion.p>
             </div>

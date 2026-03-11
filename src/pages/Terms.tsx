@@ -4,19 +4,6 @@ import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 import { Footer } from "@/components/layout/Footer";
 import { FileText, Calendar, Mail } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const sections = [
   {
     title: "1. Acceptance of Terms",
@@ -232,18 +219,14 @@ const Terms = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <FileText className="w-4 h-4" />
                 Legal
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -255,7 +238,6 @@ const Terms = () => {
               </span>
             </motion.h1>
             <motion.div
-              variants={itemVariants}
               className="flex items-center justify-center gap-4 text-sm text-gray-50"
             >
               <span className="flex items-center gap-1">
@@ -272,14 +254,9 @@ const Terms = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="max-w-3xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {/* Introduction */}
             <motion.div
-              variants={itemVariants}
               className="mb-12 p-6 rounded-2xl bg-black border border-white/30"
             >
               <p className="text-gray-50 leading-relaxed">
@@ -296,7 +273,6 @@ const Terms = () => {
               {sections.map((section, index) => (
                 <motion.div
                   key={index}
-                  variants={itemVariants}
                   className="group"
                 >
                   <h2 className="text-xl font-semibold text-white mb-4">
@@ -323,7 +299,6 @@ const Terms = () => {
 
             {/* Contact Box */}
             <motion.div
-              variants={itemVariants}
               className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 text-center"
             >
               <Mail className="w-8 h-8 text-indigo-400 mx-auto mb-4" />

@@ -2,22 +2,6 @@ import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 const comparisons = [
   {
     criteria: "Who judges readiness?",
@@ -50,10 +34,6 @@ export function DifferentiatorSection() {
   return (
     <motion.section
       className="py-32 relative overflow-hidden bg-black"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
@@ -72,7 +52,7 @@ export function DifferentiatorSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
+        <motion.div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             Why We're Different
           </span>
@@ -93,7 +73,7 @@ export function DifferentiatorSection() {
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Left: Image */}
-          <motion.div variants={itemVariants} className="relative">
+          <motion.div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-emerald-600/20 to-indigo-600/20 rounded-3xl blur-2xl" />
             <div className="relative rounded-3xl overflow-hidden border border-white/10">
               <img
@@ -106,7 +86,7 @@ export function DifferentiatorSection() {
           </motion.div>
 
           {/* Right: Comparison Table */}
-          <motion.div variants={itemVariants}>
+          <motion.div>
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500" />
 
@@ -128,9 +108,6 @@ export function DifferentiatorSection() {
                 {comparisons.map((row, index) => (
                   <motion.div
                     key={row.criteria}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                     className={cn(
                       "grid grid-cols-3",
@@ -156,7 +133,7 @@ export function DifferentiatorSection() {
         </div>
 
         {/* Quote */}
-        <motion.div variants={itemVariants} className="max-w-2xl mx-auto mt-20 text-center">
+        <motion.div className="max-w-2xl mx-auto mt-20 text-center">
           <blockquote className="text-2xl md:text-3xl font-medium text-white italic leading-relaxed">
             "The flowchart is the map. The data is the territory.
             <br />

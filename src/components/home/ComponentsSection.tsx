@@ -14,22 +14,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 const components = [
   {
     id: "skill-passport",
@@ -125,10 +109,6 @@ export function ComponentsSection() {
   return (
     <motion.section
       className="py-32 relative overflow-hidden bg-black"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
@@ -147,7 +127,7 @@ export function ComponentsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
+        <motion.div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
             Platform Components
           </span>
@@ -168,7 +148,6 @@ export function ComponentsSection() {
 
         {/* Components Grid */}
         <motion.div
-          variants={containerVariants}
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {components.map((component, index) => (
@@ -177,7 +156,7 @@ export function ComponentsSection() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div variants={itemVariants} className="text-center mt-16">
+        <motion.div className="text-center mt-16">
           <motion.div
             whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(99, 102, 241, 0.4)" }}
             whileTap={{ scale: 0.95 }}
@@ -207,7 +186,6 @@ interface ComponentCardProps {
 function ComponentCard({ component, index }: ComponentCardProps) {
   return (
     <motion.div
-      variants={itemVariants}
       className="group relative"
       whileHover={{ y: -10, rotateY: 5, rotateX: 5 }}
       style={{ transformStyle: "preserve-3d" }}

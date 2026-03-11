@@ -460,8 +460,6 @@ export default function ApiTestChat() {
             {/* Empty state */}
             {uiMessages.length === 0 && !isStreaming && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
                 className="max-w-2xl mx-auto text-center pt-20"
               >
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20 flex items-center justify-center mx-auto mb-4 border border-indigo-500/20">
@@ -510,8 +508,6 @@ export default function ApiTestChat() {
             {uiMessages.map((msg, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
                 className={`max-w-2xl mx-auto ${msg.role === "user" ? "flex justify-end" : ""}`}
               >
                 {msg.role === "assistant" ? (
@@ -581,8 +577,6 @@ export default function ApiTestChat() {
             {/* Streaming indicator */}
             {isStreaming && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
                 className="max-w-2xl mx-auto"
               >
                 <div className="flex items-start gap-3">
@@ -690,8 +684,6 @@ export default function ApiTestChat() {
         <AnimatePresence>
           {showDebug && (
             <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 384, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               className="border-l border-white/[0.06] bg-black overflow-hidden flex-shrink-0"
             >

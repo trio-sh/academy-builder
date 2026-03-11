@@ -17,19 +17,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const openPositions = [
   {
     title: "Senior Full-Stack Engineer",
@@ -146,18 +133,14 @@ const Careers = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Sparkles className="w-4 h-4" />
                 We're Hiring
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -169,13 +152,12 @@ const Careers = () => {
               </span>
             </motion.h1>
             <motion.p
-              variants={itemVariants}
               className="text-lg text-gray-50 mb-8"
             >
               Join our mission to bridge the gap between credentials and workplace readiness.
               We're building technology that validates real human capability.
             </motion.p>
-            <motion.div variants={itemVariants}>
+            <motion.div>
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
@@ -194,9 +176,6 @@ const Careers = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -210,15 +189,10 @@ const Careers = () => {
 
           <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {values.map((value, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -240,9 +214,6 @@ const Careers = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -256,15 +227,10 @@ const Careers = () => {
 
           <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -288,9 +254,6 @@ const Careers = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -304,15 +267,10 @@ const Careers = () => {
 
           <motion.div
             className="max-w-4xl mx-auto space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {openPositions.map((position, index) => (
               <motion.div
                 key={index}
-                variants={itemVariants}
                 className="group relative"
               >
                 <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
@@ -361,9 +319,6 @@ const Careers = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
               <Users className="w-8 h-8 text-indigo-400" />

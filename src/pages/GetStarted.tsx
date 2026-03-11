@@ -30,22 +30,6 @@ import { findMentorMatches } from "@/lib/mentorMatching";
 
 type UserRole = "candidate" | "mentor" | "employer" | "school_admin";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const roleOptions = [
   {
     id: "candidate" as UserRole,
@@ -513,8 +497,6 @@ const GetStarted = () => {
         {/* Hero */}
         <motion.section
           className="py-16 md:py-24 relative overflow-hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
@@ -528,18 +510,12 @@ const GetStarted = () => {
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-white/30 text-sm text-gray-50 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 Start Your Journey
               </motion.div>
               <motion.h1
                 className="text-4xl md:text-5xl font-bold mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
               >
                 <span className="text-white">
                   Begin Your
@@ -550,9 +526,6 @@ const GetStarted = () => {
               </motion.h1>
               <motion.p
                 className="text-lg text-gray-50"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
               >
                 Choose your role and start building your evidence-based
                 behavioral profile with mentor guidance.
@@ -568,9 +541,6 @@ const GetStarted = () => {
               {/* Progress */}
               <motion.div
                 className="flex items-center justify-center gap-4 mb-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
               >
                 {[1, 2, 3].map((s) => (
                   <div key={s} className="flex items-center gap-2">
@@ -599,19 +569,15 @@ const GetStarted = () => {
               {step === 1 && (
                 <motion.div
                   className="space-y-8"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
                 >
-                  <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-white mb-8">
+                  <motion.h2 className="text-2xl font-bold text-center text-white mb-8">
                     I want to join as...
                   </motion.h2>
 
-                  <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-6">
+                  <motion.div className="grid md:grid-cols-2 gap-6">
                     {roleOptions.map((role) => (
                       <motion.button
                         key={role.id}
-                        variants={itemVariants}
                         onClick={() => setSelectedRole(role.id)}
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
@@ -659,8 +625,6 @@ const GetStarted = () => {
                   {selectedRole === "candidate" && (
                     <motion.div
                       className="space-y-6 mt-8"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
                       transition={{ duration: 0.3 }}
                     >
                       <h3 className="text-xl font-bold text-center text-white">Choose Your Entry Point</h3>
@@ -716,7 +680,7 @@ const GetStarted = () => {
                     </motion.div>
                   )}
 
-                  <motion.div variants={itemVariants} className="flex justify-center pt-6">
+                  <motion.div className="flex justify-center pt-6">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button
                         size="lg"
@@ -735,7 +699,7 @@ const GetStarted = () => {
                     </motion.div>
                   </motion.div>
 
-                  <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
+                  <motion.p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
                     <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                       Sign In
@@ -746,8 +710,8 @@ const GetStarted = () => {
 
               {/* Step 2: Account Details */}
               {step === 2 && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <motion.div className="max-w-md mx-auto">
+                  <motion.div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-3xl bg-black border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
@@ -927,8 +891,8 @@ const GetStarted = () => {
 
               {/* Step 3 for Candidates: Resume Upload */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <motion.div className="max-w-md mx-auto">
+                  <motion.div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-3xl bg-black border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">
@@ -1009,8 +973,8 @@ const GetStarted = () => {
 
               {/* Step 3 for Candidates: LiveWorks Profile */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
-                <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative group">
+                <motion.div className="max-w-md mx-auto">
+                  <motion.div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-3xl bg-black border border-white/30">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
@@ -1058,8 +1022,8 @@ const GetStarted = () => {
 
               {/* Step 3 for Non-Candidate Roles: Welcome / Success */}
               {step === 3 && selectedRole !== "candidate" && (
-                <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.div variants={itemVariants} className="relative">
+                <motion.div className="max-w-md mx-auto text-center">
+                  <motion.div className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">

@@ -71,19 +71,6 @@ interface ProjectWithApplications extends LiveWorksProject {
   escrow_transactions?: EscrowTransaction[];
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const navItems = [
   { name: "Overview", href: "/dashboard/employer", icon: TrendingUp },
   { name: "Find Talent", href: "/dashboard/employer/search", icon: Search },
@@ -180,12 +167,9 @@ const Overview = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome back, {profile?.first_name || "Employer"}
         </h1>
@@ -197,7 +181,6 @@ const Overview = () => {
       {/* Verification status */}
       {employerProfile && !employerProfile.is_verified && (
         <motion.div
-          variants={itemVariants}
           className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 text-amber-400" />
@@ -210,7 +193,7 @@ const Overview = () => {
         </motion.div>
       )}
 
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
@@ -228,7 +211,7 @@ const Overview = () => {
         ))}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+      <motion.div className="grid md:grid-cols-2 gap-6">
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
           <div className="space-y-3">
@@ -479,12 +462,9 @@ const SearchTalent = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">T3X Talent Exchange</h1>
         <p className="text-gray-400">
           Search for verified Skill Passport holders.
@@ -492,7 +472,7 @@ const SearchTalent = () => {
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
+      <motion.div className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-400">Filters:</span>
@@ -546,7 +526,7 @@ const SearchTalent = () => {
 
       {/* Results */}
       {candidates.length > 0 ? (
-        <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-4">
+        <motion.div className="grid md:grid-cols-2 gap-4">
           {candidates.map((candidate) => (
             <div
               key={candidate.id}
@@ -672,7 +652,6 @@ const SearchTalent = () => {
         </motion.div>
       ) : (
         <motion.div
-          variants={itemVariants}
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -691,8 +670,6 @@ const SearchTalent = () => {
             onClick={() => !isSendingConnection && setShowConnectModal(false)}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
           >
             {connectionSuccess ? (
@@ -893,18 +870,15 @@ const Connections = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Connections</h1>
         <p className="text-gray-400">Manage your candidate connections.</p>
       </motion.div>
 
       {/* Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-2">
+      <motion.div className="flex gap-2">
         <button
           onClick={() => setActiveTab("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -948,7 +922,7 @@ const Connections = () => {
       </motion.div>
 
       {filteredConnections.length > 0 ? (
-        <motion.div variants={itemVariants} className="space-y-4">
+        <motion.div className="space-y-4">
           {filteredConnections.map((connection) => {
             const StatusIcon = getStatusIcon(connection.status);
             const candidateProfile = connection.candidate_profile;
@@ -1045,7 +1019,6 @@ const Connections = () => {
         </motion.div>
       ) : (
         <motion.div
-          variants={itemVariants}
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
         >
           <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1478,12 +1451,9 @@ const Projects = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">LiveWorks Projects</h1>
           <p className="text-gray-400">Create and manage project postings.</p>
@@ -1500,8 +1470,6 @@ const Projects = () => {
       {/* New Project Form */}
       {showNewProject && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           className="p-6 rounded-xl bg-black border border-white/30"
         >
           <h2 className="text-lg font-semibold text-white mb-4">Create New Project</h2>
@@ -1615,7 +1583,7 @@ const Projects = () => {
 
       {/* Projects List */}
       {projects.length > 0 ? (
-        <motion.div variants={itemVariants} className="space-y-4">
+        <motion.div className="space-y-4">
           {projects.map((project) => {
             const applicationCount = project.applications?.length || 0;
             const pendingApps = project.applications?.filter((a) => a.status === "pending").length || 0;
@@ -1738,7 +1706,6 @@ const Projects = () => {
       ) : (
         !showNewProject && (
           <motion.div
-            variants={itemVariants}
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
           >
             <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -1753,14 +1720,10 @@ const Projects = () => {
       {/* Project Details Modal */}
       {selectedProject && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedProject(null)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-3xl max-h-[80vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -2193,8 +2156,6 @@ const Projects = () => {
       {/* Manual Payment Modal */}
       {showEscrowModal && selectedMilestone && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-[60] p-4"
           onClick={() => {
             setShowEscrowModal(false);
@@ -2203,8 +2164,6 @@ const Projects = () => {
           }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -2628,12 +2587,9 @@ const Feedback = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Hire Feedback</h1>
         <p className="text-gray-400">
           Provide 30/60/90 day performance feedback for your hires.
@@ -2642,7 +2598,6 @@ const Feedback = () => {
 
       {/* Info Banner */}
       <motion.div
-        variants={itemVariants}
         className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-4"
       >
         <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -2656,7 +2611,7 @@ const Feedback = () => {
       </motion.div>
 
       {/* Hires List */}
-      <motion.div variants={itemVariants}>
+      <motion.div>
         {hires.length > 0 ? (
           <div className="space-y-4">
             {hires.map((hire) => {
@@ -2806,14 +2761,10 @@ const Feedback = () => {
       {/* Feedback Modal */}
       {showFeedbackModal && selectedHire && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowFeedbackModal(false)}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
@@ -3091,12 +3042,12 @@ const EmployerMessagesPage = () => {
   if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
-      <motion.div variants={itemVariants} className="mb-6">
+    <motion.div className="h-[calc(100vh-12rem)]">
+      <motion.div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, mentors, and other employers.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      <motion.div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         <div className="w-80 border-r border-white/30 flex flex-col">
           <div className="p-4 border-b border-white/30 space-y-3">
             <div className="flex items-center gap-2">
@@ -3296,12 +3247,9 @@ const Company = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-2xl space-y-8"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Company Profile</h1>
           <p className="text-gray-400">Manage your company information</p>
@@ -3323,7 +3271,7 @@ const Company = () => {
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-4">
+      <motion.div className="space-y-4">
         {/* Contact Info */}
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h3 className="font-semibold text-white mb-4">Contact Information</h3>
@@ -3450,17 +3398,14 @@ const SettingsPage = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
       className="max-w-2xl space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-4">
+      <motion.div className="space-y-4">
         <div className="p-6 rounded-xl bg-black border border-white/30">
           <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
           <div className="space-y-4">

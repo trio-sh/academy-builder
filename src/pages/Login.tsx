@@ -12,22 +12,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const Login = () => {
   const [userType, setUserType] = useState("candidate");
   const [email, setEmail] = useState("");
@@ -99,13 +83,9 @@ const Login = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <motion.div
               className="max-w-md mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
             >
               {/* Logo */}
               <motion.div
-                variants={itemVariants}
                 className="flex items-center justify-center gap-2 mb-8"
               >
                 <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
@@ -119,7 +99,7 @@ const Login = () => {
               </motion.div>
 
               {/* Card */}
-              <motion.div variants={itemVariants} className="relative group">
+              <motion.div className="relative group">
                 {/* Glow effect */}
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 

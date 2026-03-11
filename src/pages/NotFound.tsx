@@ -19,15 +19,11 @@ const NotFound = () => {
       <div className="container px-4 md:px-6 relative z-10">
         <motion.div
           className="max-w-lg mx-auto text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {/* 404 Number */}
           <motion.div
             className="mb-8"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <span className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -38,9 +34,6 @@ const NotFound = () => {
           {/* Card */}
           <motion.div
             className="relative group"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
           >
             {/* Glow effect */}
             <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
@@ -91,9 +84,6 @@ const NotFound = () => {
           {/* Suggested Links */}
           <motion.div
             className="mt-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
           >
             <p className="text-gray-500 text-sm mb-4">Or try one of these:</p>
             <div className="flex flex-wrap items-center justify-center gap-4">

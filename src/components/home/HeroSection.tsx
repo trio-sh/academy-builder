@@ -3,22 +3,6 @@ import { ArrowRight, FileText, Users, Briefcase, Sparkles, Play } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
 const floatingVariants = {
   animate: {
     y: [0, -15, 0],
@@ -79,7 +63,6 @@ export function HeroSection() {
         className="absolute bottom-40 left-[5%] w-36 h-36 rounded-2xl overflow-hidden opacity-15 hidden lg:block"
         variants={floatingVariants}
         animate="animate"
-        transition={{ delay: 2 }}
       >
         <img
           src="https://api.a0.dev/assets/image?text=diverse%20team%20collaborating%20on%20project%20modern%20workspace&aspect=1:1&seed=hero_float2"
@@ -99,9 +82,6 @@ export function HeroSection() {
       {/* Content */}
       <motion.div
         className="relative container px-4 md:px-6 pt-32 pb-20"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
       >
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -109,7 +89,6 @@ export function HeroSection() {
             <div className="text-left">
               {/* Badge */}
               <motion.div
-                variants={itemVariants}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-sm text-indigo-300 mb-8"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
@@ -119,8 +98,6 @@ export function HeroSection() {
               {/* Headline */}
               <motion.h1
                 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
                 <span className="text-white">
@@ -138,7 +115,6 @@ export function HeroSection() {
 
               {/* Subheadline */}
               <motion.p
-                variants={itemVariants}
                 className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
               >
                 The 3rd Academy bridges the gap between what your resume says and what
@@ -148,7 +124,6 @@ export function HeroSection() {
 
               {/* CTAs */}
               <motion.div
-                variants={itemVariants}
                 className="flex flex-col sm:flex-row items-start gap-4"
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -180,7 +155,6 @@ export function HeroSection() {
 
               {/* Trust indicators */}
               <motion.div
-                variants={itemVariants}
                 className="flex items-center gap-6 mt-10 text-sm text-gray-400"
               >
                 <div className="flex items-center gap-2">
@@ -200,7 +174,6 @@ export function HeroSection() {
 
             {/* Right: Hero Image + Stats */}
             <motion.div
-              variants={itemVariants}
               className="relative hidden lg:block"
             >
               {/* Main hero image */}
@@ -240,7 +213,6 @@ export function HeroSection() {
 
           {/* Entry Points Cards */}
           <motion.div
-            variants={containerVariants}
             className="grid md:grid-cols-3 gap-6 mt-20"
           >
             <EntryPointCard
@@ -290,8 +262,6 @@ function EntryPointCard({ icon, title, description, entry, image, delay }: Entry
   return (
     <motion.div
       className="group relative"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 + delay }}
       whileHover={{ y: -10 }}
     >

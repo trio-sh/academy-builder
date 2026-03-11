@@ -22,19 +22,6 @@ import {
   FileText,
 } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const helpCategories = [
   {
     icon: BookOpen,
@@ -183,18 +170,14 @@ const Help = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
           >
-            <motion.div variants={itemVariants} className="mb-6">
+            <motion.div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <HelpCircle className="w-4 h-4" />
                 Help Center
               </span>
             </motion.div>
             <motion.h1
-              variants={itemVariants}
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
               <span className="text-white">
@@ -206,7 +189,6 @@ const Help = () => {
               </span>
             </motion.h1>
             <motion.p
-              variants={itemVariants}
               className="text-lg text-gray-50 mb-8"
             >
               Search our knowledge base or browse categories to find answers
@@ -215,7 +197,6 @@ const Help = () => {
 
             {/* Search */}
             <motion.div
-              variants={itemVariants}
               className="max-w-xl mx-auto relative"
             >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -235,9 +216,6 @@ const Help = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Browse by Category
@@ -246,16 +224,11 @@ const Help = () => {
 
           <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
           >
             {helpCategories.map((category, index) => (
               <motion.a
                 key={index}
                 href="#"
-                variants={itemVariants}
                 className="group block"
               >
                 <div className="relative h-full">
@@ -288,9 +261,6 @@ const Help = () => {
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Popular Articles */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
             >
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-indigo-400" />
@@ -318,9 +288,6 @@ const Help = () => {
 
             {/* Video Tutorials */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
             >
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Play className="w-5 h-5 text-indigo-400" />
@@ -358,9 +325,6 @@ const Help = () => {
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Frequently Asked Questions
@@ -374,9 +338,6 @@ const Help = () => {
             {faqs.map((section, sectionIndex) => (
               <motion.div
                 key={section.category}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ delay: sectionIndex * 0.1 }}
               >
                 <h3 className="text-lg font-semibold text-indigo-400 mb-4">
@@ -405,8 +366,6 @@ const Help = () => {
                         <AnimatePresence>
                           {openFaq === faqId && (
                             <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
                             >
@@ -432,9 +391,6 @@ const Help = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
               <MessageCircle className="w-8 h-8 text-indigo-400" />
