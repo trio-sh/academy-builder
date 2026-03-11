@@ -1345,6 +1345,15 @@ The 3rd Academy bridges credentials and workplace readiness through mentor-gated
 - T3X Exchange: Employer marketplace for verified talent
 - Civic Access Lab: School track for early career awareness
 
+## IMPORTANT: Platform Information Research Protocol
+When a user asks questions about The 3rd Academy platform, its mission, how it works, features, or general information about the platform:
+1. FIRST, use the "read_page" tool to read the content from "/about" page
+2. THEN, use the "read_page" tool to read the content from "/help" page
+3. ONLY AFTER reading both pages, formulate your response based on the information found there
+4. Combine the information from these pages with your base knowledge above to provide comprehensive answers
+
+This ensures you always have the most accurate and up-to-date information about the platform when answering user questions.
+
 ## User Context
 ${userContextSummary}
 
