@@ -79,7 +79,7 @@ const NotFound = () => {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Suggested Links */}
           <div
@@ -101,7 +101,7 @@ const NotFound = () => {
                 </Link>
               ))}
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </div>

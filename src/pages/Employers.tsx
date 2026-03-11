@@ -151,7 +151,7 @@ const Employers = () => {
               >
                 <Building2 className="w-4 h-4 text-indigo-400" />
                 T3X Talent Exchange
-              </motion.div>
+              </div>
               <h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               >
@@ -186,7 +186,7 @@ const Employers = () => {
                     Schedule Demo
                   </Link>
                 </Button>
-              </motion.div>
+              </div>
             </div>
           </div>
         </motion.section>
@@ -205,7 +205,7 @@ const Employers = () => {
                   <div className="text-sm text-white">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -225,7 +225,7 @@ const Employers = () => {
                 Traditional hiring relies on resumes and gut feelings. We deliver
                 data-backed insights from real-world behavioral validation.
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
@@ -248,9 +248,9 @@ const Employers = () => {
                       {benefit.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -273,7 +273,7 @@ const Employers = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-white">
                 Your Hiring Journey
               </h2>
-            </motion.div>
+            </div>
 
             <div
               className="max-w-5xl mx-auto"
@@ -299,10 +299,10 @@ const Employers = () => {
                     {index < 3 && (
                       <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-px bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
                     )}
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -321,7 +321,7 @@ const Employers = () => {
               <p className="text-lg text-white">
                 Start free, upgrade when ready. No hidden fees, cancel anytime.
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
@@ -392,9 +392,9 @@ const Employers = () => {
                       </Link>
                     </Button>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -419,7 +419,7 @@ const Employers = () => {
               <p className="text-lg text-white">
                 See what hiring professionals are saying about T3X
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
@@ -452,9 +452,9 @@ const Employers = () => {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -503,9 +503,9 @@ const Employers = () => {
                   Schedule Demo
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
       <Footer />
     </div>

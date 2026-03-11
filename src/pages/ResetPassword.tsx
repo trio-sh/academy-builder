@@ -101,8 +101,7 @@ const ResetPassword = () => {
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <BackgroundVideo />
 
-      <motion.div
-        transition={{ duration: 0.5 }}
+      <div
         className="relative w-full max-w-md"
       >
         <div className="p-8 rounded-2xl bg-black border border-white/30">
@@ -134,7 +133,7 @@ const ResetPassword = () => {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ) : success ? (
             <div
               className="text-center"
@@ -154,7 +153,7 @@ const ResetPassword = () => {
                   Go to Login Now
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           ) : (
             <>
               <div className="text-center mb-8">
@@ -173,7 +172,7 @@ const ResetPassword = () => {
                 >
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <p className="text-sm">{error}</p>
-                </motion.div>
+                </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -285,7 +284,7 @@ const ResetPassword = () => {
             </>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

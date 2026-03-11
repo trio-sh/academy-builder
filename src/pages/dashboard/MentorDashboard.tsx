@@ -735,7 +735,7 @@ const Overview = () => {
         <p className="text-gray-400">
           Manage your mentees and track your observations.
         </p>
-      </motion.div>
+      </div>
 
       {/* Alert if not accepting mentees */}
       {mentorProfile && !mentorProfile.is_accepting && (
@@ -749,7 +749,7 @@ const Overview = () => {
               Update your preferences
             </Link>
           </p>
-        </motion.div>
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -768,7 +768,7 @@ const Overview = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Quick Actions */}
       <div>
@@ -804,7 +804,7 @@ const Overview = () => {
             <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-purple-400 mt-3 transition-colors" />
           </Link>
         </div>
-      </motion.div>
+      </div>
 
       {/* Pending Actions */}
       <div>
@@ -845,8 +845,8 @@ const Overview = () => {
             <p className="text-sm text-gray-500 mt-1">You're all caught up!</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1070,7 +1070,7 @@ const Mentees = () => {
         <p className="text-gray-400">
           View and manage your assigned candidates.
         </p>
-      </motion.div>
+      </div>
 
       {/* Pending Requests Section */}
       {pendingRequests.length > 0 && (
@@ -1136,7 +1136,7 @@ const Mentees = () => {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       )}
 
       {/* Active Mentees Section */}
@@ -1222,7 +1222,7 @@ const Mentees = () => {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       ) : (
         !pendingRequests.length && (
           <div
@@ -1233,7 +1233,7 @@ const Mentees = () => {
             <p className="text-sm text-gray-500 mt-1">
               Candidates will request you as their mentor
             </p>
-          </motion.div>
+          </div>
         )
       )}
 
@@ -1318,10 +1318,10 @@ const Mentees = () => {
                 )}
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -1478,7 +1478,7 @@ const AssignDimensions = () => {
         <p className="text-gray-400">
           Select the behavioral dimensions for <span className="text-white font-medium">{candidateName}</span> to be observed on. The candidate cannot begin any observation activity until dimensions are assigned.
         </p>
-      </motion.div>
+      </div>
 
       {/* MVP Dimensions */}
       <div>
@@ -1512,7 +1512,7 @@ const AssignDimensions = () => {
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Future Dimensions */}
       <div>
@@ -1546,7 +1546,7 @@ const AssignDimensions = () => {
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Save */}
       <div className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
@@ -1569,8 +1569,8 @@ const AssignDimensions = () => {
             <><Save className="w-4 h-4 mr-2" /> Save Assigned Dimensions</>
           )}
         </Button>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1652,7 +1652,7 @@ const Observations = () => {
           <Plus className="w-4 h-4 mr-2" />
           New Observation
         </Button>
-      </motion.div>
+      </div>
 
       {observations.length > 0 ? (
         <div className="space-y-4">
@@ -1706,7 +1706,7 @@ const Observations = () => {
               )}
             </div>
           ))}
-        </motion.div>
+        </div>
       ) : (
         <div
           className="p-8 rounded-2xl bg-black border border-white/30 text-center"
@@ -1716,9 +1716,9 @@ const Observations = () => {
           <p className="text-sm text-gray-500 mt-1">
             Start recording observations for your mentees
           </p>
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -2064,7 +2064,7 @@ const Endorsements = () => {
         <p className="text-gray-400">
           Issue endorsements for candidates who have completed 3 mentor observations.
         </p>
-      </motion.div>
+      </div>
 
       {/* Ready for Endorsement */}
       <div>
@@ -2267,7 +2267,7 @@ const Endorsements = () => {
                           )}
                         </Button>
                       </div>
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               );
@@ -2282,7 +2282,7 @@ const Endorsements = () => {
             </p>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Past Endorsements */}
       <div>
@@ -2344,8 +2344,8 @@ const Endorsements = () => {
             <p className="text-gray-400 text-sm">No endorsements given yet</p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -2539,7 +2539,7 @@ const Schedule = () => {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Schedule</h1>
         <p className="text-gray-400">Manage your availability and upcoming sessions.</p>
-      </motion.div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-2">
@@ -2559,7 +2559,7 @@ const Schedule = () => {
           <Calendar className="w-4 h-4 mr-2" />
           Sessions ({sessions.length})
         </Button>
-      </motion.div>
+      </div>
 
       {activeTab === "availability" && (
         <div className="p-6 rounded-xl bg-black border border-white/30">
@@ -2648,7 +2648,7 @@ const Schedule = () => {
               </>
             )}
           </Button>
-        </motion.div>
+        </div>
       )}
 
       {activeTab === "sessions" && (
@@ -2750,9 +2750,9 @@ const Schedule = () => {
               </div>
             ))
           )}
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -2910,7 +2910,7 @@ const ProfilePage = () => {
             </Button>
           </div>
         )}
-      </motion.div>
+      </div>
 
       <div className="space-y-4">
         {/* Basic Info */}
@@ -3091,8 +3091,8 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -3225,7 +3225,7 @@ const MentorMessagesPage = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with candidates, employers, and other mentors.</p>
-      </motion.div>
+      </div>
       <div className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
         {/* Conversations List */}
         <div className="w-80 border-r border-white/30 flex flex-col">
@@ -3348,8 +3348,8 @@ const MentorMessagesPage = () => {
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -3363,7 +3363,7 @@ const SettingsPage = () => {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
-      </motion.div>
+      </div>
 
       <div className="space-y-4">
         {/* Account */}
@@ -3409,8 +3409,8 @@ const SettingsPage = () => {
             </label>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

@@ -1175,7 +1175,7 @@ export const AssessmentViewer = () => {
                   )}
                   {renderSceneContent()}
                 </div>
-              </motion.div>
+              </div>
             </AnimatePresence>
           </div>
         </div>

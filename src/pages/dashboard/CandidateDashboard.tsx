@@ -321,7 +321,7 @@ const Overview = () => {
         <p className="text-gray-400">
           Track your progress and continue your observation journey.
         </p>
-      </motion.div>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -340,7 +340,7 @@ const Overview = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Next Steps */}
       <div>
@@ -375,7 +375,7 @@ const Overview = () => {
             </Link>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Recent Activity */}
       <div>
@@ -419,8 +419,8 @@ const Overview = () => {
             </p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -746,7 +746,7 @@ const SkillPassport = () => {
           <p className="text-gray-400">
             Your behavioral readiness documentation for the workplace.
           </p>
-        </motion.div>
+        </div>
 
         <div
           className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 border border-indigo-500/20 text-center"
@@ -780,7 +780,7 @@ const SkillPassport = () => {
               <span className="text-gray-400">/ 3 Mentor Loops</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">How It Works</h2>
@@ -814,8 +814,8 @@ const SkillPassport = () => {
               </div>
             ))}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   }
 
@@ -850,7 +850,7 @@ const SkillPassport = () => {
             Download PDF
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Passport Card */}
       <div
@@ -938,7 +938,7 @@ const SkillPassport = () => {
             <span>The 3rd Academy</span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Behavioral Scores */}
       <div>
@@ -967,7 +967,7 @@ const SkillPassport = () => {
             );
           })}
         </div>
-      </motion.div>
+      </div>
 
       {/* Average Score */}
       <div>
@@ -986,7 +986,7 @@ const SkillPassport = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Verification Info */}
       <div>
@@ -1001,8 +1001,8 @@ const SkillPassport = () => {
             </p>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -1192,7 +1192,7 @@ const GrowthLog = () => {
             Timeline
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1214,7 +1214,7 @@ const GrowthLog = () => {
           <p className="text-sm text-gray-400 mb-1">Event Types</p>
           <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
         </div>
-      </motion.div>
+      </div>
 
       {viewMode === "charts" && (
         <>
@@ -1260,7 +1260,7 @@ const GrowthLog = () => {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </motion.div>
+          </div>
 
           {/* Behavioral Dimensions Radar */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -1298,7 +1298,7 @@ const GrowthLog = () => {
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
-            </motion.div>
+            </div>
 
             <div className="p-6 rounded-xl bg-black border border-white/30">
               <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
@@ -1325,7 +1325,7 @@ const GrowthLog = () => {
                   <p className="text-gray-500 text-center py-4">No activities recorded yet</p>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
         </>
       )}
@@ -1375,7 +1375,7 @@ const GrowthLog = () => {
                   );
                 })}
               </div>
-            </motion.div>
+            </div>
           ) : (
             <div
               className="p-8 rounded-2xl bg-black border border-white/30 text-center"
@@ -1385,11 +1385,11 @@ const GrowthLog = () => {
               <p className="text-sm text-gray-500 mt-1">
                 Your growth log will populate as you complete activities
               </p>
-            </motion.div>
+            </div>
           )}
         </>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -1670,8 +1670,8 @@ const ObservationPathway = () => {
               </div>
             ))}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   }
 
@@ -1686,7 +1686,7 @@ const ObservationPathway = () => {
           <p className="text-gray-400">
             You are assigned to mentor {mentorProfile?.first_name} {mentorProfile?.last_name}.
           </p>
-        </motion.div>
+        </div>
 
         <div className="p-8 rounded-2xl bg-black border border-white/10 text-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
@@ -1699,7 +1699,7 @@ const ObservationPathway = () => {
           <p className="text-sm text-gray-500 mt-4">
             Your mentor will be notified that you are ready to begin.
           </p>
-        </motion.div>
+        </div>
 
         <div>
           <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
@@ -1707,8 +1707,8 @@ const ObservationPathway = () => {
               While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Skill Passport.
             </p>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   }
 
@@ -1735,7 +1735,7 @@ const ObservationPathway = () => {
             {assignedDimensions.length} Dimensions Assigned
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* L1 Observation Session — Only on assigned dimensions */}
       <div>
@@ -1779,7 +1779,7 @@ const ObservationPathway = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Assigned Dimensions */}
       <div>
@@ -1840,7 +1840,7 @@ const ObservationPathway = () => {
             );
           })}
         </div>
-      </motion.div>
+      </div>
 
       {/* Feedback History */}
       {observationFeedback.filter(f => f.final_feedback).length > 0 && (
@@ -1871,7 +1871,7 @@ const ObservationPathway = () => {
                 );
               })}
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* BARS Scale Reference */}
@@ -1893,8 +1893,8 @@ const ObservationPathway = () => {
             ))}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -2074,7 +2074,7 @@ const SelfAssessmentPage = () => {
             This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Skill Passport. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
           </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Success Banner with Mentor Recommendation */}
       {showSuccess && (
@@ -2105,7 +2105,7 @@ const SelfAssessmentPage = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Progress Steps */}
@@ -2134,7 +2134,7 @@ const SelfAssessmentPage = () => {
             {index < 4 && <ChevronRight className="w-4 h-4 text-gray-600 mx-1" />}
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Step Content */}
       <div
@@ -2637,7 +2637,7 @@ const SelfAssessmentPage = () => {
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Previous Readiness Reflections */}
       {assessments.length > 0 && (
@@ -2680,9 +2680,9 @@ const SelfAssessmentPage = () => {
               );
             })}
           </div>
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -2793,7 +2793,7 @@ const Training = () => {
             BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Skill Passport.
           </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Progress Overview */}
       <div className="grid md:grid-cols-3 gap-4">
@@ -2812,7 +2812,7 @@ const Training = () => {
           <p className="text-3xl font-bold text-white">{completedCount}</p>
           <p className="text-sm text-gray-400">Completed</p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Modules Grid */}
       <div>
@@ -2961,7 +2961,7 @@ const Training = () => {
             );
           })}
         </div>
-      </motion.div>
+      </div>
 
       {/* Info section */}
       <div className="p-6 rounded-xl bg-indigo-950 border border-indigo-500/30">
@@ -2978,8 +2978,8 @@ const Training = () => {
             </p>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -3115,7 +3115,7 @@ const Projects = () => {
         <p className="text-gray-400">
           Apply to real projects with employer partners to build experience.
         </p>
-      </motion.div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-2">
@@ -3144,7 +3144,7 @@ const Projects = () => {
             </span>
           )}
         </button>
-      </motion.div>
+      </div>
 
       {activeTab === "browse" ? (
         projects.length > 0 ? (
@@ -3209,7 +3209,7 @@ const Projects = () => {
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         ) : (
           <div
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
@@ -3219,7 +3219,7 @@ const Projects = () => {
             <p className="text-sm text-gray-500 mt-1">
               Check back soon for new opportunities
             </p>
-          </motion.div>
+          </div>
         )
       ) : (
         appliedProjects.length > 0 ? (
@@ -3257,7 +3257,7 @@ const Projects = () => {
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         ) : (
           <div
             className="p-8 rounded-2xl bg-black border border-white/30 text-center"
@@ -3273,7 +3273,7 @@ const Projects = () => {
             >
               Browse Projects
             </Button>
-          </motion.div>
+          </div>
         )
       )}
 
@@ -3369,10 +3369,10 @@ const Projects = () => {
                 </div>
               </>
             )}
-          </motion.div>
+          </div>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -3497,7 +3497,7 @@ const Connections = () => {
         <p className="text-gray-400">
           Manage connection requests from employers interested in your profile.
         </p>
-      </motion.div>
+      </div>
 
       {/* Pending Requests */}
       {pendingConnections.length > 0 && (
@@ -3563,7 +3563,7 @@ const Connections = () => {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Connection History */}
@@ -3620,8 +3620,8 @@ const Connections = () => {
         ) : (
           <p className="text-gray-500 text-sm">No previous connections</p>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -4162,7 +4162,7 @@ const Profile = () => {
             </Button>
           </div>
         )}
-      </motion.div>
+      </div>
 
       <div className="space-y-4">
         {/* Avatar and basic info */}
@@ -4513,7 +4513,7 @@ const Profile = () => {
             </div>
           )}
         </div>
-      </motion.div>
+      </div>
 
       {/* Resume Viewer Modal */}
       {showResumeViewer && candidateProfile?.resume_url && (
@@ -4603,10 +4603,10 @@ const Profile = () => {
                 </div>
               )}
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -4679,7 +4679,7 @@ const SettingsPage = () => {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-gray-400">Manage your account preferences</p>
-      </motion.div>
+      </div>
 
       <div className="space-y-4">
         {/* Account */}
@@ -4750,7 +4750,7 @@ const SettingsPage = () => {
             Delete Account
           </Button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Password Change Modal */}
       {showPasswordModal && (
@@ -4863,10 +4863,10 @@ const SettingsPage = () => {
                 </div>
               </>
             )}
-          </motion.div>
+          </div>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -5026,7 +5026,7 @@ const FindMentor = () => {
         <p className="text-gray-400">
           Connect with experienced professionals who can guide your career growth.
         </p>
-      </motion.div>
+      </div>
 
       {/* Active Mentor Status */}
       {activeMentor && (
@@ -5043,7 +5043,7 @@ const FindMentor = () => {
           <p className="text-sm text-gray-400 mt-2">
             Loop Progress: {activeMentor.loop_number} / 3
           </p>
-        </motion.div>
+        </div>
       )}
 
       {/* Pending Mentor Request Status */}
@@ -5058,7 +5058,7 @@ const FindMentor = () => {
           <p className="text-gray-300">
             Your mentor request has been sent and is awaiting approval. You will be notified once your mentor accepts.
           </p>
-        </motion.div>
+        </div>
       )}
 
       {/* Recommended Matches Section */}
@@ -5204,12 +5204,12 @@ const FindMentor = () => {
                         </Button>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           )}
-        </motion.div>
+        </div>
       )}
 
       {/* Industry Filter */}
@@ -5237,7 +5237,7 @@ const FindMentor = () => {
             {industry}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Mentors Grid */}
       <div>
@@ -5372,7 +5372,7 @@ const FindMentor = () => {
             </p>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Request Mentor Modal */}
       {selectedMentor && (
@@ -5445,10 +5445,10 @@ const FindMentor = () => {
                 )}
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -5749,7 +5749,7 @@ const MessagesPage = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
         <p className="text-gray-400">Connect with mentors and employers.</p>
-      </motion.div>
+      </div>
 
       <div
         className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex"
@@ -6011,8 +6011,8 @@ const MessagesPage = () => {
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -6148,7 +6148,7 @@ const NotificationsPage = () => {
             Mark all as read
           </Button>
         )}
-      </motion.div>
+      </div>
 
       {/* Filter tabs */}
       <div className="flex gap-2">
@@ -6165,7 +6165,7 @@ const NotificationsPage = () => {
             {f}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Notifications List */}
       <div className="space-y-3">
@@ -6222,7 +6222,7 @@ const NotificationsPage = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })
         ) : (
@@ -6238,8 +6238,8 @@ const NotificationsPage = () => {
             </p>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

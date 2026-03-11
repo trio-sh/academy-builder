@@ -93,7 +93,7 @@ export function StakeholdersSection() {
             Whether you're seeking your next opportunity, hiring talent, or preparing
             students for the workforce — we've built a pathway for you.
           </p>
-        </motion.div>
+        </div>
 
         {/* Stakeholder Cards */}
         <div className="grid lg:grid-cols-3 gap-8">
@@ -167,7 +167,7 @@ export function StakeholdersSection() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

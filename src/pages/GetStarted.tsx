@@ -513,7 +513,7 @@ const GetStarted = () => {
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 Start Your Journey
-              </motion.div>
+              </div>
               <h1
                 className="text-4xl md:text-5xl font-bold mb-4"
               >
@@ -554,7 +554,7 @@ const GetStarted = () => {
                       whileHover={{ scale: 1.05 }}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
-                    </motion.div>
+                    </div>
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5 transition-colors duration-300",
@@ -563,7 +563,7 @@ const GetStarted = () => {
                     )}
                   </div>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Step 1: Role Selection + Entry Path for candidates */}
               {step === 1 && (
@@ -619,7 +619,7 @@ const GetStarted = () => {
                         </div>
                       </button>
                     ))}
-                  </motion.div>
+                  </div>
 
                   {/* Entry Path Selection - only for candidates */}
                   {selectedRole === "candidate" && (
@@ -697,7 +697,7 @@ const GetStarted = () => {
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </motion.div>
-                  </motion.div>
+                  </div>
 
                   <p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
@@ -705,7 +705,7 @@ const GetStarted = () => {
                       Sign In
                     </Link>
                   </p>
-                </motion.div>
+                </div>
               )}
 
               {/* Step 2: Account Details */}
@@ -885,8 +885,8 @@ const GetStarted = () => {
                         <a href="/privacy" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>.
                       </p>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Candidates: Resume Upload */}
@@ -967,8 +967,8 @@ const GetStarted = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Candidates: LiveWorks Profile */}
@@ -1016,8 +1016,8 @@ const GetStarted = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3 for Non-Candidate Roles: Welcome / Success */}
@@ -1052,8 +1052,8 @@ const GetStarted = () => {
                         )}
                       </Button>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
             </div>
           </div>

@@ -225,7 +225,7 @@ const Terms = () => {
                 <FileText className="w-4 h-4" />
                 Legal
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -244,8 +244,8 @@ const Terms = () => {
                 <Calendar className="w-4 h-4" />
                 Last updated: January 15, 2026
               </span>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -266,7 +266,7 @@ const Terms = () => {
                 acknowledge that you have read, understood, and agree to be bound
                 by these Terms.
               </p>
-            </motion.div>
+            </div>
 
             {/* Sections */}
             <div className="space-y-8">
@@ -293,7 +293,7 @@ const Terms = () => {
                       </p>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -314,8 +314,8 @@ const Terms = () => {
               >
                 legal@the3rdacademy.com
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 

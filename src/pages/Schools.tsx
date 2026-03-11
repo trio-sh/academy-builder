@@ -99,7 +99,7 @@ const Schools = () => {
               >
                 <GraduationCap className="w-4 h-4 text-cyan-400" />
                 Civic Access Lab
-              </motion.div>
+              </div>
               <h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               >
@@ -133,7 +133,7 @@ const Schools = () => {
                     Download Brochure
                   </Link>
                 </Button>
-              </motion.div>
+              </div>
             </div>
           </div>
         </motion.section>
@@ -153,7 +153,7 @@ const Schools = () => {
               </div>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Stats */}
         <section className="py-16 bg-black">
@@ -169,7 +169,7 @@ const Schools = () => {
                   <div className="text-sm text-white">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -189,7 +189,7 @@ const Schools = () => {
                 A complete ecosystem designed for students, teachers, and administrators
                 to foster career readiness from the ground up.
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
@@ -212,9 +212,9 @@ const Schools = () => {
                       {feature.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -237,7 +237,7 @@ const Schools = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-white">
                 Built for Your Entire Community
               </h2>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
@@ -274,9 +274,9 @@ const Schools = () => {
                   </div>
                   <h3 className="font-bold text-white mb-3 text-lg">{user.title}</h3>
                   <p className="text-sm text-white leading-relaxed">{user.desc}</p>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -317,7 +317,7 @@ const Schools = () => {
                     </Link>
                   </Button>
                 </div>
-              </motion.div>
+              </div>
 
               <div
                 className="relative"
@@ -336,8 +336,8 @@ const Schools = () => {
                     </p>
                   </div>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -372,7 +372,7 @@ const Schools = () => {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -421,9 +421,9 @@ const Schools = () => {
                   Download Materials
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
       <Footer />
     </div>

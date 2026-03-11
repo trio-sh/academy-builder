@@ -145,7 +145,7 @@ const Security = () => {
                 <Shield className="w-4 h-4" />
                 Security
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -163,7 +163,7 @@ const Security = () => {
               We implement industry-leading security measures to protect your
               personal information, credentials, and behavioral data.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -181,7 +181,7 @@ const Security = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               Comprehensive security measures at every layer of our platform.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
@@ -201,9 +201,9 @@ const Security = () => {
                   </h3>
                   <p className="text-gray-50 text-sm">{feature.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -222,7 +222,7 @@ const Security = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               We maintain compliance with industry standards and regulations.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
@@ -239,9 +239,9 @@ const Security = () => {
                   {cert.name}
                 </h3>
                 <p className="text-gray-50 text-sm">{cert.description}</p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -259,7 +259,7 @@ const Security = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               How we protect your data through robust security operations.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
@@ -283,9 +283,9 @@ const Security = () => {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -346,7 +346,7 @@ const Security = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -399,7 +399,7 @@ const Security = () => {
                 </Button>
               </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

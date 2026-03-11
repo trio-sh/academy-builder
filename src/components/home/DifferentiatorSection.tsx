@@ -69,7 +69,7 @@ export function DifferentiatorSection() {
             Competitors are doing point-in-time AI assessments. We're doing sustained
             human-gated observation with outcome learning.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Left: Image */}
@@ -83,7 +83,7 @@ export function DifferentiatorSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: Comparison Table */}
           <div>
@@ -129,7 +129,7 @@ export function DifferentiatorSection() {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Quote */}
@@ -142,7 +142,7 @@ export function DifferentiatorSection() {
             </span>
             "
           </blockquote>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

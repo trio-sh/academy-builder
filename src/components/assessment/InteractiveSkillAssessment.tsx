@@ -762,7 +762,7 @@ export const InteractiveSkillAssessment = () => {
                         <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </>
             )}
@@ -841,7 +841,7 @@ export const InteractiveSkillAssessment = () => {
                   <p className="text-emerald-400/70 text-sm mt-1">Scenario complete — your mentor will review.</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       );
@@ -971,7 +971,7 @@ export const InteractiveSkillAssessment = () => {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -1007,7 +1007,7 @@ export const InteractiveSkillAssessment = () => {
               className="p-3 rounded-lg bg-black border-l-4 border-indigo-500"
             >
               <p className="text-gray-400 text-sm">{choice.consequence}</p>
-            </motion.div>
+            </div>
           ))}
 
           {/* Current branch choices */}
@@ -1152,7 +1152,7 @@ export const InteractiveSkillAssessment = () => {
                     className="mt-3 pt-3 border-t border-white/30"
                   >
                     <p className="text-emerald-400 text-sm">Response recorded.</p>
-                  </motion.div>
+                  </div>
                 )}
               </button>
             ))}

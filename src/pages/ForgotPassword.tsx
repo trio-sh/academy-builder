@@ -85,7 +85,7 @@ const ForgotPassword = () => {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ) : (
             <>
               <div className="text-center mb-8">
@@ -104,7 +104,7 @@ const ForgotPassword = () => {
                 >
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <p className="text-sm">{error}</p>
-                </motion.div>
+                </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">

@@ -1054,7 +1054,7 @@ export const TrainingModuleViewer = () => {
                             </p>
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     )}
 
                     {/* Submit button for choice */}
@@ -1262,7 +1262,7 @@ export const TrainingModuleViewer = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           </AnimatePresence>
           </div>
         </div>

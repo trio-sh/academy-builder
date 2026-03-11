@@ -129,7 +129,7 @@ export function JourneySection() {
             Every credential is earned through sustained mentor observation — no shortcuts,
             no self-assessments. Human judgment at every critical gate.
           </p>
-        </motion.div>
+        </div>
 
         {/* Journey Steps - Alternating Layout */}
         <div className="max-w-6xl mx-auto space-y-6">
@@ -195,7 +195,7 @@ export function JourneySection() {
                   </div>
                 </motion.div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -228,7 +228,7 @@ export function JourneySection() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

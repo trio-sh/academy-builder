@@ -2089,7 +2089,7 @@ export default function AIAgent() {
                 >
                   <qa.icon className="w-4.5 h-4.5 text-gray-500 group-hover:text-indigo-400 transition-colors" />
                   <span className="text-xs text-gray-400 group-hover:text-white transition-colors leading-tight">{qa.label}</span>
-                </motion.button>
+                </button>
               ))}
             </div>
 

@@ -96,7 +96,7 @@ const Login = () => {
                     THE 3RD ACADEMY
                   </span>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Card */}
               <div className="relative group">
@@ -206,8 +206,8 @@ const Login = () => {
                     </Link>
                   </p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </section>
       </main>

@@ -158,7 +158,7 @@ const Privacy = () => {
                 <Shield className="w-4 h-4" />
                 Legal
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -177,8 +177,8 @@ const Privacy = () => {
                 <Calendar className="w-4 h-4" />
                 Last updated: January 15, 2026
               </span>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -203,7 +203,7 @@ const Privacy = () => {
                 information in accordance with this policy. If you do not agree with
                 our policies and practices, please do not use our services.
               </p>
-            </motion.div>
+            </div>
 
             {/* Sections */}
             <div className="space-y-8">
@@ -230,7 +230,7 @@ const Privacy = () => {
                       </p>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -251,8 +251,8 @@ const Privacy = () => {
               >
                 privacy@the3rdacademy.com
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 

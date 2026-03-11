@@ -45,7 +45,7 @@ export function CTASection() {
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 Begin Your Credential Journey
-              </motion.div>
+              </div>
 
               {/* Headline */}
               <h2
@@ -100,7 +100,7 @@ export function CTASection() {
                     <Link to="/platform">Learn More</Link>
                   </Button>
                 </motion.div>
-              </motion.div>
+              </div>
 
               {/* Trust Signal */}
               <p className="mt-10 text-gray-400 text-sm">
@@ -108,7 +108,7 @@ export function CTASection() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

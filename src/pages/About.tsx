@@ -77,7 +77,7 @@ const About = () => {
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 The 3rd Academy
-              </motion.div>
+              </div>
               <h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               >
@@ -113,7 +113,7 @@ const About = () => {
                   <div className="text-sm text-white">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -130,7 +130,7 @@ const About = () => {
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                   Making Behavioral Readiness Measurable
                 </h2>
-              </motion.div>
+              </div>
 
               <div className="relative p-10 rounded-3xl bg-black border border-white/30">
                 <div className="space-y-6 text-lg text-white leading-relaxed">
@@ -175,7 +175,7 @@ const About = () => {
               <p className="text-lg text-white">
                 Every technical decision reflects a human value. Our architecture is our ethics.
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
@@ -198,9 +198,9 @@ const About = () => {
                       {value.description}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -225,7 +225,7 @@ const About = () => {
               <p className="text-lg text-white">
                 Three pathways, one ecosystem—designed for candidates, employers, and educators.
               </p>
-            </motion.div>
+            </div>
 
             <div
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
@@ -271,9 +271,9 @@ const About = () => {
                       </Link>
                     </Button>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -322,9 +322,9 @@ const About = () => {
                   Contact Us
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
       <Footer />
     </div>

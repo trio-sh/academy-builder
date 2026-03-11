@@ -106,7 +106,7 @@ const Contact = () => {
                 <MessageSquare className="w-4 h-4" />
                 Get in Touch
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -124,7 +124,7 @@ const Contact = () => {
               Have questions about The 3rd Academy? We'd love to hear from you.
               Our team is here to help.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -167,7 +167,7 @@ const Contact = () => {
                       >
                         Send Another Message
                       </Button>
-                    </motion.div>
+                    </div>
                   ) : (
                     <>
                       <h2 className="text-2xl font-bold text-white mb-6">
@@ -284,7 +284,7 @@ const Contact = () => {
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Contact Info */}
             <div
@@ -357,7 +357,7 @@ const Contact = () => {
                   </a>.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -388,7 +388,7 @@ const Contact = () => {
                 <a href="/help">Visit Help Center</a>
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

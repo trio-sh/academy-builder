@@ -139,7 +139,7 @@ const Careers = () => {
                 <Sparkles className="w-4 h-4" />
                 We're Hiring
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -166,8 +166,8 @@ const Careers = () => {
                 View Open Positions
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -185,7 +185,7 @@ const Careers = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               These principles guide everything we do at The 3rd Academy.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -202,9 +202,9 @@ const Careers = () => {
                   </h3>
                   <p className="text-gray-50 text-sm">{value.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -223,7 +223,7 @@ const Careers = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               We take care of our team so they can focus on changing the future of work.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -243,9 +243,9 @@ const Careers = () => {
                   </h3>
                   <p className="text-gray-50 text-sm">{benefit.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -263,7 +263,7 @@ const Careers = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               Find your role in transforming how the world validates skills.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="max-w-4xl mx-auto space-y-4"
@@ -307,9 +307,9 @@ const Careers = () => {
                     </motion.div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -345,7 +345,7 @@ const Careers = () => {
                 </Link>
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

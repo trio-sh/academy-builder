@@ -501,7 +501,7 @@ export default function ApiTestChat() {
                     </button>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {/* Messages */}
@@ -571,7 +571,7 @@ export default function ApiTestChat() {
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </div>
             ))}
 
             {/* Streaming indicator */}
@@ -621,7 +621,7 @@ export default function ApiTestChat() {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             <div ref={messagesEndRef} />

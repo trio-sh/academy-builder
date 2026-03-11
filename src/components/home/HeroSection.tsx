@@ -93,7 +93,7 @@ export function HeroSection() {
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 Mentor-Gated Behavioral Validation
-              </motion.div>
+              </div>
 
               {/* Headline */}
               <motion.h1
@@ -151,7 +151,7 @@ export function HeroSection() {
                     </Link>
                   </Button>
                 </motion.div>
-              </motion.div>
+              </div>
 
               {/* Trust indicators */}
               <div
@@ -169,7 +169,7 @@ export function HeroSection() {
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span>Evidence-based</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* Right: Hero Image + Stats */}
@@ -208,7 +208,7 @@ export function HeroSection() {
                 <div className="text-2xl font-bold text-emerald-400">500+</div>
                 <div className="text-xs text-gray-400">Mentor-Verified</div>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Entry Points Cards */}
@@ -239,9 +239,9 @@ export function HeroSection() {
               image="https://api.a0.dev/assets/image?text=team%20working%20on%20real%20project%20in%20modern%20co-working%20space%20with%20screens%20showing%20project%20milestones&aspect=16:9&seed=entry_liveworks"
               delay={0.2}
             />
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Bottom Gradient Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent" />

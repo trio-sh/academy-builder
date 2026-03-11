@@ -144,7 +144,7 @@ export function ComponentsSection() {
             Every component serves two purposes: a visible function for users and
             an invisible function for system intelligence.
           </p>
-        </motion.div>
+        </div>
 
         {/* Components Grid */}
         <div
@@ -153,7 +153,7 @@ export function ComponentsSection() {
           {components.map((component, index) => (
             <ComponentCard key={component.id} component={component} index={index} />
           ))}
-        </motion.div>
+        </div>
 
         {/* CTA */}
         <div className="text-center mt-16">
@@ -172,7 +172,7 @@ export function ComponentsSection() {
               </Link>
             </Button>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

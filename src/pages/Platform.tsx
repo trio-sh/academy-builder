@@ -368,9 +368,9 @@ const Platform = () => {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -418,7 +418,7 @@ const Platform = () => {
               </Button>
             </motion.div>
           </div>
-        </motion.section>
+        </section>
       </main>
       <Footer />
     </div>

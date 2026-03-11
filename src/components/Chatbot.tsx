@@ -1245,7 +1245,7 @@ export function Chatbot() {
         {result.status === "error" && result.detail && (
           <span className="text-red-400/70 truncate max-w-[120px]">— {result.detail}</span>
         )}
-      </motion.div>
+      </div>
     );
   }
 
@@ -1270,7 +1270,7 @@ export function Chatbot() {
             }}
           >
             <MessageCircle size={28} />
-          </motion.button>
+          </button>
         )}
       </AnimatePresence>
 
@@ -1331,7 +1331,7 @@ export function Chatbot() {
                   whileTap={{ scale: 0.9 }}
                 >
                   <X size={18} />
-                </motion.button>
+                </button>
               </div>
             </div>
 
@@ -1386,10 +1386,10 @@ export function Chatbot() {
                         whileTap={{ scale: 0.98 }}
                       >
                         {reply}
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {messages.map((message, index) => (
@@ -1456,7 +1456,7 @@ export function Chatbot() {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
 
               {/* Typing Indicator */}
@@ -1474,7 +1474,7 @@ export function Chatbot() {
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
                     </div>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               <div ref={messagesEndRef} />

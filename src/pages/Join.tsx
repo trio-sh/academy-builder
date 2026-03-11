@@ -168,7 +168,7 @@ const Join = () => {
               >
                 <UserPlus className="w-4 h-4 text-indigo-400" />
                 Join The 3rd Academy
-              </motion.div>
+              </div>
               <h1
                 className="text-4xl md:text-5xl font-bold mb-4"
               >
@@ -203,13 +203,13 @@ const Join = () => {
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
-                    </motion.div>
+                    </div>
                     {s < 3 && (
                       <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black")} />
                     )}
                   </div>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Step 1: Role Selection */}
               {step === 1 && (
@@ -263,7 +263,7 @@ const Join = () => {
                         </div>
                       </button>
                     ))}
-                  </motion.div>
+                  </div>
 
                   <div className="flex justify-center pt-6">
                     <Button
@@ -275,7 +275,7 @@ const Join = () => {
                       Continue
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
-                  </motion.div>
+                  </div>
 
                   <p className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
@@ -283,7 +283,7 @@ const Join = () => {
                       Sign In
                     </Link>
                   </p>
-                </motion.div>
+                </div>
               )}
 
               {/* Step 2: Account Details */}
@@ -455,8 +455,8 @@ const Join = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
 
               {/* Step 3: Success */}
@@ -482,8 +482,8 @@ const Join = () => {
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
             </div>
           </div>

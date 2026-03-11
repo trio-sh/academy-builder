@@ -246,7 +246,7 @@ const Blog = () => {
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -284,8 +284,8 @@ const Blog = () => {
                   <X className="w-4 h-4" />
                 </button>
               )}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -364,7 +364,7 @@ const Blog = () => {
                   </div>
                 </div>
               </button>
-            </motion.div>
+            </div>
           </div>
         </section>
       )}
@@ -382,7 +382,7 @@ const Blog = () => {
               <p className="text-gray-500 text-sm">
                 Try a different search term or category
               </p>
-            </motion.div>
+            </div>
           ) : (
             <div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -424,9 +424,9 @@ const Blog = () => {
                       </div>
                     </div>
                   </div>
-                </motion.button>
+                </button>
               ))}
-            </motion.div>
+            </div>
           )}
         </div>
       </section>
@@ -463,7 +463,7 @@ const Blog = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

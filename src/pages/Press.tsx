@@ -113,7 +113,7 @@ const Press = () => {
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -131,7 +131,7 @@ const Press = () => {
               Stay updated on The 3rd Academy's mission to transform credentialing
               through mentor-validated behavioral assessment.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -150,9 +150,9 @@ const Press = () => {
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-50">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -170,7 +170,7 @@ const Press = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               Official announcements from The 3rd Academy.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="max-w-4xl mx-auto space-y-4"
@@ -197,7 +197,7 @@ const Press = () => {
                 </div>
               </a>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -216,7 +216,7 @@ const Press = () => {
             <p className="text-gray-50 max-w-2xl mx-auto">
               Media coverage and thought leadership features.
             </p>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
@@ -239,9 +239,9 @@ const Press = () => {
                   </h3>
                   <p className="text-sm text-gray-500">{feature.date}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -293,7 +293,7 @@ const Press = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -341,7 +341,7 @@ const Press = () => {
                 </Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

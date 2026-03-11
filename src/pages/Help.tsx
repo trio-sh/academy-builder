@@ -176,7 +176,7 @@ const Help = () => {
                 <HelpCircle className="w-4 h-4" />
                 Help Center
               </span>
-            </motion.div>
+            </div>
             <h1
               className="text-3xl md:text-4xl font-display font-normal mb-6"
             >
@@ -206,8 +206,8 @@ const Help = () => {
                 placeholder="Search for help articles..."
                 className="w-full pl-12 pr-4 py-6 text-lg bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500 rounded-xl"
               />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -220,7 +220,7 @@ const Help = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Browse by Category
             </h2>
-          </motion.div>
+          </div>
 
           <div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto"
@@ -248,9 +248,9 @@ const Help = () => {
                     </span>
                   </div>
                 </div>
-              </motion.a>
+              </a>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -284,7 +284,7 @@ const Help = () => {
                   </motion.a>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Video Tutorials */}
             <div
@@ -315,7 +315,7 @@ const Help = () => {
               <p className="text-gray-50 text-sm mt-4">
                 Watch our comprehensive platform walkthrough to get started quickly.
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -332,7 +332,7 @@ const Help = () => {
             <p className="text-gray-50">
               Quick answers to common questions about The 3rd Academy.
             </p>
-          </motion.div>
+          </div>
 
           <div className="max-w-3xl mx-auto space-y-8">
             {faqs.map((section, sectionIndex) => (
@@ -425,7 +425,7 @@ const Help = () => {
                 Live Chat
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
