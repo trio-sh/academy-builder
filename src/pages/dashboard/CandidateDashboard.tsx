@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, updatePassword } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { parseResume } from "@/lib/resumeParser";
 import { analyzeResume } from "@/services/resumeEnhancer";
@@ -1167,7 +1168,9 @@ const GrowthLog = () => {
       return daysDiff >= 7 && daysDiff < 14;
     }).length;
 
-    const growthRate = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : thisWeek > 0 ? 100 : 0;
+    // Only calculate growth rate if there's a baseline from last week
+    // If lastWeek is 0, showing 100% growth is unrealistic - show 0 instead
+    const growthRate = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : 0;
 
     return { thisWeek, lastWeek, growthRate };
   };
@@ -5537,6 +5540,7 @@ const FindMentor = () => {
 // Messages Page component
 const MessagesPage = () => {
   const { user, profile } = useAuth();
+  const { toast } = useToast();
   const [conversations, setConversations] = useState<any[]>([]);
   const [activeConversation, setActiveConversation] = useState<any | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -5558,15 +5562,32 @@ const MessagesPage = () => {
     }
     setIsSearching(true);
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("id, first_name, last_name, avatar_url, role")
         .neq("id", user?.id)
         .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
         .limit(20);
-      setSearchResults(data || []);
+
+      if (error) {
+        console.error("Error searching users:", error);
+        toast({
+          title: "Search Error",
+          description: "Failed to search for users. Please try again.",
+          variant: "destructive",
+        });
+        setSearchResults([]);
+      } else {
+        setSearchResults(data || []);
+      }
     } catch (error) {
       console.error("Error searching users:", error);
+      toast({
+        title: "Search Error",
+        description: "An unexpected error occurred while searching.",
+        variant: "destructive",
+      });
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -5583,20 +5604,43 @@ const MessagesPage = () => {
   const startConversation = async (targetUserId: string) => {
     if (!user?.id || isCreatingConversation) return;
     setIsCreatingConversation(true);
+
     try {
       // Check if conversation already exists
-      const { data: myConvs } = await supabase
+      const { data: myConvs, error: myConvsError } = await supabase
         .from("conversation_participants")
         .select("conversation_id")
         .eq("user_id", user.id);
 
+      if (myConvsError) {
+        console.error("Error fetching user conversations:", myConvsError);
+        toast({
+          title: "Connection Error",
+          description: "Failed to check existing conversations. Please try again.",
+          variant: "destructive",
+        });
+        setIsCreatingConversation(false);
+        return;
+      }
+
       if (myConvs && myConvs.length > 0) {
         const myConvIds = myConvs.map((c) => c.conversation_id);
-        const { data: theirConvs } = await supabase
+        const { data: theirConvs, error: theirConvsError } = await supabase
           .from("conversation_participants")
           .select("conversation_id")
           .eq("user_id", targetUserId)
           .in("conversation_id", myConvIds);
+
+        if (theirConvsError) {
+          console.error("Error checking for existing conversation:", theirConvsError);
+          toast({
+            title: "Connection Error",
+            description: "Failed to verify conversation status. Please try again.",
+            variant: "destructive",
+          });
+          setIsCreatingConversation(false);
+          return;
+        }
 
         if (theirConvs && theirConvs.length > 0) {
           // Existing conversation found — switch to it
@@ -5607,6 +5651,10 @@ const MessagesPage = () => {
             setShowNewChat(false);
             setUserSearchQuery("");
             setSearchResults([]);
+            toast({
+              title: "Conversation Opened",
+              description: "Switched to existing conversation.",
+            });
             setIsCreatingConversation(false);
             return;
           }
@@ -5614,33 +5662,72 @@ const MessagesPage = () => {
       }
 
       // Create new conversation
-      const { data: conv } = await supabase
+      const { data: conv, error: convError } = await supabase
         .from("conversations")
         .insert({ last_message_at: new Date().toISOString() })
         .select()
         .single();
 
-      if (conv) {
-        await supabase.from("conversation_participants").insert([
+      if (convError || !conv) {
+        console.error("Error creating conversation:", convError);
+        toast({
+          title: "Failed to Create Conversation",
+          description: convError?.message || "Could not create a new conversation. Please try again.",
+          variant: "destructive",
+        });
+        setIsCreatingConversation(false);
+        return;
+      }
+
+      // Add participants
+      const { error: participantsError } = await supabase
+        .from("conversation_participants")
+        .insert([
           { conversation_id: conv.id, user_id: user.id },
           { conversation_id: conv.id, user_id: targetUserId },
         ]);
 
-        const { data: targetProfile } = await supabase
-          .from("profiles")
-          .select("id, first_name, last_name, avatar_url, role")
-          .eq("id", targetUserId)
-          .single();
-
-        const newConv = { ...conv, other_user: targetProfile };
-        setConversations((prev) => [newConv, ...prev]);
-        setActiveConversation(newConv);
-        setShowNewChat(false);
-        setUserSearchQuery("");
-        setSearchResults([]);
+      if (participantsError) {
+        console.error("Error adding conversation participants:", participantsError);
+        toast({
+          title: "Failed to Add Participants",
+          description: "Could not add participants to the conversation. Please try again.",
+          variant: "destructive",
+        });
+        setIsCreatingConversation(false);
+        return;
       }
+
+      // Fetch target user profile
+      const { data: targetProfile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, first_name, last_name, avatar_url, role")
+        .eq("id", targetUserId)
+        .single();
+
+      if (profileError) {
+        console.error("Error fetching target profile:", profileError);
+        // Continue anyway - conversation was created successfully
+      }
+
+      const newConv = { ...conv, other_user: targetProfile };
+      setConversations((prev) => [newConv, ...prev]);
+      setActiveConversation(newConv);
+      setShowNewChat(false);
+      setUserSearchQuery("");
+      setSearchResults([]);
+
+      toast({
+        title: "Conversation Started",
+        description: `You can now message ${targetProfile?.first_name || "this user"}.`,
+      });
     } catch (error) {
-      console.error("Error creating conversation:", error);
+      console.error("Unexpected error creating conversation:", error);
+      toast({
+        title: "Unexpected Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsCreatingConversation(false);
     }
