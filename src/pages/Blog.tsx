@@ -312,21 +312,18 @@ const Blog = () => {
       <section className="py-8 border-b border-white/30">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {categories.map((category, index) => (
-              <motion.button
+            {categories.map((category) => (
+              <button
                 key={category}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   selectedCategory === category
-                    ? "bg-indigo-600/20 border border-indigo-500/50 text-white"
-                    : "bg-black border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
+                    ? "bg-indigo-600 border border-indigo-500 text-white"
+                    : "bg-gray-900 border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
                 }`}
               >
                 {category}
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>

@@ -716,24 +716,22 @@ const GetStarted = () => {
                     </motion.div>
                   )}
 
-                  <motion.div variants={itemVariants} className="flex justify-center pt-6">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        size="lg"
-                        onClick={() => setStep(2)}
-                        disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
-                        className={cn(
-                          "px-10 py-6 rounded-xl font-bold text-lg text-white transition-all duration-300",
-                          !selectedRole || (selectedRole === "candidate" && !selectedPath)
-                            ? "bg-gray-700/60 border border-white/10 text-gray-400 shadow-none cursor-not-allowed"
-                            : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-2xl shadow-indigo-600/30 active:from-indigo-700 active:to-purple-700 ring-2 ring-indigo-400/50"
-                        )}
-                      >
-                        Continue
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Button>
-                    </motion.div>
-                  </motion.div>
+                  <div className="flex justify-center pt-6">
+                    <Button
+                      size="lg"
+                      onClick={() => setStep(2)}
+                      disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
+                      className={cn(
+                        "px-10 py-6 rounded-xl font-bold text-lg text-white transition-colors duration-300",
+                        !selectedRole || (selectedRole === "candidate" && !selectedPath)
+                          ? "bg-gray-800 border border-white/10 text-gray-400 shadow-none cursor-not-allowed"
+                          : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-2xl shadow-indigo-600/30"
+                      )}
+                    >
+                      Continue
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </div>
 
                   <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
                     Already have an account?{" "}
