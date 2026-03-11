@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
@@ -29,22 +28,6 @@ import { analyzeResume } from "@/services/resumeEnhancer";
 import { findMentorMatches } from "@/lib/mentorMatching";
 
 type UserRole = "candidate" | "mentor" | "employer" | "school_admin";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
 
 const roleOptions = [
   {
@@ -546,9 +529,9 @@ const GetStarted = () => {
                   <div key={s} className="flex items-center gap-2">
                     <div
                       className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-300",
+                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium",
                         step >= s
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
                           : "bg-gray-900 text-gray-50 border border-gray-700"
                       )}
                     >
@@ -556,7 +539,7 @@ const GetStarted = () => {
                     </div>
                     {s < totalSteps && (
                       <div className={cn(
-                        "w-16 h-0.5 transition-colors duration-300",
+                        "w-16 h-0.5",
                         step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-gray-800"
                       )} />
                     )}
@@ -577,15 +560,12 @@ const GetStarted = () => {
                         key={role.id}
                         onClick={() => setSelectedRole(role.id)}
                         className={cn(
-                          "group relative p-6 rounded-2xl text-left transition-colors duration-300",
+                          "group relative p-6 rounded-2xl text-left",
                           selectedRole === role.id
                             ? "bg-gray-950 border-2 border-indigo-500"
                             : "bg-gray-950 border border-gray-700 hover:border-gray-600"
                         )}
                       >
-                        {selectedRole === role.id && (
-                          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
-                        )}
 
                         <div className="relative">
                           <div className="flex items-center gap-3 mb-3">
@@ -627,15 +607,12 @@ const GetStarted = () => {
                             key={path.id}
                             onClick={() => setSelectedPath(path.id)}
                             className={cn(
-                              "group relative p-8 rounded-3xl text-left transition-colors duration-300",
+                              "group relative p-8 rounded-3xl text-left",
                               selectedPath === path.id
                                 ? "bg-gray-950 border-2 border-indigo-500"
                                 : "bg-gray-950 border border-gray-700 hover:border-gray-600"
                             )}
                           >
-                            {selectedPath === path.id && (
-                              <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                            )}
 
                             <div className="relative">
                               {path.recommended && (
@@ -678,10 +655,10 @@ const GetStarted = () => {
                       onClick={() => setStep(2)}
                       disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
                       className={cn(
-                        "px-10 py-6 rounded-xl font-bold text-lg text-white transition-colors duration-300",
+                        "px-10 py-6 rounded-xl font-bold text-lg text-white",
                         !selectedRole || (selectedRole === "candidate" && !selectedPath)
-                          ? "bg-gray-800 cursor-not-allowed opacity-50"
-                          : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-600/30"
+                          ? "bg-gray-800 cursor-not-allowed"
+                          : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                       )}
                     >
                       Continue
@@ -701,8 +678,7 @@ const GetStarted = () => {
               {/* Step 2: Account Details */}
               {step === 2 && (
                 <div className="max-w-md mx-auto">
-                  <div className="relative group">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
+                  <div className="relative">
                     <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
@@ -882,8 +858,7 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: Resume Upload */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
                 <div className="max-w-md mx-auto">
-                  <div className="relative group">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
+                  <div className="relative">
                     <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">
                         {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
@@ -906,7 +881,7 @@ const GetStarted = () => {
 
                       {!uploadedFile ? (
                         <div
-                          className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-indigo-500 transition-colors cursor-pointer"
+                          className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-indigo-500 cursor-pointer"
                           onClick={() => fileInputRef.current?.click()}
                         >
                           {isUploading || isEnhancing ? (
@@ -963,8 +938,7 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: LiveWorks Profile */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
                 <div className="max-w-md mx-auto">
-                  <div className="relative group">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 blur-xl" />
+                  <div className="relative">
                     <div className="relative p-8 rounded-3xl bg-gray-950 border border-gray-800">
                       <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
 
@@ -1013,7 +987,6 @@ const GetStarted = () => {
               {step === 3 && selectedRole !== "candidate" && (
                 <div className="max-w-md mx-auto text-center">
                   <div className="relative">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
                     <div className="relative p-8 rounded-2xl bg-gray-950 border border-gray-800">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
@@ -1032,7 +1005,7 @@ const GetStarted = () => {
                       <Button
                         onClick={handleNonCandidateComplete}
                         disabled={isCompletingSetup}
-                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-600/30"
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
                       >
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
