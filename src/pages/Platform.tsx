@@ -232,7 +232,6 @@ const Platform = () => {
   // Scroll to hash anchor on navigation (e.g. /platform#t3x)
   useEffect(() => {
     if (location.hash) {
-      // Small delay to let the page render before scrolling
       const timer = setTimeout(() => {
         const el = document.getElementById(location.hash.slice(1));
         if (el) {
@@ -240,8 +239,6 @@ const Platform = () => {
         }
       }, 300);
       return () => clearTimeout(timer);
-    } else {
-      window.scrollTo(0, 0);
     }
   }, [location]);
   return (

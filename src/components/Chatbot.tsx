@@ -1039,10 +1039,15 @@ export function Chatbot() {
     }
   }, [messages, db]);
 
-  // Scroll to bottom
+  // Scroll to bottom of chat (only when chat is open)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping, isExecuting]);
+    if (!isOpen) return;
+    // Scroll within the chat container, not the page
+    const el = messagesEndRef.current;
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [messages, isTyping, isExecuting, isOpen]);
 
   // Focus input
   useEffect(() => {
