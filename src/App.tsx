@@ -38,6 +38,7 @@ import Careers from "./pages/Careers";
 import Press from "./pages/Press";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Help from "./pages/Help";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/press" element={<Press />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/help" element={<Help />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
