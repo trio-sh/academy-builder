@@ -14,7 +14,7 @@ export function BackgroundVideo() {
         />
       </video>
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black" />
     </div>
   );
 }

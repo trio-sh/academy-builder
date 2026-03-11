@@ -344,7 +344,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity" />
             <div className="relative">
@@ -910,15 +910,15 @@ const SkillPassport = () => {
 
           {/* Tier & Stats */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
               <p className={`text-xl font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Mentor Loops</p>
               <p className="text-xl font-bold text-white">{candidateProfile?.mentor_loops || 3}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Valid Until</p>
               <p className="text-xl font-bold text-white">
                 {passportData?.expires_at
@@ -929,7 +929,7 @@ const SkillPassport = () => {
           </div>
 
           {/* Verification Code */}
-          <div className="p-4 rounded-xl bg-black/20 backdrop-blur mb-8">
+          <div className="p-4 rounded-xl bg-black mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <QrCode className="w-8 h-8 text-emerald-400" />
@@ -3191,7 +3191,7 @@ const Projects = () => {
         >
           My Applications
           {appliedProjects.length > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+            <span className="px-2 py-0.5 rounded-full bg-white/15 text-xs">
               {appliedProjects.length}
             </span>
           )}
@@ -3303,7 +3303,7 @@ const Projects = () => {
                     </span>
                   </div>
                   {application.cover_letter && (
-                    <p className="text-sm text-gray-400 bg-black/20 p-3 rounded-lg line-clamp-2">
+                    <p className="text-sm text-gray-400 bg-black p-3 rounded-lg line-clamp-2">
                       {application.cover_letter}
                     </p>
                   )}
@@ -3589,7 +3589,7 @@ const Connections = () => {
                 </div>
 
                 {connection.message && (
-                  <div className="mt-4 p-3 rounded-lg bg-black/20">
+                  <div className="mt-4 p-3 rounded-lg bg-black">
                     <p className="text-sm text-gray-300">{connection.message}</p>
                   </div>
                 )}
@@ -4243,7 +4243,7 @@ const Profile = () => {
                 </div>
               )}
               {/* Upload overlay */}
-              <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <label className="absolute inset-0 flex items-center justify-center bg-black rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                 {isUploadingAvatar ? (
                   <Loader2 className="w-6 h-6 text-white animate-spin" />
                 ) : (
@@ -4350,7 +4350,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/15 transition-colors flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4359,7 +4359,7 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/15 transition-colors flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
@@ -4477,7 +4477,7 @@ const Profile = () => {
                 <p className="text-sm text-gray-400 mb-2">Observation Areas Identified</p>
                 <div className="flex flex-wrap gap-2">
                   {candidateProfile.observation_areas.map((area: string, i: number) => (
-                    <span key={i} className="px-3 py-1 rounded-lg bg-black/60 text-sm text-indigo-300 border border-indigo-500/20">
+                    <span key={i} className="px-3 py-1 rounded-lg bg-black text-sm text-indigo-300 border border-indigo-500/20">
                       {area.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
                     </span>
                   ))}
@@ -4582,7 +4582,7 @@ const Profile = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowResumeViewer(false)}
         >
           <motion.div
@@ -4606,7 +4606,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/15 transition-colors flex items-center gap-2 text-sm"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4615,7 +4615,7 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/15 transition-colors flex items-center gap-2 text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
@@ -4660,7 +4660,7 @@ const Profile = () => {
                       href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl bg-black hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-black hover:bg-white/15 text-white font-medium transition-colors flex items-center gap-2"
                     >
                       <ExternalLink className="w-5 h-5" />
                       Open with Google Docs
@@ -5457,7 +5457,7 @@ const FindMentor = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedMentor(null)}
         >
           <motion.div
@@ -5865,7 +5865,7 @@ const MessagesPage = () => {
 
             {/* New Chat User Search */}
             {showNewChat && (
-              <div className="bg-black/90 border border-indigo-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-black border border-indigo-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-indigo-400 font-medium">Find someone to message</p>
                 <input
                   type="text"
@@ -6394,14 +6394,14 @@ const CandidateDashboard = () => {
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -6554,7 +6554,7 @@ const CandidateDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -6577,7 +6577,7 @@ const CandidateDashboard = () => {
 
             {/* Notifications dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black border border-white/30 shadow-xl overflow-hidden">
                 <div className="p-3 border-b border-white/30 flex items-center justify-between">
                   <h3 className="font-semibold text-white">Notifications</h3>
                   {notifications.length > 0 && (

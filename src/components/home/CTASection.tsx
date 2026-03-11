@@ -62,7 +62,7 @@ export function CTASection() {
               {/* Badge */}
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-white mb-8"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 Begin Your Credential Journey
@@ -118,7 +118,7 @@ export function CTASection() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-6 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all duration-300 backdrop-blur-xl"
+                    className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-6 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all duration-300"
                     asChild
                   >
                     <Link to="/platform">Learn More</Link>

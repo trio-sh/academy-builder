@@ -260,7 +260,7 @@ const Help = () => {
               >
                 <div className="relative h-full">
                   <div className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-20 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity duration-500" />
-                  <div className="relative p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-indigo-500/30 transition-colors h-full">
+                  <div className="relative p-6 rounded-2xl bg-black border border-white/30 hover:border-indigo-500/30 transition-colors h-full">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mb-4">
                       <category.icon className="w-6 h-6 text-indigo-400" />
                     </div>
@@ -334,7 +334,7 @@ const Help = () => {
                     alt="Platform Tutorial"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black flex items-center justify-center">
                     <motion.button
                       className="w-16 h-16 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center"
                       whileHover={{ scale: 1.1 }}

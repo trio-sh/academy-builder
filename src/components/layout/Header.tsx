@@ -39,7 +39,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-xl border-b border-white/30"
+      className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/30"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -143,7 +143,7 @@ export function Header() {
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs bg-black/95 backdrop-blur-xl border-white/30">
+          <SheetContent side="right" className="w-full max-w-xs bg-black border-white/30">
             <div className="flex flex-col gap-6 mt-8">
               {navigation.map((item) => (
                 <Link

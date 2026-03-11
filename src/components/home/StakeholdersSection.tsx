@@ -130,7 +130,7 @@ export function StakeholdersSection() {
               />
 
               {/* Glass card */}
-              <div className="relative h-full bg-black/70 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/20 transition-all duration-500">
+              <div className="relative h-full bg-black border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/20 transition-all duration-500">
                 {/* Image Header */}
                 <div className="relative h-48 overflow-hidden">
                   <img

@@ -110,7 +110,7 @@ export function DifferentiatorSection() {
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500" />
 
-              <div className="relative rounded-3xl border border-white/10 overflow-hidden bg-black/60 backdrop-blur-xl">
+              <div className="relative rounded-3xl border border-white/10 overflow-hidden bg-black">
                 {/* Header */}
                 <div className="grid grid-cols-3 bg-black">
                   <div className="p-4 border-r border-white/10">

@@ -158,7 +158,7 @@ const Contact = () => {
             >
               <div className="relative group">
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-                <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                   {isSubmitted ? (
                     <motion.div
                       className="text-center py-12"
@@ -350,7 +350,7 @@ const Contact = () => {
               </div>
 
               {/* Office Hours */}
-              <div className="p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+              <div className="p-6 rounded-2xl bg-black border border-white/30">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Office Hours
                 </h3>

@@ -720,7 +720,7 @@ export const TrainingModuleViewer = () => {
       </div>
 
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-b border-white/5">
+      <div className="absolute top-0 left-0 right-0 z-50 bg-gray-900 border-b border-white/5">
         <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 md:gap-5 min-w-0">
@@ -838,7 +838,7 @@ export const TrainingModuleViewer = () => {
 
       {/* Scene navigation - left sidebar */}
       <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40 hidden xl:block">
-        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-gray-900/50 backdrop-blur border border-white/5">
+        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-gray-900 border border-white/5">
           <span className="text-[10px] uppercase tracking-wider text-gray-500 text-center mb-1">Scenes</span>
           {module.scenes.map((scene, index) => {
             const isCompleted = sceneProgress.get(scene.id)?.completed;
@@ -887,7 +887,7 @@ export const TrainingModuleViewer = () => {
             <motion.div
               key={currentScene?.id}
               ref={contentRef}
-              className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20"
+              className="bg-gradient-to-b from-gray-900/80 to-gray-900/60 rounded-3xl border border-white/30 overflow-hidden shadow-2xl shadow-black/20"
             >
               {/* Scene header */}
               <div className="px-8 pt-8 pb-6 border-b border-white/5">
@@ -1271,7 +1271,7 @@ export const TrainingModuleViewer = () => {
       </div>
 
       {/* Footer navigation */}
-      <div className="absolute bottom-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-xl border-t border-white/5">
+      <div className="absolute bottom-0 left-0 right-0 z-50 bg-gray-900 border-t border-white/5">
         <div className="max-w-3xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <Button

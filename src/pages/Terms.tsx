@@ -280,7 +280,7 @@ const Terms = () => {
             {/* Introduction */}
             <motion.div
               variants={itemVariants}
-              className="mb-12 p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
+              className="mb-12 p-6 rounded-2xl bg-black border border-white/30"
             >
               <p className="text-gray-50 leading-relaxed">
                 Welcome to The 3rd Academy. These Terms of Service govern your use of

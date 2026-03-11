@@ -110,7 +110,7 @@ export function HeroSection() {
               {/* Badge */}
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 text-sm text-indigo-300 mb-8"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-sm text-indigo-300 mb-8"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 Mentor-Gated Behavioral Validation
@@ -167,7 +167,7 @@ export function HeroSection() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 px-10 py-7 rounded-2xl text-lg backdrop-blur-xl"
+                    className="border-white/20 text-white hover:bg-white/10 px-10 py-7 rounded-2xl text-lg"
                     asChild
                   >
                     <Link to="/employers">
@@ -219,7 +219,7 @@ export function HeroSection() {
 
               {/* Floating stat cards */}
               <motion.div
-                className="absolute -left-8 top-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
+                className="absolute -left-8 top-1/4 bg-black border border-white/20 rounded-2xl p-4 shadow-xl"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
@@ -228,7 +228,7 @@ export function HeroSection() {
               </motion.div>
 
               <motion.div
-                className="absolute -right-4 bottom-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
+                className="absolute -right-4 bottom-1/4 bg-black border border-white/20 rounded-2xl p-4 shadow-xl"
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               >
@@ -299,7 +299,7 @@ function EntryPointCard({ icon, title, description, entry, image, delay }: Entry
       <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500" />
 
       {/* Glass card */}
-      <div className="relative bg-black backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
+      <div className="relative bg-black border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
         {/* Image */}
         <div className="relative h-36 overflow-hidden">
           <img
@@ -308,7 +308,7 @@ function EntryPointCard({ icon, title, description, entry, image, delay }: Entry
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-          <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-medium text-indigo-300 bg-black/70 backdrop-blur-sm rounded-full border border-indigo-500/30">
+          <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-medium text-indigo-300 bg-black rounded-full border border-indigo-500/30">
             {entry}
           </span>
         </div>

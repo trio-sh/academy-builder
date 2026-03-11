@@ -883,7 +883,7 @@ const Observations = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowNewObservation(false)}
         >
           <motion.div
@@ -1021,7 +1021,7 @@ const Observations = () => {
                   </p>
                 </div>
                 {obs.notes && (
-                  <p className="mt-3 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
+                  <p className="mt-3 text-sm text-gray-400 bg-black p-3 rounded-lg">
                     {obs.notes}
                   </p>
                 )}
@@ -1236,7 +1236,7 @@ const SchoolMessagesPage = () => {
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-black border border-teal-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-teal-400 font-medium">Find someone to message</p>
                 <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -1389,14 +1389,14 @@ const SchoolDashboard = () => {
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -1493,7 +1493,7 @@ const SchoolDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"

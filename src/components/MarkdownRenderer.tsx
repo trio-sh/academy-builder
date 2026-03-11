@@ -66,7 +66,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
                   {lang}
                 </div>
               )}
-              <pre className="p-3 bg-black/40 overflow-x-auto">
+              <pre className="p-3 bg-black overflow-x-auto">
                 <code className={`text-xs font-mono leading-relaxed text-gray-300 ${className || ""}`} {...props}>
                   {children}
                 </code>

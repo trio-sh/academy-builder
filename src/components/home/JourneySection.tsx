@@ -183,7 +183,7 @@ export function JourneySection() {
                     <step.icon className="w-6 h-6 text-white" />
                   </div>
                   {step.highlight && (
-                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-950 text-white rounded-full border border-purple-500/30 backdrop-blur-sm">
+                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-950 text-white rounded-full border border-purple-500/30">
                       Required Gate
                     </span>
                   )}
@@ -196,8 +196,8 @@ export function JourneySection() {
                   className={cn(
                     "relative p-6 md:p-8 rounded-2xl transition-all duration-500",
                     step.highlight
-                      ? "bg-black backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
-                      : "bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20"
+                      ? "bg-black border-2 border-purple-500/30 group-hover:border-purple-500/50"
+                      : "bg-black border border-white/10 group-hover:border-white/20"
                   )}
                   whileHover={{ y: -5 }}
                 >
@@ -227,7 +227,7 @@ export function JourneySection() {
         >
           <div className="relative group">
             <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
-            <div className="relative p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500">
+            <div className="relative p-8 rounded-3xl bg-black border border-white/10 group-hover:border-white/20 transition-all duration-500">
               <h3 className="text-lg font-bold text-white mb-6 text-center">
                 Architectural Principles
               </h3>

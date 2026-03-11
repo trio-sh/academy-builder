@@ -332,7 +332,7 @@ const ObservationFormModal = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black z-50 flex items-center justify-center p-4"
         onClick={closeModal}
       >
         <motion.div
@@ -436,7 +436,7 @@ const ObservationFormModal = () => {
 
                 <div>
                   <p className="text-sm text-gray-400 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
-                  <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black/60 border border-white/10 text-center">
+                  <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black border border-white/10 text-center">
                     <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Developing</p></div>
                     <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-gray-500">Competent</p></div>
                     <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-gray-500">Proficient</p></div>
@@ -464,7 +464,7 @@ const ObservationFormModal = () => {
                               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                                 formData.scores[dimension.id] === score
                                   ? `${color} text-white`
-                                  : "bg-black text-gray-400 hover:bg-white/20"
+                                  : "bg-black text-gray-400 hover:bg-white/15"
                               }`}
                               title={label}
                             >
@@ -777,7 +777,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-purple-600 to-pink-600 transition-opacity" />
             <div className="relative">
@@ -1267,7 +1267,7 @@ const Mentees = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setRecommendModal(null)}
         >
           <motion.div
@@ -1528,7 +1528,7 @@ const AssignDimensions = () => {
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  selectedDimensions.includes(dim.id) ? "bg-emerald-500" : "bg-black/60"
+                  selectedDimensions.includes(dim.id) ? "bg-emerald-500" : "bg-black"
                 }`}>
                   {selectedDimensions.includes(dim.id) ? (
                     <CheckCircle className="w-5 h-5 text-white" />
@@ -1562,7 +1562,7 @@ const AssignDimensions = () => {
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  selectedDimensions.includes(dim.id) ? "bg-indigo-500" : "bg-black/60"
+                  selectedDimensions.includes(dim.id) ? "bg-indigo-500" : "bg-black"
                 }`}>
                   {selectedDimensions.includes(dim.id) ? (
                     <CheckCircle className="w-5 h-5 text-white" />
@@ -2208,7 +2208,7 @@ const Endorsements = () => {
                               <select
                                 value={endorsementForm.redirectModule}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectModule: e.target.value, redirectToLiveworks: false }))}
-                                className="w-full px-4 py-2 rounded-lg bg-black/50 border border-white/30 text-white focus:border-amber-500 focus:outline-none"
+                                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-amber-500 focus:outline-none"
                               >
                                 <option value="">Select a module...</option>
                                 {bridgefastModules.map(m => (
@@ -3282,7 +3282,7 @@ const MentorMessagesPage = () => {
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-purple-600 hover:bg-purple-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-black border border-purple-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-purple-400 font-medium">Find someone to message</p>
                 <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -3501,13 +3501,13 @@ const MentorDashboardInner = () => {
     <div className="min-h-screen bg-black">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -3603,7 +3603,7 @@ const MentorDashboardInner = () => {
       </aside>
 
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3625,7 +3625,7 @@ const MentorDashboardInner = () => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black border border-white/30 shadow-xl overflow-hidden">
                 <div className="p-3 border-b border-white/30">
                   <h3 className="font-semibold text-white">Notifications</h3>
                 </div>

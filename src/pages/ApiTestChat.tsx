@@ -693,7 +693,7 @@ export default function ApiTestChat() {
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 384, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              className="border-l border-white/[0.06] bg-black/40 overflow-hidden flex-shrink-0"
+              className="border-l border-white/[0.06] bg-black overflow-hidden flex-shrink-0"
             >
               <div className="w-96 h-full flex flex-col">
                 <div className="px-3 py-2 border-b border-white/[0.06] flex items-center justify-between">

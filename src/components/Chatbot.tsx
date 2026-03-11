@@ -759,7 +759,7 @@ function ChatbotPdfCard({ pdf }: { pdf: { title: string; url: string; rawJson?: 
         )}
       </div>
       {pdf.rawJson && expanded && (
-        <div className={`border-t bg-black/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
+        <div className={`border-t bg-black ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
           <pre className="p-2 overflow-x-auto max-h-48 overflow-y-auto text-[10px] font-mono leading-relaxed text-gray-400">
             {pdf.rawJson}
           </pre>
@@ -1290,7 +1290,7 @@ export function Chatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[420px] h-full sm:h-[650px] sm:max-h-[85vh] flex flex-col bg-black/95 backdrop-blur-xl border border-white/30 sm:rounded-3xl shadow-2xl overflow-hidden"
+            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[420px] h-full sm:h-[650px] sm:max-h-[85vh] flex flex-col bg-black border border-white/30 sm:rounded-3xl shadow-2xl overflow-hidden"
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
@@ -1340,7 +1340,7 @@ export function Chatbot() {
                 )}
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/15 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -1449,7 +1449,7 @@ export function Chatbot() {
                       className={`p-3 rounded-2xl rounded-tl-sm ${
                         message.role === "user"
                           ? "bg-indigo-950 border border-indigo-500/20 text-gray-200"
-                          : "bg-black/60 border border-white/10 text-gray-300"
+                          : "bg-black border border-white/10 text-gray-300"
                       }`}
                     >
                       <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -1504,7 +1504,7 @@ export function Chatbot() {
             {/* Input */}
             <form
               onSubmit={handleSubmit}
-              className="p-4 border-t border-white/30 bg-black/50"
+              className="p-4 border-t border-white/30 bg-black"
             >
               <div className="flex gap-2">
                 <Input

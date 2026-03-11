@@ -251,21 +251,21 @@ const VerifyPassport = () => {
 
           {/* Stats */}
           <div className="grid md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
               <p className={`text-lg font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Mentor Loops</p>
               <p className="text-lg font-bold text-white">{candidateProfile?.mentor_loops || 0}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Issued</p>
               <p className="text-lg font-bold text-white">
                 {new Date(passport.issued_at).toLocaleDateString()}
               </p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
+            <div className="p-4 rounded-xl bg-black">
               <p className="text-sm text-gray-400 mb-1">Expires</p>
               <p className="text-lg font-bold text-white">
                 {passport.expires_at

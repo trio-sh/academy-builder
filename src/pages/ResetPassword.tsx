@@ -107,7 +107,7 @@ const ResetPassword = () => {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        <div className="p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+        <div className="p-8 rounded-2xl bg-black border border-white/30">
           {isValidSession === null ? (
             <div className="text-center py-8">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mx-auto mb-4" />

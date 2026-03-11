@@ -54,7 +54,7 @@ const ForgotPassword = () => {
           Back to Login
         </Link>
 
-        <div className="p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+        <div className="p-8 rounded-2xl bg-black border border-white/30">
           {success ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}

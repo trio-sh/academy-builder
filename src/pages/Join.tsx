@@ -179,7 +179,7 @@ const Join = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-white/30 text-sm text-gray-50 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -311,7 +311,7 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -484,7 +484,7 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                       </div>

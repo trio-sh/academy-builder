@@ -123,7 +123,7 @@ const Login = () => {
                 {/* Glow effect */}
                 <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
 
-                <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                <div className="relative p-8 rounded-2xl bg-black border border-white/30">
                   <h1 className="text-2xl font-bold text-center mb-2">
                     <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Welcome Back

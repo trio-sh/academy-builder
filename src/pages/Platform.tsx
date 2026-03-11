@@ -312,14 +312,14 @@ const Platform = () => {
                       component.gradient
                     )} />
 
-                    <div className="relative rounded-3xl border border-white/30 overflow-hidden bg-black backdrop-blur-xl group-hover:border-white/20 transition-all duration-500">
+                    <div className="relative rounded-3xl border border-white/30 overflow-hidden bg-black group-hover:border-white/20 transition-all duration-500">
                       {/* Header */}
                       <div className={cn(
                         "p-8 md:p-10 bg-gradient-to-r",
                         component.gradient
                       )}>
                         <div className="flex items-center gap-4 mb-4">
-                          <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center">
                             <component.icon className="w-7 h-7 text-white" />
                           </div>
                           <div>

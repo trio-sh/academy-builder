@@ -737,7 +737,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
 
       {/* Collapsible JSON accordion */}
       {pdf.rawJson && expanded && (
-        <div className={`border-t bg-black/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
+        <div className={`border-t bg-black ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
           <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-gray-400">
             {pdf.rawJson}
           </pre>

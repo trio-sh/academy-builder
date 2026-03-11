@@ -864,7 +864,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -962,7 +962,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -1066,7 +1066,7 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
         >
           <motion.div
@@ -1393,7 +1393,7 @@ const TalentVisaReview = () => {
                     {quota.current_approvals} / {quota.max_approvals}
                   </span>
                 </div>
-                <div className="h-2 bg-black/30 rounded-full overflow-hidden">
+                <div className="h-2 bg-black rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       isExceeded ? "bg-red-500" : percentage >= 80 ? "bg-amber-500" : "bg-emerald-500"
@@ -1502,7 +1502,7 @@ const TalentVisaReview = () => {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-lg bg-black/20 mb-4">
+                  <div className="p-4 rounded-lg bg-black mb-4">
                     <p className="text-sm text-gray-400 mb-1">Justification</p>
                     <p className="text-gray-300">{nomination.justification}</p>
                   </div>
@@ -1549,7 +1549,7 @@ const TalentVisaReview = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowApprovalModal(false);
             setSelectedNomination(null);
@@ -2442,7 +2442,7 @@ const SettingsPage = () => {
   };
 
   const ToggleSwitch = ({ enabled, onToggle, label, description }: { enabled: boolean; onToggle: () => void; label: string; description: string }) => (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/10">
+    <div className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
       <div>
         <p className="font-medium text-white">{label}</p>
         <p className="text-sm text-gray-400">{description}</p>
@@ -2563,7 +2563,7 @@ const SettingsPage = () => {
           <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
         </div>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-black border border-red-500/10">
             <div>
               <p className="font-medium text-white">Reset All Notifications</p>
               <p className="text-sm text-gray-400">Clear all pending notifications across the platform</p>
@@ -2572,7 +2572,7 @@ const SettingsPage = () => {
               Reset
             </Button>
           </div>
-          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-black border border-red-500/10">
             <div>
               <p className="font-medium text-white">Purge Inactive Users</p>
               <p className="text-sm text-gray-400">Remove users who haven't logged in for 6+ months</p>
@@ -2654,14 +2654,14 @@ const AdminDashboard = () => {
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -2762,7 +2762,7 @@ const AdminDashboard = () => {
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
         {/* Enhanced Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -2808,7 +2808,7 @@ const AdminDashboard = () => {
 
               {/* Notifications Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-96 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden">
+                <div className="absolute right-0 mt-2 w-96 rounded-xl bg-gray-900/95 border border-white/20 shadow-2xl overflow-hidden">
                   <div className="p-4 border-b border-white/10 flex items-center justify-between">
                     <h3 className="font-semibold text-white">Notifications</h3>
                     <div className="flex items-center gap-2">

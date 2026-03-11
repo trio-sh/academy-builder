@@ -214,7 +214,7 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-black border border-white/30 hover:border-white/20 transition-colors"
           >
             <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-emerald-600 to-teal-600 transition-opacity" />
             <div className="relative">
@@ -925,7 +925,7 @@ const Connections = () => {
         >
           Accepted
           {acceptedCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+            <span className="px-2 py-0.5 rounded-full bg-white/15 text-xs">
               {acceptedCount}
             </span>
           )}
@@ -940,7 +940,7 @@ const Connections = () => {
         >
           Pending
           {pendingCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+            <span className="px-2 py-0.5 rounded-full bg-white/15 text-xs">
               {pendingCount}
             </span>
           )}
@@ -1013,7 +1013,7 @@ const Connections = () => {
                 </div>
 
                 {connection.message && (
-                  <p className="mt-4 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
+                  <p className="mt-4 text-sm text-gray-400 bg-black p-3 rounded-lg">
                     <span className="text-gray-500">Your message: </span>
                     {connection.message}
                   </p>
@@ -1755,7 +1755,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedProject(null)}
         >
           <motion.div
@@ -1938,7 +1938,7 @@ const Projects = () => {
                           </div>
                         </div>
                         {app.cover_letter && (
-                          <div className="mt-3 p-3 rounded bg-black/20">
+                          <div className="mt-3 p-3 rounded bg-black">
                             <p className="text-xs text-gray-500 mb-1">Cover Letter</p>
                             <p className="text-sm text-gray-300">{app.cover_letter}</p>
                           </div>
@@ -2195,7 +2195,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-[60] p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-[60] p-4"
           onClick={() => {
             setShowEscrowModal(false);
             setSelectedMilestone(null);
@@ -2759,7 +2759,7 @@ const Feedback = () => {
                         {hire.feedbacks.map((fb) => (
                           <div
                             key={fb.id || fb.feedback_type}
-                            className="flex items-center justify-between p-3 rounded-lg bg-black/20"
+                            className="flex items-center justify-between p-3 rounded-lg bg-black"
                           >
                             <div className="flex items-center gap-3">
                               <span className="text-sm text-gray-400">{fb.feedback_type.replace("_", " ")}</span>
@@ -2808,7 +2808,7 @@ const Feedback = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
           onClick={() => setShowFeedbackModal(false)}
         >
           <motion.div
@@ -3104,7 +3104,7 @@ const EmployerMessagesPage = () => {
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-emerald-600 hover:bg-emerald-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-emerald-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-black border border-emerald-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-emerald-400 font-medium">Find someone to message</p>
                 <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -3542,13 +3542,13 @@ const EmployerDashboard = () => {
     <div className="min-h-screen bg-black">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -3643,7 +3643,7 @@ const EmployerDashboard = () => {
       </aside>
 
       <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black border-b border-white/30 flex-shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-400 hover:text-white"
@@ -3665,7 +3665,7 @@ const EmployerDashboard = () => {
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
+              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black border border-white/30 shadow-xl overflow-hidden">
                 <div className="p-3 border-b border-white/30">
                   <h3 className="font-semibold text-white">Notifications</h3>
                 </div>
