@@ -88,26 +88,101 @@ const PDF_ACTION_PATTERN =
   /\b(generate|create|make|build|export|produce|write|draft|prepare|design|format)\b/i;
 
 /**
- * Check if the user's last message is requesting PDF generation.
- * Looks for PDF-related nouns combined with creation verbs.
+ * Legacy regex-based PDF intent detection (fallback)
  */
-function isPdfRequest(messages: OpenAIMessage[]): boolean {
-  // Find the last user message
+function quickPdfCheck(messages: OpenAIMessage[]): boolean {
   for (let i = messages.length - 1; i >= 0; i--) {
     if (messages[i].role === "user" && messages[i].content) {
       const content = messages[i].content!;
-      // Direct PDF mention with action verb
       if (/\bpdf\b/i.test(content) && PDF_ACTION_PATTERN.test(content)) return true;
-      // Document-type noun + action verb (e.g. "create a resume", "generate an invoice")
       if (PDF_INTENT_PATTERN.test(content) && PDF_ACTION_PATTERN.test(content)) {
-        // Exclude false positives: if the message is about web pages, code, images, etc.
         if (/\b(html|website|web\s*page|webpage|landing\s*page|image|photo|picture|app)\b/i.test(content)) return false;
         return true;
       }
-      break; // only check the last user message
+      break;
     }
   }
   return false;
+}
+
+/**
+ * Enhanced LLM-based context-aware document intent detection.
+ * Uses A0 LLM to analyze conversation context and determine if the user is requesting document generation.
+ */
+async function isPdfRequest(messages: OpenAIMessage[], log?: Console): Promise<boolean> {
+  try {
+    // Quick pre-check: if obvious keywords exist, do a fast regex check first
+    const hasQuickMatch = quickPdfCheck(messages);
+
+    // Build context from recent messages (last 5 messages or last 2000 chars)
+    const recentMessages = messages.slice(-5);
+    const conversationContext = recentMessages
+      .map((m) => `${m.role}: ${m.content || ""}`)
+      .join("\n")
+      .slice(0, 2000);
+
+    // Intent detection prompt for A0 LLM
+    const intentMessages = [
+      {
+        role: "system" as const,
+        content: `You are an intent classification assistant. Your task is to analyze user requests and determine if they are asking for DOCUMENT GENERATION (PDFs, reports, resumes, invoices, certificates, letters, contracts, etc.).
+
+IMPORTANT DETECTION RULES:
+1. Look for requests to CREATE, GENERATE, MAKE, BUILD, EXPORT, PRODUCE, WRITE, DRAFT, or PREPARE any type of document
+2. Consider the FULL conversation context - the user might be continuing a previous request
+3. Common document types: PDF, report, resume, CV, invoice, certificate, letter, memo, proposal, contract, agreement, transcript, diploma, brochure, flyer, receipt, syllabus
+4. EXCLUDE: HTML pages, websites, web pages, landing pages, images, photos, pictures, apps, code files (unless they're asking for documentation)
+5. If the user is asking for analysis, comparison, or summary that should be PRESENTED IN DOCUMENT FORMAT, that counts as a document request
+6. If they say "put this in a document", "document this", "make a report about", etc. - that's a document request
+
+Respond with ONLY "YES" or "NO" - nothing else.`
+      },
+      {
+        role: "user" as const,
+        content: `Conversation context:\n${conversationContext}\n\nQuestion: Is the user requesting document generation (PDF, report, resume, invoice, certificate, or any formal document)?`
+      }
+    ];
+
+    log?.info("→ Calling A0 LLM for context-aware document intent detection...");
+    const start = Date.now();
+
+    const res = await fetch(A0_LLM_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: intentMessages,
+        temperature: 0.1, // Low temperature for consistent classification
+        max_tokens: 10,
+      }),
+    });
+
+    if (!res.ok) {
+      log?.warn(`A0 intent detection failed (${res.status}), falling back to regex`);
+      return hasQuickMatch;
+    }
+
+    const data: A0Response = await res.json();
+    const answer = data.completion.trim().toUpperCase();
+    const elapsed = Date.now() - start;
+
+    log?.info(`← A0 intent detection (${elapsed}ms): ${answer}`);
+
+    const isDocumentRequest = answer.startsWith("YES");
+
+    // Log detection result
+    if (isDocumentRequest) {
+      log?.info("✓ Document generation intent detected by A0 LLM");
+    } else {
+      log?.info("✗ No document generation intent (A0 LLM classification)");
+    }
+
+    return isDocumentRequest;
+
+  } catch (err) {
+    log?.error("Error in LLM intent detection, falling back to regex:", err);
+    // Fallback to quick regex check on error
+    return quickPdfCheck(messages);
+  }
 }
 
 const PDF_KILO_SYSTEM_PROMPT = `You are Praxis, an AI PDF document generation assistant built by The 3rd Academy. You use the pdfmake library to create professional PDF documents. When the user asks you to create a PDF, respond with a brief message followed by a \`\`\`json code block containing a valid pdfmake document definition.
@@ -2278,8 +2353,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}, continuation=${!!continuation}`);
 
     // ── PDF Intent Routing: detect PDF requests and route to Kilo ──
-    if (!continuation && isPdfRequest(body.messages)) {
-      log.info("PDF intent detected — routing to Kilo Gateway");
+    const isPdfIntent = !continuation && await isPdfRequest(body.messages, log);
+    if (isPdfIntent) {
+      log.info("✓ PDF intent detected — routing to Kilo Gateway for document generation");
       const pdfPrompt = buildPdfKiloPrompt(body.messages);
 
       if (stream) {
