@@ -1432,10 +1432,59 @@ When interacting with the page, note these patterns:
 - Your own input ("Reply...") is protected and will NOT be targeted by fill/click tools.
 - When you need to use exact CSS selectors, prefer \`input[placeholder="Type a message..."]\` for message fields.
 
+## Available Routes
+When the user asks to navigate to specific features, use these exact paths:
+${role === "candidate" ? `
+**Candidate Dashboard Routes:**
+- Overview/Home: ${dashboardBase}
+- Observation Pathway: ${dashboardBase}/observations
+- Skill Passport: ${dashboardBase}/passport
+- Growth Log: ${dashboardBase}/growth
+- Self Assessment: ${dashboardBase}/assessment
+- Training/BridgeFast: ${dashboardBase}/training
+- Projects/LiveWorks: ${dashboardBase}/projects
+- Find Mentor/MentorLink: ${dashboardBase}/mentors
+- Connections: ${dashboardBase}/connections
+- Messages: ${dashboardBase}/messages
+- Notifications: ${dashboardBase}/notifications
+- Profile: ${dashboardBase}/profile
+- Settings: ${dashboardBase}/settings
+- AI Agent/Praxis: ${dashboardBase}/agent
+` : role === "mentor" ? `
+**Mentor Dashboard Routes:**
+- Overview/Home: ${dashboardBase}
+- My Mentees: ${dashboardBase}/mentees
+- Observations: ${dashboardBase}/observations
+- Messages: ${dashboardBase}/messages
+- Profile: ${dashboardBase}/profile
+- Settings: ${dashboardBase}/settings
+- AI Agent/Praxis: ${dashboardBase}/agent
+` : role === "employer" ? `
+**Employer Dashboard Routes:**
+- Overview/Home: ${dashboardBase}
+- Browse Talent/T3X: ${dashboardBase}/browse
+- My Listings: ${dashboardBase}/listings
+- Saved Candidates: ${dashboardBase}/saved
+- Messages: ${dashboardBase}/messages
+- Profile: ${dashboardBase}/profile
+- Settings: ${dashboardBase}/settings
+- AI Agent/Praxis: ${dashboardBase}/agent
+` : `
+**School Admin Dashboard Routes:**
+- Overview/Home: ${dashboardBase}
+- Students: ${dashboardBase}/students
+- Programs: ${dashboardBase}/programs
+- Analytics: ${dashboardBase}/analytics
+- Messages: ${dashboardBase}/messages
+- Profile: ${dashboardBase}/profile
+- Settings: ${dashboardBase}/settings
+- AI Agent/Praxis: ${dashboardBase}/agent
+`}
+
 ## Important Guidelines
 1. Be proactive: if the user asks to find something, search AND navigate. Don't just describe — take action.
 2. Reference the user's actual data when answering questions about their progress.
-3. For this user role (${role}), navigate within ${dashboardBase}/...
+3. When user asks to go to "MentorLink" or "Find Mentor", navigate to ${dashboardBase}/mentors
 4. When you use read_page, synthesize the extracted content into a clear answer.
 5. After tool results come back, always provide a complete response. Never stop mid-thought.
 6. You can use MULTIPLE tools in one turn when needed.
