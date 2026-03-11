@@ -47,12 +47,12 @@ export function CTASection() {
 
             {/* Decorative Elements */}
             <motion.div
-              className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"
+              className="absolute top-0 right-0 w-96 h-96 bg-indigo-950 rounded-full blur-3xl"
               animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-              className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"
+              className="absolute bottom-0 left-0 w-64 h-64 bg-purple-950 rounded-full blur-3xl"
               animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
               transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             />

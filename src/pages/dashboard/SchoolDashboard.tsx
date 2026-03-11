@@ -392,7 +392,7 @@ const Students = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-emerald-500/20 text-emerald-400";
+      case "active": return "bg-emerald-950 text-emerald-400";
       case "graduated": return "bg-blue-500/20 text-blue-400";
       case "transferred": return "bg-amber-500/20 text-amber-400";
       case "inactive": return "bg-gray-500/20 text-gray-400";
@@ -589,7 +589,7 @@ const Cohorts = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-emerald-500/20 text-emerald-400";
+      case "active": return "bg-emerald-950 text-emerald-400";
       case "completed": return "bg-blue-500/20 text-blue-400";
       case "upcoming": return "bg-amber-500/20 text-amber-400";
       default: return "bg-gray-500/20 text-gray-400";

@@ -258,7 +258,7 @@ const Blog = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/50 text-indigo-400 text-sm">
                 <BookOpen className="w-4 h-4" />
                 The 3rd Academy Blog
               </span>
@@ -321,7 +321,7 @@ const Blog = () => {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm transition-colors ${
                   selectedCategory === category
-                    ? "bg-indigo-600/20 border border-indigo-500/50 text-white"
+                    ? "bg-indigo-600 border border-indigo-500 text-white"
                     : "bg-black border border-white/30 text-gray-50 hover:border-white/20 hover:text-white"
                 }`}
               >

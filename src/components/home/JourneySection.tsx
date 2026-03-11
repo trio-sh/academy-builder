@@ -183,7 +183,7 @@ export function JourneySection() {
                     <step.icon className="w-6 h-6 text-white" />
                   </div>
                   {step.highlight && (
-                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-500/30 text-white rounded-full border border-purple-500/30 backdrop-blur-sm">
+                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-950 text-white rounded-full border border-purple-500/30 backdrop-blur-sm">
                       Required Gate
                     </span>
                   )}

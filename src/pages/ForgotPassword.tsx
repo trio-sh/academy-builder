@@ -61,7 +61,7 @@ const ForgotPassword = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center"
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-950 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-emerald-400" />
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Check Your Email</h2>

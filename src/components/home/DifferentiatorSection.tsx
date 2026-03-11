@@ -116,7 +116,7 @@ export function DifferentiatorSection() {
                   <div className="p-4 border-r border-white/10">
                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria</span>
                   </div>
-                  <div className="p-4 border-r border-white/10 bg-emerald-500/10">
+                  <div className="p-4 border-r border-white/10 bg-emerald-950">
                     <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">The 3rd Academy</span>
                   </div>
                   <div className="p-4">

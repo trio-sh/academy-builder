@@ -485,7 +485,7 @@ const ObservationFormModal = () => {
                   <label className="text-sm text-gray-400 block mb-2">Observed Strengths</label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {formData.strengths.map(s => (
-                      <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm">
+                      <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-sm">
                         {s}
                         <button onClick={() => removeStrength(s)} className="hover:text-white">
                           <X className="w-3 h-3" />
@@ -549,7 +549,7 @@ const ObservationFormModal = () => {
                 </div>
 
                 {/* Score Summary */}
-                <div className="p-4 rounded-lg bg-purple-500/30 border border-purple-500/20">
+                <div className="p-4 rounded-lg bg-purple-950 border border-purple-500/20">
                   <h3 className="font-medium text-white mb-3">Score Summary</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {BEHAVIORAL_DIMENSIONS.map(d => (
@@ -1168,7 +1168,7 @@ const Mentees = () => {
         <motion.div variants={itemVariants} className="space-y-4">
           {pendingRequests.length > 0 && (
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-emerald-950 flex items-center justify-center">
                 <Users className="w-4 h-4 text-emerald-400" />
               </div>
               <h2 className="text-lg font-semibold text-emerald-400">
@@ -1195,7 +1195,7 @@ const Mentees = () => {
                       <h3 className="font-semibold text-white">
                         {profile?.first_name} {profile?.last_name}
                       </h3>
-                      <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-emerald-950 text-emerald-400">
                         active
                       </span>
                     </div>
@@ -1289,7 +1289,7 @@ const Mentees = () => {
                   key={module.id}
                   className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     selectedModules.includes(module.id)
-                      ? "bg-indigo-500/20 border-indigo-500/30"
+                      ? "bg-indigo-950 border-indigo-500/30"
                       : "bg-black border-white/10 hover:border-white/20"
                   }`}
                 >
@@ -1522,7 +1522,7 @@ const AssignDimensions = () => {
               onClick={() => toggleDimension(dim.id)}
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
-                  ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                  ? "bg-emerald-950 border-emerald-500/50 ring-2 ring-emerald-500/30"
                   : "bg-black border-white/10 hover:border-white/20"
               }`}
             >
@@ -1556,7 +1556,7 @@ const AssignDimensions = () => {
               onClick={() => toggleDimension(dim.id)}
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
-                  ? "bg-indigo-500/20 border-indigo-500/50 ring-2 ring-indigo-500/30"
+                  ? "bg-indigo-950 border-indigo-500/50 ring-2 ring-indigo-500/30"
                   : "bg-black border-white/10 hover:border-white/20"
               }`}
             >
@@ -1728,7 +1728,7 @@ const Observations = () => {
                   <p className="text-sm text-gray-400 mb-2">Strengths:</p>
                   <div className="flex flex-wrap gap-2">
                     {observation.strengths.map((s, i) => (
-                      <span key={i} className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">
+                      <span key={i} className="px-2 py-1 rounded bg-emerald-950 text-emerald-400 text-xs">
                         {s}
                       </span>
                     ))}
@@ -2119,7 +2119,7 @@ const Endorsements = () => {
                   key={assignment.id}
                   className={`p-6 rounded-xl border transition-colors ${
                     isSelected
-                      ? "bg-purple-500/30 border-purple-500/30"
+                      ? "bg-purple-950 border-purple-500/30"
                       : "bg-black border-white/30 hover:border-white/20"
                   }`}
                 >
@@ -2135,7 +2135,7 @@ const Endorsements = () => {
                         <p className="text-sm text-gray-400">
                           {assignment.observation_count} observations completed
                         </p>
-                        <span className="inline-block px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400 mt-1">
+                        <span className="inline-block px-2 py-0.5 rounded text-xs bg-emerald-950 text-emerald-400 mt-1">
                           Ready for endorsement
                         </span>
                       </div>
@@ -2174,7 +2174,7 @@ const Endorsements = () => {
                               className={`p-4 rounded-xl border text-left transition-colors ${
                                 endorsementForm.decision === option.value
                                   ? option.color === "emerald"
-                                    ? "bg-emerald-500/20 border-emerald-500/50"
+                                    ? "bg-emerald-950 border-emerald-500/50"
                                     : option.color === "amber"
                                     ? "bg-amber-500/20 border-amber-500/50"
                                     : option.color === "orange"
@@ -2337,7 +2337,7 @@ const Endorsements = () => {
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   endorsement.decision === "proceed"
-                    ? "bg-emerald-500/20"
+                    ? "bg-emerald-950"
                     : endorsement.decision === "redirect"
                     ? "bg-amber-500/20"
                     : endorsement.decision === "escalate"
@@ -2361,7 +2361,7 @@ const Endorsements = () => {
                     </p>
                     <span className={`px-2 py-0.5 rounded text-xs ${
                       endorsement.decision === "proceed"
-                        ? "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-emerald-950 text-emerald-400"
                         : endorsement.decision === "redirect"
                         ? "bg-amber-500/20 text-amber-400"
                         : endorsement.decision === "escalate"
@@ -2557,8 +2557,8 @@ const Schedule = () => {
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       scheduled: "bg-blue-500/20 text-blue-400",
-      confirmed: "bg-emerald-500/20 text-emerald-400",
-      completed: "bg-purple-500/20 text-purple-400",
+      confirmed: "bg-emerald-950 text-emerald-400",
+      completed: "bg-purple-950 text-purple-400",
       cancelled: "bg-red-500/20 text-red-400",
       no_show: "bg-amber-500/20 text-amber-400",
     };
@@ -2622,7 +2622,7 @@ const Schedule = () => {
                   key={day.value}
                   className={`p-4 rounded-lg border transition-colors ${
                     isActive
-                      ? "bg-purple-500/30 border-purple-500/30"
+                      ? "bg-purple-950 border-purple-500/30"
                       : "bg-black border-white/30"
                   }`}
                 >
@@ -2971,7 +2971,7 @@ const ProfilePage = () => {
                 {formData.first_name} {formData.last_name}
               </h2>
               <p className="text-gray-400">{profile?.email}</p>
-              <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+              <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-950 text-purple-400 mt-1">
                 Mentor
               </span>
             </div>
@@ -3063,7 +3063,7 @@ const ProfilePage = () => {
             {formData.specializations.map((spec) => (
               <span
                 key={spec}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-950 text-purple-400 text-sm"
               >
                 {spec}
                 {isEditing && (
@@ -3115,7 +3115,7 @@ const ProfilePage = () => {
                 </label>
               ) : (
                 <span className={`px-2 py-1 rounded text-xs ${
-                  formData.is_accepting ? "bg-emerald-500/20 text-emerald-400" : "bg-gray-500/20 text-gray-400"
+                  formData.is_accepting ? "bg-emerald-950 text-emerald-400" : "bg-gray-500/20 text-gray-400"
                 }`}>
                   {formData.is_accepting ? "Yes" : "No"}
                 </span>
@@ -3315,7 +3315,7 @@ const MentorMessagesPage = () => {
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-950 border-l-2 border-purple-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-purple-400" />}

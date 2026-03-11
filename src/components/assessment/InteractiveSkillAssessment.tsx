@@ -674,7 +674,7 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'voice-response' && scene.voicePrompt) {
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-indigo-300 font-medium mb-2">Scenario:</p>
             <p className="text-gray-300">{scene.voicePrompt.scenario}</p>
           </div>
@@ -757,7 +757,7 @@ export const InteractiveSkillAssessment = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full space-y-4"
                   >
-                    <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+                    <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -780,13 +780,13 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-indigo-300 font-medium mb-2">Scenario:</p>
             <p className="text-gray-300">{challenge.scenario}</p>
           </div>
 
           <div className="flex gap-4 text-sm">
-            <div className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400">
+            <div className="px-3 py-1 rounded-full bg-purple-950 text-purple-400">
               Type: {challenge.type}
             </div>
             <div className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400">
@@ -838,7 +838,7 @@ export const InteractiveSkillAssessment = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -921,7 +921,7 @@ export const InteractiveSkillAssessment = () => {
               Submit Prioritization
             </Button>
           ) : (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -940,7 +940,7 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-purple-500/30 border border-purple-500/20">
+          <div className="p-4 rounded-xl bg-purple-950 border border-purple-500/20">
             <p className="text-purple-300 font-medium mb-2">{rolePlay.title}</p>
             <p className="text-gray-300 text-sm">{rolePlay.context}</p>
             <p className="text-gray-400 text-sm mt-2">
@@ -982,7 +982,7 @@ export const InteractiveSkillAssessment = () => {
           </div>
 
           {dialogueChoices.length >= 2 && (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1035,7 +1035,7 @@ export const InteractiveSkillAssessment = () => {
           )}
 
           {problemChoices.length >= 1 && !currentBranchData && (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1096,7 +1096,7 @@ export const InteractiveSkillAssessment = () => {
                         disabled={listeningSubmitted}
                         className={`w-full p-3 text-left rounded-lg transition-all ${
                           listeningAnswers[qIndex] === oIndex
-                            ? 'bg-indigo-500/20 border border-indigo-500/50'
+                            ? 'bg-indigo-950 border border-indigo-500/50'
                             : 'bg-black border border-white/30 hover:bg-black'
                         }`}
                       >
@@ -1149,7 +1149,7 @@ export const InteractiveSkillAssessment = () => {
                 disabled={judgmentChoice !== null}
                 className={`w-full p-4 text-left rounded-xl border transition-all ${
                   judgmentChoice === option.id
-                    ? 'bg-indigo-500/20 border-indigo-500/50'
+                    ? 'bg-indigo-950 border-indigo-500/50'
                     : 'bg-black border-white/30 hover:bg-black'
                 }`}
               >
@@ -1212,7 +1212,7 @@ export const InteractiveSkillAssessment = () => {
               Submit Response
             </Button>
           ) : (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1228,7 +1228,7 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'review') {
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-indigo-300 font-medium text-sm mb-1">L1 Session AI Observation Notes</p>
             <p className="text-gray-400 text-sm">
               These are auto-generated AI observation notes from your session. Your mentor will review, add their own notes, and share feedback with you directly.
@@ -1279,7 +1279,7 @@ export const InteractiveSkillAssessment = () => {
           </div>
 
           {/* Evidence count */}
-          <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-indigo-400 text-sm">
               <strong>{challengeResults.length}</strong> skill demonstrations captured as evidence for mentor review.
             </p>
@@ -1404,7 +1404,7 @@ export const InteractiveSkillAssessment = () => {
                 <span className="text-gray-500"> ({cooldownStatus.daysRemaining} days)</span>
               )}
             </p>
-            <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20 mb-6 text-left">
+            <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20 mb-6 text-left">
               <p className="text-indigo-300 text-sm font-medium mb-1">What happens next?</p>
               <p className="text-gray-400 text-sm">
                 Your mentor will review your session evidence and be in touch with feedback and next steps before your next observation window opens.
@@ -1464,13 +1464,13 @@ export const InteractiveSkillAssessment = () => {
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </Button>
               {/* Desktop: Horizontal badge */}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-950 border border-indigo-500/20">
                 <Target className="w-4 h-4 text-indigo-400" />
                 <span className="text-indigo-400 font-semibold">{challengeResults.length}</span>
                 <span className="text-indigo-400/50">scenarios observed</span>
               </div>
               {/* Mobile: Compact badge */}
-              <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
+              <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-500/20">
                 <Target className="w-3 h-3 text-indigo-400" />
                 <span className="text-indigo-400 font-semibold text-xs">{challengeResults.length} observed</span>
               </div>

@@ -125,7 +125,7 @@ const Press = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <Newspaper className="w-4 h-4" />
                 Press Room
               </span>

@@ -439,7 +439,7 @@ export default function ApiTestChat() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowDebug(!showDebug)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${showDebug ? "bg-indigo-600/30 text-indigo-300 border border-indigo-500/30" : "bg-white/[0.04] text-gray-400 border border-white/[0.06] hover:text-white"}`}
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${showDebug ? "bg-indigo-950 text-indigo-300 border border-indigo-500/30" : "bg-white/[0.04] text-gray-400 border border-white/[0.06] hover:text-white"}`}
           >
             Debug
           </button>
@@ -570,7 +570,7 @@ export default function ApiTestChat() {
                   </div>
                 ) : (
                   <div className="max-w-[85%] inline-block">
-                    <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-gray-200">
+                    <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-950 border border-indigo-500/15 text-gray-200">
                       <p className="text-[13px] leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                     </div>
                   </div>
@@ -670,7 +670,7 @@ export default function ApiTestChat() {
                     <motion.button
                       type="submit"
                       disabled={!input.trim() || isStreaming}
-                      className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                      className="w-8 h-8 rounded-lg bg-gray-900 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
                       whileHover={!input.trim() || isStreaming ? {} : { scale: 1.05 }}
                       whileTap={!input.trim() || isStreaming ? {} : { scale: 0.95 }}
                     >

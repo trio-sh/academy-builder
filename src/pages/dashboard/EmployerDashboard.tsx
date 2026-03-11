@@ -514,7 +514,7 @@ const SearchTalent = () => {
           onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
           className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
         />
-        <div className="w-px h-6 bg-white/10" />
+        <div className="w-px h-6 bg-gray-900" />
         <div className="flex items-center gap-2">
           <Target className="w-4 h-4 text-emerald-400" />
           <span className="text-xs text-emerald-400 font-medium">BehaviourMatch™</span>
@@ -568,7 +568,7 @@ const SearchTalent = () => {
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     <span className={`px-2 py-0.5 rounded ${
                       candidate.current_tier === "platinum"
-                        ? "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-emerald-950 text-emerald-400"
                         : candidate.current_tier === "gold"
                         ? "bg-amber-500/20 text-amber-400"
                         : "bg-gray-500/20 text-gray-400"
@@ -697,7 +697,7 @@ const SearchTalent = () => {
           >
             {connectionSuccess ? (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-950 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
@@ -857,7 +857,7 @@ const Connections = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "accepted": return "bg-emerald-500/20 text-emerald-400";
+      case "accepted": return "bg-emerald-950 text-emerald-400";
       case "pending": return "bg-amber-500/20 text-amber-400";
       case "declined": return "bg-red-500/20 text-red-400";
       default: return "bg-gray-500/20 text-gray-400";
@@ -1356,7 +1356,7 @@ const Projects = () => {
     const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
       pending: { label: "Not Funded", color: "text-gray-400 bg-gray-500/20", icon: Wallet },
       funded: { label: "In Escrow", color: "text-amber-400 bg-amber-500/20", icon: Lock },
-      released: { label: "Released", color: "text-emerald-400 bg-emerald-500/20", icon: Unlock },
+      released: { label: "Released", color: "text-emerald-400 bg-emerald-950", icon: Unlock },
       refunded: { label: "Refunded", color: "text-red-400 bg-red-500/20", icon: ArrowRight },
     };
     return badges[status || "pending"] || badges.pending;
@@ -1460,7 +1460,7 @@ const Projects = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-emerald-500/20 text-emerald-400";
+      case "open": return "bg-emerald-950 text-emerald-400";
       case "in_progress": return "bg-amber-500/20 text-amber-400";
       case "completed": return "bg-blue-500/20 text-blue-400";
       case "draft": return "bg-gray-500/20 text-gray-400";
@@ -1563,7 +1563,7 @@ const Projects = () => {
             </div>
 
             {/* Budget Section */}
-            <div className="p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
+            <div className="p-4 rounded-lg bg-emerald-950 border border-emerald-500/20">
               <div className="flex items-center gap-2 mb-3">
                 <DollarSign className="w-5 h-5 text-emerald-400" />
                 <h3 className="font-medium text-white">Project Budget</h3>
@@ -1716,7 +1716,7 @@ const Projects = () => {
                             app.status === "pending"
                               ? "bg-amber-500/20 text-amber-400"
                               : app.status === "accepted"
-                              ? "bg-emerald-500/20 text-emerald-400"
+                              ? "bg-emerald-950 text-emerald-400"
                               : "bg-red-500/20 text-red-400"
                           }`}>
                             {app.status}
@@ -1928,7 +1928,7 @@ const Projects = () => {
                               <span
                                 className={`px-3 py-1 rounded-full text-sm ${
                                   app.status === "accepted"
-                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    ? "bg-emerald-950 text-emerald-400"
                                     : "bg-red-500/20 text-red-400"
                                 }`}
                               >
@@ -2039,7 +2039,7 @@ const Projects = () => {
                     {selectedProject.milestones.map((milestone, index) => {
                       const getMilestoneStatusColor = (status: string) => {
                         switch (status) {
-                          case "approved": return "bg-emerald-500/20 text-emerald-400";
+                          case "approved": return "bg-emerald-950 text-emerald-400";
                           case "submitted": return "bg-blue-500/20 text-blue-400";
                           case "in_progress": return "bg-amber-500/20 text-amber-400";
                           case "revision_requested": return "bg-red-500/20 text-red-400";
@@ -2063,7 +2063,7 @@ const Projects = () => {
                             <div className="flex items-start gap-3">
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
                                 milestone.status === "approved"
-                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  ? "bg-emerald-950 text-emerald-400"
                                   : "bg-black text-gray-400"
                               }`}>
                                 {index + 1}
@@ -2212,7 +2212,7 @@ const Projects = () => {
               <>
                 {/* Share Payment Credentials */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-950 flex items-center justify-center">
                     <Wallet className="w-6 h-6 text-indigo-400" />
                   </div>
                   <div>
@@ -2320,7 +2320,7 @@ const Projects = () => {
               <>
                 {/* Verify Payment Received */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-950 flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
@@ -2361,7 +2361,7 @@ const Projects = () => {
                   </div>
                 )}
 
-                <div className="p-3 rounded-lg bg-emerald-500/30 border border-emerald-500/20 mb-4">
+                <div className="p-3 rounded-lg bg-emerald-950 border border-emerald-500/20 mb-4">
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
                     <p className="text-sm text-emerald-300">
@@ -2643,7 +2643,7 @@ const Feedback = () => {
       {/* Info Banner */}
       <motion.div
         variants={itemVariants}
-        className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-4"
+        className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/20 flex items-start gap-4"
       >
         <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
         <div>
@@ -2677,7 +2677,7 @@ const Feedback = () => {
                           className="w-14 h-14 rounded-xl object-cover"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                        <div className="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center text-emerald-400 font-bold text-lg">
                           {hire.candidate?.profile?.first_name?.[0]}
                           {hire.candidate?.profile?.last_name?.[0]}
                         </div>
@@ -2691,7 +2691,7 @@ const Feedback = () => {
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                           {hire.candidate?.current_tier && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-950 text-indigo-400">
                               {hire.candidate.current_tier.replace("_", " ")}
                             </span>
                           )}
@@ -2710,7 +2710,7 @@ const Feedback = () => {
                             key={type}
                             className={`px-3 py-2 rounded-lg text-center ${
                               feedback
-                                ? "bg-emerald-500/20 border border-emerald-500/30"
+                                ? "bg-emerald-950 border border-emerald-500/30"
                                 : "bg-black border border-white/30"
                             }`}
                           >
@@ -3137,7 +3137,7 @@ const EmployerMessagesPage = () => {
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-950 border-l-2 border-emerald-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-emerald-400" />}
@@ -3416,7 +3416,7 @@ const Company = () => {
         {/* Verification Status */}
         <div className={`p-6 rounded-xl border ${
           employerProfile?.is_verified
-            ? "bg-emerald-500/30 border-emerald-500/20"
+            ? "bg-emerald-950 border-emerald-500/20"
             : "bg-amber-500/30 border-amber-500/20"
         }`}>
           <div className="flex items-center gap-3">

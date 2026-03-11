@@ -118,7 +118,7 @@ const Contact = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <MessageSquare className="w-4 h-4" />
                 Get in Touch
               </span>
@@ -210,7 +210,7 @@ const Contact = () => {
                               onClick={() => setSelectedReason(reason.id)}
                               className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
                                 selectedReason === reason.id
-                                  ? "bg-indigo-600/20 border-indigo-500/50 text-white"
+                                  ? "bg-indigo-950 border-indigo-500/50 text-white"
                                   : "bg-black border-white/30 text-gray-50 hover:border-white/20"
                               }`}
                             >

@@ -546,8 +546,8 @@ const Overview = () => {
               </div>
               <div className="flex items-center gap-3">
                 <span className={`px-2 py-1 rounded text-xs ${
-                  user.role === "candidate" ? "bg-emerald-500/20 text-emerald-400" :
-                  user.role === "mentor" ? "bg-purple-500/20 text-purple-400" :
+                  user.role === "candidate" ? "bg-emerald-950 text-emerald-400" :
+                  user.role === "mentor" ? "bg-purple-950 text-purple-400" :
                   user.role === "employer" ? "bg-amber-500/20 text-amber-400" :
                   "bg-blue-500/20 text-blue-400"
                 }`}>
@@ -700,8 +700,8 @@ const UsersManagement = () => {
 
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
-      candidate: "bg-emerald-500/20 text-emerald-400",
-      mentor: "bg-purple-500/20 text-purple-400",
+      candidate: "bg-emerald-950 text-emerald-400",
+      mentor: "bg-purple-950 text-purple-400",
       employer: "bg-amber-500/20 text-amber-400",
       admin: "bg-red-500/20 text-red-400",
       school_admin: "bg-blue-500/20 text-blue-400",
@@ -800,7 +800,7 @@ const UsersManagement = () => {
                     </td>
                     <td className="px-4 py-4">
                       <span className={`px-2 py-1 rounded text-xs ${
-                        user.is_active ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                        user.is_active ? "bg-emerald-950 text-emerald-400" : "bg-red-500/20 text-red-400"
                       }`}>
                         {user.is_active ? "Active" : "Inactive"}
                       </span>
@@ -895,7 +895,7 @@ const UsersManagement = () => {
                   <span className={`px-2 py-0.5 rounded text-xs capitalize ${getRoleBadge(selectedUser.role)}`}>
                     {selectedUser.role?.replace("_", " ")}
                   </span>
-                  <span className={`px-2 py-0.5 rounded text-xs ${selectedUser.is_active ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                  <span className={`px-2 py-0.5 rounded text-xs ${selectedUser.is_active ? "bg-emerald-950 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
                     {selectedUser.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -1488,7 +1488,7 @@ const TalentVisaReview = () => {
                         nomination.status === "pending"
                           ? "bg-amber-500/20 text-amber-400"
                           : nomination.status === "approved"
-                          ? "bg-emerald-500/20 text-emerald-400"
+                          ? "bg-emerald-950 text-emerald-400"
                           : "bg-red-500/20 text-red-400"
                       }`}>
                         {nomination.status}
@@ -1615,7 +1615,7 @@ const TalentVisaReview = () => {
             </div>
 
             {selectedNomination.behavioral_score !== undefined && selectedNomination.behavioral_score > 0 && (
-              <div className="p-3 rounded-lg bg-indigo-500/30 border border-indigo-500/20 mb-6">
+              <div className="p-3 rounded-lg bg-indigo-950 border border-indigo-500/20 mb-6">
                 <p className="text-sm text-indigo-300">
                   Candidate's behavioral score is <span className="font-bold">{selectedNomination.behavioral_score.toFixed(1)}/5</span>.
                   Suggested tier: <span className="font-bold">{TIER_CONFIG[getSuggestedTier(selectedNomination.behavioral_score)].label}</span>
@@ -1743,7 +1743,7 @@ const EmployersManagement = () => {
                 <div className="flex items-center gap-3">
                   <span className={`px-2 py-1 rounded text-xs ${
                     employer.is_verified
-                      ? "bg-emerald-500/20 text-emerald-400"
+                      ? "bg-emerald-950 text-emerald-400"
                       : "bg-amber-500/20 text-amber-400"
                   }`}>
                     {employer.is_verified ? "Verified" : "Unverified"}
@@ -1909,7 +1909,7 @@ const SchoolsManagement = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`px-2 py-1 rounded text-xs ${
-                      school.is_verified ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400"
+                      school.is_verified ? "bg-emerald-950 text-emerald-400" : "bg-amber-500/20 text-amber-400"
                     }`}>
                       {school.is_verified ? "Verified" : "Unverified"}
                     </span>
@@ -2783,7 +2783,7 @@ const AdminDashboard = () => {
               <input
                 type="text"
                 placeholder="Quick search..."
-                className="bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-red-500/50 w-48 focus:w-64 transition-all"
+                className="bg-gray-900 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-red-500/50 w-48 focus:w-64 transition-all"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && e.currentTarget.value) {
                     navigate("/dashboard/admin/users");

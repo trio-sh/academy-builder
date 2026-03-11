@@ -981,7 +981,7 @@ const GetStarted = () => {
                         </div>
                       )}
 
-                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
                         <ul className="space-y-2 text-sm text-gray-50">
                           {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
@@ -1030,7 +1030,7 @@ const GetStarted = () => {
                         </div>
                       </div>
 
-                      <div className="mt-6 p-4 rounded-xl bg-purple-500/30 border border-purple-500/20">
+                      <div className="mt-6 p-4 rounded-xl bg-purple-950 border border-purple-500/20">
                         <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
                         <ul className="space-y-2 text-sm text-gray-50">
                           {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Skill Passport"].map((item) => (

@@ -188,7 +188,7 @@ const Help = () => {
             animate="visible"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950 border border-indigo-500/20 text-indigo-400 text-sm">
                 <HelpCircle className="w-4 h-4" />
                 Help Center
               </span>
@@ -304,7 +304,7 @@ const Help = () => {
                     className="group flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-indigo-500/30 transition-colors"
                     whileHover={{ x: 5 }}
                   >
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-950 flex items-center justify-center flex-shrink-0">
                       <FileText className="w-4 h-4 text-indigo-400" />
                     </div>
                     <span className="text-gray-50 group-hover:text-white transition-colors">

@@ -502,7 +502,7 @@ export const AssessmentViewer = () => {
       return (
         <div>
           {isRetake && attemptNumber > 1 && scene.type === 'narrative' && (
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-950 border border-purple-500/20 text-sm text-purple-400">
               <Sparkles className="w-4 h-4" />
               <span>Fresh content for attempt #{attemptNumber}</span>
             </div>
@@ -665,7 +665,7 @@ export const AssessmentViewer = () => {
       return (
         <div className="space-y-6">
           {isRetake && attemptNumber > 1 && aiGeneratedContent.has(scene.id) && (
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
+            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-950 border border-purple-500/20 text-sm text-purple-400">
               <Sparkles className="w-4 h-4" />
               <span>Fresh prompts for attempt #{attemptNumber}</span>
             </div>
@@ -699,7 +699,7 @@ export const AssessmentViewer = () => {
                   disabled={!isSelected && selected.length >= maxSelect}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     isSelected
-                      ? 'bg-indigo-500/20 border-indigo-500/50'
+                      ? 'bg-indigo-950 border-indigo-500/50'
                       : 'bg-black border-white/30 hover:bg-black disabled:opacity-40'
                   }`}
                 >
@@ -840,7 +840,7 @@ export const AssessmentViewer = () => {
 
           {/* Strengths & Improvements */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20">
+            <div className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/20">
               <p className="text-sm text-emerald-400 font-medium mb-2">Strengths</p>
               <div className="space-y-1">
                 {strengths.map(id => {
@@ -866,7 +866,7 @@ export const AssessmentViewer = () => {
 
           {/* Goals Summary */}
           {goals && (
-            <div className="p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/20">
+            <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
               <p className="text-sm text-indigo-400 font-medium mb-2">Your Goals</p>
               <p className="text-sm text-gray-300 whitespace-pre-wrap">{goals}</p>
             </div>
@@ -929,7 +929,7 @@ export const AssessmentViewer = () => {
             </Button>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 max-w-sm mx-auto">
+              <div className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/30 max-w-sm mx-auto">
                 <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                 <p className="text-emerald-400 font-medium">Assessment Saved!</p>
               </div>
@@ -1068,7 +1068,7 @@ export const AssessmentViewer = () => {
               <div className="h-6 w-px bg-black hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-950 border border-indigo-500/20">
                   <Star className="w-4 h-4 text-indigo-400" />
                   <span className="text-indigo-400 font-semibold">{getOverallScore(scores).toFixed(1)}</span>
                   <span className="text-indigo-400/50">/ 5.0</span>
@@ -1090,7 +1090,7 @@ export const AssessmentViewer = () => {
               </div>
               {/* Mobile: Stacked compact badges */}
               <div className="flex md:hidden flex-col gap-1">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/30 border border-indigo-500/20">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-500/20">
                   <Star className="w-3 h-3 text-indigo-400" />
                   <span className="text-indigo-400 font-semibold text-xs">{getOverallScore(scores).toFixed(1)}/5</span>
                 </div>
@@ -1139,10 +1139,10 @@ export const AssessmentViewer = () => {
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`p-2 rounded-xl ${
                       currentScene?.type === 'welcome' || currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
-                      currentScene?.type === 'dimension' || currentScene?.type === 'multi-dimension' ? 'bg-purple-500/30' :
+                      currentScene?.type === 'dimension' || currentScene?.type === 'multi-dimension' ? 'bg-purple-950' :
                       currentScene?.type === 'selection' ? 'bg-amber-500/30' :
                       currentScene?.type === 'goals' ? 'bg-cyan-500/30' :
-                      currentScene?.type === 'review' ? 'bg-emerald-500/30' :
+                      currentScene?.type === 'review' ? 'bg-emerald-950' :
                       'bg-amber-500/30'
                     }`}>
                       {getSceneIcon()}

@@ -703,7 +703,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
     <div className={`rounded-xl border overflow-hidden ${isError ? "border-amber-500/25 bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
       {/* Download button row */}
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-600/30"}`}>
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-950"}`}>
           {isError ? <AlertCircle className="w-4.5 h-4.5 text-amber-300" /> : <FileText className="w-4.5 h-4.5 text-indigo-300" />}
         </div>
         <div className="flex-1 min-w-0">
@@ -2184,7 +2184,7 @@ export default function AIAgent() {
               </div>
             ) : msg.role === "user" ? (
               <div className="group max-w-[85%] inline-block">
-                <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-gray-200">
+                <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-950 border border-indigo-500/15 text-gray-200">
                   <UserMessageContent content={msg.content} idx={idx} />
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -2214,7 +2214,7 @@ export default function AIAgent() {
                       {cleaned && <MarkdownRenderer content={cleaned} />}
                       {hasPdfBlock && (
                         <div className="flex items-center gap-2.5 mt-3 px-4 py-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
-                          <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-indigo-950 flex items-center justify-center flex-shrink-0">
                             <FileText className="w-4 h-4 text-indigo-300" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -2335,7 +2335,7 @@ export default function AIAgent() {
                 <motion.button
                   type="submit"
                   disabled={!input.trim() || isStreaming}
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                  className="w-8 h-8 rounded-lg bg-gray-900 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
                   whileHover={!input.trim() || isStreaming ? {} : { scale: 1.05 }}
                   whileTap={!input.trim() || isStreaming ? {} : { scale: 0.95 }}
                 >

@@ -894,9 +894,9 @@ export const TrainingModuleViewer = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`p-2 rounded-xl ${
                     currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
-                    currentScene?.type === 'choice' ? 'bg-purple-500/30' :
+                    currentScene?.type === 'choice' ? 'bg-purple-950' :
                     currentScene?.type === 'reflection' ? 'bg-amber-500/30' :
-                    currentScene?.type === 'quiz' ? 'bg-emerald-500/30' :
+                    currentScene?.type === 'quiz' ? 'bg-emerald-950' :
                     'bg-amber-500/30'
                   }`}>
                     {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-blue-400" />}
@@ -983,7 +983,7 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'choice' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-950 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh scenario for attempt #{attemptNumber}</span>
                       </div>
@@ -999,11 +999,11 @@ export const TrainingModuleViewer = () => {
                             selectedChoice === choice.id
                               ? showFeedback
                                 ? choice.isCorrect
-                                  ? 'bg-emerald-500/20 border-emerald-500/50'
+                                  ? 'bg-emerald-950 border-emerald-500/50'
                                   : 'bg-red-500/20 border-red-500/50'
-                                : 'bg-indigo-500/20 border-indigo-500/50'
+                                : 'bg-indigo-950 border-indigo-500/50'
                               : 'bg-black border-white/30 hover:bg-black hover:border-white/20'
-                          } ${showFeedback && choice.isCorrect ? 'bg-emerald-500/20 border-emerald-500/50' : ''}`}
+                          } ${showFeedback && choice.isCorrect ? 'bg-emerald-950 border-emerald-500/50' : ''}`}
                         >
                           <div className="flex items-start gap-3">
                             <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
@@ -1032,7 +1032,7 @@ export const TrainingModuleViewer = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className={`mt-6 p-4 rounded-xl ${
                           currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
-                            ? 'bg-emerald-500/30 border border-emerald-500/30'
+                            ? 'bg-emerald-950 border border-emerald-500/30'
                             : 'bg-amber-500/30 border border-amber-500/30'
                         }`}
                       >
@@ -1076,7 +1076,7 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'reflection' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-950 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh reflection prompt for attempt #{attemptNumber}</span>
                       </div>
@@ -1115,7 +1115,7 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'quiz' && currentSceneWithAI && (
                   <div>
                     {isRetake && attemptNumber > 1 && aiGeneratedScenes.has(currentScene.id) && (
-                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/30 border border-purple-500/20 text-sm text-purple-400">
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-950 border border-purple-500/20 text-sm text-purple-400">
                         <Sparkles className="w-4 h-4" />
                         <span>Fresh questions for attempt #{attemptNumber}</span>
                       </div>
@@ -1143,11 +1143,11 @@ export const TrainingModuleViewer = () => {
                                   quizAnswers[qIndex] === oIndex
                                     ? quizSubmitted
                                       ? oIndex === q.correctIndex
-                                        ? 'bg-emerald-500/20 border border-emerald-500/50'
+                                        ? 'bg-emerald-950 border border-emerald-500/50'
                                         : 'bg-red-500/20 border border-red-500/50'
-                                      : 'bg-indigo-500/20 border border-indigo-500/50'
+                                      : 'bg-indigo-950 border border-indigo-500/50'
                                     : quizSubmitted && oIndex === q.correctIndex
-                                    ? 'bg-emerald-500/20 border border-emerald-500/50'
+                                    ? 'bg-emerald-950 border border-emerald-500/50'
                                     : 'bg-black border border-white/30 hover:bg-black'
                                 }`}
                               >
@@ -1189,7 +1189,7 @@ export const TrainingModuleViewer = () => {
                         <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
                     ) : (
-                      <div className="mt-6 p-4 rounded-xl bg-indigo-500/30 border border-indigo-500/30">
+                      <div className="mt-6 p-4 rounded-xl bg-indigo-950 border border-indigo-500/30">
                         <p className="text-indigo-400 font-medium">
                           Quiz Complete! You answered {quizAnswers.filter((a, i) => a === currentSceneWithAI.quiz?.[i].correctIndex).length} of {currentSceneWithAI.quiz?.length} correctly.
                         </p>
@@ -1238,7 +1238,7 @@ export const TrainingModuleViewer = () => {
                       </Button>
                     ) : (
                       <div className="space-y-4">
-                        <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 mb-4">
+                        <div className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/30 mb-4">
                           <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                           <p className="text-emerald-400 font-medium">Module Completed!</p>
                         </div>

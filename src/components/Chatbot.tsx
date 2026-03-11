@@ -1320,7 +1320,7 @@ export function Chatbot() {
                   onClick={() => setScreenAware(!screenAware)}
                   className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors ${
                     screenAware
-                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                      ? "bg-indigo-950 text-indigo-300 border border-indigo-500/30"
                       : "bg-black text-gray-500 border border-white/10"
                   }`}
                   title={screenAware ? "Screen awareness ON" : "Screen awareness OFF"}
@@ -1351,7 +1351,7 @@ export function Chatbot() {
 
             {/* Screen Context Indicator */}
             {screenAware && (
-              <div className="px-4 py-2 bg-indigo-500/10 border-b border-indigo-500/20 flex items-center gap-2">
+              <div className="px-4 py-2 bg-indigo-950 border-b border-indigo-500/20 flex items-center gap-2">
                 <Monitor className="w-3.5 h-3.5 text-indigo-400" />
                 <span className="text-xs text-indigo-300">
                   Viewing:{" "}
@@ -1448,7 +1448,7 @@ export function Chatbot() {
                     <div
                       className={`p-3 rounded-2xl rounded-tl-sm ${
                         message.role === "user"
-                          ? "bg-indigo-600/20 border border-indigo-500/20 text-gray-200"
+                          ? "bg-indigo-950 border border-indigo-500/20 text-gray-200"
                           : "bg-black/60 border border-white/10 text-gray-300"
                       }`}
                     >

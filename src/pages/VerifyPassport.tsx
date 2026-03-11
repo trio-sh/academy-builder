@@ -186,7 +186,7 @@ const VerifyPassport = () => {
           animate={{ opacity: 1, y: 0 }}
           className={`p-4 rounded-xl mb-8 flex items-center gap-4 ${
             isValid
-              ? "bg-emerald-500/30 border border-emerald-500/30"
+              ? "bg-emerald-950 border border-emerald-500/30"
               : "bg-amber-500/30 border border-amber-500/30"
           }`}
         >
@@ -243,7 +243,7 @@ const VerifyPassport = () => {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-500/30">
               <Shield className="w-4 h-4 text-emerald-400" />
               <span className="text-emerald-400 font-medium text-sm">Verified</span>
             </div>

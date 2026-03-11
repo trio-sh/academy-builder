@@ -249,7 +249,7 @@ const About = () => {
         <section className="py-20 md:py-28 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-950 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -334,7 +334,7 @@ const About = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/30 to-black" />
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-950 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />

@@ -370,7 +370,7 @@ const Overview = () => {
             >
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 step.completed
-                  ? "bg-emerald-500/20 text-emerald-400"
+                  ? "bg-emerald-950 text-emerald-400"
                   : "bg-black text-gray-400"
               }`}>
                 {step.completed ? (
@@ -405,7 +405,7 @@ const Overview = () => {
                   key={entry.id}
                   className="flex items-start gap-4 p-4 rounded-xl bg-black border border-white/30"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-950 flex items-center justify-center">
                     <Icon className="w-5 h-5 text-indigo-400" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -771,7 +771,7 @@ const SkillPassport = () => {
           variants={itemVariants}
           className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 border border-indigo-500/20 text-center"
         >
-          <div className="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 rounded-full bg-indigo-950 flex items-center justify-center mx-auto mb-6">
             <Shield className="w-10 h-10 text-indigo-400" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Earn Your Skill Passport</h2>
@@ -901,7 +901,7 @@ const SkillPassport = () => {
               </div>
             </div>
             <div className="text-right">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-500/30">
                 <CheckCircle className="w-4 h-4 text-emerald-400" />
                 <span className="text-emerald-400 font-medium text-sm">Verified</span>
               </div>
@@ -1695,7 +1695,7 @@ const ObservationPathway = () => {
               { step: "3", title: "Begin Observations", desc: "Complete L1–L4 observation sessions on assigned dimensions" },
             ].map((item) => (
               <div key={item.step} className="p-4 rounded-xl bg-black border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm mb-3">
+                <div className="w-8 h-8 rounded-full bg-indigo-950 flex items-center justify-center text-indigo-400 font-bold text-sm mb-3">
                   {item.step}
                 </div>
                 <h3 className="font-semibold text-white text-sm">{item.title}</h3>
@@ -1738,7 +1738,7 @@ const ObservationPathway = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+          <div className="p-4 rounded-xl bg-indigo-950 border border-indigo-500/20">
             <p className="text-sm text-indigo-300">
               While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Skill Passport.
             </p>
@@ -1765,11 +1765,11 @@ const ObservationPathway = () => {
           Observation sessions on your mentor-assigned dimensions. All feedback is documented and assessed by your mentor.
         </p>
         <div className="mt-3 flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-sm text-emerald-400">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950 text-sm text-emerald-400">
             <CheckCircle className="w-4 h-4" />
             Mentor: {mentorProfile?.first_name} {mentorProfile?.last_name}
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 text-sm text-indigo-400">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-950 text-sm text-indigo-400">
             <ClipboardCheck className="w-4 h-4" />
             {assignedDimensions.length} Dimensions Assigned
           </div>
@@ -1862,7 +1862,7 @@ const ObservationPathway = () => {
                             ? "bg-emerald-500"
                             : isPending
                             ? "bg-amber-500"
-                            : "bg-white/10"
+                            : "bg-gray-900"
                         }`}
                         title={`L${level}: ${isComplete ? "Complete" : isPending ? "Awaiting mentor review" : "Not started"}`}
                       />
@@ -1894,7 +1894,7 @@ const ObservationPathway = () => {
                   <div key={i} className="p-4 rounded-xl bg-black border border-white/10">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-400">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-950 text-indigo-400">
                           L{fb.feedback_level}
                         </span>
                         <span className="font-medium text-white text-sm">{dim?.label}</span>
@@ -2125,7 +2125,7 @@ const SelfAssessmentPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3">
+          <div className="p-4 rounded-xl bg-emerald-950 border border-emerald-500/30 flex items-center gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-400" />
             <span className="text-emerald-300">Reflection saved successfully!</span>
           </div>
@@ -2162,7 +2162,7 @@ const SelfAssessmentPage = () => {
                 activeStep === index
                   ? "bg-indigo-600 text-white"
                   : activeStep > index
-                  ? "bg-emerald-500/20 text-emerald-400"
+                  ? "bg-emerald-950 text-emerald-400"
                   : "bg-black text-gray-400 hover:bg-black"
               }`}
             >
@@ -2279,7 +2279,7 @@ const SelfAssessmentPage = () => {
                     return (
                       <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-black">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg bg-indigo-950 flex items-center justify-center">
                             <ClipboardCheck className="w-5 h-5 text-indigo-400" />
                           </div>
                           <div>
@@ -2416,7 +2416,7 @@ const SelfAssessmentPage = () => {
                     onClick={() => toggleStrength(dim.id)}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       strengths.includes(dim.id)
-                        ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                        ? "bg-emerald-950 border-emerald-500/50 ring-2 ring-emerald-500/30"
                         : "bg-black border-white/30 hover:border-white/20"
                     }`}
                   >
@@ -2614,7 +2614,7 @@ const SelfAssessmentPage = () => {
                   <div className="space-y-2">
                     {strengths.length > 0 ? (
                       strengths.map((s) => (
-                        <div key={s} className="p-2 rounded-lg bg-emerald-500/30 text-emerald-300 text-sm">
+                        <div key={s} className="p-2 rounded-lg bg-emerald-950 text-emerald-300 text-sm">
                           {ASSESSMENT_DESCRIPTIONS[s].title}
                         </div>
                       ))
@@ -2700,7 +2700,7 @@ const SelfAssessmentPage = () => {
                   className="flex items-center justify-between p-4 rounded-xl bg-black hover:bg-black transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-lg bg-indigo-950 flex items-center justify-center">
                       <ClipboardCheck className="w-5 h-5 text-indigo-400" />
                     </div>
                     <div>
@@ -2881,7 +2881,7 @@ const Training = () => {
                   locked
                     ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
                     : isCompleted
-                    ? 'bg-emerald-500/30 border-emerald-500/30 hover:border-emerald-500/50'
+                    ? 'bg-emerald-950 border-emerald-500/30 hover:border-emerald-500/50'
                     : 'bg-black border-white/30 hover:border-white/30'
                 }`}
                 onClick={() => !locked && openModule(module.slug)}
@@ -3013,9 +3013,9 @@ const Training = () => {
       </motion.div>
 
       {/* Info section */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/30 border border-indigo-500/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-950 border border-indigo-500/30">
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-xl bg-indigo-500/20">
+          <div className="p-3 rounded-xl bg-indigo-950">
             <Sparkles className="w-6 h-6 text-indigo-400" />
           </div>
           <div>
@@ -3213,7 +3213,7 @@ const Projects = () => {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-950 text-purple-400 mt-1">
                         {project.category}
                       </span>
                     </div>
@@ -3240,7 +3240,7 @@ const Projects = () => {
                     {hasApplied ? (
                       <span className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
                         application.status === "accepted"
-                          ? "bg-emerald-500/20 text-emerald-400"
+                          ? "bg-emerald-950 text-emerald-400"
                           : application.status === "rejected"
                           ? "bg-red-500/20 text-red-400"
                           : "bg-amber-500/20 text-amber-400"
@@ -3293,7 +3293,7 @@ const Projects = () => {
                     </div>
                     <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
                       application.status === "accepted"
-                        ? "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-emerald-950 text-emerald-400"
                         : application.status === "rejected"
                         ? "bg-red-500/20 text-red-400"
                         : "bg-amber-500/20 text-amber-400"
@@ -3345,7 +3345,7 @@ const Projects = () => {
           >
             {applicationSuccess ? (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-950 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Application Submitted!</h3>
@@ -3637,7 +3637,7 @@ const Connections = () => {
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   connection.status === "accepted"
-                    ? "bg-emerald-500/20"
+                    ? "bg-emerald-950"
                     : "bg-gray-500/20"
                 }`}>
                   <Building2 className={`w-5 h-5 ${
@@ -3658,7 +3658,7 @@ const Connections = () => {
                 </div>
                 <span className={`px-3 py-1 rounded-full text-sm ${
                   connection.status === "accepted"
-                    ? "bg-emerald-500/20 text-emerald-400"
+                    ? "bg-emerald-950 text-emerald-400"
                     : connection.status === "declined"
                     ? "bg-gray-500/20 text-gray-400"
                     : "bg-amber-500/20 text-amber-400"
@@ -4326,8 +4326,8 @@ const Profile = () => {
 
           {candidateProfile?.resume_url ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+              <div className="flex items-center gap-4 p-4 rounded-lg bg-emerald-950 border border-emerald-500/20">
+                <div className="w-12 h-12 rounded-xl bg-emerald-950 flex items-center justify-center">
                   <CheckCircle className="w-6 h-6 text-emerald-400" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -4428,14 +4428,14 @@ const Profile = () => {
               )}
 
               {uploadSuccess && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-500/30 border border-emerald-500/20 text-emerald-400 text-sm">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-950 border border-emerald-500/20 text-emerald-400 text-sm">
                   <CheckCircle className="w-5 h-5 flex-shrink-0" />
                   Resume uploaded successfully!
                 </div>
               )}
 
               {isEnhancing && (
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-950 border border-indigo-500/20 text-indigo-300 text-sm">
                   <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
                   <div>
                     <p className="font-medium">Resume Enhancer AI is analyzing your resume...</p>
@@ -4445,7 +4445,7 @@ const Profile = () => {
               )}
 
               {enhancerSummary && !isEnhancing && (
-                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-950 border border-indigo-500/20 text-indigo-300 text-sm">
                   <Sparkles className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-indigo-400">AI Analysis Complete</p>
@@ -4461,14 +4461,14 @@ const Profile = () => {
         {candidateProfile?.has_basic_profile && (
           <div className="p-6 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-indigo-950 flex items-center justify-center">
                 <FileText className="w-5 h-5 text-indigo-400" />
               </div>
               <div>
                 <h3 className="font-semibold text-white">Basic Profile</h3>
                 <p className="text-xs text-gray-400">Created by Resume Enhancer AI (non-credentialed)</p>
               </div>
-              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-medium">
+              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-950 text-indigo-400 text-xs font-medium">
                 Active
               </span>
             </div>
@@ -4545,7 +4545,7 @@ const Profile = () => {
             {formData.skills.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-950 text-indigo-400 text-sm"
               >
                 {skill}
                 {isEditing && (
@@ -4594,7 +4594,7 @@ const Profile = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-white/30">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-indigo-950 flex items-center justify-center">
                   <FileText className="w-5 h-5 text-indigo-400" />
                 </div>
                 <div>
@@ -4639,7 +4639,7 @@ const Profile = () => {
                 />
               ) : (
                 <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-                  <div className="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4">
+                  <div className="w-20 h-20 rounded-2xl bg-indigo-950 flex items-center justify-center mb-4">
                     <FileText className="w-10 h-10 text-indigo-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">Document Preview</h3>
@@ -4835,7 +4835,7 @@ const SettingsPage = () => {
           >
             {passwordSuccess ? (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-950 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Password Updated!</h3>
@@ -5024,7 +5024,7 @@ const FindMentor = () => {
   const getCompatibilityBadgeColor = (level: string) => {
     switch (level) {
       case "excellent":
-        return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+        return "bg-emerald-950 text-emerald-400 border-emerald-500/30";
       case "good":
         return "bg-blue-500/20 text-blue-400 border-blue-500/30";
       case "fair":
@@ -5335,7 +5335,7 @@ const FindMentor = () => {
                   whileHover={{ scale: 1.01 }}
                   className={`p-6 rounded-xl border transition-colors ${
                     isAssigned
-                      ? "bg-emerald-500/30 border-emerald-500/30"
+                      ? "bg-emerald-950 border-emerald-500/30"
                       : isPending
                       ? "bg-amber-500/10 border-amber-500/30"
                       : "bg-black border-white/30 hover:border-white/20"
@@ -5368,7 +5368,7 @@ const FindMentor = () => {
                       </div>
                     </div>
                     {isAssigned && (
-                      <span className="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs">
+                      <span className="px-2 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs">
                         Your Mentor
                       </span>
                     )}
@@ -5380,7 +5380,7 @@ const FindMentor = () => {
                       {mentor.specializations.slice(0, 3).map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400"
+                          className="px-2 py-1 rounded text-xs bg-purple-950 text-purple-400"
                         >
                           {spec}
                         </span>
@@ -5934,7 +5934,7 @@ const MessagesPage = () => {
                     key={conv.id}
                     onClick={() => setActiveConversation(conv)}
                     className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${
-                      activeConversation?.id === conv.id ? "bg-indigo-500/30 border-l-2 border-indigo-500" : ""
+                      activeConversation?.id === conv.id ? "bg-indigo-950 border-l-2 border-indigo-500" : ""
                     }`}
                   >
                     <div className="relative">
@@ -6187,10 +6187,10 @@ const NotificationsPage = () => {
         return "text-blue-400 bg-blue-500/20";
       case "connection_accepted":
       case "application_accepted":
-        return "text-emerald-400 bg-emerald-500/20";
+        return "text-emerald-400 bg-emerald-950";
       case "endorsement":
       case "passport_issued":
-        return "text-purple-400 bg-purple-500/20";
+        return "text-purple-400 bg-purple-950";
       case "training_assigned":
         return "text-amber-400 bg-amber-500/20";
       default:
@@ -6221,7 +6221,7 @@ const NotificationsPage = () => {
           <p className="text-gray-400">
             Stay updated on your activity.
             {unreadCount > 0 && (
-              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-sm">
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-400 text-sm">
                 {unreadCount} unread
               </span>
             )}
