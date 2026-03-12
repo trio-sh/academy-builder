@@ -5818,7 +5818,7 @@ const MessagesPage = () => {
 
     fetchMessages();
 
-    // Subscribe to new messages
+    // Subscribe to new messages (for messages from other users)
     const channel = supabase
       .channel(`messages:${activeConversation.id}`)
       .on(
@@ -5830,6 +5830,11 @@ const MessagesPage = () => {
           filter: `conversation_id=eq.${activeConversation.id}`,
         },
         async (payload) => {
+          // Skip if this is our own message (already added optimistically)
+          if (payload.new.sender_id === user?.id) {
+            return;
+          }
+
           // Fetch the new message with sender info
           const { data: newMsg } = await supabase
             .from("messages")
@@ -5838,7 +5843,12 @@ const MessagesPage = () => {
             .single();
 
           if (newMsg) {
-            setMessages((prev) => [...prev, newMsg]);
+            // Check if message already exists before adding
+            setMessages((prev) => {
+              const exists = prev.some((m) => m.id === newMsg.id);
+              if (exists) return prev;
+              return [...prev, newMsg];
+            });
           }
         }
       )
@@ -5856,16 +5866,60 @@ const MessagesPage = () => {
     const messageContent = newMessage.trim();
     setNewMessage("");
 
-    try {
-      // Insert message
-      await supabase.from("messages").insert({
-        conversation_id: activeConversation.id,
-        sender_id: user.id,
-        content: messageContent,
-        message_type: "text",
-      });
+    // Create optimistic message object to show immediately in UI
+    const optimisticMessage = {
+      id: `temp-${Date.now()}`,
+      conversation_id: activeConversation.id,
+      sender_id: user.id,
+      content: messageContent,
+      message_type: "text",
+      created_at: new Date().toISOString(),
+      sender: {
+        id: user.id,
+        first_name: profile?.first_name || "",
+        last_name: profile?.last_name || "",
+        avatar_url: profile?.avatar_url || null,
+      },
+    };
 
-      // Update conversation
+    // Optimistically add message to UI immediately
+    setMessages((prev) => [...prev, optimisticMessage]);
+
+    try {
+      // Insert message to database
+      const { data: insertedMessage, error: insertError } = await supabase
+        .from("messages")
+        .insert({
+          conversation_id: activeConversation.id,
+          sender_id: user.id,
+          content: messageContent,
+          message_type: "text",
+        })
+        .select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)")
+        .single();
+
+      if (insertError) {
+        console.error("Error sending message:", insertError);
+        toast({
+          title: "Failed to Send Message",
+          description: insertError.message || "Could not send message. Please try again.",
+          variant: "destructive",
+        });
+        // Remove optimistic message on error
+        setMessages((prev) => prev.filter((m) => m.id !== optimisticMessage.id));
+        setNewMessage(messageContent);
+        setIsSending(false);
+        return;
+      }
+
+      // Replace optimistic message with real message from database
+      if (insertedMessage) {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === optimisticMessage.id ? insertedMessage : m))
+        );
+      }
+
+      // Update conversation metadata
       await supabase
         .from("conversations")
         .update({
@@ -5876,6 +5930,13 @@ const MessagesPage = () => {
         .eq("id", activeConversation.id);
     } catch (error) {
       console.error("Error sending message:", error);
+      toast({
+        title: "Unexpected Error",
+        description: "An unexpected error occurred while sending the message.",
+        variant: "destructive",
+      });
+      // Remove optimistic message on error
+      setMessages((prev) => prev.filter((m) => m.id !== optimisticMessage.id));
       setNewMessage(messageContent);
     } finally {
       setIsSending(false);
