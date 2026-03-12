@@ -1,17 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Github, Twitter, Linkedin } from "lucide-react";
 
 const footerLinks = {
   platform: [
-    { name: "Skill Passport", href: "/platform#skill-passport" },
-    { name: "Growth Log", href: "/platform#growth-log" },
-    { name: "MentorLink", href: "/platform#mentorlink" },
-    { name: "BridgeFast", href: "/platform#bridgefast" },
-    { name: "LiveWorks Studio", href: "/platform#liveworks" },
-    { name: "Civic Access Lab", href: "/platform#civic-access" },
-    { name: "TalentVisa", href: "/platform#talentvisa" },
-    { name: "T3X Exchange", href: "/platform#t3x" },
+    { name: "Platform Overview", href: "/platform" },
+    { name: "For Candidates", href: "/get-started" },
+    { name: "For Employers", href: "/employers" },
+    { name: "For Schools", href: "/schools" },
   ],
   company: [
     { name: "About Us", href: "/about" },
@@ -20,8 +15,7 @@ const footerLinks = {
     { name: "Contact", href: "/contact" },
   ],
   resources: [
-    { name: "For Employers", href: "/employers" },
-    { name: "For Schools", href: "/schools" },
+    { name: "Get Started", href: "/get-started" },
     { name: "Blog", href: "/blog" },
     { name: "Help Center", href: "/help" },
   ],
@@ -31,12 +25,6 @@ const footerLinks = {
     { name: "Security", href: "/security" },
   ],
 };
-
-const socialLinks = [
-  { name: "GitHub", icon: Github, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-];
 
 export function Footer() {
   return (
@@ -57,25 +45,10 @@ export function Footer() {
                 </span>
               </motion.div>
             </Link>
-            <p className="text-sm text-gray-300 leading-relaxed mb-6">
+            <p className="text-sm text-gray-300 leading-relaxed">
               Bridging the gap between credentials and workplace readiness through
               mentor-gated behavioral validation.
             </p>
-            {/* Social Links */}
-            <div className="flex items-center gap-3">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.name}
-                  href={social.href}
-                  className="w-9 h-9 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-black transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <social.icon className="w-4 h-4" />
-                  <span className="sr-only">{social.name}</span>
-                </motion.a>
-              ))}
-            </div>
           </div>
 
           {/* Platform Links */}
