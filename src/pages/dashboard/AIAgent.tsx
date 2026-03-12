@@ -1842,7 +1842,8 @@ export default function AIAgent() {
 
       try {
         const parsed = await parseResume(file);
-        const text = parsed.rawText;
+        // Strip null bytes and control chars that break PostgreSQL text columns
+        const text = parsed.rawText.replace(/\u0000/g, "").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
 
         // Reject scanned / image-only docs — very little extractable text
         if (file.type === "application/pdf" && text.replace(/\s/g, "").length < 50) {

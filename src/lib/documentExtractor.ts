@@ -25,6 +25,11 @@ export interface DocumentExtractionResult {
   error?: string;
 }
 
+function sanitizeText(text: string): string {
+  // Remove null bytes and other control characters that PostgreSQL cannot store
+  return text.replace(/\u0000/g, "").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+}
+
 function getFileExtension(name: string): string {
   return name.slice(name.lastIndexOf(".")).toLowerCase();
 }
@@ -86,6 +91,9 @@ export async function extractDocumentText(file: File): Promise<DocumentExtractio
     } else {
       return { success: false, text: "", fileName: file.name, fileSize: file.size, error: "Unsupported file type." };
     }
+
+    // Sanitize: remove null bytes and control chars that PostgreSQL cannot store
+    text = sanitizeText(text);
 
     if (text.length < MIN_TEXT_LENGTH) {
       return {
