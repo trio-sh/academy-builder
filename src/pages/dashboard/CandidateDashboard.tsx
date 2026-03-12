@@ -69,6 +69,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   ChevronLeft,
+  ChevronDown,
   Target,
   GraduationCap,
   Send,
@@ -5556,6 +5557,7 @@ const MessagesPage = () => {
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
   const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
+  const [expandedDocs, setExpandedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -6213,20 +6215,44 @@ const MessagesPage = () => {
                                 : "bg-black text-gray-200 rounded-bl-md"
                             }`}
                           >
-                            {msg.message_type === "file" && msg.content?.includes("[Attached:") ? (
-                              <>
-                                {/* Show user's own text if they typed something alongside the file */}
-                                {msg.content.split("\n\n[Attached:")[0].trim() && (
-                                  <p className="text-sm whitespace-pre-wrap mb-2">{msg.content.split("\n\n[Attached:")[0].trim()}</p>
-                                )}
-                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium ${
-                                  isOwn ? "bg-white/15 text-white/90" : "bg-indigo-500/15 text-indigo-300"
-                                }`}>
-                                  <FileText className="w-3.5 h-3.5" />
-                                  <span className="truncate max-w-[180px]">{msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document"}</span>
-                                </div>
-                              </>
-                            ) : (
+                            {msg.message_type === "file" && msg.content?.includes("[Attached:") ? (() => {
+                              const fileName = msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document";
+                              const userText = msg.content.split("\n\n[Attached:")[0].trim();
+                              const docContent = msg.content.replace(/^[\s\S]*?\[Attached: .+?\]\n\n/, "");
+                              const isDocExpanded = expandedDocs.has(msg.id);
+                              return (
+                                <>
+                                  {userText && <p className="text-sm whitespace-pre-wrap mb-2">{userText}</p>}
+                                  <div className={`rounded-xl border overflow-hidden ${
+                                    isOwn ? "border-white/15 bg-white/5" : "border-indigo-500/25 bg-indigo-950/30"
+                                  }`}>
+                                    <button
+                                      onClick={() => setExpandedDocs(prev => {
+                                        const next = new Set(prev);
+                                        if (next.has(msg.id)) next.delete(msg.id); else next.add(msg.id);
+                                        return next;
+                                      })}
+                                      className="w-full flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition-colors"
+                                    >
+                                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                        isOwn ? "bg-white/10" : "bg-indigo-600/30"
+                                      }`}>
+                                        <FileText className="w-4 h-4" />
+                                      </div>
+                                      <span className="text-xs font-medium truncate flex-1 text-left">{fileName}</span>
+                                      <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${isDocExpanded ? "rotate-180" : ""}`} />
+                                    </button>
+                                    {isDocExpanded && (
+                                      <div className={`border-t px-3 py-2 max-h-64 overflow-y-auto ${
+                                        isOwn ? "border-white/10" : "border-indigo-500/15"
+                                      }`}>
+                                        <p className="text-xs whitespace-pre-wrap leading-relaxed opacity-80">{docContent}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              );
+                            })() : (
                               <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                             )}
                           </div>
