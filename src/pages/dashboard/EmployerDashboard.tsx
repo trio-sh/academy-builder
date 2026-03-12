@@ -56,6 +56,7 @@ import {
   PanelLeftClose,
   PanelLeft,
   Paperclip,
+  FileText,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -3182,17 +3183,21 @@ const EmployerMessagesPage = () => {
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
                           <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
-                            {msg.message_type === "file" && msg.content?.startsWith("[Attached:") && (
-                              <div className="flex items-center gap-1.5 mb-1 text-xs opacity-75">
-                                <Paperclip className="w-3 h-3" />
-                                <span>{msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document"}</span>
-                              </div>
+                            {msg.message_type === "file" && msg.content?.includes("[Attached:") ? (
+                              <>
+                                {msg.content.split("\n\n[Attached:")[0].trim() && (
+                                  <p className="text-sm whitespace-pre-wrap mb-2">{msg.content.split("\n\n[Attached:")[0].trim()}</p>
+                                )}
+                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium ${
+                                  isOwn ? "bg-white/15 text-white/90" : "bg-emerald-500/15 text-emerald-300"
+                                }`}>
+                                  <FileText className="w-3.5 h-3.5" />
+                                  <span className="truncate max-w-[180px]">{msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document"}</span>
+                                </div>
+                              </>
+                            ) : (
+                              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                             )}
-                            <p className="text-sm whitespace-pre-wrap">
-                              {msg.message_type === "file" && msg.content?.startsWith("[Attached:")
-                                ? msg.content.replace(/^\[Attached: .+?\]\n\n/, "").substring(0, 500) + (msg.content.length > 500 ? "..." : "")
-                                : msg.content}
-                            </p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
