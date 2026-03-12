@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { parseResume } from "@/lib/resumeParser";
 import { analyzeResume } from "@/services/resumeEnhancer";
+import { extractDocumentText } from "@/lib/documentExtractor";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
 import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
@@ -5553,6 +5554,30 @@ const MessagesPage = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+  const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null);
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsProcessingFile(true);
+    try {
+      const result = await extractDocumentText(file);
+      if (!result.success) {
+        toast({ title: "Attachment Failed", description: result.error, variant: "destructive" });
+        setAttachedFile(null);
+      } else {
+        setAttachedFile({ name: result.fileName, text: result.text });
+        toast({ title: "Document Attached", description: `"${result.fileName}" ready to send.` });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to process document.", variant: "destructive" });
+    } finally {
+      setIsProcessingFile(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   // Search for users to start new conversation
   const searchUsers = async (query: string) => {
@@ -5860,11 +5885,17 @@ const MessagesPage = () => {
   }, [activeConversation?.id, user?.id]);
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !activeConversation || !user?.id) return;
+    if ((!newMessage.trim() && !attachedFile) || !activeConversation || !user?.id) return;
 
     setIsSending(true);
-    const messageContent = newMessage.trim();
+    let messageContent = newMessage.trim();
+    if (attachedFile) {
+      const fileHeader = `[Attached: ${attachedFile.name}]\n\n${attachedFile.text}`;
+      messageContent = messageContent ? `${messageContent}\n\n${fileHeader}` : fileHeader;
+    }
     setNewMessage("");
+    const hadFile = !!attachedFile;
+    setAttachedFile(null);
 
     // Create optimistic message object to show immediately in UI
     const optimisticMessage = {
@@ -5872,7 +5903,7 @@ const MessagesPage = () => {
       conversation_id: activeConversation.id,
       sender_id: user.id,
       content: messageContent,
-      message_type: "text",
+      message_type: hadFile ? "file" : "text",
       created_at: new Date().toISOString(),
       sender: {
         id: user.id,
@@ -5893,7 +5924,7 @@ const MessagesPage = () => {
           conversation_id: activeConversation.id,
           sender_id: user.id,
           content: messageContent,
-          message_type: "text",
+          message_type: hadFile ? "file" : "text",
         })
         .select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)")
         .single();
@@ -6182,7 +6213,17 @@ const MessagesPage = () => {
                                 : "bg-black text-gray-200 rounded-bl-md"
                             }`}
                           >
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            {msg.message_type === "file" && msg.content?.startsWith("[Attached:") && (
+                              <div className="flex items-center gap-1.5 mb-1 text-xs opacity-75">
+                                <Paperclip className="w-3 h-3" />
+                                <span>{msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document"}</span>
+                              </div>
+                            )}
+                            <p className="text-sm whitespace-pre-wrap">
+                              {msg.message_type === "file" && msg.content?.startsWith("[Attached:")
+                                ? msg.content.replace(/^\[Attached: .+?\]\n\n/, "").substring(0, 500) + (msg.content.length > 500 ? "..." : "")
+                                : msg.content}
+                            </p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>
                             {formatMessageTime(msg.created_at)}
@@ -6196,7 +6237,31 @@ const MessagesPage = () => {
 
               {/* Message Input */}
               <div className="p-4 border-t border-white/30">
+                {attachedFile && (
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                    <Paperclip className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                    <span className="text-sm text-indigo-300 truncate flex-1">{attachedFile.name}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileAttach}
+                    accept=".pdf,.doc,.docx,.txt"
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isProcessingFile}
+                    className="p-3 rounded-xl border border-white/30 text-gray-400 hover:text-white hover:border-indigo-500 transition-colors disabled:opacity-50"
+                    title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)"
+                  >
+                    {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+                  </button>
                   <div className="flex-1 relative">
                     <input
                       type="text"
@@ -6214,7 +6279,7 @@ const MessagesPage = () => {
                   </div>
                   <Button
                     onClick={sendMessage}
-                    disabled={!newMessage.trim() || isSending}
+                    disabled={(!newMessage.trim() && !attachedFile) || isSending}
                     className="bg-indigo-600 hover:bg-indigo-500 rounded-xl px-6"
                   >
                     {isSending ? (

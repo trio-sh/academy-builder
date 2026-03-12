@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 import {
   MessageCircle,
@@ -1001,6 +1002,7 @@ export function Chatbot() {
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const buildSystemPrompt = useCallback(() => {
     if (!screenAware) return BASE_SYSTEM_PROMPT;
@@ -1008,7 +1010,9 @@ export function Chatbot() {
     return `${BASE_SYSTEM_PROMPT}\n\n--- CURRENT SCREEN CONTEXT ---\n${pageContext}\n--- END SCREEN CONTEXT ---`;
   }, [screenAware, location.pathname]);
 
-  // Initialize IndexedDB
+  // Initialize IndexedDB (scoped to user to prevent cross-account chat leakage)
+  const chatKey = user?.id ? `chat-${user.id}` : null;
+
   useEffect(() => {
     const initDB = async () => {
       const database = await openDB<ChatbotDBSchema>("ChatbotDB", 1, {
@@ -1019,25 +1023,29 @@ export function Chatbot() {
         },
       });
       setDb(database);
-      const stored = await database.get("messages", "chat");
-      if (stored?.messages) {
-        setMessages(
-          stored.messages.map((m) => ({
-            ...m,
-            timestamp: new Date(m.timestamp),
-          }))
-        );
+      if (chatKey) {
+        const stored = await database.get("messages", chatKey);
+        if (stored?.messages) {
+          setMessages(
+            stored.messages.map((m) => ({
+              ...m,
+              timestamp: new Date(m.timestamp),
+            }))
+          );
+        } else {
+          setMessages([]);
+        }
       }
     };
     initDB();
-  }, []);
+  }, [chatKey]);
 
-  // Save messages
+  // Save messages (scoped to user)
   useEffect(() => {
-    if (db && messages.length > 0) {
-      db.put("messages", { id: "chat", messages });
+    if (db && chatKey && messages.length > 0) {
+      db.put("messages", { id: chatKey, messages });
     }
-  }, [messages, db]);
+  }, [messages, db, chatKey]);
 
   // Scroll to bottom of chat (only when chat is open)
   useEffect(() => {
@@ -1213,7 +1221,7 @@ export function Chatbot() {
 
   const clearChat = () => {
     setMessages([]);
-    if (db) db.delete("messages", "chat");
+    if (db && chatKey) db.delete("messages", chatKey);
   };
 
   // ─── Action Status Badge ───────────────────────────────────────────────────

@@ -83,23 +83,23 @@ async function getDB(): Promise<IDBPDatabase<AgentDBSchema>> {
   return dbInstance;
 }
 
-async function saveConversation(apiMessages: ApiMessage[], uiMessages: UIMessage[]): Promise<void> {
+async function saveConversation(userId: string, apiMessages: ApiMessage[], uiMessages: UIMessage[]): Promise<void> {
   try {
     const db = await getDB();
     const serialized: SerializedUIMessage[] = uiMessages.map(m => ({
       ...m,
       timestamp: m.timestamp.toISOString(),
     }));
-    await db.put("messages", { id: "agent-chat", apiMessages, uiMessages: serialized });
+    await db.put("messages", { id: `agent-chat-${userId}`, apiMessages, uiMessages: serialized });
   } catch (e) {
     console.error("Failed to save agent messages:", e);
   }
 }
 
-async function loadConversation(): Promise<{ apiMessages: ApiMessage[]; uiMessages: UIMessage[] }> {
+async function loadConversation(userId: string): Promise<{ apiMessages: ApiMessage[]; uiMessages: UIMessage[] }> {
   try {
     const db = await getDB();
-    const stored = await db.get("messages", "agent-chat");
+    const stored = await db.get("messages", `agent-chat-${userId}`);
     if (!stored) return { apiMessages: [], uiMessages: [] };
     return {
       apiMessages: stored.apiMessages || [],
@@ -1618,23 +1618,24 @@ export default function AIAgent() {
   const [fileProcessing, setFileProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load persisted conversation from IndexedDB
+  // Load persisted conversation from IndexedDB (scoped to user)
   useEffect(() => {
-    loadConversation().then(stored => {
+    if (!user?.id) return;
+    loadConversation(user.id).then(stored => {
       if (stored.apiMessages.length > 0) {
         setApiMessages(stored.apiMessages);
         setUiMessages(stored.uiMessages);
       }
       setDataLoaded(true);
     });
-  }, []);
+  }, [user?.id]);
 
-  // Persist conversation
+  // Persist conversation (scoped to user)
   useEffect(() => {
-    if (dataLoaded) {
-      saveConversation(apiMessages, uiMessages);
+    if (dataLoaded && user?.id) {
+      saveConversation(user.id, apiMessages, uiMessages);
     }
-  }, [apiMessages, uiMessages, dataLoaded]);
+  }, [apiMessages, uiMessages, dataLoaded, user?.id]);
 
   // Load user context
   useEffect(() => {

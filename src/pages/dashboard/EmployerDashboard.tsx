@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
+import { extractDocumentText } from "@/lib/documentExtractor";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
@@ -53,6 +55,7 @@ import {
   Bot,
   PanelLeftClose,
   PanelLeft,
+  Paperclip,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -302,8 +305,6 @@ const SearchTalent = () => {
   const [filters, setFilters] = useState({
     tier: "",
     skill: "",
-    dimension: "",
-    minScore: "",
   });
 
   // Connection modal state
@@ -377,16 +378,7 @@ const SearchTalent = () => {
             };
           })
         );
-        // Apply BehaviourMatch™ dimension filter client-side
-        let filtered = enhancedCandidates;
-        if (filters.dimension) {
-          const minScore = parseFloat(filters.minScore) || 2.5;
-          filtered = filtered.filter(c =>
-            c.behavioralScores &&
-            (c.behavioralScores[filters.dimension] || 0) >= minScore
-          );
-        }
-        setCandidates(filtered);
+        setCandidates(enhancedCandidates);
       } else {
         setCandidates([]);
       }
@@ -514,34 +506,6 @@ const SearchTalent = () => {
           onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
           className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
         />
-        <div className="w-px h-6 bg-white/10" />
-        <div className="flex items-center gap-2">
-          <Target className="w-4 h-4 text-emerald-400" />
-          <span className="text-xs text-emerald-400 font-medium">BehaviourMatch™</span>
-        </div>
-        <select
-          value={filters.dimension}
-          onChange={(e) => setFilters((prev) => ({ ...prev, dimension: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
-        >
-          <option value="">All Dimensions</option>
-          <option value="integrity_ethics">Integrity & Ethics</option>
-          <option value="accountability_ownership">Accountability & Ownership</option>
-          <option value="execution_reliability">Execution & Reliability</option>
-          <option value="communication_pressure">Communication Under Pressure</option>
-          <option value="collaboration_conflict">Collaboration & Conflict</option>
-        </select>
-        {filters.dimension && (
-          <select
-            value={filters.minScore}
-            onChange={(e) => setFilters((prev) => ({ ...prev, minScore: e.target.value }))}
-            className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
-          >
-            <option value="2.5">Score ≥ 2.5 (Competent+)</option>
-            <option value="3">Score ≥ 3.0 (Proficient+)</option>
-            <option value="3.5">Score ≥ 3.5 (Near Exemplary)</option>
-          </select>
-        )}
       </motion.div>
 
       {/* Results */}
@@ -2970,6 +2934,7 @@ const Feedback = () => {
 // Messages Page for Employer Dashboard
 const EmployerMessagesPage = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [conversations, setConversations] = useState<any[]>([]);
   const [activeConversation, setActiveConversation] = useState<any | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -2982,6 +2947,30 @@ const EmployerMessagesPage = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+  const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null);
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsProcessingFile(true);
+    try {
+      const result = await extractDocumentText(file);
+      if (!result.success) {
+        toast({ title: "Attachment Failed", description: result.error, variant: "destructive" });
+        setAttachedFile(null);
+      } else {
+        setAttachedFile({ name: result.fileName, text: result.text });
+        toast({ title: "Document Attached", description: `"${result.fileName}" ready to send.` });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to process document.", variant: "destructive" });
+    } finally {
+      setIsProcessingFile(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const searchUsers = async (query: string) => {
     if (!query.trim() || query.length < 2) { setSearchResults([]); return; }
@@ -3062,12 +3051,18 @@ const EmployerMessagesPage = () => {
   }, [activeConversation?.id, user?.id]);
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !activeConversation || !user?.id) return;
+    if ((!newMessage.trim() && !attachedFile) || !activeConversation || !user?.id) return;
     setIsSending(true);
-    const messageContent = newMessage.trim();
+    let messageContent = newMessage.trim();
+    const hadFile = !!attachedFile;
+    if (attachedFile) {
+      const fileHeader = `[Attached: ${attachedFile.name}]\n\n${attachedFile.text}`;
+      messageContent = messageContent ? `${messageContent}\n\n${fileHeader}` : fileHeader;
+    }
     setNewMessage("");
+    setAttachedFile(null);
     try {
-      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: "text" });
+      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: hadFile ? "file" : "text" });
       await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: messageContent.substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
     } catch (error) { console.error("Error sending message:", error); setNewMessage(messageContent); } finally { setIsSending(false); }
   };
@@ -3187,7 +3182,17 @@ const EmployerMessagesPage = () => {
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
                           <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            {msg.message_type === "file" && msg.content?.startsWith("[Attached:") && (
+                              <div className="flex items-center gap-1.5 mb-1 text-xs opacity-75">
+                                <Paperclip className="w-3 h-3" />
+                                <span>{msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document"}</span>
+                              </div>
+                            )}
+                            <p className="text-sm whitespace-pre-wrap">
+                              {msg.message_type === "file" && msg.content?.startsWith("[Attached:")
+                                ? msg.content.replace(/^\[Attached: .+?\]\n\n/, "").substring(0, 500) + (msg.content.length > 500 ? "..." : "")
+                                : msg.content}
+                            </p>
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
@@ -3197,9 +3202,22 @@ const EmployerMessagesPage = () => {
                 })}
               </div>
               <div className="p-4 border-t border-white/30">
+                {attachedFile && (
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                    <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-emerald-300 truncate flex-1">{attachedFile.name}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
+                  <input type="file" ref={fileInputRef} onChange={handleFileAttach} accept=".pdf,.doc,.docx,.txt" className="hidden" />
+                  <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingFile} className="p-3 rounded-xl border border-white/30 text-gray-400 hover:text-white hover:border-emerald-500 transition-colors disabled:opacity-50" title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)">
+                    {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+                  </button>
                   <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
-                  <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6">
+                  <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
