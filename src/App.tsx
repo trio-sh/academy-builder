@@ -11,17 +11,19 @@ import { ProtectedRoute, PublicOnlyRoute } from "@/components/ProtectedRoute";
 function ScrollToTop() {
   const location = useLocation();
   useEffect(() => {
+    // Always scroll to top first, even with hash links
+    window.scrollTo(0, 0);
+
     if (location.hash) {
-      // Hash links: scroll to the target element after a brief render delay
+      // Hash links: scroll to the target element after page loads and renders
       const timer = setTimeout(() => {
         const el = document.getElementById(location.hash.slice(1));
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, 100);
+      }, 300);
       return () => clearTimeout(timer);
     }
-    window.scrollTo(0, 0);
   }, [location.pathname, location.key]);
   return null;
 }
