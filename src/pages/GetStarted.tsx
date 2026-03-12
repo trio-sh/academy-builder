@@ -289,6 +289,22 @@ const GetStarted = () => {
         });
       }
 
+      // Create mentor_profiles row for mentors so they appear in Find a Mentor
+      if (selectedRole === "mentor") {
+        await supabase
+          .from("mentor_profiles")
+          .upsert(
+            {
+              profile_id: user.id,
+              industry: industry || "Technology",
+              years_experience: yearsExperience ? parseInt(yearsExperience, 10) : 5,
+              is_accepting: true,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "profile_id" }
+          );
+      }
+
       await supabase
         .from("profiles")
         .update({ onboarding_completed: true, updated_at: new Date().toISOString() })

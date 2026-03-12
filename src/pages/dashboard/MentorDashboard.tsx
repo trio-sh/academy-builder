@@ -114,12 +114,21 @@ const ObservationFormModal = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Get mentor profile
-        const { data: mp } = await supabase
+        // Get mentor profile, auto-create if missing (safety net for pre-fix mentors)
+        let { data: mp } = await supabase
           .from("mentor_profiles")
           .select("*")
           .eq("profile_id", user.id)
           .single();
+
+        if (!mp) {
+          const { data: created } = await supabase
+            .from("mentor_profiles")
+            .insert({ profile_id: user.id })
+            .select("*")
+            .single();
+          mp = created;
+        }
         setMentorProfile(mp);
 
         if (mp) {
