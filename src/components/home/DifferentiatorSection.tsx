@@ -111,45 +111,85 @@ export function DifferentiatorSection() {
               <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500" />
 
               <div className="relative rounded-3xl border border-white/10 overflow-hidden bg-black/60 backdrop-blur-xl">
-                {/* Header */}
-                <div className="grid grid-cols-3 bg-black">
-                  <div className="p-4 border-r border-white/10">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria</span>
+                {/* Desktop Table - Hidden on Mobile */}
+                <div className="hidden md:block">
+                  {/* Header */}
+                  <div className="grid grid-cols-[1.2fr_1.5fr_1.5fr] bg-black">
+                    <div className="p-4 border-r border-white/10">
+                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Criteria</span>
+                    </div>
+                    <div className="p-4 border-r border-white/10 bg-emerald-500/10">
+                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">The 3rd Academy</span>
+                    </div>
+                    <div className="p-4">
+                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Traditional</span>
+                    </div>
                   </div>
-                  <div className="p-4 border-r border-white/10 bg-emerald-500/10">
-                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">The 3rd Academy</span>
-                  </div>
-                  <div className="p-4">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Traditional</span>
-                  </div>
+
+                  {/* Rows */}
+                  {comparisons.map((row, index) => (
+                    <motion.div
+                      key={row.criteria}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className={cn(
+                        "grid grid-cols-[1.2fr_1.5fr_1.5fr]",
+                        index !== comparisons.length - 1 && "border-b border-white/10"
+                      )}
+                    >
+                      <div className="p-4 border-r border-white/10 flex items-start">
+                        <span className="text-sm font-medium text-white leading-relaxed">{row.criteria}</span>
+                      </div>
+                      <div className="p-4 border-r border-white/10 bg-emerald-500/5 flex items-start gap-3">
+                        <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-gray-300 leading-relaxed">{row.t3a}</span>
+                      </div>
+                      <div className="p-4 flex items-start gap-3">
+                        <X className="w-5 h-5 text-red-400/50 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-gray-500 leading-relaxed">{row.competitors}</span>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
 
-                {/* Rows */}
-                {comparisons.map((row, index) => (
-                  <motion.div
-                    key={row.criteria}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className={cn(
-                      "grid grid-cols-3",
-                      index !== comparisons.length - 1 && "border-b border-white/10"
-                    )}
-                  >
-                    <div className="p-4 border-r border-white/10 flex items-center">
-                      <span className="text-sm font-medium text-white">{row.criteria}</span>
-                    </div>
-                    <div className="p-4 border-r border-white/10 bg-emerald-500/5 flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                      <span className="text-sm text-gray-300">{row.t3a}</span>
-                    </div>
-                    <div className="p-4 flex items-center gap-2">
-                      <X className="w-4 h-4 text-red-400/50 flex-shrink-0" />
-                      <span className="text-sm text-gray-500">{row.competitors}</span>
-                    </div>
-                  </motion.div>
-                ))}
+                {/* Mobile Cards - Shown on Mobile */}
+                <div className="md:hidden space-y-4 p-4">
+                  {comparisons.map((row, index) => (
+                    <motion.div
+                      key={row.criteria}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="rounded-2xl border border-white/10 overflow-hidden bg-black/40"
+                    >
+                      {/* Criteria Header */}
+                      <div className="p-4 bg-black border-b border-white/10">
+                        <span className="text-sm font-semibold text-white">{row.criteria}</span>
+                      </div>
+
+                      {/* The 3rd Academy */}
+                      <div className="p-4 bg-emerald-500/5 border-b border-white/10">
+                        <div className="flex items-start gap-3 mb-2">
+                          <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">The 3rd Academy</span>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed ml-8">{row.t3a}</p>
+                      </div>
+
+                      {/* Traditional */}
+                      <div className="p-4">
+                        <div className="flex items-start gap-3 mb-2">
+                          <X className="w-5 h-5 text-red-400/50 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Traditional</span>
+                        </div>
+                        <p className="text-sm text-gray-500 leading-relaxed ml-8">{row.competitors}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>
