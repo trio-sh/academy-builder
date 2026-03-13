@@ -4,6 +4,7 @@ import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { extractDocumentText } from "@/lib/documentExtractor";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,8 @@ import {
   PanelLeft,
   Paperclip,
   FileText,
+  Copy,
+  Reply,
 } from "lucide-react";
 
 type EmployerProfile = Database["public"]["Tables"]["employer_profiles"]["Row"];
@@ -2934,7 +2937,7 @@ const Feedback = () => {
 // Company Profile component
 // Messages Page for Employer Dashboard
 const EmployerMessagesPage = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { toast } = useToast();
   const [conversations, setConversations] = useState<any[]>([]);
   const [activeConversation, setActiveConversation] = useState<any | null>(null);
@@ -2952,6 +2955,9 @@ const EmployerMessagesPage = () => {
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [expandedDocs, setExpandedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [onlineUsers, setOnlineUsers] = useState<Record<string, string>>({});
+  const [replyTo, setReplyTo] = useState<any | null>(null);
+  const [activeMsgId, setActiveMsgId] = useState<string | null>(null);
 
   const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -3024,8 +3030,11 @@ const EmployerMessagesPage = () => {
           const { data: participants } = await supabase.from("conversation_participants").select("user_id").eq("conversation_id", conv.id).neq("user_id", user.id);
           let otherUser = null;
           if (participants && participants.length > 0) {
-            const { data: profileData } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role").eq("id", participants[0].user_id).single();
+            const { data: profileData } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role, last_seen").eq("id", participants[0].user_id).single();
             otherUser = profileData;
+            if (profileData?.last_seen) {
+              setOnlineUsers((prev) => ({ ...prev, [profileData.id]: profileData.last_seen }));
+            }
           }
           const myParticipant = participantData.find((p) => p.conversation_id === conv.id);
           return { ...conv, other_user: otherUser, last_read_at: myParticipant?.last_read_at };
@@ -3035,13 +3044,39 @@ const EmployerMessagesPage = () => {
       setIsLoading(false);
     };
     fetchConversations();
+
+    // Real-time conversation updates
+    if (!user?.id) return;
+    const convChannel = supabase
+      .channel(`conv-updates-employer-${user.id}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "conversations" }, (payload) => {
+        const updated = payload.new as any;
+        setConversations((prev) => {
+          const idx = prev.findIndex((c) => c.id === updated.id);
+          if (idx === -1) return prev;
+          const updatedList = [...prev];
+          updatedList[idx] = { ...updatedList[idx], ...updated };
+          updatedList.sort((a, b) => new Date(b.last_message_at || 0).getTime() - new Date(a.last_message_at || 0).getTime());
+          return updatedList;
+        });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(convChannel); };
   }, [user?.id]);
 
   useEffect(() => {
     if (!activeConversation) { setMessages([]); return; }
     const fetchMessages = async () => {
       const { data } = await supabase.from("messages").select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)").eq("conversation_id", activeConversation.id).order("created_at", { ascending: true });
-      setMessages(data || []);
+      const enriched = (data || []).map((msg: any) => {
+        if (msg.reply_to_id) {
+          const repliedMsg = (data || []).find((m: any) => m.id === msg.reply_to_id);
+          if (repliedMsg) return { ...msg, reply_to: { id: repliedMsg.id, content: repliedMsg.content, sender: repliedMsg.sender } };
+        }
+        return msg;
+      });
+      setMessages(enriched);
       await supabase.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).eq("conversation_id", activeConversation.id).eq("user_id", user?.id);
     };
     fetchMessages();
@@ -3063,9 +3098,16 @@ const EmployerMessagesPage = () => {
     }
     setNewMessage("");
     setAttachedFile(null);
+    const replyMsg = replyTo;
+    setReplyTo(null);
     try {
-      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: hadFile ? "file" : "text" });
+      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: hadFile ? "file" : "text", ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}) });
       await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: messageContent.substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
+      // Send notification to the other user
+      if (activeConversation.other_user?.id) {
+        const senderName = `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim();
+        await sendMessageNotification(user.id, senderName, activeConversation.other_user.id, messageContent, activeConversation.id);
+      }
     } catch (error) { console.error("Error sending message:", error); setNewMessage(messageContent); } finally { setIsSending(false); }
   };
 
@@ -3139,7 +3181,11 @@ const EmployerMessagesPage = () => {
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-emerald-400" />}
                     </div>
-                    {hasUnread && <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500" />}
+                    {hasUnread ? (
+                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500" />
+                    ) : (
+                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[conv.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
@@ -3161,20 +3207,24 @@ const EmployerMessagesPage = () => {
           {activeConversation ? (
             <>
               <div className="p-4 border-b border-white/30 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                  {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-emerald-400" />}
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
+                    {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-emerald-400" />}
+                  </div>
+                  <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
                 </div>
                 <div>
                   <p className="font-medium text-white">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{activeConversation.other_user?.role}</p>
+                  <p className="text-xs text-gray-500">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, idx) => {
                   const isOwn = msg.sender_id === user?.id;
                   const showAvatar = idx === 0 || messages[idx - 1]?.sender_id !== msg.sender_id;
+                  const showActions = activeMsgId === msg.id;
                   return (
-                    <div key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
+                    <div key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`} onMouseEnter={() => setActiveMsgId(msg.id)} onMouseLeave={() => setActiveMsgId(null)}>
                       <div className={`flex gap-2 max-w-[70%] ${isOwn ? "flex-row-reverse" : ""}`}>
                         {!isOwn && showAvatar && (
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
@@ -3182,8 +3232,24 @@ const EmployerMessagesPage = () => {
                           </div>
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
-                        <div>
-                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
+                        <div className="relative">
+                          {/* Action buttons */}
+                          <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
+                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-emerald-500/50 transition-colors" title="Reply">
+                              <Reply className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); toast({ title: "Copied", description: "Message copied to clipboard." }); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-emerald-500/50 transition-colors" title="Copy">
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          {/* Reply quote */}
+                          {msg.reply_to && (
+                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-emerald-700/40 border-emerald-400/60 text-emerald-200" : "bg-white/5 border-emerald-400/40 text-gray-400"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-emerald-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-emerald-500/50"), 2000); } }}>
+                              <p className="font-medium text-[11px] mb-0.5">{msg.reply_to.sender?.first_name || "User"}</p>
+                              <p className="truncate opacity-80">{msg.reply_to.content?.substring(0, 80)}</p>
+                            </div>
+                          )}
+                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
                             {msg.message_type === "file" && msg.content?.includes("[Attached:") ? (() => {
                               const fileName = msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document";
                               const userText = msg.content.split("\n\n[Attached:")[0].trim();
@@ -3192,32 +3258,13 @@ const EmployerMessagesPage = () => {
                               return (
                                 <>
                                   {userText && <p className="text-sm whitespace-pre-wrap mb-2">{userText}</p>}
-                                  <div className={`rounded-xl border overflow-hidden ${
-                                    isOwn ? "border-white/15 bg-white/5" : "border-emerald-500/25 bg-emerald-950/30"
-                                  }`}>
-                                    <button
-                                      onClick={() => setExpandedDocs(prev => {
-                                        const next = new Set(prev);
-                                        if (next.has(msg.id)) next.delete(msg.id); else next.add(msg.id);
-                                        return next;
-                                      })}
-                                      className="w-full flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition-colors"
-                                    >
-                                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                                        isOwn ? "bg-white/10" : "bg-emerald-600/30"
-                                      }`}>
-                                        <FileText className="w-4 h-4" />
-                                      </div>
+                                  <div className={`rounded-xl border overflow-hidden ${isOwn ? "border-white/15 bg-white/5" : "border-emerald-500/25 bg-emerald-950/30"}`}>
+                                    <button onClick={(e) => { e.stopPropagation(); setExpandedDocs(prev => { const next = new Set(prev); if (next.has(msg.id)) next.delete(msg.id); else next.add(msg.id); return next; }); }} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition-colors">
+                                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOwn ? "bg-white/10" : "bg-emerald-600/30"}`}><FileText className="w-4 h-4" /></div>
                                       <span className="text-xs font-medium truncate flex-1 text-left">{fileName}</span>
                                       <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${isDocExpanded ? "rotate-180" : ""}`} />
                                     </button>
-                                    {isDocExpanded && (
-                                      <div className={`border-t px-3 py-2 max-h-64 overflow-y-auto ${
-                                        isOwn ? "border-white/10" : "border-emerald-500/15"
-                                      }`}>
-                                        <p className="text-xs whitespace-pre-wrap leading-relaxed opacity-80">{docContent}</p>
-                                      </div>
-                                    )}
+                                    {isDocExpanded && (<div className={`border-t px-3 py-2 max-h-64 overflow-y-auto ${isOwn ? "border-white/10" : "border-emerald-500/15"}`}><p className="text-xs whitespace-pre-wrap leading-relaxed opacity-80">{docContent}</p></div>)}
                                   </div>
                                 </>
                               );
@@ -3233,6 +3280,16 @@ const EmployerMessagesPage = () => {
                 })}
               </div>
               <div className="p-4 border-t border-white/30">
+                {replyTo && (
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                    <Reply className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <div className="flex-1 min-w-0 border-l-2 border-emerald-400/50 pl-2">
+                      <p className="text-xs font-medium text-emerald-300">{replyTo.sender?.first_name || "User"}</p>
+                      <p className="text-xs text-gray-400 truncate">{replyTo.content?.substring(0, 100)}</p>
+                    </div>
+                    <button onClick={() => setReplyTo(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
+                  </div>
+                )}
                 {attachedFile && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
@@ -3562,6 +3619,8 @@ const EmployerDashboard = () => {
   const [notifications, setNotifications] = useState<{ id: string; title: string; message: string }[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
+  const { unreadCount: unreadMessageCount } = useUnreadMessageCount(user?.id);
+  usePresence(user?.id);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -3579,6 +3638,22 @@ const EmployerDashboard = () => {
     };
 
     fetchNotifications();
+
+    // Real-time notification subscription
+    const channel = supabase
+      .channel(`notifications-employer-${user?.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user?.id}` },
+        (payload) => {
+          setNotifications((prev) => [payload.new as any, ...prev].slice(0, 5));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user?.id]);
 
   const handleSignOut = async () => {
@@ -3637,7 +3712,14 @@ const EmployerDashboard = () => {
                       : "text-gray-400 hover:text-white hover:bg-black"
                   }`}
                 >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <div className="relative flex-shrink-0">
+                    <item.icon className="w-5 h-5" />
+                    {item.name === "Messages" && unreadMessageCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-emerald-500 text-white text-[10px] font-bold px-1">
+                        {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
+                      </span>
+                    )}
+                  </div>
                   {!sidebarCollapsed && item.name}
                 </Link>
               );
