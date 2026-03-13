@@ -328,21 +328,29 @@ const GetStarted = () => {
               await supabase.from("mentor_assignments").insert({
                 mentor_id: topMentor.mentor.id,
                 candidate_id: cpRow.id,
-                status: "active",
+                status: "pending",
+              });
+
+              // Notify the mentor about the mentee request
+              await supabase.from("notifications").insert({
+                user_id: topMentor.mentor.profile?.id || topMentor.mentor.profile_id,
+                type: "mentee_request",
+                title: "New Mentee Request",
+                message: `A new candidate has been matched with you (${topMentor.compatibilityLevel} compatibility). Review and accept in your dashboard.`,
               });
             }
 
             await supabase.from("growth_log_entries").insert({
               candidate_id: user.id,
               event_type: "training",
-              title: "Mentor Matched",
-              description: `Auto-matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match)`,
+              title: "Mentor Match Requested",
+              description: `Matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match). Awaiting mentor approval.`,
               source_component: "MentorMatching",
             });
 
             toast({
               title: "Setup complete!",
-              description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match).`,
+              description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match). They'll confirm shortly.`,
             });
           } else {
             await supabase.from("growth_log_entries").insert({

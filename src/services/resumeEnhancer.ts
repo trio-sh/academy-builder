@@ -53,30 +53,30 @@ const RESUME_ENHANCER_SYSTEM = `You are The 3rd Academy's Resume Enhancer AI. Yo
 Your task:
 1. Summarize the candidate's professional background in 2-3 sentences
 2. Identify their key strength areas from the resume
-3. Determine which of the 5 MVP behavioral dimensions are MOST relevant for observation based on their experience:
+3. From the 5 behavioral dimensions below, select the TOP 3 that are MOST relevant for this specific candidate based on evidence in their resume. Then include the remaining 2 at the end. The ORDER matters — put the most relevant dimensions first:
    - integrity_ethics: Ethical decision-making, honesty, transparency
    - accountability_ownership: Taking responsibility, follow-through, ownership of outcomes
    - execution_reliability: Delivering on commitments, meeting deadlines, consistent output
    - communication_pressure: Communicating clearly under stress, difficult conversations
    - collaboration_conflict: Working in teams, resolving disagreements, building consensus
-4. For each selected dimension, explain WHY it's relevant based on the resume
+4. For each dimension, write a SPECIFIC rationale tied to this candidate's actual resume content (job titles, responsibilities, achievements). Do NOT use generic phrases like "Core dimension" or "will be assessed." Reference specific details from the resume.
 5. Suggest any additional skills not explicitly mentioned but implied by their experience
 6. Assess experience level: entry (0-2 yrs), mid (3-6 yrs), senior (7-12 yrs), executive (13+ yrs)
 7. Identify their industry focus areas
 
-IMPORTANT: Always include ALL 5 MVP dimensions in observationDimensions — but rank them by relevance. The rationale should explain what in the resume connects to each dimension.
+IMPORTANT: Include ALL 5 dimensions but RANK them by relevance to this specific candidate. The first 3 should be the strongest matches based on resume evidence. Each rationale MUST reference specific content from the resume.
 
 Return ONLY valid JSON in this exact format:
 {
-  "summary": "<2-3 sentence professional summary>",
+  "summary": "<2-3 sentence professional summary based on their actual experience>",
   "strengthAreas": ["<area 1>", "<area 2>", ...],
-  "observationDimensions": ["integrity_ethics", "accountability_ownership", "execution_reliability", "communication_pressure", "collaboration_conflict"],
+  "observationDimensions": ["<most relevant dimension>", "<2nd most relevant>", "<3rd>", "<4th>", "<5th>"],
   "dimensionRationale": {
-    "integrity_ethics": "<why this dimension is relevant based on resume>",
-    "accountability_ownership": "<why>",
-    "execution_reliability": "<why>",
-    "communication_pressure": "<why>",
-    "collaboration_conflict": "<why>"
+    "<dimension_1>": "<specific rationale referencing resume content>",
+    "<dimension_2>": "<specific rationale referencing resume content>",
+    "<dimension_3>": "<specific rationale referencing resume content>",
+    "<dimension_4>": "<specific rationale referencing resume content>",
+    "<dimension_5>": "<specific rationale referencing resume content>"
   },
   "suggestedSkills": ["<skill 1>", "<skill 2>", ...],
   "experienceLevel": "entry|mid|senior|executive",
@@ -134,12 +134,12 @@ export async function analyzeResume(resumeText: string): Promise<ResumeEnhancerR
 
     const parsed = JSON.parse(jsonMatch[0]) as ResumeEnhancerResult;
 
-    // Validate and ensure all MVP dimensions are present
+    // Validate dimensions — preserve the LLM's ranking order
     const validDimensions = (parsed.observationDimensions || []).filter(
       (d) => MVP_DIMENSIONS.includes(d)
     );
 
-    // If AI missed some MVP dimensions, add them
+    // Append any MVP dimensions the AI missed, but at the end (lowest priority)
     const missingDimensions = MVP_DIMENSIONS.filter(
       (d) => !validDimensions.includes(d)
     );
@@ -149,7 +149,7 @@ export async function analyzeResume(resumeText: string): Promise<ResumeEnhancerR
       strengthAreas: parsed.strengthAreas || [],
       observationDimensions: [...validDimensions, ...missingDimensions],
       dimensionRationale: {
-        ...Object.fromEntries(MVP_DIMENSIONS.map((d) => [d, "Standard MVP observation dimension."])),
+        ...Object.fromEntries(missingDimensions.map((d) => [d, "Additional observation dimension for comprehensive assessment."])),
         ...(parsed.dimensionRationale || {}),
       },
       suggestedSkills: parsed.suggestedSkills || [],
