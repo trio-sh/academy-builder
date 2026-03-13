@@ -32,7 +32,7 @@ const journeySteps = [
     step: "01",
     title: "Basic Profile",
     description:
-      "Non-credentialed snapshot created from your resume or project participation. Not a credential — purely descriptive.",
+      "Initial profile created from your resume or participation. A starting point for your professional development journey.",
     icon: FileText,
     gradient: "from-gray-600 to-gray-700",
     highlight: false,
@@ -42,7 +42,7 @@ const journeySteps = [
     step: "02",
     title: "Growth Log",
     description:
-      "Passive tracking of all your interactions. Captures behavioral patterns for system learning without manual input.",
+      "Your activity and experiences contribute to a continuously evolving development record.",
     icon: BarChart3,
     gradient: "from-indigo-600 to-indigo-700",
     highlight: false,
@@ -50,9 +50,9 @@ const journeySteps = [
   },
   {
     step: "03",
-    title: "MentorLink",
+    title: "Mentor Guidance",
     description:
-      "MANDATORY gate. Every candidate must pass through mentor review. Mentors decide: proceed, redirect, or pause.",
+      "Participants engage with experienced professionals who provide guidance and feedback throughout their journey.",
     icon: Users,
     gradient: "from-purple-500 to-purple-600",
     highlight: true,
@@ -62,7 +62,7 @@ const journeySteps = [
     step: "04",
     title: "Skill Passport",
     description:
-      "EARNED credential that emerges after sustained observation. Evidence-linked to mentor observations and behavioral data.",
+      "A professional credential reflecting progress, experience, and demonstrated workplace readiness.",
     icon: Award,
     gradient: "from-emerald-500 to-emerald-600",
     highlight: false,
@@ -72,7 +72,7 @@ const journeySteps = [
     step: "05",
     title: "TalentVisa",
     description:
-      "Late-stage, conditional, rare. Silver / Gold / Platinum tiers based on evidence strength. Not guaranteed.",
+      "Advanced recognition tiers for participants demonstrating strong readiness signals. Silver, Gold, and Platinum levels.",
     icon: GraduationCap,
     gradient: "from-amber-500 to-amber-600",
     highlight: false,
@@ -82,7 +82,7 @@ const journeySteps = [
     step: "06",
     title: "T3X Exchange",
     description:
-      "You're listed for employers. They view your TalentVisa tier and Skill Passport evidence to make hiring decisions.",
+      "Employers can discover and review participant profiles and credentials when considering candidates.",
     icon: Building2,
     gradient: "from-pink-500 to-pink-600",
     highlight: false,
@@ -146,8 +146,8 @@ export function JourneySection() {
             </span>
           </h2>
           <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
-            Every credential is earned through sustained mentor observation — no shortcuts,
-            no self-assessments. Human judgment at every critical gate.
+            Credentials are earned through guided professional evaluation over time — no shortcuts,
+            no self-assessments. Professional guidance throughout the process.
           </p>
         </motion.div>
 
@@ -184,7 +184,7 @@ export function JourneySection() {
                   </div>
                   {step.highlight && (
                     <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-500/30 text-white rounded-full border border-purple-500/30 backdrop-blur-sm">
-                      Required Gate
+                      Key Stage
                     </span>
                   )}
                 </div>
@@ -220,7 +220,7 @@ export function JourneySection() {
           ))}
         </div>
 
-        {/* Key Principles */}
+        {/* Our Promise */}
         <motion.div
           variants={itemVariants}
           className="max-w-3xl mx-auto mt-20"
@@ -229,14 +229,14 @@ export function JourneySection() {
             <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
             <div className="relative p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500">
               <h3 className="text-lg font-bold text-white mb-6 text-center">
-                Architectural Principles
+                Our Promise
               </h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
-                  "Mentor-gated — no bypass allowed",
-                  "Credentials are earned, not generated",
-                  "Observations inform, they don't gatekeep",
-                  "All outcomes feed system learning",
+                  "Professional guidance at every step",
+                  "Credentials that reflect real experience",
+                  "Growth that speaks for itself",
+                  "Results employers can trust",
                 ].map((principle, index) => (
                   <motion.div
                     key={principle}

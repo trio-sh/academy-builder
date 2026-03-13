@@ -87,8 +87,8 @@ export function CTASection() {
                 variants={itemVariants}
                 className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
               >
-                Join The 3rd Academy today. Upload your resume, get matched with a mentor,
-                and start building your Skill Passport through evidence-based observation.
+                Join The 3rd Academy today. Upload your resume, connect with a mentor,
+                and begin building your Skill Passport.
               </motion.p>
 
               {/* CTAs */}

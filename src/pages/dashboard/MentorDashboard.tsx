@@ -1098,7 +1098,7 @@ const Mentees = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div variants={itemVariants} className="sticky top-0 z-10 bg-black/95 backdrop-blur-sm pb-4 -mx-4 px-4 pt-2 -mt-2 border-b border-white/10">
         <h1 className="text-3xl font-bold text-white mb-2">My Mentees</h1>
         <p className="text-gray-400">
           View and manage your assigned candidates.

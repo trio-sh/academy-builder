@@ -22,7 +22,7 @@ const comparisons = [
   {
     criteria: "Who judges readiness?",
     t3a: "Human mentor (mandatory)",
-    competitors: "AI algorithms or self-assessment",
+    competitors: "Automated scoring or self-assessment",
   },
   {
     criteria: "What gets validated?",
@@ -31,17 +31,17 @@ const comparisons = [
   },
   {
     criteria: "When is credential issued?",
-    t3a: "Late-stage, after sustained observation",
+    t3a: "After demonstrated readiness over time",
     competitors: "Immediately after passing test/course",
   },
   {
     criteria: "Can candidates game it?",
-    t3a: "No — mentor-gated",
+    t3a: "No — human-led evaluation",
     competitors: "Yes — study for test, get badge",
   },
   {
-    criteria: "Data moat",
-    t3a: "Mentor judgment + behavioral fingerprint",
+    criteria: "Why results are trusted",
+    t3a: "Observed performance history",
     competitors: "Content library (easily copied)",
   },
 ];
@@ -86,8 +86,8 @@ export function DifferentiatorSection() {
             </span>
           </h2>
           <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
-            Competitors are doing point-in-time AI assessments. We're doing sustained
-            human-gated observation with outcome learning.
+            Others test a moment. We document what actually happens at work —
+            with human-led evaluation over time.
           </p>
         </motion.div>
 

@@ -113,7 +113,7 @@ export function HeroSection() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 text-sm text-indigo-300 mb-8"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
-                Mentor-Gated Behavioral Validation
+                Workplace-Ready Behavioral Documentation
               </motion.div>
 
               {/* Headline */}
@@ -142,8 +142,8 @@ export function HeroSection() {
                 className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
               >
                 The 3rd Academy bridges the gap between what your resume says and what
-                employers actually need — through sustained mentor observation and
-                evidence-based behavioral validation.
+                employers actually need — through guided professional experience and
+                structured readiness documentation.
               </motion.p>
 
               {/* CTAs */}
@@ -193,7 +193,7 @@ export function HeroSection() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Evidence-based</span>
+                  <span>Experience-based</span>
                 </div>
               </motion.div>
             </div>
@@ -233,7 +233,7 @@ export function HeroSection() {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               >
                 <div className="text-2xl font-bold text-emerald-400">500+</div>
-                <div className="text-xs text-gray-400">Mentor-Verified</div>
+                <div className="text-xs text-gray-400">Professionals Supported</div>
               </motion.div>
             </motion.div>
           </div>
@@ -246,7 +246,7 @@ export function HeroSection() {
             <EntryPointCard
               icon={<FileText className="w-6 h-6" />}
               title="Resume Upload"
-              description="Start with your resume. Our enhancer identifies areas for mentor focus."
+              description="Start with your resume. We help highlight what matters beyond credentials."
               entry="Entry A"
               image="https://api.a0.dev/assets/image?text=professional%20resume%20being%20analyzed%20by%20AI%20with%20highlighted%20sections%20and%20glowing%20data%20points%20dark%20theme&aspect=16:9&seed=entry_resume"
               delay={0}
@@ -262,7 +262,7 @@ export function HeroSection() {
             <EntryPointCard
               icon={<Briefcase className="w-6 h-6" />}
               title="LiveWorks Studio"
-              description="Complete real projects under mentor supervision."
+              description="Complete real projects with professional guidance."
               entry="Entry C"
               image="https://api.a0.dev/assets/image?text=team%20working%20on%20real%20project%20in%20modern%20co-working%20space%20with%20screens%20showing%20project%20milestones&aspect=16:9&seed=entry_liveworks"
               delay={0.2}

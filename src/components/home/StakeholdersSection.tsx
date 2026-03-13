@@ -40,12 +40,12 @@ const stakeholders = [
     icon: Building2,
     title: "For Employers",
     description:
-      "Access pre-validated candidates with proven behavioral readiness. Real evidence, not just keywords. Outcome-tracked hiring.",
+      "Access pre-validated candidates with proven behavioral readiness. Real results, not just keywords. Hiring supported by post-placement insights.",
     benefits: [
       "Mentor-vetted candidates",
       "Behavioral evidence, not just resumes",
       "TalentVisa premium tier access",
-      "30/60/90-day outcome tracking",
+      "Follow-through insights after hiring",
     ],
     cta: "Explore T3X Exchange",
     href: "/employers",
@@ -56,7 +56,7 @@ const stakeholders = [
     icon: GraduationCap,
     title: "For Schools",
     description:
-      "Engage students early with career awareness. Build behavioral documentation that transitions seamlessly to the credential pathway.",
+      "Engage students early with career awareness. Build behavioral documentation that supports students' transition into the workforce.",
     benefits: [
       "Civic Access Lab platform",
       "Teacher observation tools",
