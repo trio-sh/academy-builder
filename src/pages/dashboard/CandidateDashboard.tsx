@@ -1697,10 +1697,10 @@ const ObservationPathway = () => {
 
   const getBarsLabel = (score: number) => {
     switch (score) {
-      case 1: return "Developing";
-      case 2: return "Competent";
-      case 3: return "Proficient";
-      case 4: return "Exemplary";
+      case 1: return "Not Yet Demonstrated";
+      case 2: return "Emerging";
+      case 3: return "Competent";
+      case 4: return "Strong";
       default: return "—";
     }
   };
@@ -1977,10 +1977,10 @@ const ObservationPathway = () => {
                   })}
                 </div>
                 <div className="flex justify-between text-[10px] text-gray-600 mt-1">
-                  <span>L1 AI</span>
-                  <span>L2 Mentor</span>
-                  <span>L3 Draft</span>
-                  <span>L4 Mentor</span>
+                  <span>L1 AI Scenarios</span>
+                  <span>L2 Mentor Live</span>
+                  <span>L3 Work Sample</span>
+                  <span>L4 Team Sim</span>
                 </div>
               </div>
             );
@@ -2026,10 +2026,10 @@ const ObservationPathway = () => {
           <h3 className="text-sm font-semibold text-gray-400 mb-3">4-Point BARS Scoring Reference</h3>
           <div className="grid grid-cols-4 gap-3">
             {[
-              { score: 1, label: "Developing", desc: "Emerging awareness, needs guidance", color: "text-orange-400" },
-              { score: 2, label: "Competent", desc: "Meets expectations with support", color: "text-amber-400" },
-              { score: 3, label: "Proficient", desc: "Consistently demonstrates independently", color: "text-blue-400" },
-              { score: 4, label: "Exemplary", desc: "Models best practice, mentors others", color: "text-emerald-400" },
+              { score: 1, label: "Not Yet Demonstrated", desc: "Behaviour not observed or inconsistent", color: "text-orange-400" },
+              { score: 2, label: "Emerging", desc: "Partially demonstrated, inconsistent under pressure", color: "text-amber-400" },
+              { score: 3, label: "Competent", desc: "Consistently demonstrated, meets readiness standard", color: "text-blue-400" },
+              { score: 4, label: "Strong", desc: "Exceeds standard, depth in complex situations", color: "text-emerald-400" },
             ].map((item) => (
               <div key={item.score} className="text-center">
                 <span className={`text-lg font-bold ${item.color}`}>{item.score}</span>

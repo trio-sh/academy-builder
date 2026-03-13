@@ -449,10 +449,10 @@ const ObservationFormModal = () => {
                 <div>
                   <p className="text-sm text-gray-400 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
                   <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black/60 border border-white/10 text-center">
-                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Developing</p></div>
-                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-gray-500">Competent</p></div>
-                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-gray-500">Proficient</p></div>
-                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-gray-500">Exemplary</p></div>
+                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Not Yet Demonstrated</p></div>
+                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-gray-500">Emerging</p></div>
+                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-gray-500">Competent</p></div>
+                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-gray-500">Strong</p></div>
                   </div>
                   <div className="space-y-4">
                     {BEHAVIORAL_DIMENSIONS.map(dimension => (
@@ -465,10 +465,10 @@ const ObservationFormModal = () => {
                         </div>
                         <div className="flex gap-2 mt-3">
                           {[
-                            { score: 1, label: "Developing", color: "bg-orange-600" },
-                            { score: 2, label: "Competent", color: "bg-amber-600" },
-                            { score: 3, label: "Proficient", color: "bg-blue-600" },
-                            { score: 4, label: "Exemplary", color: "bg-emerald-600" },
+                            { score: 1, label: "Not Yet", color: "bg-orange-600" },
+                            { score: 2, label: "Emerging", color: "bg-amber-600" },
+                            { score: 3, label: "Competent", color: "bg-blue-600" },
+                            { score: 4, label: "Strong", color: "bg-emerald-600" },
                           ].map(({ score, label, color }) => (
                             <button
                               key={score}
