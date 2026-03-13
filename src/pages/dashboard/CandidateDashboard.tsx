@@ -452,6 +452,8 @@ const SkillPassport = () => {
   const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [observationProgress, setObservationProgress] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string }>>([]);
+  const [assignedDimensionIds, setAssignedDimensionIds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -465,17 +467,49 @@ const SkillPassport = () => {
         .single();
       setCandidateProfile(cp);
 
-      // If has passport, fetch passport data (candidate_id = candidate_profiles.id)
-      if (cp?.has_skill_passport) {
-        const { data: passport } = await supabase
-          .from("skill_passports")
-          .select("*")
+      if (cp) {
+        // If has passport, fetch passport data (candidate_id = candidate_profiles.id)
+        if (cp.has_skill_passport) {
+          const { data: passport } = await supabase
+            .from("skill_passports")
+            .select("*")
+            .eq("candidate_id", cp.id)
+            .eq("is_active", true)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          setPassportData(passport);
+        }
+
+        // Fetch observation feedback progress
+        const { data: assignments } = await supabase
+          .from("mentor_assignments")
+          .select("id")
           .eq("candidate_id", cp.id)
-          .eq("is_active", true)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        setPassportData(passport);
+          .eq("status", "active")
+          .limit(1);
+
+        if (assignments && assignments.length > 0) {
+          const assignmentId = assignments[0].id;
+
+          // Get assigned dimensions
+          const { data: dims } = await supabase
+            .from("mentor_assigned_dimensions")
+            .select("dimension_id")
+            .eq("assignment_id", assignmentId)
+            .eq("is_active", true);
+          if (dims) {
+            setAssignedDimensionIds(dims.map((d: { dimension_id: string }) => d.dimension_id));
+          }
+
+          // Get observation feedback
+          const { data: feedback } = await supabase
+            .from("observation_feedback")
+            .select("dimension_id, feedback_level, bars_score, status")
+            .eq("assignment_id", assignmentId)
+            .eq("candidate_id", cp.id);
+          if (feedback) setObservationProgress(feedback);
+        }
       }
 
       setIsLoading(false);
@@ -786,25 +820,55 @@ const SkillPassport = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
-              <span>3 Mentor Observations</span>
+              <CheckCircle className={`w-5 h-5 ${(candidateProfile?.mentor_loops || 0) >= 1 ? "text-emerald-400" : "text-gray-600"}`} />
+              <span>Observation Sessions</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
-              <span>Behavioral Endorsement</span>
+              <CheckCircle className={`w-5 h-5 ${observationProgress.some(f => f.status === 'approved') ? "text-emerald-400" : "text-gray-600"}`} />
+              <span>Mentor Review</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
+              <CheckCircle className={`w-5 h-5 ${(candidateProfile?.mentor_loops || 0) >= 3 ? "text-emerald-400" : "text-gray-600"}`} />
               <span>Tier Assessment</span>
             </div>
           </div>
           <div className="mt-8">
-            <p className="text-sm text-gray-500 mb-2">Current Progress</p>
+            <p className="text-sm text-gray-500 mb-2">Observation Progress</p>
             <div className="flex items-center justify-center gap-2">
               <span className="text-2xl font-bold text-white">{candidateProfile?.mentor_loops || 0}</span>
               <span className="text-gray-400">/ 3 Mentor Loops</span>
             </div>
           </div>
+
+          {/* Show dimension-level observation progress if any feedback exists */}
+          {observationProgress.length > 0 && assignedDimensionIds.length > 0 && (
+            <div className="mt-8 max-w-lg mx-auto">
+              <p className="text-sm text-gray-500 mb-3">Dimension Progress</p>
+              <div className="space-y-3">
+                {assignedDimensionIds.map(dimId => {
+                  const dimInfo = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+                  const dimFeedback = observationProgress.filter(f => f.dimension_id === dimId);
+                  const completedLevels = dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').length;
+                  const latestScore = dimFeedback.find(f => f.bars_score)?.bars_score;
+
+                  return (
+                    <div key={dimId} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/10">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${completedLevels > 0 ? "bg-emerald-400" : "bg-gray-600"}`} />
+                        <span className="text-sm text-white">{dimInfo?.label || dimId}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {latestScore && (
+                          <span className="text-xs text-gray-400">BARS: {latestScore}/4</span>
+                        )}
+                        <span className="text-xs text-gray-500">{completedLevels}/4 levels</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -1557,6 +1621,7 @@ const ObservationPathway = () => {
   const [mentorAssignment, setMentorAssignment] = useState<MentorAssignment | null>(null);
   const [mentorProfile, setMentorProfile] = useState<{ first_name: string; last_name: string } | null>(null);
   const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
+  const [mentorLoops, setMentorLoops] = useState(0);
   const [observationFeedback, setObservationFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; final_feedback: string | null }>>([]);
 
   useEffect(() => {
@@ -1567,10 +1632,11 @@ const ObservationPathway = () => {
         // Get candidate_profiles.id (FK for mentor_assignments)
         const { data: cp } = await supabase
           .from("candidate_profiles")
-          .select("id")
+          .select("id, mentor_loops")
           .eq("profile_id", user.id)
           .single();
         if (!cp) { setIsLoading(false); return; }
+        setMentorLoops(cp.mentor_loops || 0);
 
         // Check for active mentor assignment
         const { data: assignments } = await supabase
@@ -1783,12 +1849,12 @@ const ObservationPathway = () => {
         </div>
       </motion.div>
 
-      {/* L1 Observation Session — Only on assigned dimensions */}
+      {/* Observation Session Card */}
       <motion.div variants={itemVariants}>
         <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
           <div className="absolute top-4 right-4">
             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
-              Level 1 — AI Observation
+              {mentorLoops >= 3 ? "All Loops Complete" : `Loop ${mentorLoops + 1} of 3`}
             </span>
           </div>
           <div className="flex flex-col md:flex-row items-start gap-6">
@@ -1796,32 +1862,66 @@ const ObservationPathway = () => {
               <Brain className="w-10 h-10 text-white" />
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-white mb-2">L1 Observation Session</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">Observation Sessions</h2>
               <p className="text-gray-300 mb-4">
-                AI-driven observation scenarios on your mentor-assigned dimensions. Your responses are documented as behavioral evidence. L1 feedback is delivered automatically after completion.
+                AI-driven observation scenarios on your mentor-assigned dimensions. Your responses are documented as behavioral evidence. Feedback is delivered automatically after completion.
               </p>
-              <div className="flex flex-wrap gap-3 mb-6">
-                {[
-                  { icon: Mic, text: "Voice Scenarios" },
-                  { icon: Brain, text: "AI Observation" },
-                  { icon: Clock, text: "Timed Scenarios" },
-                  { icon: ClipboardCheck, text: "Evidence Documented" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-sm text-gray-300">
-                    <item.icon className="w-4 h-4 text-emerald-400" />
-                    {item.text}
+
+              {/* Loop progress indicator */}
+              <div className="flex items-center gap-2 mb-6">
+                {[1, 2, 3].map((loop) => (
+                  <div key={loop} className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      mentorLoops >= loop
+                        ? "bg-emerald-500 text-white"
+                        : mentorLoops + 1 === loop
+                        ? "bg-emerald-500/30 text-emerald-400 border border-emerald-500"
+                        : "bg-gray-800 text-gray-500 border border-gray-700"
+                    }`}>
+                      {mentorLoops >= loop ? <CheckCircle className="w-4 h-4" /> : loop}
+                    </div>
+                    {loop < 3 && <div className={`w-8 h-0.5 ${mentorLoops >= loop ? "bg-emerald-500" : "bg-gray-700"}`} />}
                   </div>
                 ))}
+                <span className="ml-2 text-sm text-gray-400">{mentorLoops}/3 Loops Complete</span>
               </div>
-              <Link to="/dashboard/candidate/observations/session">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
-                >
-                  Begin Observation Session
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+
+              {mentorLoops >= 3 ? (
+                <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <Award className="w-5 h-5" />
+                    <span className="font-semibold">All 3 observation loops complete!</span>
+                  </div>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Your Skill Passport has been generated. View it in the Skill Passport section.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {[
+                      { icon: Mic, text: "Voice Scenarios" },
+                      { icon: Brain, text: "AI Observation" },
+                      { icon: Clock, text: "Timed Scenarios" },
+                      { icon: ClipboardCheck, text: "Evidence Documented" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-sm text-gray-300">
+                        <item.icon className="w-4 h-4 text-emerald-400" />
+                        {item.text}
+                      </div>
+                    ))}
+                  </div>
+                  <Link to="/dashboard/candidate/observations/session">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
+                    >
+                      Begin Loop {mentorLoops + 1} of 3
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -31,12 +31,11 @@ export interface CooldownStatus {
 
 export interface ObservationSession {
   id: string;
+  assignmentId: string;
   candidateId: string;
-  dimensionId: string;
-  observationLevel: number;
-  sessionStartedAt: Date;
-  randomSeed: number;
-  scenarioIds: string[];
+  sessionType: string;
+  status: string;
+  feedbackLevel: number;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -67,18 +66,17 @@ export async function getCooldownDays(): Promise<number> {
 }
 
 /**
- * Checks whether a candidate is allowed to start a new observation session
- * for a given dimension, respecting the admin-configured cooldown period.
+ * Checks whether a candidate is allowed to start a new observation session,
+ * respecting the admin-configured cooldown period.
  *
- * @param candidateId - The candidate's profile UUID
- * @param dimensionId - The T3A dimension ID (e.g., 'integrity_ethics')
+ * @param candidateId - The candidate's auth user UUID
  * @returns CooldownStatus with `allowed: true` if they can proceed
  */
 export async function checkObservationCooldown(
   candidateId: string,
-  dimensionId: string
+  _dimensionId?: string
 ): Promise<CooldownStatus> {
-  if (!candidateId || !dimensionId) {
+  if (!candidateId) {
     return { allowed: false };
   }
 
@@ -86,20 +84,19 @@ export async function checkObservationCooldown(
 
   const { data: lastSession } = await supabase
     .from('observation_sessions')
-    .select('session_completed_at')
+    .select('updated_at')
     .eq('candidate_id', candidateId)
-    .eq('dimension_id', dimensionId)
-    .eq('is_complete', true)
-    .order('session_completed_at', { ascending: false })
+    .eq('status', 'completed')
+    .order('updated_at', { ascending: false })
     .limit(1)
     .single();
 
-  if (!lastSession?.session_completed_at) {
+  if (!lastSession?.updated_at) {
     // No prior completed session — allowed
     return { allowed: true };
   }
 
-  const lastCompleted = new Date(lastSession.session_completed_at);
+  const lastCompleted = new Date(lastSession.updated_at);
   const cooldownEndsAt = new Date(
     lastCompleted.getTime() + cooldownDays * 24 * 60 * 60 * 1000
   );
@@ -170,27 +167,30 @@ export function seededShuffle<T>(items: T[], seed: number): T[] {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * Creates a new observation session row and logs the scenario selection
- * audit record (Build Rules 9 & 10).
+ * Creates a new observation session row.
+ * Matches actual observation_sessions table schema.
  *
+ * @param candidateId - The candidate's auth user UUID
+ * @param assignmentId - The mentor_assignments.id
+ * @param feedbackLevel - The observation level (1=L1 AI, 2=L2 Mentor, etc.)
+ * @param mentorId - Optional mentor_profiles.id
  * @returns The created session ID, or null on error
  */
 export async function startObservationSession(
   candidateId: string,
-  dimensionId: string,
-  observationLevel: number,
-  randomSeed: number,
-  scenarioIds: string[]
+  assignmentId: string,
+  feedbackLevel: number,
+  mentorId?: string
 ): Promise<string | null> {
   const { data: session, error } = await supabase
     .from('observation_sessions')
     .insert({
       candidate_id: candidateId,
-      dimension_id: dimensionId,
-      observation_level: observationLevel,
-      random_seed: randomSeed,
-      scenario_ids: scenarioIds,
-      is_complete: false,
+      assignment_id: assignmentId,
+      session_type: 'ai_observation',
+      status: 'in_progress',
+      feedback_level: feedbackLevel,
+      mentor_id: mentorId || null,
     })
     .select('id')
     .single();
@@ -200,21 +200,11 @@ export async function startObservationSession(
     return null;
   }
 
-  // Log the scenario selection for audit (Rule 10)
-  await supabase.from('scenario_selection_audit').insert({
-    session_id: session.id,
-    candidate_id: candidateId,
-    dimension_id: dimensionId,
-    random_seed: randomSeed,
-    scenario_sequence: scenarioIds,
-  });
-
   return session.id;
 }
 
 /**
- * Marks a session as complete, recording the completion timestamp.
- * Triggers are responsible for updating behavioral_consistency_index (Rule 11).
+ * Marks a session as complete.
  */
 export async function completeObservationSession(
   sessionId: string
@@ -222,10 +212,139 @@ export async function completeObservationSession(
   await supabase
     .from('observation_sessions')
     .update({
-      is_complete: true,
-      session_completed_at: new Date().toISOString(),
+      status: 'completed',
+      updated_at: new Date().toISOString(),
     })
     .eq('id', sessionId);
+}
+
+/**
+ * Records observation feedback for a dimension after session completion.
+ * Creates a record in observation_feedback that the ObservationPathway page reads.
+ *
+ * @param feedbackLevel - The observation loop number (1, 2, or 3)
+ */
+export async function recordObservationFeedback(
+  sessionId: string,
+  assignmentId: string,
+  candidateId: string,
+  dimensionId: string,
+  feedbackLevel: number,
+  barsScore: number,
+  aiFeedback: string
+): Promise<void> {
+  const { error } = await supabase.from('observation_feedback').insert({
+    session_id: sessionId,
+    assignment_id: assignmentId,
+    candidate_id: candidateId,
+    dimension_id: dimensionId,
+    feedback_level: feedbackLevel,
+    bars_score: Math.min(4, Math.max(1, Math.round(barsScore))),
+    ai_draft_feedback: aiFeedback,
+    status: 'ai_delivered',
+  });
+
+  if (error) {
+    console.error('[T3A] Failed to record observation feedback:', error);
+  }
+}
+
+/**
+ * Returns the current mentor_loops count for a candidate.
+ */
+export async function getMentorLoops(
+  candidateProfileId: string
+): Promise<number> {
+  const { data: cp } = await supabase
+    .from('candidate_profiles')
+    .select('mentor_loops')
+    .eq('id', candidateProfileId)
+    .single();
+
+  return cp?.mentor_loops || 0;
+}
+
+/**
+ * Increments the mentor_loops count on candidate_profiles after a completed observation loop.
+ * Caps at 3. When reaching 3, automatically awards the Skill Passport.
+ */
+export async function incrementMentorLoops(
+  candidateProfileId: string
+): Promise<number> {
+  const currentLoops = await getMentorLoops(candidateProfileId);
+
+  // Already at max — don't increment further
+  if (currentLoops >= 3) return currentLoops;
+
+  const newLoops = currentLoops + 1;
+
+  const updateData: Record<string, unknown> = {
+    mentor_loops: newLoops,
+    updated_at: new Date().toISOString(),
+  };
+
+  // Auto-award Skill Passport when 3 loops are complete
+  if (newLoops >= 3) {
+    updateData.has_skill_passport = true;
+  }
+
+  await supabase
+    .from('candidate_profiles')
+    .update(updateData)
+    .eq('id', candidateProfileId);
+
+  // If passport awarded, create the skill_passports record
+  if (newLoops >= 3) {
+    await createSkillPassportRecord(candidateProfileId);
+  }
+
+  return newLoops;
+}
+
+/**
+ * Creates a skill_passports row when a candidate earns their passport.
+ */
+async function createSkillPassportRecord(
+  candidateProfileId: string
+): Promise<void> {
+  // Gather average BARS scores from observation_feedback
+  const { data: feedback } = await supabase
+    .from('observation_feedback')
+    .select('dimension_id, bars_score')
+    .eq('candidate_id', candidateProfileId)
+    .not('bars_score', 'is', null);
+
+  const behavioralScores: Record<string, number> = {};
+  if (feedback) {
+    const dimScores: Record<string, number[]> = {};
+    for (const f of feedback) {
+      if (!dimScores[f.dimension_id]) dimScores[f.dimension_id] = [];
+      dimScores[f.dimension_id].push(f.bars_score);
+    }
+    for (const [dim, scores] of Object.entries(dimScores)) {
+      behavioralScores[dim] = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+    }
+  }
+
+  const avgScore = Object.values(behavioralScores).length > 0
+    ? Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length
+    : 0;
+
+  // Determine readiness tier based on average BARS score (enum: silver, gold, platinum)
+  let readinessTier = 'silver';
+  if (avgScore >= 3.5) readinessTier = 'platinum';
+  else if (avgScore >= 2.5) readinessTier = 'gold';
+
+  const verificationCode = crypto.randomUUID().replace(/-/g, '').substring(0, 12).toUpperCase();
+
+  await supabase.from('skill_passports').insert({
+    candidate_id: candidateProfileId,
+    behavioral_scores: behavioralScores,
+    readiness_tier: readinessTier,
+    verification_code: verificationCode,
+    is_active: true,
+    issued_at: new Date().toISOString(),
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────

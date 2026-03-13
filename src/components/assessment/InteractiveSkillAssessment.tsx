@@ -46,6 +46,9 @@ import {
   checkObservationCooldown,
   startObservationSession,
   completeObservationSession,
+  recordObservationFeedback,
+  getMentorLoops,
+  incrementMentorLoops,
   generateRandomSeed,
   CooldownStatus
 } from '@/lib/observationIntegrity';
@@ -171,6 +174,12 @@ export const InteractiveSkillAssessment = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const sessionStartedRef = useRef(false);
 
+  // Assignment context for observation pipeline
+  const [assignmentId, setAssignmentId] = useState<string | null>(null);
+  const [candidateProfileId, setCandidateProfileId] = useState<string | null>(null);
+  const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
+  const [currentLoop, setCurrentLoop] = useState<number>(1);
+
   // Refs
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -217,20 +226,58 @@ export const InteractiveSkillAssessment = () => {
     checkMic();
   }, []);
 
-  // Build Rule 9 — Check cooldown on mount
-  // Uses dimension_id 'l1_interactive' to track the full L1 session cooldown
+  // Fetch assignment context on mount — needed to write observation_feedback
+  useEffect(() => {
+    const fetchAssignmentContext = async () => {
+      if (!user?.id) return;
+
+      const { data: cp } = await supabase
+        .from('candidate_profiles')
+        .select('id, mentor_loops')
+        .eq('profile_id', user.id)
+        .single();
+      if (!cp) return;
+      setCandidateProfileId(cp.id);
+      setCurrentLoop((cp.mentor_loops || 0) + 1);
+
+      const { data: assignments } = await supabase
+        .from('mentor_assignments')
+        .select('id, mentor_id')
+        .eq('candidate_id', cp.id)
+        .eq('status', 'active')
+        .limit(1);
+
+      if (assignments && assignments.length > 0) {
+        setAssignmentId(assignments[0].id);
+
+        const { data: dims } = await supabase
+          .from('mentor_assigned_dimensions')
+          .select('dimension_id')
+          .eq('assignment_id', assignments[0].id)
+          .eq('is_active', true);
+
+        if (dims) {
+          setAssignedDimensions(dims.map((d: { dimension_id: string }) => d.dimension_id));
+        }
+      }
+    };
+    fetchAssignmentContext();
+  }, [user?.id]);
+
+  // Build Rule 9 — Check cooldown on mount (waits for candidateProfileId)
   useEffect(() => {
     const checkCooldown = async () => {
-      if (!user?.id) {
-        setIsCheckingCooldown(false);
+      if (!candidateProfileId) {
+        // Still loading assignment context — don't unblock yet unless no user
+        if (!user?.id) setIsCheckingCooldown(false);
         return;
       }
-      const status = await checkObservationCooldown(user.id, 'l1_interactive');
+      const status = await checkObservationCooldown(candidateProfileId);
       setCooldownStatus(status);
       setIsCheckingCooldown(false);
     };
     checkCooldown();
-  }, [user?.id]);
+  }, [user?.id, candidateProfileId]);
 
   // Build Rule 10 — Start observation session when candidate reaches first challenge
   // Session is created once per assessment run; not re-created on back-navigation
@@ -238,21 +285,18 @@ export const InteractiveSkillAssessment = () => {
     if (!user?.id) return;
     if (sessionStartedRef.current) return;
     if (cooldownStatus === null) return; // wait for cooldown check
+    if (!assignmentId || !candidateProfileId) return; // wait for assignment context
 
     const scene = INTERACTIVE_ASSESSMENT_SCENES[currentSceneIndex];
     const isChallenge = scene && scene.type !== 'welcome' && scene.type !== 'narrative';
 
     if (isChallenge) {
       sessionStartedRef.current = true;
-      const seed = generateRandomSeed();
-      const sceneIds = INTERACTIVE_ASSESSMENT_SCENES
-        .filter(s => s.type !== 'welcome' && s.type !== 'narrative' && s.type !== 'review' && s.type !== 'completion')
-        .map(s => s.id);
 
-      startObservationSession(user.id, 'l1_interactive', 1, seed, sceneIds)
+      startObservationSession(candidateProfileId, assignmentId, currentLoop)
         .then(id => { if (id) setSessionId(id); });
     }
-  }, [currentSceneIndex, user?.id, cooldownStatus]);
+  }, [currentSceneIndex, user?.id, cooldownStatus, assignmentId, candidateProfileId]);
 
   // Initialize scene timer
   useEffect(() => {
@@ -1306,8 +1350,38 @@ export const InteractiveSkillAssessment = () => {
 
           <Button
             onClick={async () => {
-              if (sessionId) await completeObservationSession(sessionId);
-              navigate('/dashboard/candidate/assessment');
+              if (sessionId) {
+                await completeObservationSession(sessionId);
+
+                // Write observation feedback for each assigned dimension
+                if (assignmentId && candidateProfileId && assignedDimensions.length > 0) {
+                  const profile = calculateSkillProfile(challengeResults);
+
+                  for (const dimId of assignedDimensions) {
+                    const dimScore = profile[dimId]?.score || 0;
+                    // Map 0-5 AI score to 1-4 BARS scale
+                    const barsScore = dimScore >= 4 ? 4 : dimScore >= 3 ? 3 : dimScore >= 2 ? 2 : 1;
+                    const evidence = profile[dimId]?.evidence || [];
+                    const feedback = evidence.length > 0
+                      ? `AI Observation Summary (Loop ${currentLoop}):\n${evidence.join('\n')}`
+                      : `Behavioral evidence recorded during Loop ${currentLoop} observation session.`;
+
+                    await recordObservationFeedback(
+                      sessionId,
+                      assignmentId,
+                      candidateProfileId,
+                      dimId,
+                      currentLoop,
+                      barsScore,
+                      feedback
+                    );
+                  }
+
+                  // Increment mentor loops (caps at 3, auto-awards passport at 3)
+                  await incrementMentorLoops(candidateProfileId);
+                }
+              }
+              navigate('/dashboard/candidate/observations');
             }}
             className="bg-indigo-600 hover:bg-indigo-500"
           >
@@ -1380,12 +1454,12 @@ export const InteractiveSkillAssessment = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/dashboard/candidate/assessment')}
+              onClick={() => navigate('/dashboard/candidate/observations')}
               className="text-gray-400 hover:text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </Button>
-            <h1 className="font-semibold text-lg text-white">L1 Observation Session</h1>
+            <h1 className="font-semibold text-lg text-white">Observation Session — Loop {currentLoop} of 3</h1>
           </div>
         </div>
         <div className="absolute inset-0 flex items-center justify-center px-4">
@@ -1395,7 +1469,7 @@ export const InteractiveSkillAssessment = () => {
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Session Closed</h2>
             <p className="text-gray-400 mb-2">
-              You have recently completed an L1 Observation Session.
+              You have recently completed an Observation Session — Loop {currentLoop} of 3.
             </p>
             <p className="text-gray-400 mb-6">
               Next session available:{' '}
@@ -1411,7 +1485,7 @@ export const InteractiveSkillAssessment = () => {
               </p>
             </div>
             <Button
-              onClick={() => navigate('/dashboard/candidate/assessment')}
+              onClick={() => navigate('/dashboard/candidate/observations')}
               className="bg-indigo-600 hover:bg-indigo-500"
             >
               Return to Observation Pathway
@@ -1438,7 +1512,7 @@ export const InteractiveSkillAssessment = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate('/dashboard/candidate/assessment')}
+                onClick={() => navigate('/dashboard/candidate/observations')}
                 className="text-gray-400 hover:text-white hover:bg-black flex-shrink-0"
               >
                 <X className="w-5 h-5" />
@@ -1446,9 +1520,9 @@ export const InteractiveSkillAssessment = () => {
               <div className="h-8 w-px bg-black hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
-                <h1 className="hidden md:block font-semibold text-lg text-white">L1 Observation Session</h1>
+                <h1 className="hidden md:block font-semibold text-lg text-white">Observation Session — Loop {currentLoop} of 3</h1>
                 {/* Mobile: Truncated title */}
-                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="L1 Observation Session">
+                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="Observation Session — Loop {currentLoop} of 3">
                   L1 Session
                 </h1>
                 <p className="text-xs md:text-sm text-gray-500 truncate">T3A Observation Protocol</p>
