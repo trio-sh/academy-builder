@@ -89,7 +89,7 @@ export async function checkObservationCooldown(
     .eq('status', 'completed')
     .order('updated_at', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (!lastSession?.updated_at) {
     // No prior completed session — allowed
