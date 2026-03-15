@@ -264,20 +264,19 @@ export const InteractiveSkillAssessment = () => {
     fetchAssignmentContext();
   }, [user?.id]);
 
-  // Build Rule 9 — Check cooldown on mount (waits for candidateProfileId)
+  // Build Rule 9 — Check cooldown on mount
   useEffect(() => {
     const checkCooldown = async () => {
-      if (!candidateProfileId) {
-        // Still loading assignment context — don't unblock yet unless no user
-        if (!user?.id) setIsCheckingCooldown(false);
+      if (!user?.id) {
+        setIsCheckingCooldown(false);
         return;
       }
-      const status = await checkObservationCooldown(candidateProfileId);
+      const status = await checkObservationCooldown(user.id);
       setCooldownStatus(status);
       setIsCheckingCooldown(false);
     };
     checkCooldown();
-  }, [user?.id, candidateProfileId]);
+  }, [user?.id]);
 
   // Build Rule 10 — Start observation session when candidate reaches first challenge
   // Session is created once per assessment run; not re-created on back-navigation
@@ -293,7 +292,7 @@ export const InteractiveSkillAssessment = () => {
     if (isChallenge) {
       sessionStartedRef.current = true;
 
-      startObservationSession(candidateProfileId, assignmentId, currentLoop)
+      startObservationSession(user.id, assignmentId, currentLoop)
         .then(id => { if (id) setSessionId(id); });
     }
   }, [currentSceneIndex, user?.id, cooldownStatus, assignmentId, candidateProfileId]);
