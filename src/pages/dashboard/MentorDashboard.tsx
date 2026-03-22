@@ -109,6 +109,8 @@ const ObservationFormModal = () => {
   });
   const [newStrength, setNewStrength] = useState("");
   const [newImprovement, setNewImprovement] = useState("");
+  const [assignedDimIds, setAssignedDimIds] = useState<string[]>([]);
+  const [l1Feedback, setL1Feedback] = useState<Array<{ dimension_id: string; bars_score: number | null; ai_draft_feedback: string | null }>>([]);
 
   // Fetch mentor profile and assignments
   useEffect(() => {
@@ -236,8 +238,26 @@ const ObservationFormModal = () => {
     setFormData(prev => ({ ...prev, areasForImprovement: prev.areasForImprovement.filter(imp => imp !== i) }));
   };
 
-  const selectCandidate = (assignmentId: string, candidateId: string) => {
+  const selectCandidate = async (assignmentId: string, candidateId: string) => {
     setFormData(prev => ({ ...prev, assignmentId, candidateId }));
+
+    // Fetch assigned dimensions for this assignment
+    const { data: dims } = await supabase
+      .from("mentor_assigned_dimensions")
+      .select("dimension_id")
+      .eq("assignment_id", assignmentId)
+      .eq("is_active", true);
+    if (dims) setAssignedDimIds(dims.map((d: { dimension_id: string }) => d.dimension_id));
+
+    // Fetch L1 AI feedback for this candidate
+    const { data: l1 } = await supabase
+      .from("observation_feedback")
+      .select("dimension_id, bars_score, ai_draft_feedback")
+      .eq("assignment_id", assignmentId)
+      .eq("candidate_id", candidateId)
+      .eq("feedback_level", 1);
+    if (l1) setL1Feedback(l1);
+
     setStep(2);
   };
 
@@ -269,6 +289,22 @@ const ObservationFormModal = () => {
       }
 
       if (!asDraft) {
+        // Write L2 observation feedback for each scored dimension
+        for (const dimId of Object.keys(formData.scores)) {
+          await supabase.from("observation_feedback").insert({
+            assignment_id: formData.assignmentId,
+            candidate_id: formData.candidateId,
+            mentor_id: mentorProfile.id,
+            dimension_id: dimId,
+            feedback_level: 2,
+            bars_score: formData.scores[dimId],
+            mentor_feedback: formData.notes || null,
+            status: "approved",
+            mentor_approved: true,
+            mentor_approved_at: new Date().toISOString(),
+          });
+        }
+
         // Update mentor stats
         await supabase
           .from("mentor_profiles")
@@ -334,7 +370,10 @@ const ObservationFormModal = () => {
   };
 
   const selectedAssignment = assignments.find(a => a.id === formData.assignmentId);
-  const allDimensionsScored = BEHAVIORAL_DIMENSIONS.every(d => formData.scores[d.id] !== undefined);
+  const scoringDimensions = assignedDimIds.length > 0
+    ? BEHAVIORAL_DIMENSIONS.filter(d => assignedDimIds.includes(d.id))
+    : BEHAVIORAL_DIMENSIONS;
+  const allDimensionsScored = scoringDimensions.every(d => formData.scores[d.id] !== undefined);
 
   if (!isOpen) return null;
 
@@ -455,37 +494,53 @@ const ObservationFormModal = () => {
                     <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-gray-500">Strong</p></div>
                   </div>
                   <div className="space-y-4">
-                    {BEHAVIORAL_DIMENSIONS.map(dimension => (
-                      <div key={dimension.id} className="p-4 rounded-lg bg-black border border-white/30">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <p className="font-medium text-white">{dimension.label}</p>
-                            <p className="text-xs text-gray-500">{dimension.description}</p>
+                    {scoringDimensions.map(dimension => {
+                      const l1 = l1Feedback.find(f => f.dimension_id === dimension.id);
+                      return (
+                        <div key={dimension.id} className="p-4 rounded-lg bg-black border border-white/30">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <p className="font-medium text-white">{dimension.label}</p>
+                              <p className="text-xs text-gray-500">{dimension.description}</p>
+                            </div>
+                            {l1 && l1.bars_score && (
+                              <div className="text-right flex-shrink-0 ml-3">
+                                <p className="text-[10px] text-gray-500 uppercase">L1 AI Score</p>
+                                <span className={`text-sm font-bold ${
+                                  l1.bars_score >= 4 ? "text-emerald-400" : l1.bars_score >= 3 ? "text-blue-400" : l1.bars_score >= 2 ? "text-amber-400" : "text-orange-400"
+                                }`}>{l1.bars_score}/4</span>
+                              </div>
+                            )}
+                          </div>
+                          {l1 && l1.ai_draft_feedback && (
+                            <p className="text-xs text-indigo-400/80 mb-2 p-2 rounded bg-indigo-500/10 border border-indigo-500/20">
+                              L1 AI: {l1.ai_draft_feedback.length > 120 ? l1.ai_draft_feedback.substring(0, 120) + "..." : l1.ai_draft_feedback}
+                            </p>
+                          )}
+                          <div className="flex gap-2 mt-2">
+                            {[
+                              { score: 1, label: "Not Yet", color: "bg-orange-600" },
+                              { score: 2, label: "Emerging", color: "bg-amber-600" },
+                              { score: 3, label: "Competent", color: "bg-blue-600" },
+                              { score: 4, label: "Strong", color: "bg-emerald-600" },
+                            ].map(({ score, label, color }) => (
+                              <button
+                                key={score}
+                                onClick={() => handleScoreChange(dimension.id, score)}
+                                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  formData.scores[dimension.id] === score
+                                    ? `${color} text-white`
+                                    : "bg-black text-gray-400 hover:bg-white/20"
+                                }`}
+                                title={label}
+                              >
+                                {score}
+                              </button>
+                            ))}
                           </div>
                         </div>
-                        <div className="flex gap-2 mt-3">
-                          {[
-                            { score: 1, label: "Not Yet", color: "bg-orange-600" },
-                            { score: 2, label: "Emerging", color: "bg-amber-600" },
-                            { score: 3, label: "Competent", color: "bg-blue-600" },
-                            { score: 4, label: "Strong", color: "bg-emerald-600" },
-                          ].map(({ score, label, color }) => (
-                            <button
-                              key={score}
-                              onClick={() => handleScoreChange(dimension.id, score)}
-                              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                formData.scores[dimension.id] === score
-                                  ? `${color} text-white`
-                                  : "bg-black text-gray-400 hover:bg-white/20"
-                              }`}
-                              title={label}
-                            >
-                              {score}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
