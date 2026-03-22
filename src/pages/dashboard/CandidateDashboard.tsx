@@ -815,53 +815,64 @@ const SkillPassport = () => {
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Earn Your Skill Passport</h2>
           <p className="text-gray-400 max-w-md mx-auto mb-6">
-            Complete the MentorLink process to receive your verified Skill Passport.
-            This documents your observed behavioral readiness for the workplace.
+            Complete L1 + L2 observations and receive a "Proceed" endorsement from your mentor.
+            Your Skill Passport documents observed behavioral readiness — earned, not generated.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className={`w-5 h-5 ${(candidateProfile?.mentor_loops || 0) >= 1 ? "text-emerald-400" : "text-gray-600"}`} />
-              <span>Observation Sessions</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className={`w-5 h-5 ${observationProgress.some(f => f.status === 'approved') ? "text-emerald-400" : "text-gray-600"}`} />
-              <span>Mentor Review</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <CheckCircle className={`w-5 h-5 ${(candidateProfile?.mentor_loops || 0) >= 3 ? "text-emerald-400" : "text-gray-600"}`} />
-              <span>Tier Assessment</span>
-            </div>
-          </div>
-          <div className="mt-8">
-            <p className="text-sm text-gray-500 mb-2">Observation Progress</p>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-2xl font-bold text-white">{candidateProfile?.mentor_loops || 0}</span>
-              <span className="text-gray-400">/ 3 Mentor Loops</span>
-            </div>
-          </div>
+          {(() => {
+            const hasL1 = observationProgress.some(f => f.feedback_level === 1);
+            const hasL2 = observationProgress.some(f => f.feedback_level === 2);
+            const dimensionsObserved = new Set(observationProgress.map(f => f.dimension_id)).size;
+            const mdcMet = dimensionsObserved >= 3;
+            return (
+              <>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <CheckCircle className={`w-5 h-5 ${hasL1 ? "text-emerald-400" : "text-gray-600"}`} />
+                    <span>L1 AI Observation</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <CheckCircle className={`w-5 h-5 ${hasL2 ? "text-emerald-400" : "text-gray-600"}`} />
+                    <span>L2 Mentor Observation</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <CheckCircle className={`w-5 h-5 ${mdcMet ? "text-emerald-400" : "text-gray-600"}`} />
+                    <span>MDC-3 ({dimensionsObserved}/3 dimensions)</span>
+                  </div>
+                </div>
+                <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <CheckCircle className={`w-5 h-5 text-gray-600`} />
+                    <span>Mentor Endorsement (Proceed)</span>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
 
           {/* Show dimension-level observation progress if any feedback exists */}
           {observationProgress.length > 0 && assignedDimensionIds.length > 0 && (
             <div className="mt-8 max-w-lg mx-auto">
-              <p className="text-sm text-gray-500 mb-3">Dimension Progress</p>
+              <p className="text-sm text-gray-500 mb-3">Observation Evidence</p>
               <div className="space-y-3">
                 {assignedDimensionIds.map(dimId => {
                   const dimInfo = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
                   const dimFeedback = observationProgress.filter(f => f.dimension_id === dimId);
-                  const completedLevels = dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').length;
+                  const hasL1 = dimFeedback.some(f => f.feedback_level === 1);
+                  const hasL2 = dimFeedback.some(f => f.feedback_level === 2);
                   const latestScore = dimFeedback.find(f => f.bars_score)?.bars_score;
 
                   return (
                     <div key={dimId} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/10">
                       <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${completedLevels > 0 ? "bg-emerald-400" : "bg-gray-600"}`} />
+                        <div className={`w-2 h-2 rounded-full ${hasL1 || hasL2 ? "bg-emerald-400" : "bg-gray-600"}`} />
                         <span className="text-sm text-white">{dimInfo?.label || dimId}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         {latestScore && (
                           <span className="text-xs text-gray-400">BARS: {latestScore}/4</span>
                         )}
-                        <span className="text-xs text-gray-500">{completedLevels}/4 levels</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL1 ? "bg-emerald-500/20 text-emerald-400" : "bg-white/5 text-gray-500"}`}>L1</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL2 ? "bg-blue-500/20 text-blue-400" : "bg-white/5 text-gray-500"}`}>L2</span>
                       </div>
                     </div>
                   );
@@ -1621,8 +1632,8 @@ const ObservationPathway = () => {
   const [mentorAssignment, setMentorAssignment] = useState<MentorAssignment | null>(null);
   const [mentorProfile, setMentorProfile] = useState<{ first_name: string; last_name: string } | null>(null);
   const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
-  const [mentorLoops, setMentorLoops] = useState(0);
   const [observationFeedback, setObservationFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; final_feedback: string | null }>>([]);
+  const [endorsementDecision, setEndorsementDecision] = useState<string | null>(null);;
 
   useEffect(() => {
     const fetchObservationData = async () => {
@@ -1632,11 +1643,10 @@ const ObservationPathway = () => {
         // Get candidate_profiles.id (FK for mentor_assignments)
         const { data: cp } = await supabase
           .from("candidate_profiles")
-          .select("id, mentor_loops")
+          .select("id")
           .eq("profile_id", user.id)
           .single();
         if (!cp) { setIsLoading(false); return; }
-        setMentorLoops(cp.mentor_loops || 0);
 
         // Check for active mentor assignment
         const { data: assignments } = await supabase
@@ -1684,6 +1694,17 @@ const ObservationPathway = () => {
             .eq("candidate_id", cp.id);
 
           if (feedback) setObservationFeedback(feedback);
+
+          // Get endorsement decision if any
+          const { data: endorsement } = await supabase
+            .from("endorsements")
+            .select("decision")
+            .eq("assignment_id", assignment.id)
+            .eq("candidate_id", cp.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          if (endorsement) setEndorsementDecision(endorsement.decision);
         }
       } catch (error) {
         console.error("Error fetching observation data:", error);
@@ -1849,81 +1870,107 @@ const ObservationPathway = () => {
         </div>
       </motion.div>
 
-      {/* Observation Session Card */}
+      {/* MVP Observation Pipeline: L1 → L2 → Endorsement */}
       <motion.div variants={itemVariants}>
-        <div className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-600/20 via-cyan-600/30 to-emerald-600/20 border border-emerald-500/30">
-          <div className="absolute top-4 right-4">
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">
-              {mentorLoops >= 3 ? "All Loops Complete" : `Loop ${mentorLoops + 1} of 3`}
-            </span>
-          </div>
-          <div className="flex flex-col md:flex-row items-start gap-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-              <Brain className="w-10 h-10 text-white" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-white mb-2">Observation Sessions</h2>
-              <p className="text-gray-300 mb-4">
-                AI-driven observation scenarios on your mentor-assigned dimensions. Your responses are documented as behavioral evidence. Feedback is delivered automatically after completion.
-              </p>
-
-              {/* Loop progress indicator */}
-              <div className="flex items-center gap-2 mb-6">
-                {[1, 2, 3].map((loop) => (
-                  <div key={loop} className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                      mentorLoops >= loop
-                        ? "bg-emerald-500 text-white"
-                        : mentorLoops + 1 === loop
-                        ? "bg-emerald-500/30 text-emerald-400 border border-emerald-500"
-                        : "bg-gray-800 text-gray-500 border border-gray-700"
-                    }`}>
-                      {mentorLoops >= loop ? <CheckCircle className="w-4 h-4" /> : loop}
-                    </div>
-                    {loop < 3 && <div className={`w-8 h-0.5 ${mentorLoops >= loop ? "bg-emerald-500" : "bg-gray-700"}`} />}
-                  </div>
-                ))}
-                <span className="ml-2 text-sm text-gray-400">{mentorLoops}/3 Loops Complete</span>
-              </div>
-
-              {mentorLoops >= 3 ? (
-                <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
-                  <div className="flex items-center gap-2 text-emerald-400">
-                    <Award className="w-5 h-5" />
-                    <span className="font-semibold">All 3 observation loops complete!</span>
-                  </div>
-                  <p className="text-gray-400 text-sm mt-1">
-                    Your Skill Passport has been generated. View it in the Skill Passport section.
-                  </p>
+        <h2 className="text-xl font-semibold text-white mb-4">Observation Pipeline</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* L1 — AI Scenarios */}
+          {(() => {
+            const l1Feedback = observationFeedback.filter(f => f.feedback_level === 1);
+            const l1Complete = l1Feedback.length > 0;
+            return (
+              <div className={`p-5 rounded-xl border ${l1Complete ? "bg-emerald-500/10 border-emerald-500/30" : "bg-black border-white/10"}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400">L1</span>
+                  {l1Complete && <CheckCircle className="w-4 h-4 text-emerald-400" />}
                 </div>
-              ) : (
-                <>
-                  <div className="flex flex-wrap gap-3 mb-6">
-                    {[
-                      { icon: Mic, text: "Voice Scenarios" },
-                      { icon: Brain, text: "AI Observation" },
-                      { icon: Clock, text: "Timed Scenarios" },
-                      { icon: ClipboardCheck, text: "Evidence Documented" },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-sm text-gray-300">
-                        <item.icon className="w-4 h-4 text-emerald-400" />
-                        {item.text}
-                      </div>
-                    ))}
-                  </div>
+                <h3 className="font-semibold text-white mb-1">AI-Driven Scenarios</h3>
+                <p className="text-xs text-gray-400 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
+                {l1Complete ? (
+                  <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1Feedback.length} dimensions scored</p>
+                ) : (
                   <Link to="/dashboard/candidate/observations/session">
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg shadow-emerald-500/25"
-                    >
-                      Begin Loop {mentorLoops + 1} of 3
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                    <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700">
+                      Begin L1 Session
+                      <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
                   </Link>
-                </>
-              )}
-            </div>
-          </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* L2 — Mentor Live Observation */}
+          {(() => {
+            const l2Feedback = observationFeedback.filter(f => f.feedback_level === 2);
+            const l2Complete = l2Feedback.length > 0;
+            const l1Complete = observationFeedback.some(f => f.feedback_level === 1);
+            return (
+              <div className={`p-5 rounded-xl border ${l2Complete ? "bg-blue-500/10 border-blue-500/30" : l1Complete ? "bg-black border-white/10" : "bg-black/50 border-white/5 opacity-60"}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400">L2</span>
+                  {l2Complete && <CheckCircle className="w-4 h-4 text-blue-400" />}
+                </div>
+                <h3 className="font-semibold text-white mb-1">Mentor Live Observation</h3>
+                <p className="text-xs text-gray-400 mb-4">Solo, synchronous. Your mentor observes your behaviour in a live session using structured prompts.</p>
+                {l2Complete ? (
+                  <p className="text-xs text-blue-400 font-medium">L2 Complete — Mentor reviewed</p>
+                ) : l1Complete ? (
+                  <p className="text-xs text-amber-400 font-medium">Awaiting mentor scheduling</p>
+                ) : (
+                  <p className="text-xs text-gray-500">Complete L1 first</p>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Endorsement Decision */}
+          {(() => {
+            const l1Complete = observationFeedback.some(f => f.feedback_level === 1);
+            const l2Complete = observationFeedback.some(f => f.feedback_level === 2);
+            const decisionColors: Record<string, string> = {
+              proceed: "bg-emerald-500/10 border-emerald-500/30",
+              redirect: "bg-amber-500/10 border-amber-500/30",
+              pause: "bg-orange-500/10 border-orange-500/30",
+              escalate: "bg-red-500/10 border-red-500/30",
+            };
+            const decisionLabels: Record<string, { label: string; color: string; desc: string }> = {
+              proceed: { label: "Proceed", color: "text-emerald-400", desc: "You've been endorsed. Skill Passport issued!" },
+              redirect: { label: "Redirect", color: "text-amber-400", desc: "Targeted development recommended before re-observation." },
+              pause: { label: "Pause", color: "text-orange-400", desc: "Additional observation needed. Sessions will be scheduled." },
+              escalate: { label: "Escalate", color: "text-red-400", desc: "Flagged for governance review." },
+            };
+            const decision = endorsementDecision ? decisionLabels[endorsementDecision] : null;
+            return (
+              <div className={`p-5 rounded-xl border ${endorsementDecision ? decisionColors[endorsementDecision] || "bg-black border-white/10" : "bg-black border-white/10"} ${!l1Complete ? "opacity-60" : ""}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-400">Decision</span>
+                  {endorsementDecision === "proceed" && <Award className="w-4 h-4 text-emerald-400" />}
+                </div>
+                <h3 className="font-semibold text-white mb-1">Mentor Endorsement</h3>
+                <p className="text-xs text-gray-400 mb-4">Your mentor reviews all observation evidence and makes an endorsement decision.</p>
+                {decision ? (
+                  <div>
+                    <p className={`text-sm font-bold ${decision.color}`}>{decision.label}</p>
+                    <p className="text-xs text-gray-400 mt-1">{decision.desc}</p>
+                  </div>
+                ) : l1Complete && l2Complete ? (
+                  <p className="text-xs text-amber-400 font-medium">Awaiting mentor endorsement</p>
+                ) : l1Complete ? (
+                  <p className="text-xs text-gray-500">Complete L2 first</p>
+                ) : (
+                  <p className="text-xs text-gray-500">Complete L1 and L2 first</p>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+
+        {/* L3/L4 Post-Launch notice */}
+        <div className="mt-4 p-3 rounded-xl bg-black/50 border border-white/5">
+          <p className="text-xs text-gray-500">
+            <span className="font-medium text-gray-400">Coming post-launch:</span> L3 Work Sample Evaluation and L4 Peer/Team Simulation will be added to strengthen your behavioral evidence profile.
+          </p>
         </div>
       </motion.div>
 
@@ -1942,7 +1989,7 @@ const ObservationPathway = () => {
                   <div>
                     <h3 className="font-semibold text-white">{dim.label}</h3>
                     <p className="text-xs text-gray-500 mt-1">
-                      {completedLevels}/4 levels documented
+                      {completedLevels}/2 levels documented
                     </p>
                   </div>
                   {latestScore && (
@@ -1956,31 +2003,30 @@ const ObservationPathway = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4].map((level) => {
+                <div className="flex gap-2">
+                  {[
+                    { level: 1, label: "L1 AI Scenarios" },
+                    { level: 2, label: "L2 Mentor Live" },
+                  ].map(({ level, label }) => {
                     const levelFeedback = dimFeedback.find(f => f.feedback_level === level);
                     const isComplete = levelFeedback && (levelFeedback.status === 'ai_delivered' || levelFeedback.status === 'approved');
                     const isPending = levelFeedback && levelFeedback.status === 'mentor_review';
                     return (
                       <div
                         key={level}
-                        className={`flex-1 h-2 rounded-full ${
+                        className={`flex-1 px-2 py-1.5 rounded-lg text-center text-[10px] font-medium ${
                           isComplete
-                            ? "bg-emerald-500"
+                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                             : isPending
-                            ? "bg-amber-500"
-                            : "bg-white/10"
+                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                            : "bg-white/5 text-gray-500 border border-white/10"
                         }`}
-                        title={`L${level}: ${isComplete ? "Complete" : isPending ? "Awaiting mentor review" : "Not started"}`}
-                      />
+                        title={`${label}: ${isComplete ? "Complete" : isPending ? "Awaiting review" : "Not started"}`}
+                      >
+                        {label}
+                      </div>
                     );
                   })}
-                </div>
-                <div className="flex justify-between text-[10px] text-gray-600 mt-1">
-                  <span>L1 AI Scenarios</span>
-                  <span>L2 Mentor Live</span>
-                  <span>L3 Work Sample</span>
-                  <span>L4 Team Sim</span>
                 </div>
               </div>
             );

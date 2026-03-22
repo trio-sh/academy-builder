@@ -265,86 +265,25 @@ export async function getMentorLoops(
 }
 
 /**
- * Increments the mentor_loops count on candidate_profiles after a completed observation loop.
- * Caps at 3. When reaching 3, automatically awards the Skill Passport.
+ * Increments the mentor_loops count on candidate_profiles after a completed observation.
+ * Tracks how many observation cycles the candidate has completed.
+ * Skill Passport is ONLY awarded via mentor endorsement (Proceed decision), NOT here.
  */
 export async function incrementMentorLoops(
   candidateProfileId: string
 ): Promise<number> {
   const currentLoops = await getMentorLoops(candidateProfileId);
-
-  // Already at max — don't increment further
-  if (currentLoops >= 3) return currentLoops;
-
   const newLoops = currentLoops + 1;
-
-  const updateData: Record<string, unknown> = {
-    mentor_loops: newLoops,
-    updated_at: new Date().toISOString(),
-  };
-
-  // Auto-award Skill Passport when 3 loops are complete
-  if (newLoops >= 3) {
-    updateData.has_skill_passport = true;
-  }
 
   await supabase
     .from('candidate_profiles')
-    .update(updateData)
+    .update({
+      mentor_loops: newLoops,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', candidateProfileId);
 
-  // If passport awarded, create the skill_passports record
-  if (newLoops >= 3) {
-    await createSkillPassportRecord(candidateProfileId);
-  }
-
   return newLoops;
-}
-
-/**
- * Creates a skill_passports row when a candidate earns their passport.
- */
-async function createSkillPassportRecord(
-  candidateProfileId: string
-): Promise<void> {
-  // Gather average BARS scores from observation_feedback
-  const { data: feedback } = await supabase
-    .from('observation_feedback')
-    .select('dimension_id, bars_score')
-    .eq('candidate_id', candidateProfileId)
-    .not('bars_score', 'is', null);
-
-  const behavioralScores: Record<string, number> = {};
-  if (feedback) {
-    const dimScores: Record<string, number[]> = {};
-    for (const f of feedback) {
-      if (!dimScores[f.dimension_id]) dimScores[f.dimension_id] = [];
-      dimScores[f.dimension_id].push(f.bars_score);
-    }
-    for (const [dim, scores] of Object.entries(dimScores)) {
-      behavioralScores[dim] = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-    }
-  }
-
-  const avgScore = Object.values(behavioralScores).length > 0
-    ? Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length
-    : 0;
-
-  // Determine readiness tier based on average BARS score (enum: silver, gold, platinum)
-  let readinessTier = 'silver';
-  if (avgScore >= 3.5) readinessTier = 'platinum';
-  else if (avgScore >= 2.5) readinessTier = 'gold';
-
-  const verificationCode = crypto.randomUUID().replace(/-/g, '').substring(0, 12).toUpperCase();
-
-  await supabase.from('skill_passports').insert({
-    candidate_id: candidateProfileId,
-    behavioral_scores: behavioralScores,
-    readiness_tier: readinessTier,
-    verification_code: verificationCode,
-    is_active: true,
-    issued_at: new Date().toISOString(),
-  });
 }
 
 // ─────────────────────────────────────────────────────────────────

@@ -178,7 +178,6 @@ export const InteractiveSkillAssessment = () => {
   const [assignmentId, setAssignmentId] = useState<string | null>(null);
   const [candidateProfileId, setCandidateProfileId] = useState<string | null>(null);
   const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
-  const [currentLoop, setCurrentLoop] = useState<number>(1);
 
   // Refs
   const contentRef = useRef<HTMLDivElement>(null);
@@ -238,7 +237,6 @@ export const InteractiveSkillAssessment = () => {
         .single();
       if (!cp) return;
       setCandidateProfileId(cp.id);
-      setCurrentLoop((cp.mentor_loops || 0) + 1);
 
       const { data: assignments } = await supabase
         .from('mentor_assignments')
@@ -292,7 +290,7 @@ export const InteractiveSkillAssessment = () => {
     if (isChallenge) {
       sessionStartedRef.current = true;
 
-      startObservationSession(user.id, assignmentId, currentLoop)
+      startObservationSession(user.id, assignmentId, 1)
         .then(id => { if (id) setSessionId(id); });
     }
   }, [currentSceneIndex, user?.id, cooldownStatus, assignmentId, candidateProfileId]);
@@ -1352,7 +1350,7 @@ export const InteractiveSkillAssessment = () => {
               if (sessionId) {
                 await completeObservationSession(sessionId);
 
-                // Write observation feedback for each assigned dimension
+                // Write L1 observation feedback for each assigned dimension
                 if (assignmentId && candidateProfileId && assignedDimensions.length > 0) {
                   const profile = calculateSkillProfile(challengeResults);
 
@@ -1362,21 +1360,21 @@ export const InteractiveSkillAssessment = () => {
                     const barsScore = dimScore >= 4 ? 4 : dimScore >= 3 ? 3 : dimScore >= 2 ? 2 : 1;
                     const evidence = profile[dimId]?.evidence || [];
                     const feedback = evidence.length > 0
-                      ? `AI Observation Summary (Loop ${currentLoop}):\n${evidence.join('\n')}`
-                      : `Behavioral evidence recorded during Loop ${currentLoop} observation session.`;
+                      ? `L1 AI Observation Summary:\n${evidence.join('\n')}`
+                      : 'Behavioral evidence recorded during L1 AI observation session.';
 
                     await recordObservationFeedback(
                       sessionId,
                       assignmentId,
                       candidateProfileId,
                       dimId,
-                      currentLoop,
+                      1,
                       barsScore,
                       feedback
                     );
                   }
 
-                  // Increment mentor loops (caps at 3, auto-awards passport at 3)
+                  // Track observation completion
                   await incrementMentorLoops(candidateProfileId);
                 }
               }
@@ -1458,7 +1456,7 @@ export const InteractiveSkillAssessment = () => {
             >
               <X className="w-5 h-5" />
             </Button>
-            <h1 className="font-semibold text-lg text-white">Observation Session — Loop {currentLoop} of 3</h1>
+            <h1 className="font-semibold text-lg text-white">L1 AI Observation Session</h1>
           </div>
         </div>
         <div className="absolute inset-0 flex items-center justify-center px-4">
@@ -1468,7 +1466,7 @@ export const InteractiveSkillAssessment = () => {
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Session Closed</h2>
             <p className="text-gray-400 mb-2">
-              You have recently completed an Observation Session — Loop {currentLoop} of 3.
+              You have recently completed an L1 AI Observation Session.
             </p>
             <p className="text-gray-400 mb-6">
               Next session available:{' '}
@@ -1519,9 +1517,9 @@ export const InteractiveSkillAssessment = () => {
               <div className="h-8 w-px bg-black hidden md:block" />
               <div className="min-w-0">
                 {/* Desktop: Full title */}
-                <h1 className="hidden md:block font-semibold text-lg text-white">Observation Session — Loop {currentLoop} of 3</h1>
+                <h1 className="hidden md:block font-semibold text-lg text-white">L1 AI Observation Session</h1>
                 {/* Mobile: Truncated title */}
-                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="Observation Session — Loop {currentLoop} of 3">
+                <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="L1 AI Observation Session">
                   L1 Session
                 </h1>
                 <p className="text-xs md:text-sm text-gray-500 truncate">T3A Observation Protocol</p>
