@@ -54,17 +54,17 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 
 // T3A 14 Behavioral Dimensions — locked framework (February 2026)
-// MVP: top 5 active for initial launch; dimensions 6–14 post-launch
+// MVP: top 7 active for initial launch; dimensions 8–14 post-launch
 const BEHAVIORAL_DIMENSIONS = [
   { id: "integrity_ethics", label: "Integrity & Ethics", description: "Acting with honesty, maintaining trust, navigating ethical grey areas" },
   { id: "accountability_ownership", label: "Accountability & Ownership", description: "Taking responsibility for outcomes, following through without excuses" },
   { id: "execution_reliability", label: "Execution Reliability", description: "Delivering consistent, quality work on time without constant supervision" },
   { id: "communication_pressure", label: "Communication Under Pressure", description: "Clear, timely messages with appropriate tone when stakes are high" },
   { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution", description: "Working effectively with diverse teams, navigating disagreements productively" },
-  { id: "workplace_adaptability", label: "Workplace Adaptability", description: "Navigating organizational culture, reading situations, adjusting behavior" },
-  { id: "prioritization_time", label: "Prioritization & Time Management", description: "Managing competing demands, making sound decisions under deadline pressure" },
   { id: "resilience_recovery", label: "Resilience & Recovery", description: "Bouncing back from setbacks, maintaining composure through failure" },
   { id: "learning_agility", label: "Learning Agility", description: "Receiving and applying feedback; proactively acquiring new knowledge" },
+  { id: "workplace_adaptability", label: "Workplace Adaptability", description: "Navigating organizational culture, reading situations, adjusting behavior" },
+  { id: "prioritization_time", label: "Prioritization & Time Management", description: "Managing competing demands, making sound decisions under deadline pressure" },
   { id: "professional_boundaries", label: "Professional Boundaries", description: "Maintaining appropriate workplace relationships, navigating social dynamics" },
   { id: "creative_problem_solving", label: "Creative Problem-Solving", description: "Finding resourceful solutions when standard approaches don't work" },
   { id: "customer_service_focus", label: "Customer & Service Focus", description: "Prioritizing stakeholder needs, delivering service with genuine care" },
@@ -1607,7 +1607,7 @@ const AssignDimensions = () => {
   };
 
   // MVP dimensions (first 5)
-  const mvpDimensions = BEHAVIORAL_DIMENSIONS.slice(0, 5);
+  const mvpDimensions = BEHAVIORAL_DIMENSIONS.slice(0, 7);
   const futureDimensions = BEHAVIORAL_DIMENSIONS.slice(5);
 
   if (isLoading) {

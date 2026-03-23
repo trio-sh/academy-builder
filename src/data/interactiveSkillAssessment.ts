@@ -691,6 +691,89 @@ What do you do?`,
     timeLimit: 30
   },
 
+  // RESILIENCE & RECOVERY - Judgment
+  {
+    id: 'resilience-judgment-1',
+    type: 'judgment',
+    title: 'Resilience Challenge',
+    subtitle: 'Setback Response',
+    dimension: 'resilience_recovery',
+    content: 'Read the scenario carefully. Choose the response that best demonstrates how you would handle this setback.',
+    judgmentScenario: {
+      situation: 'You\'ve been working on a critical client proposal for three weeks. Two hours before the deadline, your laptop crashes and you lose the final draft — your cloud backup is from two days ago. Your manager is in back-to-back meetings and can\'t be reached. The client is expecting the proposal by end of day.\n\nYou also just learned that a colleague\'s competing proposal for the same client was submitted yesterday, and your team lead mentioned this morning that budget cuts may affect your department next quarter.',
+      options: [
+        {
+          id: 'resilience-a',
+          text: 'Panic and send an email to the client explaining you need a 3-day extension due to technical issues.',
+          quality: 'poor',
+          feedback: 'While honest, this shows difficulty maintaining composure under pressure. It prioritises the emotional reaction over problem-solving.'
+        },
+        {
+          id: 'resilience-b',
+          text: 'Immediately start rebuilding from the 2-day-old backup, prioritising the most critical sections. Email the client a brief update that the proposal is being finalised and will arrive by end of day.',
+          quality: 'excellent',
+          feedback: 'Excellent — you recover quickly, focus energy on what you can control, communicate proactively without excuses, and maintain composure. This is resilience in action.'
+        },
+        {
+          id: 'resilience-c',
+          text: 'Blame IT for not having better backup systems and escalate to your manager\'s manager to get help.',
+          quality: 'poor',
+          feedback: 'Deflecting responsibility and escalating over your manager shows poor resilience. It wastes time on blame rather than recovery.'
+        },
+        {
+          id: 'resilience-d',
+          text: 'Ask a colleague to help reconstruct the proposal while you handle the client communication.',
+          quality: 'good',
+          feedback: 'Good resourcefulness in seeking help and splitting tasks. Slightly less autonomous than rebuilding yourself, but shows practical recovery thinking.'
+        }
+      ]
+    },
+    animationType: 'fadeIn'
+  },
+
+  // LEARNING AGILITY - Quick Response
+  {
+    id: 'learning-quick-1',
+    type: 'quick-response',
+    title: 'Learning Agility Test',
+    subtitle: 'Feedback Application',
+    dimension: 'learning_agility',
+    content: 'You\'ll see a feedback scenario. You have 45 seconds to describe specifically how you would apply this feedback going forward. Focus on concrete actions, not just acknowledgment.',
+    animationType: 'scaleIn',
+    timeLimit: 45
+  },
+
+  // LEARNING AGILITY - Written Challenge
+  {
+    id: 'learning-written-1',
+    type: 'written-challenge',
+    title: 'Learning Agility Challenge',
+    subtitle: 'Adapting to New Information',
+    dimension: 'learning_agility',
+    content: 'Write a response demonstrating how you process and apply new information under pressure.',
+    writtenChallenge: {
+      id: 'learning-write-1',
+      type: 'message',
+      scenario: 'You\'ve been leading a project using Approach A for the past month. In today\'s team meeting, a senior colleague presents compelling data showing that Approach B would deliver 40% better results. Your team has already invested significant effort in Approach A, and two team members are visibly frustrated by the suggestion to change course.',
+      context: 'Your manager is watching how you handle this. The project deadline is in 3 weeks.',
+      recipient: 'Your project team (via team Slack channel)',
+      constraints: {
+        minWords: 40,
+        maxWords: 200,
+        mustInclude: ['team', 'approach'],
+        mustAvoid: ['blame', 'fault', 'stupid']
+      },
+      evaluationCriteria: {
+        tone: 'Open to learning, non-defensive, acknowledges both the new data and the team\'s effort',
+        clarity: 'Clear plan for evaluating and potentially pivoting, with specific next steps',
+        actionability: 'Concrete actions that move the team forward rather than dwelling on sunk costs',
+        professionalism: 'Respects the team\'s investment while being intellectually honest about the data'
+      }
+    },
+    timeLimit: 180,
+    animationType: 'slideUp'
+  },
+
   // REVIEW
   {
     id: 'review',

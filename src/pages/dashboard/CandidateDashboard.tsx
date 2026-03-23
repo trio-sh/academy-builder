@@ -107,17 +107,17 @@ type MentorAssignment = Database["public"]["Tables"]["mentor_assignments"]["Row"
 type SelfAssessment = Database["public"]["Tables"]["candidate_self_assessments"]["Row"];
 
 // T3A 14 Behavioral Dimensions — locked framework (February 2026)
-// MVP: top 5 active for initial launch; dimensions 6–14 post-launch
+// MVP: top 7 active for initial launch; dimensions 8–14 post-launch
 const BEHAVIORAL_DIMENSIONS = [
   { id: "integrity_ethics", label: "Integrity & Ethics", color: "from-emerald-500 to-teal-500" },
   { id: "accountability_ownership", label: "Accountability & Ownership", color: "from-blue-500 to-indigo-500" },
   { id: "execution_reliability", label: "Execution Reliability", color: "from-violet-500 to-purple-500" },
   { id: "communication_pressure", label: "Communication Under Pressure", color: "from-sky-500 to-blue-500" },
   { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution", color: "from-pink-500 to-rose-500" },
-  { id: "workplace_adaptability", label: "Workplace Adaptability", color: "from-amber-500 to-orange-500" },
-  { id: "prioritization_time", label: "Prioritization & Time Management", color: "from-lime-500 to-green-500" },
   { id: "resilience_recovery", label: "Resilience & Recovery", color: "from-red-500 to-rose-500" },
   { id: "learning_agility", label: "Learning Agility", color: "from-cyan-500 to-sky-500" },
+  { id: "workplace_adaptability", label: "Workplace Adaptability", color: "from-amber-500 to-orange-500" },
+  { id: "prioritization_time", label: "Prioritization & Time Management", color: "from-lime-500 to-green-500" },
   { id: "professional_boundaries", label: "Professional Boundaries", color: "from-slate-500 to-gray-500" },
   { id: "creative_problem_solving", label: "Creative Problem-Solving", color: "from-yellow-500 to-amber-500" },
   { id: "customer_service_focus", label: "Customer & Service Focus", color: "from-teal-500 to-cyan-500" },
