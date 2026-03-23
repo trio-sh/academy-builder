@@ -5119,7 +5119,9 @@ interface MentorWithProfile extends MentorProfile {
 }
 
 const FindMentor = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
   const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
   const [myCandidateProfileId, setMyCandidateProfileId] = useState<string | null>(null);
@@ -5211,6 +5213,21 @@ const FindMentor = () => {
 
   const requestMentor = async () => {
     if (!user?.id || !selectedMentor || !myCandidateProfileId) return;
+
+    // Check profile completeness before requesting
+    if (!profile?.first_name?.trim() || !profile?.last_name?.trim()) {
+      toast({
+        title: "Complete Your Profile First",
+        description: "Please add your first and last name before requesting a mentor.",
+        variant: "destructive",
+        action: (
+          <Button size="sm" variant="outline" className="border-white/20 text-white" onClick={() => navigate("/dashboard/candidate/profile")}>
+            Go to Profile
+          </Button>
+        ),
+      });
+      return;
+    }
 
     setIsRequesting(true);
 
