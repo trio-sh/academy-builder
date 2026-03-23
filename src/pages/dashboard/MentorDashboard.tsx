@@ -385,7 +385,7 @@ const ObservationFormModal = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={closeModal}
       >
         <motion.div
@@ -527,9 +527,10 @@ const ObservationFormModal = () => {
                               { score: 4, label: "Strong", color: "bg-emerald-600" },
                             ].map(({ score, label, color }) => (
                               <button
+                                type="button"
                                 key={score}
-                                onClick={() => handleScoreChange(dimension.id, score)}
-                                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleScoreChange(dimension.id, score); }}
+                                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${
                                   formData.scores[dimension.id] === score
                                     ? `${color} text-white`
                                     : "bg-black text-gray-400 hover:bg-white/20"
