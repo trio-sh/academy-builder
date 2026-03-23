@@ -727,16 +727,18 @@ const SkillPassport = () => {
             </div>
           </div>
 
-          <div class="dimensions-title">Behavioral Dimensions</div>
+          <div class="dimensions-title">Behavioral Assessment (BARS 4-Point Scale)</div>
           <div class="dimensions-grid">
-            ${BEHAVIORAL_DIMENSIONS.map(dim => {
-              const score = behavioralScores[dim.id] || 0;
+            ${Object.entries(behavioralScores).filter(([, v]) => v > 0).map(([dimId, score]) => {
+              const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+              if (!dim) return '';
               const percentage = (score / 4) * 100;
+              const label = score >= 3.5 ? "Strong" : score >= 2.5 ? "Competent" : score >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
               return `
                 <div class="dimension">
                   <div class="dimension-header">
                     <span class="dimension-name">${dim.label}</span>
-                    <span class="dimension-score">${score.toFixed(1)}/4</span>
+                    <span class="dimension-score">${score.toFixed(1)}/4 — ${label}</span>
                   </div>
                   <div class="progress-bar">
                     <div class="progress-fill" style="width: ${percentage}%"></div>
@@ -748,7 +750,7 @@ const SkillPassport = () => {
 
           <div class="overall-score">
             <div>
-              <div class="overall-label">Overall Behavioral Score</div>
+              <div class="overall-label">Overall Behavioral Readiness</div>
               <div class="overall-value">${avgScore}/4</div>
             </div>
             <div style="font-size: 48px;">🏆</div>
@@ -1048,24 +1050,25 @@ const SkillPassport = () => {
         </div>
       </motion.div>
 
-      {/* Behavioral Scores */}
+      {/* Behavioral Scores — Only observed dimensions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Behavioral Dimensions</h2>
+        <h2 className="text-xl font-semibold text-white mb-4">Behavioral Assessment (BARS 4-Point Scale)</h2>
         <div className="grid md:grid-cols-2 gap-4">
-          {BEHAVIORAL_DIMENSIONS.map((dimension) => {
-            const score = behavioralScores[dimension.id] || 0;
+          {Object.entries(behavioralScores).filter(([, v]) => v > 0).map(([dimId, score]) => {
+            const dimension = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+            if (!dimension) return null;
             const percentage = (score / 4) * 100;
+            const barsLabel = score >= 3.5 ? "Strong" : score >= 2.5 ? "Competent" : score >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
+            const barsColor = score >= 3.5 ? "text-emerald-400" : score >= 2.5 ? "text-blue-400" : score >= 1.5 ? "text-amber-400" : "text-orange-400";
 
             return (
-              <div
-                key={dimension.id}
-                className="p-4 rounded-xl bg-black border border-white/30"
-              >
-                <div className="flex items-center justify-between mb-2">
+              <div key={dimId} className="p-4 rounded-xl bg-black border border-white/10">
+                <div className="flex items-center justify-between mb-1">
                   <span className="font-medium text-white">{dimension.label}</span>
-                  <span className="text-lg font-bold text-white">{score.toFixed(1)}/4</span>
+                  <span className={`text-lg font-bold ${barsColor}`}>{score.toFixed(1)}/4</span>
                 </div>
-                <div className="h-2 bg-black rounded-full overflow-hidden">
+                <p className={`text-xs mb-2 ${barsColor}`}>{barsLabel}</p>
+                <div className="h-2 bg-white/5 rounded-full overflow-hidden">
                   <div
                     className={`h-full bg-gradient-to-r ${dimension.color} rounded-full transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -1077,24 +1080,29 @@ const SkillPassport = () => {
         </div>
       </motion.div>
 
-      {/* Average Score */}
-      <motion.div variants={itemVariants}>
-        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/20">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-400 mb-1">Behavioral Evidence Summary</p>
-              <p className="text-3xl font-bold text-white">
-                {Object.values(behavioralScores).length > 0
-                  ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
-                  : "N/A"}/4
-              </p>
+      {/* Overall Score */}
+      {(() => {
+        const scored = Object.values(behavioralScores).filter(v => v > 0);
+        const avg = scored.length > 0 ? scored.reduce((a, b) => a + b, 0) / scored.length : 0;
+        const label = avg >= 3.5 ? "Strong" : avg >= 2.5 ? "Competent" : avg >= 1.5 ? "Emerging" : "—";
+        const color = avg >= 3.5 ? "text-emerald-400" : avg >= 2.5 ? "text-blue-400" : avg >= 1.5 ? "text-amber-400" : "text-gray-400";
+        return (
+          <motion.div variants={itemVariants}>
+            <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 mb-1">Overall Behavioral Readiness</p>
+                  <p className={`text-3xl font-bold ${color}`}>{avg > 0 ? avg.toFixed(1) : "N/A"}/4</p>
+                  <p className={`text-sm ${color}`}>{label}</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                  <Award className="w-10 h-10 text-purple-400" />
+                </div>
+              </div>
             </div>
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-              <Award className="w-10 h-10 text-purple-400" />
-            </div>
-          </div>
-        </div>
-      </motion.div>
+          </motion.div>
+        );
+      })()}
 
       {/* Verification Info */}
       <motion.div variants={itemVariants}>

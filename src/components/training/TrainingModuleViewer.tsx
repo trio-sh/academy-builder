@@ -937,18 +937,24 @@ export const TrainingModuleViewer = () => {
                 {currentScene?.type === 'narrative' && (
                   <div>
                     <div className="prose prose-invert max-w-none">
-                      <div className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+                      <div className="text-gray-300 leading-relaxed text-lg">
                         {currentScene.content.split('\n').map((line, i) => {
                           if (line.startsWith('**') && line.endsWith('**')) {
                             return <h4 key={i} className="text-white font-semibold mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
                           }
-                          if (line.startsWith('•')) {
-                            return <p key={i} className="ml-4 my-1">{line}</p>;
+                          if (line.startsWith('•') || line.startsWith('- ')) {
+                            const parsed = line.replace(/^[•\-]\s*/, '').replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+                            return <div key={i} className="flex items-start gap-2 ml-2 my-1.5 text-gray-400"><span className="text-indigo-400 mt-1">•</span><span dangerouslySetInnerHTML={{ __html: parsed }} /></div>;
                           }
                           if (line.match(/^\d+\./)) {
-                            return <p key={i} className="ml-4 my-1">{line}</p>;
+                            const parsed = line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+                            return <p key={i} className="ml-4 my-1" dangerouslySetInnerHTML={{ __html: parsed }} />;
                           }
-                          return <p key={i} className="my-2">{line}</p>;
+                          if (line.trim()) {
+                            const parsed = line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+                            return <p key={i} className="my-2" dangerouslySetInnerHTML={{ __html: parsed }} />;
+                          }
+                          return <div key={i} className="h-3" />;
                         })}
                       </div>
                     </div>
@@ -988,7 +994,7 @@ export const TrainingModuleViewer = () => {
                         <span>Fresh scenario for attempt #{attemptNumber}</span>
                       </div>
                     )}
-                    <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
+                    <p className="text-gray-300 mb-6" dangerouslySetInnerHTML={{ __html: currentSceneWithAI.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
                     <div className="space-y-3">
                       {currentSceneWithAI.choices?.map((choice) => (
                         <button
@@ -1081,7 +1087,7 @@ export const TrainingModuleViewer = () => {
                         <span>Fresh reflection prompt for attempt #{attemptNumber}</span>
                       </div>
                     )}
-                    <p className="text-gray-300 mb-4">{currentSceneWithAI.content}</p>
+                    <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{ __html: currentSceneWithAI.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
                     <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/30 mb-4">
                       <p className="text-amber-400 text-sm">{currentSceneWithAI.reflection?.prompt}</p>
                     </div>
@@ -1120,7 +1126,7 @@ export const TrainingModuleViewer = () => {
                         <span>Fresh questions for attempt #{attemptNumber}</span>
                       </div>
                     )}
-                    <p className="text-gray-300 mb-6">{currentSceneWithAI.content}</p>
+                    <p className="text-gray-300 mb-6" dangerouslySetInnerHTML={{ __html: currentSceneWithAI.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
                     <div className="space-y-6">
                       {currentSceneWithAI.quiz?.map((q, qIndex) => (
                         <div key={qIndex} className="p-4 rounded-xl bg-black border border-white/30">
@@ -1204,7 +1210,7 @@ export const TrainingModuleViewer = () => {
                     <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${module.color} flex items-center justify-center mx-auto mb-6`}>
                       <Award className="w-12 h-12 text-white" />
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-4">{currentScene.content}</h3>
+                    <h3 className="text-3xl font-bold text-white mb-4" dangerouslySetInnerHTML={{ __html: currentScene.content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }} />
 
                     <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8">
                       <div className="p-4 rounded-xl bg-black border border-white/30">
