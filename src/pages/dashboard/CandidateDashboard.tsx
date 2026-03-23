@@ -533,13 +533,98 @@ const SkillPassport = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
-    const avgScore = Object.values(behavioralScores).length > 0
-      ? (Object.values(behavioralScores).reduce((a, b) => a + b, 0) / Object.values(behavioralScores).length).toFixed(1)
+    const scoredDims = Object.entries(behavioralScores).filter(([, v]) => v > 0);
+    const avgScore = scoredDims.length > 0
+      ? (scoredDims.reduce((a, [, b]) => a + b, 0) / scoredDims.length).toFixed(1)
       : "N/A";
     const tierLabel = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
 
+    try {
+      const pdfMakeModule = await import("pdfmake/build/pdfmake");
+      const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+      const pdfMake = pdfMakeModule.default || pdfMakeModule;
+      const vfs = (pdfFontsModule as any)?.pdfMake?.vfs || (pdfFontsModule as any)?.default?.pdfMake?.vfs;
+      if (vfs) pdfMake.vfs = vfs;
+
+      const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
+
+      const docDefinition = {
+        pageSize: 'A4' as const,
+        pageMargins: [40, 40, 40, 40] as [number, number, number, number],
+        content: [
+          { text: 'THE 3RD ACADEMY', style: 'brand' },
+          { text: 'Skill Passport', style: 'title' },
+          { canvas: [{ type: 'line' as const, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1, lineColor: '#10b981' }], margin: [0, 5, 0, 15] as [number, number, number, number] },
+          {
+            columns: [
+              { text: `${profile?.first_name || ''} ${profile?.last_name || ''}`, style: 'name', width: '*' },
+              { text: `✓ Verified`, style: 'verified', width: 'auto' },
+            ],
+          },
+          { text: profile?.headline || 'Behavioral Readiness Credential Holder', style: 'headline', margin: [0, 2, 0, 15] as [number, number, number, number] },
+          {
+            columns: [
+              { text: [{ text: 'Tier: ', style: 'label' }, { text: tierLabel.label, bold: true }], width: '*' },
+              { text: [{ text: 'Dimensions: ', style: 'label' }, { text: `${scoredDims.length}`, bold: true }], width: '*' },
+              { text: [{ text: 'Issued: ', style: 'label' }, { text: passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : '—', bold: true }], width: '*' },
+              { text: [{ text: 'Expires: ', style: 'label' }, { text: passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString() : 'Never', bold: true }], width: '*' },
+            ],
+            margin: [0, 0, 0, 20] as [number, number, number, number],
+          },
+          { text: 'Behavioral Assessment (BARS 4-Point Scale)', style: 'sectionTitle' },
+          {
+            table: {
+              widths: ['*', 60, 100],
+              body: [
+                [{ text: 'Dimension', style: 'tableHeader' }, { text: 'Score', style: 'tableHeader' }, { text: 'Level', style: 'tableHeader' }],
+                ...scoredDims.map(([dimId, score]) => {
+                  const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+                  return [
+                    { text: dim?.label || dimId, margin: [0, 4, 0, 4] as [number, number, number, number] },
+                    { text: `${score.toFixed(1)}/4`, bold: true, alignment: 'center' as const, margin: [0, 4, 0, 4] as [number, number, number, number] },
+                    { text: barsLabel(score), alignment: 'center' as const, margin: [0, 4, 0, 4] as [number, number, number, number] },
+                  ];
+                }),
+              ],
+            },
+            layout: 'lightHorizontalLines',
+            margin: [0, 5, 0, 20] as [number, number, number, number],
+          },
+          {
+            columns: [
+              { text: [{ text: 'Overall: ', style: 'label' }, { text: `${avgScore}/4 — ${avgScore !== "N/A" ? barsLabel(parseFloat(avgScore)) : '—'}`, bold: true, fontSize: 14 }], width: '*' },
+            ],
+            margin: [0, 0, 0, 20] as [number, number, number, number],
+          },
+          { canvas: [{ type: 'line' as const, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#666' }], margin: [0, 0, 0, 10] as [number, number, number, number] },
+          { text: [{ text: 'Verification Code: ', style: 'label' }, { text: passportData?.verification_code || '', bold: true, font: 'Courier' }], margin: [0, 0, 0, 5] as [number, number, number, number] },
+          { text: `Verify at: ${window.location.origin}/verify/${passportData?.verification_code}`, style: 'small' },
+          { text: '© 2026 The 3rd Academy. All rights reserved.', style: 'footer' },
+        ],
+        styles: {
+          brand: { fontSize: 10, color: '#6366f1', bold: true, margin: [0, 0, 0, 2] as [number, number, number, number] },
+          title: { fontSize: 22, bold: true, color: '#10b981', margin: [0, 0, 0, 5] as [number, number, number, number] },
+          name: { fontSize: 16, bold: true },
+          headline: { fontSize: 10, color: '#888' },
+          verified: { fontSize: 10, color: '#10b981', bold: true },
+          label: { fontSize: 9, color: '#888' },
+          sectionTitle: { fontSize: 12, bold: true, margin: [0, 0, 0, 5] as [number, number, number, number] },
+          tableHeader: { fontSize: 9, bold: true, color: '#888', margin: [0, 4, 0, 4] as [number, number, number, number] },
+          small: { fontSize: 8, color: '#999' },
+          footer: { fontSize: 8, color: '#aaa', margin: [0, 20, 0, 0] as [number, number, number, number], alignment: 'center' as const },
+        },
+        defaultStyle: { fontSize: 10 },
+      };
+
+      pdfMake.createPdf(docDefinition).download(`Skill-Passport-${profile?.first_name}-${profile?.last_name}.pdf`);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+    }
+    return; // skip old print window code below
+
+    // Legacy print approach (kept as fallback reference)
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
