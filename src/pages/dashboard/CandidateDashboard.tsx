@@ -1889,11 +1889,11 @@ const ObservationPathway = () => {
                 <h3 className="font-semibold text-white mb-1">AI-Driven Scenarios</h3>
                 <p className="text-xs text-gray-400 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
                 {l1AllComplete ? (
-                  <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1Feedback.length}/{assignedDimensions.length} dimensions scored</p>
+                  <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1ScoredDims.size}/{assignedDimensions.length} dimensions scored</p>
                 ) : (
                   <>
                     {l1Partial && (
-                      <p className="text-xs text-amber-400 mb-3">{l1Feedback.length}/{assignedDimensions.length} dimensions scored — continue to complete remaining</p>
+                      <p className="text-xs text-amber-400 mb-3">{l1ScoredDims.size}/{assignedDimensions.length} dimensions scored — continue to complete remaining</p>
                     )}
                     <Link to="/dashboard/candidate/observations/session">
                       <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700">
@@ -1988,7 +1988,7 @@ const ObservationPathway = () => {
           {mvpDimensions.map((dim) => {
             const dimFeedback = observationFeedback.filter(f => f.dimension_id === dim.id);
             const latestScore = dimFeedback.find(f => f.bars_score)?.bars_score;
-            const completedLevels = dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').length;
+            const completedLevels = new Set(dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').map(f => f.feedback_level)).size;
 
             return (
               <div key={dim.id} className="p-5 rounded-xl bg-black border border-white/10">
