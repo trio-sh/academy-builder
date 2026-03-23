@@ -953,6 +953,8 @@ const Mentees = () => {
     };
     assigned_dimensions?: string[];
     observation_count?: number;
+    l1_completed?: boolean;
+    l1_dimensions_scored?: number;
   }
   const [mentees, setMentees] = useState<MenteeWithProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -1007,12 +1009,20 @@ const Mentees = () => {
                 .eq("assignment_id", assignment.id)
                 .eq("is_active", true);
 
-              // Count observations (locked mentor_observations)
+              // Count L2 observations (locked mentor_observations)
               const { count: obsCount } = await supabase
                 .from("mentor_observations")
                 .select("*", { count: "exact", head: true })
                 .eq("assignment_id", assignment.id)
                 .eq("is_locked", true);
+
+              // Count L1 AI feedback dimensions scored
+              const { count: l1Count } = await supabase
+                .from("observation_feedback")
+                .select("*", { count: "exact", head: true })
+                .eq("assignment_id", assignment.id)
+                .eq("candidate_id", assignment.candidate_id)
+                .eq("feedback_level", 1);
 
               return {
                 ...assignment,
@@ -1022,6 +1032,8 @@ const Mentees = () => {
                 },
                 assigned_dimensions: dims?.map((d: { dimension_id: string }) => d.dimension_id) || [],
                 observation_count: obsCount || 0,
+                l1_completed: (l1Count || 0) > 0,
+                l1_dimensions_scored: l1Count || 0,
               };
             }
             return assignment;
@@ -1289,8 +1301,16 @@ const Mentees = () => {
                     </div>
                     <p className="text-sm text-gray-400">{profile?.email}</p>
                     <div className="flex flex-wrap items-center gap-3 mt-3 text-sm">
+                      {assignment.l1_completed ? (
+                        <span className="flex items-center gap-1 text-emerald-400">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          L1 Complete ({assignment.l1_dimensions_scored} dims)
+                        </span>
+                      ) : (
+                        <span className="text-amber-400">L1 Not started</span>
+                      )}
                       <span className="text-gray-500">
-                        {assignment.observation_count || 0} observations
+                        {assignment.observation_count || 0} L2 observations
                       </span>
                       <span className="text-gray-500">
                         Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
