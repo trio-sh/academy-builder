@@ -31,7 +31,6 @@ import {
   Star,
   MessageSquare,
   Send,
-  Plus,
   FileCheck,
   ThumbsUp,
   ArrowRight,

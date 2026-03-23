@@ -33,7 +33,6 @@ import {
   Filter,
   MessageSquare,
   Send,
-  Plus,
   User,
   Bot,
   PanelLeftClose,
