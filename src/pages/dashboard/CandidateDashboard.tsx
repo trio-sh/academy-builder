@@ -551,72 +551,227 @@ const SkillPassport = () => {
 
       const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
+      const tierColor = passportData?.readiness_tier === 'platinum' ? '#10b981' : passportData?.readiness_tier === 'gold' ? '#f59e0b' : '#94a3b8';
+      const tierBg = passportData?.readiness_tier === 'platinum' ? '#ecfdf5' : passportData?.readiness_tier === 'gold' ? '#fffbeb' : '#f8fafc';
+
       const docDefinition = {
         pageSize: 'A4' as const,
-        pageMargins: [40, 40, 40, 40] as [number, number, number, number],
+        pageMargins: [0, 0, 0, 0] as [number, number, number, number],
+        background: [
+          // Top accent bar
+          { canvas: [{ type: 'rect' as const, x: 0, y: 0, w: 595, h: 8, color: '#10b981' }] },
+          // Bottom accent bar
+          { canvas: [{ type: 'rect' as const, x: 0, y: 834, w: 595, h: 8, color: '#6366f1' }] },
+          // Left border accent
+          { canvas: [{ type: 'rect' as const, x: 0, y: 8, w: 4, h: 826, color: '#10b981' }] },
+          // Right border accent
+          { canvas: [{ type: 'rect' as const, x: 591, y: 8, w: 4, h: 826, color: '#6366f1' }] },
+        ],
         content: [
-          { text: 'THE 3RD ACADEMY', style: 'brand' },
-          { text: 'Skill Passport', style: 'title' },
-          { canvas: [{ type: 'line' as const, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1, lineColor: '#10b981' }], margin: [0, 5, 0, 15] as [number, number, number, number] },
+          // Header section
+          { text: '', margin: [0, 20, 0, 0] as [number, number, number, number] },
           {
             columns: [
-              { text: `${profile?.first_name || ''} ${profile?.last_name || ''}`, style: 'name', width: '*' },
-              { text: `✓ Verified`, style: 'verified', width: 'auto' },
+              {
+                width: '*',
+                stack: [
+                  { text: 'THE 3RD ACADEMY', fontSize: 11, bold: true, color: '#6366f1', letterSpacing: 2 },
+                  { text: 'Skill Passport', fontSize: 28, bold: true, color: '#111827', margin: [0, 4, 0, 0] as [number, number, number, number] },
+                  { text: 'Behavioral Readiness Credential', fontSize: 10, color: '#6b7280', italics: true, margin: [0, 2, 0, 0] as [number, number, number, number] },
+                ],
+                margin: [50, 0, 0, 0] as [number, number, number, number],
+              },
+              {
+                width: 120,
+                stack: [
+                  {
+                    table: {
+                      body: [[{
+                        text: [
+                          { text: '✓ ', fontSize: 14, bold: true, color: '#10b981' },
+                          { text: 'VERIFIED', fontSize: 9, bold: true, color: '#10b981', letterSpacing: 1 },
+                        ],
+                        alignment: 'center' as const,
+                        margin: [8, 6, 8, 6] as [number, number, number, number],
+                      }]],
+                    },
+                    layout: { hLineColor: () => '#10b981', vLineColor: () => '#10b981', hLineWidth: () => 1.5, vLineWidth: () => 1.5 },
+                  },
+                ],
+                margin: [0, 10, 50, 0] as [number, number, number, number],
+              },
             ],
           },
-          { text: profile?.headline || 'Behavioral Readiness Credential Holder', style: 'headline', margin: [0, 2, 0, 15] as [number, number, number, number] },
+          // Divider
+          { canvas: [{ type: 'line' as const, x1: 50, y1: 0, x2: 545, y2: 0, lineWidth: 2, lineColor: '#10b981' }], margin: [0, 15, 0, 20] as [number, number, number, number] },
+          // Candidate name
+          {
+            stack: [
+              { text: `${profile?.first_name || ''} ${profile?.last_name || ''}`, fontSize: 22, bold: true, color: '#111827' },
+              { text: profile?.headline || 'Behavioral Readiness Credential Holder', fontSize: 11, color: '#6b7280', margin: [0, 3, 0, 0] as [number, number, number, number] },
+            ],
+            margin: [50, 0, 50, 20] as [number, number, number, number],
+          },
+          // Stats cards row
           {
             columns: [
-              { text: [{ text: 'Tier: ', style: 'label' }, { text: tierLabel.label, bold: true }], width: '*' },
-              { text: [{ text: 'Dimensions: ', style: 'label' }, { text: `${scoredDims.length}`, bold: true }], width: '*' },
-              { text: [{ text: 'Issued: ', style: 'label' }, { text: passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : '—', bold: true }], width: '*' },
-              { text: [{ text: 'Expires: ', style: 'label' }, { text: passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString() : 'Never', bold: true }], width: '*' },
+              {
+                width: '*',
+                table: {
+                  widths: ['*'],
+                  body: [[{
+                    stack: [
+                      { text: 'READINESS TIER', fontSize: 7, bold: true, color: '#9ca3af', letterSpacing: 1 },
+                      { text: tierLabel.label.toUpperCase(), fontSize: 18, bold: true, color: tierColor, margin: [0, 4, 0, 0] as [number, number, number, number] },
+                    ],
+                    fillColor: tierBg,
+                    margin: [12, 10, 12, 10] as [number, number, number, number],
+                  }]],
+                },
+                layout: { hLineColor: () => '#e5e7eb', vLineColor: () => '#e5e7eb', hLineWidth: () => 1, vLineWidth: () => 1 },
+              },
+              { width: 10, text: '' },
+              {
+                width: '*',
+                table: {
+                  widths: ['*'],
+                  body: [[{
+                    stack: [
+                      { text: 'DIMENSIONS OBSERVED', fontSize: 7, bold: true, color: '#9ca3af', letterSpacing: 1 },
+                      { text: `${scoredDims.length}`, fontSize: 18, bold: true, color: '#111827', margin: [0, 4, 0, 0] as [number, number, number, number] },
+                    ],
+                    fillColor: '#f9fafb',
+                    margin: [12, 10, 12, 10] as [number, number, number, number],
+                  }]],
+                },
+                layout: { hLineColor: () => '#e5e7eb', vLineColor: () => '#e5e7eb', hLineWidth: () => 1, vLineWidth: () => 1 },
+              },
+              { width: 10, text: '' },
+              {
+                width: '*',
+                table: {
+                  widths: ['*'],
+                  body: [[{
+                    stack: [
+                      { text: 'ISSUED', fontSize: 7, bold: true, color: '#9ca3af', letterSpacing: 1 },
+                      { text: passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : '—', fontSize: 12, bold: true, color: '#111827', margin: [0, 4, 0, 0] as [number, number, number, number] },
+                    ],
+                    fillColor: '#f9fafb',
+                    margin: [12, 10, 12, 10] as [number, number, number, number],
+                  }]],
+                },
+                layout: { hLineColor: () => '#e5e7eb', vLineColor: () => '#e5e7eb', hLineWidth: () => 1, vLineWidth: () => 1 },
+              },
+              { width: 10, text: '' },
+              {
+                width: '*',
+                table: {
+                  widths: ['*'],
+                  body: [[{
+                    stack: [
+                      { text: 'EXPIRES', fontSize: 7, bold: true, color: '#9ca3af', letterSpacing: 1 },
+                      { text: passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString() : 'Never', fontSize: 12, bold: true, color: '#111827', margin: [0, 4, 0, 0] as [number, number, number, number] },
+                    ],
+                    fillColor: '#f9fafb',
+                    margin: [12, 10, 12, 10] as [number, number, number, number],
+                  }]],
+                },
+                layout: { hLineColor: () => '#e5e7eb', vLineColor: () => '#e5e7eb', hLineWidth: () => 1, vLineWidth: () => 1 },
+              },
             ],
-            margin: [0, 0, 0, 20] as [number, number, number, number],
+            margin: [50, 0, 50, 25] as [number, number, number, number],
           },
-          { text: 'Behavioral Assessment (BARS 4-Point Scale)', style: 'sectionTitle' },
+          // Assessment section header
+          { text: 'BEHAVIORAL ASSESSMENT', fontSize: 9, bold: true, color: '#6b7280', letterSpacing: 2, margin: [50, 0, 50, 8] as [number, number, number, number] },
+          { text: '4-Point Behaviourally Anchored Rating Scale (BARS)', fontSize: 8, color: '#9ca3af', margin: [50, 0, 50, 12] as [number, number, number, number] },
+          // Scores table
           {
             table: {
-              widths: ['*', 60, 100],
+              headerRows: 1,
+              widths: ['*', 70, 100, 50],
               body: [
-                [{ text: 'Dimension', style: 'tableHeader' }, { text: 'Score', style: 'tableHeader' }, { text: 'Level', style: 'tableHeader' }],
+                [
+                  { text: 'Dimension', fontSize: 8, bold: true, color: '#6b7280', fillColor: '#f3f4f6', margin: [8, 8, 8, 8] as [number, number, number, number] },
+                  { text: 'Score', fontSize: 8, bold: true, color: '#6b7280', fillColor: '#f3f4f6', alignment: 'center' as const, margin: [8, 8, 8, 8] as [number, number, number, number] },
+                  { text: 'Level', fontSize: 8, bold: true, color: '#6b7280', fillColor: '#f3f4f6', alignment: 'center' as const, margin: [8, 8, 8, 8] as [number, number, number, number] },
+                  { text: '', fillColor: '#f3f4f6', margin: [8, 8, 8, 8] as [number, number, number, number] },
+                ],
                 ...scoredDims.map(([dimId, score]) => {
                   const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+                  const color = score >= 3.5 ? '#10b981' : score >= 2.5 ? '#3b82f6' : score >= 1.5 ? '#f59e0b' : '#ef4444';
+                  const bar = '█'.repeat(Math.round((score / 4) * 10)) + '░'.repeat(10 - Math.round((score / 4) * 10));
                   return [
-                    { text: dim?.label || dimId, margin: [0, 4, 0, 4] as [number, number, number, number] },
-                    { text: `${score.toFixed(1)}/4`, bold: true, alignment: 'center' as const, margin: [0, 4, 0, 4] as [number, number, number, number] },
-                    { text: barsLabel(score), alignment: 'center' as const, margin: [0, 4, 0, 4] as [number, number, number, number] },
+                    { text: dim?.label || dimId, fontSize: 10, margin: [8, 8, 8, 8] as [number, number, number, number] },
+                    { text: `${score.toFixed(1)} / 4`, fontSize: 10, bold: true, alignment: 'center' as const, color, margin: [8, 8, 8, 8] as [number, number, number, number] },
+                    { text: barsLabel(score), fontSize: 9, alignment: 'center' as const, color, margin: [8, 8, 8, 8] as [number, number, number, number] },
+                    { text: bar, fontSize: 6, color, margin: [4, 10, 4, 8] as [number, number, number, number] },
                   ];
                 }),
               ],
             },
-            layout: 'lightHorizontalLines',
-            margin: [0, 5, 0, 20] as [number, number, number, number],
+            layout: {
+              hLineWidth: (i: number, node: any) => i === 0 || i === 1 || i === node.table.body.length ? 1 : 0.5,
+              vLineWidth: () => 0,
+              hLineColor: (i: number) => i <= 1 ? '#d1d5db' : '#f3f4f6',
+              paddingLeft: () => 0,
+              paddingRight: () => 0,
+            },
+            margin: [50, 0, 50, 20] as [number, number, number, number],
           },
+          // Overall score box
+          {
+            table: {
+              widths: ['*'],
+              body: [[{
+                columns: [
+                  {
+                    width: '*',
+                    stack: [
+                      { text: 'OVERALL BEHAVIORAL READINESS', fontSize: 8, bold: true, color: '#6b7280', letterSpacing: 1 },
+                      {
+                        text: [
+                          { text: `${avgScore}`, fontSize: 28, bold: true, color: '#111827' },
+                          { text: ' / 4', fontSize: 14, color: '#9ca3af' },
+                          { text: `  —  ${avgScore !== "N/A" ? barsLabel(parseFloat(avgScore)) : '—'}`, fontSize: 12, bold: true, color: avgScore !== "N/A" && parseFloat(avgScore) >= 3.5 ? '#10b981' : '#3b82f6' },
+                        ],
+                        margin: [0, 4, 0, 0] as [number, number, number, number],
+                      },
+                    ],
+                  },
+                ],
+                fillColor: '#f0fdf4',
+                margin: [16, 14, 16, 14] as [number, number, number, number],
+              }]],
+            },
+            layout: { hLineColor: () => '#10b981', vLineColor: () => '#10b981', hLineWidth: () => 1.5, vLineWidth: () => 1.5 },
+            margin: [50, 0, 50, 30] as [number, number, number, number],
+          },
+          // Footer divider
+          { canvas: [{ type: 'line' as const, x1: 50, y1: 0, x2: 545, y2: 0, lineWidth: 0.5, lineColor: '#e5e7eb' }], margin: [0, 0, 0, 15] as [number, number, number, number] },
+          // Verification section
           {
             columns: [
-              { text: [{ text: 'Overall: ', style: 'label' }, { text: `${avgScore}/4 — ${avgScore !== "N/A" ? barsLabel(parseFloat(avgScore)) : '—'}`, bold: true, fontSize: 14 }], width: '*' },
+              {
+                width: '*',
+                stack: [
+                  { text: 'VERIFICATION', fontSize: 7, bold: true, color: '#9ca3af', letterSpacing: 1 },
+                  { text: passportData?.verification_code || '', fontSize: 14, bold: true, color: '#111827', margin: [0, 3, 0, 2] as [number, number, number, number] },
+                  { text: `${window.location.origin}/verify/${passportData?.verification_code}`, fontSize: 8, color: '#6366f1' },
+                ],
+              },
+              {
+                width: 'auto',
+                stack: [
+                  { text: 'The 3rd Academy', fontSize: 9, bold: true, color: '#6b7280', alignment: 'right' as const },
+                  { text: 'Behavioral Readiness Platform', fontSize: 7, color: '#9ca3af', alignment: 'right' as const, margin: [0, 2, 0, 0] as [number, number, number, number] },
+                  { text: '© 2026 All rights reserved.', fontSize: 7, color: '#d1d5db', alignment: 'right' as const, margin: [0, 2, 0, 0] as [number, number, number, number] },
+                ],
+              },
             ],
-            margin: [0, 0, 0, 20] as [number, number, number, number],
+            margin: [50, 0, 50, 0] as [number, number, number, number],
           },
-          { canvas: [{ type: 'line' as const, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#666' }], margin: [0, 0, 0, 10] as [number, number, number, number] },
-          { text: [{ text: 'Verification Code: ', style: 'label' }, { text: passportData?.verification_code || '', bold: true }], margin: [0, 0, 0, 5] as [number, number, number, number] },
-          { text: `Verify at: ${window.location.origin}/verify/${passportData?.verification_code}`, style: 'small' },
-          { text: '© 2026 The 3rd Academy. All rights reserved.', style: 'footer' },
         ],
-        styles: {
-          brand: { fontSize: 10, color: '#6366f1', bold: true, margin: [0, 0, 0, 2] as [number, number, number, number] },
-          title: { fontSize: 22, bold: true, color: '#10b981', margin: [0, 0, 0, 5] as [number, number, number, number] },
-          name: { fontSize: 16, bold: true },
-          headline: { fontSize: 10, color: '#888' },
-          verified: { fontSize: 10, color: '#10b981', bold: true },
-          label: { fontSize: 9, color: '#888' },
-          sectionTitle: { fontSize: 12, bold: true, margin: [0, 0, 0, 5] as [number, number, number, number] },
-          tableHeader: { fontSize: 9, bold: true, color: '#888', margin: [0, 4, 0, 4] as [number, number, number, number] },
-          small: { fontSize: 8, color: '#999' },
-          footer: { fontSize: 8, color: '#aaa', margin: [0, 20, 0, 0] as [number, number, number, number], alignment: 'center' as const },
-        },
-        defaultStyle: { fontSize: 10 },
+        defaultStyle: { fontSize: 10, color: '#374151' },
       };
 
       pdfMake.createPdf(docDefinition).download(`Skill-Passport-${profile?.first_name}-${profile?.last_name}.pdf`);
