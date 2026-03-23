@@ -551,6 +551,20 @@ const SkillPassport = () => {
 
       const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
+      // Convert avatar to base64 for pdfmake (can't use external URLs)
+      let avatarBase64: string | null = null;
+      if (profile?.avatar_url) {
+        try {
+          const resp = await fetch(profile.avatar_url);
+          const blob = await resp.blob();
+          avatarBase64 = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
+        } catch { /* skip avatar if fetch fails */ }
+      }
+
       const tierColor = passportData?.readiness_tier === 'platinum' ? '#10b981' : passportData?.readiness_tier === 'gold' ? '#f59e0b' : '#94a3b8';
       const tierBg = passportData?.readiness_tier === 'platinum' ? '#ecfdf5' : passportData?.readiness_tier === 'gold' ? '#fffbeb' : '#f8fafc';
 
@@ -604,11 +618,22 @@ const SkillPassport = () => {
           },
           // Divider
           { canvas: [{ type: 'line' as const, x1: 50, y1: 0, x2: 545, y2: 0, lineWidth: 2, lineColor: '#10b981' }], margin: [0, 15, 0, 20] as [number, number, number, number] },
-          // Candidate name
+          // Candidate name with avatar
           {
-            stack: [
-              { text: `${profile?.first_name || ''} ${profile?.last_name || ''}`, fontSize: 22, bold: true, color: '#111827' },
-              { text: profile?.headline || 'Behavioral Readiness Credential Holder', fontSize: 11, color: '#6b7280', margin: [0, 3, 0, 0] as [number, number, number, number] },
+            columns: [
+              ...(avatarBase64 ? [{
+                image: avatarBase64,
+                width: 50,
+                height: 50,
+                margin: [0, 0, 12, 0] as [number, number, number, number],
+              }] : []),
+              {
+                width: '*',
+                stack: [
+                  { text: `${profile?.first_name || ''} ${profile?.last_name || ''}`, fontSize: 22, bold: true, color: '#111827' },
+                  { text: profile?.headline || 'Behavioral Readiness Credential Holder', fontSize: 11, color: '#6b7280', margin: [0, 3, 0, 0] as [number, number, number, number] },
+                ],
+              },
             ],
             margin: [50, 0, 50, 20] as [number, number, number, number],
           },
