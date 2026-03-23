@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -182,8 +182,16 @@ export const InteractiveSkillAssessment = () => {
   // Refs
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const currentScene = INTERACTIVE_ASSESSMENT_SCENES[currentSceneIndex];
-  const progress = ((currentSceneIndex + 1) / INTERACTIVE_ASSESSMENT_SCENES.length) * 100;
+  // Filter scenes to only include assigned dimensions (+ welcome/review/completion)
+  const filteredScenes = useMemo(() => {
+    if (assignedDimensions.length === 0) return INTERACTIVE_ASSESSMENT_SCENES;
+    return INTERACTIVE_ASSESSMENT_SCENES.filter(
+      scene => scene.dimension === 'all' || assignedDimensions.includes(scene.dimension)
+    );
+  }, [assignedDimensions]);
+
+  const currentScene = filteredScenes[currentSceneIndex];
+  const progress = ((currentSceneIndex + 1) / filteredScenes.length) * 100;
 
   // Format time
   const formatTime = (seconds: number): string => {
@@ -284,7 +292,7 @@ export const InteractiveSkillAssessment = () => {
     if (cooldownStatus === null) return; // wait for cooldown check
     if (!assignmentId || !candidateProfileId) return; // wait for assignment context
 
-    const scene = INTERACTIVE_ASSESSMENT_SCENES[currentSceneIndex];
+    const scene = filteredScenes[currentSceneIndex];
     const isChallenge = scene && scene.type !== 'welcome' && scene.type !== 'narrative';
 
     if (isChallenge) {
@@ -622,7 +630,7 @@ export const InteractiveSkillAssessment = () => {
       timerRef.current = null;
     }
 
-    if (currentSceneIndex < INTERACTIVE_ASSESSMENT_SCENES.length - 1) {
+    if (currentSceneIndex < filteredScenes.length - 1) {
       setCurrentSceneIndex(prev => prev + 1);
     }
   };
@@ -1623,9 +1631,9 @@ export const InteractiveSkillAssessment = () => {
             </Button>
 
             <div className="flex items-center gap-2">
-              {INTERACTIVE_ASSESSMENT_SCENES.slice(
+              {filteredScenes.slice(
                 Math.max(0, currentSceneIndex - 3),
-                Math.min(INTERACTIVE_ASSESSMENT_SCENES.length, currentSceneIndex + 4)
+                Math.min(filteredScenes.length, currentSceneIndex + 4)
               ).map((scene, i) => {
                 const actualIndex = Math.max(0, currentSceneIndex - 3) + i;
                 const isCurrent = actualIndex === currentSceneIndex;
@@ -1650,7 +1658,7 @@ export const InteractiveSkillAssessment = () => {
             ) : (
               <Button
                 onClick={goToNextScene}
-                disabled={currentSceneIndex === INTERACTIVE_ASSESSMENT_SCENES.length - 1 || !canProceed()}
+                disabled={currentSceneIndex === filteredScenes.length - 1 || !canProceed()}
                 className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 disabled:opacity-30 px-6"
               >
                 Continue

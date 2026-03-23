@@ -444,7 +444,7 @@ What do you do first?`,
     type: 'prioritization',
     title: 'Prioritization Challenge',
     subtitle: 'Task Management Under Pressure',
-    dimension: 'prioritization_time',
+    dimension: 'execution_reliability',
     content: 'It\'s Monday morning. You have these 8 tasks. Rank them in the order you would complete them. You have 60 seconds.',
     prioritizationTasks: [
       {
