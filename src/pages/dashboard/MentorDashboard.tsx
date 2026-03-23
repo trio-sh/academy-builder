@@ -540,9 +540,14 @@ const ObservationFormModal = () => {
                             )}
                           </div>
                           {l1 && l1.ai_draft_feedback && (
-                            <p className="text-xs text-indigo-400/80 mb-2 p-2 rounded bg-indigo-500/10 border border-indigo-500/20">
-                              L1 AI: {l1.ai_draft_feedback.length > 120 ? l1.ai_draft_feedback.substring(0, 120) + "..." : l1.ai_draft_feedback}
-                            </p>
+                            <details className="mb-2">
+                              <summary className="text-xs text-indigo-400/80 p-2 rounded bg-indigo-500/10 border border-indigo-500/20 cursor-pointer hover:bg-indigo-500/20 transition-colors">
+                                L1 AI: {l1.ai_draft_feedback.length > 100 ? l1.ai_draft_feedback.substring(0, 100) + "..." : l1.ai_draft_feedback}
+                              </summary>
+                              <p className="text-xs text-indigo-400/70 p-2 mt-1 rounded bg-indigo-500/5 border border-indigo-500/10 whitespace-pre-wrap">
+                                {l1.ai_draft_feedback}
+                              </p>
+                            </details>
                           )}
                           <div className="flex gap-2 mt-2">
                             {[
@@ -1994,7 +1999,12 @@ const MenteeDetail = () => {
                           <span className={`text-lg font-bold ${getBarsColor(l1.bars_score)}`}>{l1.bars_score}/4</span>
                           <span className={`text-xs ml-2 ${getBarsColor(l1.bars_score)}`}>{getBarsLabel(l1.bars_score)}</span>
                           {l1.ai_draft_feedback && (
-                            <p className="text-xs text-gray-400 mt-1 line-clamp-2">{l1.ai_draft_feedback}</p>
+                            <details className="mt-1">
+                              <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
+                                {l1.ai_draft_feedback.length > 80 ? l1.ai_draft_feedback.substring(0, 80) + "..." : l1.ai_draft_feedback}
+                              </summary>
+                              <p className="text-xs text-gray-400 mt-1 whitespace-pre-wrap">{l1.ai_draft_feedback}</p>
+                            </details>
                           )}
                         </div>
                       ) : (
