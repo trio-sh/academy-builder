@@ -542,22 +542,12 @@ const SkillPassport = () => {
     const tierLabel = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
 
     try {
-      const pdfMakeModule = await import("pdfmake/build/pdfmake");
-      const pdfFontsModule = await import("pdfmake/build/vfs_fonts") as any;
-      const pdfMake = pdfMakeModule.default || pdfMakeModule;
-      // Try multiple ways to get vfs fonts
-      if (pdfFontsModule?.pdfMake?.vfs) {
-        pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
-      } else if (pdfFontsModule?.default?.pdfMake?.vfs) {
-        pdfMake.vfs = pdfFontsModule.default.pdfMake.vfs;
-      } else if (pdfFontsModule?.default) {
-        // Some builds export vfs directly on default
-        const def = pdfFontsModule.default;
-        if (def.vfs) pdfMake.vfs = def.vfs;
-        else if (def.pdfMake?.vfs) pdfMake.vfs = def.pdfMake.vfs;
+      // Use pdfMake from CDN (loaded via script tags in index.html)
+      const pdfMake = (window as any).pdfMake;
+      if (!pdfMake) {
+        console.error("pdfMake not loaded — check CDN script tags in index.html");
+        return;
       }
-      // Also set on window for pdfmake internal access
-      if (pdfMake.vfs) (window as any).pdfMake = pdfMake;
 
       const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
