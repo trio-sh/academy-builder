@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation, useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Loader2,
   ChevronRight,
+  ChevronLeft,
   Eye,
   Award,
   Save,
@@ -1277,9 +1278,9 @@ const Mentees = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-semibold text-white">
+                      <Link to={`/dashboard/mentor/mentees/${assignment.id}`} className="font-semibold text-white hover:text-indigo-400 transition-colors">
                         {profile?.first_name} {profile?.last_name}
-                      </h3>
+                      </Link>
                       <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">
                         active
                       </span>
@@ -1702,6 +1703,316 @@ const AssignDimensions = () => {
           )}
         </Button>
       </motion.div>
+    </motion.div>
+  );
+};
+
+// Mentee Detail — Focused view of a single mentee's observation journey
+const MenteeDetail = () => {
+  const { assignmentId } = useParams<{ assignmentId: string }>();
+  const { user } = useAuth();
+  const { openModal } = useObservationModal();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [assignment, setAssignment] = useState<MentorAssignment | null>(null);
+  const [candidateProfile, setCandidateProfile] = useState<{ profile?: Profile; current_tier?: string } | null>(null);
+  const [assignedDims, setAssignedDims] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; ai_draft_feedback: string | null; mentor_feedback: string | null; created_at: string }>>([]);
+  const [observations, setObservations] = useState<Array<{ id: string; session_date: string; behavioral_scores: Record<string, number>; is_locked: boolean; notes: string }>>([]);
+  const [endorsement, setEndorsement] = useState<{ decision: string; justification: string; created_at: string } | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!assignmentId || !user?.id) return;
+
+      try {
+        // Fetch assignment
+        const { data: asgn } = await supabase
+          .from("mentor_assignments")
+          .select("*")
+          .eq("id", assignmentId)
+          .single();
+        if (!asgn) { setIsLoading(false); return; }
+        setAssignment(asgn);
+
+        // Fetch candidate profile + user profile
+        const { data: cp } = await supabase
+          .from("candidate_profiles")
+          .select("id, profile_id, current_tier")
+          .eq("id", asgn.candidate_id)
+          .single();
+        if (cp) {
+          const { data: prof } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", cp.profile_id)
+            .single();
+          setCandidateProfile({ ...cp, profile: prof });
+        }
+
+        // Fetch assigned dimensions
+        const { data: dims } = await supabase
+          .from("mentor_assigned_dimensions")
+          .select("dimension_id")
+          .eq("assignment_id", assignmentId)
+          .eq("is_active", true);
+        if (dims) setAssignedDims(dims.map((d: { dimension_id: string }) => d.dimension_id));
+
+        // Fetch observation feedback (L1 + L2)
+        const { data: fb } = await supabase
+          .from("observation_feedback")
+          .select("dimension_id, feedback_level, bars_score, status, ai_draft_feedback, mentor_feedback, created_at")
+          .eq("assignment_id", assignmentId)
+          .eq("candidate_id", asgn.candidate_id)
+          .order("created_at", { ascending: true });
+        if (fb) setFeedback(fb);
+
+        // Fetch mentor observations
+        const { data: obs } = await supabase
+          .from("mentor_observations")
+          .select("id, session_date, behavioral_scores, is_locked, notes")
+          .eq("assignment_id", assignmentId)
+          .order("session_date", { ascending: false });
+        if (obs) setObservations(obs);
+
+        // Fetch endorsement
+        const { data: end } = await supabase
+          .from("endorsements")
+          .select("decision, justification, created_at")
+          .eq("assignment_id", assignmentId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (end) setEndorsement(end);
+      } catch (error) {
+        console.error("Error fetching mentee detail:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [assignmentId, user?.id]);
+
+  const getBarsLabel = (score: number) => {
+    switch (score) {
+      case 1: return "Not Yet Demonstrated";
+      case 2: return "Emerging";
+      case 3: return "Competent";
+      case 4: return "Strong";
+      default: return "—";
+    }
+  };
+
+  const getBarsColor = (score: number) => {
+    switch (score) {
+      case 1: return "text-orange-400";
+      case 2: return "text-amber-400";
+      case 3: return "text-blue-400";
+      case 4: return "text-emerald-400";
+      default: return "text-gray-400";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      </div>
+    );
+  }
+
+  if (!assignment || !candidateProfile) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-gray-400">Mentee not found.</p>
+        <Button variant="ghost" onClick={() => navigate("/dashboard/mentor/mentees")} className="mt-4 text-indigo-400">
+          Back to Mentees
+        </Button>
+      </div>
+    );
+  }
+
+  const profile = candidateProfile.profile;
+  const l1Feedback = feedback.filter(f => f.feedback_level === 1);
+  const l2Feedback = feedback.filter(f => f.feedback_level === 2);
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-5xl mx-auto space-y-8"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants}>
+        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/mentor/mentees")} className="text-gray-400 hover:text-white mb-4">
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Mentees
+        </Button>
+        <div className="flex items-start gap-4">
+          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">
+            {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+          </div>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-white">{profile?.first_name} {profile?.last_name}</h1>
+            <p className="text-gray-400">{profile?.email}</p>
+            <div className="flex items-center gap-3 mt-2">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-400">
+                {assignment.status}
+              </span>
+              <span className="text-sm text-gray-500">
+                Tier: {candidateProfile.current_tier?.replace("_", " ") || "Not assessed"}
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
+              <Button size="sm" variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
+                <Star className="w-4 h-4 mr-1" /> Dimensions
+              </Button>
+            </Link>
+            <Button size="sm" className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal(assignment.id, assignment.candidate_id)}>
+              <ClipboardCheck className="w-4 h-4 mr-1" /> Record L2
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Observation Pipeline Status */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-lg font-semibold text-white mb-3">Observation Pipeline</h2>
+        <div className="grid grid-cols-3 gap-4">
+          <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-black border-white/10"}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-emerald-400">L1 AI Scenarios</span>
+              {l1Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-emerald-400" />}
+            </div>
+            <p className="text-white font-bold">{l1Feedback.length > 0 ? `${l1Feedback.length} dimensions scored` : "Not started"}</p>
+          </div>
+          <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-blue-500/10 border-blue-500/30" : "bg-black border-white/10"}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-blue-400">L2 Mentor Live</span>
+              {l2Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-blue-400" />}
+            </div>
+            <p className="text-white font-bold">{l2Feedback.length > 0 ? `${l2Feedback.length} dimensions scored` : observations.length > 0 ? `${observations.length} observations recorded` : "Not started"}</p>
+          </div>
+          <div className={`p-4 rounded-xl border ${endorsement ? "bg-indigo-500/10 border-indigo-500/30" : "bg-black border-white/10"}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-indigo-400">Endorsement</span>
+              {endorsement?.decision === "proceed" && <Award className="w-4 h-4 text-emerald-400" />}
+            </div>
+            {endorsement ? (
+              <p className={`font-bold capitalize ${
+                endorsement.decision === "proceed" ? "text-emerald-400" :
+                endorsement.decision === "redirect" ? "text-amber-400" :
+                endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
+              }`}>{endorsement.decision}</p>
+            ) : (
+              <p className="text-white font-bold">Pending</p>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Assigned Dimensions with L1/L2 Scores */}
+      <motion.div variants={itemVariants}>
+        <h2 className="text-lg font-semibold text-white mb-3">Dimensions ({assignedDims.length} assigned)</h2>
+        {assignedDims.length === 0 ? (
+          <div className="p-6 rounded-xl bg-black border border-white/10 text-center">
+            <p className="text-amber-400">No dimensions assigned yet.</p>
+            <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
+              <Button size="sm" className="mt-3 bg-indigo-600 hover:bg-indigo-500">Assign Dimensions</Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {assignedDims.map(dimId => {
+              const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+              const l1 = l1Feedback.find(f => f.dimension_id === dimId);
+              const l2 = l2Feedback.find(f => f.dimension_id === dimId);
+
+              return (
+                <div key={dimId} className="p-4 rounded-xl bg-black border border-white/10">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-medium text-white">{dim?.label || dimId}</h3>
+                      <p className="text-xs text-gray-500">{dim?.description}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div className={`p-3 rounded-lg ${l1 ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-white/5 border border-white/5"}`}>
+                      <p className="text-[10px] text-gray-500 uppercase mb-1">L1 AI Score</p>
+                      {l1 && l1.bars_score ? (
+                        <div>
+                          <span className={`text-lg font-bold ${getBarsColor(l1.bars_score)}`}>{l1.bars_score}/4</span>
+                          <span className={`text-xs ml-2 ${getBarsColor(l1.bars_score)}`}>{getBarsLabel(l1.bars_score)}</span>
+                          {l1.ai_draft_feedback && (
+                            <p className="text-xs text-gray-400 mt-1 line-clamp-2">{l1.ai_draft_feedback}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500">—</p>
+                      )}
+                    </div>
+                    <div className={`p-3 rounded-lg ${l2 ? "bg-blue-500/10 border border-blue-500/20" : "bg-white/5 border border-white/5"}`}>
+                      <p className="text-[10px] text-gray-500 uppercase mb-1">L2 Mentor Score</p>
+                      {l2 && l2.bars_score ? (
+                        <div>
+                          <span className={`text-lg font-bold ${getBarsColor(l2.bars_score)}`}>{l2.bars_score}/4</span>
+                          <span className={`text-xs ml-2 ${getBarsColor(l2.bars_score)}`}>{getBarsLabel(l2.bars_score)}</span>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500">—</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </motion.div>
+
+      {/* Endorsement Detail */}
+      {endorsement && (
+        <motion.div variants={itemVariants}>
+          <h2 className="text-lg font-semibold text-white mb-3">Endorsement Record</h2>
+          <div className={`p-5 rounded-xl border ${
+            endorsement.decision === "proceed" ? "bg-emerald-500/10 border-emerald-500/30" :
+            endorsement.decision === "redirect" ? "bg-amber-500/10 border-amber-500/30" :
+            "bg-black border-white/10"
+          }`}>
+            <div className="flex items-center gap-3 mb-2">
+              <span className={`text-lg font-bold capitalize ${
+                endorsement.decision === "proceed" ? "text-emerald-400" :
+                endorsement.decision === "redirect" ? "text-amber-400" :
+                endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
+              }`}>{endorsement.decision}</span>
+              <span className="text-xs text-gray-500">{new Date(endorsement.created_at).toLocaleDateString()}</span>
+            </div>
+            {endorsement.justification && (
+              <p className="text-sm text-gray-300">{endorsement.justification}</p>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Actions */}
+      {!endorsement && (
+        <motion.div variants={itemVariants}>
+          <div className="flex gap-3">
+            <Button className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal(assignment.id, assignment.candidate_id)}>
+              <ClipboardCheck className="w-4 h-4 mr-2" /> Record L2 Observation
+            </Button>
+            {observations.filter(o => o.is_locked).length >= 1 && l1Feedback.length > 0 && (
+              <Link to="/dashboard/mentor/endorsements">
+                <Button variant="outline" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                  <Award className="w-4 h-4 mr-2" /> Submit Endorsement
+                </Button>
+              </Link>
+            )}
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
@@ -3852,6 +4163,7 @@ const MentorDashboardInner = () => {
           <Routes>
             <Route index element={<Overview />} />
             <Route path="mentees" element={<Mentees />} />
+            <Route path="mentees/:assignmentId" element={<MenteeDetail />} />
             <Route path="assign-dimensions/:assignmentId/:candidateId" element={<AssignDimensions />} />
             <Route path="observations" element={<Observations />} />
             <Route path="endorsements" element={<Endorsements />} />
