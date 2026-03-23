@@ -970,9 +970,13 @@ const SkillPassport = () => {
           {/* Header */}
           <div className="flex items-start justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
-                {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-              </div>
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Profile" className="w-16 h-16 rounded-2xl object-cover" />
+              ) : (
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
+                  {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+                </div>
+              )}
               <div>
                 <h2 className="text-2xl font-bold text-white">
                   {profile?.first_name} {profile?.last_name}
