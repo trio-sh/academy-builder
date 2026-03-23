@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { extractDocumentText } from "@/lib/documentExtractor";
+import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
@@ -2951,7 +2952,7 @@ const EmployerMessagesPage = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
-  const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null);
+  const [attachedFile, setAttachedFile] = useState<{ url: string; name: string; size: number; type: string } | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [expandedDocs, setExpandedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -2961,19 +2962,19 @@ const EmployerMessagesPage = () => {
 
   const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
     setIsProcessingFile(true);
     try {
-      const result = await extractDocumentText(file);
-      if (!result.success) {
-        toast({ title: "Attachment Failed", description: result.error, variant: "destructive" });
+      const result = await uploadMessageAttachment(file, user.id);
+      if (!result) {
+        toast({ title: "Attachment Failed", description: "File too large or unsupported type (max 10MB).", variant: "destructive" });
         setAttachedFile(null);
       } else {
-        setAttachedFile({ name: result.fileName, text: result.text });
-        toast({ title: "Document Attached", description: `"${result.fileName}" ready to send.` });
+        setAttachedFile({ url: result.url, name: result.name, size: result.size, type: result.type });
+        toast({ title: "File Attached", description: `"${result.name}" ready to send.` });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to process document.", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to upload file.", variant: "destructive" });
     } finally {
       setIsProcessingFile(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -3090,23 +3091,26 @@ const EmployerMessagesPage = () => {
   const sendMessage = async () => {
     if ((!newMessage.trim() && !attachedFile) || !activeConversation || !user?.id) return;
     setIsSending(true);
-    let messageContent = newMessage.trim();
-    const hadFile = !!attachedFile;
-    if (attachedFile) {
-      const fileHeader = `[Attached: ${attachedFile.name}]\n\n${attachedFile.text}`;
-      messageContent = messageContent ? `${messageContent}\n\n${fileHeader}` : fileHeader;
-    }
+    const messageContent = newMessage.trim();
+    const fileToSend = attachedFile;
     setNewMessage("");
     setAttachedFile(null);
     const replyMsg = replyTo;
     setReplyTo(null);
     try {
-      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: hadFile ? "file" : "text", ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}) });
-      await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: messageContent.substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
+      await supabase.from("messages").insert({
+        conversation_id: activeConversation.id,
+        sender_id: user.id,
+        content: messageContent || (fileToSend ? fileToSend.name : ""),
+        message_type: fileToSend ? "file" : "text",
+        ...(fileToSend ? { file_url: fileToSend.url, metadata: { file_name: fileToSend.name, file_size: fileToSend.size, file_type: fileToSend.type } } : {}),
+        ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}),
+      });
+      await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: (messageContent || fileToSend?.name || "File").substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
       // Send notification to the other user
       if (activeConversation.other_user?.id) {
         const senderName = `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim();
-        await sendMessageNotification(user.id, senderName, activeConversation.other_user.id, messageContent, activeConversation.id);
+        await sendMessageNotification(user.id, senderName, activeConversation.other_user.id, messageContent || (fileToSend ? `📎 ${fileToSend.name}` : ""), activeConversation.id);
       }
     } catch (error) { console.error("Error sending message:", error); setNewMessage(messageContent); } finally { setIsSending(false); }
   };
@@ -3250,26 +3254,21 @@ const EmployerMessagesPage = () => {
                             </div>
                           )}
                           <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
-                            {msg.message_type === "file" && msg.content?.includes("[Attached:") ? (() => {
-                              const fileName = msg.content.match(/\[Attached: (.+?)\]/)?.[1] || "Document";
-                              const userText = msg.content.split("\n\n[Attached:")[0].trim();
-                              const docContent = msg.content.replace(/^[\s\S]*?\[Attached: .+?\]\n\n/, "");
-                              const isDocExpanded = expandedDocs.has(msg.id);
-                              return (
-                                <>
-                                  {userText && <p className="text-sm whitespace-pre-wrap mb-2">{userText}</p>}
-                                  <div className={`rounded-xl border overflow-hidden ${isOwn ? "border-white/15 bg-white/5" : "border-emerald-500/25 bg-emerald-950/30"}`}>
-                                    <button onClick={(e) => { e.stopPropagation(); setExpandedDocs(prev => { const next = new Set(prev); if (next.has(msg.id)) next.delete(msg.id); else next.add(msg.id); return next; }); }} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition-colors">
-                                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOwn ? "bg-white/10" : "bg-emerald-600/30"}`}><FileText className="w-4 h-4" /></div>
-                                      <span className="text-xs font-medium truncate flex-1 text-left">{fileName}</span>
-                                      <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${isDocExpanded ? "rotate-180" : ""}`} />
-                                    </button>
-                                    {isDocExpanded && (<div className={`border-t px-3 py-2 max-h-64 overflow-y-auto ${isOwn ? "border-white/10" : "border-emerald-500/15"}`}><p className="text-xs whitespace-pre-wrap leading-relaxed opacity-80">{docContent}</p></div>)}
-                                  </div>
-                                </>
-                              );
-                            })() : (
-                              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            {msg.file_url && (
+                              <div className="mt-2">
+                                {isImageFile(msg.file_url, msg.metadata) ? (
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
+                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-white/10" />
+                                  </a>
+                                ) : (
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 text-sm">
+                                    <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                                    <span className="text-emerald-400 truncate">{msg.metadata?.file_name || 'Attachment'}</span>
+                                    {msg.metadata?.file_size && <span className="text-gray-500 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                  </a>
+                                )}
+                              </div>
                             )}
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
@@ -3294,13 +3293,14 @@ const EmployerMessagesPage = () => {
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <span className="text-sm text-emerald-300 truncate flex-1">{attachedFile.name}</span>
+                    <span className="text-xs text-gray-500 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
                     <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 )}
                 <div className="flex items-center gap-3">
-                  <input type="file" ref={fileInputRef} onChange={handleFileAttach} accept=".pdf,.doc,.docx,.txt" className="hidden" />
+                  <input type="file" ref={fileInputRef} onChange={handleFileAttach} accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp" className="hidden" />
                   <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingFile} className="p-3 rounded-xl border border-white/30 text-gray-400 hover:text-white hover:border-emerald-500 transition-colors disabled:opacity-50" title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)">
                     {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
                   </button>
@@ -3815,6 +3815,15 @@ const EmployerDashboard = () => {
                     <p className="text-sm text-gray-400">No new notifications</p>
                   </div>
                 )}
+                <div className="border-t border-white/10 p-2">
+                  <Link
+                    to="/dashboard/employer/notifications"
+                    className="block w-full text-center py-2 text-sm text-indigo-400 hover:bg-black rounded-lg"
+                    onClick={() => setShowNotifications(false)}
+                  >
+                    View all notifications
+                  </Link>
+                </div>
               </div>
             )}
           </div>

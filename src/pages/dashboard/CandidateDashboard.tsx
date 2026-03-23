@@ -8,7 +8,7 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { MentorMatchingService, type MentorMatch } from "@/lib/mentorMatching";
 import { parseResume } from "@/lib/resumeParser";
 import { analyzeResume } from "@/services/resumeEnhancer";
-import { extractDocumentText } from "@/lib/documentExtractor";
+import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
 import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
@@ -5721,9 +5721,8 @@ const MessagesPage = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
-  const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null);
+  const [attachedFile, setAttachedFile] = useState<{ url: string; name: string; size: number; type: string } | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
-  const [expandedDocs, setExpandedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [onlineUsers, setOnlineUsers] = useState<Record<string, string>>({});
   const [replyTo, setReplyTo] = useState<any | null>(null);
@@ -5731,19 +5730,19 @@ const MessagesPage = () => {
 
   const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
     setIsProcessingFile(true);
     try {
-      const result = await extractDocumentText(file);
-      if (!result.success) {
-        toast({ title: "Attachment Failed", description: result.error, variant: "destructive" });
+      const uploaded = await uploadMessageAttachment(file, user.id);
+      if (!uploaded) {
+        toast({ title: "Upload Failed", description: "File too large or type not supported.", variant: "destructive" });
         setAttachedFile(null);
       } else {
-        setAttachedFile({ name: result.fileName, text: result.text });
-        toast({ title: "Document Attached", description: `"${result.fileName}" ready to send.` });
+        setAttachedFile(uploaded);
+        toast({ title: "File Attached", description: `"${uploaded.name}" ready to send.` });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to process document.", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to upload file.", variant: "destructive" });
     } finally {
       setIsProcessingFile(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -6099,12 +6098,9 @@ const MessagesPage = () => {
     if ((!newMessage.trim() && !attachedFile) || !activeConversation || !user?.id) return;
 
     setIsSending(true);
-    let messageContent = newMessage.trim();
-    if (attachedFile) {
-      const fileHeader = `[Attached: ${attachedFile.name}]\n\n${attachedFile.text}`;
-      messageContent = messageContent ? `${messageContent}\n\n${fileHeader}` : fileHeader;
-    }
+    const messageContent = newMessage.trim();
     setNewMessage("");
+    const currentFile = attachedFile;
     const hadFile = !!attachedFile;
     setAttachedFile(null);
     const replyMsg = replyTo;
@@ -6138,9 +6134,13 @@ const MessagesPage = () => {
         .insert({
           conversation_id: activeConversation.id,
           sender_id: user.id,
-          content: messageContent,
+          content: messageContent || (currentFile ? `Sent a file: ${currentFile.name}` : ""),
           message_type: hadFile ? "file" : "text",
           ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}),
+          ...(currentFile ? {
+            file_url: currentFile.url,
+            metadata: { file_name: currentFile.name, file_size: currentFile.size, file_type: currentFile.type },
+          } : {}),
         })
         .select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)")
         .single();
@@ -6566,6 +6566,7 @@ const MessagesPage = () => {
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
                     <Paperclip className="w-4 h-4 text-indigo-400 flex-shrink-0" />
                     <span className="text-sm text-indigo-300 truncate flex-1">{attachedFile.name}</span>
+                    <span className="text-xs text-gray-500">{formatFileSize(attachedFile.size)}</span>
                     <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
                       <X className="w-4 h-4" />
                     </button>
@@ -6576,7 +6577,7 @@ const MessagesPage = () => {
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileAttach}
-                    accept=".pdf,.doc,.docx,.txt"
+                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp"
                     className="hidden"
                   />
                   <button

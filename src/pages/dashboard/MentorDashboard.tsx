@@ -1,9 +1,10 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, Routes, Route, useLocation, useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
+import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
@@ -43,6 +44,7 @@ import {
   PanelLeft,
   Copy,
   Reply,
+  Paperclip,
 } from "lucide-react";
 
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];
@@ -3574,6 +3576,26 @@ const MentorMessagesPage = () => {
   const [onlineUsers, setOnlineUsers] = useState<Record<string, string>>({});
   const [replyTo, setReplyTo] = useState<any | null>(null);
   const [activeMsgId, setActiveMsgId] = useState<string | null>(null);
+  const [attachedFile, setAttachedFile] = useState<{ url: string; name: string; size: number; type: string } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+    setIsUploading(true);
+    try {
+      const result = await uploadMessageAttachment(file, user.id);
+      if (result) {
+        setAttachedFile({ url: result.url, name: result.name, size: result.size, type: result.type });
+      }
+    } catch (err) {
+      console.error("File upload failed:", err);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const searchUsers = async (query: string) => {
     if (!query.trim() || query.length < 2) { setSearchResults([]); return; }
@@ -3683,19 +3705,29 @@ const MentorMessagesPage = () => {
   }, [activeConversation?.id, user?.id]);
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !activeConversation || !user?.id) return;
+    if (!newMessage.trim() && !attachedFile) return;
+    if (!activeConversation || !user?.id) return;
     setIsSending(true);
     const messageContent = newMessage.trim();
+    const fileToSend = attachedFile;
     setNewMessage("");
+    setAttachedFile(null);
     const replyMsg = replyTo;
     setReplyTo(null);
     try {
-      await supabase.from("messages").insert({ conversation_id: activeConversation.id, sender_id: user.id, content: messageContent, message_type: "text", ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}) });
-      await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: messageContent.substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
+      await supabase.from("messages").insert({
+        conversation_id: activeConversation.id,
+        sender_id: user.id,
+        content: messageContent || (fileToSend ? fileToSend.name : ""),
+        message_type: fileToSend ? "file" : "text",
+        ...(fileToSend ? { file_url: fileToSend.url, metadata: { file_name: fileToSend.name, file_size: fileToSend.size, file_type: fileToSend.type } } : {}),
+        ...(replyMsg?.id ? { reply_to_id: replyMsg.id } : {}),
+      });
+      await supabase.from("conversations").update({ last_message_at: new Date().toISOString(), last_message_preview: (messageContent || fileToSend?.name || "File").substring(0, 100), updated_at: new Date().toISOString() }).eq("id", activeConversation.id);
       // Send notification to the other user
       if (activeConversation.other_user?.id) {
         const senderName = `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim();
-        await sendMessageNotification(user.id, senderName, activeConversation.other_user.id, messageContent, activeConversation.id);
+        await sendMessageNotification(user.id, senderName, activeConversation.other_user.id, messageContent || (fileToSend ? `📎 ${fileToSend.name}` : ""), activeConversation.id);
       }
     } catch (error) { console.error("Error sending message:", error); setNewMessage(messageContent); } finally { setIsSending(false); }
   };
@@ -3842,6 +3874,21 @@ const MentorMessagesPage = () => {
                           )}
                           <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-purple-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            {msg.file_url && (
+                              <div className="mt-2">
+                                {isImageFile(msg.file_url, msg.metadata) ? (
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
+                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-white/10" />
+                                  </a>
+                                ) : (
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 text-sm">
+                                    <Paperclip className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                                    <span className="text-indigo-400 truncate">{msg.metadata?.file_name || 'Attachment'}</span>
+                                    {msg.metadata?.file_size && <span className="text-gray-500 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                  </a>
+                                )}
+                              </div>
+                            )}
                           </div>
                           <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
@@ -3861,9 +3908,32 @@ const MentorMessagesPage = () => {
                     <button onClick={() => setReplyTo(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
                   </div>
                 )}
+                {attachedFile && (
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                    <Paperclip className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span className="text-sm text-purple-300 truncate flex-1">{attachedFile.name}</span>
+                    <span className="text-xs text-gray-500 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp"
+                    onChange={handleFileUpload}
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    disabled={isUploading}
+                    title="Attach file"
+                  >
+                    {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+                  </button>
                   <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
-                  <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
+                  <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
                 </div>
@@ -4154,6 +4224,15 @@ const MentorDashboardInner = () => {
                     <p className="text-sm text-gray-400">No new notifications</p>
                   </div>
                 )}
+                <div className="border-t border-white/10 p-2">
+                  <Link
+                    to="/dashboard/mentor/notifications"
+                    className="block w-full text-center py-2 text-sm text-indigo-400 hover:bg-black rounded-lg"
+                    onClick={() => setShowNotifications(false)}
+                  >
+                    View all notifications
+                  </Link>
+                </div>
               </div>
             )}
           </div>
