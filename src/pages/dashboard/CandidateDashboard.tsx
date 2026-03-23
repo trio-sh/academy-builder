@@ -695,7 +695,10 @@ const SkillPassport = () => {
         <div class="passport-container">
           <div class="header">
             <div class="profile">
-              <div class="avatar">${profile?.first_name?.[0] || ''}${profile?.last_name?.[0] || ''}</div>
+              ${profile?.avatar_url
+                ? `<img src="${profile.avatar_url}" class="avatar" style="object-fit: cover;" />`
+                : `<div class="avatar">${profile?.first_name?.[0] || ''}${profile?.last_name?.[0] || ''}</div>`
+              }
               <div>
                 <div class="name">${profile?.first_name || ''} ${profile?.last_name || ''}</div>
                 <div class="headline">${profile?.headline || 'Candidate'}</div>
