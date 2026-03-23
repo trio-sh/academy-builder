@@ -244,7 +244,7 @@ const Overview = () => {
       color: "from-indigo-500 to-purple-500"
     },
     {
-      label: "Mentor Loops",
+      label: "Observations",
       value: (candidateProfile?.mentor_loops || 0).toString(),
       icon: Briefcase,
       color: "from-emerald-500 to-teal-500"
@@ -293,9 +293,9 @@ const Overview = () => {
         href: "/dashboard/candidate/mentors"
       },
       {
-        title: "Complete mentor observations",
-        description: "Your mentor submits L1/L2 behavioral observations (3 needed)",
-        completed: (candidateProfile?.mentor_loops || 0) >= 3,
+        title: "Complete L1 + L2 observations",
+        description: "Complete AI scenarios (L1) and mentor live observation (L2) across your assigned dimensions",
+        completed: candidateProfile?.has_skill_passport || false,
         href: "/dashboard/candidate/observations"
       },
       {
@@ -710,8 +710,8 @@ const SkillPassport = () => {
               <div class="stat-value" style="color: ${tierLabel.color.includes('emerald') ? '#10b981' : tierLabel.color.includes('blue') ? '#3b82f6' : '#f59e0b'}">${tierLabel.label}</div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Mentor Loops</div>
-              <div class="stat-value">${candidateProfile?.mentor_loops || 3}</div>
+              <div class="stat-label">Dimensions Observed</div>
+              <div class="stat-value">${Object.keys(behavioralScores).length}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Valid Until</div>
@@ -995,8 +995,8 @@ const SkillPassport = () => {
               <p className={`text-xl font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
             </div>
             <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
-              <p className="text-sm text-gray-400 mb-1">Mentor Loops</p>
-              <p className="text-xl font-bold text-white">{candidateProfile?.mentor_loops || 3}</p>
+              <p className="text-sm text-gray-400 mb-1">Dimensions Observed</p>
+              <p className="text-xl font-bold text-white">{Object.keys(behavioralScores).length}</p>
             </div>
             <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
               <p className="text-sm text-gray-400 mb-1">Valid Until</p>
@@ -5277,10 +5277,10 @@ const FindMentor = () => {
             <h3 className="font-semibold text-emerald-400">Active Mentorship</h3>
           </div>
           <p className="text-gray-300">
-            You currently have an active mentor. Complete your mentor loops to progress.
+            You have an active mentor. Complete your L1 and L2 observations across your assigned dimensions to progress toward endorsement.
           </p>
           <p className="text-sm text-gray-400 mt-2">
-            Loop Progress: {activeMentor.loop_number} / 3
+            Visit your <Link to="/dashboard/candidate/observations" className="text-indigo-400 underline">Observation Pathway</Link> to begin.
           </p>
         </motion.div>
       )}
