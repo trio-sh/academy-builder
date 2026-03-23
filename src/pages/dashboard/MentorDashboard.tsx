@@ -948,6 +948,8 @@ const Mentees = () => {
       current_tier?: string;
       mentor_loops?: number;
     };
+    assigned_dimensions?: string[];
+    observation_count?: number;
   }
   const [mentees, setMentees] = useState<MenteeWithProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -994,12 +996,29 @@ const Mentees = () => {
                 .select("*")
                 .eq("id", candidateProfile.profile_id)
                 .single();
+
+              // Fetch assigned dimensions for this assignment
+              const { data: dims } = await supabase
+                .from("mentor_assigned_dimensions")
+                .select("dimension_id")
+                .eq("assignment_id", assignment.id)
+                .eq("is_active", true);
+
+              // Count observations (locked mentor_observations)
+              const { count: obsCount } = await supabase
+                .from("mentor_observations")
+                .select("*", { count: "exact", head: true })
+                .eq("assignment_id", assignment.id)
+                .eq("is_locked", true);
+
               return {
                 ...assignment,
                 candidate_profile: {
                   ...candidateProfile,
                   profile: profileData,
                 },
+                assigned_dimensions: dims?.map((d: { dimension_id: string }) => d.dimension_id) || [],
+                observation_count: obsCount || 0,
               };
             }
             return assignment;
@@ -1266,14 +1285,29 @@ const Mentees = () => {
                       </span>
                     </div>
                     <p className="text-sm text-gray-400">{profile?.email}</p>
-                    <div className="flex items-center gap-4 mt-3 text-sm">
+                    <div className="flex flex-wrap items-center gap-3 mt-3 text-sm">
                       <span className="text-gray-500">
-                        Loop {assignment.loop_number} of 3
+                        {assignment.observation_count || 0} observations
                       </span>
                       <span className="text-gray-500">
                         Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
                       </span>
                     </div>
+                    {assignment.assigned_dimensions && assignment.assigned_dimensions.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {assignment.assigned_dimensions.map(dimId => {
+                          const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
+                          return (
+                            <span key={dimId} className="px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/20">
+                              {dim?.label || dimId}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {(!assignment.assigned_dimensions || assignment.assigned_dimensions.length === 0) && (
+                      <p className="text-xs text-amber-400 mt-2">No dimensions assigned yet</p>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button
