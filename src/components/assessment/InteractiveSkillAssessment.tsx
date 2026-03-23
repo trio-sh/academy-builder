@@ -689,15 +689,20 @@ export const InteractiveSkillAssessment = () => {
       return (
         <div>
           <div className="prose prose-invert max-w-none">
-            <div className="text-gray-300 leading-relaxed whitespace-pre-line text-lg">
+            <div className="text-gray-300 leading-relaxed text-lg">
               {scene.content.split('\n').map((line, i) => {
                 if (line.startsWith('**') && line.endsWith('**')) {
                   return <h4 key={i} className="text-white font-semibold mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
                 }
-                if (line.startsWith('•')) {
-                  return <p key={i} className="ml-4 my-1 text-gray-400">{line}</p>;
+                if (line.startsWith('•') || line.startsWith('- ')) {
+                  const parsed = line.replace(/^[•\-]\s*/, '').replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+                  return <div key={i} className="flex items-start gap-2 ml-2 my-1.5 text-gray-400"><span className="text-indigo-400 mt-1">•</span><span dangerouslySetInnerHTML={{ __html: parsed }} /></div>;
                 }
-                return line.trim() ? <p key={i} className="my-2">{line}</p> : <br key={i} />;
+                if (line.trim()) {
+                  const parsed = line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+                  return <p key={i} className="my-2" dangerouslySetInnerHTML={{ __html: parsed }} />;
+                }
+                return <div key={i} className="h-3" />;
               })}
             </div>
           </div>
@@ -904,7 +909,7 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'prioritization' && scene.prioritizationTasks) {
       return (
         <div className="space-y-6">
-          <p className="text-gray-300">{scene.content}</p>
+          <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: scene.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
 
           {timeRemaining > 0 && !prioritizationSubmitted && (
             <div className={`flex items-center gap-2 px-3 py-2 rounded-full ${
@@ -1100,7 +1105,7 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'active-listening') {
       return (
         <div className="space-y-6">
-          <p className="text-gray-300">{scene.content}</p>
+          <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: scene.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
 
           {!audioPlayed ? (
             <div className="flex flex-col items-center gap-4 py-8">
@@ -1178,7 +1183,7 @@ export const InteractiveSkillAssessment = () => {
       return (
         <div className="space-y-6">
           <div className="p-4 rounded-xl bg-slate-500/30 border border-slate-500/20">
-            <p className="text-gray-300 whitespace-pre-line">{judgment.situation}</p>
+            <p className="text-gray-300 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: judgment.situation.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
           </div>
 
           <div className="text-sm text-gray-400">
@@ -1224,7 +1229,7 @@ export const InteractiveSkillAssessment = () => {
     if (scene.type === 'quick-response') {
       return (
         <div className="space-y-6">
-          <p className="text-gray-300">{scene.content}</p>
+          <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: scene.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
 
           <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
             <p className="text-amber-300">Scenario:</p>
