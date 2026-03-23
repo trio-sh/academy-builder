@@ -183,12 +183,37 @@ const ObservationFormModal = () => {
 
     fetchData();
 
-    // Pre-populate if assignment/candidate was provided
-    if (selectedAssignmentId) {
+    // Pre-populate if assignment/candidate was provided — also fetch assigned dims + L1 feedback
+    if (selectedAssignmentId && selectedCandidateId) {
+      setFormData(prev => ({ ...prev, assignmentId: selectedAssignmentId, candidateId: selectedCandidateId }));
+
+      // Fetch assigned dimensions for this assignment
+      supabase
+        .from("mentor_assigned_dimensions")
+        .select("dimension_id")
+        .eq("assignment_id", selectedAssignmentId)
+        .eq("is_active", true)
+        .then(({ data: dims }) => {
+          if (dims) setAssignedDimIds(dims.map((d: { dimension_id: string }) => d.dimension_id));
+        });
+
+      // Fetch L1 AI feedback for this candidate
+      supabase
+        .from("observation_feedback")
+        .select("dimension_id, bars_score, ai_draft_feedback")
+        .eq("assignment_id", selectedAssignmentId)
+        .eq("candidate_id", selectedCandidateId)
+        .eq("feedback_level", 1)
+        .then(({ data: l1 }) => {
+          if (l1) setL1Feedback(l1);
+        });
+
+      setStep(2);
+    } else if (selectedAssignmentId) {
       setFormData(prev => ({ ...prev, assignmentId: selectedAssignmentId }));
       setStep(2);
     }
-    if (selectedCandidateId) {
+    if (selectedCandidateId && !selectedAssignmentId) {
       setFormData(prev => ({ ...prev, candidateId: selectedCandidateId }));
     }
   }, [isOpen, user?.id, selectedAssignmentId, selectedCandidateId]);
