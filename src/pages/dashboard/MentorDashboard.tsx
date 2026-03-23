@@ -2265,17 +2265,32 @@ const Endorsements = () => {
             .eq("status", "active");
 
           if (assignments) {
-            // For each assignment, get observation count and check if ready for endorsement
+            // For each assignment, check L1+L2 completion and existing endorsements
             const enrichedAssignments = await Promise.all(
               assignments.map(async (assignment) => {
-                // Count locked observations
-                const { count } = await supabase
-                  .from("mentor_observations")
+                // Check L1 feedback exists
+                const { count: l1Count } = await supabase
+                  .from("observation_feedback")
                   .select("*", { count: "exact", head: true })
                   .eq("assignment_id", assignment.id)
-                  .eq("is_locked", true);
+                  .eq("candidate_id", assignment.candidate_id)
+                  .eq("feedback_level", 1);
 
-                // Get candidate profile (candidate_id = candidate_profiles.id)
+                // Check L2 feedback exists
+                const { count: l2Count } = await supabase
+                  .from("observation_feedback")
+                  .select("*", { count: "exact", head: true })
+                  .eq("assignment_id", assignment.id)
+                  .eq("candidate_id", assignment.candidate_id)
+                  .eq("feedback_level", 2);
+
+                // Check if already endorsed
+                const { count: endorsedCount } = await supabase
+                  .from("endorsements")
+                  .select("*", { count: "exact", head: true })
+                  .eq("assignment_id", assignment.id);
+
+                // Get candidate profile
                 const { data: candidateProfile } = await supabase
                   .from("candidate_profiles")
                   .select("*")
@@ -2294,14 +2309,17 @@ const Endorsements = () => {
 
                 return {
                   ...assignment,
-                  observation_count: count || 0,
+                  observation_count: (l1Count || 0) + (l2Count || 0),
+                  l1_complete: (l1Count || 0) > 0,
+                  l2_complete: (l2Count || 0) > 0,
+                  already_endorsed: (endorsedCount || 0) > 0,
                   candidate_profile: candidateProfile ? { ...candidateProfile, profile } : undefined,
                 };
               })
             );
 
-            // Filter to those with 3+ observations
-            setReadyForEndorsement(enrichedAssignments.filter(a => (a.observation_count || 0) >= 3));
+            // Ready for endorsement: has L1 + L2 and not already endorsed
+            setReadyForEndorsement(enrichedAssignments.filter(a => a.l1_complete && a.l2_complete && !a.already_endorsed));
           }
 
           // Get past endorsements
@@ -2442,20 +2460,24 @@ const Endorsements = () => {
 
       // If decision is "proceed", generate Skill Passport
       if (endorsementForm.decision === "proceed") {
-        // Calculate aggregate behavioral scores from observations
-        const { data: observations } = await supabase
-          .from("mentor_observations")
-          .select("behavioral_scores")
+        // Calculate aggregate behavioral scores from observation_feedback (L1 + L2)
+        const { data: allFeedback } = await supabase
+          .from("observation_feedback")
+          .select("dimension_id, bars_score, feedback_level")
           .eq("assignment_id", selectedAssignment)
-          .eq("is_locked", true);
+          .eq("candidate_id", assignment.candidate_id)
+          .not("bars_score", "is", null);
 
         let aggregatedScores: Record<string, number> = {};
-        if (observations && observations.length > 0) {
-          // Average all behavioral scores
-          const scoreKeys = Object.keys(observations[0].behavioral_scores || {});
-          scoreKeys.forEach(key => {
-            const sum = observations.reduce((acc, o) => acc + (o.behavioral_scores?.[key] || 0), 0);
-            aggregatedScores[key] = Math.round((sum / observations.length) * 10) / 10;
+        if (allFeedback && allFeedback.length > 0) {
+          // Group scores by dimension, average L1+L2
+          const dimScores: Record<string, number[]> = {};
+          allFeedback.forEach(f => {
+            if (!dimScores[f.dimension_id]) dimScores[f.dimension_id] = [];
+            dimScores[f.dimension_id].push(f.bars_score);
+          });
+          Object.entries(dimScores).forEach(([dim, scores]) => {
+            aggregatedScores[dim] = Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10;
           });
         }
 
