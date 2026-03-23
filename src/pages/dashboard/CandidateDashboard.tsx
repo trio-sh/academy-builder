@@ -5124,59 +5124,62 @@ const FindMentor = () => {
 
   useEffect(() => {
     const fetchMentors = async () => {
-      if (!user?.id) return;
+      if (!user?.id) { setIsLoading(false); return; }
 
-      // Get my candidate_profiles.id (needed for mentor_assignments FK)
-      const { data: cp } = await supabase
-        .from("candidate_profiles")
-        .select("id")
-        .eq("profile_id", user.id)
-        .single();
-      const candidateProfileId = cp?.id || null;
-      setMyCandidateProfileId(candidateProfileId);
-
-      // Fetch intelligent mentor matches
       try {
-        const matches = await MentorMatchingService.findMentorMatches(user.id, 5);
-        setRecommendedMatches(matches);
-      } catch (error) {
-        console.log("Mentor matching unavailable:", error);
-      }
+        // Get my candidate_profiles.id (needed for mentor_assignments FK)
+        const { data: cp } = await supabase
+          .from("candidate_profiles")
+          .select("id")
+          .eq("profile_id", user.id)
+          .single();
+        const candidateProfileId = cp?.id || null;
+        setMyCandidateProfileId(candidateProfileId);
 
-      // Fetch mentors who are accepting
-      const { data: mentorsData } = await supabase
-        .from("mentor_profiles")
-        .select("*")
-        .eq("is_accepting", true)
-        .order("total_observations", { ascending: false });
+        // Fetch intelligent mentor matches
+        try {
+          const matches = await MentorMatchingService.findMentorMatches(user.id, 5);
+          setRecommendedMatches(matches);
+        } catch (error) {
+          console.log("Mentor matching unavailable:", error);
+        }
 
-      if (mentorsData) {
-        // Enrich with profile data
-        const enrichedMentors = await Promise.all(
-          mentorsData.map(async (mentor) => {
-            const { data: profileData } = await supabase
-              .from("profiles")
-              .select("*")
-              .eq("id", mentor.profile_id)
-              .single();
-
-            return { ...mentor, profile: profileData };
-          })
-        );
-        setMentors(enrichedMentors);
-      }
-
-      // Fetch my current assignments using candidate_profiles.id
-      if (candidateProfileId) {
-        const { data: assignmentsData } = await supabase
-          .from("mentor_assignments")
+        // Fetch mentors who are accepting
+        const { data: mentorsData } = await supabase
+          .from("mentor_profiles")
           .select("*")
-          .eq("candidate_id", candidateProfileId);
+          .eq("is_accepting", true)
+          .order("total_observations", { ascending: false });
 
-        setMyAssignments(assignmentsData || []);
+        if (mentorsData) {
+          const enrichedMentors = await Promise.all(
+            mentorsData.map(async (mentor) => {
+              const { data: profileData } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", mentor.profile_id)
+                .single();
+
+              return { ...mentor, profile: profileData };
+            })
+          );
+          setMentors(enrichedMentors);
+        }
+
+        // Fetch my current assignments using candidate_profiles.id
+        if (candidateProfileId) {
+          const { data: assignmentsData } = await supabase
+            .from("mentor_assignments")
+            .select("*")
+            .eq("candidate_id", candidateProfileId);
+
+          setMyAssignments(assignmentsData || []);
+        }
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
 
     fetchMentors();
