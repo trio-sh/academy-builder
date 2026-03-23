@@ -2084,6 +2084,7 @@ const Endorsements = () => {
           .from("candidate_profiles")
           .update({
             has_skill_passport: true,
+            is_listed_on_t3x: true,
             updated_at: new Date().toISOString(),
           })
           .eq("id", assignment.candidate_id);

@@ -412,7 +412,7 @@ const SearchTalent = () => {
 
       const { error } = await supabase.from("t3x_connections").insert({
         employer_id: employerProfile.id,
-        candidate_id: selectedCandidate.profile_id,
+        candidate_id: selectedCandidate.id,
         message: connectionMessage || null,
         status: "pending",
         expires_at: expiresAt.toISOString(),

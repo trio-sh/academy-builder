@@ -3600,11 +3600,19 @@ const Connections = () => {
     const fetchConnections = async () => {
       if (!user?.id) return;
 
+      // Get candidate_profiles.id (t3x_connections FK references candidate_profiles, not profiles)
+      const { data: cp } = await supabase
+        .from("candidate_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .single();
+      if (!cp) { setIsLoading(false); return; }
+
       // Fetch connections for this candidate
       const { data: connectionData } = await supabase
         .from("t3x_connections")
         .select("*")
-        .eq("candidate_id", user.id)
+        .eq("candidate_id", cp.id)
         .order("created_at", { ascending: false });
 
       if (connectionData && connectionData.length > 0) {
