@@ -1877,24 +1877,31 @@ const ObservationPathway = () => {
           {/* L1 — AI Scenarios */}
           {(() => {
             const l1Feedback = observationFeedback.filter(f => f.feedback_level === 1);
-            const l1Complete = l1Feedback.length > 0;
+            const l1ScoredDims = new Set(l1Feedback.map(f => f.dimension_id));
+            const l1AllComplete = assignedDimensions.length > 0 && assignedDimensions.every(d => l1ScoredDims.has(d));
+            const l1Partial = l1Feedback.length > 0 && !l1AllComplete;
             return (
-              <div className={`p-5 rounded-xl border ${l1Complete ? "bg-emerald-500/10 border-emerald-500/30" : "bg-black border-white/10"}`}>
+              <div className={`p-5 rounded-xl border ${l1AllComplete ? "bg-emerald-500/10 border-emerald-500/30" : l1Partial ? "bg-amber-500/10 border-amber-500/30" : "bg-black border-white/10"}`}>
                 <div className="flex items-center justify-between mb-3">
                   <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400">L1</span>
-                  {l1Complete && <CheckCircle className="w-4 h-4 text-emerald-400" />}
+                  {l1AllComplete && <CheckCircle className="w-4 h-4 text-emerald-400" />}
                 </div>
                 <h3 className="font-semibold text-white mb-1">AI-Driven Scenarios</h3>
                 <p className="text-xs text-gray-400 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
-                {l1Complete ? (
-                  <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1Feedback.length} dimensions scored</p>
+                {l1AllComplete ? (
+                  <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1Feedback.length}/{assignedDimensions.length} dimensions scored</p>
                 ) : (
-                  <Link to="/dashboard/candidate/observations/session">
-                    <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700">
-                      Begin L1 Session
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </Link>
+                  <>
+                    {l1Partial && (
+                      <p className="text-xs text-amber-400 mb-3">{l1Feedback.length}/{assignedDimensions.length} dimensions scored — continue to complete remaining</p>
+                    )}
+                    <Link to="/dashboard/candidate/observations/session">
+                      <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700">
+                        {l1Partial ? "Continue L1 Session" : "Begin L1 Session"}
+                        <ArrowRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </Link>
+                  </>
                 )}
               </div>
             );
