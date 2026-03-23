@@ -2459,14 +2459,15 @@ const Endorsements = () => {
         escalate: "Escalate - Flagged for governance review",
       };
 
-      await supabase.from("growth_log_entries").insert({
+      // Growth log entry (non-blocking — don't let this fail the critical path)
+      supabase.from("growth_log_entries").insert({
         candidate_id: growthCandidateId,
         event_type: "endorsement",
         title: `Mentor Endorsement: ${endorsementForm.decision.charAt(0).toUpperCase() + endorsementForm.decision.slice(1)}`,
         description: decisionLabels[endorsementForm.decision],
         source_component: "MentorLink",
         source_id: endorsement.id,
-      });
+      }).then(() => {}).catch(e => console.log("Growth log write:", e));
 
       // If decision is "proceed", generate Skill Passport
       if (endorsementForm.decision === "proceed") {
@@ -2514,26 +2515,26 @@ const Endorsements = () => {
           })
           .eq("id", assignment.candidate_id);
 
-        // Create growth log entry for passport (FK to profiles.id)
-        await supabase.from("growth_log_entries").insert({
+        // Create growth log entry for passport (non-blocking)
+        supabase.from("growth_log_entries").insert({
           candidate_id: growthCandidateId,
           event_type: "endorsement",
           title: "Skill Passport Earned",
           description: `Verification Code: ${verificationCode}`,
           source_component: "SkillPassport",
-        });
+        }).then(() => {}).catch(e => console.log("Passport growth log:", e));
       }
 
       // If escalate, create an escalation notification for admin/governance
       if (endorsementForm.decision === "escalate") {
-        await supabase.from("growth_log_entries").insert({
+        supabase.from("growth_log_entries").insert({
           candidate_id: growthCandidateId,
           event_type: "escalation",
           title: "Observation Escalated — Governance Review",
           description: `Concern: ${endorsementForm.escalateConcern || endorsementForm.justification}. Awaiting governance review.`,
           source_component: "MentorLink",
           source_id: endorsement.id,
-        });
+        }).then(() => {}).catch(e => console.log("Escalation growth log:", e));
       }
 
       // Update assignment status
