@@ -543,10 +543,21 @@ const SkillPassport = () => {
 
     try {
       const pdfMakeModule = await import("pdfmake/build/pdfmake");
-      const pdfFontsModule = await import("pdfmake/build/vfs_fonts");
+      const pdfFontsModule = await import("pdfmake/build/vfs_fonts") as any;
       const pdfMake = pdfMakeModule.default || pdfMakeModule;
-      const vfs = (pdfFontsModule as any)?.pdfMake?.vfs || (pdfFontsModule as any)?.default?.pdfMake?.vfs;
-      if (vfs) pdfMake.vfs = vfs;
+      // Try multiple ways to get vfs fonts
+      if (pdfFontsModule?.pdfMake?.vfs) {
+        pdfMake.vfs = pdfFontsModule.pdfMake.vfs;
+      } else if (pdfFontsModule?.default?.pdfMake?.vfs) {
+        pdfMake.vfs = pdfFontsModule.default.pdfMake.vfs;
+      } else if (pdfFontsModule?.default) {
+        // Some builds export vfs directly on default
+        const def = pdfFontsModule.default;
+        if (def.vfs) pdfMake.vfs = def.vfs;
+        else if (def.pdfMake?.vfs) pdfMake.vfs = def.pdfMake.vfs;
+      }
+      // Also set on window for pdfmake internal access
+      if (pdfMake.vfs) (window as any).pdfMake = pdfMake;
 
       const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
@@ -599,7 +610,7 @@ const SkillPassport = () => {
             margin: [0, 0, 0, 20] as [number, number, number, number],
           },
           { canvas: [{ type: 'line' as const, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#666' }], margin: [0, 0, 0, 10] as [number, number, number, number] },
-          { text: [{ text: 'Verification Code: ', style: 'label' }, { text: passportData?.verification_code || '', bold: true, font: 'Courier' }], margin: [0, 0, 0, 5] as [number, number, number, number] },
+          { text: [{ text: 'Verification Code: ', style: 'label' }, { text: passportData?.verification_code || '', bold: true }], margin: [0, 0, 0, 5] as [number, number, number, number] },
           { text: `Verify at: ${window.location.origin}/verify/${passportData?.verification_code}`, style: 'small' },
           { text: '© 2026 The 3rd Academy. All rights reserved.', style: 'footer' },
         ],
