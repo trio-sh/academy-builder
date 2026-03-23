@@ -66,8 +66,9 @@ export async function getCooldownDays(): Promise<number> {
 }
 
 /**
- * Checks whether a candidate is allowed to start a new observation session,
- * respecting the admin-configured cooldown period.
+ * Checks whether a candidate is allowed to start a new observation session.
+ * Cooldown only applies when ALL assigned dimensions have L1 feedback.
+ * If some dimensions are still unscored, the candidate can continue.
  *
  * @param candidateId - The candidate's auth user UUID
  * @returns CooldownStatus with `allowed: true` if they can proceed
@@ -80,6 +81,52 @@ export async function checkObservationCooldown(
     return { allowed: false };
   }
 
+  // Check if the candidate has unscored dimensions (incomplete L1 cycle)
+  // If so, skip cooldown — they need to finish their current cycle
+  const { data: cp } = await supabase
+    .from('candidate_profiles')
+    .select('id')
+    .eq('profile_id', candidateId)
+    .maybeSingle();
+
+  if (cp) {
+    // Get active assignment
+    const { data: assignment } = await supabase
+      .from('mentor_assignments')
+      .select('id')
+      .eq('candidate_id', cp.id)
+      .eq('status', 'active')
+      .limit(1)
+      .maybeSingle();
+
+    if (assignment) {
+      // Get assigned dimensions
+      const { data: dims } = await supabase
+        .from('mentor_assigned_dimensions')
+        .select('dimension_id')
+        .eq('assignment_id', assignment.id)
+        .eq('is_active', true);
+
+      // Get L1 feedback already recorded
+      const { data: l1Feedback } = await supabase
+        .from('observation_feedback')
+        .select('dimension_id')
+        .eq('assignment_id', assignment.id)
+        .eq('candidate_id', cp.id)
+        .eq('feedback_level', 1);
+
+      const assignedDimIds = dims?.map(d => d.dimension_id) || [];
+      const scoredDimIds = new Set(l1Feedback?.map(f => f.dimension_id) || []);
+      const allScored = assignedDimIds.length > 0 && assignedDimIds.every(d => scoredDimIds.has(d));
+
+      // If not all dimensions scored, allow — no cooldown for incomplete cycles
+      if (!allScored) {
+        return { allowed: true };
+      }
+    }
+  }
+
+  // All dimensions scored — check cooldown for next full cycle
   const cooldownDays = await getCooldownDays();
 
   const { data: lastSession } = await supabase
@@ -92,7 +139,6 @@ export async function checkObservationCooldown(
     .maybeSingle();
 
   if (!lastSession?.updated_at) {
-    // No prior completed session — allowed
     return { allowed: true };
   }
 
