@@ -533,7 +533,7 @@ const SkillPassport = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const downloadPDF = async () => {
+  const downloadPDF = () => {
     const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
     const scoredDims = Object.entries(behavioralScores).filter(([, v]) => v > 0);
     const avgScore = scoredDims.length > 0
@@ -541,18 +541,19 @@ const SkillPassport = () => {
       : "N/A";
     const tierLabel = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
 
-    try {
-      // Use pdfMake from CDN (loaded via script tags in index.html)
-      const pdfMake = (window as any).pdfMake;
-      if (!pdfMake) {
-        console.error("pdfMake not loaded — check CDN script tags in index.html");
-        return;
-      }
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    const tierColorHex = tierLabel.color.includes('emerald') ? '#10b981' : tierLabel.color.includes('amber') ? '#f59e0b' : '#94a3b8';
+    const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
-      const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
+    const html = `<!DOCTYPE html><html><head><title>Skill Passport - ${profile?.first_name} ${profile?.last_name}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:40px;color:#1a1a2e;background:#fff}.c{max-width:800px;margin:0 auto;border:2px solid #10b981;border-radius:16px;padding:32px;background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#f0fdfa 100%)}.hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #d1d5db}.pr{display:flex;align-items:center;gap:16px}.av{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#10b981,#14b8a6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;object-fit:cover}.nm{font-size:24px;font-weight:700;color:#1a1a2e}.hl{color:#10b981;font-weight:500}.vb{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#dcfce7;border:1px solid #86efac;border-radius:20px;color:#16a34a;font-size:14px;font-weight:500}.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.sc{padding:14px;background:#fff;border-radius:12px;border:1px solid #e5e7eb}.sl{font-size:11px;color:#6b7280;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}.sv{font-size:18px;font-weight:700}.vx{padding:16px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:24px;display:flex;align-items:center;gap:12px}.vc{font-family:monospace;font-size:18px;font-weight:700;letter-spacing:2px}.dt{font-size:16px;font-weight:600;margin-bottom:4px}.ds{font-size:11px;color:#6b7280;margin-bottom:16px}.dg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}.dm{padding:14px;background:#fff;border-radius:10px;border:1px solid #e5e7eb}.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.dn{font-weight:600;font-size:13px}.ds2{font-weight:700;font-size:14px}.dl{font-size:11px;margin-bottom:8px}.pb{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}.pf{height:100%;border-radius:4px}.os{padding:24px;background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border:2px solid #10b981;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.ol{color:#6b7280;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.5px}.ov{font-size:36px;font-weight:700;color:#1a1a2e}.ox{font-size:14px;font-weight:600;color:#10b981}.ft{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280}@media print{body{padding:20px}.c{border-width:1px}}</style></head><body><div class="c"><div class="hd"><div class="pr">${profile?.avatar_url ? '<img src="' + profile.avatar_url + '" class="av"/>' : '<div class="av">' + (profile?.first_name?.[0] || '') + (profile?.last_name?.[0] || '') + '</div>'}<div><div class="nm">${profile?.first_name || ''} ${profile?.last_name || ''}</div><div class="hl">${profile?.headline || 'Behavioral Readiness Credential Holder'}</div></div></div><div class="vb">✓ Verified</div></div><div class="sg"><div class="sc"><div class="sl">Readiness Tier</div><div class="sv" style="color:${tierColorHex}">${tierLabel.label}</div></div><div class="sc"><div class="sl">Dimensions</div><div class="sv">${scoredDims.length}</div></div><div class="sc"><div class="sl">Issued</div><div class="sv" style="font-size:14px">${passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : 'N/A'}</div></div><div class="sc"><div class="sl">Expires</div><div class="sv" style="font-size:14px">${passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString() : 'Never'}</div></div></div><div class="vx"><span style="font-size:24px">🔒</span><div><div class="sl">Verification Code</div><div class="vc">${passportData?.verification_code || 'N/A'}</div></div></div><div class="dt">Behavioral Assessment</div><div class="ds">4-Point Behaviourally Anchored Rating Scale (BARS)</div><div class="dg">${scoredDims.map(([dimId, score]) => { const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId); if (!dim) return ''; const pct = (score / 4) * 100; const clr = score >= 3.5 ? '#10b981' : score >= 2.5 ? '#3b82f6' : score >= 1.5 ? '#f59e0b' : '#ef4444'; return '<div class="dm"><div class="dh"><span class="dn">' + dim.label + '</span><span class="ds2" style="color:' + clr + '">' + score.toFixed(1) + '/4</span></div><div class="dl" style="color:' + clr + '">' + barsLabel(score) + '</div><div class="pb"><div class="pf" style="width:' + pct + '%;background:' + clr + '"></div></div></div>'; }).join('')}</div><div class="os"><div><div class="ol">Overall Behavioral Readiness</div><div class="ov">${avgScore}/4</div><div class="ox">${avgScore !== "N/A" ? barsLabel(parseFloat(avgScore)) : '—'}</div></div><div style="font-size:48px">🏆</div></div><div class="ft"><span>The 3rd Academy — Behavioral Readiness Platform</span><span style="color:#6366f1;font-family:monospace;font-size:11px">${window.location.origin}/verify/${passportData?.verification_code}</span></div></div><script>window.onload=function(){window.print()}<\/script></body></html>`;
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
 
-      // Convert avatar to base64 for pdfmake (can't use external URLs)
-      let avatarBase64: string | null = null;
+    /* Dead code removed — old pdfmake + legacy print code cleaned up */
+    if (false) { const _unused = `
       if (profile?.avatar_url) {
         try {
           const resp = await fetch(profile.avatar_url);
@@ -803,14 +804,9 @@ const SkillPassport = () => {
     } catch (err) {
       console.error("PDF generation failed:", err);
     }
-    return; // skip old print window code below
+    return; `; } // end dead code
 
-    // Legacy print approach (kept as fallback reference)
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-
-    const html = `
-      <!DOCTYPE html>
+    // getTierLabel is defined below — the active downloadPDF function ends at line 552 above
       <html>
       <head>
         <title>Skill Passport - ${profile?.first_name} ${profile?.last_name}</title>
