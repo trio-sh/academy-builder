@@ -2434,11 +2434,12 @@ const Endorsements = () => {
         newTier = tierProgression[newTier] || "gold";
       }
 
-      // candidate_id = candidate_profiles.id; look up profiles.id for growth_log_entries
+      // candidate_id = candidate_profiles.id — update tier + passport flags together
       await supabase
         .from("candidate_profiles")
         .update({
           current_tier: newTier,
+          ...(endorsementForm.decision === "proceed" ? { has_skill_passport: true, is_listed_on_t3x: true } : {}),
           updated_at: new Date().toISOString(),
         })
         .eq("id", assignment.candidate_id);
@@ -2505,15 +2506,7 @@ const Endorsements = () => {
           expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year expiry
         });
 
-        // Update candidate profile
-        await supabase
-          .from("candidate_profiles")
-          .update({
-            has_skill_passport: true,
-            is_listed_on_t3x: true,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", assignment.candidate_id);
+        // has_skill_passport + is_listed_on_t3x already set above in the tier update
 
         // Create growth log entry for passport (non-blocking)
         supabase.from("growth_log_entries").insert({
