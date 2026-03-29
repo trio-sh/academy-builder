@@ -54,6 +54,7 @@ import {
   Lock,
   Unlock,
   Target,
+  Shield,
   Bot,
   PanelLeftClose,
   PanelLeft,
@@ -309,8 +310,34 @@ const SearchTalent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState({
     tier: "",
-    skill: "",
+    dimensions: [] as string[],
   });
+  const [viewMode, setViewMode] = useState<"list" | "card">("list");
+  const [expandedCandidate, setExpandedCandidate] = useState<string | null>(null);
+
+  const MVP_DIMENSIONS = [
+    { id: "integrity_ethics", label: "Integrity & Ethics" },
+    { id: "accountability_ownership", label: "Accountability & Ownership" },
+    { id: "execution_reliability", label: "Execution Reliability" },
+    { id: "communication_pressure", label: "Communication Under Pressure" },
+    { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution" },
+    { id: "resilience_recovery", label: "Resilience & Recovery" },
+    { id: "learning_agility", label: "Learning Agility" },
+  ];
+
+  const getBarsLabel = (score: number) => {
+    if (score >= 3.5) return "Strong";
+    if (score >= 2.5) return "Competent";
+    if (score >= 1.5) return "Emerging";
+    return "Not Yet Demonstrated";
+  };
+
+  const getBarsColor = (score: number) => {
+    if (score >= 3.5) return "text-emerald-400";
+    if (score >= 2.5) return "text-blue-400";
+    if (score >= 1.5) return "text-amber-400";
+    return "text-orange-400";
+  };
 
   // Connection modal state
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -489,168 +516,202 @@ const SearchTalent = () => {
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="flex flex-wrap gap-4 p-4 rounded-xl bg-black border border-white/30">
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-400">Filters:</span>
+      <motion.div variants={itemVariants} className="p-4 rounded-xl bg-black border border-white/10">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-400">Filters:</span>
+          </div>
+          <select
+            value={filters.tier}
+            onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
+            className="px-3 py-1.5 rounded-lg bg-black border border-white/20 text-white text-sm focus:border-emerald-500 focus:outline-none"
+          >
+            <option value="">All Tiers</option>
+            <option value="silver">Silver</option>
+            <option value="gold">Gold</option>
+            <option value="platinum">Platinum</option>
+          </select>
+          {/* Dimension multi-select */}
+          <div className="flex flex-wrap gap-1.5">
+            {MVP_DIMENSIONS.map(dim => (
+              <button
+                key={dim.id}
+                type="button"
+                onClick={() => setFilters(prev => ({
+                  ...prev,
+                  dimensions: prev.dimensions.includes(dim.id)
+                    ? prev.dimensions.filter(d => d !== dim.id)
+                    : [...prev.dimensions, dim.id],
+                }))}
+                className={`px-2 py-1 rounded-full text-[11px] font-medium transition-colors ${
+                  filters.dimensions.includes(dim.id)
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                    : "bg-white/5 text-gray-500 border border-white/10 hover:text-gray-300"
+                }`}
+              >
+                {dim.label}
+              </button>
+            ))}
+          </div>
+          {filters.dimensions.length > 0 && (
+            <button
+              onClick={() => setFilters(prev => ({ ...prev, dimensions: [] }))}
+              className="text-xs text-gray-500 hover:text-white"
+            >
+              Clear
+            </button>
+          )}
         </div>
-        <select
-          value={filters.tier}
-          onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm focus:border-emerald-500 focus:outline-none"
-        >
-          <option value="">All Tiers</option>
-          <option value="platinum">Platinum</option>
-          <option value="gold">Gold</option>
-          <option value="silver">Silver</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Search skills..."
-          value={filters.skill}
-          onChange={(e) => setFilters((prev) => ({ ...prev, skill: e.target.value }))}
-          className="px-3 py-1.5 rounded-lg bg-black border border-white/30 text-white text-sm placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
-        />
       </motion.div>
 
-      {/* Results */}
-      {candidates.length > 0 ? (
-        <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-4">
-          {candidates.map((candidate) => (
-            <div
-              key={candidate.id}
-              className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
-                  {candidate.profile?.first_name?.[0]}
-                  {candidate.profile?.last_name?.[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-white">
-                      {candidate.profile?.first_name} {candidate.profile?.last_name}
-                    </h3>
-                    <Award className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <p className="text-sm text-gray-400">{candidate.profile?.headline || "Skill Passport Holder"}</p>
-                  <div className="flex items-center gap-4 mt-2 text-xs">
-                    <span className={`px-2 py-0.5 rounded ${
-                      candidate.current_tier === "platinum"
-                        ? "bg-emerald-500/20 text-emerald-400"
-                        : candidate.current_tier === "gold"
-                        ? "bg-amber-500/20 text-amber-400"
-                        : "bg-gray-500/20 text-gray-400"
-                    }`}>
-                      {candidate.current_tier ? candidate.current_tier.charAt(0).toUpperCase() + candidate.current_tier.slice(1) : "Silver"}
-                    </span>
-                    {candidate.experience_years && (
-                      <span className="text-gray-500">{candidate.experience_years} years exp</span>
-                    )}
-                  </div>
-                </div>
-              </div>
+      {/* Results — List view by default */}
+      {(() => {
+        // Filter candidates by selected dimensions
+        const filtered = filters.dimensions.length > 0
+          ? candidates.filter(c => {
+              if (!c.behavioralScores) return false;
+              return filters.dimensions.every(d => c.behavioralScores?.[d] !== undefined && c.behavioralScores[d] > 0);
+            })
+          : candidates;
 
-              {candidate.skills && candidate.skills.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-1">
-                  {candidate.skills.slice(0, 5).map((skill, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
-                      {skill}
-                    </span>
-                  ))}
-                  {candidate.skills.length > 5 && (
-                    <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
-                      +{candidate.skills.length - 5} more
-                    </span>
+        return filtered.length > 0 ? (
+          <motion.div variants={itemVariants} className="space-y-2">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-400">{filtered.length} candidate{filtered.length !== 1 ? "s" : ""} found</p>
+            </div>
+
+            {/* List rows */}
+            {filtered.map((candidate) => {
+              const isExpanded = expandedCandidate === candidate.id;
+              const connectionStatus = getConnectionStatus(candidate.profile_id);
+
+              return (
+                <div key={candidate.id} className="rounded-xl bg-black border border-white/10 overflow-hidden">
+                  {/* List row — always visible */}
+                  <div
+                    className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => setExpandedCandidate(isExpanded ? null : candidate.id)}
+                  >
+                    {candidate.profile?.avatar_url ? (
+                      <img src={candidate.profile.avatar_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                        {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-white">{candidate.profile?.first_name} {candidate.profile?.last_name}</span>
+                        <Award className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                          candidate.current_tier === "platinum" ? "bg-emerald-500/20 text-emerald-400" :
+                          candidate.current_tier === "gold" ? "bg-amber-500/20 text-amber-400" :
+                          "bg-gray-500/20 text-gray-400"
+                        }`}>
+                          Silver
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 truncate">{candidate.profile?.headline || "Skill Passport Holder"}</p>
+                    </div>
+                    {/* BARS labels — no raw scores */}
+                    <div className="hidden md:flex items-center gap-2">
+                      {candidate.behavioralScores && MVP_DIMENSIONS.slice(0, 4).map(dim => {
+                        const score = candidate.behavioralScores?.[dim.id];
+                        if (!score || score <= 0) return null;
+                        return (
+                          <span key={dim.id} className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${getBarsColor(score)} bg-white/5`}>
+                            {getBarsLabel(score)}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {connectionStatus === "accepted" ? (
+                        <span className="text-xs text-emerald-400">Connected</span>
+                      ) : connectionStatus === "pending" ? (
+                        <span className="text-xs text-amber-400">Pending</span>
+                      ) : (
+                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-xs h-7" onClick={(e) => { e.stopPropagation(); openConnectModal(candidate); }}>
+                          Connect
+                        </Button>
+                      )}
+                      <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                    </div>
+                  </div>
+
+                  {/* Expanded card — Skill Passport view */}
+                  {isExpanded && (
+                    <div className="border-t border-white/5 p-5 bg-white/[0.02]">
+                      <div className="flex items-start gap-4 mb-4">
+                        {candidate.profile?.avatar_url ? (
+                          <img src={candidate.profile.avatar_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
+                        ) : (
+                          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                            {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">{candidate.profile?.first_name} {candidate.profile?.last_name}</h3>
+                          <p className="text-sm text-gray-400">{candidate.profile?.headline || "Skill Passport Holder"}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-gray-400 font-medium">Silver</span>
+                            <span className="text-xs text-emerald-400 flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Skill Passport</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* BehaviourMatch™ — 7 MVP dimensions, BARS labels only */}
+                      {candidate.behavioralScores && Object.keys(candidate.behavioralScores).length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-xs text-emerald-400 font-medium mb-3 flex items-center gap-1">
+                            <Target className="w-3 h-3" /> BehaviourMatch™ — Behavioral Readiness Profile
+                          </p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            {MVP_DIMENSIONS.map(dim => {
+                              const score = candidate.behavioralScores?.[dim.id];
+                              if (!score || score <= 0) return null;
+                              const label = getBarsLabel(score);
+                              const color = getBarsColor(score);
+                              return (
+                                <div key={dim.id} className="p-2.5 rounded-lg bg-black border border-white/10">
+                                  <p className="text-[10px] text-gray-500 mb-1">{dim.label}</p>
+                                  <p className={`text-sm font-semibold ${color}`}>{label}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex gap-2">
+                        <a href={`/verify/${(() => { /* passport code lookup would go here */ return ''; })()}`} target="_blank" rel="noopener noreferrer">
+                          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
+                            <Shield className="w-4 h-4 mr-1" />
+                            View Skill Passport
+                          </Button>
+                        </a>
+                        {connectionStatus !== "accepted" && connectionStatus !== "pending" && (
+                          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500" onClick={() => openConnectModal(candidate)}>
+                            <Send className="w-4 h-4 mr-1" />
+                            Connect
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-              )}
-
-              {/* BehaviourMatch™ Scores */}
-              {candidate.behavioralScores && Object.keys(candidate.behavioralScores).length > 0 && (
-                <div className="mt-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
-                  <p className="text-xs text-emerald-400 font-medium mb-2 flex items-center gap-1">
-                    <Target className="w-3 h-3" /> BehaviourMatch™
-                  </p>
-                  <div className="grid grid-cols-5 gap-1">
-                    {[
-                      { key: "integrity_ethics", label: "INT" },
-                      { key: "accountability_ownership", label: "ACC" },
-                      { key: "execution_reliability", label: "EXE" },
-                      { key: "communication_pressure", label: "COM" },
-                      { key: "collaboration_conflict", label: "COL" },
-                    ].map(dim => {
-                      const score = candidate.behavioralScores?.[dim.key] || 0;
-                      return (
-                        <div key={dim.key} className="text-center">
-                          <div className={`text-xs font-bold ${
-                            score >= 3.5 ? "text-emerald-400" :
-                            score >= 2.5 ? "text-amber-400" : "text-gray-500"
-                          }`}>
-                            {score > 0 ? score.toFixed(1) : "-"}
-                          </div>
-                          <div className="text-[10px] text-gray-600">{dim.label}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-4 flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex-1 border-white/20 text-white hover:bg-black"
-                >
-                  <Eye className="w-4 h-4 mr-1" />
-                  View Profile
-                </Button>
-                {(() => {
-                  const status = getConnectionStatus(candidate.profile_id);
-                  if (status === "accepted") {
-                    return (
-                      <Button size="sm" disabled className="flex-1 bg-emerald-600/50">
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        Connected
-                      </Button>
-                    );
-                  } else if (status === "pending") {
-                    return (
-                      <Button size="sm" disabled className="flex-1 bg-amber-600/50">
-                        <Clock className="w-4 h-4 mr-1" />
-                        Pending
-                      </Button>
-                    );
-                  } else {
-                    return (
-                      <Button
-                        size="sm"
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-                        onClick={() => openConnectModal(candidate)}
-                      >
-                        <Send className="w-4 h-4 mr-1" />
-                        Connect
-                      </Button>
-                    );
-                  }
-                })()}
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
-        >
-          <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No candidates found</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Try adjusting your filters or check back later
-          </p>
-        </motion.div>
-      )}
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black border border-white/10 text-center">
+            <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400">No candidates found</p>
+            <p className="text-sm text-gray-500 mt-1">Try adjusting your filters or check back later</p>
+          </motion.div>
+        );
+      })()}
 
       {/* Connection Request Modal */}
       {showConnectModal && selectedCandidate && (
