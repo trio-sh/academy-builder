@@ -47,11 +47,11 @@ import {
   startObservationSession,
   completeObservationSession,
   recordObservationFeedback,
-  getMentorLoops,
   incrementMentorLoops,
   generateRandomSeed,
   CooldownStatus
 } from '@/lib/observationIntegrity';
+import { startLoop, completeLoop, getLoopStatus } from '@/lib/observationLoops';
 import {
   createSpeechRecognitionService,
   isSpeechRecognitionSupported,
@@ -1385,6 +1385,12 @@ export const InteractiveSkillAssessment = () => {
                       barsScore,
                       feedback
                     );
+
+                    // Record loop for this dimension (L1)
+                    const loop = await startLoop(candidateProfileId, assignmentId, dimId, 1);
+                    if (loop) {
+                      await completeLoop(loop.id, barsScore, 'proceed');
+                    }
                   }
 
                   // Track observation completion

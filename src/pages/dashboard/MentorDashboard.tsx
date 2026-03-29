@@ -1773,6 +1773,7 @@ const MenteeDetail = () => {
   const [feedback, setFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; ai_draft_feedback: string | null; mentor_feedback: string | null; created_at: string }>>([]);
   const [observations, setObservations] = useState<Array<{ id: string; session_date: string; behavioral_scores: Record<string, number>; is_locked: boolean; notes: string }>>([]);
   const [endorsement, setEndorsement] = useState<{ decision: string; justification: string; created_at: string } | null>(null);
+  const [loopData, setLoopData] = useState<Array<{ dimension_id: string; loop_number: number; status: string; bars_score: number | null; endorsement_decision: string | null; completed_at: string | null; cooldown_ends_at: string | null }>>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -1827,6 +1828,14 @@ const MenteeDetail = () => {
           .eq("assignment_id", assignmentId)
           .order("session_date", { ascending: false });
         if (obs) setObservations(obs);
+
+        // Fetch loop tracking data
+        const { data: loops } = await supabase
+          .from("observation_loops")
+          .select("dimension_id, loop_number, status, bars_score, endorsement_decision, completed_at, cooldown_ends_at")
+          .eq("candidate_id", asgn.candidate_id)
+          .order("loop_number", { ascending: true });
+        if (loops) setLoopData(loops);
 
         // Fetch endorsement
         const { data: end } = await supabase
@@ -1982,6 +1991,11 @@ const MenteeDetail = () => {
               const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
               const l1 = l1Feedback.find(f => f.dimension_id === dimId);
               const l2 = l2Feedback.find(f => f.dimension_id === dimId);
+              const dimLoops = loopData.filter(l => l.dimension_id === dimId);
+              const latestLoop = dimLoops[dimLoops.length - 1];
+              const loopCount = dimLoops.length;
+              const hasCooldown = latestLoop?.cooldown_ends_at && new Date(latestLoop.cooldown_ends_at) > new Date();
+              const cooldownDays = hasCooldown ? Math.ceil((new Date(latestLoop.cooldown_ends_at!).getTime() - Date.now()) / (24 * 60 * 60 * 1000)) : 0;
 
               return (
                 <div key={dimId} className="p-4 rounded-xl bg-black border border-white/10">
@@ -1990,7 +2004,42 @@ const MenteeDetail = () => {
                       <h3 className="font-medium text-white">{dim?.label || dimId}</h3>
                       <p className="text-xs text-gray-500">{dim?.description}</p>
                     </div>
+                    {/* Loop tracking badge */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {loopCount > 0 && (
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
+                          latestLoop?.endorsement_decision === 'proceed' ? 'bg-emerald-500/20 text-emerald-400' :
+                          hasCooldown ? 'bg-amber-500/20 text-amber-400' :
+                          loopCount >= 3 ? 'bg-red-500/20 text-red-400' :
+                          'bg-indigo-500/20 text-indigo-400'
+                        }`}>
+                          Loop {loopCount}/3
+                          {latestLoop?.endorsement_decision === 'proceed' && ' ✓'}
+                          {hasCooldown && ` (${cooldownDays}d cooldown)`}
+                          {loopCount >= 3 && latestLoop?.endorsement_decision !== 'proceed' && ' Locked'}
+                        </span>
+                      )}
+                      {loopCount === 0 && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-gray-500">No loops</span>
+                      )}
+                    </div>
                   </div>
+                  {/* Loop history */}
+                  {dimLoops.length > 0 && (
+                    <div className="flex items-center gap-1 mt-2">
+                      {dimLoops.map((loop, i) => (
+                        <div key={i} className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] ${
+                          loop.endorsement_decision === 'proceed' ? 'bg-emerald-500/10 text-emerald-400' :
+                          loop.endorsement_decision === 'redirect' ? 'bg-amber-500/10 text-amber-400' :
+                          loop.endorsement_decision === 'pause' ? 'bg-orange-500/10 text-orange-400' :
+                          'bg-white/5 text-gray-500'
+                        }`}>
+                          L{loop.loop_number}: {loop.bars_score ? `${loop.bars_score}/4` : '—'} {loop.endorsement_decision ? `(${loop.endorsement_decision})` : ''}
+                          {loop.completed_at && <span className="text-gray-600 ml-1">{new Date(loop.completed_at).toLocaleDateString()}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <div className={`p-3 rounded-lg ${l1 ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-white/5 border border-white/5"}`}>
                       <p className="text-[10px] text-gray-500 uppercase mb-1">L1 AI Score</p>
