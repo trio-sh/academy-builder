@@ -4939,6 +4939,8 @@ const FindMentor = () => {
   const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
   const [requestMessage, setRequestMessage] = useState("");
   const [isRequesting, setIsRequesting] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [requestSent, setRequestSent] = useState<Set<string>>(new Set());
   const [industryFilter, setIndustryFilter] = useState<string>("all");
   const [recommendedMatches, setRecommendedMatches] = useState<MentorMatch[]>([]);
@@ -5512,7 +5514,13 @@ const FindMentor = () => {
                 Cancel
               </Button>
               <Button
-                onClick={requestMentor}
+                onClick={() => {
+                  if (!disclaimerAccepted) {
+                    setShowDisclaimer(true);
+                  } else {
+                    requestMentor();
+                  }
+                }}
                 disabled={isRequesting}
                 className="flex-1 bg-indigo-600 hover:bg-indigo-500"
               >
@@ -5531,6 +5539,45 @@ const FindMentor = () => {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {showDisclaimer && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/80" onClick={() => setShowDisclaimer(false)} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10 max-h-[80vh] overflow-y-auto"
+          >
+            <h2 className="text-xl font-bold text-white mb-4">Candidate Disclaimer & Consent</h2>
+            <div className="text-sm text-gray-300 space-y-3 mb-6">
+              <p>By requesting a mentor and entering the T3A Observation Protocol, you acknowledge and agree to the following:</p>
+              <p><strong className="text-white">1. No Employment Guarantee.</strong> The Skill Passport is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
+              <p><strong className="text-white">2. Endorsement Outcomes.</strong> Mentor endorsement decisions (Proceed, Redirect, Pause, or Escalate) are evidence-based protocol outcomes determined by trained evaluators using the T3A Behavioural Assessment Standard. They are not personal judgments.</p>
+              <p><strong className="text-white">3. Permanent Growth Log.</strong> All observation data, session recordings, feedback, and endorsement decisions are recorded in your Growth Log, which is append-only and permanent. Records cannot be deleted or modified after creation.</p>
+              <p><strong className="text-white">4. Session Recording Consent.</strong> Observation sessions may be recorded for quality assurance, audit compliance, and evidence documentation purposes.</p>
+              <p><strong className="text-white">5. Loop & Cooldown Rules.</strong> Re-attempts are subject to cooldown periods and a maximum of 3 loops per dimension per level within a rolling 6-month window. These rules exist to maintain assessment integrity.</p>
+              <p><strong className="text-white">6. Data Usage.</strong> Your Skill Passport data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
+            </div>
+            <label className="flex items-start gap-3 p-3 rounded-lg bg-black border border-white/10 cursor-pointer mb-4">
+              <input
+                type="checkbox"
+                checked={disclaimerAccepted}
+                onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                className="mt-1 w-4 h-4 rounded border-white/30 bg-black text-emerald-500 focus:ring-emerald-500"
+              />
+              <span className="text-sm text-gray-300">I have read, understood, and agree to the above terms. I give my informed consent to participate in the T3A Observation Protocol.</span>
+            </label>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => setShowDisclaimer(false)} className="flex-1 border-white/20 text-white">Cancel</Button>
+              <Button
+                disabled={!disclaimerAccepted}
+                onClick={() => { setShowDisclaimer(false); requestMentor(); }}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-30"
+              >Accept & Request Mentor</Button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </motion.div>
   );

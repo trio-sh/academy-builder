@@ -518,6 +518,24 @@ const ObservationFormModal = () => {
                 </div>
 
                 <div>
+                  <details className="mb-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                    <summary className="text-sm font-medium text-indigo-400 cursor-pointer hover:text-indigo-300">
+                      L2 Session Script (Read before starting)
+                    </summary>
+                    <div className="mt-3 text-sm text-gray-300 space-y-3">
+                      <p className="text-indigo-300 font-medium">Opening Script — Read verbatim to candidate:</p>
+                      <blockquote className="pl-3 border-l-2 border-indigo-500/50 text-gray-400 italic space-y-2">
+                        <p>"Hello <span className="text-white">[Candidate Name]</span>, my name is <span className="text-white">[Mentor Name]</span>, and I'll be conducting your L2 live observation session today.</p>
+                        <p>Before we begin, I want to confirm a few things:</p>
+                        <p>This session will be used to observe and document your behavioural responses in a structured professional context. Your responses will be scored using The 3rd Academy's 4-point Behaviourally Anchored Rating Scale.</p>
+                        <p>This session may be recorded for quality assurance and audit purposes. Do you consent to proceed with the session under these conditions?</p>
+                        <p>[Wait for verbal confirmation]</p>
+                        <p>Thank you. During this session, I'll present you with scenarios related to your assigned behavioural dimensions. Please respond as naturally and honestly as you can — there are no trick questions, and this is not a test you can fail. The purpose is to observe how you approach workplace situations.</p>
+                        <p>Do you have any questions before we begin?"</p>
+                      </blockquote>
+                      <p className="text-xs text-gray-500 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>
+                    </div>
+                  </details>
                   <p className="text-sm text-gray-400 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
                   <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black/60 border border-white/10 text-center">
                     <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Not Yet Demonstrated</p></div>
@@ -769,6 +787,8 @@ const Overview = () => {
   const [activeMentees, setActiveMentees] = useState(0);
   const [pendingRequests, setPendingRequests] = useState(0);
   const [pendingObservations, setPendingObservations] = useState(0);
+  const [needsL2, setNeedsL2] = useState(0);
+  const [readyForEndorsement, setReadyForEndorsement] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -800,6 +820,34 @@ const Overview = () => {
             .eq("mentor_id", mp.id)
             .eq("status", "pending");
           setPendingRequests(pendingCount || 0);
+
+          // Candidates needing L2 (have L1 but no L2)
+          const { data: activeAssignments } = await supabase
+            .from("mentor_assignments")
+            .select("id, candidate_id")
+            .eq("mentor_id", mp.id)
+            .eq("status", "active");
+
+          let needsL2Count = 0;
+          let readyForEndorsementCount = 0;
+          if (activeAssignments) {
+            for (const a of activeAssignments) {
+              const { count: l1Count } = await supabase
+                .from("observation_feedback")
+                .select("*", { count: "exact", head: true })
+                .eq("assignment_id", a.id)
+                .eq("feedback_level", 1);
+              const { count: l2Count } = await supabase
+                .from("observation_feedback")
+                .select("*", { count: "exact", head: true })
+                .eq("assignment_id", a.id)
+                .eq("feedback_level", 2);
+              if ((l1Count || 0) > 0 && (l2Count || 0) === 0) needsL2Count++;
+              if ((l1Count || 0) > 0 && (l2Count || 0) > 0) readyForEndorsementCount++;
+            }
+          }
+          setNeedsL2(needsL2Count);
+          setReadyForEndorsement(readyForEndorsementCount);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -861,6 +909,57 @@ const Overview = () => {
           Manage your mentees and track your observations.
         </p>
       </motion.div>
+
+      {/* Action Required alerts */}
+      {(pendingRequests > 0 || needsL2 > 0 || readyForEndorsement > 0) && (
+        <motion.div variants={itemVariants} className="space-y-3">
+          <h2 className="text-lg font-semibold text-amber-400 flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5" /> Action Required
+          </h2>
+          {pendingRequests > 0 && (
+            <Link to="/dashboard/mentor/mentees">
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between hover:bg-amber-500/15 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Bell className="w-5 h-5 text-amber-400" />
+                  <div>
+                    <p className="font-medium text-white">{pendingRequests} Pending Mentee Request{pendingRequests > 1 ? 's' : ''}</p>
+                    <p className="text-xs text-gray-400">Candidates waiting for your approval</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-500" />
+              </div>
+            </Link>
+          )}
+          {needsL2 > 0 && (
+            <Link to="/dashboard/mentor/mentees">
+              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between hover:bg-blue-500/15 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <ClipboardCheck className="w-5 h-5 text-blue-400" />
+                  <div>
+                    <p className="font-medium text-white">{needsL2} Candidate{needsL2 > 1 ? 's' : ''} Ready for L2 Observation</p>
+                    <p className="text-xs text-gray-400">L1 complete — schedule live observation</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-500" />
+              </div>
+            </Link>
+          )}
+          {readyForEndorsement > 0 && (
+            <Link to="/dashboard/mentor/endorsements">
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between hover:bg-emerald-500/15 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Award className="w-5 h-5 text-emerald-400" />
+                  <div>
+                    <p className="font-medium text-white">{readyForEndorsement} Candidate{readyForEndorsement > 1 ? 's' : ''} Ready for Endorsement</p>
+                    <p className="text-xs text-gray-400">L1 + L2 complete — submit endorsement decision</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-500" />
+              </div>
+            </Link>
+          )}
+        </motion.div>
+      )}
 
       {/* Alert if not accepting mentees */}
       {mentorProfile && !mentorProfile.is_accepting && (
