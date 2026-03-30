@@ -300,6 +300,7 @@ interface CandidateWithProfile extends CandidateProfile {
   profile?: Profile;
   connectionStatus?: string | null;
   behavioralScores?: Record<string, number>;
+  verificationCode?: string;
 }
 
 const SearchTalent = () => {
@@ -379,9 +380,10 @@ const SearchTalent = () => {
         .eq("is_listed_on_t3x", true)
         .eq("has_skill_passport", true);
 
-      if (filters.tier) {
-        query = query.eq("current_tier", filters.tier);
-      }
+      // MVP: All candidates display as Silver tier — tier filter disabled
+      // if (filters.tier) {
+      //   query = query.eq("current_tier", filters.tier);
+      // }
 
       const { data: candidateData } = await query.limit(20);
 
@@ -397,7 +399,7 @@ const SearchTalent = () => {
             // Get behavioral scores from skill passport
             const { data: passport } = await supabase
               .from("skill_passports")
-              .select("behavioral_scores")
+              .select("behavioral_scores, verification_code")
               .eq("candidate_id", cp.id)
               .eq("is_active", true)
               .order("created_at", { ascending: false })
@@ -407,6 +409,7 @@ const SearchTalent = () => {
               ...cp,
               profile: profileData || undefined,
               behavioralScores: (passport?.behavioral_scores as Record<string, number>) || undefined,
+              verificationCode: passport?.verification_code || undefined,
             };
           })
         );
@@ -471,7 +474,7 @@ const SearchTalent = () => {
       // Update local state
       setExistingConnections(prev => {
         const newMap = new Map(prev);
-        newMap.set(selectedCandidate.profile_id, "pending");
+        newMap.set(selectedCandidate.id, "pending");
         return newMap;
       });
 
@@ -584,7 +587,7 @@ const SearchTalent = () => {
             {/* List rows */}
             {filtered.map((candidate) => {
               const isExpanded = expandedCandidate === candidate.id;
-              const connectionStatus = getConnectionStatus(candidate.profile_id);
+              const connectionStatus = getConnectionStatus(candidate.id);
 
               return (
                 <div key={candidate.id} className="rounded-xl bg-black border border-white/10 overflow-hidden">
@@ -614,17 +617,10 @@ const SearchTalent = () => {
                       </div>
                       <p className="text-xs text-gray-500 truncate">{candidate.profile?.headline || "Skill Passport Holder"}</p>
                     </div>
-                    {/* BARS labels — no raw scores */}
                     <div className="hidden md:flex items-center gap-2">
-                      {candidate.behavioralScores && MVP_DIMENSIONS.slice(0, 4).map(dim => {
-                        const score = candidate.behavioralScores?.[dim.id];
-                        if (!score || score <= 0) return null;
-                        return (
-                          <span key={dim.id} className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${getBarsColor(score)} bg-white/5`}>
-                            {getBarsLabel(score)}
-                          </span>
-                        );
-                      })}
+                      <span className="text-xs text-emerald-400 flex items-center gap-1">
+                        <Shield className="w-3 h-3" /> Verified
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {connectionStatus === "accepted" ? (
@@ -685,7 +681,7 @@ const SearchTalent = () => {
                       )}
 
                       <div className="flex gap-2">
-                        <a href={`/verify/${(() => { /* passport code lookup would go here */ return ''; })()}`} target="_blank" rel="noopener noreferrer">
+                        <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
                           <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
                             <Shield className="w-4 h-4 mr-1" />
                             View Skill Passport
@@ -3429,6 +3425,8 @@ const Company = () => {
     setIsSaving(true);
 
     try {
+      const allFieldsFilled = !!(formData.company_name && formData.industry && formData.company_size);
+
       if (employerProfile) {
         await supabase
           .from("employer_profiles")
@@ -3437,6 +3435,7 @@ const Company = () => {
             industry: formData.industry,
             company_size: formData.company_size,
             company_website: formData.company_website,
+            is_verified: allFieldsFilled ? true : employerProfile.is_verified,
             updated_at: new Date().toISOString(),
           })
           .eq("profile_id", user.id);
@@ -3449,6 +3448,7 @@ const Company = () => {
             industry: formData.industry,
             company_size: formData.company_size,
             company_website: formData.company_website,
+            is_verified: allFieldsFilled,
           });
       }
 
@@ -3673,11 +3673,77 @@ const SettingsPage = () => {
   );
 };
 
+const EmployerNotificationsPage = () => {
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      if (!user?.id) return;
+      const { data } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      setNotifications(data || []);
+      setIsLoading(false);
+    };
+    fetchAll();
+  }, [user?.id]);
+
+  const markAsRead = async (id: string) => {
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+  };
+
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+    await supabase.from("notifications").update({ is_read: true }).eq("user_id", user.id).eq("is_read", false);
+    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+  };
+
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
+
+  return (
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">Notifications</h1>
+        {notifications.some(n => !n.is_read) && (
+          <Button size="sm" variant="outline" onClick={markAllAsRead} className="border-white/20 text-gray-400">
+            Mark all as read
+          </Button>
+        )}
+      </motion.div>
+      <motion.div variants={itemVariants} className="space-y-2">
+        {notifications.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">No notifications yet</p>
+        ) : notifications.map(n => (
+          <div
+            key={n.id}
+            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-black border-white/5" : "bg-emerald-500/5 border-emerald-500/20"}`}
+            onClick={() => markAsRead(n.id)}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <p className={`font-medium ${n.is_read ? "text-gray-400" : "text-white"}`}>{n.title}</p>
+                <p className="text-sm text-gray-500 mt-1">{n.message}</p>
+              </div>
+              <span className="text-xs text-gray-600 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const EmployerDashboard = () => {
   const { profile, signOut, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string }[]>([]);
+  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; type?: string }[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
   const { unreadCount: unreadMessageCount } = useUnreadMessageCount(user?.id);
@@ -3689,7 +3755,7 @@ const EmployerDashboard = () => {
 
       const { data } = await supabase
         .from("notifications")
-        .select("id, title, message")
+        .select("id, title, message, type")
         .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
@@ -3864,10 +3930,19 @@ const EmployerDashboard = () => {
                 {notifications.length > 0 ? (
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <div key={notification.id} className="p-3 hover:bg-black border-b border-white/5">
+                      <Link
+                        key={notification.id}
+                        to={
+                          notification.type === 'connection_request' ? '/dashboard/employer/connections' :
+                          notification.type === 'message' ? '/dashboard/employer/messages' :
+                          '/dashboard/employer/notifications'
+                        }
+                        onClick={() => setShowNotifications(false)}
+                        className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-colors border-b border-white/5"
+                      >
                         <p className="text-sm font-medium text-white">{notification.title}</p>
                         <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 ) : (
@@ -3901,6 +3976,7 @@ const EmployerDashboard = () => {
             <Route path="company" element={<Company />} />
             <Route path="agent" element={<AIAgent />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="notifications" element={<EmployerNotificationsPage />} />
           </Routes>
         </main>
       </div>
