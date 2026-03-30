@@ -169,6 +169,7 @@ export const InteractiveSkillAssessment = () => {
   // Build Rule 9 — Cooldown enforcement
   const [cooldownStatus, setCooldownStatus] = useState<CooldownStatus | null>(null);
   const [isCheckingCooldown, setIsCheckingCooldown] = useState(true);
+  const [dimensionCooldownMessage, setDimensionCooldownMessage] = useState<string | null>(null);
 
   // Build Rule 10 — Session tracking
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -279,6 +280,31 @@ export const InteractiveSkillAssessment = () => {
       }
       const status = await checkObservationCooldown(user.id);
       setCooldownStatus(status);
+
+      // Also check per-dimension loop cooldowns from observation_loops
+      if (status.allowed) {
+        const { data: cp } = await supabase
+          .from('candidate_profiles')
+          .select('id')
+          .eq('profile_id', user.id)
+          .single();
+        if (cp) {
+          const now = new Date().toISOString();
+          const { data: activeCooldowns } = await supabase
+            .from('observation_loops')
+            .select('dimension_id, cooldown_ends_at')
+            .eq('candidate_id', cp.id)
+            .not('cooldown_ends_at', 'is', null)
+            .gt('cooldown_ends_at', now);
+          if (activeCooldowns && activeCooldowns.length > 0) {
+            const dimIds = activeCooldowns.map(r => r.dimension_id).join(', ');
+            setDimensionCooldownMessage(
+              `One or more assigned dimensions (${dimIds}) have an active loop cooldown. You may proceed but those dimensions will not generate new loop records until the cooldown expires.`
+            );
+          }
+        }
+      }
+
       setIsCheckingCooldown(false);
     };
     checkCooldown();
@@ -1580,8 +1606,16 @@ export const InteractiveSkillAssessment = () => {
         </div>
       </div>
 
+      {/* Build Rule 9 — Per-dimension loop cooldown warning banner */}
+      {dimensionCooldownMessage && (
+        <div className="absolute top-[76px] left-0 right-0 z-40 px-4 py-2 bg-amber-500/20 border-b border-amber-500/30 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+          <p className="text-xs text-amber-300">{dimensionCooldownMessage}</p>
+        </div>
+      )}
+
       {/* Main content */}
-      <div className="absolute inset-0 top-[76px] bottom-[80px] overflow-y-auto">
+      <div className={`absolute inset-0 bottom-[80px] overflow-y-auto ${dimensionCooldownMessage ? 'top-[116px]' : 'top-[76px]'}`}>
         <div className="min-h-full flex items-center justify-center px-4 py-12">
           <div className="w-full max-w-3xl">
             <AnimatePresence mode="wait">

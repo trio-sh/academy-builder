@@ -1426,6 +1426,7 @@ const ObservationPathway = () => {
   const [assignedDimensions, setAssignedDimensions] = useState<string[]>([]);
   const [observationFeedback, setObservationFeedback] = useState<Array<{ dimension_id: string; feedback_level: number; bars_score: number | null; status: string; final_feedback: string | null }>>([]);
   const [endorsementDecision, setEndorsementDecision] = useState<string | null>(null);;
+  const [loopData, setLoopData] = useState<Array<{dimension_id: string; loop_number: number; status: string; cooldown_ends_at: string | null; endorsement_decision: string | null; completed_at: string | null}>>([]);
 
   useEffect(() => {
     const fetchObservationData = async () => {
@@ -1486,6 +1487,14 @@ const ObservationPathway = () => {
             .eq("candidate_id", cp.id);
 
           if (feedback) setObservationFeedback(feedback);
+
+          // Get loop tracking data for this candidate
+          const { data: loops } = await supabase
+            .from("observation_loops")
+            .select("dimension_id, loop_number, status, cooldown_ends_at, endorsement_decision, completed_at")
+            .eq("candidate_id", cp.id)
+            .order("loop_number", { ascending: true });
+          if (loops) setLoopData(loops);
 
           // Get endorsement decision if any
           const { data: endorsement } = await supabase
@@ -1827,6 +1836,19 @@ const ObservationPathway = () => {
                     );
                   })}
                 </div>
+                {(() => {
+                  const dimLoops = loopData.filter(l => l.dimension_id === dim.id);
+                  if (dimLoops.length === 0) return null;
+                  const latest = dimLoops[dimLoops.length - 1];
+                  const hasCooldown = latest.cooldown_ends_at && new Date(latest.cooldown_ends_at) > new Date();
+                  return (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-[10px] text-gray-500">Loop {dimLoops.length}/3</span>
+                      {hasCooldown && <span className="text-[10px] text-amber-400">Cooldown active</span>}
+                      {latest.endorsement_decision === 'proceed' && <span className="text-[10px] text-emerald-400">Endorsed</span>}
+                    </div>
+                  );
+                })()}
               </div>
             );
           })}

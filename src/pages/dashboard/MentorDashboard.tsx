@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, Routes, Route, useLocation, useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { startLoop, completeLoop, mentorOverride } from "@/lib/observationLoops";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
@@ -330,6 +331,10 @@ const ObservationFormModal = () => {
             mentor_approved: true,
             mentor_approved_at: new Date().toISOString(),
           });
+
+          // Record loop tracking for L2 observation
+          const loop = await startLoop(formData.candidateId, formData.assignmentId, dimId, 2, mentorProfile.id);
+          if (loop) await completeLoop(loop.id, formData.scores[dimId], 'proceed');
         }
 
         // Update mentor stats
@@ -1774,6 +1779,8 @@ const MenteeDetail = () => {
   const [observations, setObservations] = useState<Array<{ id: string; session_date: string; behavioral_scores: Record<string, number>; is_locked: boolean; notes: string }>>([]);
   const [endorsement, setEndorsement] = useState<{ decision: string; justification: string; created_at: string } | null>(null);
   const [loopData, setLoopData] = useState<Array<{ dimension_id: string; loop_number: number; status: string; bars_score: number | null; endorsement_decision: string | null; completed_at: string | null; cooldown_ends_at: string | null }>>([]);
+  const [overrideModal, setOverrideModal] = useState<{ dimId: string; dimLabel: string } | null>(null);
+  const [overrideReason, setOverrideReason] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -2022,6 +2029,14 @@ const MenteeDetail = () => {
                       {loopCount === 0 && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-gray-500">No loops</span>
                       )}
+                      {loopCount >= 3 && latestLoop?.endorsement_decision !== 'proceed' && (
+                        <button
+                          onClick={() => setOverrideModal({ dimId, dimLabel: dim?.label || dimId })}
+                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-500/20 text-purple-400 hover:bg-purple-500/30"
+                        >
+                          Override
+                        </button>
+                      )}
                     </div>
                   </div>
                   {/* Loop history */}
@@ -2119,6 +2134,42 @@ const MenteeDetail = () => {
             )}
           </div>
         </motion.div>
+      )}
+
+      {/* Override modal */}
+      {overrideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/80" onClick={() => setOverrideModal(null)} />
+          <div className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10">
+            <h3 className="text-lg font-bold text-white mb-2">Override Loop Limit</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              Grant an additional attempt for <strong className="text-white">{overrideModal.dimLabel}</strong> beyond the 3-loop maximum. This requires documented justification.
+            </p>
+            <textarea
+              value={overrideReason}
+              onChange={(e) => setOverrideReason(e.target.value)}
+              placeholder="Reason for override (required)..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-lg bg-black border border-white/20 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none mb-4"
+            />
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => { setOverrideModal(null); setOverrideReason(""); }} className="flex-1 border-white/20 text-white">Cancel</Button>
+              <Button
+                disabled={!overrideReason.trim()}
+                onClick={async () => {
+                  if (!assignment || !overrideReason.trim()) return;
+                  await mentorOverride(assignment.candidate_id, overrideModal.dimId, 1, overrideReason);
+                  setOverrideModal(null);
+                  setOverrideReason("");
+                  // Refresh loop data
+                  const { data: loops } = await supabase.from("observation_loops").select("dimension_id, loop_number, status, bars_score, endorsement_decision, completed_at, cooldown_ends_at").eq("candidate_id", assignment.candidate_id).order("loop_number", { ascending: true });
+                  if (loops) setLoopData(loops);
+                }}
+                className="flex-1 bg-purple-600 hover:bg-purple-500"
+              >Grant Override</Button>
+            </div>
+          </div>
+        </div>
       )}
     </motion.div>
   );
@@ -2460,6 +2511,31 @@ const Endorsements = () => {
       if (endorsementError) {
         console.error("Error creating endorsement:", endorsementError);
         return;
+      }
+
+      // Record loop tracking for endorsement — one loop per assigned dimension
+      const { data: endorsedDims } = await supabase
+        .from("mentor_assigned_dimensions")
+        .select("dimension_id")
+        .eq("assignment_id", selectedAssignment)
+        .eq("is_active", true);
+
+      if (endorsedDims && endorsedDims.length > 0) {
+        // Calculate average score across all feedback for this assignment
+        const { data: allFeedbackForAvg } = await supabase
+          .from("observation_feedback")
+          .select("bars_score")
+          .eq("assignment_id", selectedAssignment)
+          .eq("candidate_id", assignment.candidate_id)
+          .not("bars_score", "is", null);
+        const avgScore = allFeedbackForAvg && allFeedbackForAvg.length > 0
+          ? Math.round((allFeedbackForAvg.reduce((sum, f) => sum + (f.bars_score || 0), 0) / allFeedbackForAvg.length) * 10) / 10
+          : 0;
+
+        for (const { dimension_id: dimId } of endorsedDims) {
+          const loop = await startLoop(assignment.candidate_id, selectedAssignment, dimId, 1);
+          if (loop) await completeLoop(loop.id, avgScore, endorsementForm.decision);
+        }
       }
 
       // Update mentor stats
