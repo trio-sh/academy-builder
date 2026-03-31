@@ -2395,6 +2395,24 @@ async function streamAgentLoop(
       const taskArgs = { ...(taskAgentCall.arguments as TaskAgentArgs) };
       if (userTools && userTools.length > 0) {
         taskArgs._custom_tools = userTools;
+        // CRITICAL: Override system prompt so Kilo uses file tools instead of outputting code as text
+        const toolNames = userTools.map((t: any) => (t.function || t).name).join(", ");
+        const fileToolInstructions = `
+
+IMPORTANT — FILE TOOL INSTRUCTIONS:
+You have access to file management tools: ${toolNames}.
+You are operating inside a browser-based IDE. The user can see files update in real-time.
+
+YOU MUST use the create_file tool to write code into the workspace. NEVER output code as text in your response.
+
+When building something:
+1. Call create_file for EACH file with the complete file content as the "content" parameter.
+2. Call edit_file on existing files to wire imports, routes, etc.
+3. Keep your text response brief — just explain what you're creating.
+
+Example: To create a component, call create_file with path "src/components/Hero.tsx" and the full component code as content.
+DO NOT output code blocks. DO NOT paste code in your response. Use the tools.`;
+        taskArgs.system_prompt = (taskArgs.system_prompt || "") + fileToolInstructions;
       }
 
       // Stream task_agent response — may return custom tool calls for client
