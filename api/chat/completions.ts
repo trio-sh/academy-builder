@@ -2557,7 +2557,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     log.info(`Config: model=${model}, temp=${temperature}, maxTokens=${maxTokens}, stream=${stream}, maxSteps=${maxSteps}, continuation=${!!continuation}`);
 
     // ── PDF Intent Routing: detect PDF requests and route to Kilo ──
-    const isPdfIntent = !continuation && await isPdfRequest(body.messages, log);
+    // Skip PDF/complex routing when custom tools are provided — the client wants
+    // tool calls routed back for client-side execution (e.g. IDE file operations).
+    const hasCustomTools = body.tools && body.tools.length > 0;
+    const isPdfIntent = !continuation && !hasCustomTools && await isPdfRequest(body.messages, log);
     if (isPdfIntent) {
       log.info("✓ PDF intent detected — routing to Kilo Gateway for document generation");
       const pdfPrompt = buildPdfKiloPrompt(body.messages);
@@ -2796,7 +2799,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // ── Complex Query Routing: detect complex/long-form requests and route to Kilo ──
-    const isComplexIntent = !continuation && await isComplexQuery(body.messages, log);
+    // Also skipped when custom tools are present (same reason as PDF routing above).
+    const isComplexIntent = !continuation && !hasCustomTools && await isComplexQuery(body.messages, log);
     if (isComplexIntent) {
       log.info("✓ Complex query detected — routing to Kilo Gateway for advanced processing");
       const complexPrompt = buildKiloPrompt(body.messages);
