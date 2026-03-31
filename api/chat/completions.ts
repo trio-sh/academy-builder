@@ -27,6 +27,9 @@ interface OpenAIRequest {
   // Custom extensions
   multistep?: boolean;
   max_steps?: number;
+  // Direct Kilo mode: bypass A0, call Kilo Gateway directly with native tool calling.
+  // Custom tools get streamed to client as tool_call deltas for client-side execution.
+  direct_kilo?: boolean;
   // Continuation support for Vercel timeout handling
   _continuation?: ContinuationState;
 }
@@ -993,6 +996,8 @@ interface TaskAgentArgs {
   system_prompt?: string;
   model?: string;
   max_tokens?: number;
+  // Injected by the server — custom tools from the caller to forward to Kilo
+  _custom_tools?: any[];
 }
 
 // Tools available to the task agent (everything except task_agent itself to avoid recursion)
@@ -1195,8 +1200,11 @@ async function executeTaskAgent(
 /**
  * Streaming: call Kilo Gateway with stream=true and tool support.
  * Pipes text tokens directly to our SSE response. When Kilo requests tool calls,
- * executes them server-side and continues the conversation (non-streaming for
- * tool rounds, streaming for the final text response).
+ * executes built-in ones server-side and continues. Custom tool calls get streamed
+ * to the client as tool_call deltas for client-side execution.
+ *
+ * Returns: { text, hasCustomToolCalls } — if hasCustomToolCalls is true, the caller
+ * should NOT write the "stop" chunk (stream ended with "tool_calls" instead).
  */
 async function streamTaskAgent(
   args: TaskAgentArgs,
@@ -1204,12 +1212,12 @@ async function streamTaskAgent(
   sseId: string,
   sseModel: string,
   log?: ReturnType<typeof createLogger>
-): Promise<string> {
+): Promise<{ text: string; hasCustomToolCalls: boolean }> {
   if (!KILO_API_KEY) {
     log?.error("KILO_API_KEY not configured");
     const errMsg = "Error: Task agent is not configured. KILO_API_KEY environment variable is missing.";
     res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-    return errMsg;
+    return { text: errMsg, hasCustomToolCalls: false };
   }
 
   const model = KILO_DEFAULT_MODEL;
@@ -1221,7 +1229,12 @@ async function streamTaskAgent(
   }
   messages.push({ role: "user", content: args.prompt });
 
-  log?.info(`⚙ Task agent stream: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch, tools=${TASK_AGENT_TOOLS.length}`);
+  // Merge built-in tools with any custom tools forwarded from the caller
+  const customTools = args._custom_tools || [];
+  const customToolNames = new Set(customTools.map((t: any) => (t.function || t).name));
+  const allKiloTools = [...TASK_AGENT_TOOLS, ...customTools];
+
+  log?.info(`⚙ Task agent stream: model=${model}, max_tokens=${maxTokens}, prompt=${args.prompt.length}ch, tools=${allKiloTools.length} (${TASK_AGENT_TOOLS.length} builtin + ${customTools.length} custom)`);
   const start = Date.now();
   let totalCollected = "";
 
@@ -1242,7 +1255,7 @@ async function streamTaskAgent(
           max_tokens: maxTokens,
           temperature: 0.7,
           stream: true,
-          tools: TASK_AGENT_TOOLS,
+          tools: allKiloTools,
         }),
       });
 
@@ -1251,14 +1264,14 @@ async function streamTaskAgent(
         log?.error(`Task agent stream error ${fetchRes.status}: ${errText.slice(0, 500)}`);
         const errMsg = `Error from task agent: ${fetchRes.status}`;
         res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-        return totalCollected + errMsg;
+        return { text: totalCollected + errMsg, hasCustomToolCalls: false };
       }
 
       if (!fetchRes.body) {
         log?.error("Task agent stream: no response body");
         const errMsg = "Error: Task agent returned no stream body.";
         res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-        return totalCollected + errMsg;
+        return { text: totalCollected + errMsg, hasCustomToolCalls: false };
       }
 
       // Read the full stream, collecting content + tool_calls
@@ -1326,9 +1339,11 @@ async function streamTaskAgent(
         .filter(Boolean)
         .map(({ _argFragments, ...tc }: any) => tc);
 
-      // If Kilo wants to call tools, execute them and continue
+      // If Kilo wants to call tools, handle them
       if (finishReason === "tool_calls" && parsedToolCalls.length > 0) {
-        log?.info(`⚙ Task agent stream step ${step + 1}: ${parsedToolCalls.length} tool calls [${parsedToolCalls.map((tc: any) => tc.function.name).join(", ")}]`);
+        const kiloBuiltinCalls = parsedToolCalls.filter((tc: any) => TASK_AGENT_TOOL_NAMES.has(tc.function.name));
+        const kiloCustomCalls = parsedToolCalls.filter((tc: any) => customToolNames.has(tc.function.name));
+        log?.info(`⚙ Task agent stream step ${step + 1}: ${parsedToolCalls.length} tool calls [builtin=${kiloBuiltinCalls.map((t: any) => t.function.name).join(",")}, custom=${kiloCustomCalls.map((t: any) => t.function.name).join(",")}]`);
 
         // Add assistant message with tool_calls
         messages.push({
@@ -1337,35 +1352,64 @@ async function streamTaskAgent(
           tool_calls: parsedToolCalls,
         });
 
-        // Execute each tool call, emit status events, add results
-        for (const tc of parsedToolCalls) {
+        // Execute built-in tool calls server-side
+        for (const tc of kiloBuiltinCalls) {
           const toolArgs = JSON.parse(tc.function.arguments || "{}");
           sseToolStatus(res, sseId, sseModel, "tool_start", tc.function.name, toolArgs);
           const result = await executeTaskAgentTool(tc.function.name, toolArgs, log);
           sseToolStatus(res, sseId, sseModel, "tool_done", tc.function.name);
-
-          messages.push({
-            role: "tool",
-            tool_call_id: tc.id,
-            content: result,
-          });
+          messages.push({ role: "tool", tool_call_id: tc.id, content: result });
         }
-        continue; // next iteration — will stream the follow-up response
+
+        // If there are custom tool calls, stream them to the client for client-side execution
+        if (kiloCustomCalls.length > 0) {
+          log?.info(`⚙ Task agent: streaming ${kiloCustomCalls.length} custom tool calls to client`);
+
+          // Stream custom tool call deltas in OpenAI format
+          kiloCustomCalls.forEach((tc: any, index: number) => {
+            const argsStr = tc.function.arguments || "{}";
+            // First chunk: id, type, name
+            res.write(sseChunk(sseId, sseModel, {
+              tool_calls: [{
+                index,
+                id: tc.id,
+                type: "function",
+                function: { name: tc.function.name, arguments: "" },
+              }],
+            }));
+            // Stream arguments in fragments
+            const fragSize = 64;
+            for (let i = 0; i < argsStr.length; i += fragSize) {
+              res.write(sseChunk(sseId, sseModel, {
+                tool_calls: [{ index, function: { arguments: argsStr.slice(i, i + fragSize) } }],
+              }));
+            }
+          });
+
+          // End with tool_calls finish reason — client will execute and send results back
+          res.write(sseChunk(sseId, sseModel, {}, "tool_calls"));
+          res.write("data: [DONE]\n\n");
+          log?.info(`⚙ Task agent stream paused for client tool execution (${Date.now() - start}ms)`);
+          return { text: totalCollected, hasCustomToolCalls: true };
+        }
+
+        // Only built-in tools — continue the Kilo loop
+        continue;
       }
 
       // Normal stop — we already piped all content
       log?.info(`⚙ Task agent stream done (${Date.now() - start}ms, ${step + 1} steps): ${totalCollected.length}ch piped`);
-      return totalCollected;
+      return { text: totalCollected, hasCustomToolCalls: false };
     } catch (err: any) {
       log?.error(`Task agent stream fetch error: ${err.message}`);
       const errMsg = `Error streaming from task agent: ${err.message}`;
       res.write(sseChunk(sseId, sseModel, { content: errMsg }));
-      return totalCollected + errMsg;
+      return { text: totalCollected + errMsg, hasCustomToolCalls: false };
     }
   }
 
   log?.warn(`Task agent stream hit max tool steps (${MAX_TASK_AGENT_TOOL_STEPS})`);
-  return totalCollected;
+  return { text: totalCollected, hasCustomToolCalls: false };
 }
 
 // ─── Tool Executor (dispatcher) ─────────────────────────────────────────────
@@ -2347,10 +2391,23 @@ async function streamAgentLoop(
         sseToolStatus(res, id, model, "tool_done", tc.name);
       }
 
-      // Stream task_agent response directly — real-time piping from Kilo → client
-      await streamTaskAgent(taskAgentCall.arguments as TaskAgentArgs, res, id, model, log);
+      // Inject custom tools from the caller into task_agent args
+      const taskArgs = { ...(taskAgentCall.arguments as TaskAgentArgs) };
+      if (userTools && userTools.length > 0) {
+        taskArgs._custom_tools = userTools;
+      }
+
+      // Stream task_agent response — may return custom tool calls for client
+      const taskResult = await streamTaskAgent(taskArgs, res, id, model, log);
 
       sseToolStatus(res, id, model, "tool_done", "task_agent");
+
+      if (taskResult.hasCustomToolCalls) {
+        // Stream already ended with tool_calls finish reason — client will handle
+        log?.info("Stream ended (tool_calls from task_agent → client)");
+        return;
+      }
+
       res.write(sseChunk(id, model, {}, "stop"));
       res.write("data: [DONE]\n\n");
       res.end();
@@ -2513,7 +2570,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const id = generateId();
         res.write(sseChunk(id, model, { role: "assistant", content: "" }));
 
-        await streamTaskAgent(
+        const pdfResult = await streamTaskAgent(
           { prompt: pdfPrompt, system_prompt: PDF_KILO_SYSTEM_PROMPT, max_tokens: maxTokens },
           res,
           id,
@@ -2521,9 +2578,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           log
         );
 
-        res.write(sseChunk(id, model, {}, "stop"));
-        res.write("data: [DONE]\n\n");
-        res.end();
+        if (!pdfResult.hasCustomToolCalls) {
+          res.write(sseChunk(id, model, {}, "stop"));
+          res.write("data: [DONE]\n\n");
+          res.end();
+        }
         log.info("Stream ended (PDF routed to Kilo)");
         return;
       } else {
@@ -2545,6 +2604,197 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // ── Direct Kilo Mode: bypass A0, call Kilo directly with native tool calling ──
+    // Custom tools are sent as native OpenAI function calling tools to Kilo.
+    // When Kilo calls a custom tool, it's streamed to the client as tool_call deltas.
+    // The client executes the tool and sends results back in a new request.
+    const directKilo = body.direct_kilo ?? false;
+    if (directKilo && stream) {
+      log.info("Direct Kilo mode: bypassing A0, calling Kilo Gateway with native tool calling");
+
+      if (!KILO_API_KEY) {
+        log.error("KILO_API_KEY not configured for direct Kilo mode");
+        return res.status(500).json({ error: { message: "Kilo Gateway not configured", type: "server_error" } });
+      }
+
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+
+      const id = `chatcmpl-${Math.random().toString(36).substring(2, 10)}`;
+
+      // Merge built-in tools (web_search, web_extract, image_generation) with user's custom tools
+      const allTools = [...TASK_AGENT_TOOLS, ...(body.tools || [])];
+      const customToolNames = new Set((body.tools || []).map((t: any) => (t.function || t).name));
+
+      // Send initial role chunk
+      res.write(sseChunk(id, model, { role: "assistant", content: "" }));
+
+      // Kilo streaming loop with tool calling support
+      const kiloMessages = [...body.messages]; // Use messages directly (already in OpenAI format)
+      const kiloMaxSteps = Math.min(body.max_steps ?? 25, MAX_STEPS_LIMIT);
+
+      for (let step = 0; step < kiloMaxSteps; step++) {
+        log.info(`Direct Kilo step ${step + 1}/${kiloMaxSteps}`);
+
+        const fetchRes = await fetch(KILO_GATEWAY_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${KILO_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: KILO_DEFAULT_MODEL,
+            messages: kiloMessages,
+            max_tokens: maxTokens,
+            temperature,
+            stream: true,
+            tools: allTools,
+            tool_choice: body.tool_choice || "auto",
+          }),
+        });
+
+        if (!fetchRes.ok) {
+          const errText = await fetchRes.text();
+          log.error(`Direct Kilo error ${fetchRes.status}: ${errText.slice(0, 500)}`);
+          res.write(sseChunk(id, model, { content: `Error: ${fetchRes.status}` }));
+          res.write(sseChunk(id, model, {}, "stop"));
+          res.write("data: [DONE]\n\n");
+          res.end();
+          return;
+        }
+
+        // Read Kilo stream, collect content + tool_calls
+        const reader = fetchRes.body!.getReader();
+        const decoder = new TextDecoder();
+        let collected = "";
+        const streamToolCalls: any[] = [];
+        let finishReason: string | null = null;
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+            try {
+              const chunk = JSON.parse(line.slice(6));
+              const delta = chunk.choices?.[0]?.delta;
+              const reason = chunk.choices?.[0]?.finish_reason;
+
+              if (reason) finishReason = reason;
+
+              // Text content — pipe to client
+              if (delta?.content) {
+                collected += delta.content;
+                res.write(sseChunk(id, model, { content: delta.content }));
+              }
+
+              // Tool call deltas — collect them
+              if (delta?.tool_calls) {
+                for (const tc of delta.tool_calls) {
+                  const idx = tc.index ?? 0;
+                  if (!streamToolCalls[idx]) {
+                    streamToolCalls[idx] = {
+                      id: tc.id || "",
+                      type: tc.type || "function",
+                      function: { name: tc.function?.name || "", arguments: "" },
+                    };
+                  }
+                  if (tc.id) streamToolCalls[idx].id = tc.id;
+                  if (tc.function?.name) streamToolCalls[idx].function.name = tc.function.name;
+                  if (tc.function?.arguments) streamToolCalls[idx].function.arguments += tc.function.arguments;
+                }
+              }
+            } catch {
+              // skip malformed SSE chunks
+            }
+          }
+        }
+
+        const parsedToolCalls = streamToolCalls.filter(Boolean);
+
+        if (finishReason === "tool_calls" && parsedToolCalls.length > 0) {
+          // Separate built-in vs custom tool calls
+          const builtinCalls = parsedToolCalls.filter((tc: any) => BUILTIN_TOOL_NAMES.has(tc.function.name));
+          const customCalls = parsedToolCalls.filter((tc: any) => customToolNames.has(tc.function.name));
+          log.info(`Direct Kilo tool calls: builtin=[${builtinCalls.map((t: any) => t.function.name).join(",")}], custom=[${customCalls.map((t: any) => t.function.name).join(",")}]`);
+
+          // Add assistant message to Kilo conversation
+          kiloMessages.push({
+            role: "assistant",
+            content: collected || null,
+            tool_calls: parsedToolCalls,
+          });
+
+          // Execute built-in tools server-side
+          for (const tc of builtinCalls) {
+            const toolArgs = JSON.parse(tc.function.arguments || "{}");
+            sseToolStatus(res, id, model, "tool_start", tc.function.name, toolArgs);
+            const result = await executeTool(tc.function.name, toolArgs, log);
+            sseToolStatus(res, id, model, "tool_done", tc.function.name);
+            kiloMessages.push({ role: "tool", tool_call_id: tc.id, content: result });
+          }
+
+          // If there are custom tool calls, stream them to client and stop
+          if (customCalls.length > 0) {
+            log.info(`Streaming ${customCalls.length} custom tool calls to client`);
+
+            // Stream custom tool call deltas to client
+            customCalls.forEach((tc: any, index: number) => {
+              const argsStr = tc.function.arguments;
+              // First chunk: id, type, name
+              res.write(sseChunk(id, model, {
+                tool_calls: [{
+                  index,
+                  id: tc.id,
+                  type: "function",
+                  function: { name: tc.function.name, arguments: "" },
+                }],
+              }));
+              // Stream arguments in fragments
+              const fragSize = 64;
+              for (let i = 0; i < argsStr.length; i += fragSize) {
+                res.write(sseChunk(id, model, {
+                  tool_calls: [{ index, function: { arguments: argsStr.slice(i, i + fragSize) } }],
+                }));
+              }
+            });
+
+            // End with tool_calls finish reason
+            res.write(sseChunk(id, model, {}, "tool_calls"));
+            res.write("data: [DONE]\n\n");
+            res.end();
+            log.info("Direct Kilo stream ended (tool_calls → client)");
+            return;
+          }
+
+          // Only built-in tools — continue Kilo loop
+          continue;
+        }
+
+        // Normal stop — done
+        res.write(sseChunk(id, model, {}, "stop"));
+        res.write("data: [DONE]\n\n");
+        res.end();
+        log.info(`Direct Kilo stream done: ${step + 1} steps, ${collected.length}ch`);
+        return;
+      }
+
+      // Max steps reached
+      res.write(sseChunk(id, model, { content: "\n\n[Max tool steps reached]" }));
+      res.write(sseChunk(id, model, {}, "stop"));
+      res.write("data: [DONE]\n\n");
+      res.end();
+      log.info("Direct Kilo stream ended (max steps)");
+      return;
+    }
+
     // ── Complex Query Routing: detect complex/long-form requests and route to Kilo ──
     const isComplexIntent = !continuation && await isComplexQuery(body.messages, log);
     if (isComplexIntent) {
@@ -2559,7 +2809,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const id = generateId();
         res.write(sseChunk(id, model, { role: "assistant", content: "" }));
 
-        await streamTaskAgent(
+        const complexResult = await streamTaskAgent(
           { prompt: complexPrompt, system_prompt: COMPLEX_KILO_SYSTEM_PROMPT, max_tokens: maxTokens },
           res,
           id,
@@ -2567,9 +2817,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           log
         );
 
-        res.write(sseChunk(id, model, {}, "stop"));
-        res.write("data: [DONE]\n\n");
-        res.end();
+        if (!complexResult.hasCustomToolCalls) {
+          res.write(sseChunk(id, model, {}, "stop"));
+          res.write("data: [DONE]\n\n");
+          res.end();
+        }
         log.info("Stream ended (complex query routed to Kilo)");
         return;
       } else {
