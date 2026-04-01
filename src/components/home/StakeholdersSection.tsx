@@ -117,77 +117,127 @@ export function StakeholdersSection() {
 
         {/* Stakeholder Cards */}
         <motion.div variants={containerVariants} className="grid lg:grid-cols-3 gap-8">
-          {stakeholders.map((stakeholder) => (
-            <motion.div
-              key={stakeholder.title}
-              variants={itemVariants}
-              className="group relative"
-              whileHover={{ y: -10 }}
-            >
-              {/* Glow effect on hover */}
-              <div
-                className={`absolute -inset-2 bg-gradient-to-r ${stakeholder.gradient} rounded-3xl opacity-0 group-hover:opacity-25 blur-xl transition-all duration-500`}
-              />
+          {stakeholders.map((stakeholder) => {
+            const isComingSoon = stakeholder.title === "For Schools";
+            return (
+              <motion.div
+                key={stakeholder.title}
+                variants={itemVariants}
+                className="group relative"
+                whileHover={{ y: isComingSoon ? 0 : -10 }}
+              >
+                {/* Glow effect on hover */}
+                <div
+                  className={`absolute -inset-2 bg-gradient-to-r ${stakeholder.gradient} rounded-3xl opacity-0 ${isComingSoon ? "" : "group-hover:opacity-25"} blur-xl transition-all duration-500`}
+                />
 
-              {/* Glass card */}
-              <div className="relative h-full bg-black/70 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/20 transition-all duration-500">
-                {/* Image Header */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={stakeholder.image}
-                    alt={stakeholder.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-
-                  {/* Icon overlay */}
-                  <div className="absolute bottom-4 left-6">
-                    <div
-                      className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stakeholder.gradient} flex items-center justify-center shadow-xl`}
-                    >
-                      <stakeholder.icon className="w-7 h-7 text-white" />
+                {/* Glass card */}
+                <div className="relative h-full bg-black/70 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/20 transition-all duration-500">
+                  {isComingSoon ? (
+                    /* Coming Soon blur wrapper */
+                    <div className="relative">
+                      <div className="blur-[6px] select-none pointer-events-none">
+                        {/* Image Header */}
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={stakeholder.image}
+                            alt={stakeholder.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                          <div className="absolute bottom-4 left-6">
+                            <div
+                              className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stakeholder.gradient} flex items-center justify-center shadow-xl`}
+                            >
+                              <stakeholder.icon className="w-7 h-7 text-white" />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-6 pt-4">
+                          <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                            {stakeholder.title}
+                          </h3>
+                          <p className="text-gray-400 leading-relaxed mb-6">
+                            {stakeholder.description}
+                          </p>
+                          <ul className="space-y-3 mb-8">
+                            {stakeholder.benefits.map((benefit) => (
+                              <li key={benefit} className="flex items-center gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                                <span className="text-gray-300 text-sm">{benefit}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="w-full py-6 rounded-xl bg-gradient-to-r from-pink-600 to-pink-700" />
+                        </div>
+                      </div>
+                      {/* Coming Soon overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-xl">
+                        <span className="px-4 py-2 rounded-full bg-black/80 text-gray-400 text-sm font-medium">Coming Soon</span>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      {/* Image Header */}
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={stakeholder.image}
+                          alt={stakeholder.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+                        {/* Icon overlay */}
+                        <div className="absolute bottom-4 left-6">
+                          <div
+                            className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stakeholder.gradient} flex items-center justify-center shadow-xl`}
+                          >
+                            <stakeholder.icon className="w-7 h-7 text-white" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6 pt-4">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                          {stakeholder.title}
+                        </h3>
+                        <p className="text-gray-400 leading-relaxed mb-6">
+                          {stakeholder.description}
+                        </p>
+
+                        {/* Benefits */}
+                        <ul className="space-y-3 mb-8">
+                          {stakeholder.benefits.map((benefit) => (
+                            <li key={benefit} className="flex items-center gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                              <span className="text-gray-300 text-sm">{benefit}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* CTA */}
+                        <motion.div
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          <Button
+                            className={`w-full bg-gradient-to-r ${stakeholder.gradient} text-white py-6 rounded-xl font-bold text-lg shadow-lg transition-all duration-300`}
+                            asChild
+                          >
+                            <Link to={stakeholder.href}>
+                              {stakeholder.cta}
+                              <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                          </Button>
+                        </motion.div>
+                      </div>
+                    </>
+                  )}
                 </div>
-
-                {/* Content */}
-                <div className="p-6 pt-4">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    {stakeholder.title}
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed mb-6">
-                    {stakeholder.description}
-                  </p>
-
-                  {/* Benefits */}
-                  <ul className="space-y-3 mb-8">
-                    {stakeholder.benefits.map((benefit) => (
-                      <li key={benefit} className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-                        <span className="text-gray-300 text-sm">{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* CTA */}
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <Button
-                      className={`w-full bg-gradient-to-r ${stakeholder.gradient} text-white py-6 rounded-xl font-bold text-lg shadow-lg transition-all duration-300`}
-                      asChild
-                    >
-                      <Link to={stakeholder.href}>
-                        {stakeholder.cta}
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                      </Link>
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </motion.section>

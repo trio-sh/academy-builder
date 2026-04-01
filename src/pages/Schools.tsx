@@ -93,6 +93,10 @@ const Schools = () => {
       <BackgroundVideo />
       <Header />
 
+      {/* Coming Soon overlay */}
+      <div className="relative">
+        <div className="blur-[6px] select-none pointer-events-none">
+
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
@@ -317,6 +321,13 @@ const Schools = () => {
           </div>
         </div>
       </section>
+
+        </div>{/* end blur inner */}
+        {/* Coming Soon overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 z-10">
+          <span className="px-6 py-3 rounded-full bg-black/80 text-gray-400 text-lg font-medium">Coming Soon</span>
+        </div>
+      </div>{/* end relative wrapper */}
 
       <Footer />
     </div>

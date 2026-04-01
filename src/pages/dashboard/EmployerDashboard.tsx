@@ -380,10 +380,8 @@ const SearchTalent = () => {
         .eq("is_listed_on_t3x", true)
         .eq("has_skill_passport", true);
 
-      // MVP: All candidates display as Silver tier — tier filter disabled
-      // if (filters.tier) {
-      //   query = query.eq("current_tier", filters.tier);
-      // }
+      // MVP: All candidates are Silver tier. Selecting "silver" shows all; no other tiers exist yet.
+      // If a tier other than silver were selected we'd filter, but only silver is offered in the UI.
 
       const { data: candidateData } = await query.limit(20);
 
@@ -532,8 +530,6 @@ const SearchTalent = () => {
           >
             <option value="">All Tiers</option>
             <option value="silver">Silver</option>
-            <option value="gold">Gold</option>
-            <option value="platinum">Platinum</option>
           </select>
           {/* Dimension multi-select */}
           <div className="flex flex-wrap gap-1.5">
@@ -626,7 +622,7 @@ const SearchTalent = () => {
                       {connectionStatus === "accepted" ? (
                         <span className="text-xs text-emerald-400">Connected</span>
                       ) : connectionStatus === "pending" ? (
-                        <span className="text-xs text-amber-400">Pending</span>
+                        <span className="text-xs text-amber-400">Awaiting Response</span>
                       ) : (
                         <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-xs h-7" onClick={(e) => { e.stopPropagation(); openConnectModal(candidate); }}>
                           Connect
@@ -681,12 +677,19 @@ const SearchTalent = () => {
                       )}
 
                       <div className="flex gap-2">
-                        <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
-                          <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
+                        {candidate.verificationCode ? (
+                          <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
+                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
+                              <Shield className="w-4 h-4 mr-1" />
+                              View Skill Passport
+                            </Button>
+                          </a>
+                        ) : (
+                          <Button size="sm" variant="outline" className="border-white/20 text-gray-600" disabled>
                             <Shield className="w-4 h-4 mr-1" />
                             View Skill Passport
                           </Button>
-                        </a>
+                        )}
                         {connectionStatus !== "accepted" && connectionStatus !== "pending" && (
                           <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500" onClick={() => openConnectModal(candidate)}>
                             <Send className="w-4 h-4 mr-1" />
@@ -713,7 +716,7 @@ const SearchTalent = () => {
       {showConnectModal && selectedCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black"
+            className="absolute inset-0 bg-black/80"
             onClick={() => !isSendingConnection && setShowConnectModal(false)}
           />
           <motion.div
@@ -964,7 +967,7 @@ const Connections = () => {
               : "bg-black text-gray-400 hover:text-white"
           }`}
         >
-          Pending
+          Awaiting Response
           {pendingCount > 0 && (
             <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
               {pendingCount}
@@ -1004,11 +1007,16 @@ const Connections = () => {
                     )}
                     <div>
                       <p className="font-semibold text-white text-lg">
-                        {profile?.first_name} {profile?.last_name}
+                        {profile?.first_name || "Candidate"} {profile?.last_name || ""}
                       </p>
-                      <p className="text-sm text-gray-400">
-                        {profile?.headline || "Skill Passport Holder"}
-                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-sm text-gray-400">
+                          {profile?.headline || "Skill Passport Holder"}
+                        </p>
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-500/20 text-gray-400 flex items-center gap-1">
+                          <Award className="w-2.5 h-2.5" />Silver
+                        </span>
+                      </div>
                       {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {candidateProfile.skills.slice(0, 4).map((skill, i) => (
@@ -1028,7 +1036,7 @@ const Connections = () => {
                   <div className="text-right">
                     <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
                       <StatusIcon className="w-4 h-4" />
-                      {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
+                      {connection.status === "pending" ? "Awaiting Response" : connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
                     </span>
                     <p className="text-xs text-gray-500 mt-2">
                       {connection.responded_at
