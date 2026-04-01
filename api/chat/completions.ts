@@ -81,7 +81,7 @@ const MAX_STEPS_LIMIT = 60;
 // Vercel Pro allows 5 minutes (300s). We start continuation at 4 min to leave
 // buffer for serializing state + one final LLM call.
 const VERCEL_TIMEOUT_MS = 300_000;
-const CONTINUATION_THRESHOLD_MS = 240_000; // 4 minutes — trigger continuation
+const CONTINUATION_THRESHOLD_MS = 280_000; // 4m 40s — trigger continuation (buffer before 5min Vercel timeout)
 
 // ─── PDF Intent Detection & Routing ─────────────────────────────────────────
 
@@ -1364,6 +1364,12 @@ async function streamTaskAgent(
         // If there are custom tool calls, stream them to the client for client-side execution
         if (kiloCustomCalls.length > 0) {
           log?.info(`⚙ Task agent: streaming ${kiloCustomCalls.length} custom tool calls to client`);
+
+          // Emit status events so the client can show progress
+          for (const tc of kiloCustomCalls) {
+            const toolArgs = JSON.parse(tc.function.arguments || "{}");
+            sseToolStatus(res, sseId, sseModel, "tool_start", tc.function.name, { path: toolArgs.path });
+          }
 
           // Stream custom tool call deltas in OpenAI format
           kiloCustomCalls.forEach((tc: any, index: number) => {
