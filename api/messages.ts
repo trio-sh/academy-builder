@@ -820,7 +820,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key, anthropic-version, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key, anthropic-version, anthropic-auth-token, Authorization");
 
   if (req.method === "OPTIONS") return res.status(200).end();
 
@@ -836,6 +836,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const apiKey =
         (req.headers["x-api-key"] as string) ||
         (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "") ||
+        (req.headers["anthropic-auth-token"] as string) ||
         "";
       if (!apiKey || apiKey !== PRAXIS_API_KEY) {
         log.warn("Unauthorized request — invalid or missing API key");
