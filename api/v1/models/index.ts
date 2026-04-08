@@ -6,9 +6,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
  * The Agent SDK validates models by calling /v1/models before using them.
  * This endpoint returns the models the SDK expects to find.
  * The actual inference is handled by Kilo Gateway via /api/messages.
+ * This endpoint is public (no auth) — it's a static list with no sensitive data.
  */
-
-const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const MODELS = [
   {
@@ -65,21 +64,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).end();
   }
 
-  // API key auth (same as other endpoints)
-  if (PRAXIS_API_KEY) {
-    const apiKey =
-      (req.headers["x-api-key"] as string) ||
-      (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "") ||
-      "";
-    if (!apiKey || apiKey !== PRAXIS_API_KEY) {
-      return res.status(401).json({
-        type: "error",
-        error: { type: "authentication_error", message: "Invalid API key" },
-      });
-    }
-  }
-
-  // Return model list in Anthropic format
+  // Return model list in Anthropic format (public — no auth required)
   return res.status(200).json({
     data: MODELS,
     has_more: false,
