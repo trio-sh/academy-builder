@@ -833,12 +833,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     // ── API Key Authentication ──
+    // The Agent SDK sends x-api-key as empty string and uses anthropic-auth-token instead.
+    // Check headers in priority order, skipping empty values.
     if (PRAXIS_API_KEY) {
-      const apiKey =
-        (req.headers["x-api-key"] as string) ||
-        (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "") ||
-        (req.headers["anthropic-auth-token"] as string) ||
-        "";
+      const xApiKey = (req.headers["x-api-key"] as string)?.trim();
+      const authToken = (req.headers["anthropic-auth-token"] as string)?.trim();
+      const bearer = (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "").trim();
+      const apiKey = (xApiKey || authToken || bearer) ?? "";
       if (!apiKey || apiKey !== PRAXIS_API_KEY) {
         log.warn("Unauthorized request — invalid or missing API key");
         return anthropicError(res, 401, "authentication_error", "Invalid API key");
