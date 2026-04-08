@@ -118,6 +118,7 @@ function createLogger(prefix?: string) {
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
@@ -830,6 +831,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const log = createLogger("messages");
 
   try {
+    // ── API Key Authentication ──
+    if (PRAXIS_API_KEY) {
+      const apiKey =
+        (req.headers["x-api-key"] as string) ||
+        (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "") ||
+        "";
+      if (!apiKey || apiKey !== PRAXIS_API_KEY) {
+        log.warn("Unauthorized request — invalid or missing API key");
+        return anthropicError(res, 401, "authentication_error", "Invalid API key");
+      }
+    }
+
     if (!KILO_API_KEY) {
       log.error("KILO_API_KEY not configured");
       return anthropicError(res, 500, "api_error", "Server not configured");

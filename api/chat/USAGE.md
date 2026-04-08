@@ -35,6 +35,19 @@ curl -X POST /api/chat/completions \
 
 ---
 
+## Authentication
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | **Yes** | `Bearer <your-api-key>` (set via `PRAXIS_API_KEY` env var) |
+| `Content-Type` | Required | Must be `application/json` |
+
+`x-api-key: <key>` is also accepted as an alternative to `Authorization: Bearer`.
+
+> **Note:** Authentication is only enforced when the `PRAXIS_API_KEY` environment variable is set on the server. If unset, all requests are allowed.
+
+---
+
 ## Request Body
 
 | Field | Type | Default | Description |

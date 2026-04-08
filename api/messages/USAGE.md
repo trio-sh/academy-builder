@@ -47,9 +47,13 @@ curl -X POST https://the3rdacademy.com/api/messages \
 
 | Header | Required | Description |
 |--------|----------|-------------|
-| `x-api-key` | Optional | API key (accepted for compatibility) |
+| `x-api-key` | **Yes** | Your Praxis API key (set via `PRAXIS_API_KEY` env var) |
 | `anthropic-version` | Optional | API version string (accepted for compatibility) |
 | `Content-Type` | Required | Must be `application/json` |
+
+`Authorization: Bearer <key>` is also accepted as an alternative to `x-api-key`.
+
+> **Note:** Authentication is only enforced when the `PRAXIS_API_KEY` environment variable is set on the server. If unset, all requests are allowed.
 
 ---
 

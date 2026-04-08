@@ -71,6 +71,7 @@ const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const DEFAULT_MAX_TOKENS = 16384;
 const DEFAULT_TEMPERATURE = 0.7;
@@ -2551,6 +2552,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const log = createLogger("chat");
 
   try {
+    // ── API Key Authentication ──
+    if (PRAXIS_API_KEY) {
+      const apiKey =
+        (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "") ||
+        (req.headers["x-api-key"] as string) ||
+        "";
+      if (!apiKey || apiKey !== PRAXIS_API_KEY) {
+        log.warn("Unauthorized request — invalid or missing API key");
+        return res.status(401).json({
+          error: { message: "Invalid API key", type: "authentication_error" },
+        });
+      }
+    }
+
     const body: OpenAIRequest = req.body;
     const msgCount = body.messages?.length ?? 0;
     const lastUserMsg = body.messages?.filter(m => m.role === "user").pop()?.content?.slice(0, 200) || "";
