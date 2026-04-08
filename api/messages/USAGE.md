@@ -11,7 +11,7 @@ Anthropic-compatible Messages endpoint powered by Kilo Gateway. Drop-in compatib
 ### Basic Chat
 
 ```bash
-curl -X POST /api/messages \
+curl -X POST https://the3rdacademy.com/api/messages \
   -H "Content-Type: application/json" \
   -H "x-api-key: your-key" \
   -H "anthropic-version: 2023-06-01" \
@@ -27,7 +27,7 @@ curl -X POST /api/messages \
 ### Streaming
 
 ```bash
-curl -X POST /api/messages \
+curl -X POST https://the3rdacademy.com/api/messages \
   -H "Content-Type: application/json" \
   -H "x-api-key: your-key" \
   -H "anthropic-version: 2023-06-01" \
@@ -407,7 +407,7 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({
   apiKey: "your-key",
-  baseURL: "https://your-domain.com/api",
+  baseURL: "https://the3rdacademy.com/api",
 });
 
 const message = await client.messages.create({
@@ -424,7 +424,7 @@ import anthropic
 
 client = anthropic.Anthropic(
     api_key="your-key",
-    base_url="https://your-domain.com/api",
+    base_url="https://the3rdacademy.com/api",
 )
 
 message = client.messages.create(
