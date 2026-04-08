@@ -2552,19 +2552,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const log = createLogger("chat");
 
   try {
-    // ── API Key Authentication ──
-    // Accept any non-empty key from supported headers. When PRAXIS_API_KEY is set,
-    // validate against it. When unset, any key is accepted (open mode).
-    const bearer = (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "").trim();
-    const xApiKey = (req.headers["x-api-key"] as string)?.trim();
-    const authToken = (req.headers["anthropic-auth-token"] as string)?.trim();
-    const apiKey = bearer || xApiKey || authToken || "";
-    if (PRAXIS_API_KEY && apiKey !== PRAXIS_API_KEY) {
-      log.warn("Unauthorized request — invalid API key");
-      return res.status(401).json({
-        error: { message: "Invalid API key", type: "authentication_error" },
-      });
-    }
+    // Auth disabled — accept all requests
 
     const body: OpenAIRequest = req.body;
     const msgCount = body.messages?.length ?? 0;
