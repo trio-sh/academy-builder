@@ -832,17 +832,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const log = createLogger("messages");
 
   try {
-    // ── API Key Authentication ──
-    // Accept any non-empty key from supported headers. When PRAXIS_API_KEY is set,
-    // validate against it. When unset, any key is accepted (open mode).
-    const xApiKey = (req.headers["x-api-key"] as string)?.trim();
-    const authToken = (req.headers["anthropic-auth-token"] as string)?.trim();
-    const bearer = (req.headers["authorization"] as string)?.replace(/^Bearer\s+/i, "").trim();
-    const apiKey = xApiKey || authToken || bearer || "";
-    if (PRAXIS_API_KEY && apiKey !== PRAXIS_API_KEY) {
-      log.warn("Unauthorized request — invalid API key");
-      return anthropicError(res, 401, "authentication_error", "Invalid API key");
-    }
+    // Auth disabled — accept all requests
 
     if (!KILO_API_KEY) {
       log.error("KILO_API_KEY not configured");
