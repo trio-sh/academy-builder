@@ -124,7 +124,7 @@ const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 
-const DEFAULT_MAX_TOKENS = 16384;
+const DEFAULT_MAX_TOKENS = 32768;
 const MAX_AGENT_STEPS = 60;
 
 const DEFAULT_SYSTEM_PROMPT = `You are Praxis, a helpful, creative, and knowledgeable AI assistant built by The 3rd Academy. You always respond with substantive, complete answers.
