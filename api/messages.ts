@@ -117,7 +117,17 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_RESPONSES_URL = "https://api.kilo.ai/api/gateway/responses";
-const KILO_API_KEY = process.env.KILO_API_KEY || "";
+const KILO_API_KEYS = (process.env.KILO_API_KEY || "")
+  .split(",")
+  .map((k) => k.trim())
+  .filter(Boolean);
+let _kiloKeyIndex = 0;
+function nextKiloKey(): string {
+  if (KILO_API_KEYS.length === 0) return "";
+  const key = KILO_API_KEYS[_kiloKeyIndex % KILO_API_KEYS.length];
+  _kiloKeyIndex = (_kiloKeyIndex + 1) % KILO_API_KEYS.length;
+  return key;
+}
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
   "x-ai/grok-code-fast-1:optimized:free",
@@ -604,6 +614,34 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
 
 // ─── Kilo Gateway Caller ────────────────────────────────────────────────────
 
+async function kiloFetch(
+  url: string,
+  bodyStr: string,
+  log: ReturnType<typeof createLogger>
+): Promise<Response> {
+  const keyCount = Math.max(1, KILO_API_KEYS.length);
+  let lastRes: Response | null = null;
+
+  for (let attempt = 0; attempt < keyCount; attempt++) {
+    const key = nextKiloKey();
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${key}`,
+      },
+      body: bodyStr,
+    });
+
+    if (res.status !== 429) return res;
+
+    log.warn(`Kilo rate-limited (429) on key #${(_kiloKeyIndex || keyCount) - 1 + 1}, rotating${attempt + 1 < keyCount ? "" : " — exhausted"}`);
+    lastRes = res;
+  }
+
+  return lastRes!;
+}
+
 async function callKilo(
   messages: OpenAIMessage[],
   tools: any[],
@@ -641,14 +679,7 @@ async function callKilo(
     body.model = model;
     log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
 
-    const res = await fetch(KILO_GATEWAY_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${KILO_API_KEY}`,
-      },
-      body: JSON.stringify(body),
-    });
+    const res = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify(body), log);
 
     if (res.ok) return res;
 
@@ -659,14 +690,7 @@ async function callKilo(
     if (errText.includes("api_kind_not_supported") && errText.includes("responses")) {
       log.info(`Model ${model} requires Responses API — retrying via /responses`);
       const responsesBody = convertChatToResponses(body);
-      const respRes = await fetch(KILO_RESPONSES_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${KILO_API_KEY}`,
-        },
-        body: JSON.stringify(responsesBody),
-      });
+      const respRes = await kiloFetch(KILO_RESPONSES_URL, JSON.stringify(responsesBody), log);
 
       if (respRes.ok) {
         if (body.stream) {
@@ -1024,7 +1048,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Auth disabled — accept all requests
 
-    if (!KILO_API_KEY) {
+    if (KILO_API_KEYS.length === 0) {
       log.error("KILO_API_KEY not configured");
       return anthropicError(res, 500, "api_error", "Server not configured");
     }
