@@ -116,6 +116,7 @@ function createLogger(prefix?: string) {
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
+const KILO_RESPONSES_URL = "https://api.kilo.ai/api/gateway/responses";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
@@ -457,6 +458,152 @@ function ssePing(): string {
   return sseEvent("ping", { type: "ping" });
 }
 
+// ─── Responses API Conversion (for models that only support /responses) ─────
+
+function convertChatToResponses(chatBody: any): any {
+  const { model, messages: msgs, tools, tool_choice, stream, max_tokens, temperature, top_p, stop } = chatBody;
+
+  let instructions = "";
+  const input: any[] = [];
+
+  for (const msg of msgs) {
+    if (msg.role === "system") {
+      instructions += (instructions ? "\n\n" : "") + (typeof msg.content === "string" ? msg.content : "");
+    } else if (msg.role === "user") {
+      input.push({ role: "user", content: msg.content });
+    } else if (msg.role === "assistant") {
+      if (msg.content) input.push({ role: "assistant", content: msg.content });
+      if (msg.tool_calls) {
+        for (const tc of msg.tool_calls) {
+          input.push({
+            type: "function_call",
+            call_id: tc.id,
+            name: tc.function.name,
+            arguments: tc.function.arguments,
+          });
+        }
+      }
+    } else if (msg.role === "tool") {
+      input.push({
+        type: "function_call_output",
+        call_id: msg.tool_call_id,
+        output: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
+      });
+    }
+  }
+
+  const body: any = { model, input, stream: stream ?? false };
+  if (instructions) body.instructions = instructions;
+  if (max_tokens) body.max_output_tokens = max_tokens;
+  if (temperature !== undefined) body.temperature = temperature;
+  if (top_p !== undefined) body.top_p = top_p;
+  if (stop) body.stop = stop;
+  if (tools && tools.length > 0) {
+    body.tools = tools.map((t: any) => ({
+      type: "function",
+      name: t.function.name,
+      description: t.function.description || "",
+      parameters: t.function.parameters,
+    }));
+  }
+  if (tool_choice) body.tool_choice = tool_choice;
+
+  return body;
+}
+
+function convertResponsesToChatResult(respBody: any): any {
+  const output = respBody.output || [];
+  const contentParts: string[] = [];
+  const toolCalls: any[] = [];
+
+  for (const item of output) {
+    if (item.type === "message") {
+      for (const part of item.content || []) {
+        if (part.type === "output_text") contentParts.push(part.text);
+        else if (part.type === "text") contentParts.push(part.text);
+      }
+    } else if (item.type === "function_call") {
+      toolCalls.push({
+        id: item.call_id || item.id,
+        type: "function",
+        function: { name: item.name, arguments: item.arguments || "{}" },
+      });
+    }
+  }
+
+  const message: any = { role: "assistant", content: contentParts.join("") || null };
+  if (toolCalls.length > 0) message.tool_calls = toolCalls;
+
+  return {
+    id: respBody.id || `resp-${Date.now()}`,
+    object: "chat.completion",
+    choices: [{ index: 0, message, finish_reason: toolCalls.length > 0 ? "tool_calls" : "stop" }],
+    usage: respBody.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+  };
+}
+
+function transformResponsesStreamToChat(responsesResponse: Response): Response {
+  const reader = responsesResponse.body!.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let funcCallIndex = -1;
+
+  const stream = new ReadableStream({
+    async pull(controller) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          if (buffer.trim()) processLines(buffer.split("\n"), controller);
+          controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
+          controller.close();
+          return;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        processLines(lines, controller);
+      }
+    },
+  });
+
+  function processLines(lines: string[], controller: ReadableStreamDefaultController) {
+    for (const line of lines) {
+      if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+      try {
+        const evt = JSON.parse(line.slice(6));
+        const type = evt.type;
+        const encoder = new TextEncoder();
+
+        if (type === "response.output_text.delta") {
+          controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ choices: [{ index: 0, delta: { content: evt.delta } }] })}\n\n`
+          ));
+        } else if (type === "response.output_item.added" && evt.item?.type === "function_call") {
+          funcCallIndex++;
+          controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ choices: [{ index: 0, delta: { tool_calls: [{ index: funcCallIndex, id: evt.item.call_id || evt.item.id || "", type: "function", function: { name: evt.item.name || "", arguments: "" } }] } }] })}\n\n`
+          ));
+        } else if (type === "response.function_call_arguments.delta") {
+          controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ choices: [{ index: 0, delta: { tool_calls: [{ index: Math.max(0, funcCallIndex), function: { arguments: evt.delta } }] } }] })}\n\n`
+          ));
+        } else if (type === "response.completed") {
+          const hasTools = (evt.response?.output || []).some((o: any) => o.type === "function_call");
+          controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ choices: [{ index: 0, delta: {}, finish_reason: hasTools ? "tool_calls" : "stop" }] })}\n\n`
+          ));
+        }
+      } catch { /* skip malformed */ }
+    }
+  }
+
+  return new Response(stream, {
+    status: 200,
+    headers: { "Content-Type": "text/event-stream" },
+  });
+}
+
 // ─── Kilo Gateway Caller ────────────────────────────────────────────────────
 
 async function callKilo(
@@ -507,6 +654,35 @@ async function callKilo(
 
     const errText = await res.text();
     log.warn(`Kilo error ${res.status} for ${model}: ${errText.slice(0, 300)}`);
+
+    // Model only supports Responses API — convert and retry via /responses
+    if (errText.includes("api_kind_not_supported") && errText.includes("responses")) {
+      log.info(`Model ${model} requires Responses API — retrying via /responses`);
+      const responsesBody = convertChatToResponses(body);
+      const respRes = await fetch(KILO_RESPONSES_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${KILO_API_KEY}`,
+        },
+        body: JSON.stringify(responsesBody),
+      });
+
+      if (respRes.ok) {
+        if (body.stream) {
+          return transformResponsesStreamToChat(respRes);
+        }
+        const respBody = await respRes.json();
+        const chatResult = convertResponsesToChatResult(respBody);
+        return new Response(JSON.stringify(chatResult), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      const respErr = await respRes.text();
+      log.warn(`Responses API error ${respRes.status} for ${model}: ${respErr.slice(0, 300)}`);
+    }
 
     if (model === modelsToTry[modelsToTry.length - 1]) {
       throw new Error(`All models failed. Last error (${model}): ${res.status}`);
