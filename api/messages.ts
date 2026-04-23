@@ -117,7 +117,7 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
-const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const KILO_DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const JINA_READER_URL = "https://r.jina.ai";
