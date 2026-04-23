@@ -117,14 +117,20 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
-const KILO_DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
+const KILO_DEFAULT_MODEL = "x-ai/grok-code-fast-1:optimized:free";
+const KILO_FALLBACK_MODELS = [
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "bytedance-seed/dola-seed-2.0-pro:free",
+  "tencent/hy3-preview:free",
+  "stepfun/step-3.5-flash:free",
+  "inclusionai/ling-2.6-flash:free",
+];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 
-const DEFAULT_MAX_TOKENS = 32768;
 const MAX_AGENT_STEPS = 60;
 
 const DEFAULT_SYSTEM_PROMPT = `You are Praxis, a helpful, creative, and knowledgeable AI assistant built by The 3rd Academy. You always respond with substantive, complete answers.
@@ -467,14 +473,15 @@ async function callKilo(
   },
   log: ReturnType<typeof createLogger>
 ): Promise<Response> {
-  const model = options.model || KILO_DEFAULT_MODEL;
+  const requestedModel = options.model || KILO_DEFAULT_MODEL;
+  const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)];
+
   const body: any = {
-    model,
     messages,
-    max_tokens: options.maxTokens || DEFAULT_MAX_TOKENS,
     stream: options.stream ?? false,
   };
 
+  if (options.maxTokens !== undefined) body.max_tokens = options.maxTokens;
   if (options.temperature !== undefined) body.temperature = options.temperature;
   if (options.topP !== undefined) body.top_p = options.topP;
   if (options.stop && options.stop.length > 0) body.stop = options.stop;
@@ -483,24 +490,31 @@ async function callKilo(
     body.tool_choice = options.toolChoice || "auto";
   }
 
-  log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
+  for (const model of modelsToTry) {
+    body.model = model;
+    log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
 
-  const res = await fetch(KILO_GATEWAY_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${KILO_API_KEY}`,
-    },
-    body: JSON.stringify(body),
-  });
+    const res = await fetch(KILO_GATEWAY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${KILO_API_KEY}`,
+      },
+      body: JSON.stringify(body),
+    });
 
-  if (!res.ok) {
+    if (res.ok) return res;
+
     const errText = await res.text();
-    log.error(`Kilo error ${res.status}: ${errText.slice(0, 500)}`);
-    throw new Error(`Kilo Gateway error: ${res.status}`);
+    log.warn(`Kilo error ${res.status} for ${model}: ${errText.slice(0, 300)}`);
+
+    if (model === modelsToTry[modelsToTry.length - 1]) {
+      throw new Error(`All models failed. Last error (${model}): ${res.status}`);
+    }
+    log.info(`Falling back to next model...`);
   }
 
-  return res;
+  throw new Error("All models exhausted");
 }
 
 // ─── Non-Streaming Handler ──────────────────────────────────────────────────
@@ -511,7 +525,7 @@ async function handleNonStreaming(
   customToolNames: Set<string>,
   requestModel: string,
   options: {
-    maxTokens: number;
+    maxTokens?: number;
     temperature?: number;
     topP?: number;
     stop?: string[];
@@ -617,7 +631,7 @@ async function handleStreaming(
   customToolNames: Set<string>,
   requestModel: string,
   options: {
-    maxTokens: number;
+    maxTokens?: number;
     temperature?: number;
     topP?: number;
     stop?: string[];
@@ -859,7 +873,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const allTools = [...BUILTIN_TOOLS_OPENAI, ...userToolsOpenAI];
 
     const options = {
-      maxTokens: body.max_tokens || DEFAULT_MAX_TOKENS,
+      maxTokens: body.max_tokens,
       temperature: body.temperature,
       topP: body.top_p,
       stop: body.stop_sequences,
