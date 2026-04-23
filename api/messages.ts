@@ -124,7 +124,6 @@ const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 
-const DEFAULT_MAX_TOKENS = 32768;
 const MAX_AGENT_STEPS = 60;
 
 const DEFAULT_SYSTEM_PROMPT = `You are Praxis, a helpful, creative, and knowledgeable AI assistant built by The 3rd Academy. You always respond with substantive, complete answers.
@@ -471,10 +470,10 @@ async function callKilo(
   const body: any = {
     model,
     messages,
-    max_tokens: options.maxTokens || DEFAULT_MAX_TOKENS,
     stream: options.stream ?? false,
   };
 
+  if (options.maxTokens !== undefined) body.max_tokens = options.maxTokens;
   if (options.temperature !== undefined) body.temperature = options.temperature;
   if (options.topP !== undefined) body.top_p = options.topP;
   if (options.stop && options.stop.length > 0) body.stop = options.stop;
@@ -511,7 +510,7 @@ async function handleNonStreaming(
   customToolNames: Set<string>,
   requestModel: string,
   options: {
-    maxTokens: number;
+    maxTokens?: number;
     temperature?: number;
     topP?: number;
     stop?: string[];
@@ -617,7 +616,7 @@ async function handleStreaming(
   customToolNames: Set<string>,
   requestModel: string,
   options: {
-    maxTokens: number;
+    maxTokens?: number;
     temperature?: number;
     topP?: number;
     stop?: string[];
@@ -859,7 +858,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const allTools = [...BUILTIN_TOOLS_OPENAI, ...userToolsOpenAI];
 
     const options = {
-      maxTokens: body.max_tokens || DEFAULT_MAX_TOKENS,
+      maxTokens: body.max_tokens,
       temperature: body.temperature,
       topP: body.top_p,
       stop: body.stop_sequences,
