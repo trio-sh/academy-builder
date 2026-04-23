@@ -618,7 +618,9 @@ async function callKilo(
   },
   log: ReturnType<typeof createLogger>
 ): Promise<Response> {
-  const requestedModel = options.model || KILO_DEFAULT_MODEL;
+  // Never route to paid models — only use our free model chain
+  const isFreeModel = (m: string) => m.endsWith(":free") || m === "kilo-auto/free";
+  const requestedModel = (options.model && isFreeModel(options.model)) ? options.model : KILO_DEFAULT_MODEL;
   const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)];
 
   const body: any = {
