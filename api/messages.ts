@@ -511,16 +511,11 @@ function convertChatToResponses(chatBody: any): any {
 
 function convertResponsesToChatResult(respBody: any): any {
   const output = respBody.output || [];
-  const reasoningParts: string[] = [];
   const contentParts: string[] = [];
   const toolCalls: any[] = [];
 
   for (const item of output) {
-    if (item.type === "reasoning") {
-      for (const s of item.summary || []) {
-        if (s.type === "summary_text" && s.text) reasoningParts.push(s.text);
-      }
-    } else if (item.type === "message") {
+    if (item.type === "message") {
       for (const part of item.content || []) {
         if (part.type === "output_text") contentParts.push(part.text);
         else if (part.type === "text") contentParts.push(part.text);
@@ -534,10 +529,7 @@ function convertResponsesToChatResult(respBody: any): any {
     }
   }
 
-  const body =
-    (reasoningParts.length > 0 ? `<thinking>\n${reasoningParts.join("\n\n")}\n</thinking>\n\n` : "") +
-    contentParts.join("");
-  const message: any = { role: "assistant", content: body || null };
+  const message: any = { role: "assistant", content: contentParts.join("") || null };
   if (toolCalls.length > 0) message.tool_calls = toolCalls;
 
   return {
@@ -553,8 +545,6 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
   const decoder = new TextDecoder();
   let buffer = "";
   let funcCallIndex = -1;
-  let thinkingOpen = false;
-  let lastReasoningItemId: string | null = null;
 
   const stream = new ReadableStream({
     async pull(controller) {
@@ -575,19 +565,6 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
     },
   });
 
-  function emitContent(controller: ReadableStreamDefaultController, text: string) {
-    controller.enqueue(new TextEncoder().encode(
-      `data: ${JSON.stringify({ choices: [{ index: 0, delta: { content: text } }] })}\n\n`
-    ));
-  }
-
-  function closeThinkingIfOpen(controller: ReadableStreamDefaultController) {
-    if (thinkingOpen) {
-      emitContent(controller, "\n</thinking>\n\n");
-      thinkingOpen = false;
-    }
-  }
-
   function processLines(lines: string[], controller: ReadableStreamDefaultController) {
     for (const line of lines) {
       if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
@@ -596,21 +573,11 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
         const type = evt.type;
         const encoder = new TextEncoder();
 
-        if (type === "response.reasoning_summary_text.delta") {
-          if (!thinkingOpen) {
-            emitContent(controller, "<thinking>\n");
-            thinkingOpen = true;
-            lastReasoningItemId = evt.item_id;
-          } else if (evt.item_id && evt.item_id !== lastReasoningItemId) {
-            emitContent(controller, "\n\n");
-            lastReasoningItemId = evt.item_id;
-          }
-          if (evt.delta) emitContent(controller, evt.delta);
-        } else if (type === "response.output_text.delta") {
-          closeThinkingIfOpen(controller);
-          emitContent(controller, evt.delta);
+        if (type === "response.output_text.delta") {
+          controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ choices: [{ index: 0, delta: { content: evt.delta } }] })}\n\n`
+          ));
         } else if (type === "response.output_item.added" && evt.item?.type === "function_call") {
-          closeThinkingIfOpen(controller);
           funcCallIndex++;
           controller.enqueue(encoder.encode(
             `data: ${JSON.stringify({ choices: [{ index: 0, delta: { tool_calls: [{ index: funcCallIndex, id: evt.item.call_id || evt.item.id || "", type: "function", function: { name: evt.item.name || "", arguments: "" } }] } }] })}\n\n`
@@ -620,7 +587,6 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
             `data: ${JSON.stringify({ choices: [{ index: 0, delta: { tool_calls: [{ index: Math.max(0, funcCallIndex), function: { arguments: evt.delta } }] } }] })}\n\n`
           ));
         } else if (type === "response.completed") {
-          closeThinkingIfOpen(controller);
           const hasTools = (evt.response?.output || []).some((o: any) => o.type === "function_call");
           controller.enqueue(encoder.encode(
             `data: ${JSON.stringify({ choices: [{ index: 0, delta: {}, finish_reason: hasTools ? "tool_calls" : "stop" }] })}\n\n`
