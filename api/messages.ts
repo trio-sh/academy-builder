@@ -5,7 +5,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 interface AnthropicRequest {
   model: string;
   messages: AnthropicMessage[];
-  max_tokens: number;
+  max_tokens?: number;
   system?: string | SystemBlock[];
   temperature?: number;
   top_p?: number;
@@ -117,14 +117,14 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
-const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const KILO_DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 
-const DEFAULT_MAX_TOKENS = 16384;
+const DEFAULT_MAX_TOKENS = 32768;
 const MAX_AGENT_STEPS = 60;
 
 const DEFAULT_SYSTEM_PROMPT = `You are Praxis, a helpful, creative, and knowledgeable AI assistant built by The 3rd Academy. You always respond with substantive, complete answers.
@@ -845,9 +845,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       return anthropicError(res, 400, "invalid_request_error", "messages is required and must be a non-empty array");
     }
-    if (!body.max_tokens || typeof body.max_tokens !== "number") {
-      return anthropicError(res, 400, "invalid_request_error", "max_tokens is required and must be a positive integer");
-    }
 
     const requestModel = body.model || "praxis-1";
     const stream = body.stream ?? false;
@@ -862,7 +859,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const allTools = [...BUILTIN_TOOLS_OPENAI, ...userToolsOpenAI];
 
     const options = {
-      maxTokens: body.max_tokens,
+      maxTokens: body.max_tokens || DEFAULT_MAX_TOKENS,
       temperature: body.temperature,
       topP: body.top_p,
       stop: body.stop_sequences,
