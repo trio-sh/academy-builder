@@ -117,7 +117,14 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
-const KILO_DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
+const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const KILO_FALLBACK_MODELS = [
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "bytedance-seed/dola-seed-2.0-pro:free",
+  "tencent/hy3-preview:free",
+  "stepfun/step-3.5-flash:free",
+  "inclusionai/ling-2.6-flash:free",
+];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
 const JINA_READER_URL = "https://r.jina.ai";
@@ -466,9 +473,10 @@ async function callKilo(
   },
   log: ReturnType<typeof createLogger>
 ): Promise<Response> {
-  const model = options.model || KILO_DEFAULT_MODEL;
+  const requestedModel = options.model || KILO_DEFAULT_MODEL;
+  const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)];
+
   const body: any = {
-    model,
     messages,
     stream: options.stream ?? false,
   };
@@ -482,24 +490,31 @@ async function callKilo(
     body.tool_choice = options.toolChoice || "auto";
   }
 
-  log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
+  for (const model of modelsToTry) {
+    body.model = model;
+    log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
 
-  const res = await fetch(KILO_GATEWAY_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${KILO_API_KEY}`,
-    },
-    body: JSON.stringify(body),
-  });
+    const res = await fetch(KILO_GATEWAY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${KILO_API_KEY}`,
+      },
+      body: JSON.stringify(body),
+    });
 
-  if (!res.ok) {
+    if (res.ok) return res;
+
     const errText = await res.text();
-    log.error(`Kilo error ${res.status}: ${errText.slice(0, 500)}`);
-    throw new Error(`Kilo Gateway error: ${res.status}`);
+    log.warn(`Kilo error ${res.status} for ${model}: ${errText.slice(0, 300)}`);
+
+    if (model === modelsToTry[modelsToTry.length - 1]) {
+      throw new Error(`All models failed. Last error (${model}): ${res.status}`);
+    }
+    log.info(`Falling back to next model...`);
   }
 
-  return res;
+  throw new Error("All models exhausted");
 }
 
 // ─── Non-Streaming Handler ──────────────────────────────────────────────────
