@@ -81,6 +81,34 @@ function nextKiloKey(): string {
   return key;
 }
 const KILO_API_KEY = KILO_API_KEYS[0] || "";
+
+async function kiloFetch(
+  url: string,
+  bodyStr: string,
+  log?: { warn: (...a: any[]) => void }
+): Promise<Response> {
+  const keyCount = Math.max(1, KILO_API_KEYS.length);
+  let lastRes: Response | null = null;
+
+  for (let attempt = 0; attempt < keyCount; attempt++) {
+    const key = nextKiloKey();
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${key}`,
+      },
+      body: bodyStr,
+    });
+
+    if (res.status !== 429) return res;
+
+    log?.warn(`Kilo rate-limited (429), rotating to next key (attempt ${attempt + 1}/${keyCount})`);
+    lastRes = res;
+  }
+
+  return lastRes!;
+}
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
@@ -1139,21 +1167,14 @@ async function executeTaskAgent(
 
   for (let step = 0; step < MAX_TASK_AGENT_TOOL_STEPS; step++) {
     try {
-      const res = await fetch(KILO_GATEWAY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${nextKiloKey()}`,
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          max_tokens: maxTokens,
-          temperature: 0.7,
-          stream: false,
-          tools: TASK_AGENT_TOOLS,
-        }),
-      });
+      const res = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify({
+        model,
+        messages,
+        max_tokens: maxTokens,
+        temperature: 0.7,
+        stream: false,
+        tools: TASK_AGENT_TOOLS,
+      }), log);
 
       if (!res.ok) {
         const errText = await res.text();
@@ -1255,21 +1276,14 @@ async function streamTaskAgent(
     // and streaming for the final text response.
     // Strategy: always try streaming first. Collect tool_calls from the stream.
     try {
-      const fetchRes = await fetch(KILO_GATEWAY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${nextKiloKey()}`,
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          max_tokens: maxTokens,
-          temperature: 0.7,
-          stream: true,
-          tools: allKiloTools,
-        }),
-      });
+      const fetchRes = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify({
+        model,
+        messages,
+        max_tokens: maxTokens,
+        temperature: 0.7,
+        stream: true,
+        tools: allKiloTools,
+      }), log);
 
       if (!fetchRes.ok) {
         const errText = await fetchRes.text();
@@ -2678,22 +2692,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       for (let step = 0; step < kiloMaxSteps; step++) {
         log.info(`Direct Kilo step ${step + 1}/${kiloMaxSteps}`);
 
-        const fetchRes = await fetch(KILO_GATEWAY_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${nextKiloKey()}`,
-          },
-          body: JSON.stringify({
-            model: KILO_DEFAULT_MODEL,
-            messages: kiloMessages,
-            max_tokens: maxTokens,
-            temperature,
-            stream: true,
-            tools: allTools,
-            tool_choice: body.tool_choice || "auto",
-          }),
-        });
+        const fetchRes = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify({
+          model: KILO_DEFAULT_MODEL,
+          messages: kiloMessages,
+          max_tokens: maxTokens,
+          temperature,
+          stream: true,
+          tools: allTools,
+          tool_choice: body.tool_choice || "auto",
+        }), log);
 
         if (!fetchRes.ok) {
           const errText = await fetchRes.text();
