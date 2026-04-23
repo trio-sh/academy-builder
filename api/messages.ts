@@ -118,13 +118,11 @@ function createLogger(prefix?: string) {
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_RESPONSES_URL = "https://api.kilo.ai/api/gateway/responses";
 const KILO_API_KEY = process.env.KILO_API_KEY || "";
-const KILO_DEFAULT_MODEL = "kilo-auto/free";
+const KILO_DEFAULT_MODEL = "x-ai/grok-code-fast-1:optimized:free";
 const KILO_FALLBACK_MODELS = [
+  "kilo-auto/free",
   "nvidia/nemotron-3-super-120b-a12b:free",
-  "bytedance-seed/dola-seed-2.0-pro:free",
-  "tencent/hy3-preview:free",
   "stepfun/step-3.5-flash:free",
-  "inclusionai/ling-2.6-flash:free",
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
