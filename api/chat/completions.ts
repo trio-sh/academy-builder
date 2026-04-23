@@ -69,7 +69,18 @@ const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 const JINA_READER_URL = "https://r.jina.ai";
 const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
-const KILO_API_KEY = process.env.KILO_API_KEY || "";
+const KILO_API_KEYS = (process.env.KILO_API_KEY || "")
+  .split(",")
+  .map((k) => k.trim())
+  .filter(Boolean);
+let _kiloKeyIndex = 0;
+function nextKiloKey(): string {
+  if (KILO_API_KEYS.length === 0) return "";
+  const key = KILO_API_KEYS[_kiloKeyIndex % KILO_API_KEYS.length];
+  _kiloKeyIndex = (_kiloKeyIndex + 1) % KILO_API_KEYS.length;
+  return key;
+}
+const KILO_API_KEY = KILO_API_KEYS[0] || "";
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
@@ -1132,7 +1143,7 @@ async function executeTaskAgent(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${KILO_API_KEY}`,
+          Authorization: `Bearer ${nextKiloKey()}`,
         },
         body: JSON.stringify({
           model,
@@ -1248,7 +1259,7 @@ async function streamTaskAgent(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${KILO_API_KEY}`,
+          Authorization: `Bearer ${nextKiloKey()}`,
         },
         body: JSON.stringify({
           model,
@@ -2671,7 +2682,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${KILO_API_KEY}`,
+            Authorization: `Bearer ${nextKiloKey()}`,
           },
           body: JSON.stringify({
             model: KILO_DEFAULT_MODEL,
