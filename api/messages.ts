@@ -657,13 +657,15 @@ async function callKilo(
     stop?: string[];
     toolChoice?: any;
     stream?: boolean;
+    skipModels?: string[];
   },
   log: ReturnType<typeof createLogger>
 ): Promise<Response> {
   // Never route to paid models — only use our free model chain
   const isFreeModel = (m: string) => m.endsWith(":free") || m === "kilo-auto/free";
   const requestedModel = (options.model && isFreeModel(options.model)) ? options.model : KILO_DEFAULT_MODEL;
-  const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)];
+  const skip = new Set(options.skipModels || []);
+  const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)].filter((m) => !skip.has(m));
 
   const body: any = {
     messages,
@@ -738,11 +740,12 @@ async function handleNonStreaming(
   log: ReturnType<typeof createLogger>
 ): Promise<AnthropicResponse> {
   let messages = [...openaiMessages];
+  const emptyRetries: string[] = [];
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     log.info(`Non-streaming step ${step + 1}/${MAX_AGENT_STEPS}`);
 
-    const res = await callKilo(messages, allTools, { ...options, stream: false }, log);
+    const res = await callKilo(messages, allTools, { ...options, stream: false, skipModels: emptyRetries }, log);
     const data = await res.json();
 
     const choice = data.choices?.[0];
@@ -754,6 +757,19 @@ async function handleNonStreaming(
     const usage = data.usage || { prompt_tokens: 0, completion_tokens: 0 };
 
     log.info(`<- Kilo: finish=${finishReason}, content=${assistantContent.length}ch, tool_calls=${toolCalls.length}`);
+
+    // Empty response — retry with next fallback model
+    if (!assistantContent && toolCalls.length === 0) {
+      const allModels = [KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS];
+      const skipSet = new Set(emptyRetries);
+      const usedModel = allModels.find((m) => !skipSet.has(m)) || KILO_DEFAULT_MODEL;
+      emptyRetries.push(usedModel);
+      if (emptyRetries.length < allModels.length) {
+        log.warn(`Empty response from ${usedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
+        continue;
+      }
+      log.error("All models returned empty responses");
+    }
 
     // No tool calls — return final response
     if (finishReason !== "tool_calls" || toolCalls.length === 0) {
@@ -853,11 +869,31 @@ async function handleStreaming(
   let totalOutputTokens = 0;
   let contentBlockIndex = 0;
   let hasStartedMessage = false;
+  const emptyRetries: string[] = [];
+  let lastUsedModel = "";
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     log.info(`Streaming step ${step + 1}/${MAX_AGENT_STEPS}`);
 
-    const kiloRes = await callKilo(messages, allTools, { ...options, stream: true }, log);
+    const skipSet = new Set(emptyRetries);
+    const allModels = [KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS];
+    lastUsedModel = allModels.find((m) => !skipSet.has(m)) || KILO_DEFAULT_MODEL;
+
+    if (emptyRetries.length >= allModels.length) {
+      log.error("All models returned empty responses");
+      if (!hasStartedMessage) {
+        res.write(sseMessageStart(msgId, requestModel, 0));
+      }
+      res.write(sseContentBlockStart(contentBlockIndex, { type: "text", text: "" }));
+      res.write(sseContentBlockDelta(contentBlockIndex, { type: "text_delta", text: "All models returned empty responses. Please try again." }));
+      res.write(sseContentBlockStop(contentBlockIndex));
+      res.write(sseMessageDelta("end_turn", 0));
+      res.write(sseMessageStop());
+      res.end();
+      return;
+    }
+
+    const kiloRes = await callKilo(messages, allTools, { ...options, stream: true, skipModels: emptyRetries }, log);
     const reader = kiloRes.body!.getReader();
     const decoder = new TextDecoder();
 
@@ -994,6 +1030,13 @@ async function handleStreaming(
       }
 
       continue; // next step
+    }
+
+    // Empty response — retry with fallback models
+    if (collected.length === 0 && parsedToolCalls.length === 0) {
+      emptyRetries.push(lastUsedModel);
+      log.warn(`Empty response from ${lastUsedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
+      continue;
     }
 
     // Normal stop — finish the stream
