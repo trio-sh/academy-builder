@@ -688,7 +688,10 @@ async function callKilo(
 
     const res = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify(body), log);
 
-    if (res.ok) return res;
+    if (res.ok) {
+      log.info(`<- Kilo OK: model=${model}`);
+      return res;
+    }
 
     const errText = await res.text();
     log.warn(`Kilo error ${res.status} for ${model}: ${errText.slice(0, 300)}`);
@@ -757,7 +760,7 @@ async function handleNonStreaming(
     const finishReason = choice.finish_reason;
     const usage = data.usage || { prompt_tokens: 0, completion_tokens: 0 };
 
-    log.info(`<- Kilo: finish=${finishReason}, content=${assistantContent.length}ch, tool_calls=${toolCalls.length}`);
+    log.info(`<- Kilo: finish=${finishReason}, content=${assistantContent.length}ch, tool_calls=${toolCalls.length}, preview=${JSON.stringify((assistantContent || "").slice(0, 300))}`);
 
     // Empty response — retry with next fallback model
     if (!assistantContent && toolCalls.length === 0) {
@@ -1012,7 +1015,7 @@ async function handleStreaming(
         res.write(sseMessageDelta("tool_use", Math.ceil(totalOutputTokens)));
         res.write(sseMessageStop());
         res.end();
-        log.info("Stream ended (tool_use → client)");
+        log.info(`Stream ended (tool_use → client): model=${lastUsedModel}, custom_tools=[${customCalls.map((t: any) => t.function.name)}], text=${collected.length}ch`);
         return;
       }
 
@@ -1046,7 +1049,7 @@ async function handleStreaming(
     res.write(sseMessageDelta(stopReason, Math.ceil(totalOutputTokens)));
     res.write(sseMessageStop());
     res.end();
-    log.info(`Stream done: ${step + 1} steps, ${collected.length}ch`);
+    log.info(`Stream done: model=${lastUsedModel}, steps=${step + 1}, text=${collected.length}ch, tool_calls=${parsedToolCalls.length}, finish=${finishReason}, preview=${JSON.stringify(collected.slice(0, 300))}`);
     return;
   }
 
@@ -1111,7 +1114,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const requestModel = body.model || "praxis-1";
     const stream = body.stream ?? false;
 
-    log.info(`Incoming: model=${requestModel}, msgs=${body.messages.length}, max_tokens=${body.max_tokens}, stream=${stream}, tools=${body.tools?.length ?? 0}`);
+    const toolNames = (body.tools || []).map((t) => t.name);
+    log.info(`Incoming: model=${requestModel}, msgs=${body.messages.length}, max_tokens=${body.max_tokens}, stream=${stream}, tools=${toolNames.length} [${toolNames.slice(0, 10).join(", ")}${toolNames.length > 10 ? "..." : ""}]`);
 
     // Convert Anthropic request → OpenAI format for Kilo
     const { messages: openaiMessages, tools: userToolsOpenAI, toolChoice } = convertAnthropicToOpenAI(body);
