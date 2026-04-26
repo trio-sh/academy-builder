@@ -142,6 +142,8 @@ const DUCKDUCKGO_HTML = "https://html.duckduckgo.com/html";
 const A0_IMAGE_URL = "https://api.a0.dev/assets/image";
 
 const MAX_AGENT_STEPS = 60;
+const MAX_EMPTY_RETRIES = 3; // retries PER model before skipping it
+const JUNK_PATTERN = /^[\s]*(<\|.*?\|>|<parameter=think>|<\/\/think>|<think>|<\/think>|\s)*[\s]*$/;
 
 const DEFAULT_SYSTEM_PROMPT = `You are PiPilot, a powerful AI model built by PiPilot Inc. You always respond with substantive, complete answers.
 
@@ -745,6 +747,7 @@ async function handleNonStreaming(
 ): Promise<AnthropicResponse> {
   let messages = [...openaiMessages];
   const emptyRetries: string[] = [];
+  let nudgeUsed = false;
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     log.info(`Non-streaming step ${step + 1}/${MAX_AGENT_STEPS}`);
@@ -762,17 +765,27 @@ async function handleNonStreaming(
 
     log.info(`<- Kilo: finish=${finishReason}, content=${assistantContent.length}ch, tool_calls=${toolCalls.length}, preview=${JSON.stringify((assistantContent || "").slice(0, 300))}`);
 
-    // Empty response — retry with next fallback model
-    if (!assistantContent && toolCalls.length === 0) {
+    // Empty or junk response — retry with fallback
+    const cleanContent = (assistantContent || "").trim();
+    const isJunkContent = cleanContent.length === 0 || JUNK_PATTERN.test(cleanContent);
+    if (isJunkContent && toolCalls.length === 0) {
       const allModels = [KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS];
       const skipSet = new Set(emptyRetries);
       const usedModel = allModels.find((m) => !skipSet.has(m)) || KILO_DEFAULT_MODEL;
       emptyRetries.push(usedModel);
       if (emptyRetries.length < allModels.length) {
-        log.warn(`Empty response from ${usedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
+        log.warn(`Empty/junk response from ${usedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
         continue;
       }
-      log.error("All models returned empty responses");
+      if (!nudgeUsed) {
+        // All models failed — try once more with a nudge
+        log.warn("All models exhausted, final nudge retry");
+        messages.push({ role: "user", content: "You must provide a response. Do not output empty or reasoning-only text. Respond now." });
+        emptyRetries.length = 0;
+        nudgeUsed = true;
+        continue;
+      }
+      log.error("All models returned empty responses even after nudge");
     }
 
     // No tool calls — return final response
@@ -873,107 +886,119 @@ async function handleStreaming(
   let totalOutputTokens = 0;
   let contentBlockIndex = 0;
   let hasStartedMessage = false;
-  const emptyRetries: string[] = [];
+  const failedModels: Map<string, number> = new Map();
   let lastUsedModel = "";
+  let nudgeUsed = false;
 
   for (let step = 0; step < MAX_AGENT_STEPS; step++) {
     log.info(`Streaming step ${step + 1}/${MAX_AGENT_STEPS}`);
 
-    const skipSet = new Set(emptyRetries);
+    // Build skip list: models that have failed MAX_EMPTY_RETRIES times
+    const skipModels = [...failedModels.entries()].filter(([, n]) => n >= MAX_EMPTY_RETRIES).map(([m]) => m);
     const allModels = [KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS];
-    lastUsedModel = allModels.find((m) => !skipSet.has(m)) || KILO_DEFAULT_MODEL;
+    const available = allModels.filter((m) => !skipModels.includes(m));
+    lastUsedModel = available[0] || KILO_DEFAULT_MODEL;
 
-    if (emptyRetries.length >= allModels.length) {
-      log.error("All models returned empty responses");
-      if (!hasStartedMessage) {
-        res.write(sseMessageStart(msgId, requestModel, 0));
+    if (available.length === 0) {
+      if (nudgeUsed) {
+        log.error("All models failed even after nudge — giving up");
+        if (!hasStartedMessage) {
+          res.write(sseMessageStart(msgId, requestModel, 0));
+        }
+        res.write(sseContentBlockStart(contentBlockIndex, { type: "text", text: "" }));
+        res.write(sseContentBlockDelta(contentBlockIndex, { type: "text_delta", text: "I'm having trouble generating a response right now. Please try again in a moment." }));
+        res.write(sseContentBlockStop(contentBlockIndex));
+        res.write(sseMessageDelta("end_turn", 0));
+        res.write(sseMessageStop());
+        res.end();
+        return;
       }
-      res.write(sseContentBlockStart(contentBlockIndex, { type: "text", text: "" }));
-      res.write(sseContentBlockDelta(contentBlockIndex, { type: "text_delta", text: "All models returned empty responses. Please try again." }));
-      res.write(sseContentBlockStop(contentBlockIndex));
-      res.write(sseMessageDelta("end_turn", 0));
-      res.write(sseMessageStop());
-      res.end();
-      return;
+      log.warn("All models exhausted, final nudge retry");
+      messages.push({ role: "user", content: "You must provide a response. Do not output empty or reasoning-only text. Respond now." });
+      failedModels.clear();
+      nudgeUsed = true;
     }
-
-    const kiloRes = await callKilo(messages, allTools, { ...options, stream: true, skipModels: emptyRetries }, log);
-    const reader = kiloRes.body!.getReader();
-    const decoder = new TextDecoder();
 
     let collected = "";
-    const streamToolCalls: any[] = [];
+    let streamToolCalls: any[] = [];
     let finishReason: string | null = null;
-    let buffer = "";
-    let stepHasTextContent = false;
+    let streamError = false;
 
-    // Emit message_start on first step
-    if (!hasStartedMessage) {
-      res.write(sseMessageStart(msgId, requestModel, 0));
-      res.write(ssePing());
-      hasStartedMessage = true;
-    }
+    try {
+      const kiloRes = await callKilo(messages, allTools, { ...options, stream: true, skipModels }, log);
+      const reader = kiloRes.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
 
-    // Start a text content block for this step's text output
-    let textBlockStarted = false;
+      // Emit message_start on first step
+      if (!hasStartedMessage) {
+        res.write(sseMessageStart(msgId, requestModel, 0));
+        res.write(ssePing());
+        hasStartedMessage = true;
+      }
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+      let textBlockStarted = false;
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      for (const line of lines) {
-        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
-        try {
-          const chunk = JSON.parse(line.slice(6));
-          const delta = chunk.choices?.[0]?.delta;
-          const reason = chunk.choices?.[0]?.finish_reason;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
 
-          if (reason) finishReason = reason;
+        for (const line of lines) {
+          if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+          try {
+            const chunk = JSON.parse(line.slice(6));
+            const delta = chunk.choices?.[0]?.delta;
+            const reason = chunk.choices?.[0]?.finish_reason;
 
-          // Text content
-          if (delta?.content) {
-            if (!textBlockStarted) {
-              res.write(sseContentBlockStart(contentBlockIndex, { type: "text", text: "" }));
-              textBlockStarted = true;
-            }
-            collected += delta.content;
-            stepHasTextContent = true;
-            res.write(sseContentBlockDelta(contentBlockIndex, { type: "text_delta", text: delta.content }));
-          }
+            if (reason) finishReason = reason;
 
-          // Tool call deltas — accumulate
-          if (delta?.tool_calls) {
-            for (const tc of delta.tool_calls) {
-              const idx = tc.index ?? 0;
-              if (!streamToolCalls[idx]) {
-                streamToolCalls[idx] = {
-                  id: tc.id || "",
-                  type: tc.type || "function",
-                  function: { name: tc.function?.name || "", arguments: "" },
-                };
+            if (delta?.content) {
+              if (!textBlockStarted) {
+                res.write(sseContentBlockStart(contentBlockIndex, { type: "text", text: "" }));
+                textBlockStarted = true;
               }
-              if (tc.id) streamToolCalls[idx].id = tc.id;
-              if (tc.function?.name) streamToolCalls[idx].function.name = tc.function.name;
-              if (tc.function?.arguments) streamToolCalls[idx].function.arguments += tc.function.arguments;
+              collected += delta.content;
+              res.write(sseContentBlockDelta(contentBlockIndex, { type: "text_delta", text: delta.content }));
             }
+
+            if (delta?.tool_calls) {
+              for (const tc of delta.tool_calls) {
+                const idx = tc.index ?? 0;
+                if (!streamToolCalls[idx]) {
+                  streamToolCalls[idx] = {
+                    id: tc.id || "",
+                    type: tc.type || "function",
+                    function: { name: tc.function?.name || "", arguments: "" },
+                  };
+                }
+                if (tc.id) streamToolCalls[idx].id = tc.id;
+                if (tc.function?.name) streamToolCalls[idx].function.name = tc.function.name;
+                if (tc.function?.arguments) streamToolCalls[idx].function.arguments += tc.function.arguments;
+              }
+            }
+          } catch {
+            // skip malformed chunks
           }
-        } catch {
-          // skip malformed chunks
         }
       }
-    }
 
-    // Close text block if we started one
-    if (textBlockStarted) {
-      res.write(sseContentBlockStop(contentBlockIndex));
-      contentBlockIndex++;
+      if (textBlockStarted) {
+        res.write(sseContentBlockStop(contentBlockIndex));
+        contentBlockIndex++;
+      }
+    } catch (err: any) {
+      log.warn(`Stream error from ${lastUsedModel}: ${err.message}`);
+      streamError = true;
     }
 
     const parsedToolCalls = streamToolCalls.filter(Boolean);
+    const cleanText = collected.trim();
+    const isJunk = cleanText.length === 0 || JUNK_PATTERN.test(cleanText);
+    const isEmpty = isJunk && parsedToolCalls.length === 0;
 
     // Handle tool calls
     if (finishReason === "tool_calls" && parsedToolCalls.length > 0) {
@@ -1036,10 +1061,11 @@ async function handleStreaming(
       continue; // next step
     }
 
-    // Empty response — retry with fallback models
-    if (collected.length === 0 && parsedToolCalls.length === 0) {
-      emptyRetries.push(lastUsedModel);
-      log.warn(`Empty response from ${lastUsedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
+    // Empty, junk, or errored response — retry with fallback
+    if (isEmpty || streamError) {
+      const count = (failedModels.get(lastUsedModel) || 0) + 1;
+      failedModels.set(lastUsedModel, count);
+      log.warn(`${streamError ? "Stream error" : "Empty/junk response"} from ${lastUsedModel} (fail ${count}/${MAX_EMPTY_RETRIES}), retrying`);
       continue;
     }
 
