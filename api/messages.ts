@@ -117,21 +117,39 @@ function createLogger(prefix?: string) {
 
 const KILO_GATEWAY_URL = "https://api.kilo.ai/api/gateway/chat/completions";
 const KILO_RESPONSES_URL = "https://api.kilo.ai/api/gateway/responses";
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const KILO_API_KEYS = (process.env.KILO_API_KEY || "")
   .split(",")
   .map((k) => k.trim())
   .filter(Boolean);
+const OPENROUTER_API_KEYS = (process.env.OPENROUTER_API_KEY || "")
+  .split(",")
+  .map((k) => k.trim())
+  .filter(Boolean);
 let _kiloKeyIndex = 0;
+let _openrouterKeyIndex = 0;
 function nextKiloKey(): string {
   if (KILO_API_KEYS.length === 0) return "";
   const key = KILO_API_KEYS[_kiloKeyIndex % KILO_API_KEYS.length];
   _kiloKeyIndex = (_kiloKeyIndex + 1) % KILO_API_KEYS.length;
   return key;
 }
+function nextOpenRouterKey(): string {
+  if (OPENROUTER_API_KEYS.length === 0) return "";
+  const key = OPENROUTER_API_KEYS[_openrouterKeyIndex % OPENROUTER_API_KEYS.length];
+  _openrouterKeyIndex = (_openrouterKeyIndex + 1) % OPENROUTER_API_KEYS.length;
+  return key;
+}
+
+const OPENROUTER_MODELS = new Set([
+  "minimax/minimax-m2.5:free",
+]);
+
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
   "tencent/hy3-preview:free",
   "inclusionai/ling-2.6-1t:free",
+  "minimax/minimax-m2.5:free",
   "inclusionai/ling-2.6-flash:free",
   "stepfun/step-3.5-flash:free",
 ];
@@ -621,16 +639,21 @@ function transformResponsesStreamToChat(responsesResponse: Response): Response {
 
 // ─── Kilo Gateway Caller ────────────────────────────────────────────────────
 
-async function kiloFetch(
-  url: string,
+async function providerFetch(
+  model: string,
   bodyStr: string,
-  log: ReturnType<typeof createLogger>
+  log: ReturnType<typeof createLogger>,
+  overrideUrl?: string
 ): Promise<Response> {
-  const keyCount = Math.max(1, KILO_API_KEYS.length);
+  const isOpenRouter = OPENROUTER_MODELS.has(model);
+  const url = overrideUrl || (isOpenRouter ? OPENROUTER_URL : KILO_GATEWAY_URL);
+  const keys = isOpenRouter ? OPENROUTER_API_KEYS : KILO_API_KEYS;
+  const nextKey = isOpenRouter ? nextOpenRouterKey : nextKiloKey;
+  const keyCount = Math.max(1, keys.length);
   let lastRes: Response | null = null;
 
   for (let attempt = 0; attempt < keyCount; attempt++) {
-    const key = nextKiloKey();
+    const key = nextKey();
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -688,7 +711,7 @@ async function callKilo(
     body.model = model;
     log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
 
-    const res = await kiloFetch(KILO_GATEWAY_URL, JSON.stringify(body), log);
+    const res = await providerFetch(model, JSON.stringify(body), log);
 
     if (res.ok) {
       log.info(`<- Kilo OK: model=${model}`);
@@ -702,7 +725,7 @@ async function callKilo(
     if (errText.includes("api_kind_not_supported") && errText.includes("responses")) {
       log.info(`Model ${model} requires Responses API — retrying via /responses`);
       const responsesBody = convertChatToResponses(body);
-      const respRes = await kiloFetch(KILO_RESPONSES_URL, JSON.stringify(responsesBody), log);
+      const respRes = await providerFetch(model, JSON.stringify(responsesBody), log, KILO_RESPONSES_URL);
 
       if (respRes.ok) {
         if (body.stream) {
@@ -1125,8 +1148,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Auth disabled — accept all requests
 
-    if (KILO_API_KEYS.length === 0) {
-      log.error("KILO_API_KEY not configured");
+    if (KILO_API_KEYS.length === 0 && OPENROUTER_API_KEYS.length === 0) {
+      log.error("No API keys configured (KILO_API_KEY or OPENROUTER_API_KEY)");
       return anthropicError(res, 500, "api_error", "Server not configured");
     }
 
