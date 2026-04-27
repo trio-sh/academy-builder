@@ -578,7 +578,10 @@ function convertResponsesToChatResult(respBody: any): any {
 }
 
 function transformResponsesStreamToChat(responsesResponse: Response): Response {
-  const reader = responsesResponse.body!.getReader();
+  if (!responsesResponse.body) {
+    throw new Error(`transformResponsesStreamToChat: response body is null (status ${responsesResponse.status})`);
+  }
+  const reader = responsesResponse.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
   let funcCallIndex = -1;
@@ -667,7 +670,10 @@ async function providerFetch(
 
     if (res.status !== 429) return res;
 
-    log.warn(`Kilo rate-limited (429) on key #${(_kiloKeyIndex || keyCount) - 1 + 1}, rotating${attempt + 1 < keyCount ? "" : " — exhausted"}`);
+    const rateLimitedKeyIndex = isOpenRouter
+      ? ((_openrouterKeyIndex - 1 + OPENROUTER_API_KEYS.length) % Math.max(1, OPENROUTER_API_KEYS.length))
+      : ((_kiloKeyIndex - 1 + KILO_API_KEYS.length) % Math.max(1, KILO_API_KEYS.length));
+    log.warn(`${isOpenRouter ? "OpenRouter" : "Kilo"} rate-limited (429) on key #${rateLimitedKeyIndex}, rotating${attempt + 1 < keyCount ? "" : " — exhausted"}`);
     lastRes = res;
   }
 
@@ -710,6 +716,13 @@ async function callKilo(
   }
 
   for (const model of modelsToTry) {
+    // Skip OpenRouter-only models when no OpenRouter key is configured to avoid
+    // sending requests with an empty Bearer token.
+    if (OPENROUTER_MODELS.has(model) && OPENROUTER_API_KEYS.length === 0) {
+      log.warn(`Skipping OpenRouter model ${model}: OPENROUTER_API_KEY not configured`);
+      continue;
+    }
+
     body.model = model;
     log.info(`-> Kilo: model=${model}, msgs=${messages.length}, tools=${tools.length}, stream=${body.stream}, max_tokens=${body.max_tokens}`);
 
@@ -717,7 +730,12 @@ async function callKilo(
 
     if (res.ok) {
       log.info(`<- Kilo OK: model=${model}`);
-      return res;
+      // Tag the response with the actual model used so callers can track it accurately.
+      const tagged = new Response(res.body, {
+        status: res.status,
+        headers: { ...Object.fromEntries(res.headers.entries()), "x-kilo-model-used": model },
+      });
+      return tagged;
     }
 
     const errText = await res.text();
@@ -737,7 +755,7 @@ async function callKilo(
         const chatResult = convertResponsesToChatResult(respBody);
         return new Response(JSON.stringify(chatResult), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-kilo-model-used": model },
         });
       }
 
@@ -795,11 +813,14 @@ async function handleNonStreaming(
     const isJunkContent = cleanContent.length === 0 || JUNK_PATTERN.test(cleanContent);
     if (isJunkContent && toolCalls.length === 0) {
       const allModels = [KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS];
-      const skipSet = new Set(emptyRetries);
-      const usedModel = allModels.find((m) => !skipSet.has(m)) || KILO_DEFAULT_MODEL;
-      emptyRetries.push(usedModel);
+      // Use the header set by callKilo to identify the model that actually responded,
+      // rather than recomputing it (callKilo may have fallen back internally).
+      const actualModel = res.headers.get("x-kilo-model-used") || (allModels.find((m) => !new Set(emptyRetries).has(m)) ?? KILO_DEFAULT_MODEL);
+      if (!emptyRetries.includes(actualModel)) {
+        emptyRetries.push(actualModel);
+      }
       if (emptyRetries.length < allModels.length) {
-        log.warn(`Empty/junk response from ${usedModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
+        log.warn(`Empty/junk response from ${actualModel}, retrying with next fallback (attempt ${emptyRetries.length})`);
         continue;
       }
       if (!nudgeUsed) {
@@ -867,7 +888,12 @@ async function handleNonStreaming(
     });
 
     for (const tc of builtinCalls) {
-      const args = JSON.parse(tc.function.arguments || "{}");
+      let args: Record<string, any> = {};
+      try {
+        args = JSON.parse(tc.function.arguments || "{}");
+      } catch (parseErr) {
+        log.warn(`Failed to parse tool arguments for ${tc.function.name}: ${parseErr}. Using empty args.`);
+      }
       log.info(`Executing built-in tool: ${tc.function.name}`);
       const result = await executeBuiltinTool(tc.function.name, args);
       messages.push({ role: "tool", tool_call_id: tc.id, content: result });
@@ -951,7 +977,12 @@ async function handleStreaming(
 
     try {
       const kiloRes = await callKilo(messages, allTools, { ...options, stream: true, skipModels }, log);
-      const reader = kiloRes.body!.getReader();
+      // Update lastUsedModel with the actual model that responded (set by callKilo via header).
+      lastUsedModel = kiloRes.headers.get("x-kilo-model-used") || lastUsedModel;
+      if (!kiloRes.body) {
+        throw new Error(`handleStreaming: response body is null (status ${kiloRes.status})`);
+      }
+      const reader = kiloRes.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
 
