@@ -144,16 +144,18 @@ function nextOpenRouterKey(): string {
 const OPENROUTER_MODELS = new Set([
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
+  "openai/gpt-oss-120b:free",
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
+  "nvidia/nemotron-3-super-120b-a12b:free",
   "tencent/hy3-preview:free",
   "inclusionai/ling-2.6-1t:free",
+  "inclusionai/ling-2.6-flash:free",
+  "openai/gpt-oss-120b:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
-  "inclusionai/ling-2.6-flash:free",
-  "stepfun/step-3.5-flash:free",
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
