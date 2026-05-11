@@ -153,6 +153,7 @@ const KILO_FALLBACK_MODELS = [
   "nvidia/nemotron-3-super-120b-a12b:free",
   "inclusionai/ring-2.6-1t:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "baidu/cobuddy:free",
   "poolside/laguna-m.1:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
