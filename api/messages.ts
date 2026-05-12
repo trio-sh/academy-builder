@@ -154,11 +154,10 @@ const KILO_FALLBACK_MODELS = [
   "inclusionai/ring-2.6-1t:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
   "baidu/cobuddy:free",
-  "poolside/laguna-m.1:free",
+  "poolside/laguna-m.1-20260312:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "openai/gpt-oss-120b:free",
-  "poolside/laguna-m.1-20260312:free",
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
