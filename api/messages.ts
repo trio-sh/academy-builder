@@ -158,6 +158,7 @@ const KILO_FALLBACK_MODELS = [
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "openai/gpt-oss-120b:free",
+  "poolside/laguna-m.1-20260312:free",
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
