@@ -150,11 +150,10 @@ const OPENROUTER_MODELS = new Set([
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
   "openrouter/owl-alpha",
+  "deepseek/deepseek-v4-flash:free",
   "nvidia/nemotron-3-super-120b-a12b:free",
-  "inclusionai/ring-2.6-1t:free",
+  "stepfun/step-3.5-flash:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-  "baidu/cobuddy:free",
-  "poolside/laguna-m.1-20260312:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "openai/gpt-oss-120b:free",
