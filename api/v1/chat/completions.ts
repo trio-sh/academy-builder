@@ -46,7 +46,21 @@ const FALLBACK_MODELS = [
   "openai/gpt-oss-120b:free",
 ];
 
+const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+
 const isFreeModel = (m: string) => m.endsWith(":free") || m === "kilo-auto/free" || m === "openrouter/owl-alpha";
+
+function hasImageContent(messages: any[]): boolean {
+  if (!Array.isArray(messages)) return false;
+  for (const msg of messages) {
+    const content = msg?.content;
+    if (!Array.isArray(content)) continue;
+    for (const part of content) {
+      if (part?.type === "image_url" || part?.type === "image") return true;
+    }
+  }
+  return false;
+}
 
 async function proxyFetch(model: string, bodyStr: string): Promise<Response> {
   const isOR = OPENROUTER_MODELS.has(model);
@@ -82,7 +96,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const model = isFreeModel(requestedModel) ? requestedModel : DEFAULT_MODEL;
   const isStream = body.stream ?? false;
 
-  const modelsToTry = [model, ...FALLBACK_MODELS.filter((m) => m !== model)];
+  // Route image requests to the vision model first
+  const hasImages = hasImageContent(body.messages);
+  const modelsToTry = hasImages
+    ? [VISION_MODEL, ...FALLBACK_MODELS.filter((m) => m !== VISION_MODEL)]
+    : [model, ...FALLBACK_MODELS.filter((m) => m !== model)];
 
   for (const m of modelsToTry) {
     const payload = JSON.stringify({ ...body, model: m });
