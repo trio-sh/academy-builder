@@ -47,6 +47,10 @@ const FALLBACK_MODELS = [
 ];
 
 const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+const VISION_FALLBACKS = [
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "kilo-auto/free",
+];
 
 const isFreeModel = (m: string) => m.endsWith(":free") || m === "kilo-auto/free" || m === "openrouter/owl-alpha";
 
@@ -96,10 +100,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const model = isFreeModel(requestedModel) ? requestedModel : DEFAULT_MODEL;
   const isStream = body.stream ?? false;
 
-  // Route image requests to the vision model first
+  // Route image requests only to vision-capable models
   const hasImages = hasImageContent(body.messages);
   const modelsToTry = hasImages
-    ? [VISION_MODEL, ...FALLBACK_MODELS.filter((m) => m !== VISION_MODEL)]
+    ? VISION_FALLBACKS
     : [model, ...FALLBACK_MODELS.filter((m) => m !== model)];
 
   for (const m of modelsToTry) {
