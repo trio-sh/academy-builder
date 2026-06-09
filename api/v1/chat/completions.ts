@@ -46,8 +46,10 @@ const FALLBACK_MODELS = [
   "openai/gpt-oss-120b:free",
 ];
 
-const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+const VISION_MODEL = "nex-agi/nex-n2-pro:free";
 const VISION_FALLBACKS = [
+  "nex-agi/nex-n2-pro:free",
+  "stepfun/step-3.7-flash:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
   "kilo-auto/free",
 ];
