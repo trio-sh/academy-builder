@@ -42,6 +42,48 @@ const MODELS = [
   },
   {
     type: "model",
+    id: "claude-3-haiku",
+    display_name: "Claude 3 Haiku",
+    created_at: "2024-03-07T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "claude-3-haiku-20240307",
+    display_name: "Claude 3 Haiku",
+    created_at: "2024-03-07T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "claude-3-sonnet-20240229",
+    display_name: "Claude 3 Sonnet",
+    created_at: "2024-02-29T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "claude-3-opus-20240229",
+    display_name: "Claude 3 Opus",
+    created_at: "2024-02-29T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "claude-3-5-sonnet-20241022",
+    display_name: "Claude 3.5 Sonnet",
+    created_at: "2024-10-22T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "claude-3-5-haiku-20241022",
+    display_name: "Claude 3.5 Haiku",
+    created_at: "2024-10-22T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "anthropic/claude-3-haiku",
+    display_name: "Claude 3 Haiku",
+    created_at: "2024-03-07T00:00:00Z",
+  },
+  {
+    type: "model",
     id: "kilo-auto/free",
     display_name: "Kilo Auto",
     created_at: "2025-01-01T00:00:00Z",
@@ -51,6 +93,12 @@ const MODELS = [
     id: "praxis-1",
     display_name: "Praxis 1",
     created_at: "2025-01-01T00:00:00Z",
+  },
+  {
+    type: "model",
+    id: "pipilot-1",
+    display_name: "PiPilot 1",
+    created_at: "2025-12-01T00:00:00Z",
   },
 ];
 
