@@ -9,7 +9,7 @@ export function BackgroundVideo() {
         className="w-full h-full object-cover opacity-30"
       >
         <source
-          src="https://bloujipdkyjsgzwxnoej.supabase.co/storage/v1/object/public/storage/homelivebg.mp4"
+          src="https://pixabay.com/videos/download/video-136959_medium.mp4"
           type="video/mp4"
         />
       </video>
