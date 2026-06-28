@@ -700,9 +700,19 @@ async function callKilo(
   },
   log: ReturnType<typeof createLogger>
 ): Promise<Response> {
-  // Never route to paid models — only use our free model chain
-  const isFreeModel = (m: string) => m.endsWith(":free") || m === "kilo-auto/free";
-  const requestedModel = (options.model && isFreeModel(options.model)) ? options.model : KILO_DEFAULT_MODEL;
+  // Model resolution:
+  //   - "auto" / empty / kilo-auto/free → use default + full chain
+  //   - A specific model from our chain → use it as primary, rest as fallback
+  //   - Any other ID (claude-*, paid models, unknown) → use default + full chain
+  const chainModels = new Set([KILO_DEFAULT_MODEL, ...KILO_FALLBACK_MODELS]);
+  let requestedModel: string;
+  if (!options.model || options.model === "auto" || options.model === KILO_DEFAULT_MODEL) {
+    requestedModel = KILO_DEFAULT_MODEL;
+  } else if (chainModels.has(options.model)) {
+    requestedModel = options.model;
+  } else {
+    requestedModel = KILO_DEFAULT_MODEL;
+  }
   const skip = new Set(options.skipModels || []);
   const modelsToTry = [requestedModel, ...KILO_FALLBACK_MODELS.filter((m) => m !== requestedModel)].filter((m) => !skip.has(m));
 
@@ -1188,6 +1198,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const allTools = [...BUILTIN_TOOLS_OPENAI, ...userToolsOpenAI];
 
     const options = {
+      model: body.model,
       maxTokens: body.max_tokens,
       temperature: body.temperature,
       topP: body.top_p,
