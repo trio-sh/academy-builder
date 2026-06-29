@@ -145,6 +145,7 @@ const OPENROUTER_MODELS = new Set([
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "openai/gpt-oss-120b:free",
+  "openai/gpt-oss-20b:free",
   "moonshotai/kimi-k2.6:free",
   "meta-llama/llama-3.3-70b-instruct:free",
   "cohere/north-mini-code:free",
@@ -156,13 +157,14 @@ const KILO_FALLBACK_MODELS = [
   "openrouter/owl-alpha",                      // ctx=1048756, max_tok=262144
   "nvidia/nemotron-3-super-120b-a12b:free",    // ctx=1000000, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
-  "nex-agi/nex-n2-pro:free",                   // ctx=262144,  max_tok=256000
   "poolside/laguna-m.1:free",                  // ctx=262144,  max_tok=32768
+  "poolside/laguna-xs.2:free",                 // ctx=262144,  max_tok=32768
   // OpenRouter free models (tool-capable)
   "moonshotai/kimi-k2.6:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "openai/gpt-oss-120b:free",
+  "openai/gpt-oss-20b:free",
   "meta-llama/llama-3.3-70b-instruct:free",
   "cohere/north-mini-code:free",
 ];
