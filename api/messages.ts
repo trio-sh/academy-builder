@@ -151,6 +151,8 @@ const OPENROUTER_MODELS = new Set([
   "meta-llama/llama-3.3-70b-instruct:free",
   "cohere/north-mini-code:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "google/gemma-4-31b-it:free",
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
@@ -158,9 +160,8 @@ const KILO_FALLBACK_MODELS = [
   // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc)
   "nvidia/nemotron-3-super-120b-a12b:free",    // ctx=1000000, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
-  "poolside/laguna-xs-2.1:free",               // ctx=262144,  max_tok=32768
   "poolside/laguna-m.1:free",                  // ctx=262144,  max_tok=32768
-  "poolside/laguna-xs-2.1:free",               // ctx=262144,  max_tok=32768 (new: latest coding agent)
+  "poolside/laguna-xs-2.1:free",               // ctx=262144,  max_tok=32768
   "poolside/laguna-xs.2:free",                 // ctx=262144,  max_tok=32768
   // OpenRouter free models (tool-capable)
   "moonshotai/kimi-k2.6:free",
@@ -172,6 +173,8 @@ const KILO_FALLBACK_MODELS = [
   "openai/gpt-oss-20b:free",
   "meta-llama/llama-3.3-70b-instruct:free",
   "cohere/north-mini-code:free",
+  "google/gemma-4-26b-a4b-it:free",            // ctx=262144, max_tok=32768
+  "google/gemma-4-31b-it:free",                // ctx=262144, max_tok=8192
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
