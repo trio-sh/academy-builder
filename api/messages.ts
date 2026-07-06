@@ -144,11 +144,13 @@ function nextOpenRouterKey(): string {
 const OPENROUTER_MODELS = new Set([
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
+  "qwen/qwen3-next-80b-a3b-instruct:free",
   "openai/gpt-oss-120b:free",
   "openai/gpt-oss-20b:free",
   "moonshotai/kimi-k2.6:free",
   "meta-llama/llama-3.3-70b-instruct:free",
   "cohere/north-mini-code:free",
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
@@ -156,6 +158,7 @@ const KILO_FALLBACK_MODELS = [
   // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc)
   "nvidia/nemotron-3-super-120b-a12b:free",    // ctx=1000000, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
+  "poolside/laguna-xs-2.1:free",               // ctx=262144,  max_tok=32768
   "poolside/laguna-m.1:free",                  // ctx=262144,  max_tok=32768
   "poolside/laguna-xs-2.1:free",               // ctx=262144,  max_tok=32768 (new: latest coding agent)
   "poolside/laguna-xs.2:free",                 // ctx=262144,  max_tok=32768
@@ -163,6 +166,8 @@ const KILO_FALLBACK_MODELS = [
   "moonshotai/kimi-k2.6:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
+  "qwen/qwen3-next-80b-a3b-instruct:free",
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
   "openai/gpt-oss-120b:free",
   "openai/gpt-oss-20b:free",
   "meta-llama/llama-3.3-70b-instruct:free",
