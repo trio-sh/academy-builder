@@ -30,7 +30,9 @@ function nextOpenRouterKey() {
 const OPENROUTER_MODELS = new Set([
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
+  "qwen/qwen3-next-80b-a3b-instruct:free",
   "openai/gpt-oss-120b:free",
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
 ]);
 
 const DEFAULT_MODEL = "kilo-auto/free";
@@ -39,19 +41,19 @@ const FALLBACK_MODELS = [
   "nvidia/nemotron-3-super-120b-a12b:free",         // ctx=1000000, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",         // ctx=1000000, max_tok=65536
   "poolside/laguna-m.1:free",                       // ctx=262144,  max_tok=32768
-  "poolside/laguna-xs-2.1:free",                    // ctx=262144,  max_tok=32768 (latest coding agent)
-  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536
+  "poolside/laguna-xs-2.1:free",                    // ctx=262144,  max_tok=32768
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
+  "qwen/qwen3-next-80b-a3b-instruct:free",
   "openai/gpt-oss-120b:free",
 ];
 
-const VISION_MODEL = "nex-agi/nex-n2-pro:free";
+const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
 const VISION_FALLBACKS = [
-  "nex-agi/nex-n2-pro:free",
-  "stepfun/step-3.7-flash:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "stepfun/step-3.7-flash:free",
   "kilo-auto/free",
 ];
 
