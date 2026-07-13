@@ -35,6 +35,7 @@ const OPENROUTER_MODELS = new Set([
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
   "google/gemma-4-26b-a4b-it:free",
   "google/gemma-4-31b-it:free",
+  "tencent/hy3:free",
 ]);
 
 const DEFAULT_MODEL = "kilo-auto/free";
@@ -42,11 +43,12 @@ const FALLBACK_MODELS = [
   // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc)
   "nvidia/nemotron-3-super-120b-a12b:free",         // ctx=1000000, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",         // ctx=1000000, max_tok=65536
-  "poolside/laguna-m.1:free",                       // ctx=262144,  max_tok=32768
+  "tencent/hy3:free",                               // ctx=262144,  max_tok=262144
   "poolside/laguna-xs-2.1:free",                    // ctx=262144,  max_tok=32768
-  "poolside/laguna-xs.2:free",                      // ctx=262144,  max_tok=32768
+  "poolside/laguna-m.1:free",                       // ctx=262144,  max_tok=32768
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
+  "tencent/hy3:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "qwen/qwen3-next-80b-a3b-instruct:free",
