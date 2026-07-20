@@ -32,7 +32,12 @@ const OPENROUTER_MODELS = new Set([
   "qwen/qwen3-coder:free",
   "qwen/qwen3-next-80b-a3b-instruct:free",
   "openai/gpt-oss-120b:free",
+  "openai/gpt-oss-20b:free",
+  "moonshotai/kimi-k2.6:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "cohere/north-mini-code:free",
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
   "google/gemma-4-26b-a4b-it:free",
   "google/gemma-4-31b-it:free",
   "tencent/hy3:free",
@@ -49,10 +54,15 @@ const FALLBACK_MODELS = [
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "tencent/hy3:free",
+  "moonshotai/kimi-k2.6:free",
   "minimax/minimax-m2.5:free",
   "qwen/qwen3-coder:free",
   "qwen/qwen3-next-80b-a3b-instruct:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",            // ctx=256000, tools (OpenRouter)
   "openai/gpt-oss-120b:free",
+  "openai/gpt-oss-20b:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "cohere/north-mini-code:free",
   "google/gemma-4-26b-a4b-it:free",
   "google/gemma-4-31b-it:free",
 ];
