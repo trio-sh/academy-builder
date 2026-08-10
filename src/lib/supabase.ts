@@ -1,31 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
+// The app now runs on the Lovable Cloud backend.
+// The underlying client is the generated Cloud client; it is re-typed with the
+// hand-maintained domain schema the app code is written against.
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabase as cloudClient } from '@/integrations/supabase/client';
 import type { Database } from '@/types/database.types';
 
-// Supabase configuration using Vite environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-if (!supabaseUrl || !supabasePublishableKey) {
-  console.warn(
-    'Missing Supabase environment variables. Please create a .env.local file with:\n' +
-    '- VITE_SUPABASE_URL\n' +
-    '- VITE_SUPABASE_PUBLISHABLE_KEY\n' +
-    '- VITE_SUPABASE_PROJECT_ID (optional)'
-  );
-}
-
-export const supabase = createClient<Database>(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabasePublishableKey || 'placeholder-key',
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      storageKey: 'the3rdacademy-auth',
-    },
-  }
-);
+export const supabase = cloudClient as unknown as SupabaseClient<Database>;
 
 // Auth helper functions
 export const signUp = async (

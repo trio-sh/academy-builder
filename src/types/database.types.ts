@@ -37,6 +37,7 @@ export interface Database {
           location: string | null;
           is_active: boolean;
           onboarding_completed: boolean;
+          last_seen: string | null;
         };
         Insert: {
           id: string;
@@ -52,6 +53,7 @@ export interface Database {
           location?: string | null;
           is_active?: boolean;
           onboarding_completed?: boolean;
+          last_seen?: string | null;
         };
         Update: {
           id?: string;
@@ -67,6 +69,7 @@ export interface Database {
           location?: string | null;
           is_active?: boolean;
           onboarding_completed?: boolean;
+          last_seen?: string | null;
         };
       };
       candidate_profiles: {
@@ -1724,12 +1727,126 @@ export interface Database {
           pdf_url?: string | null;
         };
       };
+      admin_settings: {
+        Row: { key: string; value: string; description: string | null; updated_at: string; updated_by: string | null };
+        Insert: { key: string; value: string; description?: string | null; updated_at?: string; updated_by?: string | null };
+        Update: { key?: string; value?: string; description?: string | null; updated_at?: string; updated_by?: string | null };
+      };
+      observation_loops: {
+        Row: {
+          id: string; candidate_id: string; assignment_id: string | null; dimension_id: string;
+          observation_level: number; loop_number: number; status: string; bars_score: number | null;
+          endorsement_decision: string | null; scenario_variant: number; mentor_id: string | null;
+          started_at: string; completed_at: string | null; cooldown_ends_at: string | null;
+          cooldown_days: number | null; is_locked: boolean; mentor_override: boolean;
+          override_reason: string | null; created_at: string; updated_at: string;
+        };
+        Insert: {
+          id?: string; candidate_id: string; assignment_id?: string | null; dimension_id: string;
+          observation_level?: number; loop_number?: number; status?: string; bars_score?: number | null;
+          endorsement_decision?: string | null; scenario_variant?: number; mentor_id?: string | null;
+          started_at?: string; completed_at?: string | null; cooldown_ends_at?: string | null;
+          cooldown_days?: number | null; is_locked?: boolean; mentor_override?: boolean;
+          override_reason?: string | null; created_at?: string; updated_at?: string;
+        };
+        Update: {
+          id?: string; candidate_id?: string; assignment_id?: string | null; dimension_id?: string;
+          observation_level?: number; loop_number?: number; status?: string; bars_score?: number | null;
+          endorsement_decision?: string | null; scenario_variant?: number; mentor_id?: string | null;
+          started_at?: string; completed_at?: string | null; cooldown_ends_at?: string | null;
+          cooldown_days?: number | null; is_locked?: boolean; mentor_override?: boolean;
+          override_reason?: string | null; created_at?: string; updated_at?: string;
+        };
+      };
+      self_assessments: {
+        Row: {
+          id: string; candidate_id: string; behavioral_scores: Json; notes: string | null;
+          attempt_number: number; completed: boolean; completed_at: string | null;
+          created_at: string; updated_at: string;
+        };
+        Insert: {
+          id?: string; candidate_id: string; behavioral_scores?: Json; notes?: string | null;
+          attempt_number?: number; completed?: boolean; completed_at?: string | null;
+          created_at?: string; updated_at?: string;
+        };
+        Update: {
+          id?: string; candidate_id?: string; behavioral_scores?: Json; notes?: string | null;
+          attempt_number?: number; completed?: boolean; completed_at?: string | null;
+          created_at?: string; updated_at?: string;
+        };
+      };
+      behavioral_consistency_index: {
+        Row: {
+          id: string; candidate_id: string; dimension_id: string; observation_cycle: number;
+          scenarios_demonstrated: number; scenarios_total: number; consistency_ratio: number | null;
+          previous_consistency_ratio: number | null; consistency_trend: string | null;
+          mentor_notes: string | null; flagged_for_review: boolean; last_updated_at: string; created_at: string;
+        };
+        Insert: {
+          id?: string; candidate_id: string; dimension_id: string; observation_cycle?: number;
+          scenarios_demonstrated?: number; scenarios_total?: number; consistency_ratio?: number | null;
+          previous_consistency_ratio?: number | null; consistency_trend?: string | null;
+          mentor_notes?: string | null; flagged_for_review?: boolean; last_updated_at?: string; created_at?: string;
+        };
+        Update: {
+          id?: string; candidate_id?: string; dimension_id?: string; observation_cycle?: number;
+          scenarios_demonstrated?: number; scenarios_total?: number; consistency_ratio?: number | null;
+          previous_consistency_ratio?: number | null; consistency_trend?: string | null;
+          mentor_notes?: string | null; flagged_for_review?: boolean; last_updated_at?: string; created_at?: string;
+        };
+      };
+      scenario_selection_audit: {
+        Row: {
+          id: string; session_id: string | null; candidate_id: string; dimension_id: string;
+          random_seed: number | null; scenario_sequence: string[]; generated_at: string;
+        };
+        Insert: {
+          id?: string; session_id?: string | null; candidate_id: string; dimension_id: string;
+          random_seed?: number | null; scenario_sequence?: string[]; generated_at?: string;
+        };
+        Update: {
+          id?: string; session_id?: string | null; candidate_id?: string; dimension_id?: string;
+          random_seed?: number | null; scenario_sequence?: string[]; generated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      create_notification: { Args: Record<string, unknown>; Returns: Json };
+      get_notifications: { Args: Record<string, unknown>; Returns: Json };
+      mark_notification_read: { Args: Record<string, unknown>; Returns: Json };
+      mark_all_notifications_read: { Args: Record<string, unknown>; Returns: Json };
+      poll_updates: { Args: Record<string, unknown>; Returns: Json };
+      get_my_profile_bundle: { Args: Record<string, unknown>; Returns: Json };
+      log_growth_event: { Args: Record<string, unknown>; Returns: Json };
+      get_growth_log: { Args: Record<string, unknown>; Returns: Json };
+      issue_behavioral_evidence_report: { Args: Record<string, unknown>; Returns: Json };
+      verify_behavioral_evidence: { Args: Record<string, unknown>; Returns: Json };
+      record_observation: { Args: Record<string, unknown>; Returns: Json };
+      submit_endorsement: { Args: Record<string, unknown>; Returns: Json };
+      assign_mentor: { Args: Record<string, unknown>; Returns: Json };
+      start_observation_loop: { Args: Record<string, unknown>; Returns: Json };
+      complete_observation_loop: { Args: Record<string, unknown>; Returns: Json };
+      start_training_module: { Args: Record<string, unknown>; Returns: Json };
+      complete_training_module: { Args: Record<string, unknown>; Returns: Json };
+      apply_to_project: { Args: Record<string, unknown>; Returns: Json };
+      request_connection: { Args: Record<string, unknown>; Returns: Json };
+      respond_to_connection: { Args: Record<string, unknown>; Returns: Json };
+      get_or_create_direct_conversation: { Args: Record<string, unknown>; Returns: Json };
+      send_message: { Args: Record<string, unknown>; Returns: Json };
+      mark_conversation_read: { Args: Record<string, unknown>; Returns: Json };
+      get_conversation_messages: { Args: Record<string, unknown>; Returns: Json };
+      get_candidate_dashboard_stats: { Args: Record<string, unknown>; Returns: Json };
+      get_mentor_dashboard_stats: { Args: Record<string, unknown>; Returns: Json };
+      get_employer_dashboard_stats: { Args: Record<string, unknown>; Returns: Json };
+      set_talentvisa_visibility: { Args: Record<string, unknown>; Returns: Json };
+      queue_email: { Args: Record<string, unknown>; Returns: Json };
+      is_admin: { Args: Record<string, unknown>; Returns: Json };
+      my_candidate_id: { Args: Record<string, unknown>; Returns: Json };
+      my_mentor_id: { Args: Record<string, unknown>; Returns: Json };
+      my_employer_id: { Args: Record<string, unknown>; Returns: Json };
     };
     Enums: {
       user_role: UserRole;
@@ -1739,6 +1856,9 @@ export interface Database {
       project_status: ProjectStatus;
       milestone_status: MilestoneStatus;
       connection_status: ConnectionStatus;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
