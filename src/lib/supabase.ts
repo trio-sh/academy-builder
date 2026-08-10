@@ -3,9 +3,10 @@
 // hand-maintained domain schema the app code is written against.
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase as cloudClient } from '@/integrations/supabase/client';
-import type { Database } from '@/types/database.types';
 
-export const supabase = cloudClient as unknown as SupabaseClient<Database>;
+// Typed loosely on purpose: the app's hand-maintained domain types are applied at
+// the call sites, and the RPC layer returns JSON payloads.
+export const supabase = cloudClient as unknown as SupabaseClient<any, 'public', any>;
 
 // Auth helper functions
 export const signUp = async (
