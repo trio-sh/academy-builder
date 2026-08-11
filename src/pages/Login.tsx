@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams, Link } from "react-router-dom";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,24 @@ const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Surface any error passed via ?error= (e.g. from AuthCallback / OAuth)
+  useEffect(() => {
+    const urlError = searchParams.get("error");
+    if (urlError) {
+      setError(urlError);
+      toast({
+        title: "Sign in failed",
+        description: urlError,
+        variant: "destructive",
+      });
+      // Clean the URL so refresh doesn't repeat the toast
+      searchParams.delete("error");
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getDashboardRoute = (role: string) => {
     const routes: Record<string, string> = {
