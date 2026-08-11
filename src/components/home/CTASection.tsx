@@ -65,7 +65,7 @@ export function CTASection() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-white mb-8"
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
-                Begin Your Credential Journey
+                Begin Your Behavioural Readiness Journey
               </motion.div>
 
               {/* Headline */}
@@ -74,11 +74,11 @@ export function CTASection() {
                 className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
               >
                 <span className="text-white">
-                  Ready to Prove Your
+                  Ready to Go
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Workplace Readiness?
+                  Beyond Credentials?
                 </span>
               </motion.h2>
 
@@ -87,8 +87,8 @@ export function CTASection() {
                 variants={itemVariants}
                 className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
               >
-                Join The 3rd Academy today. Upload your resume, connect with a mentor,
-                and begin building your Skill Passport.
+                Join The 3rd Academy. Upload your resume, connect with a mentor, and begin
+                preparing for the workplace moments where behavior has to show up.
               </motion.p>
 
               {/* CTAs */}

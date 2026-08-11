@@ -1,23 +1,14 @@
 import { supabase } from "./supabase";
 import { getEmailHtml, getEmailSubject, type EmailTemplate } from "./notifications";
 
-// Email configuration for Zoho SMTP
+// Sender identity used when calling the send-email edge function.
+// SMTP credentials live in Supabase function secrets, not in source.
 export const EMAIL_CONFIG = {
-  host: "smtp.zoho.com",
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: "the3rdacademy@pipilot.dev",
-    pass: "Bamenda@5",
-  },
   from: {
     name: "The 3rd Academy",
-    email: "the3rdacademy@pipilot.dev",
+    email: "support@the3rdacademy.com",
   },
 };
-
-// For browser-based sending, we'll use Supabase Edge Function or API
-// This config is for reference or server-side implementation
 
 /**
  * Send email via Supabase Edge Function

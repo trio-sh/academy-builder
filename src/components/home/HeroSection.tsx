@@ -132,7 +132,7 @@ export function HeroSection() {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Workplace Ready.
+                  Behavioral Workplace Readiness
                 </span>
               </motion.h1>
 
@@ -142,8 +142,8 @@ export function HeroSection() {
                 className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
               >
                 The 3rd Academy bridges the gap between what your resume says and what
-                employers actually need — through guided professional experience and
-                structured readiness documentation.
+                employers need — through guided professional experience and structured
+                documentation of Behavioral Readiness.
               </motion.p>
 
               {/* CTAs */}
@@ -210,8 +210,8 @@ export function HeroSection() {
                 transition={{ duration: 0.3 }}
               >
                 <img
-                  src="https://api.a0.dev/assets/image?text=futuristic%20digital%20skill%20passport%20holographic%20interface%20with%20glowing%20blue%20purple%20gradients%20showing%20behavioral%20scores%20and%20mentor%20endorsements%20dark%20background&aspect=4:3&seed=hero_main"
-                  alt="Skill Passport Interface"
+                  src="https://api.a0.dev/assets/image?text=futuristic%20digital%20behavioral%20evidence%20report%20holographic%20interface%20with%20glowing%20blue%20purple%20gradients%20showing%20behavioral%20scores%20and%20mentor%20endorsements%20dark%20background&aspect=4:3&seed=hero_main"
+                  alt="Behavioral Evidence Report Interface"
                   className="w-full h-auto"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
