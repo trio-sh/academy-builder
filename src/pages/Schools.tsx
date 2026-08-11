@@ -30,7 +30,7 @@ const features = [
   {
     n: "04",
     title: "Transition-ready evidence",
-    body: "Students graduate with a portfolio of behavioural evidence that carries forward into the post-graduation register.",
+    body: "Students graduate with a portfolio of behavioral evidence that carries forward into the post-graduation register.",
   },
 ];
 
@@ -59,7 +59,7 @@ const Schools = () => {
         }
         lede={
           <>
-            Engage students early with career awareness. Build behavioural documentation
+            Engage students early with career awareness. Build behavioral documentation
             that supports transition into the workforce.
           </>
         }

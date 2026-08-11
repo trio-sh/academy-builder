@@ -16,14 +16,14 @@ const openPositions = [
   { title: "Mentor Success Manager", dept: "Operations", location: "New York, NY", type: "Full-time", body: "Recruit, train, and support the network of industry mentors who keep the register." },
   { title: "Content & Curriculum Developer", dept: "Education", location: "Remote (US)", type: "Full-time", body: "Author the BridgeFast preparation modules and assessment frameworks." },
   { title: "Enterprise Sales Representative", dept: "Sales", location: "San Francisco, CA", type: "Full-time", body: "Introduce the register to hiring desks. Long conversations, honest ones." },
-  { title: "Data Scientist — Behavioural Analytics", dept: "Engineering", location: "Remote (US)", type: "Full-time", body: "Instruments for reading the register at scale. No prediction dressed as evidence." },
+  { title: "Data Scientist — Behavioral Analytics", dept: "Engineering", location: "Remote (US)", type: "Full-time", body: "Instruments for reading the register at scale. No prediction dressed as evidence." },
 ];
 
 const benefits = [
   { label: "Health & Wellness", body: "Full medical, dental, and vision for you and your family." },
   { label: "Growth Budget", body: "$2,000 annual for books, courses, conferences, retreats." },
   { label: "Remote-First", body: "Work from anywhere. Flexible hours. We trust you to deliver." },
-  { label: "The Register", body: "Free platform access — earn your own Behavioural Evidence Report." },
+  { label: "The Register", body: "Free platform access — earn your own Behavioral Evidence Report." },
 ];
 
 const Careers = () => {

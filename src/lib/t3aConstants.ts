@@ -190,7 +190,7 @@ export const OBS_COPY = {
   PAUSE: "Pause",
 
   /** Credential labels */
-  SKILL_PASSPORT: "Behavioral Evidence Report",
+  BER: "Behavioral Evidence Report",
   TALENT_VISA: "TalentVisa",
 
   /** Status */

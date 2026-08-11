@@ -134,7 +134,7 @@ const About = () => {
             </>
           }
         >
-          Making <span className="italic display-serif-italic">behavioural
+          Making <span className="italic display-serif-italic">behavioral
           readiness</span> <span className="ink-vermilion">documentable.</span>
         </LedgerHeader>
 
@@ -201,7 +201,7 @@ const About = () => {
             n="I"
             role="The candidate"
             title="For Candidates"
-            lede="Build an evidence-based behavioural profile through mentor observation and real project experience."
+            lede="Build an evidence-based behavioral profile through mentor observation and real project experience."
             index={0}
             isFirst
             cta={
@@ -214,7 +214,7 @@ const About = () => {
             n="II"
             role="The hiring desk"
             title="For Employers"
-            lede="Access pre-observed candidates with proven behavioural readiness. Follow-through insights after hiring."
+            lede="Access pre-observed candidates with proven behavioral readiness. Follow-through insights after hiring."
             index={1}
             cta={
               <Link to="/employers" className="mt-2">
@@ -226,7 +226,7 @@ const About = () => {
             n="III"
             role="The institution"
             title="For Schools"
-            lede="Engage students early. Build longitudinal behavioural documentation that supports transition into work."
+            lede="Engage students early. Build longitudinal behavioral documentation that supports transition into work."
             index={2}
             cta={
               <Link to="/schools" className="mt-2">

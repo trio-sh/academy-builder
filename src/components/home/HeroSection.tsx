@@ -64,7 +64,7 @@ export function HeroSection() {
               Credentials.
             </span>
             <span className="block relative">
-              <span className="text-foreground">Behavioural </span>
+              <span className="text-foreground">Behavioral </span>
               <span className="ink-vermilion">Readiness</span>
               <span className="ink-vermilion">.</span>
             </span>
