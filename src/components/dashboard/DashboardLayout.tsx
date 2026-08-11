@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { BrandSeal } from "@/components/BrandSeal";
 import type { Database } from "@/types/database.types";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -101,19 +102,11 @@ export function DashboardLayout({
           >
             {collapsed ? (
               <Link to="/" className="flex items-center justify-center">
-                <img
-                  src="/logo.png"
-                  alt="The 3rd Academy"
-                  className="w-9 h-9 rounded-full ring-1 ring-foreground/25 logo-ink"
-                />
+                <BrandSeal size={36} />
               </Link>
             ) : (
               <Link to="/" className="flex items-center gap-3 group">
-                <img
-                  src="/logo.png"
-                  alt="The 3rd Academy"
-                  className="w-9 h-9 rounded-full ring-1 ring-foreground/25 group-hover:ring-foreground transition-all logo-ink"
-                />
+                <BrandSeal size={40} className="group-hover:rotate-[-2deg] transition-transform" />
                 <div className="flex flex-col leading-none">
                   <span className="display-serif text-base tracking-tight text-foreground">
                     The 3rd Academy

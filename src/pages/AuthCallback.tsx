@@ -12,17 +12,22 @@ const AuthCallback = () => {
 
         if (error) {
           console.error('Auth callback error:', error);
-          navigate('/login?error=auth_failed');
+          navigate(`/login?error=${encodeURIComponent(error.message)}`);
           return;
         }
 
         if (session?.user) {
-          // Get user profile to determine redirect
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role, onboarding_completed')
             .eq('id', session.user.id)
             .maybeSingle();
+
+          if (profileError) {
+            console.error('Auth callback profile error:', profileError);
+            navigate(`/login?error=${encodeURIComponent(profileError.message)}`);
+            return;
+          }
 
           if (profile) {
             const dashboardRoutes: Record<string, string> = {
@@ -39,11 +44,12 @@ const AuthCallback = () => {
             navigate('/get-started');
           }
         } else {
-          navigate('/login');
+          navigate('/login?error=' + encodeURIComponent('Your sign-in session could not be found. Please try again.'));
         }
-      } catch (error) {
-        console.error('Auth callback error:', error);
-        navigate('/login?error=auth_failed');
+      } catch (err) {
+        console.error('Auth callback error:', err);
+        const message = err instanceof Error ? err.message : 'Sign in could not be completed';
+        navigate(`/login?error=${encodeURIComponent(message)}`);
       }
     };
 

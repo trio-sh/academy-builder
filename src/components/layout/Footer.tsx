@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { BrandSeal } from "@/components/BrandSeal";
 
 const footerLinks = {
   platform: {
@@ -56,15 +57,11 @@ export function Footer() {
         {/* Masthead */}
         <div className="grid md:grid-cols-12 gap-10 mb-16">
           <div className="md:col-span-6">
-            <Link to="/" className="inline-flex items-center gap-3 mb-6">
-              <img
-                src="/logo.png"
-                alt="The 3rd Academy"
-                className="h-12 w-12 rounded-full ring-1 ring-foreground/25 logo-ink"
-              />
+            <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
+              <BrandSeal size={48} withDots className="group-hover:rotate-[-2deg] transition-transform" />
               <span className="display-serif text-2xl tracking-tight">The 3rd Academy</span>
             </Link>
-            <p className="display-serif text-3xl md:text-4xl leading-[1.1] max-w-lg text-foreground">
+            <p className="display-serif text-xl md:text-2xl leading-[1.35] max-w-lg text-foreground">
               Focused on <span className="italic display-serif-italic">Behavioral Workplace Readiness</span> — how conduct shows up in the environment where work happens, when knowledge and capability alone are no longer enough.
             </p>
             <p className="mono-label text-foreground/50 mt-8">

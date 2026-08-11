@@ -700,7 +700,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
   const isError = !pdf.url;
 
   return (
-    <div className={`rounded-xl border overflow-hidden ${isError ? "border-amber-500/25 bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
+    <div className={`rounded-xl border overflow-hidden ${isError ? "border-vermilion bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
       {/* Download button row */}
       <div className="flex items-center gap-3 px-4 py-3">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-600/30"}`}>
@@ -710,7 +710,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
           <span className="font-medium text-sm text-foreground truncate block">
             {isError ? "PDF Generation Failed" : `${pdf.title}.pdf`}
           </span>
-          <span className={`text-[10px] ${isError ? "text-amber-400" : "ink-vermilion"}`}>
+          <span className={`text-[10px] ${isError ? "ink-vermilion" : "ink-vermilion"}`}>
             {isError ? "The AI produced invalid JSON — try regenerating" : "PDF document ready"}
           </span>
         </div>
@@ -737,7 +737,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
 
       {/* Collapsible JSON accordion */}
       {pdf.rawJson && expanded && (
-        <div className={`border-t bg-background/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
+        <div className={`border-t bg-background/30 ${isError ? "border-vermilion" : "border-indigo-500/15"}`}>
           <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-foreground/60">
             {pdf.rawJson}
           </pre>
@@ -2007,7 +2007,7 @@ export default function AIAgent() {
 
     return (
       <motion.div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-emerald-500/30 text-emerald-300"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-foreground/40 text-emerald-300"
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         layout
@@ -2028,8 +2028,8 @@ export default function AIAgent() {
     return (
       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
         isDone
-          ? "bg-emerald-950/60 border border-emerald-500/20 text-emerald-300"
-          : "bg-amber-950/60 border border-amber-500/20 text-amber-300"
+          ? "bg-emerald-950/60 border border-foreground/40 text-emerald-300"
+          : "bg-amber-950/60 border border-vermilion text-amber-300"
       }`}>
         {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
         {label}
@@ -2047,7 +2047,7 @@ export default function AIAgent() {
           className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors"
           title="Copy"
         >
-          {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+          {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-foreground" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
         {!isUser && (
           <>
@@ -2151,7 +2151,7 @@ export default function AIAgent() {
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <qa.icon className="w-4.5 h-4.5 text-foreground/850 group-hover:ink-vermilion transition-colors" />
+                  <qa.icon className="w-4.5 h-4.5 text-foreground/50 group-hover:ink-vermilion transition-colors" />
                   <span className="text-xs text-foreground/60 group-hover:text-foreground transition-colors leading-tight">{qa.label}</span>
                 </motion.button>
               ))}
@@ -2161,7 +2161,7 @@ export default function AIAgent() {
             {userContext && (
               <div className="mt-6 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
                 <p className="text-[10px] text-foreground/40 uppercase tracking-wider mb-1.5 font-semibold">Your context</p>
-                <div className="text-xs text-foreground/850 space-y-0.5">
+                <div className="text-xs text-foreground/50 space-y-0.5">
                   {userContext.profile && (
                     <p>
                       <span className="text-foreground/60">{String((userContext.profile as Record<string, unknown>).first_name ?? "")} {String((userContext.profile as Record<string, unknown>).last_name ?? "")}</span>
@@ -2208,7 +2208,7 @@ export default function AIAgent() {
                     {msg.statuses && msg.statuses.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {msg.statuses.filter(s => s.type === "tool_start").map((s, i) => (
-                          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/20 text-[11px] text-emerald-300">
+                          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-foreground/40 text-[11px] text-emerald-300">
                             <Globe className="w-3 h-3" />
                             {toolDisplayName(s.name, s.arguments || {})}
                             <CheckCircle2 className="w-3 h-3" />
@@ -2296,7 +2296,7 @@ export default function AIAgent() {
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
-                    <span className="text-xs text-foreground/850">Thinking</span>
+                    <span className="text-xs text-foreground/50">Thinking</span>
                   </div>
                 )}
 
@@ -2359,7 +2359,7 @@ export default function AIAgent() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder={isStreaming ? "Praxis is working..." : "Reply..."}
-              className={`w-full bg-transparent px-4 ${attachedFiles.length > 0 ? "pt-2" : "pt-3.5"} pb-12 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none resize-none min-h-[52px] max-h-[200px]`}
+              className={`w-full bg-transparent px-4 ${attachedFiles.length > 0 ? "pt-2" : "pt-3.5"} pb-12 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none resize-none min-h-[52px] max-h-[200px]`}
               rows={1}
               disabled={isStreaming}
             />
@@ -2369,7 +2369,7 @@ export default function AIAgent() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={fileProcessing}
-                  className="p-1.5 rounded-lg text-foreground/850 hover:text-foreground/75 hover:bg-foreground/5 transition-colors disabled:opacity-40"
+                  className="p-1.5 rounded-lg text-foreground/50 hover:text-foreground/75 hover:bg-foreground/5 transition-colors disabled:opacity-40"
                   title="Attach file (PDF, DOCX, TXT)"
                 >
                   {fileProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
@@ -2387,7 +2387,7 @@ export default function AIAgent() {
               </div>
               <div className="flex items-center gap-2">
                 {isStreaming && (
-                  <span className="text-[10px] text-foreground/850 flex items-center gap-1">
+                  <span className="text-[10px] text-foreground/50 flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Streaming
                   </span>

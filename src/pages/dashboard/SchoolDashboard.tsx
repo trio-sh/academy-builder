@@ -10,6 +10,14 @@ import {
   type DashboardNavItem,
   type DashboardSection,
 } from "@/components/dashboard/DashboardLayout";
+import {
+  DashboardPageHeader,
+  DashSection,
+  LedgerStat,
+  LedgerLoading,
+  EmptyState,
+} from "@/components/dashboard/primitives";
+import { cn } from "@/lib/utils";
 import type { Database } from "@/types/database.types";
 import {
   BarChart3,
@@ -189,128 +197,120 @@ const Overview = () => {
     fetchData();
   }, [user?.id]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
-      </div>
-    );
-  }
+  if (isLoading) return <LedgerLoading />;
+
+  const overviewStats = [
+    { label: "Total students", value: stats.totalStudents },
+    { label: "Active cohorts", value: stats.activeCohorts },
+    { label: "Observations filed", value: stats.totalObservations },
+    { label: "Average score", value: `${stats.avgBehavioralScore}%` },
+  ];
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Welcome, {schoolProfile?.school_name || "School Admin"}
-        </h1>
-        <p className="text-foreground/60">
-          Manage your students and track their behavioral development.
-        </p>
-      </motion.div>
+    <div>
+      <DashboardPageHeader
+        eyebrow={`§ Civic Access Lab · ${schoolProfile?.school_name || "Institution"}`}
+        title={
+          <>
+            Welcome,{" "}
+            <span className="italic display-serif-italic ink-vermilion">
+              {schoolProfile?.school_name || "school"}
+            </span>
+            .
+          </>
+        }
+        meta="Where the classroom register begins to become the professional one."
+      />
 
-      {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "Total Students", value: stats.totalStudents, icon: Users, color: "text-teal-400" },
-          { label: "Active Cohorts", value: stats.activeCohorts, icon: GraduationCap, color: "text-blue-400" },
-          { label: "Observations", value: stats.totalObservations, icon: ClipboardList, color: "ink-vermilion" },
-          { label: "Avg Score", value: `${stats.avgBehavioralScore}%`, icon: Target, color: "text-emerald-400" },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="p-6 rounded-xl bg-background border border-foreground/25"
-          >
-            <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
-            <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-sm text-foreground/60">{stat.label}</p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Quick Actions */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          <Link
-            to="/dashboard/school/students"
-            className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20 hover:border-teal-500/40 transition-colors group"
-          >
-            <Users className="w-8 h-8 text-teal-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">Manage Students</h3>
-            <p className="text-sm text-foreground/60">View and manage enrolled students</p>
-            <ChevronRight className="w-5 h-5 text-teal-400 mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            to="/dashboard/school/observations"
-            className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
-          >
-            <ClipboardList className="w-8 h-8 ink-vermilion mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">Record Observation</h3>
-            <p className="text-sm text-foreground/60">Document student behavioral assessments</p>
-            <ChevronRight className="w-5 h-5 ink-vermilion mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            to="/dashboard/school/analytics"
-            className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20 hover:border-blue-500/40 transition-colors group"
-          >
-            <TrendingUp className="w-8 h-8 text-blue-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">View Analytics</h3>
-            <p className="text-sm text-foreground/60">Track cohort performance trends</p>
-            <ChevronRight className="w-5 h-5 text-blue-400 mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
+      <DashSection eyebrow="§ I · Standing figures" title="At the institution">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {overviewStats.map((s) => (
+            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          ))}
         </div>
-      </motion.div>
+      </DashSection>
 
-      {/* Recent Observations */}
-      <motion.div variants={itemVariants}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-foreground">Recent Observations</h2>
-          <Link to="/dashboard/school/observations" className="text-sm text-teal-400 hover:text-teal-300">
-            View all
-          </Link>
+      <DashSection eyebrow="§ II · Common entries" title="Where you likely wanted to go">
+        <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
+          {[
+            { n: "01", title: "Manage students", body: "View and manage enrolled students.", href: "/dashboard/school/students" },
+            { n: "02", title: "Record an observation", body: "Document student behavioural assessments.", href: "/dashboard/school/observations" },
+            { n: "03", title: "View analytics", body: "Track cohort trends over time.", href: "/dashboard/school/analytics" },
+          ].map((q, i) => (
+            <Link
+              key={q.n}
+              to={q.href}
+              className={cn(
+                "p-8 hover:bg-foreground/[0.025] transition-colors group",
+                i > 0 && "border-t md:border-t-0 md:border-l border-foreground/25"
+              )}
+            >
+              <div className="ledger-num text-4xl text-foreground mb-3">{q.n}</div>
+              <h3 className="display-serif text-2xl text-foreground mb-3 group-hover:italic transition-all">
+                {q.title}
+              </h3>
+              <p className="text-foreground/75 text-[0.9375rem] mb-5">{q.body}</p>
+              <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                Enter →
+              </span>
+            </Link>
+          ))}
         </div>
+      </DashSection>
+
+      <DashSection
+        eyebrow="§ III · Recent observations"
+        title="Latest entries in the classroom register"
+        actions={
+          <Link to="/dashboard/school/observations">
+            <span className="mono-label text-foreground hover:ink-vermilion underline underline-offset-4">
+              View all →
+            </span>
+          </Link>
+        }
+      >
         {recentObservations.length > 0 ? (
-          <div className="space-y-3">
-            {recentObservations.map((obs) => (
+          <div className="border-t-2 border-foreground">
+            {recentObservations.map((obs, i) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center justify-between"
+                className="grid grid-cols-12 gap-4 py-5 px-2 md:px-4 border-b border-foreground/20 items-baseline"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
-                    <ClipboardList className="w-5 h-5 text-teal-400" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">
-                      {obs.student?.profile?.first_name} {obs.student?.profile?.last_name}
-                    </p>
-                    <p className="text-sm text-foreground/60">{obs.context}</p>
-                  </div>
+                <div className="col-span-3 md:col-span-2 mono-num text-foreground/50 text-xs">
+                  {new Date(obs.observation_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-foreground/60">
-                    {new Date(obs.observation_date).toLocaleDateString()}
+                <div className="col-span-1 mono-label text-foreground/40">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="col-span-8 md:col-span-9">
+                  <p className="display-serif text-lg text-foreground leading-tight">
+                    {obs.student?.profile?.first_name} {obs.student?.profile?.last_name}
                   </p>
+                  {obs.context && (
+                    <p className="text-foreground/70 text-[0.875rem] mt-1 leading-relaxed">
+                      {obs.context}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="p-8 rounded-xl bg-background border border-foreground/25 text-center">
-            <ClipboardList className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-            <p className="text-foreground/60">No observations recorded yet</p>
-            <p className="text-sm text-foreground/850 mt-1">Start documenting student behaviors</p>
-          </div>
+          <EmptyState
+            eyebrow="§ No entries yet"
+            title={
+              <>
+                The classroom register is <span className="italic display-serif-italic">open.</span>
+              </>
+            }
+            body="Start documenting student behaviours to begin building the record."
+          />
         )}
-      </motion.div>
-    </motion.div>
+      </DashSection>
+    </div>
   );
 };
 
@@ -396,9 +396,9 @@ const Students = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-emerald-500/20 text-emerald-400";
-      case "graduated": return "bg-blue-500/20 text-blue-400";
-      case "transferred": return "bg-amber-500/20 text-amber-400";
+      case "active": return "bg-foreground/[0.06] text-foreground";
+      case "graduated": return "bg-foreground/[0.06] text-foreground";
+      case "transferred": return "bg-vermilion/10 ink-vermilion";
       case "inactive": return "bg-gray-500/20 text-foreground/60";
       default: return "bg-gray-500/20 text-foreground/60";
     }
@@ -407,7 +407,7 @@ const Students = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -436,7 +436,7 @@ const Students = () => {
       {/* Search */}
       <motion.div variants={itemVariants}>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/50" />
           <input
             type="text"
             value={searchQuery}
@@ -465,7 +465,7 @@ const Students = () => {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold">
+                      <div className="w-12 h-12 rounded-full bg-foreground/[0.06] flex items-center justify-center text-foreground font-bold">
                         {student.profile?.first_name?.[0]}{student.profile?.last_name?.[0]}
                       </div>
                     )}
@@ -497,7 +497,7 @@ const Students = () => {
                         {student.total_observations} observations
                       </p>
                       {student.avg_behavioral_score && (
-                        <p className="text-sm text-teal-400">
+                        <p className="text-sm text-foreground">
                           Avg: {student.avg_behavioral_score}%
                         </p>
                       )}
@@ -518,7 +518,7 @@ const Students = () => {
           <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No students found</p>
-            <p className="text-sm text-foreground/850 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               {searchQuery ? "Try a different search term" : "Add students to get started"}
             </p>
           </div>
@@ -593,9 +593,9 @@ const Cohorts = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-emerald-500/20 text-emerald-400";
-      case "completed": return "bg-blue-500/20 text-blue-400";
-      case "upcoming": return "bg-amber-500/20 text-amber-400";
+      case "active": return "bg-foreground/[0.06] text-foreground";
+      case "completed": return "bg-foreground/[0.06] text-foreground";
+      case "upcoming": return "bg-vermilion/10 ink-vermilion";
       default: return "bg-gray-500/20 text-foreground/60";
     }
   };
@@ -603,7 +603,7 @@ const Cohorts = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -730,7 +730,7 @@ const Cohorts = () => {
           <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
             <GraduationCap className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No cohorts created yet</p>
-            <p className="text-sm text-foreground/850 mt-1">Create cohorts to organize your students</p>
+            <p className="text-sm text-foreground/50 mt-1">Create cohorts to organize your students</p>
           </div>
         )}
       </motion.div>
@@ -856,7 +856,7 @@ const Observations = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -1010,7 +1010,7 @@ const Observations = () => {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold">
+                    <div className="w-10 h-10 rounded-full bg-foreground/[0.06] flex items-center justify-center text-foreground font-bold">
                       {obs.student?.profile?.first_name?.[0]}{obs.student?.profile?.last_name?.[0]}
                     </div>
                     <div>
@@ -1020,7 +1020,7 @@ const Observations = () => {
                       <p className="text-sm text-foreground/60">{obs.context}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-foreground/850">
+                  <p className="text-sm text-foreground/50">
                     {new Date(obs.observation_date).toLocaleDateString()}
                   </p>
                 </div>
@@ -1036,7 +1036,7 @@ const Observations = () => {
           <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
             <ClipboardList className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No observations recorded yet</p>
-            <p className="text-sm text-foreground/850 mt-1">Start documenting student behaviors</p>
+            <p className="text-sm text-foreground/50 mt-1">Start documenting student behaviors</p>
           </div>
         )}
       </motion.div>
@@ -1083,17 +1083,17 @@ const Analytics = () => {
       {/* Stats Cards */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
-          <TrendingUp className="w-8 h-8 text-teal-400 mb-3" />
+          <TrendingUp className="w-8 h-8 text-foreground mb-3" />
           <p className="text-3xl font-bold text-foreground">+12%</p>
           <p className="text-sm text-foreground/60">Average Score Improvement</p>
         </div>
-        <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-foreground/40">
           <Award className="w-8 h-8 ink-vermilion mb-3" />
           <p className="text-3xl font-bold text-foreground">24</p>
           <p className="text-sm text-foreground/60">Students Ready for Mentorship</p>
         </div>
-        <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
-          <Target className="w-8 h-8 text-blue-400 mb-3" />
+        <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-foreground/40">
+          <Target className="w-8 h-8 text-foreground mb-3" />
           <p className="text-3xl font-bold text-foreground">78%</p>
           <p className="text-sm text-foreground/60">Goal Completion Rate</p>
         </div>
@@ -1246,7 +1246,7 @@ const SchoolMessagesPage = () => {
     return otherName.includes(searchQuery.toLowerCase());
   });
 
-  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-teal-500" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-foreground" /></div>;
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
@@ -1258,27 +1258,27 @@ const SchoolMessagesPage = () => {
         <div className="w-80 border-r border-foreground/25 flex flex-col">
           <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-teal-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
               <div className="bg-background/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
-                <p className="text-xs text-teal-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
+                <p className="text-xs text-foreground font-medium">Find someone to message</p>
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-teal-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
-                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-teal-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
+                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-foreground" /></div>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/50 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/50 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
-                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-teal-500/10 transition-colors text-left">
+                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/[0.06] transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-teal-400" />}
+                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-foreground" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
+                        <p className="text-xs text-foreground/50 capitalize">{result.role}</p>
                       </div>
-                      <Send className="w-3.5 h-3.5 text-teal-400 flex-shrink-0" />
+                      <Send className="w-3.5 h-3.5 text-foreground flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -1290,27 +1290,27 @@ const SchoolMessagesPage = () => {
               <div className="p-8 text-center">
                 <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
                 <p className="text-foreground/60">No conversations yet</p>
-                <p className="text-sm text-foreground/850 mt-1">Click the <span className="text-teal-400">+</span> button to find and message anyone</p>
+                <p className="text-sm text-foreground/50 mt-1">Click the <span className="text-foreground">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-teal-500/30 border-l-2 border-teal-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-foreground/[0.06] border-l-2 border-teal-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-teal-400" />}
+                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-foreground" />}
                     </div>
                     {hasUnread && <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-teal-500" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <span className="text-xs text-foreground/50">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-xs text-foreground/50 capitalize">{conv.other_user?.role}</span>
                       <span className="text-foreground/40">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/50"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -1323,11 +1323,11 @@ const SchoolMessagesPage = () => {
             <>
               <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
-                  {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-teal-400" />}
+                  {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-foreground" />}
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-foreground/850 capitalize">{activeConversation.other_user?.role}</p>
+                  <p className="text-xs text-foreground/50 capitalize">{activeConversation.other_user?.role}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -1339,7 +1339,7 @@ const SchoolMessagesPage = () => {
                       <div className={`flex gap-2 max-w-[70%] ${isOwn ? "flex-row-reverse" : ""}`}>
                         {!isOwn && showAvatar && (
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-teal-400" />}
+                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-foreground" />}
                           </div>
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
@@ -1347,7 +1347,7 @@ const SchoolMessagesPage = () => {
                           <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-teal-600 text-foreground rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                           </div>
-                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/50 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
@@ -1356,7 +1356,7 @@ const SchoolMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-foreground/25">
                 <div className="flex items-center gap-3">
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-teal-500" />
                   <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-teal-600 hover:bg-teal-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>

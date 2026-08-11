@@ -9,6 +9,14 @@ import {
   type DashboardNavItem,
   type DashboardSection,
 } from "@/components/dashboard/DashboardLayout";
+import {
+  DashboardPageHeader,
+  DashSection,
+  LedgerStat,
+  LedgerBadge,
+  LedgerLoading,
+} from "@/components/dashboard/primitives";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -95,9 +103,9 @@ const TIER_CONFIG = {
   gold: {
     label: "Gold",
     icon: Crown,
-    color: "text-amber-400",
-    bgColor: "bg-amber-500/20",
-    borderColor: "border-amber-500/30",
+    color: "ink-vermilion",
+    bgColor: "bg-vermilion/10",
+    borderColor: "border-vermilion",
     minScore: 4.5,
     description: "Top 5% - Exceptional candidates",
   },
@@ -113,8 +121,8 @@ const TIER_CONFIG = {
   bronze: {
     label: "Bronze",
     icon: Star,
-    color: "text-orange-400",
-    bgColor: "bg-orange-500/20",
+    color: "ink-vermilion",
+    bgColor: "bg-vermilion/10",
     borderColor: "border-orange-500/30",
     minScore: 3.5,
     description: "Top 30% - Strong candidates",
@@ -296,276 +304,223 @@ const Overview = () => {
     fetchStats();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
-      </div>
-    );
-  }
+  if (isLoading) return <LedgerLoading />;
+
+  const chartAxis = { fill: "hsl(30 6% 32%)", fontSize: 11 };
+  const chartLine = "hsl(30 12% 10% / 0.15)";
+  const chartTooltip = {
+    backgroundColor: "hsl(40 33% 92%)",
+    border: "2px solid hsl(30 12% 10%)",
+    borderRadius: 0,
+    color: "hsl(30 12% 10%)",
+    fontFamily: '"JetBrains Mono", monospace',
+    fontSize: 12,
+  };
+  const inkFill = "hsl(30 12% 10%)";
+  const vermFill = "hsl(12 76% 42%)";
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-        <p className="text-foreground/60">Platform management and analytics overview.</p>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/30 to-cyan-500/30" },
-          { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/30 to-teal-500/30" },
-          { label: "Mentors", value: stats.totalMentors, icon: GraduationCap, color: "ink-vermilion", bg: "from-purple-500/30 to-pink-500/30" },
-          { label: "Employers", value: stats.totalEmployers, icon: Building2, color: "text-amber-400", bg: "from-amber-500/30 to-orange-500/30" },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className={`p-6 rounded-xl bg-gradient-to-br ${stat.bg} border border-foreground/25`}
-          >
-            <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
-            <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-sm text-foreground/60">{stat.label}</p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Secondary Stats */}
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "Active Passports", value: stats.totalPassports, icon: Shield, color: "ink-vermilion" },
-          { label: "Pending TalentVisa", value: stats.pendingTalentVisas, icon: Award, color: "text-yellow-400" },
-          { label: "Active Projects", value: stats.activeProjects, icon: Briefcase, color: "text-cyan-400" },
-          { label: "Total Connections", value: stats.totalConnections, icon: Activity, color: "text-pink-400" },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="p-4 rounded-xl bg-background border border-foreground/25"
-          >
-            <div className="flex items-center gap-3">
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              <div>
-                <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-foreground/60">{stat.label}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Analytics Charts */}
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
-        {/* User Growth Chart */}
-        <div className="p-6 rounded-xl bg-background border border-foreground/25">
-          <h3 className="text-lg font-semibold text-foreground mb-4">User Growth (12 Weeks)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={userGrowthData}>
-                <defs>
-                  <linearGradient id="userGrowthGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fill: "#9ca3af", fontSize: 10 }}
-                  tickLine={{ stroke: "#4b5563" }}
-                />
-                <YAxis
-                  tick={{ fill: "#9ca3af", fontSize: 12 }}
-                  tickLine={{ stroke: "#4b5563" }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1f2937",
-                    border: "1px solid #374151",
-                    borderRadius: "8px",
-                    color: "#fff",
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="users"
-                  stroke="#6366f1"
-                  strokeWidth={2}
-                  fill="url(#userGrowthGradient)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Role Distribution Pie Chart */}
-        <div className="p-6 rounded-xl bg-background border border-foreground/25">
-          <h3 className="text-lg font-semibold text-foreground mb-4">User Role Distribution</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={roleDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={{ stroke: "#6b7280" }}
-                >
-                  {roleDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#1f2937",
-                    border: "1px solid #374151",
-                    borderRadius: "8px",
-                    color: "#fff",
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Platform Activity Bar Chart */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Platform Activity Overview</h3>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={activityData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis type="number" tick={{ fill: "#9ca3af", fontSize: 12 }} />
-              <YAxis
-                type="category"
-                dataKey="name"
-                tick={{ fill: "#9ca3af", fontSize: 12 }}
-                width={120}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1f2937",
-                  border: "1px solid #374151",
-                  borderRadius: "8px",
-                  color: "#fff",
-                }}
-              />
-              <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </motion.div>
-
-      {/* Alerts */}
-      {stats.pendingTalentVisas > 0 && (
-        <motion.div variants={itemVariants}>
-          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-4">
-            <AlertTriangle className="w-6 h-6 text-amber-400" />
-            <div className="flex-1">
-              <p className="font-medium text-amber-400">Pending Review</p>
-              <p className="text-sm text-foreground/60">
-                {stats.pendingTalentVisas} TalentVisa nomination{stats.pendingTalentVisas !== 1 ? "s" : ""} awaiting review.
-              </p>
-            </div>
+    <div>
+      <DashboardPageHeader
+        eyebrow="§ Administration · Platform"
+        title={
+          <>
+            Register <span className="italic display-serif-italic ink-vermilion">management.</span>
+          </>
+        }
+        meta="Governance for the governance — you keep the register itself in good order."
+        actions={
+          stats.pendingTalentVisas > 0 ? (
             <Link to="/dashboard/admin/talentvisa">
-              <Button size="sm" className="bg-amber-600 hover:bg-amber-500">
-                Review Now
-              </Button>
+              <LedgerBadge variant="stamp">
+                {stats.pendingTalentVisas} pending TalentVisa
+              </LedgerBadge>
             </Link>
+          ) : null
+        }
+      />
+
+      <DashSection eyebrow="§ I · Standing figures" title="Roll call">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {[
+            { label: "Total users", value: stats.totalUsers.toLocaleString() },
+            { label: "Candidates", value: stats.totalCandidates.toLocaleString() },
+            { label: "Mentors", value: stats.totalMentors.toLocaleString() },
+            { label: "Employers", value: stats.totalEmployers.toLocaleString() },
+          ].map((s) => (
+            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          ))}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-10">
+          {[
+            { label: "Active reports", value: stats.totalPassports.toLocaleString() },
+            { label: "Pending TalentVisa", value: stats.pendingTalentVisas.toLocaleString() },
+            { label: "Active projects", value: stats.activeProjects.toLocaleString() },
+            { label: "Total connections", value: stats.totalConnections.toLocaleString() },
+          ].map((s) => (
+            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          ))}
+        </div>
+      </DashSection>
+
+      <DashSection eyebrow="§ II · Analytics" title="Movement across the register">
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="border-2 border-foreground p-6">
+            <div className="mono-label text-foreground/60 pb-3 mb-4 border-b border-foreground/25">
+              User growth · Last 12 weeks
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={userGrowthData}>
+                  <defs>
+                    <linearGradient id="userGrowthGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={inkFill} stopOpacity={0.4} />
+                      <stop offset="95%" stopColor={inkFill} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="1 3" stroke={chartLine} />
+                  <XAxis dataKey="date" tick={chartAxis} tickLine={{ stroke: chartLine }} />
+                  <YAxis tick={chartAxis} tickLine={{ stroke: chartLine }} />
+                  <Tooltip contentStyle={chartTooltip} />
+                  <Area type="monotone" dataKey="users" stroke={inkFill} strokeWidth={1.5} fill="url(#userGrowthGradient)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </motion.div>
-      )}
 
-      {/* Quick Actions */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          <Link
-            to="/dashboard/admin/users"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
-          >
-            <Users className="w-8 h-8 text-blue-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">Manage Users</h3>
-            <p className="text-sm text-foreground/60">View, edit, and moderate user accounts</p>
-            <ChevronRight className="w-5 h-5 text-blue-400 mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            to="/dashboard/admin/talentvisa"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
-          >
-            <Award className="w-8 h-8 text-yellow-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">TalentVisa Review</h3>
-            <p className="text-sm text-foreground/60">Review and approve premium nominations</p>
-            <ChevronRight className="w-5 h-5 text-yellow-400 mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
-
-          <Link
-            to="/dashboard/admin/reports"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
-          >
-            <FileText className="w-8 h-8 ink-vermilion mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">View Reports</h3>
-            <p className="text-sm text-foreground/60">Platform analytics and insights</p>
-            <ChevronRight className="w-5 h-5 ink-vermilion mt-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="border-2 border-foreground p-6">
+            <div className="mono-label text-foreground/60 pb-3 mb-4 border-b border-foreground/25">
+              Role distribution
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={roleDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} · ${(percent * 100).toFixed(0)}%`}
+                    labelLine={{ stroke: chartLine }}
+                    stroke="hsl(40 33% 92%)"
+                    strokeWidth={2}
+                  >
+                    {roleDistribution.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index === 0 ? inkFill : index === 1 ? vermFill : "hsl(30 12% 10% / 0.55)"}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={chartTooltip} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
-      </motion.div>
 
-      {/* Recent Users */}
-      <motion.div variants={itemVariants}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-foreground">Recent Users</h2>
-          <Link to="/dashboard/admin/users" className="text-sm text-red-400 hover:text-red-300">
-            View all
-          </Link>
+        <div className="border-2 border-foreground p-6 mt-8">
+          <div className="mono-label text-foreground/60 pb-3 mb-4 border-b border-foreground/25">
+            Platform activity · Cumulative
+          </div>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={activityData} layout="vertical">
+                <CartesianGrid strokeDasharray="1 3" stroke={chartLine} />
+                <XAxis type="number" tick={chartAxis} />
+                <YAxis type="category" dataKey="name" tick={chartAxis} width={140} />
+                <Tooltip contentStyle={chartTooltip} />
+                <Bar dataKey="value" fill={inkFill} radius={[0, 0, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="space-y-2">
-          {recentActivity.map((user) => (
+      </DashSection>
+
+      <DashSection eyebrow="§ III · Common entries" title="Where you likely wanted to go">
+        <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
+          {[
+            { n: "01", title: "Manage users", body: "View, edit, and moderate user accounts.", href: "/dashboard/admin/users" },
+            { n: "02", title: "TalentVisa review", body: "Review and approve premium nominations.", href: "/dashboard/admin/talentvisa" },
+            { n: "03", title: "View reports", body: "Platform analytics and insights.", href: "/dashboard/admin/reports" },
+          ].map((q, i) => (
+            <Link
+              key={q.n}
+              to={q.href}
+              className={cn(
+                "p-8 hover:bg-foreground/[0.025] transition-colors group",
+                i > 0 && "border-t md:border-t-0 md:border-l border-foreground/25"
+              )}
+            >
+              <div className="ledger-num text-4xl text-foreground mb-3">{q.n}</div>
+              <h3 className="display-serif text-2xl text-foreground mb-3 group-hover:italic transition-all">
+                {q.title}
+              </h3>
+              <p className="text-foreground/75 text-[0.9375rem] mb-5">{q.body}</p>
+              <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                Enter →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </DashSection>
+
+      <DashSection
+        eyebrow="§ IV · Recent users"
+        title="Newest entries in the register"
+        actions={
+          <Link to="/dashboard/admin/users">
+            <span className="mono-label text-foreground hover:ink-vermilion underline underline-offset-4">
+              View all →
+            </span>
+          </Link>
+        }
+      >
+        <div className="border-t-2 border-foreground">
+          {recentActivity.map((user, i) => (
             <div
               key={user.id}
-              className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center justify-between"
+              className="grid grid-cols-12 gap-4 py-4 px-2 md:px-4 border-b border-foreground/20 items-center row-hover"
             >
-              <div className="flex items-center gap-4">
+              <div className="col-span-1 mono-label text-foreground/40">
+                {String(i + 1).padStart(2, "0")}
+              </div>
+              <div className="col-span-5 md:col-span-4 flex items-center gap-3">
                 {user.avatar_url ? (
-                  <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  <img src={user.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover ring-1 ring-foreground/25" />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold">
-                    {user.first_name?.[0]}{user.last_name?.[0]}
+                  <div className="w-9 h-9 rounded-full border border-foreground flex items-center justify-center display-serif text-foreground">
+                    {user.first_name?.[0]}
+                    {user.last_name?.[0]}
                   </div>
                 )}
-                <div>
-                  <p className="font-medium text-foreground">{user.first_name} {user.last_name}</p>
-                  <p className="text-sm text-foreground/60">{user.email}</p>
+                <div className="min-w-0">
+                  <p className="display-serif text-base text-foreground truncate">
+                    {user.first_name} {user.last_name}
+                  </p>
+                  <p className="mono-label text-foreground/50 truncate normal-case">
+                    {user.email}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className={`px-2 py-1 rounded text-xs ${
-                  user.role === "candidate" ? "bg-emerald-500/20 text-emerald-400" :
-                  user.role === "mentor" ? "bg-purple-500/20 ink-vermilion" :
-                  user.role === "employer" ? "bg-amber-500/20 text-amber-400" :
-                  "bg-blue-500/20 text-blue-400"
-                }`}>
-                  {user.role}
-                </span>
-                <span className="text-xs text-foreground/850">
-                  {new Date(user.created_at).toLocaleDateString()}
-                </span>
+              <div className="col-span-3 md:col-span-4">
+                <LedgerBadge variant="outline">{user.role}</LedgerBadge>
+              </div>
+              <div className="col-span-3 mono-num text-foreground/50 text-xs text-right">
+                {new Date(user.created_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </div>
             </div>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
+      </DashSection>
+    </div>
   );
 };
 
@@ -704,11 +659,11 @@ const UsersManagement = () => {
 
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
-      candidate: "bg-emerald-500/20 text-emerald-400",
-      mentor: "bg-purple-500/20 ink-vermilion",
-      employer: "bg-amber-500/20 text-amber-400",
-      admin: "bg-red-500/20 text-red-400",
-      school_admin: "bg-blue-500/20 text-blue-400",
+      candidate: "bg-foreground/[0.06] text-foreground",
+      mentor: "bg-foreground/[0.06] ink-vermilion",
+      employer: "bg-vermilion/10 ink-vermilion",
+      admin: "bg-vermilion/15 ink-vermilion",
+      school_admin: "bg-foreground/[0.06] text-foreground",
     };
     return styles[role] || "bg-gray-500/20 text-foreground/60";
   };
@@ -716,7 +671,7 @@ const UsersManagement = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -741,7 +696,7 @@ const UsersManagement = () => {
       {/* Filters */}
       <motion.div variants={itemVariants} className="flex gap-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/50" />
           <input
             type="text"
             value={searchQuery}
@@ -787,13 +742,13 @@ const UsersManagement = () => {
                         {user.avatar_url ? (
                           <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">
+                          <div className="w-10 h-10 rounded-full bg-vermilion/15 flex items-center justify-center ink-vermilion text-sm font-bold">
                             {user.first_name?.[0]}{user.last_name?.[0]}
                           </div>
                         )}
                         <div>
                           <p className="font-medium text-foreground">{user.first_name} {user.last_name}</p>
-                          <p className="text-xs text-foreground/850">{user.email}</p>
+                          <p className="text-xs text-foreground/50">{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -804,7 +759,7 @@ const UsersManagement = () => {
                     </td>
                     <td className="px-4 py-4">
                       <span className={`px-2 py-1 rounded text-xs ${
-                        user.is_active ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                        user.is_active ? "bg-foreground/[0.06] text-foreground" : "bg-vermilion/15 ink-vermilion"
                       }`}>
                         {user.is_active ? "Active" : "Inactive"}
                       </span>
@@ -830,7 +785,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => openEditModal(user)}
-                          className="text-blue-400 hover:text-blue-300"
+                          className="text-foreground hover:text-blue-300"
                           title="Edit profile"
                         >
                           <Edit className="w-4 h-4" />
@@ -848,7 +803,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => toggleUserStatus(user.id, user.is_active)}
-                          className={user.is_active ? "text-amber-400 hover:text-amber-300" : "text-emerald-400 hover:text-emerald-300"}
+                          className={user.is_active ? "ink-vermilion hover:text-amber-300" : "text-foreground hover:text-emerald-300"}
                           title={user.is_active ? "Deactivate" : "Activate"}
                         >
                           {user.is_active ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
@@ -888,7 +843,7 @@ const UsersManagement = () => {
               {selectedUser.avatar_url ? (
                 <img src={selectedUser.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover" />
               ) : (
-                <div className="w-16 h-16 rounded-xl bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl">
+                <div className="w-16 h-16 rounded-xl bg-vermilion/15 flex items-center justify-center ink-vermilion font-bold text-xl">
                   {selectedUser.first_name?.[0]}{selectedUser.last_name?.[0]}
                 </div>
               )}
@@ -899,7 +854,7 @@ const UsersManagement = () => {
                   <span className={`px-2 py-0.5 rounded text-xs capitalize ${getRoleBadge(selectedUser.role)}`}>
                     {selectedUser.role?.replace("_", " ")}
                   </span>
-                  <span className={`px-2 py-0.5 rounded text-xs ${selectedUser.is_active ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                  <span className={`px-2 py-0.5 rounded text-xs ${selectedUser.is_active ? "bg-foreground/[0.06] text-foreground" : "bg-vermilion/15 ink-vermilion"}`}>
                     {selectedUser.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -909,31 +864,31 @@ const UsersManagement = () => {
             <div className="space-y-4 mb-6">
               {selectedUser.headline && (
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Headline</p>
+                  <p className="text-xs text-foreground/50 mb-1">Headline</p>
                   <p className="text-sm text-foreground/75">{selectedUser.headline}</p>
                 </div>
               )}
               {selectedUser.bio && (
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Bio</p>
+                  <p className="text-xs text-foreground/50 mb-1">Bio</p>
                   <p className="text-sm text-foreground/75">{selectedUser.bio}</p>
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Location</p>
+                  <p className="text-xs text-foreground/50 mb-1">Location</p>
                   <p className="text-sm text-foreground/75">{selectedUser.location || "Not set"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Onboarding</p>
+                  <p className="text-xs text-foreground/50 mb-1">Onboarding</p>
                   <p className="text-sm text-foreground/75">{selectedUser.onboarding_completed ? "Completed" : "Incomplete"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Joined</p>
+                  <p className="text-xs text-foreground/50 mb-1">Joined</p>
                   <p className="text-sm text-foreground/75">{new Date(selectedUser.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground/850 mb-1">Last Updated</p>
+                  <p className="text-xs text-foreground/50 mb-1">Last Updated</p>
                   <p className="text-sm text-foreground/75">{new Date(selectedUser.updated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
                 </div>
               </div>
@@ -1112,19 +1067,19 @@ const UsersManagement = () => {
                   </div>
                   <div className="flex-1">
                     <p className={`text-sm font-medium ${newRole === role.value ? "text-foreground" : "text-foreground/75"}`}>{role.label}</p>
-                    <p className="text-xs text-foreground/850">{role.desc}</p>
+                    <p className="text-xs text-foreground/50">{role.desc}</p>
                   </div>
-                  {newRole === role.value && <CheckCircle className="w-5 h-5 text-emerald-400" />}
+                  {newRole === role.value && <CheckCircle className="w-5 h-5 text-foreground" />}
                   {selectedUser.role === role.value && newRole !== role.value && (
-                    <span className="text-xs text-foreground/850">Current</span>
+                    <span className="text-xs text-foreground/50">Current</span>
                   )}
                 </button>
               ))}
             </div>
 
             {newRole !== selectedUser.role && (
-              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4">
-                <p className="text-xs text-amber-400">
+              <div className="p-3 rounded-lg bg-vermilion/10 border border-vermilion mb-4">
+                <p className="text-xs ink-vermilion">
                   Changing role from <span className="font-bold capitalize">{selectedUser.role?.replace("_", " ")}</span> to <span className="font-bold capitalize">{newRole.replace("_", " ")}</span>. This will affect the user's dashboard and permissions.
                 </p>
               </div>
@@ -1340,7 +1295,7 @@ const TalentVisaReview = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -1393,7 +1348,7 @@ const TalentVisaReview = () => {
               <div className="mb-2">
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-foreground/60">Monthly Quota</span>
-                  <span className={isExceeded ? "text-red-400" : "text-foreground"}>
+                  <span className={isExceeded ? "ink-vermilion" : "text-foreground"}>
                     {quota.current_approvals} / {quota.max_approvals}
                   </span>
                 </div>
@@ -1407,7 +1362,7 @@ const TalentVisaReview = () => {
                 </div>
               </div>
               {isExceeded && (
-                <p className="text-xs text-red-400 flex items-center gap-1">
+                <p className="text-xs ink-vermilion flex items-center gap-1">
                   <Lock className="w-3 h-3" />
                   Quota reached for this month
                 </p>
@@ -1448,10 +1403,10 @@ const TalentVisaReview = () => {
                   key={nomination.id}
                   className={`p-6 rounded-xl border transition-colors ${
                     nomination.status === "pending"
-                      ? "bg-amber-500/5 border-amber-500/20"
+                      ? "bg-vermilion/10 border-vermilion"
                       : nomination.status === "approved"
-                      ? "bg-emerald-500/5 border-emerald-500/20"
-                      : "bg-red-500/5 border-red-500/20"
+                      ? "bg-foreground/[0.06] border-foreground/40"
+                      : "bg-vermilion/15 border-vermilion"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -1463,7 +1418,7 @@ const TalentVisaReview = () => {
                           className="w-14 h-14 rounded-xl object-cover"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-lg">
+                        <div className="w-14 h-14 rounded-xl bg-vermilion/10 flex items-center justify-center ink-vermilion font-bold text-lg">
                           {nomination.candidate?.first_name?.[0]}{nomination.candidate?.last_name?.[0]}
                         </div>
                       )}
@@ -1475,7 +1430,7 @@ const TalentVisaReview = () => {
                           Nominated by {nomination.mentor?.first_name} {nomination.mentor?.last_name}
                         </p>
                         <div className="flex items-center gap-3 mt-1">
-                          <span className="text-xs text-foreground/850">
+                          <span className="text-xs text-foreground/50">
                             {new Date(nomination.created_at).toLocaleDateString()}
                           </span>
                           {nomination.behavioral_score !== undefined && nomination.behavioral_score > 0 && (
@@ -1490,10 +1445,10 @@ const TalentVisaReview = () => {
                     <div className="flex flex-col items-end gap-2">
                       <span className={`px-3 py-1 rounded-full text-sm ${
                         nomination.status === "pending"
-                          ? "bg-amber-500/20 text-amber-400"
+                          ? "bg-vermilion/10 ink-vermilion"
                           : nomination.status === "approved"
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-red-500/20 text-red-400"
+                          ? "bg-foreground/[0.06] text-foreground"
+                          : "bg-vermilion/15 ink-vermilion"
                       }`}>
                         {nomination.status}
                       </span>
@@ -1529,7 +1484,7 @@ const TalentVisaReview = () => {
                       <Button
                         onClick={() => reviewNomination(nomination.id, "rejected")}
                         variant="outline"
-                        className="border-red-500/30 text-red-400 hover:bg-red-500/30"
+                        className="border-vermilion ink-vermilion hover:bg-vermilion/15"
                       >
                         <XCircle className="w-4 h-4 mr-2" />
                         Reject
@@ -1601,7 +1556,7 @@ const TalentVisaReview = () => {
                             {config.label} Tier
                           </p>
                           <p className="text-xs text-foreground/60">{config.description}</p>
-                          <p className="text-xs text-foreground/850 mt-1">
+                          <p className="text-xs text-foreground/50 mt-1">
                             Min Score: {config.minScore}/5 | Quota: {quota.current_approvals}/{quota.max_approvals}
                           </p>
                         </div>
@@ -1610,7 +1565,7 @@ const TalentVisaReview = () => {
                         <CheckCircle className={`w-5 h-5 ${config.color}`} />
                       )}
                       {exceeded && (
-                        <Lock className="w-5 h-5 text-foreground/850" />
+                        <Lock className="w-5 h-5 text-foreground/50" />
                       )}
                     </div>
                   </button>
@@ -1700,7 +1655,7 @@ const EmployersManagement = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -1733,7 +1688,7 @@ const EmployersManagement = () => {
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">
+                    <div className="w-12 h-12 rounded-lg bg-vermilion/10 flex items-center justify-center ink-vermilion font-bold">
                       {employer.company_name?.[0]}
                     </div>
                   )}
@@ -1747,8 +1702,8 @@ const EmployersManagement = () => {
                 <div className="flex items-center gap-3">
                   <span className={`px-2 py-1 rounded text-xs ${
                     employer.is_verified
-                      ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-amber-500/20 text-amber-400"
+                      ? "bg-foreground/[0.06] text-foreground"
+                      : "bg-vermilion/10 ink-vermilion"
                   }`}>
                     {employer.is_verified ? "Verified" : "Unverified"}
                   </span>
@@ -1830,7 +1785,7 @@ const SchoolsManagement = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -1853,7 +1808,7 @@ const SchoolsManagement = () => {
       {schools.length > 0 && (
         <motion.div variants={itemVariants}>
           <div className="relative max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/50" />
             <input
               type="text"
               value={searchQuery}
@@ -1872,15 +1827,15 @@ const SchoolsManagement = () => {
           <p className="text-xs text-foreground/60">Total Schools</p>
         </div>
         <div className="p-4 rounded-xl bg-background border border-foreground/25">
-          <p className="text-2xl font-bold text-emerald-400">{schools.filter((s) => s.is_verified).length}</p>
+          <p className="text-2xl font-bold text-foreground">{schools.filter((s) => s.is_verified).length}</p>
           <p className="text-xs text-foreground/60">Verified</p>
         </div>
         <div className="p-4 rounded-xl bg-background border border-foreground/25">
-          <p className="text-2xl font-bold text-amber-400">{schools.filter((s) => !s.is_verified).length}</p>
+          <p className="text-2xl font-bold ink-vermilion">{schools.filter((s) => !s.is_verified).length}</p>
           <p className="text-xs text-foreground/60">Pending Verification</p>
         </div>
         <div className="p-4 rounded-xl bg-background border border-foreground/25">
-          <p className="text-2xl font-bold text-blue-400">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
+          <p className="text-2xl font-bold text-foreground">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
           <p className="text-xs text-foreground/60">Total Students</p>
         </div>
       </motion.div>
@@ -1895,7 +1850,7 @@ const SchoolsManagement = () => {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-lg">
+                    <div className="w-12 h-12 rounded-xl bg-foreground/[0.06] flex items-center justify-center text-foreground font-bold text-lg">
                       {school.school_name?.[0]}
                     </div>
                     <div>
@@ -1903,7 +1858,7 @@ const SchoolsManagement = () => {
                       <p className="text-sm text-foreground/60">
                         {school.profile?.first_name} {school.profile?.last_name} &middot; {school.profile?.email}
                       </p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-foreground/850">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-foreground/50">
                         <span className="capitalize">{school.school_type?.replace("_", " ")}</span>
                         {school.district && <span>{school.district}</span>}
                         <span>{school.total_students || 0} students</span>
@@ -1913,7 +1868,7 @@ const SchoolsManagement = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`px-2 py-1 rounded text-xs ${
-                      school.is_verified ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-500/20 text-amber-400"
+                      school.is_verified ? "bg-foreground/[0.06] text-foreground" : "bg-vermilion/10 ink-vermilion"
                     }`}>
                       {school.is_verified ? "Verified" : "Unverified"}
                     </span>
@@ -2026,7 +1981,7 @@ const Reports = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -2050,8 +2005,8 @@ const Reports = () => {
         {[
           { label: "Behavioral Evidence Reports", value: reportStats.passports, icon: Shield, color: "ink-vermilion" },
           { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "ink-vermilion" },
-          { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-cyan-400" },
-          { label: "Connections", value: reportStats.connections, icon: Activity, color: "text-pink-400" },
+          { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-foreground" },
+          { label: "Connections", value: reportStats.connections, icon: Activity, color: "ink-vermilion" },
         ].map((stat) => (
           <div key={stat.label} className="p-5 rounded-xl bg-background border border-foreground/25">
             <stat.icon className={`w-6 h-6 ${stat.color} mb-2`} />
@@ -2230,7 +2185,7 @@ const CommunicationsPage = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -2266,13 +2221,13 @@ const CommunicationsPage = () => {
               <option value="school_admin" className="bg-background/50">School Admins</option>
             </select>
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/850" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
               <input
                 type="text"
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-background border border-foreground/25 rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-foreground/850 text-sm"
+                className="w-full bg-background border border-foreground/25 rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-foreground/50 text-sm"
               />
             </div>
           </div>
@@ -2285,7 +2240,7 @@ const CommunicationsPage = () => {
             >
               {selectedUsers.length === filteredUsers.length ? "Deselect All" : "Select All"}
             </button>
-            <span className="text-sm text-foreground/850">
+            <span className="text-sm text-foreground/50">
               {selectedUsers.length} of {filteredUsers.length} selected
             </span>
           </div>
@@ -2297,7 +2252,7 @@ const CommunicationsPage = () => {
                 key={user.id}
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                   selectedUsers.includes(user.id)
-                    ? "bg-red-500/30 border border-red-500/30"
+                    ? "bg-vermilion/15 border border-vermilion"
                     : "bg-background hover:bg-foreground/5"
                 }`}
               >
@@ -2311,7 +2266,7 @@ const CommunicationsPage = () => {
                   <p className="text-sm font-medium text-foreground truncate">
                     {user.first_name} {user.last_name}
                   </p>
-                  <p className="text-xs text-foreground/850 truncate">{user.email}</p>
+                  <p className="text-xs text-foreground/50 truncate">{user.email}</p>
                 </div>
                 <span className="text-xs px-2 py-1 rounded-full bg-background text-foreground/60 capitalize">
                   {user.role}
@@ -2339,7 +2294,7 @@ const CommunicationsPage = () => {
                   onClick={() => setSendType(option.value as typeof sendType)}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-colors ${
                     sendType === option.value
-                      ? "bg-red-500/20 border-red-500/50 text-foreground"
+                      ? "bg-vermilion/15 border-vermilion text-foreground"
                       : "border-foreground/25 text-foreground/60 hover:bg-foreground/5"
                   }`}
                 >
@@ -2360,7 +2315,7 @@ const CommunicationsPage = () => {
                   value={notificationTitle}
                   onChange={(e) => setNotificationTitle(e.target.value)}
                   placeholder="Important Update"
-                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/50"
                 />
               </div>
               <div>
@@ -2370,7 +2325,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setNotificationMessage(e.target.value)}
                   placeholder="Enter your notification message..."
                   rows={3}
-                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850 resize-none"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/50 resize-none"
                 />
               </div>
             </div>
@@ -2386,7 +2341,7 @@ const CommunicationsPage = () => {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Subject line"
-                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/50"
                 />
               </div>
               <div>
@@ -2396,7 +2351,7 @@ const CommunicationsPage = () => {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Enter your email message..."
                   rows={5}
-                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850 resize-none"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/50 resize-none"
                 />
               </div>
             </div>
@@ -2453,9 +2408,9 @@ const SettingsPage = () => {
       </div>
       <button onClick={onToggle} className="flex-shrink-0">
         {enabled ? (
-          <ToggleRight className="w-10 h-10 text-emerald-400" />
+          <ToggleRight className="w-10 h-10 text-foreground" />
         ) : (
-          <ToggleLeft className="w-10 h-10 text-foreground/850" />
+          <ToggleLeft className="w-10 h-10 text-foreground/50" />
         )}
       </button>
     </div>
@@ -2491,7 +2446,7 @@ const SettingsPage = () => {
       {/* General Settings */}
       <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
-          <Globe className="w-5 h-5 text-blue-400" />
+          <Globe className="w-5 h-5 text-foreground" />
           <h2 className="text-lg font-semibold text-foreground">General</h2>
         </div>
         <div className="space-y-4">
@@ -2519,7 +2474,7 @@ const SettingsPage = () => {
       {/* Access Control */}
       <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
-          <Shield className="w-5 h-5 text-red-400" />
+          <Shield className="w-5 h-5 ink-vermilion" />
           <h2 className="text-lg font-semibold text-foreground">Access Control</h2>
         </div>
         <div className="space-y-3">
@@ -2541,7 +2496,7 @@ const SettingsPage = () => {
       {/* Approvals */}
       <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
-          <CheckCircle className="w-5 h-5 text-emerald-400" />
+          <CheckCircle className="w-5 h-5 text-foreground" />
           <h2 className="text-lg font-semibold text-foreground">Auto-Approval</h2>
         </div>
         <div className="space-y-3">
@@ -2561,27 +2516,27 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Danger Zone */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-red-500/5 border border-red-500/20">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-vermilion/15 border border-vermilion">
         <div className="flex items-center gap-3 mb-6">
-          <AlertTriangle className="w-5 h-5 text-red-400" />
-          <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
+          <AlertTriangle className="w-5 h-5 ink-vermilion" />
+          <h2 className="text-lg font-semibold ink-vermilion">Danger Zone</h2>
         </div>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-vermilion">
             <div>
               <p className="font-medium text-foreground">Reset All Notifications</p>
               <p className="text-sm text-foreground/60">Clear all pending notifications across the platform</p>
             </div>
-            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+            <Button variant="outline" className="border-vermilion ink-vermilion hover:bg-vermilion/15">
               Reset
             </Button>
           </div>
-          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-vermilion">
             <div>
               <p className="font-medium text-foreground">Purge Inactive Users</p>
               <p className="text-sm text-foreground/60">Remove users who haven't logged in for 6+ months</p>
             </div>
-            <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+            <Button variant="outline" className="border-vermilion ink-vermilion hover:bg-vermilion/15">
               Purge
             </Button>
           </div>

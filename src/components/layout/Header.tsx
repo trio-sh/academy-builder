@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, LayoutDashboard, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { BrandSeal } from "@/components/BrandSeal";
 import type { Database } from "@/types/database.types";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
@@ -54,11 +55,7 @@ export function Header() {
       <nav className="flex items-center justify-between h-16 px-4 md:px-6 max-w-[1400px] mx-auto">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
-          <img
-            src="/logo.png"
-            alt="The 3rd Academy"
-            className="h-10 w-10 rounded-full ring-1 ring-foreground/25 group-hover:ring-foreground transition-all logo-ink"
-          />
+          <BrandSeal size={40} className="group-hover:rotate-[-2deg] transition-transform" />
           <div className="flex flex-col leading-none">
             <span className="display-serif text-[1.05rem] tracking-tight text-foreground">
               The 3rd Academy

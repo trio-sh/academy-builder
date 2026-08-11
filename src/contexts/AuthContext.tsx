@@ -9,6 +9,7 @@ import {
 } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase, signIn, signUp, signOut, signInWithOAuth, createProfile } from '@/lib/supabase';
+import { toast } from '@/hooks/use-toast';
 import type { Database } from '@/types/database.types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -39,14 +40,31 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
   signInWithLinkedIn: () => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<{ error: Error | null }>;
   refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Timeout for profile fetching (5 seconds)
 const PROFILE_FETCH_TIMEOUT = 5000;
+
+/** Surface an auth error as a toast — no more silent console.errors. */
+function surfaceAuthError(title: string, err: unknown) {
+  const message =
+    err instanceof Error
+      ? err.message
+      : typeof err === 'string'
+        ? err
+        : err && typeof err === 'object' && 'message' in err
+          ? String((err as { message: unknown }).message)
+          : 'An unexpected error occurred';
+  console.error(`[auth] ${title}:`, err);
+  toast({
+    title,
+    description: message,
+    variant: 'destructive',
+  });
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -55,26 +73,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Use ref to track if component is mounted
   const isMounted = useRef(true);
-  // Track if we're currently fetching profile to avoid race conditions
   const isFetchingProfile = useRef(false);
 
-  // Fetch user profile with timeout
   const fetchProfile = useCallback(async (userId: string, userObj?: User): Promise<Profile | null> => {
-    if (isFetchingProfile.current) {
-      return null;
-    }
-
+    if (isFetchingProfile.current) return null;
     isFetchingProfile.current = true;
 
     try {
-      // Create a promise that rejects after timeout
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Profile fetch timeout')), PROFILE_FETCH_TIMEOUT);
+        setTimeout(() => reject(new Error('Profile fetch timed out')), PROFILE_FETCH_TIMEOUT);
       });
 
-      // Fetch profile with timeout
       const fetchPromise = supabase
         .from('profiles')
         .select('*')
@@ -84,42 +94,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as Awaited<typeof fetchPromise>;
 
       if (error && error.code === 'PGRST116') {
-        // Profile doesn't exist, create it from user metadata
+        // Profile doesn't exist — bootstrap from user metadata.
         if (userObj) {
           const metadata = userObj.user_metadata || {};
-          await createProfile(
+          const { error: createErr } = await createProfile(
             userId,
             userObj.email || '',
             metadata.first_name || '',
             metadata.last_name || '',
             metadata.role || 'candidate'
           );
-          // Fetch again after creation
-          const { data: newData } = await supabase
+          if (createErr) {
+            surfaceAuthError('Could not create your profile', createErr);
+            return null;
+          }
+          const { data: newData, error: refetchErr } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', userId)
             .single();
+          if (refetchErr) {
+            surfaceAuthError('Profile was created but could not be loaded', refetchErr);
+            return null;
+          }
           return newData;
         }
         return null;
       }
 
       if (error) {
-        console.error('Error fetching profile:', error);
+        surfaceAuthError('Could not load your profile', error);
         return null;
       }
 
       return data;
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+    } catch (err) {
+      surfaceAuthError('Could not load your profile', err);
       return null;
     } finally {
       isFetchingProfile.current = false;
     }
   }, []);
 
-  // Refresh profile data
   const refreshProfile = useCallback(async () => {
     if (user) {
       const profileData = await fetchProfile(user.id, user);
@@ -129,35 +145,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, fetchProfile]);
 
-  // Initialize auth state
   useEffect(() => {
     isMounted.current = true;
     let authSubscription: { unsubscribe: () => void } | null = null;
 
     const initAuth = async () => {
       try {
-        // Get initial session
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
 
+        if (error) {
+          surfaceAuthError('Could not restore your session', error);
+        }
         if (!isMounted.current) return;
 
         if (initialSession?.user) {
           setSession(initialSession);
           setUser(initialSession.user);
-
-          // Fetch profile with timeout
           const profileData = await fetchProfile(initialSession.user.id, initialSession.user);
-          if (isMounted.current) {
-            setProfile(profileData);
-          }
+          if (isMounted.current) setProfile(profileData);
         } else {
           setSession(null);
           setUser(null);
           setProfile(null);
         }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        // Even on error, we need to stop loading
+      } catch (err) {
+        surfaceAuthError('Could not initialise authentication', err);
         if (isMounted.current) {
           setSession(null);
           setUser(null);
@@ -171,12 +183,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    // Set up auth state change listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         if (!isMounted.current) return;
-
-        // Update session and user immediately
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
 
@@ -188,8 +197,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (currentSession?.user) {
-            // Use setTimeout to avoid blocking the auth state change
-            // This helps with Supabase's internal state management
             setTimeout(async () => {
               if (!isMounted.current) return;
               const profileData = await fetchProfile(currentSession.user.id, currentSession.user);
@@ -201,16 +208,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
 
-        // For other events like INITIAL_SESSION, let initAuth handle it
         if (event === 'INITIAL_SESSION' && !isInitialized) {
-          return; // initAuth will handle this
+          return;
         }
       }
     );
 
     authSubscription = subscription;
-
-    // Initialize auth
     initAuth();
 
     return () => {
@@ -219,19 +223,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [fetchProfile, isInitialized]);
 
-  // Safety timeout - ensure loading doesn't stay forever
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (isLoading && isMounted.current) {
         console.warn('Auth loading timeout - forcing completion');
         setIsLoading(false);
       }
-    }, 10000); // 10 second max loading time
-
+    }, 10000);
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
-  // Auth methods
   const handleSignUp = async (
     email: string,
     password: string,
@@ -250,8 +251,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await signUp(email, password, metadata);
     if (error) {
       setIsLoading(false);
+      surfaceAuthError('Sign up failed', error);
     }
-    // Don't set loading to false on success - let onAuthStateChange handle it
     return { error: error as Error | null };
   };
 
@@ -260,28 +261,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await signIn(email, password);
     if (error) {
       setIsLoading(false);
+      surfaceAuthError('Sign in failed', error);
     }
-    // Don't set loading to false on success - let onAuthStateChange handle it
     return { error: error as Error | null };
   };
 
   const handleSignInWithGoogle = async () => {
     const { error } = await signInWithOAuth('google');
+    if (error) surfaceAuthError('Google sign-in failed', error);
     return { error: error as Error | null };
   };
 
   const handleSignInWithLinkedIn = async () => {
     const { error } = await signInWithOAuth('linkedin_oidc');
+    if (error) surfaceAuthError('LinkedIn sign-in failed', error);
     return { error: error as Error | null };
   };
 
   const handleSignOut = async () => {
     setIsLoading(true);
-    await signOut();
+    const { error } = await signOut();
+    if (error) {
+      surfaceAuthError('Sign out failed', error);
+    }
     setUser(null);
     setProfile(null);
     setSession(null);
     setIsLoading(false);
+    return { error: error as Error | null };
   };
 
   const value: AuthContextType = {
@@ -309,13 +316,11 @@ export function useAuth() {
   return context;
 }
 
-// Hook for getting user role
 export function useUserRole() {
   const { profile } = useAuth();
   return profile?.role ?? null;
 }
 
-// Hook for checking if user has specific role
 export function useHasRole(role: UserRole | UserRole[]) {
   const userRole = useUserRole();
   if (!userRole) return false;
