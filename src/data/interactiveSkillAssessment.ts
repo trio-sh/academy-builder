@@ -102,9 +102,9 @@ export interface ProblemSolvingScenario {
 }
 
 export interface JudgmentScenario {
-  id: string;
+  id?: string;
   situation: string;
-  stakeholders: string[];
+  stakeholders?: string[];
   options: {
     id: string;
     action?: string;

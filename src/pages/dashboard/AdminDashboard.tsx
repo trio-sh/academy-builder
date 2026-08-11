@@ -68,7 +68,6 @@ import {
   RefreshCw,
   ToggleLeft,
   ToggleRight,
-  Database,
   Globe,
   Palette,
   Bot,

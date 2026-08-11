@@ -1100,9 +1100,6 @@ const Connections = () => {
 };
 
 // Projects component
-type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
-type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
-
 interface ProjectWithApplications extends LiveWorksProject {
   applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
   milestones?: LiveWorksMilestone[];
@@ -1425,7 +1422,7 @@ const Projects = () => {
 
     if (!error) {
       setProjects((prev) =>
-        prev.map((p) => (p.id === projectId ? { ...p, status: newStatus } : p))
+        prev.map((p) => (p.id === projectId ? { ...p, status: newStatus as ProjectWithApplications["status"] } : p))
       );
     }
     setShowStatusMenu(null);
