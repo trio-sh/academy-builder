@@ -75,7 +75,7 @@ export function JourneySection() {
         >
           <div className="md:col-span-8">
             <div className="mono-label text-foreground/60 mb-4">
-              § II · The Behavioural Readiness Journey
+              § II · The Behavioral Readiness Journey
             </div>
             <h2 className="display-serif text-5xl md:text-7xl lg:text-[5.5rem] text-foreground leading-[0.95]">
               From <span className="italic display-serif-italic">Profile</span> to{" "}

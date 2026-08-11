@@ -61,7 +61,7 @@ const tiers = [
     features: [
       "Unlimited candidate browsing",
       "TalentVisa access — see who has a current record",
-      "Advanced filters and behavioural cross-references",
+      "Advanced filters and behavioral cross-references",
       "Follow-through insights after hiring",
       "Dedicated account editor",
       "API access to the register",
@@ -97,13 +97,13 @@ const Employers = () => {
             <span className="block">Add</span>
             <span className="block italic display-serif-italic">documented</span>
             <span className="block">
-              <span className="ink-vermilion">behavioural</span> evidence.
+              <span className="ink-vermilion">behavioral</span> evidence.
             </span>
           </>
         }
         lede={
           <>
-            Add documented behavioural evidence to your hiring decisions — showing how
+            Add documented behavioral evidence to your hiring decisions — showing how
             conduct appeared across workplace situations.
           </>
         }

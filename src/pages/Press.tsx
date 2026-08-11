@@ -11,14 +11,14 @@ import {
 const pressReleases = [
   { date: "January 15, 2026", title: "The 3rd Academy Raises $25M Series B to Scale Mentor-Led Observation", excerpt: "Funding will accelerate expansion of the mentor network and the T3X reading room." },
   { date: "December 8, 2025", title: "Partnership: Major Tech Employers Join The Register", excerpt: "Leading companies commit to reading Behavioral Evidence Reports before making hiring decisions." },
-  { date: "November 20, 2025", title: "Civic Access Lab Launches in 50 School Districts Nationwide", excerpt: "The free behavioural readiness programme brings the register to underserved students." },
-  { date: "October 5, 2025", title: "The 3rd Academy Passes 100,000 Behavioural Evidence Reports", excerpt: "Milestone demonstrates growing demand for observation-based hiring evidence." },
+  { date: "November 20, 2025", title: "Civic Access Lab Launches in 50 School Districts Nationwide", excerpt: "The free behavioral readiness programme brings the register to underserved students." },
+  { date: "October 5, 2025", title: "The 3rd Academy Passes 100,000 Behavioral Evidence Reports", excerpt: "Milestone demonstrates growing demand for observation-based hiring evidence." },
   { date: "September 12, 2025", title: "Independent Study: BER Holders Show 40% Higher Retention Rates", excerpt: "External research validates the observation-over-time approach to workplace readiness." },
 ];
 
 const mediaFeatures = [
   { outlet: "TechCrunch", title: "How The 3rd Academy is Fixing the Broken Credentialing System", date: "January 2026" },
-  { outlet: "Forbes", title: "The Future of Hiring: Why Behavioural Observation Matters", date: "December 2025" },
+  { outlet: "Forbes", title: "The Future of Hiring: Why Behavioral Observation Matters", date: "December 2025" },
   { outlet: "Harvard Business Review", title: "Rethinking Credentials in the Age of Skills-Based Hiring", date: "November 2025" },
   { outlet: "The Wall Street Journal", title: "Startups Tackle the $400B Credential Gap", date: "October 2025" },
 ];

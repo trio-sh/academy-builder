@@ -26,7 +26,7 @@ const readers: Reader[] = [
     n: "I",
     title: "For Job Seekers",
     role: "The candidate",
-    lede: "Go beyond your résumé. Build an evidence-based behavioural profile through real observation, mentorship, and project experience.",
+    lede: "Go beyond your résumé. Build an evidence-based behavioral profile through real observation, mentorship, and project experience.",
     entries: [
       "Résumé enhancement without bias",
       "Assigned mentor guidance",
@@ -40,7 +40,7 @@ const readers: Reader[] = [
     n: "II",
     title: "For Employers",
     role: "The hiring desk",
-    lede: "Access pre-validated candidates with proven behavioural readiness. Real results, not just keywords. Hiring supported by post-placement insights.",
+    lede: "Access pre-validated candidates with proven behavioral readiness. Real results, not just keywords. Hiring supported by post-placement insights.",
     entries: [
       "Mentor-vetted candidates",
       "Behavioral evidence, not just résumés",
@@ -54,7 +54,7 @@ const readers: Reader[] = [
     n: "III",
     title: "For Schools",
     role: "The institution",
-    lede: "Engage students early with career awareness. Build behavioural documentation that supports transition into the workforce.",
+    lede: "Engage students early with career awareness. Build behavioral documentation that supports transition into the workforce.",
     entries: [
       "Civic Access Lab platform",
       "Teacher observation tools",

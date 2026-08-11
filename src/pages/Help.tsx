@@ -19,7 +19,7 @@ const faqs = [
   {
     category: "General",
     questions: [
-      { q: "What is The 3rd Academy?", a: "A behavioural readiness platform that keeps a dated record of observed conduct — how a candidate acts across workplace-pressure situations, mentor-observed, over time. Not a certifier. A registrar." },
+      { q: "What is The 3rd Academy?", a: "A behavioral readiness platform that keeps a dated record of observed conduct — how a candidate acts across workplace-pressure situations, mentor-observed, over time. Not a certifier. A registrar." },
       { q: "How is this different from traditional certifications?", a: "Certifications say what you passed. A Behavioral Evidence Report is a dated record of how you conducted yourself when the work stopped going to plan. Observation-based, not exam-based." },
       { q: "How long does it take to build a Behavioral Evidence Report?", a: "The record accrues at the pace of your work. Most participants have a first releasable entry within four to eight weeks. There is no fixed schedule — evidence takes the time it takes." },
     ],

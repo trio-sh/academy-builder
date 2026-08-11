@@ -34,7 +34,7 @@ export function CTASection() {
             custom={0}
           >
             <div className="mono-label text-foreground/60 mb-6">
-              § V · Register of Behavioural Readiness — Entry Form
+              § V · Register of Behavioral Readiness — Entry Form
             </div>
           </motion.div>
 
@@ -120,7 +120,7 @@ export function CTASection() {
             <p className="display-serif text-xl leading-tight mb-6">
               This is to record that{" "}
               <span className="italic display-serif-italic">the bearer</span> has
-              entered the Behavioural Readiness Register on this day.
+              entered the Behavioral Readiness Register on this day.
             </p>
 
             <dl className="space-y-3 text-sm">
@@ -143,7 +143,7 @@ export function CTASection() {
             </dl>
 
             <div className="mt-6 pt-4 border-t border-foreground/25 mono-label text-foreground/50 text-center">
-              The 3rd Academy · Register of Behavioural Readiness
+              The 3rd Academy · Register of Behavioral Readiness
             </div>
           </div>
         </motion.aside>
