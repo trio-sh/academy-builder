@@ -89,6 +89,8 @@ export interface Database {
           has_skill_passport: boolean;
           has_talentvisa: boolean;
           is_listed_on_t3x: boolean;
+          has_basic_profile?: boolean | null;
+          observation_areas?: string[] | null;
         };
         Insert: {
           id?: string;
@@ -106,6 +108,8 @@ export interface Database {
           has_skill_passport?: boolean;
           has_talentvisa?: boolean;
           is_listed_on_t3x?: boolean;
+          has_basic_profile?: boolean | null;
+          observation_areas?: string[] | null;
         };
         Update: {
           id?: string;
@@ -123,6 +127,8 @@ export interface Database {
           has_skill_passport?: boolean;
           has_talentvisa?: boolean;
           is_listed_on_t3x?: boolean;
+          has_basic_profile?: boolean | null;
+          observation_areas?: string[] | null;
         };
       };
       mentor_profiles: {

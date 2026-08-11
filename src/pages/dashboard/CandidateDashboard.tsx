@@ -2713,6 +2713,7 @@ type TrainingProgressFromLog = {
   module_slug: string;
   score: number;
   completed_at: string;
+  progress_percent?: number;
 };
 
 const Training = () => {

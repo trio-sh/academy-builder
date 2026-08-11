@@ -2655,7 +2655,7 @@ const Endorsements = () => {
           gold: "platinum",
           platinum: "platinum", // Already at max
         };
-        newTier = tierProgression[newTier] || "gold";
+        newTier = (tierProgression[newTier] || "gold") as typeof newTier;
       }
 
       // candidate_id = candidate_profiles.id — update tier + passport flags together
@@ -2991,6 +2991,7 @@ const Endorsements = () => {
                             setSelectedAssignment(null);
                             setEndorsementForm({
                               decision: "",
+                              escalateConcern: "",
                               justification: "",
                               redirectModule: "",
                               redirectToLiveworks: false,
