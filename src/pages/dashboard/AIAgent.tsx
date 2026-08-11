@@ -2649,6 +2649,9 @@ export default function AIAgent() {
  setApiMessages(prev => [...prev, userApiMsg]);
  }
  setInput("");
+ // Reset the auto-grown textarea back to a single row after send —
+ // handleInputChange only grows it; nothing shrinks it otherwise.
+ if (inputRef.current) inputRef.current.style.height = "auto";
  setAttachedFiles([]);
 
  // Build API messages: system + condensed prior transcript + new user message.
