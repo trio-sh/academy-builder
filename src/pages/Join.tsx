@@ -492,7 +492,7 @@ const Join = () => {
 
                       <Button
                         onClick={handleComplete}
-                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-foreground"
+                        className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                       >
                         Go to Dashboard
                         <ArrowRight className="ml-2 h-4 w-4" />

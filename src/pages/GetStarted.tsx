@@ -576,7 +576,7 @@ const GetStarted = () => {
                               )}
                             >
                               {path.recommended && (
-                                <span className="inline-block mb-2 px-2 py-1 text-xs font-medium bg-emerald-600 text-foreground rounded">
+                                <span className="inline-block mb-2 px-2 py-1 text-xs font-medium bg-foreground text-background rounded">
                                   Recommended
                                 </span>
                               )}
@@ -760,7 +760,7 @@ const GetStarted = () => {
                         variant="outline"
                         onClick={() => setStep(1)}
                         disabled={isLoading}
-                        className="flex-1 border-foreground/25 text-foreground hover:bg-background"
+                        className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none"
                       >
                         Back
                       </Button>
@@ -833,7 +833,7 @@ const GetStarted = () => {
                             <Upload className="w-12 h-12 text-foreground/80 mx-auto mb-4" />
                             <p className="text-foreground font-medium mb-2">Click to upload your resume</p>
                             <p className="text-sm text-foreground/800 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                            <Button variant="outline" size="sm" className="border-foreground/25 text-foreground hover:bg-background" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                            <Button variant="outline" size="sm" className="border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                           </>
                         )}
                       </div>
@@ -856,9 +856,9 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-foreground/25 text-foreground hover:bg-background">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none">Back</Button>
                       )}
-                      <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground">
+                      <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Matching mentor...</>
                         ) : (
@@ -891,7 +891,7 @@ const GetStarted = () => {
                       </div>
                     </div>
 
-                    <div className="mt-6 p-4 rounded-xl bg-purple-950 border border-purple-800">
+                    <div className="mt-6 p-4 rounded-xl bg-foreground/[0.03] border border-foreground/25">
                       <h3 className="text-sm font-medium text-foreground mb-3">What happens next?</h3>
                       <ul className="space-y-2 text-sm text-foreground/80">
                         {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Behavioral Evidence Report"].map((item) => (
@@ -902,9 +902,9 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-foreground/25 text-foreground hover:bg-background">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none">Back</Button>
                       )}
-                      <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground">
+                      <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
                         ) : (
@@ -920,8 +920,8 @@ const GetStarted = () => {
               {step === 3 && selectedRole !== "candidate" && (
                 <div className="max-w-md mx-auto text-center">
                   <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-10 h-10 text-foreground" />
+                    <div className="w-20 h-20 rounded-full bg-vermilion flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-10 h-10 text-background" />
                     </div>
 
                     <h2 className="text-2xl font-bold text-foreground mb-2">
@@ -937,7 +937,7 @@ const GetStarted = () => {
                     <Button
                       onClick={handleNonCandidateComplete}
                       disabled={isCompletingSetup}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-foreground"
+                      className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                     >
                       {isCompletingSetup ? (
                         <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
