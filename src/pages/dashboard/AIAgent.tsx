@@ -37,6 +37,7 @@ import {
  ChevronDown,
  ChevronUp,
  ScanSearch,
+ Brain,
  Plus,
  ArrowUp,
  Wrench,
@@ -51,6 +52,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { parseResume } from "@/lib/resumeParser";
 import { supabase } from "@/lib/supabase";
 import { useDashboardHeader } from "@/components/dashboard/DashboardLayout";
+import { parseReasoning } from "@/lib/reasoning";
+import { condenseHistory } from "@/lib/agentHistory";
 
 // ─── IndexedDB Schema ─────────────────────────────────────────────────────────
 
@@ -1626,6 +1629,34 @@ You can:
 - Generate PDF documents (respond with a pdfmake JSON block — see PDF section)
 - Interact with page elements (click, fill, scroll, highlight, submit forms, open/close dialogs, toggle, wait, …) — see "Discovering On-Demand Tools" below
 
+## Reasoning Protocol — REQUIRED FORMAT FOR EVERY REPLY
+Every assistant reply MUST begin with a <thinking>…</thinking> block
+that captures your private reasoning: what the user asked, what you
+know from context vs. what you need to fetch, which tools you plan to
+call (or why none is needed), and how you'll shape the answer. The UI
+renders that block as a collapsed accordion, so it stays out of the
+user's way while remaining auditable.
+
+Rules:
+- Open with "<thinking>" and close with "</thinking>" on their own words.
+  Do NOT nest, and do NOT omit the closing tag — the frontend is
+  tolerant of a missing close on partial streams but a well-formed
+  block is expected.
+- Reasoning is for you, not the user: reference tool names, args, and
+  intermediate observations freely — nothing outside the tags is
+  private.
+- After </thinking>, write ONLY the user-facing reply. Do not repeat
+  the reasoning.
+- Keep the thinking block proportional to the difficulty — a couple of
+  lines for a lookup; more only when planning multi-tool actions.
+
+Example:
+<thinking>
+User asks for latest AI news. Time-sensitive → call web_search first,
+then read the top few results, then summarize with links.
+</thinking>
+Here's the latest… [answer with citations]
+
 ## Web Research Protocol — READ CAREFULLY, NON-NEGOTIABLE
 When the user asks you to search, look up, research, check, find, google, or
 otherwise obtain fresh/external information — including phrases like
@@ -1658,6 +1689,25 @@ Concretely, the correct sequence for "search the web for latest news in AI"
 is: one tool call to web_search with query "latest AI news 2026", then a
 response grounded in the returned snippets. Not a paragraph asking for
 more input.
+
+### After web_search: auto-extract the top N results
+Search snippets are shallow. Immediately after a successful web_search
+call, invoke web_extract on the top 5 result URLs (or the number the
+user asked for — "read the top 3", "check the first two") — in parallel
+tool calls when supported. Then synthesize an answer from the extracted
+page contents, structured as:
+
+  1. Short answer / summary paragraph
+  2. Numbered list of the sources you actually read, each as:
+     - Title (bold)
+     - URL (as a markdown link)
+     - 1-2 sentence takeaway
+
+If the user did not specify a number, default to 5. If the query returns
+fewer than N results, extract what you got and note the count. If a
+particular URL fails to extract, skip it silently and continue with the
+next result. Do not narrate the extraction ("now reading page 1 of 5")
+— the UI already shows tool badges.
 
 ## Discovering On-Demand Tools — READ THIS BEFORE INTERACTING WITH THE PAGE
 Your toolset is intentionally small so you can think clearly. The full DOM
@@ -2418,11 +2468,13 @@ export default function AIAgent() {
  setInput("");
  setAttachedFiles([]);
 
- // Build API messages: system + recent conversation + new user message
- // Only include the last 40 messages to prevent context overflow
+ // Build API messages: system + condensed prior transcript + new user message.
+ // Prior tool_calls / tool_results are folded into text stand-ins so the
+ // model still knows what happened without shipping multi-KB payloads.
  const recentApiMessages = apiMessages.slice(-40);
+ const condensed = condenseHistory(recentApiMessages) as ApiMessage[];
  const systemMsg: ApiMessage = { role: "system", content: systemPrompt };
- let currentMessages: ApiMessage[] = [systemMsg, ...recentApiMessages, userApiMsg];
+ let currentMessages: ApiMessage[] = [systemMsg, ...condensed, userApiMsg];
  setApiMessages(prev => [...prev, userApiMsg]);
 
  // Tool calling loop
@@ -2519,43 +2571,143 @@ export default function AIAgent() {
  el.style.height = Math.min(el.scrollHeight, 200) + "px";
  };
 
- // ─── Tool Call Badge ─────────────────────────────────────────────────────
+ // ─── Tool Call Badge (expandable) ────────────────────────────────────
 
  function ToolBadge({ tc }: { tc: OpenAIToolCall; }) {
+ const [open, setOpen] = useState(false);
  let args: Record<string, unknown> = {};
  try { args = JSON.parse(tc.function.arguments); } catch { /* */ }
  const Icon = toolIcon(tc.function.name);
  const label = toolDisplayName(tc.function.name, args);
+ const hasDetails = Object.keys(args).length > 0;
 
  return (
- <motion.div
- className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion"
- initial={{ opacity: 0, y: 5 }}
- animate={{ opacity: 1, y: 0 }}
- layout
+ <span className="inline-flex flex-col">
+ <button
+ type="button"
+ onClick={() => hasDetails && setOpen((v) => !v)}
+ className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion ${
+ hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"
+ }`}
+ aria-expanded={open}
  >
- <CheckCircle2 className="w-3 h-3" />
+ <Icon className="w-3 h-3" />
  <span className="font-medium">{label}</span>
- </motion.div>
+ {hasDetails && (
+ <ChevronDown
+ className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
+ />
+ )}
+ </button>
+ <AnimatePresence initial={false}>
+ {open && hasDetails && (
+ <motion.pre
+ initial={{ opacity: 0, height: 0 }}
+ animate={{ opacity: 1, height: "auto" }}
+ exit={{ opacity: 0, height: 0 }}
+ transition={{ duration: 0.15 }}
+ className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
+ >
+ {JSON.stringify(args, null, 2)}
+ </motion.pre>
+ )}
+ </AnimatePresence>
+ </span>
  );
  }
 
- // ─── Status Badge (for built-in tools executed by backend) ────────────
+ // ─── Status Badge (for built-in tools executed by backend, expandable) ─
 
  function StatusBadge({ status }: { status: StatusEvent }) {
+ const [open, setOpen] = useState(false);
  const Icon = toolIcon(status.name);
  const isDone = status.type === "tool_done";
  const label = toolDisplayName(status.name, status.arguments || {});
+ const hasDetails = !!status.arguments && Object.keys(status.arguments).length > 0;
 
  return (
- <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
+ <span className="inline-flex flex-col">
+ <button
+ type="button"
+ onClick={() => hasDetails && setOpen((v) => !v)}
+ className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
  isDone
  ? "bg-foreground/[0.05] border border-foreground/40 ink-vermilion"
  : "bg-vermilion/10 border border-vermilion ink-vermilion"
- }`}>
+ } ${hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"}`}
+ aria-expanded={open}
+ >
  {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
+ <Icon className="w-3 h-3" />
  {label}
+ {hasDetails && (
+ <ChevronDown
+ className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
+ />
+ )}
+ </button>
+ <AnimatePresence initial={false}>
+ {open && hasDetails && (
+ <motion.pre
+ initial={{ opacity: 0, height: 0 }}
+ animate={{ opacity: 1, height: "auto" }}
+ exit={{ opacity: 0, height: 0 }}
+ transition={{ duration: 0.15 }}
+ className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
+ >
+ {JSON.stringify(status.arguments, null, 2)}
+ </motion.pre>
+ )}
+ </AnimatePresence>
  </span>
+ );
+ }
+
+ // ─── Reasoning Accordion — <thinking>…</thinking> ─────────────────────
+
+ function ReasoningBlock({ reasoning, closed }: { reasoning: string; closed: boolean }) {
+ // Open while reasoning is streaming; auto-collapse on close tag.
+ const [open, setOpen] = useState(!closed);
+ const prevClosed = useRef(closed);
+ useEffect(() => {
+ if (!prevClosed.current && closed) setOpen(false);
+ prevClosed.current = closed;
+ }, [closed]);
+ if (!reasoning) return null;
+ return (
+ <div className="mb-2 rounded-md border border-foreground/15 bg-foreground/[0.03] overflow-hidden">
+ <button
+ type="button"
+ onClick={() => setOpen((v) => !v)}
+ className="w-full flex items-center justify-between gap-2 px-3 py-1.5 text-[11px] mono-label text-foreground/60 hover:text-foreground"
+ aria-expanded={open}
+ >
+ <span className="inline-flex items-center gap-1.5">
+ {closed ? (
+ <Brain className="w-3 h-3" />
+ ) : (
+ <Loader2 className="w-3 h-3 animate-spin" />
+ )}
+ {closed ? "Reasoning" : "Reasoning…"}
+ </span>
+ <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+ </button>
+ <AnimatePresence initial={false}>
+ {open && (
+ <motion.div
+ initial={{ opacity: 0, height: 0 }}
+ animate={{ opacity: 1, height: "auto" }}
+ exit={{ opacity: 0, height: 0 }}
+ transition={{ duration: 0.15 }}
+ className="border-t border-foreground/10"
+ >
+ <div className="px-3 py-2 text-[12.5px] text-foreground/70 whitespace-pre-wrap font-serif leading-relaxed">
+ {reasoning}
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </div>
  );
  }
 
@@ -2719,11 +2871,17 @@ export default function AIAgent() {
  <Bot className="w-3.5 h-3.5 text-background" />
  </div>
  <div className="flex-1 min-w-0">
- {msg.content && (
+ {msg.content && (() => {
+ const parsed = parseReasoning(msg.content);
+ return (
  <div className="text-foreground/80">
- <MarkdownRenderer content={msg.content} />
- </div>
+ {parsed.hasReasoning && (
+ <ReasoningBlock reasoning={parsed.reasoning} closed={parsed.closed} />
  )}
+ {parsed.cleaned && <MarkdownRenderer content={parsed.cleaned} />}
+ </div>
+ );
+ })()}
 
  {/* Built-in tool statuses */}
  {msg.statuses && msg.statuses.length > 0 && (
@@ -2789,9 +2947,13 @@ export default function AIAgent() {
  </div>
  <div className="flex-1 min-w-0 text-foreground/80">
  {streamingContent ? (() => {
- const { cleaned, hasPdfBlock } = cleanStreamingPdfContent(streamingContent);
+ const parsed = parseReasoning(streamingContent);
+ const { cleaned, hasPdfBlock } = cleanStreamingPdfContent(parsed.cleaned);
  return (
  <>
+ {parsed.hasReasoning && (
+ <ReasoningBlock reasoning={parsed.reasoning} closed={parsed.closed} />
+ )}
  {cleaned && <MarkdownRenderer content={cleaned} />}
  {hasPdfBlock && (
  <div className="flex items-center gap-2.5 mt-3 px-4 py-3 rounded-xl bg-foreground/30 border border-foreground/20">
