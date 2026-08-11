@@ -309,8 +309,20 @@ interface StreamResult {
 // ─── Custom Tools (OpenAI Function Schemas) ─────────────────────────────────
 // These are executed on the FRONTEND. Built-in tools (web_search, web_extract,
 // image_generation) are handled by the backend automatically.
+//
+// TOOL GATING
+// -----------
+// To keep the request payload lean and stop the model from getting lost in a
+// wall of tool schemas on every turn, only the ESSENTIAL tools are exposed by
+// default (navigate, read_page, query_data, get_current_time). Everything else
+// — the whole DOM-automation family (click, fill, scroll, …) — lives in the
+// LAZY set and is only sent up when the model has discovered it through
+// search_tools and enabled it through load_tool. The names in the lazy set
+// stay executable via executeCustomTool regardless of whether they've been
+// "loaded" for the API payload — load_tool only controls whether the schema
+// is announced to the model.
 
-const CUSTOM_TOOLS = [
+const DEFAULT_TOOLS = [
  {
  type: "function" as const,
  function: {
@@ -339,6 +351,71 @@ const CUSTOM_TOOLS = [
  },
  },
  },
+ {
+ type: "function" as const,
+ function: {
+ name: "query_data",
+ description: "Look up the user's data — growth logs, training progress, mentor info, endorsements, credentials, connections, notifications, or projects. Returns up to 10 entries. IMPORTANT: Never reveal the data source names to the user — just present the results naturally.",
+ parameters: {
+ type: "object",
+ properties: {
+ table: {
+ type: "string",
+ enum: ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"],
+ description: "The data category to look up",
+ },
+ },
+ required: ["table"],
+ },
+ },
+ },
+ {
+ type: "function" as const,
+ function: {
+ name: "get_current_time",
+ description: "Get the current date and time in various timezones.",
+ parameters: {
+ type: "object",
+ properties: {
+ timezone: { type: "string", description: 'IANA timezone string, e.g. "America/New_York", "UTC"', default: "UTC" },
+ format: { type: "string", enum: ["12h", "24h"], description: "Time format", default: "12h" },
+ },
+ required: [],
+ },
+ },
+ },
+ {
+ type: "function" as const,
+ function: {
+ name: "search_tools",
+ description: "Search the catalogue of on-demand tools for one that fits what you need to do next. Call this BEFORE trying to click, fill, scroll, or otherwise manipulate the page — those tools are not exposed by default and must be discovered here first. Returns matching tool names with short descriptions. Follow up with load_tool to enable a tool for use.",
+ parameters: {
+ type: "object",
+ properties: {
+ query: { type: "string", description: "Short keywords describing what you need to do (e.g. \"click button\", \"fill input\", \"scroll page\", \"wait\", \"open dialog\")" },
+ },
+ required: ["query"],
+ },
+ },
+ },
+ {
+ type: "function" as const,
+ function: {
+ name: "load_tool",
+ description: "Enable an on-demand tool discovered via search_tools so you can call it in your next turn. Returns confirmation and the tool's schema. Only tools returned by search_tools are loadable; loading is idempotent.",
+ parameters: {
+ type: "object",
+ properties: {
+ name: { type: "string", description: "The exact tool name returned by search_tools." },
+ },
+ required: ["name"],
+ },
+ },
+ },
+];
+
+// Lazy tools — announced only after the model discovers + loads them.
+const LAZY_TOOLS = [
  {
  type: "function" as const,
  function: {
@@ -508,42 +585,42 @@ const CUSTOM_TOOLS = [
  },
  },
  },
- {
- type: "function" as const,
- function: {
- name: "query_data",
- description: "Look up the user's data — growth logs, training progress, mentor info, endorsements, credentials, connections, notifications, or projects. Returns up to 10 entries. IMPORTANT: Never reveal the data source names to the user — just present the results naturally.",
- parameters: {
- type: "object",
- properties: {
- table: {
- type: "string",
- enum: ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"],
- description: "The data category to look up",
- },
- },
- required: ["table"],
- },
- },
- },
- {
- type: "function" as const,
- function: {
- name: "get_current_time",
- description: "Get the current date and time in various timezones.",
- parameters: {
- type: "object",
- properties: {
- timezone: { type: "string", description: 'IANA timezone string, e.g. "America/New_York", "UTC"', default: "UTC" },
- format: { type: "string", enum: ["12h", "24h"], description: "Time format", default: "12h" },
- },
- required: [],
- },
- },
- },
 ];
 
+const CUSTOM_TOOLS = [...DEFAULT_TOOLS, ...LAZY_TOOLS];
 const CUSTOM_TOOL_NAMES = new Set(CUSTOM_TOOLS.map(t => t.function.name));
+const LAZY_TOOL_INDEX = new Map(LAZY_TOOLS.map(t => [t.function.name, t]));
+
+function pickTools(loaded: Set<string>): typeof CUSTOM_TOOLS {
+ const extra = LAZY_TOOLS.filter((t) => loaded.has(t.function.name));
+ return [...DEFAULT_TOOLS, ...extra];
+}
+
+function searchLazyTools(query: string): { name: string; description: string }[] {
+ const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+ if (terms.length === 0) {
+ return LAZY_TOOLS.map((t) => ({
+ name: t.function.name,
+ description: t.function.description,
+ }));
+ }
+ const scored = LAZY_TOOLS.map((t) => {
+ const haystack = `${t.function.name} ${t.function.description}`.toLowerCase();
+ let score = 0;
+ for (const term of terms) {
+ if (haystack.includes(term)) score += 1;
+ if (t.function.name.toLowerCase().includes(term)) score += 2;
+ }
+ return { tool: t, score };
+ })
+ .filter((x) => x.score > 0)
+ .sort((a, b) => b.score - a.score)
+ .slice(0, 8);
+ return scored.map((x) => ({
+ name: x.tool.function.name,
+ description: x.tool.function.description,
+ }));
+}
 
 // ─── PDF JSON Code Block Detection ───────────────────────────────────────────
 // The AI streams pdfmake document definitions as JSON code blocks (```json ... ```).
@@ -966,11 +1043,55 @@ async function executeCustomTool(
  name: string,
  args: Record<string, unknown>,
  navigateFn: ReturnType<typeof useNavigate>,
- userContext: UserContext
+ userContext: UserContext,
+ loadedTools: Set<string>,
+ onLoadTool: (name: string) => void
 ): Promise<string> {
  const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
 
  switch (name) {
+ case "search_tools": {
+ const q = (args.query as string) || "";
+ const matches = searchLazyTools(q);
+ if (matches.length === 0) {
+ return JSON.stringify({
+ query: q,
+ matches: [],
+ hint: "No on-demand tool matches that query. Try broader keywords like 'click', 'fill', 'scroll', 'wait', or 'dialog'.",
+ });
+ }
+ return JSON.stringify({
+ query: q,
+ matches,
+ hint: "Call load_tool with the exact name of the tool you want, then invoke it in your next turn.",
+ });
+ }
+
+ case "load_tool": {
+ const target = (args.name as string) || "";
+ const tool = LAZY_TOOL_INDEX.get(target);
+ if (!tool) {
+ return JSON.stringify({
+ loaded: false,
+ error: `Unknown tool "${target}". Use search_tools first to find loadable tool names.`,
+ });
+ }
+ if (loadedTools.has(target)) {
+ return JSON.stringify({
+ loaded: true,
+ name: target,
+ note: "Already loaded — you can call it directly.",
+ });
+ }
+ onLoadTool(target);
+ return JSON.stringify({
+ loaded: true,
+ name: target,
+ schema: tool.function,
+ note: "Now available in your toolset — call it in your next turn.",
+ });
+ }
+
  case "get_current_time": {
  const tz = (args.timezone as string) || "UTC";
  const fmt = (args.format as string) || "12h";
@@ -1496,13 +1617,37 @@ ${pageContext}
 
 ## Your Capabilities
 You can:
-- Search the web and extract web page content
-- Navigate the app and read pages without navigating
-- Interact with page elements (click, fill, scroll, highlight, etc.)
-- Look up the user's progress data (growth logs, training, mentor info, etc.)
-- Generate images
-- Generate PDF documents
-- Get current time in any timezone
+- Search the web and extract web page content (built-in — always available)
+- Navigate the app (navigate) and read pages without navigating (read_page)
+- Look up the user's progress data (query_data)
+- Get the current time in any timezone (get_current_time)
+- Generate images (built-in)
+- Generate PDF documents (respond with a pdfmake JSON block — see PDF section)
+- Interact with page elements (click, fill, scroll, highlight, submit forms, open/close dialogs, toggle, wait, …) — see "Discovering On-Demand Tools" below
+
+## Discovering On-Demand Tools — READ THIS BEFORE INTERACTING WITH THE PAGE
+Your toolset is intentionally small so you can think clearly. The full DOM
+interaction family (click, fill, clear_field, select_option, toggle,
+submit_form, scroll_to, scroll_page, highlight, open_modal, close_modal,
+wait) is NOT exposed by default. Two meta-tools let you pull them in when
+you need them:
+
+1. \`search_tools(query: string)\` — search the catalogue with a short
+   keyword ("click", "fill input", "scroll", "wait", "dialog"). Returns
+   a list of {name, description}.
+2. \`load_tool(name: string)\` — enable a specific tool by exact name.
+   Once loaded, call the tool on your NEXT turn (it will appear in your
+   toolset from then on).
+
+Rule of thumb:
+- If the user asks you to click, fill a form, submit, scroll, wait, or
+  otherwise touch the page you are on — first \`search_tools\`, then
+  \`load_tool\`, then call the tool.
+- If the user just asks a question, wants information, wants to navigate,
+  or wants their data — you already have the tools you need; do not call
+  search_tools.
+- Web search / web extract / image generation are built-in and do not
+  require load_tool.
 
 ## PDF Generation — CRITICAL INSTRUCTIONS
 When the user asks you to create, generate, or export a PDF, you MUST respond with a valid pdfmake document definition JSON inside a \`\`\`json code block. The frontend will automatically detect it and render the PDF for download.
@@ -1560,7 +1705,8 @@ CRITICAL RULES — NEVER VIOLATE:
 - You may include conversational text before/after the JSON code block to explain what you created
 
 ## DOM Interaction Hints
-When interacting with the page, note these patterns:
+Remember: DOM tools (fill, click, submit_form, scroll_*, …) require
+search_tools + load_tool first. Once loaded, these patterns apply:
 - **Message input fields** on dashboard pages use placeholder "Type a message..." (text input, NOT textarea). To fill a messaging input, use: fill(field="Type a message...", value="your message")
 - **Form submit** is often a button with text "Send" or an icon button next to the input.
 - Your own input ("Reply...") is protected and will NOT be targeted by fill/click tools.
@@ -1771,6 +1917,12 @@ export default function AIAgent() {
  const [sessionPickerOpen, setSessionPickerOpen] = useState(false);
  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+ // Tool gating: which lazy tools the model has discovered + loaded this session.
+ // Kept in a ref so sendRequest reads the freshest value without needing to be
+ // re-created on every load_tool call; the mirrored state drives any UI hints.
+ const [loadedTools, setLoadedTools] = useState<Set<string>>(new Set());
+ const loadedToolsRef = useRef<Set<string>>(new Set());
+
  const refreshSessions = useCallback(async () => {
  if (!user?.id) return;
  const list = await listSessions(user.id);
@@ -1828,6 +1980,8 @@ export default function AIAgent() {
  setStreamingContent("");
  setActiveStatuses([]);
  setActiveTitle("New chat");
+ loadedToolsRef.current = new Set();
+ setLoadedTools(loadedToolsRef.current);
  setSessionPickerOpen(false);
  setSidebarOpen(false);
  inputRef.current?.focus();
@@ -1847,6 +2001,8 @@ export default function AIAgent() {
  setActiveTitle(loaded.title);
  setStreamingContent("");
  setActiveStatuses([]);
+ loadedToolsRef.current = new Set();
+ setLoadedTools(loadedToolsRef.current);
  }
  setSessionPickerOpen(false);
  setSidebarOpen(false);
@@ -1906,7 +2062,7 @@ export default function AIAgent() {
  multistep: true,
  max_steps: 60,
  max_tokens: 16384,
- tools: CUSTOM_TOOLS,
+ tools: pickTools(loadedToolsRef.current),
  temperature: 0.7,
  ...(continuationState ? { _continuation: continuationState } : {}),
  }),
@@ -1965,7 +2121,12 @@ export default function AIAgent() {
  tc.function.name,
  args,
  navigateFn,
- userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null }
+ userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null },
+ loadedToolsRef.current,
+ (n) => {
+ loadedToolsRef.current = new Set(loadedToolsRef.current).add(n);
+ setLoadedTools(loadedToolsRef.current);
+ }
  );
  toolResultMessages.push({
  role: "tool",
