@@ -1,9 +1,148 @@
+import { useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { ChevronDown, Copy, Check, Download } from "lucide-react";
+
+const LANG_EXTENSIONS: Record<string, string> = {
+  javascript: "js",
+  js: "js",
+  typescript: "ts",
+  ts: "ts",
+  tsx: "tsx",
+  jsx: "jsx",
+  python: "py",
+  py: "py",
+  rust: "rs",
+  rs: "rs",
+  go: "go",
+  java: "java",
+  kotlin: "kt",
+  swift: "swift",
+  ruby: "rb",
+  rb: "rb",
+  php: "php",
+  bash: "sh",
+  sh: "sh",
+  shell: "sh",
+  zsh: "sh",
+  html: "html",
+  css: "css",
+  scss: "scss",
+  sql: "sql",
+  json: "json",
+  yaml: "yml",
+  yml: "yml",
+  toml: "toml",
+  markdown: "md",
+  md: "md",
+  c: "c",
+  cpp: "cpp",
+  csharp: "cs",
+  cs: "cs",
+};
+
+function extForLang(lang: string): string {
+  return LANG_EXTENSIONS[lang.toLowerCase()] || "txt";
+}
 
 interface MarkdownRendererProps {
   content: string;
   className?: string;
+}
+
+function CodeBlockAccordion({
+  lang,
+  className,
+  children,
+}: {
+  lang: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const source =
+    typeof children === "string"
+      ? children
+      : Array.isArray(children)
+        ? children.join("")
+        : String(children ?? "");
+
+  const copyCode = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(source);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const downloadCode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const ext = extForLang(lang);
+      const blob = new Blob([source], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `snippet.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 250);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const lineCount = source.split("\n").filter((l) => l.length > 0).length;
+
+  return (
+    <div className="my-3 border border-foreground/25">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-1.5 border-b border-foreground/15 text-[10px] text-foreground/60 font-mono uppercase tracking-widest bg-foreground/[0.03] hover:bg-foreground/[0.06]"
+        aria-expanded={open}
+      >
+        <span className="inline-flex items-center gap-2">
+          <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+          <span>{lang || "code"}</span>
+          <span className="normal-case tracking-normal text-foreground/40">· {lineCount} line{lineCount === 1 ? "" : "s"}</span>
+        </span>
+        <span className="inline-flex items-center gap-1 normal-case tracking-normal">
+          <span
+            onClick={copyCode}
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-foreground/10 text-foreground/60 hover:text-foreground"
+            role="button"
+            aria-label="Copy code"
+          >
+            {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+            {copied ? "Copied" : "Copy"}
+          </span>
+          <span
+            onClick={downloadCode}
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-foreground/10 text-foreground/60 hover:text-foreground"
+            role="button"
+            aria-label="Download code"
+          >
+            <Download className="w-3 h-3" />
+            Download
+          </span>
+        </span>
+      </button>
+      {open && (
+        <pre className="p-3 overflow-x-auto bg-foreground/[0.02] max-h-96 overflow-y-auto">
+          <code className={`text-[0.8125rem] font-mono leading-relaxed text-foreground ${className || ""}`}>
+            {children}
+          </code>
+        </pre>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -73,7 +212,7 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
             </em>
           ),
 
-          code: ({ className, children, ...props }) => {
+          code: ({ className, children }) => {
             const isInline = !className;
             if (isInline) {
               return (
@@ -84,21 +223,9 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
             }
             const lang = className?.replace("language-", "") || "";
             return (
-              <div className="my-3 border border-foreground/25">
-                {lang && (
-                  <div className="px-3 py-1 border-b border-foreground/15 text-[10px] text-foreground/60 font-mono uppercase tracking-widest bg-foreground/[0.03]">
-                    {lang}
-                  </div>
-                )}
-                <pre className="p-3 overflow-x-auto bg-foreground/[0.02]">
-                  <code
-                    className={`text-[0.8125rem] font-mono leading-relaxed text-foreground ${className || ""}`}
-                    {...props}
-                  >
-                    {children}
-                  </code>
-                </pre>
-              </div>
+              <CodeBlockAccordion lang={lang} className={className}>
+                {children}
+              </CodeBlockAccordion>
             );
           },
 
