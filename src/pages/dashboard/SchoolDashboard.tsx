@@ -1426,11 +1426,11 @@ const SchoolDashboard = () => {
           <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
             {sidebarCollapsed ? (
               <Link to="/" className="flex items-center justify-center">
-                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
               </Link>
             ) : (
               <Link to="/" className="flex items-center gap-2">
-                <img src="/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full" />
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
                 <span className="font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
                   Civic Access Lab
                 </span>

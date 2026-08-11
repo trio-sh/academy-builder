@@ -1,366 +1,209 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
-import { Footer } from "@/components/layout/Footer";
+import { motion } from "framer-motion";
+import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  MessageSquare,
-  Building,
-  GraduationCap,
-  User,
-  Loader2,
-  CheckCircle,
-} from "lucide-react";
+import { Loader2, CheckCircle } from "lucide-react";
+import { LedgerHero, LedgerSection, rise } from "@/components/ledger";
 
 const contactReasons = [
-  { id: "general", label: "General Inquiry", icon: MessageSquare },
-  { id: "employer", label: "Employer Partnership", icon: Building },
-  { id: "school", label: "School Partnership", icon: GraduationCap },
-  { id: "candidate", label: "Candidate Support", icon: User },
+  { id: "general", label: "General inquiry" },
+  { id: "employer", label: "Employer partnership" },
+  { id: "school", label: "School partnership" },
+  { id: "candidate", label: "Candidate support" },
 ];
 
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "hello@the3rdacademy.com",
-    href: "mailto:hello@the3rdacademy.com",
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    value: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
-  },
-  {
-    icon: MapPin,
-    label: "Headquarters",
-    value: "San Francisco, CA",
-    href: "#",
-  },
+const info = [
+  { label: "Editorial", value: "hello@the3rdacademy.com", href: "mailto:hello@the3rdacademy.com" },
+  { label: "Support", value: "support@the3rdacademy.com", href: "mailto:support@the3rdacademy.com" },
+  { label: "Headquarters", value: "San Francisco, CA" },
 ];
 
 const Contact = () => {
   const [selectedReason, setSelectedReason] = useState("general");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    organization: "",
-    message: "",
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
+    await new Promise((r) => setTimeout(r, 1200));
     setIsSubmitting(false);
     setIsSubmitted(true);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
   return (
-    <div className="min-h-screen bg-black text-white">
-      <BackgroundVideo />
-      <Header />
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-indigo-100 text-sm">
-                <MessageSquare className="w-4 h-4" />
-                Get in Touch
-              </span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-display font-normal mb-6">
-              <span className="text-white">
-                Let's Start a
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Conversation
-              </span>
-            </h1>
-            <p className="text-lg text-gray-300 mb-8">
-              Have questions about The 3rd Academy? We'd love to hear from you.
-              Our team is here to help.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form Section */}
-      <section className="py-20 relative">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Form */}
-            <div>
-              <div className="relative group">
-                <div className="relative p-8 rounded-2xl bg-gray-950 border border-gray-800">
-                  {isSubmitted ? (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 rounded-2xl bg-green-600/20 flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="w-8 h-8 text-green-400" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-white mb-4">
-                        Message Sent!
-                      </h3>
-                      <p className="text-gray-300 mb-6">
-                        Thank you for reaching out. We'll get back to you within
-                        24-48 hours.
-                      </p>
-                      <Button
-                        variant="outline"
-                        className="border-gray-700 text-white hover:bg-gray-900"
-                        onClick={() => {
-                          setIsSubmitted(false);
-                          setFormData({
-                            name: "",
-                            email: "",
-                            organization: "",
-                            message: "",
-                          });
-                        }}
-                      >
-                        Send Another Message
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <h2 className="text-2xl font-bold text-white mb-6">
-                        Send us a Message
-                      </h2>
-
-                      {/* Reason Selection */}
-                      <div className="mb-6">
-                        <label className="block text-sm text-gray-300 mb-3">
-                          What can we help you with?
-                        </label>
-                        <div className="grid grid-cols-2 gap-3">
-                          {contactReasons.map((reason) => (
-                            <button
-                              key={reason.id}
-                              type="button"
-                              onClick={() => setSelectedReason(reason.id)}
-                              className={`p-3 rounded-xl border flex items-center gap-2 ${
-                                selectedReason === reason.id
-                                  ? "bg-indigo-600/20 border-indigo-500 text-white"
-                                  : "bg-gray-900 border-gray-800 text-gray-300 hover:border-gray-700"
-                              }`}
-                            >
-                              <reason.icon className="w-4 h-4" />
-                              <span className="text-sm">{reason.label}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm text-gray-300 mb-2">
-                              Name
-                            </label>
-                            <Input
-                              name="name"
-                              value={formData.name}
-                              onChange={handleChange}
-                              placeholder="Your name"
-                              required
-                              className="bg-gray-900 border-gray-800 text-white placeholder:text-gray-500 focus:border-indigo-500"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-300 mb-2">
-                              Email
-                            </label>
-                            <Input
-                              name="email"
-                              type="email"
-                              value={formData.email}
-                              onChange={handleChange}
-                              placeholder="you@example.com"
-                              required
-                              className="bg-gray-900 border-gray-800 text-white placeholder:text-gray-500 focus:border-indigo-500"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm text-gray-300 mb-2">
-                            Organization (Optional)
-                          </label>
-                          <Input
-                            name="organization"
-                            value={formData.organization}
-                            onChange={handleChange}
-                            placeholder="Company or school name"
-                            className="bg-gray-900 border-gray-800 text-white placeholder:text-gray-500 focus:border-indigo-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm text-gray-300 mb-2">
-                            Message
-                          </label>
-                          <Textarea
-                            name="message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            placeholder="How can we help you?"
-                            required
-                            rows={5}
-                            className="bg-gray-900 border-gray-800 text-white placeholder:text-gray-500 focus:border-indigo-500 resize-none"
-                          />
-                        </div>
-
-                        <Button
-                          type="submit"
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Sending...
-                            </>
-                          ) : (
-                            <>
-                              <Send className="mr-2 h-4 w-4" />
-                              Send Message
-                            </>
-                          )}
-                        </Button>
-                      </form>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Info */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">
-                  Contact Information
-                </h2>
-                <p className="text-gray-300">
-                  Reach out directly or fill out the form and we'll get back to
-                  you as soon as possible.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {contactInfo.map((info, index) => (
-                  <a
-                    key={index}
-                    href={info.href}
-                    className="group block"
-                  >
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-950 border border-gray-800 hover:border-indigo-500">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-600/20 flex items-center justify-center">
-                        <info.icon className="w-5 h-5 text-indigo-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">{info.label}</p>
-                        <p className="text-white group-hover:text-indigo-400">
-                          {info.value}
-                        </p>
-                      </div>
-                    </div>
+    <PublicLayout>
+      <LedgerHero
+        eyebrow="§ Correspondence"
+        meta="Write to the editor"
+        stamp="Reply within 2 business days"
+        title={
+          <>
+            <span className="block">Write to</span>
+            <span className="block italic display-serif-italic">the editor.</span>
+          </>
+        }
+        lede={
+          <>
+            The register is kept by people. Reach the desk directly — no forms triage,
+            no bots.
+          </>
+        }
+        ledeSide={
+          <div className="grid gap-4">
+            {info.map((i) => (
+              <div key={i.label} className="flex items-baseline justify-between gap-4 border-b border-foreground/15 pb-3">
+                <span className="mono-label text-foreground/60">{i.label}</span>
+                {i.href ? (
+                  <a href={i.href} className="text-foreground underline underline-offset-4 hover:ink-vermilion">
+                    {i.value}
                   </a>
-                ))}
+                ) : (
+                  <span className="text-foreground">{i.value}</span>
+                )}
               </div>
+            ))}
+          </div>
+        }
+      />
 
-              {/* Office Hours */}
-              <div className="p-6 rounded-2xl bg-gray-950 border border-gray-800">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  Office Hours
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Monday - Friday</span>
-                    <span className="text-white">9:00 AM - 6:00 PM PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Saturday</span>
-                    <span className="text-white">10:00 AM - 4:00 PM PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Sunday</span>
-                    <span className="text-gray-500">Closed</span>
-                  </div>
+      <LedgerSection first>
+        <motion.form
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={rise}
+          onSubmit={handleSubmit}
+          className="max-w-3xl border-2 border-foreground p-8 md:p-12 bg-background/40"
+        >
+          <div className="mono-label text-foreground/60 pb-3 mb-6 border-b border-foreground/25">
+            Correspondence Form · No. 000-002
+          </div>
+
+          {isSubmitted ? (
+            <div className="text-center py-12">
+              <CheckCircle className="w-14 h-14 mx-auto mb-6 text-foreground" />
+              <p className="display-serif text-3xl mb-4">Filed with the editor.</p>
+              <p className="text-foreground/70">
+                You will hear back within two business days.
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Reason */}
+              <fieldset className="mb-8">
+                <legend className="mono-label text-foreground/60 mb-3">Reason for writing</legend>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {contactReasons.map((r) => (
+                    <label
+                      key={r.id}
+                      className={
+                        "cursor-pointer border p-3 flex items-center gap-3 transition-colors " +
+                        (selectedReason === r.id
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-foreground/25 hover:border-foreground/60")
+                      }
+                    >
+                      <input
+                        type="radio"
+                        name="reason"
+                        value={r.id}
+                        checked={selectedReason === r.id}
+                        onChange={(e) => setSelectedReason(e.target.value)}
+                        className="sr-only"
+                      />
+                      <span className="text-sm font-medium">{r.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label htmlFor="firstName" className="mono-label text-foreground/60 block mb-2">First name</label>
+                  <Input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="mono-label text-foreground/60 block mb-2">Last name</label>
+                  <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                  />
                 </div>
               </div>
 
-              {/* Response Time */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Quick Response Promise
-                </h3>
-                <p className="text-gray-300 text-sm">
-                  We aim to respond to all inquiries within 24-48 business hours.
-                  For urgent matters, call us directly at{" "}
-                  <a href="tel:+15551234567" className="text-indigo-400 hover:text-indigo-300 font-medium underline underline-offset-2">
-                    +1 (555) 123-4567
-                  </a>.
-                </p>
+              <div className="mb-6">
+                <label htmlFor="email" className="mono-label text-foreground/60 block mb-2">Email</label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* FAQ CTA */}
-      <section className="py-20 relative border-t border-gray-800">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Looking for Quick Answers?
-              </span>
-            </h2>
-            <p className="text-gray-300 mb-8">
-              Check out our Help Center for frequently asked questions and
-              detailed guides.
-            </p>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-gray-700 text-white hover:bg-gray-900"
-              asChild
-            >
-              <a href="/help">Visit Help Center</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+              <div className="mb-6">
+                <label htmlFor="subject" className="mono-label text-foreground/60 block mb-2">Subject</label>
+                <Input
+                  id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  required
+                  className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                />
+              </div>
 
-      <Footer />
-    </div>
+              <div className="mb-8">
+                <label htmlFor="message" className="mono-label text-foreground/60 block mb-2">Message</label>
+                <Textarea
+                  id="message"
+                  rows={6}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  required
+                  className="rounded-none border-foreground/40 focus-visible:border-foreground focus-visible:ring-0 bg-transparent text-base leading-relaxed"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none py-6 text-base font-medium"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Filing...
+                  </>
+                ) : (
+                  <>
+                    File this message with the editor
+                    <span className="ml-3">→</span>
+                  </>
+                )}
+              </Button>
+            </>
+          )}
+        </motion.form>
+      </LedgerSection>
+    </PublicLayout>
   );
 };
 

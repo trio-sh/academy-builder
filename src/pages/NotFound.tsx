@@ -1,120 +1,87 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Home, ArrowLeft, Search } from "lucide-react";
+import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
 
 const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    console.error("404: attempted route:", location.pathname);
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-      <BackgroundVideo />
-
-      <div className="container px-4 md:px-6 relative z-10">
-        <motion.div
-          className="max-w-lg mx-auto text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* 404 Number */}
+    <PublicLayout>
+      <section className="paper-grain min-h-screen flex items-center justify-center pt-32 pb-24 overflow-hidden">
+        <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <span className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              404
-            </span>
-          </motion.div>
-
-          {/* Card */}
-          <motion.div
-            className="relative group"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
           >
-            {/* Glow effect */}
-            <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
+            <div className="mono-label text-foreground/50 mb-6">
+              § 404 · Page not in the register
+            </div>
 
-            <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
-                <Search className="w-8 h-8 text-indigo-400" />
-              </div>
+            <div className="ledger-num text-[10rem] md:text-[16rem] text-foreground leading-none tracking-tighter">
+              404
+            </div>
 
-              <h1 className="text-2xl md:text-3xl font-bold mb-4">
-                <span className="text-white">
-                  Page Not Found
-                </span>
-              </h1>
-
-              <p className="text-gray-400 mb-8">
-                Oops! The page you're looking for doesn't exist or has been moved.
-                Let's get you back on track.
+            <div className="my-10 max-w-md mx-auto">
+              <div className="rule-h border-foreground my-8" />
+              <p className="display-serif text-3xl md:text-4xl text-foreground leading-tight">
+                This <span className="italic display-serif-italic">page</span> was not{" "}
+                <span className="ink-vermilion">filed.</span>
               </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-                    asChild
-                  >
-                    <Link to="/">
-                      <Home className="mr-2 h-4 w-4" />
-                      Return Home
-                    </Link>
-                  </Button>
-                </motion.div>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto border-white/20 text-white hover:bg-black"
-                  onClick={() => window.history.back()}
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Go Back
-                </Button>
+              <p className="mt-6 text-foreground/70 leading-relaxed">
+                The page you were looking for is not in this volume. It may have been
+                moved, retired, or never registered at all.
+              </p>
+              <div className="mono-label text-foreground/50 mt-6 text-left inline-block">
+                Attempted route:{" "}
+                <span className="text-foreground normal-case">{location.pathname}</span>
               </div>
             </div>
-          </motion.div>
 
-          {/* Suggested Links */}
-          <motion.div
-            className="mt-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <p className="text-gray-500 text-sm mb-4">Or try one of these:</p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button
+                asChild
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6 text-base font-medium"
+              >
+                <Link to="/">
+                  Return to the front page
+                  <span className="ml-3">→</span>
+                </Link>
+              </Button>
+              <Button
+                onClick={() => window.history.back()}
+                variant="ghost"
+                className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-6 text-base font-medium underline underline-offset-8 decoration-1"
+              >
+                ← Go back one page
+              </Button>
+            </div>
+
+            <div className="mt-12 mono-label text-foreground/50">
+              Or try:{" "}
               {[
                 { label: "Platform", href: "/platform" },
                 { label: "About", href: "/about" },
                 { label: "Get Started", href: "/get-started" },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-                >
-                  {link.label}
-                </Link>
+              ].map((l, i) => (
+                <span key={l.href}>
+                  {i > 0 && " · "}
+                  <Link to={l.href} className="text-foreground hover:ink-vermilion normal-case underline underline-offset-4">
+                    {l.label}
+                  </Link>
+                </span>
               ))}
             </div>
           </motion.div>
-        </motion.div>
-      </div>
-    </div>
+        </div>
+      </section>
+    </PublicLayout>
   );
 };
 
