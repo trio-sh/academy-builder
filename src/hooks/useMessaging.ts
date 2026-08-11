@@ -47,24 +47,12 @@ export function useUnreadMessageCount(userId: string | undefined) {
 
     if (!userId) return;
 
-    // Subscribe to new messages globally to update unread count
-    const channel = supabase
-      .channel(`unread-messages-${userId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => {
-          // Only increment if message is not from this user
-          if (payload.new.sender_id !== userId) {
-            setUnreadCount((prev) => prev + 1);
-          }
-        }
-      )
-      .subscribe();
+    // Poll the unread count instead of holding a realtime channel open
+    const timer = setInterval(() => {
+      if (!document.hidden) void fetchUnreadCount();
+    }, 15000);
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => clearInterval(timer);
   }, [userId, fetchUnreadCount]);
 
   // Allow manual refresh (e.g., when user opens messages page)
