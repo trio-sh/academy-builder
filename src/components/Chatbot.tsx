@@ -1266,72 +1266,123 @@ export function Chatbot() {
   if (location.pathname.endsWith("/agent") || location.pathname.endsWith("/profile")) return null;
 
   return (
-    <>
-      {/* Floating Action Button */}
+    <div data-theme="paper" className="text-foreground">
+      {/* Floating trigger — an inked correspondence card with a wax seal */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-2xl"
+            className="fixed bottom-5 right-5 z-50 group"
             onClick={() => setIsOpen(true)}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-              boxShadow: [
-                "0 0 20px rgba(99, 102, 241, 0.4)",
-                "0 0 40px rgba(139, 92, 246, 0.6)",
-                "0 0 20px rgba(99, 102, 241, 0.4)",
-              ],
-            }}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1, rotate: 10 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{
-              boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-            }}
+            initial={{ scale: 0, opacity: 0, rotate: -6, y: 20 }}
+            animate={{ scale: 1, opacity: 1, rotate: -2, y: 0 }}
+            exit={{ scale: 0, opacity: 0, y: 20 }}
+            whileHover={{ rotate: 0, y: -3 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", damping: 18, stiffness: 240 }}
+            aria-label="Open the Editor's desk"
+            style={{ fontFamily: 'Fraunces, Georgia, serif' }}
           >
-            <MessageCircle size={28} />
+            {/* Envelope corner card */}
+            <div
+              className="relative bg-[#EFE9DA] text-[#1D1815] pl-3.5 pr-5 py-3 shadow-[4px_4px_0_rgba(29,24,21,0.20)] border border-[#1D1815]/60"
+              style={{
+                clipPath:
+                  "polygon(0 0, 100% 0, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+              }}
+            >
+              {/* Faint stamp border */}
+              <div className="absolute inset-1.5 pointer-events-none border border-dashed border-[#1D1815]/25" />
+
+              <div className="relative flex items-center gap-3">
+                {/* Wax-seal circle with tinted logo */}
+                <div className="relative w-11 h-11 flex-shrink-0">
+                  <div
+                    className="absolute inset-0 rounded-full bg-[#B84A22] flex items-center justify-center shadow-[inset_1px_-2px_3px_rgba(0,0,0,0.25)]"
+                    style={{ transform: "rotate(-6deg)" }}
+                  >
+                    <img
+                      src="/logo.png"
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover opacity-90"
+                      style={{ filter: "grayscale(1) brightness(1.8) contrast(0.9)" }}
+                    />
+                  </div>
+                  {/* Wax edges — decorative dots */}
+                  <span className="absolute -top-0.5 -left-0.5 w-1.5 h-1.5 rounded-full bg-[#B84A22]" />
+                  <span className="absolute -bottom-1 right-0 w-1 h-1 rounded-full bg-[#B84A22]/70" />
+                </div>
+
+                <div className="text-left leading-tight">
+                  <div
+                    className="text-[0.65rem] uppercase tracking-[0.2em] text-[#1D1815]/60"
+                    style={{ fontFamily: '"JetBrains Mono", monospace' }}
+                  >
+                    Editorial desk · open
+                  </div>
+                  <div className="text-[1rem] mt-1 tracking-tight text-[#1D1815] group-hover:italic transition-all">
+                    Write to the editor
+                    <span
+                      className="inline-block ml-2 text-[#B84A22] transition-transform group-hover:translate-x-0.5"
+                    >
+                      →
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Postmark ring — appears on hover */}
+            <div
+              className="absolute -top-3 -left-3 w-14 h-14 border-2 border-[#B84A22] rounded-full opacity-0 group-hover:opacity-70 transition-opacity flex items-center justify-center pointer-events-none"
+              style={{ transform: "rotate(-12deg)" }}
+            >
+              <span
+                className="text-[0.55rem] uppercase tracking-widest text-[#B84A22]"
+                style={{ fontFamily: '"JetBrains Mono", monospace' }}
+              >
+                T3A
+              </span>
+            </div>
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Chat Window */}
+      {/* Chat panel — paper editorial */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[420px] h-full sm:h-[650px] sm:max-h-[85vh] flex flex-col bg-black/95 backdrop-blur-xl border border-white/30 sm:rounded-3xl shadow-2xl overflow-hidden"
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
+            className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-50 w-full sm:w-[440px] h-full sm:h-[680px] sm:max-h-[86vh] flex flex-col bg-background border-2 border-foreground shadow-[6px_6px_0_rgba(29,24,21,0.25)] overflow-hidden paper-grain"
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            exit={{ opacity: 0, y: 40, scale: 0.98 }}
+            transition={{ type: "spring", damping: 26, stiffness: 300 }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/30 bg-gradient-to-r from-indigo-950/50 to-purple-950/50">
+            {/* Masthead */}
+            <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-foreground bg-background/70 backdrop-blur-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
-                </div>
+                <img src="/logo.png" alt="" className="w-10 h-10 rounded-full ring-1 ring-foreground/25 logo-ink" />
                 <div>
-                  <h3 className="font-semibold text-white">Academy Assistant</h3>
-                  <p className="text-xs text-gray-400">
+                  <div className="display-serif text-lg leading-none text-foreground">Editor's Desk</div>
+                  <div className="mono-label text-foreground/60 mt-1">
                     {isExecuting ? (
-                      <span className="text-indigo-300 flex items-center gap-1">
-                        <Loader2 className="w-3 h-3 animate-spin inline" /> Performing actions...
+                      <span className="inline-flex items-center gap-1">
+                        <Loader2 className="w-3 h-3 animate-spin" /> Filing…
                       </span>
                     ) : (
-                      "AI-powered with DOM control"
+                      "Ask · Navigate · Act"
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setScreenAware(!screenAware)}
-                  className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors ${
+                  className={`flex items-center gap-1 px-2 py-1 text-[0.6875rem] uppercase tracking-widest border transition-colors ${
                     screenAware
-                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                      : "bg-black text-gray-500 border border-white/10"
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/30 text-foreground/60 hover:text-foreground hover:border-foreground/60"
                   }`}
+                  style={{ fontFamily: '"JetBrains Mono", monospace' }}
                   title={screenAware ? "Screen awareness ON" : "Screen awareness OFF"}
                 >
                   <Monitor className="w-3 h-3" />
@@ -1342,76 +1393,68 @@ export function Chatbot() {
                     variant="ghost"
                     size="sm"
                     onClick={clearChat}
-                    className="text-gray-400 hover:text-white hover:bg-black text-xs"
+                    className="text-foreground/60 hover:text-foreground hover:bg-foreground/5 text-xs rounded-none mono-label"
                   >
                     Clear
                   </Button>
                 )}
-                <motion.button
+                <button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  className="w-8 h-8 border border-foreground/25 hover:border-foreground text-foreground flex items-center justify-center"
+                  aria-label="Close"
                 >
-                  <X size={18} />
-                </motion.button>
+                  <X size={16} />
+                </button>
               </div>
             </div>
 
-            {/* Screen Context Indicator */}
+            {/* Screen context strip */}
             {screenAware && (
-              <div className="px-4 py-2 bg-indigo-500/10 border-b border-indigo-500/20 flex items-center gap-2">
-                <Monitor className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="text-xs text-indigo-300">
-                  Viewing:{" "}
-                  <span className="text-white font-medium">
+              <div className="px-5 py-2 border-b border-foreground/20 flex items-center gap-2 text-foreground/70">
+                <Monitor className="w-3.5 h-3.5" />
+                <span className="mono-label">
+                  Reading:{" "}
+                  <span className="text-foreground normal-case">
                     {location.pathname === "/"
-                      ? "Homepage"
-                      : location.pathname
-                          .split("/")
-                          .filter(Boolean)
-                          .pop()
-                          ?.replace(/-/g, " ")}
+                      ? "Front page"
+                      : location.pathname.split("/").filter(Boolean).pop()?.replace(/-/g, " ")}
                   </span>
                 </span>
-                <span className="text-xs text-indigo-400/50 ml-auto flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> Can act on screen
+                <span className="mono-label text-foreground/50 ml-auto flex items-center gap-1">
+                  <Zap className="w-3 h-3" /> Can act
                 </span>
               </div>
             )}
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto px-5 py-6 space-y-5">
               {messages.length === 0 && (
                 <motion.div
-                  className="text-center py-8"
+                  className="text-center py-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="w-8 h-8 text-indigo-400" />
-                  </div>
-                  <h4 className="text-lg font-semibold text-white mb-2">
-                    Welcome to The 3rd Academy!
+                  <div className="mono-label text-foreground/60 mb-4">§ Welcome to the desk</div>
+                  <h4 className="display-serif text-3xl text-foreground leading-tight mb-4 px-2">
+                    Ask the <span className="italic display-serif-italic ink-vermilion">editor.</span>
                   </h4>
-                  <p className="text-sm text-gray-400 mb-2">
-                    I can help you navigate, click buttons, fill forms, and interact with the page directly.
+                  <p className="text-foreground/75 text-[0.9375rem] leading-relaxed mb-2 max-w-sm mx-auto">
+                    I can navigate the register, fill forms, and act on the page directly.
                   </p>
-                  <p className="text-xs text-indigo-400/60 mb-6">
-                    Try asking me to open a page or click something!
-                  </p>
+                  <p className="marginalia mb-6">Try one of the prompts below.</p>
 
-                  <div className="flex flex-wrap justify-center gap-2">
+                  <div className="flex flex-col gap-2 max-w-sm mx-auto">
                     {QUICK_REPLIES.map((reply) => (
-                      <motion.button
+                      <button
                         key={reply}
                         onClick={() => sendMessage(reply)}
-                        className="px-3 py-2 text-sm rounded-xl bg-black border border-white/30 text-gray-300 hover:bg-black hover:border-white/20 transition-colors"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        className="group text-left px-4 py-3 border border-foreground/25 hover:border-foreground hover:bg-foreground/[0.03] transition-all"
                       >
-                        {reply}
-                      </motion.button>
+                        <span className="text-[0.9375rem] text-foreground group-hover:italic transition-all">
+                          {reply}
+                        </span>
+                        <span className="ml-2 text-foreground/40 group-hover:text-foreground/70 transition-colors">→</span>
+                      </button>
                     ))}
                   </div>
                 </motion.div>
@@ -1423,50 +1466,42 @@ export function Chatbot() {
                   className="flex gap-3"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
+                  transition={{ delay: 0.05 }}
                 >
                   <div
-                    className={`w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5 ${
+                    className={`w-7 h-7 flex-shrink-0 flex items-center justify-center mt-0.5 ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-indigo-600 to-purple-600"
-                        : "bg-black border border-white/10"
+                        ? "bg-foreground text-background"
+                        : "border border-foreground text-foreground"
                     }`}
                   >
                     {message.role === "user" ? (
-                      <User className="w-3.5 h-3.5 text-white" />
+                      <User className="w-3.5 h-3.5" />
                     ) : (
-                      <Bot className="w-3.5 h-3.5 text-indigo-400" />
+                      <Bot className="w-3.5 h-3.5" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`text-xs font-medium ${
-                          message.role === "user" ? "text-indigo-300" : "text-purple-300"
-                        }`}
-                      >
-                        {message.role === "user" ? "You" : "Academy AI"}
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <span className="mono-label text-foreground">
+                        {message.role === "user" ? "You" : "Editor"}
                       </span>
-                      <span className="text-xs text-gray-600">
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                      <span className="mono-label text-foreground/40">
+                        {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
                     <div
-                      className={`p-3 rounded-2xl rounded-tl-sm ${
+                      className={`p-3.5 border-l-2 ${
                         message.role === "user"
-                          ? "bg-indigo-600/20 border border-indigo-500/20 text-gray-200"
-                          : "bg-black/60 border border-white/10 text-gray-300"
+                          ? "border-foreground bg-foreground/[0.03]"
+                          : "border-foreground/40"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      <p className="text-[0.9375rem] leading-[1.65] whitespace-pre-wrap text-foreground">
                         {message.content}
                       </p>
                     </div>
 
-                    {/* Action Badges */}
                     {message.actions && message.actions.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {message.actions.map((actionResult, aIdx) => (
@@ -1475,7 +1510,6 @@ export function Chatbot() {
                       </div>
                     )}
 
-                    {/* PDF download cards with accordion */}
                     {message.pdfDownloads && message.pdfDownloads.length > 0 && (
                       <div className="flex flex-col gap-1.5 mt-2">
                         {message.pdfDownloads.map((pdf, pIdx) => (
@@ -1487,21 +1521,20 @@ export function Chatbot() {
                 </motion.div>
               ))}
 
-              {/* Typing Indicator */}
               {isTyping && (
                 <motion.div
                   className="flex gap-3"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-indigo-400" />
+                  <div className="w-7 h-7 border border-foreground text-foreground flex items-center justify-center">
+                    <Bot className="w-3.5 h-3.5" />
                   </div>
-                  <div className="p-3 rounded-2xl rounded-tl-sm bg-black border border-white/30">
+                  <div className="p-3.5 border-l-2 border-foreground/40">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                      <div className="w-1.5 h-1.5 bg-foreground/70 animate-bounce" style={{ animationDelay: "0s" }} />
+                      <div className="w-1.5 h-1.5 bg-foreground/70 animate-bounce" style={{ animationDelay: "0.12s" }} />
+                      <div className="w-1.5 h-1.5 bg-foreground/70 animate-bounce" style={{ animationDelay: "0.24s" }} />
                     </div>
                   </div>
                 </motion.div>
@@ -1513,35 +1546,37 @@ export function Chatbot() {
             {/* Input */}
             <form
               onSubmit={handleSubmit}
-              className="p-4 border-t border-white/30 bg-black/50"
+              className="px-5 py-4 border-t border-foreground bg-background/60"
             >
-              <div className="flex gap-2">
+              <div className="flex items-end gap-2 border-b-2 border-foreground pb-2">
                 <Input
                   ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={isExecuting ? "Executing actions..." : "Ask me anything or tell me to do something..."}
-                  className="flex-1 bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                  placeholder={isExecuting ? "Filing…" : "Write a note to the editor…"}
+                  className="flex-1 rounded-none border-0 bg-transparent px-0 text-base display-serif focus-visible:ring-0 h-auto py-2"
                   disabled={isTyping || isExecuting}
                 />
-                <motion.button
+                <button
                   type="submit"
                   disabled={!inputValue.trim() || isTyping || isExecuting}
-                  className="w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="w-9 h-9 bg-foreground text-background flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors"
+                  aria-label="Send"
                 >
                   {isTyping || isExecuting ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4" />
                   )}
-                </motion.button>
+                </button>
+              </div>
+              <div className="mono-label text-foreground/40 mt-2">
+                Enter to send · Shift+Enter for new line
               </div>
             </form>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

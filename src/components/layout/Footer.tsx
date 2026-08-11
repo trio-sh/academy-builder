@@ -57,9 +57,11 @@ export function Footer() {
         <div className="grid md:grid-cols-12 gap-10 mb-16">
           <div className="md:col-span-6">
             <Link to="/" className="inline-flex items-center gap-3 mb-6">
-              <div className="h-11 w-11 flex items-center justify-center rounded-full border border-foreground">
-                <span className="display-serif text-xl leading-none pt-0.5">T³</span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="The 3rd Academy"
+                className="h-12 w-12 rounded-full ring-1 ring-foreground/25 logo-ink"
+              />
               <span className="display-serif text-2xl tracking-tight">The 3rd Academy</span>
             </Link>
             <p className="display-serif text-3xl md:text-4xl leading-[1.1] max-w-lg text-foreground">

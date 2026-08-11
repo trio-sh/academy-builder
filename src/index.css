@@ -261,6 +261,34 @@
   color: hsl(var(--paper));
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Logo tone — desaturates the brand mark to match the paper
+   theme's warm-ink palette without breaking the source PNG.
+   The two utilities below can be composed:
+     .logo-ink       — for use ON paper (ink-toned)
+     .logo-invert    — for use ON dark headers/footers (paper-toned)
+   ───────────────────────────────────────────────────────────── */
+.logo-ink {
+  filter:
+    grayscale(1)
+    brightness(0.55)
+    contrast(1.1)
+    sepia(0.35)
+    hue-rotate(-12deg)
+    saturate(0.9);
+  mix-blend-mode: multiply;
+}
+[data-theme="paper"] .logo-ink { mix-blend-mode: multiply; }
+
+.logo-tinted {
+  filter:
+    grayscale(0.85)
+    sepia(0.4)
+    hue-rotate(-15deg)
+    saturate(1.1)
+    brightness(0.9);
+}
+
 @layer base {
   * {
     @apply border-border;

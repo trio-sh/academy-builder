@@ -1,35 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
-import { GraduationCap, Loader2, AlertCircle } from "lucide-react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
+import { cn } from "@/lib/utils";
 
 const Login = () => {
-  const [userType, setUserType] = useState("candidate");
+  const [userType, setUserType] = useState<"candidate" | "mentor" | "employer">("candidate");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,35 +21,28 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || getDashboardRoute(userType);
-
-  function getDashboardRoute(role: string) {
+  const getDashboardRoute = (role: string) => {
     const routes: Record<string, string> = {
       candidate: "/dashboard/candidate",
       mentor: "/dashboard/mentor",
       employer: "/dashboard/employer",
     };
     return routes[role] || "/dashboard/candidate";
-  }
+  };
+
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || getDashboardRoute(userType);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
     try {
       const { error: signInError } = await signIn(email, password);
-
       if (signInError) {
         setError(signInError.message || "Invalid email or password");
         return;
       }
-
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
-
+      toast({ title: "Welcome back.", description: "You have signed in to the register." });
       navigate(from, { replace: true });
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -78,160 +52,121 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <BackgroundVideo />
-      <Header />
-      <main className="pt-16">
-        <section className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 relative overflow-hidden">
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
-          <motion.div
-            className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-20 left-20 w-80 h-80 bg-purple-900 rounded-full opacity-20 blur-3xl"
-            animate={{ scale: [1.2, 1, 1.2] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
-              className="max-w-md mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {/* Logo */}
-              <motion.div
-                variants={itemVariants}
-                className="flex items-center justify-center gap-2 mb-8"
-              >
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
-                  <GraduationCap className="w-6 h-6" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold tracking-tight text-white">
-                    THE 3RD ACADEMY
-                  </span>
-                </div>
-              </motion.div>
-
-              {/* Card */}
-              <motion.div variants={itemVariants} className="relative group">
-                {/* Glow effect */}
-                <div className="absolute -inset-2 rounded-3xl opacity-30 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600" />
-
-                <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
-                  <h1 className="text-2xl font-bold text-center mb-2">
-                    <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      Welcome Back
-                    </span>
-                  </h1>
-                  <p className="text-center text-gray-400 mb-6">
-                    Sign in to continue your journey
-                  </p>
-
-                  {/* Error Message */}
-                  {error && (
-                    <div className="mb-6 p-4 rounded-xl bg-red-500/30 border border-red-500/20 flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                      <p className="text-sm text-red-400">{error}</p>
-                    </div>
-                  )}
-
-                  {/* User Type Tabs */}
-                  <Tabs value={userType} onValueChange={setUserType} className="mb-6">
-                    <TabsList className="grid w-full grid-cols-3 bg-black border border-white/30">
-                      <TabsTrigger
-                        value="candidate"
-                        className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-gray-400"
-                      >
-                        Candidate
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="mentor"
-                        className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-gray-400"
-                      >
-                        Mentor
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="employer"
-                        className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white text-gray-400"
-                      >
-                        Employer
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-
-                  {/* Form */}
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-50">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        disabled={isLoading}
-                        className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="password" className="text-gray-50">Password</Label>
-                        <Link to="/forgot-password" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
-                          Forgot password?
-                        </Link>
-                      </div>
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={isLoading}
-                        className="bg-black border-white/20 text-white placeholder:text-gray-500 focus:border-indigo-500"
-                      />
-                    </div>
-
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-                      >
-                        {isLoading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Signing In...
-                          </>
-                        ) : (
-                          "Sign In"
-                        )}
-                      </Button>
-                    </motion.div>
-                  </form>
-
-                  {/* Sign Up Link */}
-                  <p className="mt-6 text-center text-sm text-gray-400">
-                    Don't have an account?{" "}
-                    <Link to="/get-started" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-                      Get Started
-                    </Link>
-                  </p>
-                </div>
-              </motion.div>
-            </motion.div>
+    <PublicLayout>
+      <section className="paper-grain min-h-screen flex items-center pt-32 pb-16">
+        <div className="max-w-6xl mx-auto px-6 w-full grid md:grid-cols-2 gap-16 items-center">
+          {/* Left — editorial welcome */}
+          <div>
+            <div className="mono-label text-foreground/60 mb-4">§ Sign in · Register access</div>
+            <h1 className="display-serif text-[3rem] md:text-[5.5rem] text-foreground leading-[0.95]">
+              <span className="block">Welcome</span>
+              <span className="block italic display-serif-italic">back to the</span>
+              <span className="block ink-vermilion">register.</span>
+            </h1>
+            <p className="mt-8 text-foreground/80 text-lg leading-relaxed border-l-2 border-foreground pl-6 max-w-md">
+              Continue where the observation left off. Every entry in your record is
+              still yours — the register kept it while you were away.
+            </p>
           </div>
-        </section>
-      </main>
-    </div>
+
+          {/* Right — form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
+            className="border-2 border-foreground p-8 md:p-10 bg-background/40 relative"
+          >
+            <div className="absolute -top-4 right-8 stamp normal-case">Members' entrance</div>
+
+            <div className="mono-label text-foreground/60 pb-3 mb-6 border-b border-foreground/25">
+              Form No. 000-003 · Sign in
+            </div>
+
+            {error && (
+              <div className="mb-5 p-4 border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-foreground flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-foreground">{error}</p>
+              </div>
+            )}
+
+            {/* Role tabs */}
+            <div className="mb-6">
+              <div className="mono-label text-foreground/60 mb-3">I am signing in as</div>
+              <div className="grid grid-cols-3 border border-foreground">
+                {(["candidate", "mentor", "employer"] as const).map((role, i) => (
+                  <button
+                    key={role}
+                    type="button"
+                    onClick={() => setUserType(role)}
+                    className={cn(
+                      "py-3 text-sm font-medium capitalize transition-colors",
+                      userType === role
+                        ? "bg-foreground text-background"
+                        : "text-foreground hover:bg-foreground/5",
+                      i > 0 && "border-l border-foreground"
+                    )}
+                  >
+                    {role === "candidate" ? "Job seeker" : role}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="mono-label text-foreground/60 block mb-2">Email</label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label htmlFor="password" className="mono-label text-foreground/60">Password</label>
+                  <Link to="/forgot-password" className="mono-label text-foreground hover:ink-vermilion underline underline-offset-4">
+                    Forgot?
+                  </Link>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="•••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none py-6 text-base font-medium"
+              >
+                {isLoading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</>
+                ) : (
+                  <>Sign in <span className="ml-3">→</span></>
+                )}
+              </Button>
+            </form>
+
+            <p className="mt-8 text-center mono-label text-foreground/60">
+              Not yet in the register?{" "}
+              <Link to="/get-started" className="text-foreground hover:ink-vermilion underline underline-offset-4">
+                Enter →
+              </Link>
+            </p>
+          </motion.div>
+        </div>
+      </section>
+    </PublicLayout>
   );
 };
 

@@ -54,9 +54,11 @@ export function Header() {
       <nav className="flex items-center justify-between h-16 px-4 md:px-6 max-w-[1400px] mx-auto">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative h-9 w-9 flex items-center justify-center rounded-full border border-foreground text-foreground group-hover:bg-foreground group-hover:text-background transition-colors">
-            <span className="display-serif text-lg leading-none pt-0.5">T³</span>
-          </div>
+          <img
+            src="/logo.png"
+            alt="The 3rd Academy"
+            className="h-10 w-10 rounded-full ring-1 ring-foreground/25 group-hover:ring-foreground transition-all logo-ink"
+          />
           <div className="flex flex-col leading-none">
             <span className="display-serif text-[1.05rem] tracking-tight text-foreground">
               The 3rd Academy
@@ -172,7 +174,7 @@ export function Header() {
                 ) : isAuthenticated && profile ? (
                   <>
                     <div className="flex items-center gap-3 py-3 border-b border-foreground/10">
-                      <div className="w-10 h-10 rounded-full border border-foreground flex items-center justify-center text-foreground font-medium display-serif">
+                      <div className="w-10 h-10 rounded-full border border-foreground flex items-center justify-center text-foreground font-medium display-serif overflow-hidden">
                         {profile.first_name?.[0]}{profile.last_name?.[0]}
                       </div>
                       <div className="flex-1 min-w-0">

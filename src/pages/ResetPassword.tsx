@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { updatePassword, supabase } from "@/lib/supabase";
+import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
+import { Eye, EyeOff, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -20,20 +20,14 @@ const ResetPassword = () => {
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check if there's a valid session (user came from reset link)
-    const checkSession = async () => {
+    const check = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsValidSession(!!session);
     };
-    checkSession();
-
-    // Listen for auth state changes
+    check();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsValidSession(true);
-      }
+      if (event === "PASSWORD_RECOVERY") setIsValidSession(true);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -52,25 +46,13 @@ const ResetPassword = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     if (!validatePassword()) return;
-
     setIsLoading(true);
-
     try {
       const { error } = await updatePassword(password);
-
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
+      if (error) { setError(error.message); return; }
       setSuccess(true);
-
-      // Redirect to login after 3 seconds
-      setTimeout(() => {
-        navigate("/login");
-      }, 3000);
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -78,223 +60,194 @@ const ResetPassword = () => {
     }
   };
 
-  // Check password strength
-  const getPasswordStrength = () => {
-    if (!password) return { strength: 0, label: "", color: "" };
-
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (password.length >= 12) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
-    if (strength <= 2) return { strength, label: "Weak", color: "bg-red-500" };
-    if (strength <= 3) return { strength, label: "Fair", color: "bg-amber-500" };
-    if (strength <= 4) return { strength, label: "Good", color: "bg-blue-500" };
-    return { strength, label: "Strong", color: "bg-emerald-500" };
-  };
-
-  const passwordStrength = getPasswordStrength();
+  const strength = (() => {
+    if (!password) return { s: 0, label: "" };
+    let s = 0;
+    if (password.length >= 8) s++;
+    if (password.length >= 12) s++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) s++;
+    if (/[0-9]/.test(password)) s++;
+    if (/[^a-zA-Z0-9]/.test(password)) s++;
+    if (s <= 2) return { s, label: "Weak" };
+    if (s <= 3) return { s, label: "Fair" };
+    if (s <= 4) return { s, label: "Good" };
+    return { s, label: "Strong" };
+  })();
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <BackgroundVideo />
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md"
-      >
-        <div className="p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
-          {isValidSession === null ? (
-            <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mx-auto mb-4" />
-              <p className="text-gray-400">Verifying reset link...</p>
-            </div>
-          ) : isValidSession === false ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="w-8 h-8 text-red-400" />
+    <PublicLayout>
+      <section className="paper-grain min-h-screen flex items-center justify-center pt-32 pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="w-full max-w-lg px-6"
+        >
+          <div className="border-2 border-foreground p-8 md:p-10 bg-background/40">
+            {isValidSession === null ? (
+              <div className="text-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin text-foreground mx-auto mb-4" />
+                <p className="mono-label text-foreground/60">Verifying reset link…</p>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Invalid or Expired Link</h2>
-              <p className="text-gray-400 mb-6">
-                This password reset link is invalid or has expired. Please request a new one.
-              </p>
-              <div className="space-y-3">
-                <Link to="/forgot-password">
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-500">
-                    Request New Reset Link
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-black">
-                    Return to Login
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-          ) : success ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-emerald-400" />
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Password Reset Complete!</h2>
-              <p className="text-gray-400 mb-6">
-                Your password has been successfully updated. You can now log in with your new password.
-              </p>
-              <p className="text-sm text-gray-500 mb-4">
-                Redirecting to login...
-              </p>
-              <Link to="/login">
-                <Button className="w-full bg-indigo-600 hover:bg-indigo-500">
-                  Go to Login Now
-                </Button>
-              </Link>
-            </motion.div>
-          ) : (
-            <>
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-4">
-                  <ShieldCheck className="w-8 h-8 text-white" />
-                </div>
-                <h1 className="text-2xl font-bold text-white mb-2">Reset Your Password</h1>
-                <p className="text-gray-400">
-                  Enter a new password for your account.
+            ) : isValidSession === false ? (
+              <>
+                <AlertCircle className="w-12 h-12 text-foreground mb-6" />
+                <div className="mono-label text-foreground/60 mb-3">§ Invalid link</div>
+                <h2 className="display-serif text-4xl md:text-5xl text-foreground leading-[0.95] mb-6">
+                  Link is <span className="italic display-serif-italic ink-vermilion">expired.</span>
+                </h2>
+                <p className="text-foreground/70 mb-8 leading-relaxed">
+                  This password reset link is invalid or has expired. Request a new one below.
                 </p>
-              </div>
+                <div className="space-y-3">
+                  <Link to="/forgot-password">
+                    <Button className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
+                      Request new reset link →
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button variant="outline" className="w-full border-foreground/30 text-foreground rounded-none hover:bg-foreground/5">
+                      Return to sign in
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            ) : success ? (
+              <>
+                <CheckCircle className="w-12 h-12 text-foreground mb-6" />
+                <div className="mono-label text-foreground/60 mb-3">§ Password updated</div>
+                <h2 className="display-serif text-4xl md:text-5xl text-foreground leading-[0.95] mb-6">
+                  Password <span className="italic display-serif-italic">reset.</span>
+                </h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">
+                  Your password has been successfully updated. You will be redirected to
+                  the sign-in page in a moment.
+                </p>
+                <Link to="/login">
+                  <Button className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
+                    Sign in now →
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="mono-label text-foreground/60 mb-3">§ Password reset · Form 000-005</div>
+                <h1 className="display-serif text-4xl md:text-5xl text-foreground leading-[0.95] mb-6">
+                  Reset your <span className="italic display-serif-italic ink-vermilion">password.</span>
+                </h1>
+                <p className="text-foreground/70 mb-8 leading-relaxed">
+                  Enter a new password for your account. Store it somewhere safe.
+                </p>
 
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 p-3 rounded-lg bg-red-500/30 border border-red-500/20 text-red-400 mb-6"
-                >
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <p className="text-sm">{error}</p>
-                </motion.div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-gray-300">New Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter new password"
-                      required
-                      className="bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                {error && (
+                  <div className="mb-5 p-4 border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-foreground flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-foreground">{error}</p>
                   </div>
-                  {/* Password strength indicator */}
-                  {password && (
-                    <div className="space-y-1">
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div
-                            key={i}
-                            className={`h-1 flex-1 rounded-full ${
-                              i <= passwordStrength.strength ? passwordStrength.color : "bg-black"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <p className={`text-xs ${
-                        passwordStrength.strength <= 2 ? "text-red-400" :
-                        passwordStrength.strength <= 3 ? "text-amber-400" :
-                        passwordStrength.strength <= 4 ? "text-blue-400" : "text-emerald-400"
-                      }`}>
-                        Password strength: {passwordStrength.label}
-                      </p>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label htmlFor="password" className="mono-label text-foreground/60 block mb-2">New password</label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter new password"
+                        required
+                        className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-0 bottom-3 text-foreground/60 hover:text-foreground"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
                     </div>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-gray-300">Confirm Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm new password"
-                      required
-                      className="bg-black border-white/30 text-white placeholder:text-gray-500 focus:border-indigo-500 pr-12"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                    {password && (
+                      <div className="mt-3">
+                        <div className="flex gap-1 mb-1">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <div
+                              key={i}
+                              className={cn(
+                                "h-[2px] flex-1",
+                                i <= strength.s ? "bg-foreground" : "bg-foreground/15"
+                              )}
+                            />
+                          ))}
+                        </div>
+                        <p className="mono-label text-foreground/60">Strength: {strength.label}</p>
+                      </div>
+                    )}
                   </div>
-                  {confirmPassword && password !== confirmPassword && (
-                    <p className="text-xs text-red-400">Passwords do not match</p>
-                  )}
-                  {confirmPassword && password === confirmPassword && (
-                    <p className="text-xs text-emerald-400">Passwords match</p>
-                  )}
-                </div>
 
-                <div className="p-3 rounded-lg bg-black border border-white/30">
-                  <p className="text-xs text-gray-400">Password requirements:</p>
-                  <ul className="text-xs text-gray-500 mt-1 space-y-0.5">
-                    <li className={password.length >= 8 ? "text-emerald-400" : ""}>
-                      {password.length >= 8 ? "✓" : "•"} At least 8 characters
-                    </li>
-                    <li className={/[a-z]/.test(password) && /[A-Z]/.test(password) ? "text-emerald-400" : ""}>
-                      {/[a-z]/.test(password) && /[A-Z]/.test(password) ? "✓" : "•"} Upper and lowercase letters
-                    </li>
-                    <li className={/[0-9]/.test(password) ? "text-emerald-400" : ""}>
-                      {/[0-9]/.test(password) ? "✓" : "•"} At least one number
-                    </li>
-                  </ul>
-                </div>
+                  <div>
+                    <label htmlFor="confirmPassword" className="mono-label text-foreground/60 block mb-2">Confirm</label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm new password"
+                        required
+                        className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-lg display-serif pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-0 bottom-3 text-foreground/60 hover:text-foreground"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                    {confirmPassword && (
+                      <p className={cn(
+                        "mono-label mt-2",
+                        password === confirmPassword ? "ink-vermilion" : "text-foreground/60"
+                      )}>
+                        {password === confirmPassword ? "✓ Passwords match" : "Passwords do not match"}
+                      </p>
+                    )}
+                  </div>
 
-                <Button
-                  type="submit"
-                  disabled={isLoading || !password || !confirmPassword || password !== confirmPassword}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Resetting Password...
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Reset Password
-                    </>
-                  )}
-                </Button>
-              </form>
-            </>
-          )}
-        </div>
-      </motion.div>
-    </div>
+                  <div className="border border-foreground/20 p-4">
+                    <p className="mono-label text-foreground/60 mb-2">Requirements</p>
+                    <ul className="space-y-1 text-sm">
+                      <li className={cn(password.length >= 8 && "ink-vermilion")}>
+                        {password.length >= 8 ? "✓" : "·"} At least 8 characters
+                      </li>
+                      <li className={cn(/[a-z]/.test(password) && /[A-Z]/.test(password) && "ink-vermilion")}>
+                        {/[a-z]/.test(password) && /[A-Z]/.test(password) ? "✓" : "·"} Upper and lowercase letters
+                      </li>
+                      <li className={cn(/[0-9]/.test(password) && "ink-vermilion")}>
+                        {/[0-9]/.test(password) ? "✓" : "·"} At least one number
+                      </li>
+                    </ul>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading || !password || !confirmPassword || password !== confirmPassword}
+                    className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none py-6 disabled:opacity-40"
+                  >
+                    {isLoading ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Resetting…</>
+                    ) : (
+                      <>Reset password <span className="ml-3">→</span></>
+                    )}
+                  </Button>
+                </form>
+              </>
+            )}
+          </div>
+        </motion.div>
+      </section>
+    </PublicLayout>
   );
 };
 

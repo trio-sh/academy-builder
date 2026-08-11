@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
-import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
-import { Footer } from "@/components/layout/Footer";
+import { PublicLayout } from "@/components/layout/PublicLayout";
 import {
   Users,
   Briefcase,
@@ -158,9 +156,7 @@ const Join = () => {
   const selectedRoleInfo = roleOptions.find((r) => r.id === selectedRole);
 
   return (
-    <div className="min-h-screen bg-black">
-      <BackgroundVideo />
-      <Header />
+    <PublicLayout>
       <main className="pt-16">
         {/* Hero */}
         <motion.section
@@ -169,9 +165,9 @@ const Join = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
+          <div className="absolute inset-0 paper-grain" />
           <motion.div
-            className="absolute top-20 right-20 w-64 h-64 bg-indigo-900 rounded-full opacity-20 blur-3xl"
+            className="absolute top-20 right-20 w-64 h-64 hidden"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -179,7 +175,7 @@ const Join = () => {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
               <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black backdrop-blur-xl border border-white/30 text-sm text-gray-50 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/60 backdrop-blur-md border border-foreground/25 text-sm text-foreground/80 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -191,14 +187,14 @@ const Join = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <span className="text-white">
+                <span className="text-foreground">
                   Create Your
                 </span>{" "}
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <span className="italic display-serif-italic ink-vermilion">
                   Account
                 </span>
               </motion.h1>
-              <motion.p className="text-lg text-gray-50">
+              <motion.p className="text-lg text-foreground/80">
                 Choose how you want to participate in the behavioral credentialing ecosystem.
               </motion.p>
             </div>
@@ -206,7 +202,7 @@ const Join = () => {
         </motion.section>
 
         {/* Main Content */}
-        <section className="py-8 md:py-12 bg-black">
+        <section className="py-8 md:py-12 bg-background paper-grain">
           <div className="container px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
               {/* Progress */}
@@ -217,14 +213,14 @@ const Join = () => {
                       className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
                         step >= s
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30"
-                          : "bg-black text-gray-50 border border-white/30"
+                          ? "bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none shadow-lg shadow-indigo-600/30"
+                          : "bg-background text-foreground border border-foreground/25"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
                     </motion.div>
                     {s < 3 && (
-                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-black")} />
+                      <div className={cn("w-16 h-0.5 transition-colors duration-300", step > s ? "bg-foreground" : "bg-black")} />
                     )}
                   </div>
                 ))}
@@ -233,7 +229,7 @@ const Join = () => {
               {/* Step 1: Role Selection */}
               {step === 1 && (
                 <motion.div className="space-y-8" variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-white mb-8">
+                  <motion.h2 variants={itemVariants} className="text-2xl font-bold text-center text-foreground mb-8">
                     I want to join as...
                   </motion.h2>
 
@@ -246,13 +242,13 @@ const Join = () => {
                         className={cn(
                           "group relative p-6 rounded-2xl text-left transition-all duration-500",
                           selectedRole === role.id
-                            ? "bg-black border-2 border-indigo-500/50"
-                            : "bg-black border border-white/30 hover:border-white/30"
+                            ? "bg-foreground/[0.03] border-2 border-foreground"
+                            : "bg-background border border-foreground/25 hover:border-foreground/60"
                         )}
                         whileHover={{ y: -5 }}
                       >
                         {selectedRole === role.id && (
-                          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 blur-xl" />
+                          <div className="absolute -inset-2 bg-foreground rounded-2xl opacity-20 blur-xl" />
                         )}
 
                         <div className="relative">
@@ -263,20 +259,20 @@ const Join = () => {
                                 selectedRole === role.id ? role.gradient : "from-white/10 to-white/5"
                               )}
                             >
-                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-white" : "text-gray-50")} />
+                              <role.icon className={cn("w-6 h-6", selectedRole === role.id ? "text-foreground" : "text-foreground/80")} />
                             </div>
                             <div>
-                              <h3 className="text-lg font-bold text-white">{role.title}</h3>
+                              <h3 className="text-lg font-bold text-foreground">{role.title}</h3>
                             </div>
                           </div>
 
-                          <p className="text-gray-50 text-sm mb-4">{role.description}</p>
+                          <p className="text-foreground/80 text-sm mb-4">{role.description}</p>
 
                           <ul className="space-y-2">
                             {role.features.map((feature) => (
                               <li key={feature} className="flex items-center gap-2 text-sm">
-                                <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-gray-500")} />
-                                <span className="text-gray-50">{feature}</span>
+                                <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-foreground/800")} />
+                                <span className="text-foreground/80">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -290,14 +286,14 @@ const Join = () => {
                       size="lg"
                       onClick={() => setStep(2)}
                       disabled={!selectedRole}
-                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-10 py-6 rounded-xl font-bold text-lg"
+                      className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-10 py-6 rounded-xl font-bold text-lg"
                     >
                       Continue
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </motion.div>
 
-                  <motion.p variants={itemVariants} className="text-center text-sm text-gray-500">
+                  <motion.p variants={itemVariants} className="text-center text-sm text-foreground/800">
                     Already have an account?{" "}
                     <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                       Sign In
@@ -310,16 +306,16 @@ const Join = () => {
               {step === 2 && (
                 <motion.div className="max-w-md mx-auto" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="absolute -inset-2 bg-foreground rounded-3xl opacity-20 blur-xl" />
+                    <div className="relative p-8 rounded-2xl bg-background/60 backdrop-blur-md border border-foreground/25">
                       <div className="flex items-center gap-3 mb-6">
                         {selectedRoleInfo && (
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
-                            <selectedRoleInfo.icon className="w-5 h-5 text-white" />
+                            <selectedRoleInfo.icon className="w-5 h-5 text-foreground" />
                           </div>
                         )}
                         <div>
-                          <h2 className="text-xl font-bold text-white">Create {selectedRoleInfo?.title} Account</h2>
+                          <h2 className="text-xl font-bold text-foreground">Create {selectedRoleInfo?.title} Account</h2>
                         </div>
                       </div>
 
@@ -333,41 +329,41 @@ const Join = () => {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="firstName" className="text-gray-50">First Name</Label>
+                            <Label htmlFor="firstName" className="text-foreground/80">First Name</Label>
                             <Input
                               id="firstName"
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white"
+                              className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="lastName" className="text-gray-50">Last Name</Label>
+                            <Label htmlFor="lastName" className="text-foreground/80">Last Name</Label>
                             <Input
                               id="lastName"
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white"
+                              className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="email" className="text-gray-50">Email</Label>
+                          <Label htmlFor="email" className="text-foreground/80">Email</Label>
                           <Input
                             id="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black border-white/20 text-white"
+                            className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="password" className="text-gray-50">Password</Label>
+                          <Label htmlFor="password" className="text-foreground/80">Password</Label>
                           <Input
                             id="password"
                             type="password"
@@ -375,7 +371,7 @@ const Join = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="bg-black border-white/20 text-white"
+                            className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                           />
                         </div>
 
@@ -383,24 +379,24 @@ const Join = () => {
                         {selectedRole === "employer" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="companyName" className="text-gray-50">Company Name</Label>
+                              <Label htmlFor="companyName" className="text-foreground/80">Company Name</Label>
                               <Input
                                 id="companyName"
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white"
+                                className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-50">Industry</Label>
+                              <Label htmlFor="industry" className="text-foreground/80">Industry</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Technology, Healthcare"
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white"
+                                className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                               />
                             </div>
                           </>
@@ -408,13 +404,13 @@ const Join = () => {
 
                         {selectedRole === "school_admin" && (
                           <div className="space-y-2">
-                            <Label htmlFor="schoolName" className="text-gray-50">School / Institution Name</Label>
+                            <Label htmlFor="schoolName" className="text-foreground/80">School / Institution Name</Label>
                             <Input
                               id="schoolName"
                               value={schoolName}
                               onChange={(e) => setSchoolName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-black border-white/20 text-white"
+                              className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                             />
                           </div>
                         )}
@@ -422,25 +418,25 @@ const Join = () => {
                         {selectedRole === "mentor" && (
                           <>
                             <div className="space-y-2">
-                              <Label htmlFor="industry" className="text-gray-50">Industry / Expertise</Label>
+                              <Label htmlFor="industry" className="text-foreground/80">Industry / Expertise</Label>
                               <Input
                                 id="industry"
                                 placeholder="e.g., Software Engineering"
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white"
+                                className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="yearsExperience" className="text-gray-50">Years of Experience</Label>
+                              <Label htmlFor="yearsExperience" className="text-foreground/80">Years of Experience</Label>
                               <Input
                                 id="yearsExperience"
                                 type="number"
                                 value={yearsExperience}
                                 onChange={(e) => setYearsExperience(e.target.value)}
                                 disabled={isLoading}
-                                className="bg-black border-white/20 text-white"
+                                className="rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 text-foreground"
                               />
                             </div>
                           </>
@@ -452,14 +448,14 @@ const Join = () => {
                           variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="flex-1 border-white/20 text-white hover:bg-black"
+                          className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                         >
                           Back
                         </Button>
                         <Button
                           onClick={handleSignUp}
                           disabled={isLoading || !firstName || !lastName || !email || !password}
-                          className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                          className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                         >
                           {isLoading ? (
                             <>
@@ -484,19 +480,19 @@ const Join = () => {
                 <motion.div className="max-w-md mx-auto text-center" variants={containerVariants} initial="hidden" animate="visible">
                   <motion.div variants={itemVariants} className="relative">
                     <div className="absolute -inset-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl opacity-20 blur-xl" />
-                    <div className="relative p-8 rounded-2xl bg-black backdrop-blur-xl border border-white/30">
+                    <div className="relative p-8 rounded-2xl bg-background/60 backdrop-blur-md border border-foreground/25">
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle2 className="w-10 h-10 text-white" />
+                        <CheckCircle2 className="w-10 h-10 text-foreground" />
                       </div>
 
-                      <h2 className="text-2xl font-bold text-white mb-2">Welcome to The 3rd Academy!</h2>
-                      <p className="text-gray-50 mb-6">
+                      <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to The 3rd Academy!</h2>
+                      <p className="text-foreground/80 mb-6">
                         Your {selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.
                       </p>
 
                       <Button
                         onClick={handleComplete}
-                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-foreground"
                       >
                         Go to Dashboard
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -509,8 +505,7 @@ const Join = () => {
           </div>
         </section>
       </main>
-      <Footer />
-    </div>
+    </PublicLayout>
   );
 };
 
