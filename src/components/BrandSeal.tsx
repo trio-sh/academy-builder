@@ -30,6 +30,9 @@ export function BrandSeal({
           style={{
             width: size * 0.72,
             height: size * 0.72,
+            // Cancel the disc's -6deg wax-seal tilt so the logo inside
+            // reads upright while the surrounding disc keeps its tilt.
+            transform: "rotate(6deg)",
             filter: "grayscale(1) brightness(1.8) contrast(0.9)",
           }}
         />
