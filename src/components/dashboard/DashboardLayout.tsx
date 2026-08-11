@@ -1,4 +1,11 @@
-import { useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -35,6 +42,32 @@ export interface DashboardSection {
   chip?: { text: string };
 }
 
+// ─── Header slot context ────────────────────────────────────────────────────
+// A dashboard route can push a custom node into the topbar, replacing the
+// default "§ Page" breadcrumb. Used by the Praxis agent to host its session
+// picker there instead of in its own body.
+
+interface HeaderSlotCtx {
+  slot: ReactNode | null;
+  setSlot: (node: ReactNode | null) => void;
+}
+
+const DashboardHeaderContext = createContext<HeaderSlotCtx | null>(null);
+
+export function useDashboardHeader() {
+  const ctx = useContext(DashboardHeaderContext);
+  const setSlot = useCallback(
+    (node: ReactNode | null) => ctx?.setSlot(node),
+    [ctx]
+  );
+  useEffect(() => {
+    // Clean up whatever this consumer registered when it unmounts.
+    return () => ctx?.setSlot(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return { setHeaderSlot: setSlot };
+}
+
 interface DashboardLayoutProps {
   role: string;
   /** Deprecated — no longer rendered. Kept to avoid breaking callers. */
@@ -61,6 +94,7 @@ export function DashboardLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [headerSlot, setHeaderSlot] = useState<ReactNode | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
@@ -69,6 +103,7 @@ export function DashboardLayout({
   const isFullBleedRoute = location.pathname.endsWith("/agent");
 
   return (
+    <DashboardHeaderContext.Provider value={{ slot: headerSlot, setSlot: setHeaderSlot }}>
     <div
       data-theme="paper"
       className={cn(
@@ -265,9 +300,13 @@ export function DashboardLayout({
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div className="mono-label text-foreground/60 hidden md:block">
-              {breadcrumb(location.pathname, nav)}
-            </div>
+            {headerSlot ? (
+              <div className="min-w-0 flex-1">{headerSlot}</div>
+            ) : (
+              <div className="mono-label text-foreground/60 hidden md:block">
+                {breadcrumb(location.pathname, nav)}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3">
@@ -382,6 +421,7 @@ export function DashboardLayout({
         </main>
       </div>
     </div>
+    </DashboardHeaderContext.Provider>
   );
 }
 

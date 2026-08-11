@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { BrandSeal } from "@/components/BrandSeal";
+import { todayStamp } from "@/lib/dateStamp";
 
 const footerLinks = {
   platform: {
@@ -65,7 +66,7 @@ export function Footer() {
               Focused on <span className="italic display-serif-italic">Behavioral Workplace Readiness</span> — how conduct shows up in the environment where work happens, when knowledge and capability alone are no longer enough.
             </p>
             <p className="mono-label text-foreground/50 mt-8">
-              Behavioral Workplace Readiness · est. MMXXV
+              Behavioral Workplace Readiness · {todayStamp()}
             </p>
           </div>
 

@@ -50,6 +50,7 @@ import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { useAuth } from "@/contexts/AuthContext";
 import { parseResume } from "@/lib/resumeParser";
 import { supabase } from "@/lib/supabase";
+import { useDashboardHeader } from "@/components/dashboard/DashboardLayout";
 
 // ─── IndexedDB Schema ─────────────────────────────────────────────────────────
 
@@ -1915,7 +1916,7 @@ export default function AIAgent() {
  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
  const [activeTitle, setActiveTitle] = useState<string>("New chat");
  const [sessionPickerOpen, setSessionPickerOpen] = useState(false);
- const [sidebarOpen, setSidebarOpen] = useState(false);
+ const { setHeaderSlot } = useDashboardHeader();
 
  // Tool gating: which lazy tools the model has discovered + loaded this session.
  // Kept in a ref so sendRequest reads the freshest value without needing to be
@@ -1983,14 +1984,12 @@ export default function AIAgent() {
  loadedToolsRef.current = new Set();
  setLoadedTools(loadedToolsRef.current);
  setSessionPickerOpen(false);
- setSidebarOpen(false);
  inputRef.current?.focus();
  }, []);
 
  const switchSession = useCallback(async (id: string) => {
  if (!user?.id || id === activeSessionId) {
  setSessionPickerOpen(false);
- setSidebarOpen(false);
  return;
  }
  const loaded = await loadSession(user.id, id);
@@ -2005,7 +2004,6 @@ export default function AIAgent() {
  setLoadedTools(loadedToolsRef.current);
  }
  setSessionPickerOpen(false);
- setSidebarOpen(false);
  }, [user?.id, activeSessionId]);
 
  const removeSession = useCallback(async (id: string) => {
@@ -2021,6 +2019,104 @@ export default function AIAgent() {
  }
  }
  }, [user?.id, activeSessionId, switchSession, startNewSession]);
+
+ // Push the session picker into the dashboard's topbar so it lives
+ // where the "§ Praxis" breadcrumb used to render. Re-registers on
+ // every state change so the dropdown reflects live data.
+ useEffect(() => {
+ setHeaderSlot(
+ <div className="flex items-center justify-between gap-2 min-w-0 w-full">
+ <div className="relative min-w-0 flex-1">
+ <button
+ type="button"
+ onClick={() => setSessionPickerOpen((v) => !v)}
+ className="flex items-center gap-1.5 min-w-0 max-w-full text-left text-sm text-foreground/85 hover:text-foreground"
+ title="Switch chat"
+ >
+ <span className="mono-label text-[0.65rem] text-foreground/40 flex-shrink-0">§ Praxis</span>
+ <span className="hidden sm:inline text-foreground/30 flex-shrink-0">·</span>
+ <span className="truncate">{activeTitle || "New chat"}</span>
+ <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${sessionPickerOpen ? "rotate-180" : ""}`} />
+ </button>
+ <AnimatePresence>
+ {sessionPickerOpen && (
+ <>
+ {/* click-outside layer */}
+ <div
+ className="fixed inset-0 z-30"
+ onClick={() => setSessionPickerOpen(false)}
+ />
+ <motion.div
+ initial={{ opacity: 0, y: -4 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0, y: -4 }}
+ transition={{ duration: 0.12 }}
+ className="absolute left-0 top-full mt-2 z-40 w-[22rem] max-w-[calc(100vw-2rem)] bg-background border border-foreground/25 rounded-md shadow-lg overflow-hidden"
+ role="menu"
+ >
+ <div className="flex items-center justify-between px-3 py-2 border-b border-foreground/10">
+ <span className="mono-label text-[0.65rem] text-foreground/50">§ Chat history</span>
+ <button
+ type="button"
+ onClick={() => { setSessionPickerOpen(false); startNewSession(); }}
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-foreground/25 text-[11px] text-foreground hover:bg-foreground/5"
+ >
+ <Plus className="w-3 h-3" /> New chat
+ </button>
+ </div>
+ <div className="max-h-[60vh] overflow-y-auto">
+ {sessions.length === 0 ? (
+ <div className="p-4 text-xs text-foreground/50">No past chats yet.</div>
+ ) : (
+ sessions.map((s) => (
+ <div
+ key={s.id}
+ className={`flex items-center gap-2 px-3 py-2 border-b border-foreground/5 last:border-b-0 hover:bg-foreground/5 cursor-pointer ${
+ s.id === activeSessionId ? "bg-foreground/5" : ""
+ }`}
+ onClick={() => switchSession(s.id)}
+ >
+ <div className="flex-1 min-w-0">
+ <div className="text-sm text-foreground/90 truncate">{s.title || "Untitled"}</div>
+ <div className="mono-label text-[0.6rem] text-foreground/40 mt-0.5">
+ {s.messageCount} msg · {relativeTime(s.updatedAt)}
+ </div>
+ </div>
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ if (window.confirm(`Delete "${s.title || "Untitled"}"?`)) {
+ void removeSession(s.id);
+ }
+ }}
+ className="p-1 rounded text-foreground/40 hover:text-foreground hover:bg-foreground/10"
+ title="Delete chat"
+ aria-label="Delete chat"
+ >
+ <Trash2 className="w-3.5 h-3.5" />
+ </button>
+ </div>
+ ))
+ )}
+ </div>
+ </motion.div>
+ </>
+ )}
+ </AnimatePresence>
+ </div>
+ <button
+ type="button"
+ onClick={startNewSession}
+ className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-foreground/25 text-[11px] text-foreground hover:bg-foreground/5 flex-shrink-0"
+ title="New chat"
+ >
+ <Plus className="w-3 h-3" />
+ <span className="hidden sm:inline">New chat</span>
+ </button>
+ </div>
+ );
+ }, [setHeaderSlot, sessionPickerOpen, sessions, activeSessionId, activeTitle, switchSession, removeSession, startNewSession]);
 
  // Load user context
  useEffect(() => {
@@ -2511,169 +2607,6 @@ export default function AIAgent() {
 
  return (
  <div className="flex flex-col h-full w-full relative">
-
- {/* Session bar */}
- <div className="flex items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-foreground/10 bg-background/60 backdrop-blur">
- <div className="flex items-center gap-2 min-w-0">
- <button
- type="button"
- onClick={() => setSidebarOpen(true)}
- className="lg:hidden p-1.5 rounded-md text-foreground/60 hover:text-foreground hover:bg-foreground/5"
- title="Chat history"
- aria-label="Open chat history"
- >
- <ChevronDown className="w-4 h-4 -rotate-90" />
- </button>
- <div className="relative min-w-0">
- <button
- type="button"
- onClick={() => setSessionPickerOpen((v) => !v)}
- className="hidden lg:flex items-center gap-1.5 max-w-[42ch] text-sm text-foreground/80 hover:text-foreground truncate"
- title="Switch chat"
- >
- <span className="mono-label text-[0.65rem] text-foreground/40">§</span>
- <span className="truncate">{activeTitle || "New chat"}</span>
- <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${sessionPickerOpen ? "rotate-180" : ""}`} />
- </button>
- <span className="lg:hidden text-sm text-foreground/80 truncate max-w-[24ch] inline-block">{activeTitle || "New chat"}</span>
- <AnimatePresence>
- {sessionPickerOpen && (
- <motion.div
- initial={{ opacity: 0, y: -4 }}
- animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, y: -4 }}
- transition={{ duration: 0.12 }}
- className="absolute left-0 top-full mt-1 z-40 w-[22rem] max-w-[calc(100vw-2rem)] bg-background border border-foreground/20 rounded-md shadow-lg overflow-hidden"
- role="menu"
- >
- <div className="max-h-[60vh] overflow-y-auto">
- {sessions.length === 0 ? (
- <div className="p-4 text-xs text-foreground/50">No past chats yet.</div>
- ) : (
- sessions.map((s) => (
- <div
- key={s.id}
- className={`flex items-center gap-2 px-3 py-2 border-b border-foreground/5 last:border-b-0 hover:bg-foreground/5 cursor-pointer ${
- s.id === activeSessionId ? "bg-foreground/5" : ""
- }`}
- onClick={() => switchSession(s.id)}
- >
- <div className="flex-1 min-w-0">
- <div className="text-sm text-foreground/90 truncate">{s.title || "Untitled"}</div>
- <div className="mono-label text-[0.6rem] text-foreground/40 mt-0.5">
- {s.messageCount} msg · {relativeTime(s.updatedAt)}
- </div>
- </div>
- <button
- type="button"
- onClick={(e) => {
- e.stopPropagation();
- if (window.confirm(`Delete "${s.title || "Untitled"}"?`)) {
- void removeSession(s.id);
- }
- }}
- className="p-1 rounded text-foreground/40 hover:text-foreground hover:bg-foreground/10"
- title="Delete chat"
- aria-label="Delete chat"
- >
- <Trash2 className="w-3.5 h-3.5" />
- </button>
- </div>
- ))
- )}
- </div>
- </motion.div>
- )}
- </AnimatePresence>
- </div>
- </div>
- <button
- type="button"
- onClick={startNewSession}
- className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-foreground/25 text-xs text-foreground hover:bg-foreground/5"
- title="New chat"
- >
- <Plus className="w-3.5 h-3.5" />
- <span className="hidden sm:inline">New chat</span>
- </button>
- </div>
-
- {/* Mobile sidebar */}
- <AnimatePresence>
- {sidebarOpen && (
- <>
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40 lg:hidden"
- onClick={() => setSidebarOpen(false)}
- />
- <motion.aside
- initial={{ x: "-100%" }}
- animate={{ x: 0 }}
- exit={{ x: "-100%" }}
- transition={{ type: "tween", duration: 0.2 }}
- className="fixed top-0 left-0 bottom-0 w-[85vw] max-w-[20rem] bg-background border-r border-foreground/15 z-50 flex flex-col lg:hidden"
- >
- <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10">
- <span className="mono-label text-[0.65rem] text-foreground/50">§ Praxis history</span>
- <button
- type="button"
- onClick={() => setSidebarOpen(false)}
- className="p-1 rounded text-foreground/50 hover:text-foreground"
- aria-label="Close"
- >
- <X className="w-4 h-4" />
- </button>
- </div>
- <button
- type="button"
- onClick={startNewSession}
- className="mx-3 mt-3 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-foreground/25 text-sm text-foreground hover:bg-foreground/5"
- >
- <Plus className="w-4 h-4" /> New chat
- </button>
- <div className="flex-1 overflow-y-auto mt-3">
- {sessions.length === 0 ? (
- <div className="p-4 text-xs text-foreground/50">No past chats yet.</div>
- ) : (
- sessions.map((s) => (
- <div
- key={s.id}
- className={`flex items-center gap-2 px-3 py-2 border-b border-foreground/5 hover:bg-foreground/5 cursor-pointer ${
- s.id === activeSessionId ? "bg-foreground/5" : ""
- }`}
- onClick={() => switchSession(s.id)}
- >
- <div className="flex-1 min-w-0">
- <div className="text-sm text-foreground/90 truncate">{s.title || "Untitled"}</div>
- <div className="mono-label text-[0.6rem] text-foreground/40 mt-0.5">
- {s.messageCount} msg · {relativeTime(s.updatedAt)}
- </div>
- </div>
- <button
- type="button"
- onClick={(e) => {
- e.stopPropagation();
- if (window.confirm(`Delete "${s.title || "Untitled"}"?`)) {
- void removeSession(s.id);
- }
- }}
- className="p-1 rounded text-foreground/40 hover:text-foreground hover:bg-foreground/10"
- aria-label="Delete chat"
- >
- <Trash2 className="w-3.5 h-3.5" />
- </button>
- </div>
- ))
- )}
- </div>
- </motion.aside>
- </>
- )}
- </AnimatePresence>
-
  {/* Messages Area */}
  <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6">
 

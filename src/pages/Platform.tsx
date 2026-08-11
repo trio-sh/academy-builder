@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
 
 const rise = {
   hidden: { opacity: 0, y: 28 },
@@ -102,7 +103,7 @@ const Platform = () => {
               <div className="stamp">Layer III · Evidence</div>
             </div>
             <div className="text-right">
-              <span className="mono-label text-foreground/60 block">Iss. 04 · MMXXVI</span>
+              <span className="mono-label text-foreground/60 block">Iss. 04 · {todayStamp()}</span>
               <span className="mono-label text-foreground/40 mt-1 block">Pp. 025–052</span>
             </div>
           </motion.div>

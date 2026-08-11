@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
 import {
   LedgerSection,
   LedgerHeader,
@@ -50,7 +51,7 @@ const About = () => {
       <LedgerHero
         eyebrow="§ About · Manifesto"
         meta="Filed for public reading"
-        stamp="Est. MMXXV"
+        stamp={todayStamp()}
         title={
           <>
             <span className="block">Not a certifier.</span>

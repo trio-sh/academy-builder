@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { todayStamp } from "@/lib/dateStamp";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -49,7 +50,7 @@ export function Header() {
       {/* Ledger meta strip */}
       <div className="hidden md:flex items-center justify-between px-6 py-1.5 border-b border-foreground/10 text-foreground/60">
         <span className="mono-label">The 3rd Academy · Behavioral Readiness Register</span>
-        <span className="mono-label">Vol. 01 · Iss. 04 · MMXXVI</span>
+        <span className="mono-label">Vol. 01 · Iss. 04 · {todayStamp()}</span>
       </div>
 
       <nav className="flex items-center justify-between h-16 px-4 md:px-6 max-w-[1400px] mx-auto">
@@ -60,7 +61,7 @@ export function Header() {
             <span className="display-serif text-[1.05rem] tracking-tight text-foreground">
               The 3rd Academy
             </span>
-            <span className="mono-label text-foreground/50 mt-0.5">est. MMXXV</span>
+            <span className="mono-label text-foreground/50 mt-0.5">{todayStamp()}</span>
           </div>
         </Link>
 
