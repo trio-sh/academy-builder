@@ -25,10 +25,14 @@ import {
   ArrowRight,
   Download,
   ChevronDown,
+  Pencil,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { ReasoningBlock } from "@/components/ReasoningBlock";
+import { parseReasoning } from "@/lib/reasoning";
 import { BrandSeal } from "@/components/BrandSeal";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -1001,6 +1005,19 @@ export function Chatbot() {
   const [db, setDb] = useState<IDBPDatabase<ChatbotDBSchema> | null>(null);
   const [screenAware, setScreenAware] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // See AIAgent for rationale — freeze auto-scroll for the whole
+  // drag gesture so text selection completes without the viewport
+  // jumping and defaulting to a full-page selection.
+  const isPointerDownRef = useRef(false);
+  const stickToBottomRef = useRef(true);
+
+  // Message editing (branching): while set, a user message at that
+  // index renders as an editable textarea. Saving truncates the
+  // conversation to just before that message and re-runs sendMessage
+  // with the new content — the classic "edit and regenerate" branch.
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -1049,15 +1066,48 @@ export function Chatbot() {
     }
   }, [messages, db, chatKey]);
 
-  // Scroll to bottom of chat (only when chat is open)
+  // Scroll to bottom of chat — but freeze during selection drag / when
+  // the user has scrolled up / when a text selection is active, so
+  // highlighting works and the viewport doesn't jump.
   useEffect(() => {
     if (!isOpen) return;
-    // Scroll within the chat container, not the page
-    const el = messagesEndRef.current;
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
+    if (isPointerDownRef.current) return;
+    if (!stickToBottomRef.current) return;
+    const sel = typeof window !== "undefined" ? window.getSelection?.() : null;
+    if (sel && sel.toString().length > 0) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [messages, isTyping, isExecuting, isOpen]);
+
+  // Track scroll position + pointerdown/pointerup so auto-scroll can
+  // freeze for the whole selection drag.
+  useEffect(() => {
+    if (!isOpen) return;
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const NEAR_BOTTOM_PX = 80;
+    const scrollHandler = () => {
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      stickToBottomRef.current = distance <= NEAR_BOTTOM_PX;
+    };
+    scrollHandler();
+    el.addEventListener("scroll", scrollHandler, { passive: true });
+
+    const pointerDown = (e: PointerEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && t.closest("button, a, input, textarea")) return;
+      isPointerDownRef.current = true;
+    };
+    const pointerUp = () => { isPointerDownRef.current = false; };
+    el.addEventListener("pointerdown", pointerDown);
+    window.addEventListener("pointerup", pointerUp);
+    window.addEventListener("pointercancel", pointerUp);
+    return () => {
+      el.removeEventListener("scroll", scrollHandler);
+      el.removeEventListener("pointerdown", pointerDown);
+      window.removeEventListener("pointerup", pointerUp);
+      window.removeEventListener("pointercancel", pointerUp);
+    };
+  }, [isOpen]);
 
   // Focus input
   useEffect(() => {
@@ -1120,7 +1170,10 @@ export function Chatbot() {
     [navigate]
   );
 
-  const sendMessage = async (messageContent: string) => {
+  const sendMessage = async (
+    messageContent: string,
+    priorMessages?: Message[]
+  ) => {
     if (!messageContent.trim()) return;
 
     const userMessage: Message = {
@@ -1129,7 +1182,15 @@ export function Chatbot() {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    // priorMessages lets callers (e.g. the edit-and-branch flow)
+    // pass a truncated history explicitly so we don't rely on the
+    // component's stale closure of `messages`.
+    const base = priorMessages ?? messages;
+    if (priorMessages) {
+      setMessages([...priorMessages, userMessage]);
+    } else {
+      setMessages((prev) => [...prev, userMessage]);
+    }
     setInputValue("");
     setIsTyping(true);
 
@@ -1143,7 +1204,7 @@ export function Chatbot() {
         body: JSON.stringify({
           messages: [
             { role: "system", content: buildSystemPrompt() },
-            ...messages.map((m) => ({ role: m.role, content: m.content })),
+            ...base.map((m) => ({ role: m.role, content: m.content })),
             { role: "user", content: messageContent },
           ],
           temperature: 0.7,
@@ -1219,6 +1280,32 @@ export function Chatbot() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     sendMessage(inputValue);
+  };
+
+  /**
+   * Edit + branch a prior user message. Drops the target user turn
+   * (and everything after it — the branch we're leaving) and re-runs
+   * sendMessage with the new content, which appends the fresh user
+   * turn and asks the model for a new assistant reply.
+   */
+  const beginEdit = (idx: number, content: string) => {
+    setEditingIdx(idx);
+    setEditingText(content);
+  };
+  const cancelEdit = () => {
+    setEditingIdx(null);
+    setEditingText("");
+  };
+  const saveEdit = (idx: number) => {
+    const next = editingText.trim();
+    setEditingIdx(null);
+    setEditingText("");
+    if (!next) return;
+    // Truncate everything from the edited user turn onward and pass
+    // that history explicitly to sendMessage so we don't race the
+    // component's stale `messages` closure.
+    const truncated = messages.slice(0, idx);
+    void sendMessage(next, truncated);
   };
 
   const clearChat = () => {
@@ -1413,7 +1500,7 @@ export function Chatbot() {
             )}
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-6 space-y-5">
+            <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-5 py-6 space-y-5">
               {messages.length === 0 && (
                 <motion.div
                   className="text-center py-6"
@@ -1475,6 +1562,18 @@ export function Chatbot() {
                       <span className="mono-label text-foreground/40">
                         {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </span>
+                      {message.role === "user" && editingIdx !== index && !isTyping && (
+                        <button
+                          type="button"
+                          onClick={() => beginEdit(index, message.content)}
+                          className="ml-auto mono-label text-foreground/40 hover:text-foreground inline-flex items-center gap-1"
+                          title="Edit and re-run"
+                          aria-label="Edit and re-run"
+                        >
+                          <Pencil className="w-3 h-3" />
+                          Edit
+                        </button>
+                      )}
                     </div>
                     <div
                       className={`p-3.5 border-l-2 ${
@@ -1483,8 +1582,51 @@ export function Chatbot() {
                           : "border-foreground/40"
                       }`}
                     >
-                      {message.role === "assistant" ? (
-                        <MarkdownRenderer content={message.content} />
+                      {message.role === "assistant" ? (() => {
+                        const parsed = parseReasoning(message.content);
+                        return (
+                          <>
+                            {parsed.hasReasoning && (
+                              <ReasoningBlock reasoning={parsed.reasoning} closed={parsed.closed} />
+                            )}
+                            {parsed.cleaned && <MarkdownRenderer content={parsed.cleaned} />}
+                          </>
+                        );
+                      })() : editingIdx === index ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={editingText}
+                            onChange={(e) => setEditingText(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Escape") { e.preventDefault(); cancelEdit(); }
+                              if ((e.key === "Enter" && (e.metaKey || e.ctrlKey))) {
+                                e.preventDefault();
+                                saveEdit(index);
+                              }
+                            }}
+                            rows={Math.min(8, Math.max(2, editingText.split("\n").length))}
+                            className="w-full bg-background border border-foreground/25 p-2 text-[0.9375rem] leading-[1.65] text-foreground resize-none outline-none focus:border-foreground"
+                            autoFocus
+                          />
+                          <div className="flex items-center gap-2 mono-label text-[0.65rem]">
+                            <button
+                              type="button"
+                              onClick={() => saveEdit(index)}
+                              disabled={!editingText.trim()}
+                              className="inline-flex items-center gap-1 px-2 py-1 border border-foreground text-foreground hover:bg-foreground hover:text-background disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                              <Check className="w-3 h-3" /> Save &amp; re-run
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelEdit}
+                              className="inline-flex items-center gap-1 px-2 py-1 border border-foreground/25 text-foreground/70 hover:text-foreground hover:border-foreground/50"
+                            >
+                              <X className="w-3 h-3" /> Cancel
+                            </button>
+                            <span className="text-foreground/40 ml-auto normal-case tracking-normal">⌘/Ctrl + Enter to save · Esc to cancel</span>
+                          </div>
+                        </div>
                       ) : (
                         <p className="text-[0.9375rem] leading-[1.65] whitespace-pre-wrap text-foreground">
                           {message.content}
