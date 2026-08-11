@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 const features = [
   {
     icon: Award,
-    title: "Skill Passport",
+    title: "Behavioral Evidence Report",
     description: "Evidence-based credentials that showcase your verified workplace readiness to employers.",
     gradient: "from-emerald-500 to-emerald-600",
   },
@@ -98,7 +98,7 @@ const howItWorks = [
   {
     step: "4",
     title: "Earn Your Credential",
-    description: "Receive your Skill Passport and showcase it to employers seeking qualified candidates.",
+    description: "Receive your Behavioral Evidence Report and showcase it to employers seeking qualified candidates.",
   },
 ];
 

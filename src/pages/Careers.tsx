@@ -85,7 +85,7 @@ const benefits = [
   },
   {
     icon: GraduationCap,
-    title: "Skill Passport",
+    title: "Behavioral Evidence Report",
     description: "Free access to our platform. Earn your own behavioral credentials.",
   },
 ];

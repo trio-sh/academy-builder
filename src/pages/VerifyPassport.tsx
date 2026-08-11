@@ -130,7 +130,7 @@ const VerifyPassport = () => {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-emerald-500 mx-auto mb-4" />
-          <p className="text-gray-400">Verifying Skill Passport...</p>
+          <p className="text-gray-400">Verifying Behavioral Evidence Report...</p>
         </div>
       </div>
     );
@@ -148,7 +148,7 @@ const VerifyPassport = () => {
             <XCircle className="w-10 h-10 text-red-400" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">Verification Failed</h1>
-          <p className="text-gray-400 mb-6">{error || "This Skill Passport could not be verified."}</p>
+          <p className="text-gray-400 mb-6">{error || "This Behavioral Evidence Report could not be verified."}</p>
           <Link to="/">
             <Button variant="outline" className="border-white/20 text-white hover:bg-black">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -178,7 +178,7 @@ const VerifyPassport = () => {
               The 3rd Academy
             </span>
           </Link>
-          <span className="text-sm text-gray-500">Skill Passport Verification</span>
+          <span className="text-sm text-gray-500">Behavioral Evidence Report Verification</span>
         </div>
       </header>
 
@@ -197,7 +197,7 @@ const VerifyPassport = () => {
             <>
               <CheckCircle className="w-8 h-8 text-emerald-400" />
               <div>
-                <p className="font-semibold text-emerald-400">Verified Skill Passport</p>
+                <p className="font-semibold text-emerald-400">Verified Behavioral Evidence Report</p>
                 <p className="text-sm text-gray-400">This credential has been verified and is currently active.</p>
               </div>
             </>
@@ -206,7 +206,7 @@ const VerifyPassport = () => {
               <AlertCircle className="w-8 h-8 text-amber-400" />
               <div>
                 <p className="font-semibold text-amber-400">Expired or Inactive</p>
-                <p className="text-sm text-gray-400">This Skill Passport has expired or been deactivated.</p>
+                <p className="text-sm text-gray-400">This Behavioral Evidence Report has expired or been deactivated.</p>
               </div>
             </>
           )}
@@ -332,7 +332,7 @@ const VerifyPassport = () => {
             {passport.verification_code}
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            This page serves as official verification of the above Skill Passport.
+            This page serves as official verification of the above Behavioral Evidence Report.
           </p>
         </motion.div>
 

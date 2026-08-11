@@ -27,7 +27,7 @@ const pressReleases = [
     date: "December 8, 2025",
     title: "Partnership Announcement: The 3rd Academy Joins Forces with Major Tech Employers",
     excerpt:
-      "Leading companies commit to prioritizing Skill Passport holders in hiring decisions.",
+      "Leading companies commit to prioritizing Behavioral Evidence Report holders in hiring decisions.",
     link: "#",
   },
   {
@@ -46,7 +46,7 @@ const pressReleases = [
   },
   {
     date: "September 12, 2025",
-    title: "New Study: Skill Passport Holders Show 40% Higher Retention Rates",
+    title: "New Study: Behavioral Evidence Report Holders Show 40% Higher Retention Rates",
     excerpt:
       "Independent research validates effectiveness of behavioral credentialing approach.",
     link: "#",

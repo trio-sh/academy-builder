@@ -141,7 +141,7 @@ const itemVariants = {
 const navItems = [
   { name: "Overview", href: "/dashboard/candidate", icon: BarChart3, section: "observation" },
   { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
-  { name: "Skill Passport", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
+  { name: "Behavioral Evidence Report", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
   { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
   { name: "Praxis", href: "/dashboard/candidate/agent", icon: Bot, section: "observation" },
   { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
@@ -299,8 +299,8 @@ const Overview = () => {
         href: "/dashboard/candidate/observations"
       },
       {
-        title: "Earn your Skill Passport",
-        description: "Mentor endorses you → Skill Passport issued → Employers can discover you on T3X",
+        title: "Earn your Behavioral Evidence Report",
+        description: "Mentor endorses you → Behavioral Evidence Report issued → Employers can discover you on T3X",
         completed: candidateProfile?.has_skill_passport || false,
         href: "/dashboard/candidate/passport"
       },
@@ -445,7 +445,7 @@ const Overview = () => {
   );
 };
 
-// Skill Passport component
+// Behavioral Evidence Report component
 const SkillPassport = () => {
   const { user, profile } = useAuth();
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
@@ -546,7 +546,7 @@ const SkillPassport = () => {
     const tierColorHex = tierLabel.color.includes('emerald') ? '#10b981' : tierLabel.color.includes('amber') ? '#f59e0b' : '#94a3b8';
     const barsLabel = (s: number) => s >= 3.5 ? "Strong" : s >= 2.5 ? "Competent" : s >= 1.5 ? "Emerging" : "Not Yet Demonstrated";
 
-    const html = `<!DOCTYPE html><html><head><title>Skill Passport - ${profile?.first_name} ${profile?.last_name}</title>
+    const html = `<!DOCTYPE html><html><head><title>Behavioral Evidence Report - ${profile?.first_name} ${profile?.last_name}</title>
 <style>*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:40px;color:#1a1a2e;background:#fff}.c{max-width:800px;margin:0 auto;border:2px solid #10b981;border-radius:16px;padding:32px;background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#f0fdfa 100%)}.hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #d1d5db}.pr{display:flex;align-items:center;gap:16px}.av{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#10b981,#14b8a6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;object-fit:cover}.nm{font-size:24px;font-weight:700;color:#1a1a2e}.hl{color:#10b981;font-weight:500}.vb{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#dcfce7;border:1px solid #86efac;border-radius:20px;color:#16a34a;font-size:14px;font-weight:500}.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.sc{padding:14px;background:#fff;border-radius:12px;border:1px solid #e5e7eb}.sl{font-size:11px;color:#6b7280;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}.sv{font-size:18px;font-weight:700}.vx{padding:16px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:24px;display:flex;align-items:center;gap:12px}.vc{font-family:monospace;font-size:18px;font-weight:700;letter-spacing:2px}.dt{font-size:16px;font-weight:600;margin-bottom:4px}.ds{font-size:11px;color:#6b7280;margin-bottom:16px}.dg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}.dm{padding:14px;background:#fff;border-radius:10px;border:1px solid #e5e7eb}.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.dn{font-weight:600;font-size:13px}.ds2{font-weight:700;font-size:14px}.dl{font-size:11px;margin-bottom:8px}.pb{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}.pf{height:100%;border-radius:4px}.os{padding:24px;background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border:2px solid #10b981;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.ol{color:#6b7280;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.5px}.ov{font-size:36px;font-weight:700;color:#1a1a2e}.ox{font-size:14px;font-weight:600;color:#10b981}.ft{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280}@media print{body{padding:20px}.c{border-width:1px}}</style></head><body><div class="c"><div class="hd"><div class="pr">${profile?.avatar_url ? '<img src="' + profile.avatar_url + '" class="av"/>' : '<div class="av">' + (profile?.first_name?.[0] || '') + (profile?.last_name?.[0] || '') + '</div>'}<div><div class="nm">${profile?.first_name || ''} ${profile?.last_name || ''}</div><div class="hl">${profile?.headline || 'Behavioral Readiness Credential Holder'}</div></div></div><div class="vb">✓ Verified</div></div><div class="sg"><div class="sc"><div class="sl">Readiness Tier</div><div class="sv" style="color:${tierColorHex}">${tierLabel.label}</div></div><div class="sc"><div class="sl">Dimensions</div><div class="sv">${scoredDims.length}</div></div><div class="sc"><div class="sl">Issued</div><div class="sv" style="font-size:14px">${passportData?.issued_at ? new Date(passportData.issued_at).toLocaleDateString() : 'N/A'}</div></div><div class="sc"><div class="sl">Expires</div><div class="sv" style="font-size:14px">${passportData?.expires_at ? new Date(passportData.expires_at).toLocaleDateString() : 'Never'}</div></div></div><div class="vx"><span style="font-size:24px">🔒</span><div><div class="sl">Verification Code</div><div class="vc">${passportData?.verification_code || 'N/A'}</div></div></div><div class="dt">Behavioral Assessment</div><div class="ds">4-Point Behaviourally Anchored Rating Scale (BARS)</div><div class="dg">${scoredDims.map(([dimId, score]) => { const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId); if (!dim) return ''; const pct = (score / 4) * 100; const clr = score >= 3.5 ? '#10b981' : score >= 2.5 ? '#3b82f6' : score >= 1.5 ? '#f59e0b' : '#ef4444'; return '<div class="dm"><div class="dh"><span class="dn">' + dim.label + '</span><span class="ds2" style="color:' + clr + '">' + score.toFixed(1) + '/4</span></div><div class="dl" style="color:' + clr + '">' + barsLabel(score) + '</div><div class="pb"><div class="pf" style="width:' + pct + '%;background:' + clr + '"></div></div></div>'; }).join('')}</div><div class="os"><div><div class="ol">Overall Behavioral Readiness</div><div class="ov">${avgScore}/4</div><div class="ox">${avgScore !== "N/A" ? barsLabel(parseFloat(avgScore)) : '—'}</div></div><div style="font-size:48px">🏆</div></div><div class="ft"><span>The 3rd Academy — Behavioral Readiness Platform</span><span style="color:#6366f1;font-family:monospace;font-size:11px">${window.location.origin}/verify/${passportData?.verification_code}</span></div></div><script>window.onload=function(){window.print()}<\/script></body></html>`;
     printWindow.document.write(html);
     printWindow.document.close();
@@ -582,7 +582,7 @@ const SkillPassport = () => {
         className="space-y-8"
       >
         <motion.div variants={itemVariants}>
-          <h1 className="text-3xl font-bold text-white mb-2">Skill Passport</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Behavioral Evidence Report</h1>
           <p className="text-gray-400">
             Your behavioral readiness documentation for the workplace.
           </p>
@@ -595,10 +595,10 @@ const SkillPassport = () => {
           <div className="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
             <Shield className="w-10 h-10 text-indigo-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Earn Your Skill Passport</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">Earn Your Behavioral Evidence Report</h2>
           <p className="text-gray-400 max-w-md mx-auto mb-6">
             Complete L1 + L2 observations and receive a "Proceed" endorsement from your mentor.
-            Your Skill Passport documents observed behavioral readiness — earned, not generated.
+            Your Behavioral Evidence Report documents observed behavioral readiness — earned, not generated.
           </p>
           {(() => {
             const hasL1 = observationProgress.some(f => f.feedback_level === 1);
@@ -701,7 +701,7 @@ const SkillPassport = () => {
     );
   }
 
-  // Has Skill Passport - Full Display
+  // Has Behavioral Evidence Report - Full Display
   const behavioralScores = (passportData?.behavioral_scores || {}) as Record<string, number>;
   const tierInfo = getTierLabel(passportData?.readiness_tier || candidateProfile?.current_tier);
 
@@ -714,7 +714,7 @@ const SkillPassport = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Your Skill Passport</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Your Behavioral Evidence Report</h1>
           <p className="text-gray-400">Your documented behavioral readiness assessment for employers.</p>
         </div>
         <div className="flex gap-2">
@@ -1635,7 +1635,7 @@ const ObservationPathway = () => {
         <motion.div variants={itemVariants}>
           <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
             <p className="text-sm text-indigo-300">
-              While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Skill Passport.
+              While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Behavioral Evidence Report.
             </p>
           </div>
         </motion.div>
@@ -1743,7 +1743,7 @@ const ObservationPathway = () => {
               escalate: "bg-red-500/10 border-red-500/30",
             };
             const decisionLabels: Record<string, { label: string; color: string; desc: string }> = {
-              proceed: { label: "Proceed", color: "text-emerald-400", desc: "You've been endorsed. Skill Passport issued!" },
+              proceed: { label: "Proceed", color: "text-emerald-400", desc: "You've been endorsed. Behavioral Evidence Report issued!" },
               redirect: { label: "Redirect", color: "text-amber-400", desc: "Targeted development recommended before re-observation." },
               pause: { label: "Pause", color: "text-orange-400", desc: "Additional observation needed. Sessions will be scheduled." },
               escalate: { label: "Escalate", color: "text-red-400", desc: "Flagged for governance review." },
@@ -2087,7 +2087,7 @@ const SelfAssessmentPage = () => {
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-sm text-amber-300">
-            This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Skill Passport. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
+            This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Behavioral Evidence Report. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
           </p>
         </div>
       </motion.div>
@@ -2111,7 +2111,7 @@ const SelfAssessmentPage = () => {
               <div className="flex-1">
                 <h3 className="font-semibold text-white mb-1">Ready for the Next Step?</h3>
                 <p className="text-sm text-gray-400 mb-4">
-                  Now that you have completed your self-reflection, connect with a mentor to begin your formal Observation Pathway. Your mentor will guide you through behavioral assessments and help you earn your Skill Passport.
+                  Now that you have completed your self-reflection, connect with a mentor to begin your formal Observation Pathway. Your mentor will guide you through behavioral assessments and help you earn your Behavioral Evidence Report.
                 </p>
                 <Link to="/dashboard/candidate/mentors">
                   <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
@@ -2173,7 +2173,7 @@ const SelfAssessmentPage = () => {
               <div className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 inline-flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
                 <p className="text-xs text-amber-300">
-                  Preparation only — not part of your formal observation. Results do not appear in your Skill Passport.
+                  Preparation only — not part of your formal observation. Results do not appear in your Behavioral Evidence Report.
                 </p>
               </div>
             </div>
@@ -2814,7 +2814,7 @@ const Training = () => {
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-sm text-amber-300">
-            BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Skill Passport.
+            BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Behavioral Evidence Report.
           </p>
         </div>
       </motion.div>
@@ -5553,12 +5553,12 @@ const FindMentor = () => {
             <h2 className="text-xl font-bold text-white mb-4">Candidate Disclaimer & Consent</h2>
             <div className="text-sm text-gray-300 space-y-3 mb-6">
               <p>By requesting a mentor and entering the T3A Observation Protocol, you acknowledge and agree to the following:</p>
-              <p><strong className="text-white">1. No Employment Guarantee.</strong> The Skill Passport is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
+              <p><strong className="text-white">1. No Employment Guarantee.</strong> The Behavioral Evidence Report is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
               <p><strong className="text-white">2. Endorsement Outcomes.</strong> Mentor endorsement decisions (Proceed, Redirect, Pause, or Escalate) are evidence-based protocol outcomes determined by trained evaluators using the T3A Behavioural Assessment Standard. They are not personal judgments.</p>
               <p><strong className="text-white">3. Permanent Growth Log.</strong> All observation data, session recordings, feedback, and endorsement decisions are recorded in your Growth Log, which is append-only and permanent. Records cannot be deleted or modified after creation.</p>
               <p><strong className="text-white">4. Session Recording Consent.</strong> Observation sessions may be recorded for quality assurance, audit compliance, and evidence documentation purposes.</p>
               <p><strong className="text-white">5. Loop & Cooldown Rules.</strong> Re-attempts are subject to cooldown periods and a maximum of 3 loops per dimension per level within a rolling 6-month window. These rules exist to maintain assessment integrity.</p>
-              <p><strong className="text-white">6. Data Usage.</strong> Your Skill Passport data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
+              <p><strong className="text-white">6. Data Usage.</strong> Your Behavioral Evidence Report data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
             </div>
             <label className="flex items-start gap-3 p-3 rounded-lg bg-black border border-white/10 cursor-pointer mb-4">
               <input

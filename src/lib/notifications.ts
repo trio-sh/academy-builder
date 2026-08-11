@@ -76,7 +76,7 @@ const EMAIL_TEMPLATES: Record<
       <p>Dear ${data.firstName},</p>
       <p>Your mentor ${data.mentorName} has completed an observation session.</p>
       <p>Your current mentor loop count: <strong>${data.loopCount}/3</strong></p>
-      ${data.loopCount >= 3 ? "<p>You're now eligible for your Skill Passport!</p>" : ""}
+      ${data.loopCount >= 3 ? "<p>You're now eligible for your Behavioral Evidence Report!</p>" : ""}
       <p>View the details in your Growth Log.</p>
       <p>Best regards,<br>The 3rd Academy Team</p>
     `,
@@ -157,17 +157,17 @@ const EMAIL_TEMPLATES: Record<
     `,
   },
   passport_issued: {
-    subject: "Your Skill Passport is Ready!",
+    subject: "Your Behavioral Evidence Report is Ready!",
     getBody: (data) => `
-      <h2>Skill Passport Issued!</h2>
+      <h2>Behavioral Evidence Report Issued!</h2>
       <p>Dear ${data.firstName},</p>
-      <p>Congratulations! Your Skill Passport has been issued.</p>
+      <p>Congratulations! Your Behavioral Evidence Report has been issued.</p>
       <p><strong>Readiness Tier:</strong> ${data.tier}</p>
       <p><strong>Verification Code:</strong> ${data.verificationCode}</p>
       <p>You can now:</p>
       <ul>
         <li>Share your verified credential with employers</li>
-        <li>Download your Skill Passport PDF</li>
+        <li>Download your Behavioral Evidence Report PDF</li>
         <li>Apply for positions on T3X Exchange</li>
       </ul>
       <p>Best regards,<br>The 3rd Academy Team</p>
@@ -452,8 +452,8 @@ export const NotificationService = {
     return sendNotification(
       userId,
       "passport",
-      "Skill Passport Issued!",
-      `Your Skill Passport is ready! Tier: ${tier}`,
+      "Behavioral Evidence Report Issued!",
+      `Your Behavioral Evidence Report is ready! Tier: ${tier}`,
       { tier, verificationCode },
       true,
       "passport_issued",

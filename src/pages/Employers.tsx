@@ -231,7 +231,7 @@ const Employers = () => {
               <div className="grid md:grid-cols-4 gap-8">
                 {[
                   { step: "1", icon: Target, title: "Search & Filter", desc: "Use advanced filters to find candidates matching your exact requirements" },
-                  { step: "2", icon: Award, title: "Review Evidence", desc: "Explore detailed Skill Passports with mentor endorsements and behavioral data" },
+                  { step: "2", icon: Award, title: "Review Evidence", desc: "Explore detailed Behavioral Evidence Reports with mentor endorsements and behavioral data" },
                   { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
                   { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
                 ].map((item) => (

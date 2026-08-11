@@ -24,7 +24,7 @@ const sections = [
 
 **Personal Information:** When you create an account, we collect your name, email address, phone number, and professional information such as your resume, work history, and educational background.
 
-**Behavioral Data:** Through our MentorLink sessions and platform interactions, we collect observations about your professional behaviors, skills demonstrations, and growth progress. This data forms the basis of your Skill Passport credential.
+**Behavioral Data:** Through our MentorLink sessions and platform interactions, we collect observations about your professional behaviors, skills demonstrations, and growth progress. This data forms the basis of your Behavioral Evidence Report credential.
 
 **Usage Information:** We automatically collect information about how you interact with our platform, including pages visited, features used, and time spent on various activities.
 
@@ -34,7 +34,7 @@ const sections = [
     title: "2. How We Use Your Information",
     content: `We use the information we collect to:
 
-**Provide Our Services:** Process your credential applications, facilitate mentor matches, and generate your Skill Passport and Growth Log.
+**Provide Our Services:** Process your credential applications, facilitate mentor matches, and generate your Behavioral Evidence Report and Growth Log.
 
 **Improve Our Platform:** Analyze usage patterns to enhance our platform features, training modules, and user experience.
 
@@ -48,7 +48,7 @@ const sections = [
     title: "3. Information Sharing",
     content: `We share your information only in the following circumstances:
 
-**With Your Consent:** We share your Skill Passport and credential information with employers only when you explicitly authorize it through T3X Exchange.
+**With Your Consent:** We share your Behavioral Evidence Report and credential information with employers only when you explicitly authorize it through T3X Exchange.
 
 **With Mentors:** Your professional information and session history are shared with assigned mentors to facilitate effective validation sessions.
 
@@ -86,7 +86,7 @@ For more details about our security practices, please visit our [Security page](
 
 **Opt-Out:** You can opt out of marketing communications and control your visibility on T3X Exchange.
 
-**Credential Control:** You maintain ownership of your Skill Passport and can choose which employers can view your credentials.
+**Credential Control:** You maintain ownership of your Behavioral Evidence Report and can choose which employers can view your credentials.
 
 To exercise these rights, please contact us at privacy@the3rdacademy.com.`,
   },
@@ -98,7 +98,7 @@ To exercise these rights, please contact us at privacy@the3rdacademy.com.`,
 - Comply with legal obligations
 - Resolve disputes and enforce our agreements
 
-**Credential Data:** Your Skill Passport and Growth Log are retained for the duration of your account plus 7 years to maintain credential validity for employers.
+**Credential Data:** Your Behavioral Evidence Report and Growth Log are retained for the duration of your account plus 7 years to maintain credential validity for employers.
 
 **Session Recordings:** Mentor session recordings are retained for 2 years for quality assurance and dispute resolution.
 

@@ -277,7 +277,7 @@ const Overview = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-gray-400">Pre-vetted candidates with verified Skill Passports</span>
+                <span className="text-gray-400">Pre-vetted candidates with verified Behavioral Evidence Reports</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
@@ -373,7 +373,7 @@ const SearchTalent = () => {
         }
       }
 
-      // Get candidates with Skill Passport listed on T3X
+      // Get candidates with Behavioral Evidence Report listed on T3X
       let query = supabase
         .from("candidate_profiles")
         .select("*")
@@ -512,7 +512,7 @@ const SearchTalent = () => {
       <motion.div variants={itemVariants}>
         <h1 className="text-3xl font-bold text-white mb-2">T3X Talent Exchange</h1>
         <p className="text-gray-400">
-          Search for verified Skill Passport holders.
+          Search for verified Behavioral Evidence Report holders.
         </p>
       </motion.div>
 
@@ -611,7 +611,7 @@ const SearchTalent = () => {
                           Silver
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 truncate">{candidate.profile?.headline || "Skill Passport Holder"}</p>
+                      <p className="text-xs text-gray-500 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-2">
                       <span className="text-xs text-emerald-400 flex items-center gap-1">
@@ -632,7 +632,7 @@ const SearchTalent = () => {
                     </div>
                   </div>
 
-                  {/* Expanded card — Skill Passport view */}
+                  {/* Expanded card — Behavioral Evidence Report view */}
                   {isExpanded && (
                     <div className="border-t border-white/5 p-5 bg-white/[0.02]">
                       <div className="flex items-start gap-4 mb-4">
@@ -645,10 +645,10 @@ const SearchTalent = () => {
                         )}
                         <div>
                           <h3 className="text-lg font-semibold text-white">{candidate.profile?.first_name} {candidate.profile?.last_name}</h3>
-                          <p className="text-sm text-gray-400">{candidate.profile?.headline || "Skill Passport Holder"}</p>
+                          <p className="text-sm text-gray-400">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-gray-400 font-medium">Silver</span>
-                            <span className="text-xs text-emerald-400 flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Skill Passport</span>
+                            <span className="text-xs text-emerald-400 flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Behavioral Evidence Report</span>
                           </div>
                         </div>
                       </div>
@@ -681,13 +681,13 @@ const SearchTalent = () => {
                           <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
                             <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
                               <Shield className="w-4 h-4 mr-1" />
-                              View Skill Passport
+                              View Behavioral Evidence Report
                             </Button>
                           </a>
                         ) : (
                           <Button size="sm" variant="outline" className="border-white/20 text-gray-600" disabled>
                             <Shield className="w-4 h-4 mr-1" />
-                            View Skill Passport
+                            View Behavioral Evidence Report
                           </Button>
                         )}
                         {connectionStatus !== "accepted" && connectionStatus !== "pending" && (
@@ -758,7 +758,7 @@ const SearchTalent = () => {
                       {selectedCandidate.profile?.first_name} {selectedCandidate.profile?.last_name}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {selectedCandidate.profile?.headline || "Skill Passport Holder"}
+                      {selectedCandidate.profile?.headline || "Behavioral Evidence Report Holder"}
                     </p>
                   </div>
                 </div>
@@ -1011,7 +1011,7 @@ const Connections = () => {
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <p className="text-sm text-gray-400">
-                          {profile?.headline || "Skill Passport Holder"}
+                          {profile?.headline || "Behavioral Evidence Report Holder"}
                         </p>
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-500/20 text-gray-400 flex items-center gap-1">
                           <Award className="w-2.5 h-2.5" />Silver
@@ -2680,7 +2680,7 @@ const Feedback = () => {
         <div>
           <p className="text-emerald-400 font-medium">Why feedback matters</p>
           <p className="text-sm text-gray-400 mt-1">
-            Your feedback helps improve the accuracy of Skill Passports and the overall
+            Your feedback helps improve the accuracy of Behavioral Evidence Reports and the overall
             quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
           </p>
         </div>
@@ -2886,7 +2886,7 @@ const Feedback = () => {
             {/* Readiness Accuracy */}
             <div className="mb-6">
               <label className="text-sm text-gray-400 block mb-2">
-                How accurate was their Skill Passport tier?
+                How accurate was their Behavioral Evidence Report tier?
               </label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((rating) => (

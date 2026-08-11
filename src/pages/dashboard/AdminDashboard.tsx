@@ -2043,7 +2043,7 @@ const Reports = () => {
       {/* Key Metrics */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Skill Passports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
+          { label: "Behavioral Evidence Reports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
           { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "text-purple-400" },
           { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-cyan-400" },
           { label: "Connections", value: reportStats.connections, icon: Activity, color: "text-pink-400" },

@@ -44,7 +44,7 @@ const helpCategories = [
   },
   {
     icon: Award,
-    title: "Skill Passport",
+    title: "Behavioral Evidence Report",
     description: "Understanding your behavioral credentials",
     articles: 8,
   },
@@ -84,10 +84,10 @@ const faqs = [
       },
       {
         q: "How is this different from traditional certifications?",
-        a: "Unlike traditional certifications that rely on exams, our Skill Passport is earned through actual mentor observation of your professional behaviors in real or simulated work scenarios. This provides employers with evidence of how you actually perform, not just what you know.",
+        a: "Unlike traditional certifications that rely on exams, our Behavioral Evidence Report is earned through actual mentor observation of your professional behaviors in real or simulated work scenarios. This provides employers with evidence of how you actually perform, not just what you know.",
       },
       {
-        q: "How long does it take to earn a Skill Passport?",
+        q: "How long does it take to earn a Behavioral Evidence Report?",
         a: "The timeline varies based on your current readiness level and the specific credentials you're pursuing. Most candidates complete their initial validation within 4-8 weeks, though some may progress faster with prior experience.",
       },
     ],
@@ -101,7 +101,7 @@ const faqs = [
       },
       {
         q: "What happens during a MentorLink session?",
-        a: "During a MentorLink session, you'll work on realistic tasks or scenarios while a qualified mentor observes and evaluates your professional behaviors. These observations are logged in your Growth Log and contribute to your Skill Passport credential.",
+        a: "During a MentorLink session, you'll work on realistic tasks or scenarios while a qualified mentor observes and evaluates your professional behaviors. These observations are logged in your Growth Log and contribute to your Behavioral Evidence Report credential.",
       },
       {
         q: "Is there a cost for candidates?",
@@ -114,7 +114,7 @@ const faqs = [
     questions: [
       {
         q: "How do I access verified candidates?",
-        a: "Employers can access our talent pool through T3X Exchange, our employer marketplace. You'll see candidates with verified Skill Passports that include specific behavioral observations and mentor endorsements relevant to your roles.",
+        a: "Employers can access our talent pool through T3X Exchange, our employer marketplace. You'll see candidates with verified Behavioral Evidence Reports that include specific behavioral observations and mentor endorsements relevant to your roles.",
       },
       {
         q: "What makes your verification reliable?",

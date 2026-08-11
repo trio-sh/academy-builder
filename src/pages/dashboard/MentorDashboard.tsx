@@ -2694,7 +2694,7 @@ const Endorsements = () => {
         source_id: endorsement.id,
       }).then(() => {}, (e: unknown) => console.log("Growth log write:", e));
 
-      // If decision is "proceed", generate Skill Passport
+      // If decision is "proceed", generate Behavioral Evidence Report
       if (endorsementForm.decision === "proceed") {
         // Calculate aggregate behavioral scores from observation_feedback (L1 + L2)
         const { data: allFeedback } = await supabase
@@ -2720,7 +2720,7 @@ const Endorsements = () => {
         // Generate unique verification code
         const verificationCode = `SKP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
-        // Create Skill Passport (FK to candidate_profiles.id)
+        // Create Behavioral Evidence Report (FK to candidate_profiles.id)
         await supabase.from("skill_passports").insert({
           candidate_id: assignment.candidate_id,
           verification_code: verificationCode,
@@ -2736,7 +2736,7 @@ const Endorsements = () => {
         supabase.from("growth_log_entries").insert({
           candidate_id: growthCandidateId,
           event_type: "endorsement",
-          title: "Skill Passport Earned",
+          title: "Behavioral Evidence Report Earned",
           description: `Verification Code: ${verificationCode}`,
           source_component: "SkillPassport",
         }).then(() => {}, (e: unknown) => console.log("Passport growth log:", e));

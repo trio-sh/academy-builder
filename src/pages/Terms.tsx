@@ -30,7 +30,7 @@ We reserve the right to update these Terms at any time. We will notify you of ma
     title: "2. Description of Service",
     content: `The 3rd Academy provides a behavioral readiness and credentialing platform that includes:
 
-**Skill Passport:** A behavioral credential earned through mentor-validated observations of workplace readiness competencies.
+**Behavioral Evidence Report:** A behavioral credential earned through mentor-validated observations of workplace readiness competencies.
 
 **MentorLink:** A system connecting candidates with industry mentors for behavioral validation sessions.
 
@@ -66,13 +66,13 @@ We reserve the right to modify, suspend, or discontinue any aspect of the Servic
 
 **Professional Conduct:** Behave professionally during all MentorLink sessions and platform interactions. Harassment, discrimination, or unprofessional behavior will not be tolerated.
 
-**Credential Integrity:** Understand that your Skill Passport represents mentor-validated observations. You may not falsify, alter, or misrepresent your credentials.
+**Credential Integrity:** Understand that your Behavioral Evidence Report represents mentor-validated observations. You may not falsify, alter, or misrepresent your credentials.
 
 **Session Participation:** Attend scheduled mentor sessions on time and prepared. Excessive no-shows or cancellations may affect your standing.
 
 **Feedback Acceptance:** Accept constructive feedback from mentors as part of the growth process. You may dispute observations through our formal review process.
 
-**Credential Ownership:** You retain ownership of your Skill Passport and control over which employers can view your credentials through T3X Exchange.`,
+**Credential Ownership:** You retain ownership of your Behavioral Evidence Report and control over which employers can view your credentials through T3X Exchange.`,
   },
   {
     title: "5. Mentor Terms",
@@ -128,7 +128,7 @@ We reserve the right to modify, suspend, or discontinue any aspect of the Servic
 
 **User Content:** You retain ownership of content you submit (resumes, project work, etc.). By submitting content, you grant us a license to use it for providing and improving our services.
 
-**Credential Data:** Behavioral observations and credential data are generated collaboratively. Candidates own their Skill Passport while we retain rights to aggregated, anonymized platform data.
+**Credential Data:** Behavioral observations and credential data are generated collaboratively. Candidates own their Behavioral Evidence Report while we retain rights to aggregated, anonymized platform data.
 
 **Restrictions:** You may not copy, modify, distribute, or reverse engineer any part of the Service without permission.`,
   },

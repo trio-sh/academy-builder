@@ -21,7 +21,7 @@ const values = [
   {
     icon: Shield,
     title: "Credentials Must Be Earned",
-    description: "Skill Passports emerge from sustained observation and documented evidence. No self-assessments, no gaming the system.",
+    description: "Behavioral Evidence Reports emerge from sustained observation and documented evidence. No self-assessments, no gaming the system.",
   },
   {
     icon: Target,
@@ -175,7 +175,7 @@ const About = () => {
               {[
                 {
                   title: "For Candidates",
-                  desc: "Earn validated credentials through mentor observation. Build a Skill Passport that proves workplace readiness.",
+                  desc: "Earn validated credentials through mentor observation. Build a Behavioral Evidence Report that proves workplace readiness.",
                   link: "/get-started",
                   icon: Users,
                   gradient: "from-indigo-600 to-indigo-700",
