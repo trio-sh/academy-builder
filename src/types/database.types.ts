@@ -311,7 +311,7 @@ export interface Database {
           candidate_id: string;
           created_at: string;
           updated_at: string;
-          status: 'active' | 'completed' | 'transferred';
+          status: 'pending' | 'active' | 'completed' | 'transferred';
           loop_number: number;
           assigned_by: string | null;
         };
@@ -321,7 +321,7 @@ export interface Database {
           candidate_id: string;
           created_at?: string;
           updated_at?: string;
-          status?: 'active' | 'completed' | 'transferred';
+          status?: 'pending' | 'active' | 'completed' | 'transferred';
           loop_number?: number;
           assigned_by?: string | null;
         };
@@ -331,7 +331,7 @@ export interface Database {
           candidate_id?: string;
           created_at?: string;
           updated_at?: string;
-          status?: 'active' | 'completed' | 'transferred';
+          status?: 'pending' | 'active' | 'completed' | 'transferred';
           loop_number?: number;
           assigned_by?: string | null;
         };
