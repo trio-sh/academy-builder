@@ -1933,28 +1933,37 @@ function getQuickActions(role: string): { label: string; icon: typeof Bot; messa
 
 // ─── Tool display helpers ────────────────────────────────────────────────────
 
-function toolDisplayName(name: string, args: Record<string, unknown>): string {
+/**
+ * Human label shown on the tool pill in the UI. Deliberately keeps
+ * the label at the ACTION level ("Looking up your data", "Searching
+ * the web"…) and does NOT surface the raw parameters — table names,
+ * search queries, form values, etc. — so the sidebar can't be used
+ * to read schema names or user-typed values off the screen.
+ */
+function toolDisplayName(name: string, _args: Record<string, unknown>): string {
  switch (name) {
- case "web_search": return `Search: "${args.query || ""}"`;
- case "web_extract": return `Extract: ${args.url || ""}`;
- case "navigate": return `Navigate to ${args.path || ""}`;
- case "read_page": return `Read page: ${args.path || ""}`;
- case "click": return `Click "${args.target || ""}"`;
- case "fill": return `Fill "${args.field || ""}"`;
- case "clear_field": return `Clear "${args.field || ""}"`;
- case "select_option": return `Select "${args.value || ""}" in "${args.field || ""}"`;
- case "toggle": return `Toggle "${args.target || ""}"`;
- case "submit_form": return `Submit form`;
- case "scroll_to": return `Scroll to "${args.target || ""}"`;
- case "scroll_page": return `Scroll ${args.direction || "down"}`;
- case "highlight": return `Highlight "${args.target || ""}"`;
- case "open_modal": return `Open "${args.target || ""}"`;
- case "close_modal": return `Close dialog`;
- case "wait": return `Wait ${args.seconds || "1"}s`;
- case "query_data": return `Query: ${args.table || ""} data`;
- case "get_current_time": return `Get time (${args.timezone || "UTC"})`;
- case "image_generation": return `Generate image`;
- default: return name;
+ case "web_search": return "Searching the web";
+ case "web_extract": return "Reading a webpage";
+ case "navigate": return "Navigating";
+ case "read_page": return "Reading a page";
+ case "click": return "Clicking";
+ case "fill": return "Filling a field";
+ case "clear_field": return "Clearing a field";
+ case "select_option": return "Selecting an option";
+ case "toggle": return "Toggling";
+ case "submit_form": return "Submitting form";
+ case "scroll_to": return "Scrolling";
+ case "scroll_page": return "Scrolling";
+ case "highlight": return "Highlighting";
+ case "open_modal": return "Opening dialog";
+ case "close_modal": return "Closing dialog";
+ case "wait": return "Waiting";
+ case "query_data": return "Looking up your data";
+ case "get_current_time": return "Checking the time";
+ case "image_generation": return "Generating an image";
+ case "search_tools": return "Looking up a tool";
+ case "load_tool": return "Loading a tool";
+ default: return name.replace(/_/g, " ");
  }
 }
 
@@ -1993,86 +2002,39 @@ function toolIcon(name: string) {
 // ─── Tool Call Badge (expandable, module-scoped so its open state survives
 //     the parent's re-renders) ────────────────────────────────────────────
 
+// Tool pills show ONLY the action (label + icon). Parameter details
+// used to be expandable into a JSON preview, but that surface leaked
+// internal table names, form values, search queries, etc. to whoever
+// happened to be looking at the screen. Kept static now.
+
 function ToolBadge({ tc }: { tc: OpenAIToolCall }) {
-  const [open, setOpen] = useState(false);
   let args: Record<string, unknown> = {};
   try { args = JSON.parse(tc.function.arguments); } catch { /* */ }
   const Icon = toolIcon(tc.function.name);
   const label = toolDisplayName(tc.function.name, args);
-  const hasDetails = Object.keys(args).length > 0;
-
   return (
-    <span className="inline-flex flex-col">
-      <button
-        type="button"
-        onClick={() => hasDetails && setOpen((v) => !v)}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion ${
-          hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"
-        }`}
-        aria-expanded={open}
-      >
-        <Icon className="w-3 h-3" />
-        <span className="font-medium">{label}</span>
-        {hasDetails && (
-          <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
-        )}
-      </button>
-      <AnimatePresence initial={false}>
-        {open && hasDetails && (
-          <motion.pre
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.15 }}
-            className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
-          >
-            {JSON.stringify(args, null, 2)}
-          </motion.pre>
-        )}
-      </AnimatePresence>
+    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion">
+      <Icon className="w-3 h-3" />
+      <span className="font-medium">{label}</span>
     </span>
   );
 }
 
 function StatusBadge({ status }: { status: StatusEvent }) {
-  const [open, setOpen] = useState(false);
   const Icon = toolIcon(status.name);
   const isDone = status.type === "tool_done";
   const label = toolDisplayName(status.name, status.arguments || {});
-  const hasDetails = !!status.arguments && Object.keys(status.arguments).length > 0;
-
   return (
-    <span className="inline-flex flex-col">
-      <button
-        type="button"
-        onClick={() => hasDetails && setOpen((v) => !v)}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
-          isDone
-            ? "bg-foreground/[0.05] border border-foreground/40 ink-vermilion"
-            : "bg-vermilion/10 border border-vermilion ink-vermilion"
-        } ${hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"}`}
-        aria-expanded={open}
-      >
-        {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
-        <Icon className="w-3 h-3" />
-        {label}
-        {hasDetails && (
-          <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
-        )}
-      </button>
-      <AnimatePresence initial={false}>
-        {open && hasDetails && (
-          <motion.pre
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.15 }}
-            className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
-          >
-            {JSON.stringify(status.arguments, null, 2)}
-          </motion.pre>
-        )}
-      </AnimatePresence>
+    <span
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
+        isDone
+          ? "bg-foreground/[0.05] border border-foreground/40 ink-vermilion"
+          : "bg-vermilion/10 border border-vermilion ink-vermilion"
+      }`}
+    >
+      {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
+      <Icon className="w-3 h-3" />
+      {label}
     </span>
   );
 }
