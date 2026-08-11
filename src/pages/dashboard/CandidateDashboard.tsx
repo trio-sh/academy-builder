@@ -16,6 +16,7 @@ import { InteractiveSkillAssessment } from "@/components/assessment/InteractiveS
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import ReportReview from "@/pages/dashboard/candidate/ReportReview";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
@@ -45,6 +46,7 @@ import {
 } from "recharts";
 import {
  Award,
+ Flag,
  BarChart3,
  Briefcase,
  User,
@@ -153,6 +155,7 @@ const navItems = [
  { name: "Overview", href: "/dashboard/candidate", icon: BarChart3, section: "observation" },
  { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
  { name: "Behavioral Evidence Report", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
+ { name: "Report Review", href: "/dashboard/candidate/report-review", icon: Flag, section: "observation" },
  { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
  { name: "Praxis", href: "/dashboard/candidate/agent", icon: Bot, section: "observation" },
  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
@@ -6818,6 +6821,7 @@ const CandidateDashboard = () => {
  <Route path="observations" element={<ObservationPathway />} />
  <Route path="observations/session" element={<InteractiveSkillAssessment />} />
  <Route path="passport" element={<SkillPassport />} />
+ <Route path="report-review" element={<ReportReview />} />
  <Route path="growth" element={<GrowthLog />} />
  <Route path="assessment" element={<SelfAssessmentPage />} />
  <Route path="assessment/interactive" element={<AssessmentViewer />} />
