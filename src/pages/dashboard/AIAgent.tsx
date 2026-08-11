@@ -2071,6 +2071,12 @@ export default function AIAgent() {
  // whole gesture so text selection can complete without the viewport
  // jumping under the cursor.
  const isPointerDownRef = useRef(false);
+ // True whenever the browser reports a non-empty text selection anywhere
+ // in the messages pane. Kept in sync via a global selectionchange
+ // listener so double-click / triple-click / keyboard-driven selections
+ // freeze auto-scroll too — the pointer-drag guard alone doesn't cover
+ // them (there's no drag).
+ const hasSelectionRef = useRef(false);
  const [showJumpToBottom, setShowJumpToBottom] = useState(false);
  const inputRef = useRef<HTMLTextAreaElement>(null);
  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -2340,9 +2346,8 @@ export default function AIAgent() {
  // Instant scroll during streaming so nothing animates on every token.
  useEffect(() => {
  if (isPointerDownRef.current) return;
+ if (hasSelectionRef.current) return;
  if (!stickToBottomRef.current) return;
- const sel = typeof window !== "undefined" ? window.getSelection?.() : null;
- if (sel && sel.toString().length > 0) return;
  messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
  }, [uiMessages, streamingContent, activeStatuses, isStreaming]);
 
@@ -2373,11 +2378,29 @@ export default function AIAgent() {
  window.addEventListener("pointerup", pointerUp);
  window.addEventListener("pointercancel", pointerUp);
 
+ // Track browser selection in real time. Double-click / triple-click
+ // / keyboard-driven selections don't involve a drag, so pointerdown
+ // guard alone can't see them. selectionchange fires the moment the
+ // browser applies a range; we freeze auto-scroll while any range
+ // intersects our messages pane, and release when the selection clears
+ // or moves outside.
+ const selectionHandler = () => {
+ const sel = window.getSelection?.();
+ if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) {
+ hasSelectionRef.current = false;
+ return;
+ }
+ const range = sel.getRangeAt(0);
+ hasSelectionRef.current = el.contains(range.commonAncestorContainer);
+ };
+ document.addEventListener("selectionchange", selectionHandler);
+
  return () => {
  el.removeEventListener("scroll", scrollHandler);
  el.removeEventListener("pointerdown", pointerDown);
  window.removeEventListener("pointerup", pointerUp);
  window.removeEventListener("pointercancel", pointerUp);
+ document.removeEventListener("selectionchange", selectionHandler);
  };
  }, [isStreaming, uiMessages.length]);
 
