@@ -7,6 +7,7 @@ import { startLoop, completeLoop, mentorOverride } from "@/lib/observationLoops"
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import Determinations from "@/pages/dashboard/mentor/Determinations";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -787,6 +788,7 @@ const navItems = [
   { name: "Overview", href: "/dashboard/mentor", icon: TrendingUp },
   { name: "My Mentees", href: "/dashboard/mentor/mentees", icon: Users },
   { name: "Observations", href: "/dashboard/mentor/observations", icon: ClipboardCheck },
+  { name: "Determinations", href: "/dashboard/mentor/determinations", icon: FileCheck },
   { name: "Endorsements", href: "/dashboard/mentor/endorsements", icon: Award },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
@@ -4411,6 +4413,7 @@ const MentorDashboardInner = () => {
           <Route path="mentees/:assignmentId" element={<MenteeDetail />} />
           <Route path="assign-dimensions/:assignmentId/:candidateId" element={<AssignDimensions />} />
           <Route path="observations" element={<Observations />} />
+          <Route path="determinations" element={<Determinations />} />
           <Route path="endorsements" element={<Endorsements />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
