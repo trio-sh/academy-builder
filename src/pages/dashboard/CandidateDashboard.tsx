@@ -784,7 +784,7 @@ const SkillPassport = () => {
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt="Profile" className="w-16 h-16 rounded-2xl object-cover" />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-foreground font-bold text-xl">
+                <div className="w-16 h-16 rounded-2xl bg-vermilion flex items-center justify-center text-background font-bold text-xl">
                   {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                 </div>
               )}
