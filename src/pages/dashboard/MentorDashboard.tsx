@@ -2692,7 +2692,7 @@ const Endorsements = () => {
         description: decisionLabels[endorsementForm.decision],
         source_component: "MentorLink",
         source_id: endorsement.id,
-      }).then(() => {}).catch(e => console.log("Growth log write:", e));
+      }).then(() => {}, (e: unknown) => console.log("Growth log write:", e));
 
       // If decision is "proceed", generate Skill Passport
       if (endorsementForm.decision === "proceed") {
@@ -2739,7 +2739,7 @@ const Endorsements = () => {
           title: "Skill Passport Earned",
           description: `Verification Code: ${verificationCode}`,
           source_component: "SkillPassport",
-        }).then(() => {}).catch(e => console.log("Passport growth log:", e));
+        }).then(() => {}, (e: unknown) => console.log("Passport growth log:", e));
       }
 
       // If escalate, create an escalation notification for admin/governance
@@ -2751,7 +2751,7 @@ const Endorsements = () => {
           description: `Concern: ${endorsementForm.escalateConcern || endorsementForm.justification}. Awaiting governance review.`,
           source_component: "MentorLink",
           source_id: endorsement.id,
-        }).then(() => {}).catch(e => console.log("Escalation growth log:", e));
+        }).then(() => {}, (e: unknown) => console.log("Escalation growth log:", e));
       }
 
       // Update assignment status

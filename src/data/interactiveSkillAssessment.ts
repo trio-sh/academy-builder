@@ -102,7 +102,6 @@ export interface ProblemSolvingScenario {
 }
 
 export interface JudgmentScenario {
-  wordsPerMinute?: number;
   id?: string;
   situation: string;
   stakeholders?: string[];
