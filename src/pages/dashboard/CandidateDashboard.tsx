@@ -717,7 +717,7 @@ const SkillPassport = () => {
                 key={item.step}
                 className="p-6 rounded-xl bg-background border border-foreground/25"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-foreground font-bold mb-4">
+                <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center text-background font-bold mb-4">
                   {item.step}
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
@@ -2163,7 +2163,7 @@ const SelfAssessmentPage = () => {
               onClick={() => setActiveStep(index)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 activeStep === index
-                  ? "bg-indigo-600 text-foreground"
+                  ? "bg-foreground text-background"
                   : activeStep > index
                   ? "bg-foreground/[0.06] text-foreground"
                   : "bg-background text-foreground/60 hover:bg-foreground/5"
@@ -3179,7 +3179,7 @@ const Projects = () => {
           onClick={() => setActiveTab("browse")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "browse"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -3189,7 +3189,7 @@ const Projects = () => {
           onClick={() => setActiveTab("applied")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "applied"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -4354,7 +4354,7 @@ const Profile = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowResumeViewer(true)}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-foreground transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-none bg-foreground hover:bg-foreground/90 text-background transition-colors flex items-center gap-2 shadow-none"
                 >
                   <Eye className="w-4 h-4" />
                   View Resume
@@ -4410,7 +4410,7 @@ const Profile = () => {
                 <p className="text-xs text-foreground/50 mb-4">
                   Supports PDF, DOC, DOCX (max 10MB)
                 </p>
-                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none font-medium transition-colors">
                   {isUploading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -4663,7 +4663,7 @@ const Profile = () => {
                     <a
                       href={candidateProfile.resume_url}
                       download
-                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none font-medium transition-colors flex items-center gap-2"
                     >
                       <Download className="w-5 h-5" />
                       Download Resume
@@ -5334,7 +5334,7 @@ const FindMentor = () => {
           onClick={() => setIndustryFilter("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             industryFilter === "all"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -5346,7 +5346,7 @@ const FindMentor = () => {
             onClick={() => setIndustryFilter(industry)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               industryFilter === industry
-                ? "bg-indigo-600 text-foreground"
+                ? "bg-foreground text-background"
                 : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
@@ -6376,7 +6376,7 @@ const MessagesPage = () => {
                             onClick={() => setActiveMsgId(showActions ? null : msg.id)}
                             className={`px-4 py-2 rounded-2xl transition-all duration-300 cursor-pointer ${
                               isOwn
-                                ? "bg-indigo-600 text-foreground rounded-br-md"
+                                ? "bg-foreground text-background rounded-br-md"
                                 : "bg-background text-foreground/80 rounded-bl-md"
                             }`}
                           >
@@ -6664,7 +6664,7 @@ const NotificationsPage = () => {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
-                ? "bg-indigo-600 text-foreground"
+                ? "bg-foreground text-background"
                 : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
