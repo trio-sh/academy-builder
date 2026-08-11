@@ -8,6 +8,7 @@
     "build": "npm run check:vocabulary && vite build",
     "build:dev": "npm run check:vocabulary && vite build --mode development",
     "check:vocabulary": "node scripts/check-vocabulary.mjs",
+    "check:firewall": "node scripts/check-firewall.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
