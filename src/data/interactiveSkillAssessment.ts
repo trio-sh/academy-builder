@@ -118,15 +118,7 @@ export interface JudgmentScenario {
 }
 
 /** Metrics captured from a spoken response during a voice challenge. */
-export interface SpeechMetrics {
-  wordsPerMinute?: number;
-  fillerWordCount?: number;
-  pauseCount?: number;
-  durationSeconds?: number;
-  clarityScore?: number;
-  confidenceScore?: number;
-  [key: string]: unknown;
-}
+export type { SpeechMetrics } from '@/services/speechRecognition';
 
 // Enhanced Assessment Scene Types
 export type InteractiveSceneType =
