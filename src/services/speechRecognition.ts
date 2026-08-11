@@ -36,7 +36,7 @@ export const isSpeechRecognitionSupported = (): boolean => {
 };
 
 // Get the SpeechRecognition constructor
-const getSpeechRecognition = (): typeof SpeechRecognition | null => {
+const getSpeechRecognition = (): any | null => {
   if ('SpeechRecognition' in window) {
     return (window as any).SpeechRecognition;
   }

@@ -128,7 +128,7 @@ const Join = () => {
         metadata.entryPath = "resume_upload";
       }
 
-      const { error: signUpError } = await signUp(email, password, metadata);
+      const { error: signUpError } = await signUp(email, password, metadata as Parameters<typeof signUp>[2]);
 
       if (signUpError) {
         setError(signUpError.message || "Failed to create account");
