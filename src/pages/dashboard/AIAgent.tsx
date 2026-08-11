@@ -2116,6 +2116,13 @@ export default function AIAgent() {
  const [contextLoading, setContextLoading] = useState(true);
  const [dataLoaded, setDataLoaded] = useState(false);
  const messagesEndRef = useRef<HTMLDivElement>(null);
+ const scrollContainerRef = useRef<HTMLDivElement>(null);
+ // Only auto-scroll when the user is pinned near the bottom. If they
+ // scroll up (typically to read or to select text), leave them alone —
+ // hammering scrollIntoView on every streamed token otherwise fights
+ // their selection and reads as the whole page "shaking".
+ const stickToBottomRef = useRef(true);
+ const [showJumpToBottom, setShowJumpToBottom] = useState(false);
  const inputRef = useRef<HTMLTextAreaElement>(null);
  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
  const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
@@ -2374,10 +2381,37 @@ export default function AIAgent() {
  }
  }, [user?.id, profile?.role]);
 
- // Auto-scroll
+ // Auto-scroll — only when user is pinned to the bottom and NOT
+ // actively selecting text. Uses instant scroll during streaming so
+ // the viewport doesn't animate on every token.
  useEffect(() => {
- messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+ if (!stickToBottomRef.current) return;
+ const sel = typeof window !== "undefined" ? window.getSelection?.() : null;
+ if (sel && sel.toString().length > 0) return;
+ messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
  }, [uiMessages, streamingContent, activeStatuses, isStreaming]);
+
+ // Track whether the user is scrolled to the bottom of the messages pane.
+ useEffect(() => {
+ const el = scrollContainerRef.current;
+ if (!el) return;
+ const NEAR_BOTTOM_PX = 80;
+ const handler = () => {
+ const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+ const atBottom = distance <= NEAR_BOTTOM_PX;
+ stickToBottomRef.current = atBottom;
+ setShowJumpToBottom(!atBottom && (isStreaming || uiMessages.length > 0));
+ };
+ handler();
+ el.addEventListener("scroll", handler, { passive: true });
+ return () => el.removeEventListener("scroll", handler);
+ }, [isStreaming, uiMessages.length]);
+
+ const jumpToBottom = useCallback(() => {
+ stickToBottomRef.current = true;
+ messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+ setShowJumpToBottom(false);
+ }, []);
 
  // Focus input
  useEffect(() => {
@@ -2815,7 +2849,10 @@ export default function AIAgent() {
  return (
  <div className="flex flex-col h-full w-full relative">
  {/* Messages Area */}
- <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6">
+ <div
+ ref={scrollContainerRef}
+ className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6"
+ >
 
  {/* Empty state */}
  {uiMessages.length === 0 && !isStreaming && (
@@ -3019,6 +3056,17 @@ export default function AIAgent() {
  )}
 
  <div ref={messagesEndRef} />
+ {showJumpToBottom && (
+ <button
+ type="button"
+ onClick={jumpToBottom}
+ className="fixed bottom-28 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-foreground/30 bg-background/90 backdrop-blur text-xs text-foreground/80 hover:bg-foreground/5 shadow-sm"
+ title="Jump to latest"
+ >
+ <ChevronDown className="w-3.5 h-3.5" />
+ New messages
+ </button>
+ )}
  </div>
 
  {/* ─── Fixed Bottom Input ─── */}
