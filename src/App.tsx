@@ -49,6 +49,7 @@ import ApiTestChat from "./pages/ApiTestChat";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
+import VerifyBER from "./pages/VerifyBER";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Join from "./pages/Join";
@@ -97,6 +98,8 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Behavioral Evidence Report verification (public) */}
+            <Route path="/verify" element={<VerifyBER />} />
+            <Route path="/verify/ber/:id" element={<VerifyBER />} />
             <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}
