@@ -7,6 +7,7 @@ import { startLoop, completeLoop, mentorOverride } from "@/lib/observationLoops"
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
   DashboardLayout,
@@ -3798,6 +3799,10 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <GoogleAuthLink />
       </motion.div>
     </motion.div>
   );

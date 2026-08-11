@@ -8,6 +8,7 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { extractDocumentText } from "@/lib/documentExtractor";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
   type DashboardNavItem,
@@ -3605,6 +3606,10 @@ const Company = () => {
             )}
           </div>
         </div>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <GoogleAuthLink />
       </motion.div>
     </motion.div>
   );

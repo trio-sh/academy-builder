@@ -4,6 +4,7 @@ import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
   DashboardLayout,
@@ -1394,6 +1395,10 @@ const SettingsPage = () => {
 
       <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <p className="text-foreground/60">School settings will appear here.</p>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <GoogleAuthLink />
       </motion.div>
     </motion.div>
   );
