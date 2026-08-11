@@ -5,6 +5,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
+import {
+  DashboardLayout,
+  type DashboardNavItem,
+  type DashboardSection,
+} from "@/components/dashboard/DashboardLayout";
 import type { Database } from "@/types/database.types";
 import {
   BarChart3,
@@ -200,10 +205,10 @@ const Overview = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           Welcome, {schoolProfile?.school_name || "School Admin"}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-foreground/60">
           Manage your students and track their behavioral development.
         </p>
       </motion.div>
@@ -213,31 +218,31 @@ const Overview = () => {
         {[
           { label: "Total Students", value: stats.totalStudents, icon: Users, color: "text-teal-400" },
           { label: "Active Cohorts", value: stats.activeCohorts, icon: GraduationCap, color: "text-blue-400" },
-          { label: "Observations", value: stats.totalObservations, icon: ClipboardList, color: "text-purple-400" },
+          { label: "Observations", value: stats.totalObservations, icon: ClipboardList, color: "ink-vermilion" },
           { label: "Avg Score", value: `${stats.avgBehavioralScore}%`, icon: Target, color: "text-emerald-400" },
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-6 rounded-xl bg-black border border-white/30"
+            className="p-6 rounded-xl bg-background border border-foreground/25"
           >
             <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
-            <p className="text-3xl font-bold text-white">{stat.value}</p>
-            <p className="text-sm text-gray-400">{stat.label}</p>
+            <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+            <p className="text-sm text-foreground/60">{stat.label}</p>
           </div>
         ))}
       </motion.div>
 
       {/* Quick Actions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/school/students"
             className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20 hover:border-teal-500/40 transition-colors group"
           >
             <Users className="w-8 h-8 text-teal-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">Manage Students</h3>
-            <p className="text-sm text-gray-400">View and manage enrolled students</p>
+            <h3 className="font-semibold text-foreground mb-1">Manage Students</h3>
+            <p className="text-sm text-foreground/60">View and manage enrolled students</p>
             <ChevronRight className="w-5 h-5 text-teal-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
 
@@ -245,10 +250,10 @@ const Overview = () => {
             to="/dashboard/school/observations"
             className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20 hover:border-purple-500/40 transition-colors group"
           >
-            <ClipboardList className="w-8 h-8 text-purple-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">Record Observation</h3>
-            <p className="text-sm text-gray-400">Document student behavioral assessments</p>
-            <ChevronRight className="w-5 h-5 text-purple-400 mt-2 group-hover:translate-x-1 transition-transform" />
+            <ClipboardList className="w-8 h-8 ink-vermilion mb-3" />
+            <h3 className="font-semibold text-foreground mb-1">Record Observation</h3>
+            <p className="text-sm text-foreground/60">Document student behavioral assessments</p>
+            <ChevronRight className="w-5 h-5 ink-vermilion mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
@@ -256,8 +261,8 @@ const Overview = () => {
             className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20 hover:border-blue-500/40 transition-colors group"
           >
             <TrendingUp className="w-8 h-8 text-blue-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">View Analytics</h3>
-            <p className="text-sm text-gray-400">Track cohort performance trends</p>
+            <h3 className="font-semibold text-foreground mb-1">View Analytics</h3>
+            <p className="text-sm text-foreground/60">Track cohort performance trends</p>
             <ChevronRight className="w-5 h-5 text-blue-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -266,7 +271,7 @@ const Overview = () => {
       {/* Recent Observations */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Recent Observations</h2>
+          <h2 className="text-xl font-semibold text-foreground">Recent Observations</h2>
           <Link to="/dashboard/school/observations" className="text-sm text-teal-400 hover:text-teal-300">
             View all
           </Link>
@@ -276,21 +281,21 @@ const Overview = () => {
             {recentObservations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
+                className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
                     <ClipboardList className="w-5 h-5 text-teal-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-foreground">
                       {obs.student?.profile?.first_name} {obs.student?.profile?.last_name}
                     </p>
-                    <p className="text-sm text-gray-400">{obs.context}</p>
+                    <p className="text-sm text-foreground/60">{obs.context}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-foreground/60">
                     {new Date(obs.observation_date).toLocaleDateString()}
                   </p>
                 </div>
@@ -298,10 +303,10 @@ const Overview = () => {
             ))}
           </div>
         ) : (
-          <div className="p-8 rounded-xl bg-black border border-white/30 text-center">
-            <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No observations recorded yet</p>
-            <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
+          <div className="p-8 rounded-xl bg-background border border-foreground/25 text-center">
+            <ClipboardList className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No observations recorded yet</p>
+            <p className="text-sm text-foreground/850 mt-1">Start documenting student behaviors</p>
           </div>
         )}
       </motion.div>
@@ -394,8 +399,8 @@ const Students = () => {
       case "active": return "bg-emerald-500/20 text-emerald-400";
       case "graduated": return "bg-blue-500/20 text-blue-400";
       case "transferred": return "bg-amber-500/20 text-amber-400";
-      case "inactive": return "bg-gray-500/20 text-gray-400";
-      default: return "bg-gray-500/20 text-gray-400";
+      case "inactive": return "bg-gray-500/20 text-foreground/60";
+      default: return "bg-gray-500/20 text-foreground/60";
     }
   };
 
@@ -416,8 +421,8 @@ const Students = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Students</h1>
-          <p className="text-gray-400">Manage enrolled students and track their progress.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Students</h1>
+          <p className="text-foreground/60">Manage enrolled students and track their progress.</p>
         </div>
         <Button
           onClick={() => setShowAddStudent(true)}
@@ -431,13 +436,13 @@ const Students = () => {
       {/* Search */}
       <motion.div variants={itemVariants}>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search students by name or ID..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-teal-500 focus:outline-none"
           />
         </div>
       </motion.div>
@@ -449,7 +454,7 @@ const Students = () => {
             {filteredStudents.map((student) => (
               <div
                 key={student.id}
-                className="p-4 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-4 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -465,10 +470,10 @@ const Students = () => {
                       </div>
                     )}
                     <div>
-                      <p className="font-semibold text-white">
+                      <p className="font-semibold text-foreground">
                         {student.profile?.first_name} {student.profile?.last_name}
                       </p>
-                      <div className="flex items-center gap-3 text-sm text-gray-400">
+                      <div className="flex items-center gap-3 text-sm text-foreground/60">
                         {student.student_id_number && (
                           <span>ID: {student.student_id_number}</span>
                         )}
@@ -476,7 +481,7 @@ const Students = () => {
                           <span>Grade: {student.grade_level}</span>
                         )}
                         {student.cohort && (
-                          <span className="px-2 py-0.5 rounded bg-black">
+                          <span className="px-2 py-0.5 rounded bg-background">
                             {student.cohort.name}
                           </span>
                         )}
@@ -488,7 +493,7 @@ const Students = () => {
                       {student.status}
                     </span>
                     <div className="text-right">
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-foreground/60">
                         {student.total_observations} observations
                       </p>
                       {student.avg_behavioral_score && (
@@ -500,7 +505,7 @@ const Students = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-black"
+                      className="border-foreground/25 text-foreground hover:bg-foreground/5"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -510,10 +515,10 @@ const Students = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No students found</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No students found</p>
+            <p className="text-sm text-foreground/850 mt-1">
               {searchQuery ? "Try a different search term" : "Add students to get started"}
             </p>
           </div>
@@ -591,7 +596,7 @@ const Cohorts = () => {
       case "active": return "bg-emerald-500/20 text-emerald-400";
       case "completed": return "bg-blue-500/20 text-blue-400";
       case "upcoming": return "bg-amber-500/20 text-amber-400";
-      default: return "bg-gray-500/20 text-gray-400";
+      default: return "bg-gray-500/20 text-foreground/60";
     }
   };
 
@@ -612,8 +617,8 @@ const Cohorts = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Cohorts</h1>
-          <p className="text-gray-400">Manage student cohorts and programs.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Cohorts</h1>
+          <p className="text-foreground/60">Manage student cohorts and programs.</p>
         </div>
         <Button
           onClick={() => setShowNewCohort(true)}
@@ -629,37 +634,37 @@ const Cohorts = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-black border border-white/30"
+          className="p-6 rounded-xl bg-background border border-foreground/25"
         >
-          <h2 className="text-lg font-semibold text-white mb-4">Create New Cohort</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Create New Cohort</h2>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Cohort Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">Cohort Name</label>
               <input
                 type="text"
                 value={newCohort.name}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, name: e.target.value }))}
                 placeholder="e.g., Spring 2024"
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Program</label>
+              <label className="text-sm text-foreground/60 block mb-2">Program</label>
               <input
                 type="text"
                 value={newCohort.program}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, program: e.target.value }))}
                 placeholder="e.g., Career Readiness"
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Start Date</label>
+              <label className="text-sm text-foreground/60 block mb-2">Start Date</label>
               <input
                 type="date"
                 value={newCohort.startDate}
                 onChange={(e) => setNewCohort((prev) => ({ ...prev, startDate: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-teal-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-teal-500 focus:outline-none"
               />
             </div>
           </div>
@@ -667,7 +672,7 @@ const Cohorts = () => {
             <Button
               variant="outline"
               onClick={() => setShowNewCohort(false)}
-              className="border-white/20 text-white hover:bg-black"
+              className="border-foreground/25 text-foreground hover:bg-foreground/5"
             >
               Cancel
             </Button>
@@ -689,18 +694,18 @@ const Cohorts = () => {
             {cohorts.map((cohort) => (
               <div
                 key={cohort.id}
-                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{cohort.name}</h3>
-                    <p className="text-sm text-gray-400">{cohort.program}</p>
+                    <h3 className="font-semibold text-foreground text-lg">{cohort.name}</h3>
+                    <p className="text-sm text-foreground/60">{cohort.program}</p>
                   </div>
                   <span className={`px-2 py-1 rounded text-xs ${getStatusColor(cohort.status)}`}>
                     {cohort.status}
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-4 text-sm text-foreground/60">
                   <span className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
                     {cohort.total_students} students
@@ -713,7 +718,7 @@ const Cohorts = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full mt-4 border-white/20 text-white hover:bg-black"
+                  className="w-full mt-4 border-foreground/25 text-foreground hover:bg-foreground/5"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   View Details
@@ -722,10 +727,10 @@ const Cohorts = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No cohorts created yet</p>
-            <p className="text-sm text-gray-500 mt-1">Create cohorts to organize your students</p>
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <GraduationCap className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No cohorts created yet</p>
+            <p className="text-sm text-foreground/850 mt-1">Create cohorts to organize your students</p>
           </div>
         )}
       </motion.div>
@@ -865,8 +870,8 @@ const Observations = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Observations</h1>
-          <p className="text-gray-400">Record and review student behavioral observations.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Observations</h1>
+          <p className="text-foreground/60">Record and review student behavioral observations.</p>
         </div>
         <Button
           onClick={() => setShowNewObservation(true)}
@@ -882,27 +887,27 @@ const Observations = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowNewObservation(false)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-2xl max-h-[85vh] overflow-hidden"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-2xl max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-white/30">
-              <h2 className="text-xl font-bold text-white">New Observation</h2>
+            <div className="p-6 border-b border-foreground/25">
+              <h2 className="text-xl font-bold text-foreground">New Observation</h2>
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {/* Student Selection */}
               <div className="mb-6">
-                <label className="text-sm text-gray-400 block mb-2">Select Student</label>
+                <label className="text-sm text-foreground/60 block mb-2">Select Student</label>
                 <select
                   value={selectedStudent?.id || ""}
                   onChange={(e) => setSelectedStudent(students.find(s => s.id === e.target.value) || null)}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-teal-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-teal-500 focus:outline-none"
                 >
                   <option value="">Choose a student...</option>
                   {students.map((student) => (
@@ -917,23 +922,23 @@ const Observations = () => {
                 <>
                   {/* Context */}
                   <div className="mb-6">
-                    <label className="text-sm text-gray-400 block mb-2">Observation Context</label>
+                    <label className="text-sm text-foreground/60 block mb-2">Observation Context</label>
                     <input
                       type="text"
                       value={observationForm.context}
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, context: e.target.value }))}
                       placeholder="e.g., Class project presentation"
-                      className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-teal-500 focus:outline-none"
                     />
                   </div>
 
                   {/* Behavioral Scores */}
                   <div className="mb-6">
-                    <label className="text-sm text-gray-400 block mb-3">Behavioral Scores</label>
+                    <label className="text-sm text-foreground/60 block mb-3">Behavioral Scores</label>
                     <div className="grid grid-cols-2 gap-4">
                       {BEHAVIORAL_DIMENSIONS.map((dimension) => (
                         <div key={dimension} className="flex items-center gap-3">
-                          <span className="text-sm text-gray-300 flex-1">{dimension}</span>
+                          <span className="text-sm text-foreground/75 flex-1">{dimension}</span>
                           <div className="flex gap-1">
                             {[1, 2, 3, 4, 5].map((score) => (
                               <button
@@ -946,8 +951,8 @@ const Observations = () => {
                                 }
                                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                                   observationForm.scores[dimension] === score
-                                    ? "bg-teal-600 text-white"
-                                    : "bg-black text-gray-400 hover:bg-black"
+                                    ? "bg-teal-600 text-foreground"
+                                    : "bg-background text-foreground/60 hover:bg-foreground/5"
                                 }`}
                               >
                                 {score}
@@ -961,24 +966,24 @@ const Observations = () => {
 
                   {/* Notes */}
                   <div className="mb-6">
-                    <label className="text-sm text-gray-400 block mb-2">Notes</label>
+                    <label className="text-sm text-foreground/60 block mb-2">Notes</label>
                     <textarea
                       value={observationForm.notes}
                       onChange={(e) => setObservationForm((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Additional observations..."
                       rows={3}
-                      className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-teal-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-teal-500 focus:outline-none resize-none"
                     />
                   </div>
                 </>
               )}
             </div>
 
-            <div className="p-6 border-t border-white/30 flex gap-3">
+            <div className="p-6 border-t border-foreground/25 flex gap-3">
               <Button
                 variant="outline"
                 onClick={() => setShowNewObservation(false)}
-                className="flex-1 border-white/20 text-white hover:bg-black"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -1001,7 +1006,7 @@ const Observations = () => {
             {observations.map((obs) => (
               <div
                 key={obs.id}
-                className="p-4 rounded-xl bg-black border border-white/30"
+                className="p-4 rounded-xl bg-background border border-foreground/25"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -1009,18 +1014,18 @@ const Observations = () => {
                       {obs.student?.profile?.first_name?.[0]}{obs.student?.profile?.last_name?.[0]}
                     </div>
                     <div>
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-foreground">
                         {obs.student?.profile?.first_name} {obs.student?.profile?.last_name}
                       </p>
-                      <p className="text-sm text-gray-400">{obs.context}</p>
+                      <p className="text-sm text-foreground/60">{obs.context}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-foreground/850">
                     {new Date(obs.observation_date).toLocaleDateString()}
                   </p>
                 </div>
                 {obs.notes && (
-                  <p className="mt-3 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
+                  <p className="mt-3 text-sm text-foreground/60 bg-background/20 p-3 rounded-lg">
                     {obs.notes}
                   </p>
                 )}
@@ -1028,10 +1033,10 @@ const Observations = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <ClipboardList className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No observations recorded yet</p>
-            <p className="text-sm text-gray-500 mt-1">Start documenting student behaviors</p>
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <ClipboardList className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No observations recorded yet</p>
+            <p className="text-sm text-foreground/850 mt-1">Start documenting student behaviors</p>
           </div>
         )}
       </motion.div>
@@ -1049,26 +1054,26 @@ const Analytics = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Analytics</h1>
-        <p className="text-gray-400">Track cohort performance and behavioral trends.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
+        <p className="text-foreground/60">Track cohort performance and behavioral trends.</p>
       </motion.div>
 
       {/* Behavioral Dimension Overview */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-        <h2 className="text-lg font-semibold text-white mb-4">Behavioral Dimensions Average</h2>
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+        <h2 className="text-lg font-semibold text-foreground mb-4">Behavioral Dimensions Average</h2>
         <div className="space-y-4">
           {BEHAVIORAL_DIMENSIONS.map((dimension, index) => {
             const score = 60 + Math.random() * 30; // Placeholder random scores
             return (
               <div key={dimension} className="flex items-center gap-4">
-                <span className="text-sm text-gray-400 w-40">{dimension}</span>
-                <div className="flex-1 h-3 bg-black rounded-full overflow-hidden">
+                <span className="text-sm text-foreground/60 w-40">{dimension}</span>
+                <div className="flex-1 h-3 bg-background rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-teal-500 to-cyan-500"
+                    className="h-full bg-foreground"
                     style={{ width: `${score}%` }}
                   />
                 </div>
-                <span className="text-sm text-white w-12 text-right">{Math.round(score)}%</span>
+                <span className="text-sm text-foreground w-12 text-right">{Math.round(score)}%</span>
               </div>
             );
           })}
@@ -1079,18 +1084,18 @@ const Analytics = () => {
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
         <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
           <TrendingUp className="w-8 h-8 text-teal-400 mb-3" />
-          <p className="text-3xl font-bold text-white">+12%</p>
-          <p className="text-sm text-gray-400">Average Score Improvement</p>
+          <p className="text-3xl font-bold text-foreground">+12%</p>
+          <p className="text-sm text-foreground/60">Average Score Improvement</p>
         </div>
         <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20">
-          <Award className="w-8 h-8 text-purple-400 mb-3" />
-          <p className="text-3xl font-bold text-white">24</p>
-          <p className="text-sm text-gray-400">Students Ready for Mentorship</p>
+          <Award className="w-8 h-8 ink-vermilion mb-3" />
+          <p className="text-3xl font-bold text-foreground">24</p>
+          <p className="text-sm text-foreground/60">Students Ready for Mentorship</p>
         </div>
         <div className="p-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
           <Target className="w-8 h-8 text-blue-400 mb-3" />
-          <p className="text-3xl font-bold text-white">78%</p>
-          <p className="text-sm text-gray-400">Goal Completion Rate</p>
+          <p className="text-3xl font-bold text-foreground">78%</p>
+          <p className="text-sm text-foreground/60">Goal Completion Rate</p>
         </div>
       </motion.div>
     </motion.div>
@@ -1246,32 +1251,32 @@ const SchoolMessagesPage = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
       <motion.div variants={itemVariants} className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-        <p className="text-gray-400">Connect with mentors, candidates, employers, and other schools.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Messages</h1>
+        <p className="text-foreground/60">Connect with mentors, candidates, employers, and other schools.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
-        <div className="w-80 border-r border-white/30 flex flex-col">
-          <div className="p-4 border-b border-white/30 space-y-3">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-background border border-foreground/25 overflow-hidden flex">
+        <div className="w-80 border-r border-foreground/25 flex flex-col">
+          <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-background/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-teal-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-teal-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
                     <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-teal-500/10 transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
                         {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-teal-400" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                        <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
+                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
                       </div>
                       <Send className="w-3.5 h-3.5 text-teal-400 flex-shrink-0" />
                     </button>
@@ -1283,14 +1288,14 @@ const SchoolMessagesPage = () => {
           <div className="flex-1 overflow-y-auto">
             {filteredConversations.length === 0 ? (
               <div className="p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No conversations yet</p>
-                <p className="text-sm text-gray-500 mt-1">Click the <span className="text-teal-400">+</span> button to find and message anyone</p>
+                <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+                <p className="text-foreground/60">No conversations yet</p>
+                <p className="text-sm text-foreground/850 mt-1">Click the <span className="text-teal-400">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-teal-500/30 border-l-2 border-teal-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-teal-500/30 border-l-2 border-teal-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-teal-400" />}
@@ -1299,13 +1304,13 @@ const SchoolMessagesPage = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className={`font-medium truncate ${hasUnread ? "text-white" : "text-gray-300"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-gray-500">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
+                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 capitalize">{conv.other_user?.role}</span>
-                      <span className="text-gray-600">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-gray-300" : "text-gray-500"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-foreground/40">·</span>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -1316,13 +1321,13 @@ const SchoolMessagesPage = () => {
         <div className="flex-1 flex flex-col">
           {activeConversation ? (
             <>
-              <div className="p-4 border-b border-white/30 flex items-center gap-4">
+              <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
                   {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-teal-400" />}
                 </div>
                 <div>
-                  <p className="font-medium text-white">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{activeConversation.other_user?.role}</p>
+                  <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
+                  <p className="text-xs text-foreground/850 capitalize">{activeConversation.other_user?.role}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -1339,19 +1344,19 @@ const SchoolMessagesPage = () => {
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div>
-                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-teal-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
+                          <div className={`px-4 py-2 rounded-2xl ${isOwn ? "bg-teal-600 text-foreground rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                           </div>
-                          <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="p-4 border-t border-white/30">
+              <div className="p-4 border-t border-foreground/25">
                 <div className="flex items-center gap-3">
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-teal-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-teal-500" />
                   <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending} className="bg-teal-600 hover:bg-teal-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -1361,9 +1366,9 @@ const SchoolMessagesPage = () => {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
-                <p className="text-gray-400 max-w-sm mb-4">Choose a conversation or start a new one.</p>
+                <MessageSquare className="w-16 h-16 text-foreground/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">Select a Conversation</h3>
+                <p className="text-foreground/60 max-w-sm mb-4">Choose a conversation or start a new one.</p>
                 <Button onClick={() => setShowNewChat(true)} className="bg-teal-600 hover:bg-teal-500 rounded-xl px-6"><Plus className="w-4 h-4 mr-2" />New Conversation</Button>
               </div>
             </div>
@@ -1383,166 +1388,49 @@ const SettingsPage = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-gray-400">Manage your school profile and preferences.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
+        <p className="text-foreground/60">Manage your school profile and preferences.</p>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-        <p className="text-gray-400">School settings will appear here.</p>
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+        <p className="text-foreground/60">School settings will appear here.</p>
       </motion.div>
     </motion.div>
   );
 };
 
 // Main Dashboard component
-const SchoolDashboard = () => {
-  const { profile, signOut } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const location = useLocation();
+const SCHOOL_SECTIONS: DashboardSection[] = [
+  { id: "main", label: "§ I · Civic Access Lab" },
+];
 
-  const handleSignOut = async () => {
-    await signOut();
-  };
+const SchoolDashboard = () => {
+  const navWithSection: DashboardNavItem[] = navItems.map((n) => ({
+    ...n,
+    section: "main",
+  }));
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
-            {sidebarCollapsed ? (
-              <Link to="/" className="flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-              </Link>
-            ) : (
-              <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-                <span className="font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-                  Civic Access Lab
-                </span>
-              </Link>
-            )}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  title={sidebarCollapsed ? item.name : undefined}
-                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-gradient-to-r from-teal-600/20 to-cyan-600/20 text-white border border-teal-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && item.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* User */}
-          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
-            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt="Profile"
-                  className={`${sidebarCollapsed ? "w-8 h-8" : "w-10 h-10"} rounded-full object-cover`}
-                />
-              ) : (
-                <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold`}>
-                  {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-                </div>
-              )}
-              {!sidebarCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white truncate">
-                    {profile?.first_name} {profile?.last_name}
-                  </p>
-                  <p className="text-xs text-gray-400 truncate">School Admin</p>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleSignOut}
-              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors`}
-              title={sidebarCollapsed ? "Sign Out" : undefined}
-            >
-              <LogOut className="w-4 h-4" />
-              {!sidebarCollapsed && "Sign Out"}
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 p-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex-1" />
-          <button className="relative text-gray-400 hover:text-white">
-            <Bell className="w-5 h-5" />
-          </button>
-        </header>
-
-        {/* Page content */}
-        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
-          <Routes>
-            <Route index element={<Overview />} />
-            <Route path="students" element={<Students />} />
-            <Route path="cohorts" element={<Cohorts />} />
-            <Route path="observations" element={<Observations />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="messages" element={<SchoolMessagesPage />} />
-            <Route path="agent" element={<AIAgent />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
+    <DashboardLayout
+      role="Institution"
+      roleTagline="Where the classroom register begins to become the professional one."
+      nav={navWithSection}
+      sections={SCHOOL_SECTIONS}
+    >
+      <Routes>
+        <Route index element={<Overview />} />
+        <Route path="students" element={<Students />} />
+        <Route path="cohorts" element={<Cohorts />} />
+        <Route path="observations" element={<Observations />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="messages" element={<SchoolMessagesPage />} />
+        <Route path="agent" element={<AIAgent />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Routes>
+    </DashboardLayout>
   );
 };
+
+// legacy shell removed
 
 export default SchoolDashboard;

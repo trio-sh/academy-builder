@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { LoadingScreen } from '@/components/LoadingScreen';
 import type { Database } from '@/types/database.types';
 
 type UserRole = Database['public']['Tables']['profiles']['Row']['role'];
@@ -18,31 +19,19 @@ export function ProtectedRoute({
   const { isAuthenticated, isLoading, profile } = useAuth();
   const location = useLocation();
 
-  // Show loading state
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
-          <p className="text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Verifying your entry in the register" />;
   }
 
-  // Not authenticated - redirect to login
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  // If onboarding not completed, redirect to get-started to finish setup
   if (profile && !profile.onboarding_completed) {
     return <Navigate to="/get-started" replace />;
   }
 
-  // Check role if specified
   if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
-    // Redirect to appropriate dashboard based on role
     const dashboardRoutes: Record<UserRole, string> = {
       candidate: '/dashboard/candidate',
       mentor: '/dashboard/mentor',
@@ -50,7 +39,6 @@ export function ProtectedRoute({
       school_admin: '/dashboard/school',
       admin: '/dashboard/admin',
     };
-
     const userDashboard = dashboardRoutes[profile.role] || '/';
     return <Navigate to={userDashboard} replace />;
   }
@@ -58,7 +46,6 @@ export function ProtectedRoute({
   return <>{children}</>;
 }
 
-// Component for public-only routes (login, signup)
 interface PublicOnlyRouteProps {
   children: React.ReactNode;
 }
@@ -67,23 +54,13 @@ export function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
   const { isAuthenticated, isLoading, profile } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
-          <p className="text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="One moment — checking the register" />;
   }
 
-  // If authenticated, redirect to appropriate page
   if (isAuthenticated && profile) {
-    // If onboarding not completed, send to get-started instead of dashboard
     if (!profile.onboarding_completed) {
       return <Navigate to="/get-started" replace />;
     }
-
     const dashboardRoutes: Record<UserRole, string> = {
       candidate: '/dashboard/candidate',
       mentor: '/dashboard/mentor',
@@ -91,7 +68,6 @@ export function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
       school_admin: '/dashboard/school',
       admin: '/dashboard/admin',
     };
-
     const userDashboard = dashboardRoutes[profile.role] || '/';
     return <Navigate to={userDashboard} replace />;
   }

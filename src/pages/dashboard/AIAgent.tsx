@@ -704,13 +704,13 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
       {/* Download button row */}
       <div className="flex items-center gap-3 px-4 py-3">
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-600/30"}`}>
-          {isError ? <AlertCircle className="w-4.5 h-4.5 text-amber-300" /> : <FileText className="w-4.5 h-4.5 text-indigo-300" />}
+          {isError ? <AlertCircle className="w-4.5 h-4.5 text-amber-300" /> : <FileText className="w-4.5 h-4.5 ink-vermilion" />}
         </div>
         <div className="flex-1 min-w-0">
-          <span className="font-medium text-sm text-white truncate block">
+          <span className="font-medium text-sm text-foreground truncate block">
             {isError ? "PDF Generation Failed" : `${pdf.title}.pdf`}
           </span>
-          <span className={`text-[10px] ${isError ? "text-amber-400" : "text-indigo-400"}`}>
+          <span className={`text-[10px] ${isError ? "text-amber-400" : "ink-vermilion"}`}>
             {isError ? "The AI produced invalid JSON — try regenerating" : "PDF document ready"}
           </span>
         </div>
@@ -718,7 +718,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
           <a
             href={pdf.url}
             download={`${pdf.title.replace(/[^a-zA-Z0-9_\- ]/g, "")}.pdf`}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 hover:border-indigo-500/50 transition-all text-xs font-medium text-white"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/40 hover:bg-indigo-600/60 border border-indigo-500/30 hover:border-indigo-500/50 transition-all text-xs font-medium text-foreground"
           >
             <Download className="w-3.5 h-3.5" />
             Download
@@ -727,7 +727,7 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
         {pdf.rawJson && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-[11px] text-gray-400 hover:text-gray-300"
+            className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-foreground/5 transition-colors text-[11px] text-foreground/60 hover:text-foreground/75"
           >
             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
             JSON
@@ -737,8 +737,8 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
 
       {/* Collapsible JSON accordion */}
       {pdf.rawJson && expanded && (
-        <div className={`border-t bg-black/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
-          <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-gray-400">
+        <div className={`border-t bg-background/30 ${isError ? "border-amber-500/15" : "border-indigo-500/15"}`}>
+          <pre className="p-3 overflow-x-auto max-h-64 overflow-y-auto text-[11px] font-mono leading-relaxed text-foreground/60">
             {pdf.rawJson}
           </pre>
         </div>
@@ -2044,22 +2044,22 @@ export default function AIAgent() {
       <div className={`flex items-center gap-1 mt-1.5 ${isUser ? "justify-end" : ""}`}>
         <button
           onClick={() => copyMessage(content, idx)}
-          className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+          className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors"
           title="Copy"
         >
           {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
         {!isUser && (
           <>
-            <button className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors" title="Good response">
+            <button className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors" title="Good response">
               <ThumbsUp className="w-3.5 h-3.5" />
             </button>
-            <button className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors" title="Bad response">
+            <button className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors" title="Bad response">
               <ThumbsDown className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => retryMessage(idx)}
-              className="p-1 rounded-md text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+              className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors"
               title="Retry"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -2094,7 +2094,7 @@ export default function AIAgent() {
         )}
         <button
           onClick={() => toggleExpand(idx)}
-          className="flex items-center gap-1 mt-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+          className="flex items-center gap-1 mt-1.5 text-xs ink-vermilion hover:ink-vermilion transition-colors"
         >
           {isExpanded ? <><ChevronUp className="w-3 h-3" /> Show less</> : <><ChevronDown className="w-3 h-3" /> Show more</>}
         </button>
@@ -2108,9 +2108,9 @@ export default function AIAgent() {
     return (
       <div className="flex items-center justify-center h-[80vh]">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-4" />
-          <p className="text-gray-400">Loading Praxis...</p>
-          <p className="text-xs text-gray-600 mt-1">Gathering your profile, progress, and context</p>
+          <Loader2 className="w-8 h-8 animate-spin ink-vermilion mx-auto mb-4" />
+          <p className="text-foreground/60">Loading Praxis...</p>
+          <p className="text-xs text-foreground/40 mt-1">Gathering your profile, progress, and context</p>
         </div>
       </div>
     );
@@ -2131,12 +2131,12 @@ export default function AIAgent() {
           >
             <div className="text-center mb-8 pt-12">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20 flex items-center justify-center mx-auto mb-5 border border-indigo-500/20">
-                <Sparkles className="w-8 h-8 text-indigo-400" />
+                <Sparkles className="w-8 h-8 ink-vermilion" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 Hey {profile?.first_name || "there"}!
               </h2>
-              <p className="text-gray-400 max-w-md mx-auto text-sm">
+              <p className="text-foreground/60 max-w-md mx-auto text-sm">
                 I'm Praxis, your AI co-pilot. I can search the web, read pages across your dashboard, query your data, and help you with anything on the platform.
               </p>
             </div>
@@ -2151,8 +2151,8 @@ export default function AIAgent() {
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <qa.icon className="w-4.5 h-4.5 text-gray-500 group-hover:text-indigo-400 transition-colors" />
-                  <span className="text-xs text-gray-400 group-hover:text-white transition-colors leading-tight">{qa.label}</span>
+                  <qa.icon className="w-4.5 h-4.5 text-foreground/850 group-hover:ink-vermilion transition-colors" />
+                  <span className="text-xs text-foreground/60 group-hover:text-foreground transition-colors leading-tight">{qa.label}</span>
                 </motion.button>
               ))}
             </div>
@@ -2160,11 +2160,11 @@ export default function AIAgent() {
             {/* Context Card */}
             {userContext && (
               <div className="mt-6 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                <p className="text-[10px] text-gray-600 uppercase tracking-wider mb-1.5 font-semibold">Your context</p>
-                <div className="text-xs text-gray-500 space-y-0.5">
+                <p className="text-[10px] text-foreground/40 uppercase tracking-wider mb-1.5 font-semibold">Your context</p>
+                <div className="text-xs text-foreground/850 space-y-0.5">
                   {userContext.profile && (
                     <p>
-                      <span className="text-gray-400">{String((userContext.profile as Record<string, unknown>).first_name ?? "")} {String((userContext.profile as Record<string, unknown>).last_name ?? "")}</span>
+                      <span className="text-foreground/60">{String((userContext.profile as Record<string, unknown>).first_name ?? "")} {String((userContext.profile as Record<string, unknown>).last_name ?? "")}</span>
                       {" — "}
                       <span className="capitalize">{role}</span>
                       {(userContext.profile as Record<string, unknown>).location && ` • ${(userContext.profile as Record<string, unknown>).location}`}
@@ -2172,7 +2172,7 @@ export default function AIAgent() {
                   )}
                   {role === "candidate" && userContext.roleProfile && (
                     <p>
-                      Tier: <span className="text-indigo-400 capitalize">{String((userContext.roleProfile as Record<string, unknown>).current_tier ?? "None")}</span>
+                      Tier: <span className="ink-vermilion capitalize">{String((userContext.roleProfile as Record<string, unknown>).current_tier ?? "None")}</span>
                       {" • Skills: "}{((userContext.roleProfile as Record<string, unknown>).skills as string[] || []).slice(0, 5).join(", ") || "None set"}
                     </p>
                   )}
@@ -2194,12 +2194,12 @@ export default function AIAgent() {
             {msg.role === "assistant" ? (
               <div className="group">
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Bot className="w-3.5 h-3.5 text-white" />
+                  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Bot className="w-3.5 h-3.5 text-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
                     {msg.content && (
-                      <div className="text-gray-200">
+                      <div className="text-foreground/80">
                         <MarkdownRenderer content={msg.content} />
                       </div>
                     )}
@@ -2244,7 +2244,7 @@ export default function AIAgent() {
               </div>
             ) : msg.role === "user" ? (
               <div className="group max-w-[85%] inline-block">
-                <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-gray-200">
+                <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-600/20 border border-indigo-500/15 text-foreground/80">
                   <UserMessageContent content={msg.content} idx={idx} />
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -2263,10 +2263,10 @@ export default function AIAgent() {
             className="max-w-2xl mx-auto"
           >
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Bot className="w-3.5 h-3.5 text-white" />
+              <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Bot className="w-3.5 h-3.5 text-foreground" />
               </div>
-              <div className="flex-1 min-w-0 text-gray-200">
+              <div className="flex-1 min-w-0 text-foreground/80">
                 {streamingContent ? (() => {
                   const { cleaned, hasPdfBlock } = cleanStreamingPdfContent(streamingContent);
                   return (
@@ -2275,10 +2275,10 @@ export default function AIAgent() {
                       {hasPdfBlock && (
                         <div className="flex items-center gap-2.5 mt-3 px-4 py-3 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
                           <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center flex-shrink-0">
-                            <FileText className="w-4 h-4 text-indigo-300" />
+                            <FileText className="w-4 h-4 ink-vermilion" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className="text-sm font-medium text-white">Generating PDF document...</span>
+                            <span className="text-sm font-medium text-foreground">Generating PDF document...</span>
                             <div className="flex gap-1 mt-1">
                               <span className="w-1 h-1 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "0ms" }} />
                               <span className="w-1 h-1 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -2296,7 +2296,7 @@ export default function AIAgent() {
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "150ms" }} />
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
-                    <span className="text-xs text-gray-500">Thinking</span>
+                    <span className="text-xs text-foreground/850">Thinking</span>
                   </div>
                 )}
 
@@ -2336,14 +2336,14 @@ export default function AIAgent() {
                 {attachedFiles.map((f, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/15 border border-indigo-500/20 text-xs text-indigo-300"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/15 border border-indigo-500/20 text-xs ink-vermilion"
                   >
                     <Paperclip className="w-3 h-3" />
                     <span className="max-w-[140px] truncate">{f.name}</span>
                     <button
                       type="button"
                       onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))}
-                      className="ml-0.5 text-indigo-400 hover:text-white"
+                      className="ml-0.5 ink-vermilion hover:text-foreground"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -2359,7 +2359,7 @@ export default function AIAgent() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder={isStreaming ? "Praxis is working..." : "Reply..."}
-              className={`w-full bg-transparent px-4 ${attachedFiles.length > 0 ? "pt-2" : "pt-3.5"} pb-12 text-sm text-white placeholder:text-gray-500 focus:outline-none resize-none min-h-[52px] max-h-[200px]`}
+              className={`w-full bg-transparent px-4 ${attachedFiles.length > 0 ? "pt-2" : "pt-3.5"} pb-12 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none resize-none min-h-[52px] max-h-[200px]`}
               rows={1}
               disabled={isStreaming}
             />
@@ -2369,7 +2369,7 @@ export default function AIAgent() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={fileProcessing}
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-40"
+                  className="p-1.5 rounded-lg text-foreground/850 hover:text-foreground/75 hover:bg-foreground/5 transition-colors disabled:opacity-40"
                   title="Attach file (PDF, DOCX, TXT)"
                 >
                   {fileProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
@@ -2378,7 +2378,7 @@ export default function AIAgent() {
                   <button
                     type="button"
                     onClick={clearChat}
-                    className="p-1.5 rounded-lg text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors"
+                    className="p-1.5 rounded-lg text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors"
                     title="Clear chat"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -2387,7 +2387,7 @@ export default function AIAgent() {
               </div>
               <div className="flex items-center gap-2">
                 {isStreaming && (
-                  <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                  <span className="text-[10px] text-foreground/850 flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Streaming
                   </span>
@@ -2395,7 +2395,7 @@ export default function AIAgent() {
                 <motion.button
                   type="submit"
                   disabled={!input.trim() || isStreaming}
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-foreground disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
                   whileHover={!input.trim() || isStreaming ? {} : { scale: 1.05 }}
                   whileTap={!input.trim() || isStreaming ? {} : { scale: 0.95 }}
                 >
@@ -2404,7 +2404,7 @@ export default function AIAgent() {
               </div>
             </div>
           </div>
-          <p className="text-center text-[10px] text-gray-600 mt-2">
+          <p className="text-center text-[10px] text-foreground/40 mt-2">
             Praxis can make mistakes. Verify important information.
           </p>
         </form>

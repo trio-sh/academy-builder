@@ -4,6 +4,11 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import {
+  DashboardLayout,
+  type DashboardNavItem,
+  type DashboardSection,
+} from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -307,8 +312,8 @@ const Overview = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-        <p className="text-gray-400">Platform management and analytics overview.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+        <p className="text-foreground/60">Platform management and analytics overview.</p>
       </motion.div>
 
       {/* Stats Grid */}
@@ -316,16 +321,16 @@ const Overview = () => {
         {[
           { label: "Total Users", value: stats.totalUsers, icon: Users, color: "text-blue-400", bg: "from-blue-500/30 to-cyan-500/30" },
           { label: "Candidates", value: stats.totalCandidates, icon: UserCheck, color: "text-emerald-400", bg: "from-emerald-500/30 to-teal-500/30" },
-          { label: "Mentors", value: stats.totalMentors, icon: GraduationCap, color: "text-purple-400", bg: "from-purple-500/30 to-pink-500/30" },
+          { label: "Mentors", value: stats.totalMentors, icon: GraduationCap, color: "ink-vermilion", bg: "from-purple-500/30 to-pink-500/30" },
           { label: "Employers", value: stats.totalEmployers, icon: Building2, color: "text-amber-400", bg: "from-amber-500/30 to-orange-500/30" },
         ].map((stat) => (
           <div
             key={stat.label}
-            className={`p-6 rounded-xl bg-gradient-to-br ${stat.bg} border border-white/30`}
+            className={`p-6 rounded-xl bg-gradient-to-br ${stat.bg} border border-foreground/25`}
           >
             <stat.icon className={`w-8 h-8 ${stat.color} mb-3`} />
-            <p className="text-3xl font-bold text-white">{stat.value}</p>
-            <p className="text-sm text-gray-400">{stat.label}</p>
+            <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+            <p className="text-sm text-foreground/60">{stat.label}</p>
           </div>
         ))}
       </motion.div>
@@ -333,20 +338,20 @@ const Overview = () => {
       {/* Secondary Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Active Passports", value: stats.totalPassports, icon: Shield, color: "text-indigo-400" },
+          { label: "Active Passports", value: stats.totalPassports, icon: Shield, color: "ink-vermilion" },
           { label: "Pending TalentVisa", value: stats.pendingTalentVisas, icon: Award, color: "text-yellow-400" },
           { label: "Active Projects", value: stats.activeProjects, icon: Briefcase, color: "text-cyan-400" },
           { label: "Total Connections", value: stats.totalConnections, icon: Activity, color: "text-pink-400" },
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl bg-black border border-white/30"
+            className="p-4 rounded-xl bg-background border border-foreground/25"
           >
             <div className="flex items-center gap-3">
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
               <div>
-                <p className="text-xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-gray-400">{stat.label}</p>
+                <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                <p className="text-xs text-foreground/60">{stat.label}</p>
               </div>
             </div>
           </div>
@@ -356,8 +361,8 @@ const Overview = () => {
       {/* Analytics Charts */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         {/* User Growth Chart */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="text-lg font-semibold text-white mb-4">User Growth (12 Weeks)</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="text-lg font-semibold text-foreground mb-4">User Growth (12 Weeks)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={userGrowthData}>
@@ -398,8 +403,8 @@ const Overview = () => {
         </div>
 
         {/* Role Distribution Pie Chart */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="text-lg font-semibold text-white mb-4">User Role Distribution</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="text-lg font-semibold text-foreground mb-4">User Role Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -433,8 +438,8 @@ const Overview = () => {
       </motion.div>
 
       {/* Platform Activity Bar Chart */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-        <h3 className="text-lg font-semibold text-white mb-4">Platform Activity Overview</h3>
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Platform Activity Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={activityData} layout="vertical">
@@ -467,7 +472,7 @@ const Overview = () => {
             <AlertTriangle className="w-6 h-6 text-amber-400" />
             <div className="flex-1">
               <p className="font-medium text-amber-400">Pending Review</p>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-foreground/60">
                 {stats.pendingTalentVisas} TalentVisa nomination{stats.pendingTalentVisas !== 1 ? "s" : ""} awaiting review.
               </p>
             </div>
@@ -482,36 +487,36 @@ const Overview = () => {
 
       {/* Quick Actions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/admin/users"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
           >
             <Users className="w-8 h-8 text-blue-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">Manage Users</h3>
-            <p className="text-sm text-gray-400">View, edit, and moderate user accounts</p>
+            <h3 className="font-semibold text-foreground mb-1">Manage Users</h3>
+            <p className="text-sm text-foreground/60">View, edit, and moderate user accounts</p>
             <ChevronRight className="w-5 h-5 text-blue-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
             to="/dashboard/admin/talentvisa"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
           >
             <Award className="w-8 h-8 text-yellow-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">TalentVisa Review</h3>
-            <p className="text-sm text-gray-400">Review and approve premium nominations</p>
+            <h3 className="font-semibold text-foreground mb-1">TalentVisa Review</h3>
+            <p className="text-sm text-foreground/60">Review and approve premium nominations</p>
             <ChevronRight className="w-5 h-5 text-yellow-400 mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
             to="/dashboard/admin/reports"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors group"
           >
-            <FileText className="w-8 h-8 text-purple-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">View Reports</h3>
-            <p className="text-sm text-gray-400">Platform analytics and insights</p>
-            <ChevronRight className="w-5 h-5 text-purple-400 mt-2 group-hover:translate-x-1 transition-transform" />
+            <FileText className="w-8 h-8 ink-vermilion mb-3" />
+            <h3 className="font-semibold text-foreground mb-1">View Reports</h3>
+            <p className="text-sm text-foreground/60">Platform analytics and insights</p>
+            <ChevronRight className="w-5 h-5 ink-vermilion mt-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </motion.div>
@@ -519,7 +524,7 @@ const Overview = () => {
       {/* Recent Users */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Recent Users</h2>
+          <h2 className="text-xl font-semibold text-foreground">Recent Users</h2>
           <Link to="/dashboard/admin/users" className="text-sm text-red-400 hover:text-red-300">
             View all
           </Link>
@@ -528,7 +533,7 @@ const Overview = () => {
           {recentActivity.map((user) => (
             <div
               key={user.id}
-              className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
+              className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center justify-between"
             >
               <div className="flex items-center gap-4">
                 {user.avatar_url ? (
@@ -539,20 +544,20 @@ const Overview = () => {
                   </div>
                 )}
                 <div>
-                  <p className="font-medium text-white">{user.first_name} {user.last_name}</p>
-                  <p className="text-sm text-gray-400">{user.email}</p>
+                  <p className="font-medium text-foreground">{user.first_name} {user.last_name}</p>
+                  <p className="text-sm text-foreground/60">{user.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <span className={`px-2 py-1 rounded text-xs ${
                   user.role === "candidate" ? "bg-emerald-500/20 text-emerald-400" :
-                  user.role === "mentor" ? "bg-purple-500/20 text-purple-400" :
+                  user.role === "mentor" ? "bg-purple-500/20 ink-vermilion" :
                   user.role === "employer" ? "bg-amber-500/20 text-amber-400" :
                   "bg-blue-500/20 text-blue-400"
                 }`}>
                   {user.role}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-foreground/850">
                   {new Date(user.created_at).toLocaleDateString()}
                 </span>
               </div>
@@ -700,12 +705,12 @@ const UsersManagement = () => {
   const getRoleBadge = (role: string) => {
     const styles: Record<string, string> = {
       candidate: "bg-emerald-500/20 text-emerald-400",
-      mentor: "bg-purple-500/20 text-purple-400",
+      mentor: "bg-purple-500/20 ink-vermilion",
       employer: "bg-amber-500/20 text-amber-400",
       admin: "bg-red-500/20 text-red-400",
       school_admin: "bg-blue-500/20 text-blue-400",
     };
-    return styles[role] || "bg-gray-500/20 text-gray-400";
+    return styles[role] || "bg-gray-500/20 text-foreground/60";
   };
 
   if (isLoading) {
@@ -725,10 +730,10 @@ const UsersManagement = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
-          <p className="text-gray-400">View, edit, and manage all platform users.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">User Management</h1>
+          <p className="text-foreground/60">View, edit, and manage all platform users.</p>
         </div>
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-foreground/60">
           {filteredUsers.length} user{filteredUsers.length !== 1 ? "s" : ""}
         </div>
       </motion.div>
@@ -736,19 +741,19 @@ const UsersManagement = () => {
       {/* Filters */}
       <motion.div variants={itemVariants} className="flex gap-4 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search users..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-red-500 focus:outline-none"
           />
         </div>
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="px-4 py-3 rounded-xl bg-black border border-white/30 text-white focus:border-red-500 focus:outline-none"
+          className="px-4 py-3 rounded-xl bg-background border border-foreground/25 text-foreground focus:border-red-500 focus:outline-none"
         >
           <option value="all">All Roles</option>
           <option value="candidate">Candidates</option>
@@ -761,22 +766,22 @@ const UsersManagement = () => {
 
       {/* Users Table */}
       <motion.div variants={itemVariants}>
-        <div className="rounded-xl border border-white/30 overflow-hidden">
+        <div className="rounded-xl border border-foreground/25 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-black">
+              <thead className="bg-background">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">User</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Role</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Location</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Joined</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Actions</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">User</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">Role</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">Status</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">Location</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">Joined</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-foreground/60">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={user.id} className="hover:bg-foreground/5 transition-colors">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         {user.avatar_url ? (
@@ -787,8 +792,8 @@ const UsersManagement = () => {
                           </div>
                         )}
                         <div>
-                          <p className="font-medium text-white">{user.first_name} {user.last_name}</p>
-                          <p className="text-xs text-gray-500">{user.email}</p>
+                          <p className="font-medium text-foreground">{user.first_name} {user.last_name}</p>
+                          <p className="text-xs text-foreground/850">{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -804,10 +809,10 @@ const UsersManagement = () => {
                         {user.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-400">
+                    <td className="px-4 py-4 text-sm text-foreground/60">
                       {user.location || "—"}
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-400">
+                    <td className="px-4 py-4 text-sm text-foreground/60">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-4">
@@ -816,7 +821,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => openViewModal(user)}
-                          className="text-gray-400 hover:text-white"
+                          className="text-foreground/60 hover:text-foreground"
                           title="View user"
                         >
                           <Eye className="w-4 h-4" />
@@ -834,7 +839,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => openRoleModal(user)}
-                          className="text-purple-400 hover:text-purple-300"
+                          className="ink-vermilion hover:text-purple-300"
                           title="Change role"
                         >
                           <Shield className="w-4 h-4" />
@@ -863,18 +868,18 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowViewModal(false); setSelectedUser(null); }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-white">User Details</h3>
-              <button onClick={() => { setShowViewModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+              <h3 className="text-xl font-bold text-foreground">User Details</h3>
+              <button onClick={() => { setShowViewModal(false); setSelectedUser(null); }} className="text-foreground/60 hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -888,8 +893,8 @@ const UsersManagement = () => {
                 </div>
               )}
               <div>
-                <p className="text-lg font-semibold text-white">{selectedUser.first_name} {selectedUser.last_name}</p>
-                <p className="text-sm text-gray-400">{selectedUser.email}</p>
+                <p className="text-lg font-semibold text-foreground">{selectedUser.first_name} {selectedUser.last_name}</p>
+                <p className="text-sm text-foreground/60">{selectedUser.email}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <span className={`px-2 py-0.5 rounded text-xs capitalize ${getRoleBadge(selectedUser.role)}`}>
                     {selectedUser.role?.replace("_", " ")}
@@ -904,32 +909,32 @@ const UsersManagement = () => {
             <div className="space-y-4 mb-6">
               {selectedUser.headline && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Headline</p>
-                  <p className="text-sm text-gray-300">{selectedUser.headline}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Headline</p>
+                  <p className="text-sm text-foreground/75">{selectedUser.headline}</p>
                 </div>
               )}
               {selectedUser.bio && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Bio</p>
-                  <p className="text-sm text-gray-300">{selectedUser.bio}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Bio</p>
+                  <p className="text-sm text-foreground/75">{selectedUser.bio}</p>
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Location</p>
-                  <p className="text-sm text-gray-300">{selectedUser.location || "Not set"}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Location</p>
+                  <p className="text-sm text-foreground/75">{selectedUser.location || "Not set"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Onboarding</p>
-                  <p className="text-sm text-gray-300">{selectedUser.onboarding_completed ? "Completed" : "Incomplete"}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Onboarding</p>
+                  <p className="text-sm text-foreground/75">{selectedUser.onboarding_completed ? "Completed" : "Incomplete"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Joined</p>
-                  <p className="text-sm text-gray-300">{new Date(selectedUser.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Joined</p>
+                  <p className="text-sm text-foreground/75">{new Date(selectedUser.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Last Updated</p>
-                  <p className="text-sm text-gray-300">{new Date(selectedUser.updated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                  <p className="text-xs text-foreground/850 mb-1">Last Updated</p>
+                  <p className="text-sm text-foreground/75">{new Date(selectedUser.updated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
                 </div>
               </div>
             </div>
@@ -938,7 +943,7 @@ const UsersManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => { setShowViewModal(false); openEditModal(selectedUser); }}
-                className="flex-1 border-white/20 text-white hover:bg-white/5"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
@@ -946,7 +951,7 @@ const UsersManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => { setShowViewModal(false); openRoleModal(selectedUser); }}
-                className="flex-1 border-white/20 text-white hover:bg-white/5"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 <Shield className="w-4 h-4 mr-2" />
                 Change Role
@@ -961,18 +966,18 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-white">Edit Profile</h3>
-              <button onClick={() => { setShowEditModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+              <h3 className="text-xl font-bold text-foreground">Edit Profile</h3>
+              <button onClick={() => { setShowEditModal(false); setSelectedUser(null); }} className="text-foreground/60 hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -980,61 +985,61 @@ const UsersManagement = () => {
             <div className="space-y-4 mb-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">First Name</label>
+                  <label className="block text-sm text-foreground/60 mb-1">First Name</label>
                   <input
                     type="text"
                     value={editForm.first_name}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, first_name: e.target.value }))}
-                    className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                    className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-red-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Last Name</label>
+                  <label className="block text-sm text-foreground/60 mb-1">Last Name</label>
                   <input
                     type="text"
                     value={editForm.last_name}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, last_name: e.target.value }))}
-                    className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                    className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Email</label>
+                <label className="block text-sm text-foreground/60 mb-1">Email</label>
                 <input
                   type="email"
                   value={editForm.email}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Headline</label>
+                <label className="block text-sm text-foreground/60 mb-1">Headline</label>
                 <input
                   type="text"
                   value={editForm.headline}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, headline: e.target.value }))}
                   placeholder="e.g. Software Engineer"
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Location</label>
+                <label className="block text-sm text-foreground/60 mb-1">Location</label>
                 <input
                   type="text"
                   value={editForm.location}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, location: e.target.value }))}
                   placeholder="e.g. New York, NY"
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-red-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Bio</label>
+                <label className="block text-sm text-foreground/60 mb-1">Bio</label>
                 <textarea
                   value={editForm.bio}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, bio: e.target.value }))}
                   rows={3}
                   placeholder="Short bio..."
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-red-500 resize-none"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-red-500 resize-none"
                 />
               </div>
             </div>
@@ -1043,7 +1048,7 @@ const UsersManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => { setShowEditModal(false); setSelectedUser(null); }}
-                className="flex-1 border-white/20 text-white hover:bg-white/5"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -1065,24 +1070,24 @@ const UsersManagement = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-md p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-white">Change Role</h3>
-              <button onClick={() => { setShowRoleModal(false); setSelectedUser(null); }} className="text-gray-400 hover:text-white">
+              <h3 className="text-xl font-bold text-foreground">Change Role</h3>
+              <button onClick={() => { setShowRoleModal(false); setSelectedUser(null); }} className="text-foreground/60 hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-sm text-gray-400 mb-4">
-              Change the role for <span className="text-white font-medium">{selectedUser.first_name} {selectedUser.last_name}</span>
+            <p className="text-sm text-foreground/60 mb-4">
+              Change the role for <span className="text-foreground font-medium">{selectedUser.first_name} {selectedUser.last_name}</span>
             </p>
 
             <div className="space-y-2 mb-6">
@@ -1099,19 +1104,19 @@ const UsersManagement = () => {
                   className={`w-full p-3 rounded-xl border text-left transition-all flex items-center gap-3 ${
                     newRole === role.value
                       ? `bg-${role.color}-500/20 border-${role.color}-500/50`
-                      : "bg-black border-white/10 hover:border-white/20"
+                      : "bg-background border-foreground/15 hover:border-foreground/25"
                   }`}
                 >
                   <div className={`w-9 h-9 rounded-lg bg-${role.color}-500/20 flex items-center justify-center`}>
                     <role.icon className={`w-4 h-4 text-${role.color}-400`} />
                   </div>
                   <div className="flex-1">
-                    <p className={`text-sm font-medium ${newRole === role.value ? "text-white" : "text-gray-300"}`}>{role.label}</p>
-                    <p className="text-xs text-gray-500">{role.desc}</p>
+                    <p className={`text-sm font-medium ${newRole === role.value ? "text-foreground" : "text-foreground/75"}`}>{role.label}</p>
+                    <p className="text-xs text-foreground/850">{role.desc}</p>
                   </div>
                   {newRole === role.value && <CheckCircle className="w-5 h-5 text-emerald-400" />}
                   {selectedUser.role === role.value && newRole !== role.value && (
-                    <span className="text-xs text-gray-500">Current</span>
+                    <span className="text-xs text-foreground/850">Current</span>
                   )}
                 </button>
               ))}
@@ -1129,7 +1134,7 @@ const UsersManagement = () => {
               <Button
                 variant="outline"
                 onClick={() => { setShowRoleModal(false); setSelectedUser(null); }}
-                className="flex-1 border-white/20 text-white hover:bg-white/5"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -1349,13 +1354,13 @@ const TalentVisaReview = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">TalentVisa Review</h1>
-          <p className="text-gray-400">Review and approve TalentVisa nominations with tier assignment.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">TalentVisa Review</h1>
+          <p className="text-foreground/60">Review and approve TalentVisa nominations with tier assignment.</p>
         </div>
         <Button
           variant="outline"
           onClick={() => setShowQuotaSettings(!showQuotaSettings)}
-          className="border-white/20 text-white hover:bg-black"
+          className="border-foreground/25 text-foreground hover:bg-foreground/5"
         >
           <Target className="w-4 h-4 mr-2" />
           Quota Settings
@@ -1382,17 +1387,17 @@ const TalentVisaReview = () => {
                 <TierIcon className={`w-6 h-6 ${config.color}`} />
                 <div>
                   <p className={`font-semibold ${config.color}`}>{config.label} Tier</p>
-                  <p className="text-xs text-gray-400">{config.description}</p>
+                  <p className="text-xs text-foreground/60">{config.description}</p>
                 </div>
               </div>
               <div className="mb-2">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-400">Monthly Quota</span>
-                  <span className={isExceeded ? "text-red-400" : "text-white"}>
+                  <span className="text-foreground/60">Monthly Quota</span>
+                  <span className={isExceeded ? "text-red-400" : "text-foreground"}>
                     {quota.current_approvals} / {quota.max_approvals}
                   </span>
                 </div>
-                <div className="h-2 bg-black/30 rounded-full overflow-hidden">
+                <div className="h-2 bg-background/30 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       isExceeded ? "bg-red-500" : percentage >= 80 ? "bg-amber-500" : "bg-emerald-500"
@@ -1420,8 +1425,8 @@ const TalentVisaReview = () => {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
-                ? "bg-red-600 text-white"
-                : "bg-black text-gray-400 hover:text-white"
+                ? "bg-red-600 text-foreground"
+                : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
             {f}
@@ -1463,18 +1468,18 @@ const TalentVisaReview = () => {
                         </div>
                       )}
                       <div>
-                        <p className="font-semibold text-white text-lg">
+                        <p className="font-semibold text-foreground text-lg">
                           {nomination.candidate?.first_name} {nomination.candidate?.last_name}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-foreground/60">
                           Nominated by {nomination.mentor?.first_name} {nomination.mentor?.last_name}
                         </p>
                         <div className="flex items-center gap-3 mt-1">
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-foreground/850">
                             {new Date(nomination.created_at).toLocaleDateString()}
                           </span>
                           {nomination.behavioral_score !== undefined && nomination.behavioral_score > 0 && (
-                            <span className="text-xs text-indigo-400 flex items-center gap-1">
+                            <span className="text-xs ink-vermilion flex items-center gap-1">
                               <Star className="w-3 h-3" />
                               Score: {nomination.behavioral_score.toFixed(1)}/5
                             </span>
@@ -1501,15 +1506,15 @@ const TalentVisaReview = () => {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-lg bg-black/20 mb-4">
-                    <p className="text-sm text-gray-400 mb-1">Justification</p>
-                    <p className="text-gray-300">{nomination.justification}</p>
+                  <div className="p-4 rounded-lg bg-background/20 mb-4">
+                    <p className="text-sm text-foreground/60 mb-1">Justification</p>
+                    <p className="text-foreground/75">{nomination.justification}</p>
                   </div>
 
                   {nomination.status === "pending" && (
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 p-3 rounded-lg bg-black border border-white/30">
-                        <p className="text-xs text-gray-400 mb-1">Suggested Tier</p>
+                      <div className="flex-1 p-3 rounded-lg bg-background border border-foreground/25">
+                        <p className="text-xs text-foreground/60 mb-1">Suggested Tier</p>
                         <p className={`font-medium ${TIER_CONFIG[suggestedTier].color}`}>
                           {TIER_CONFIG[suggestedTier].label} (min score: {TIER_CONFIG[suggestedTier].minScore})
                         </p>
@@ -1536,9 +1541,9 @@ const TalentVisaReview = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <Award className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No {filter !== "all" ? filter : ""} nominations</p>
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Award className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No {filter !== "all" ? filter : ""} nominations</p>
           </div>
         )}
       </motion.div>
@@ -1548,7 +1553,7 @@ const TalentVisaReview = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowApprovalModal(false);
             setSelectedNomination(null);
@@ -1557,11 +1562,11 @@ const TalentVisaReview = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold text-white mb-2">Approve TalentVisa</h3>
-            <p className="text-gray-400 mb-6">
+            <h3 className="text-xl font-bold text-foreground mb-2">Approve TalentVisa</h3>
+            <p className="text-foreground/60 mb-6">
               Select a tier for {selectedNomination.candidate?.first_name} {selectedNomination.candidate?.last_name}
             </p>
 
@@ -1580,10 +1585,10 @@ const TalentVisaReview = () => {
                     disabled={exceeded}
                     className={`w-full p-4 rounded-xl border transition-all text-left ${
                       exceeded
-                        ? "opacity-50 cursor-not-allowed bg-gray-800/50 border-gray-700"
+                        ? "opacity-50 cursor-not-allowed bg-foreground/[0.06]/50 border-foreground/25"
                         : isSelected
                         ? `${config.bgColor} ${config.borderColor} border-2`
-                        : "bg-black border-white/30 hover:border-white/30"
+                        : "bg-background border-foreground/25 hover:border-foreground/25"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -1592,11 +1597,11 @@ const TalentVisaReview = () => {
                           <TierIcon className={`w-5 h-5 ${config.color}`} />
                         </div>
                         <div>
-                          <p className={`font-semibold ${isSelected ? config.color : "text-white"}`}>
+                          <p className={`font-semibold ${isSelected ? config.color : "text-foreground"}`}>
                             {config.label} Tier
                           </p>
-                          <p className="text-xs text-gray-400">{config.description}</p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-foreground/60">{config.description}</p>
+                          <p className="text-xs text-foreground/850 mt-1">
                             Min Score: {config.minScore}/5 | Quota: {quota.current_approvals}/{quota.max_approvals}
                           </p>
                         </div>
@@ -1605,7 +1610,7 @@ const TalentVisaReview = () => {
                         <CheckCircle className={`w-5 h-5 ${config.color}`} />
                       )}
                       {exceeded && (
-                        <Lock className="w-5 h-5 text-gray-500" />
+                        <Lock className="w-5 h-5 text-foreground/850" />
                       )}
                     </div>
                   </button>
@@ -1615,7 +1620,7 @@ const TalentVisaReview = () => {
 
             {selectedNomination.behavioral_score !== undefined && selectedNomination.behavioral_score > 0 && (
               <div className="p-3 rounded-lg bg-indigo-500/30 border border-indigo-500/20 mb-6">
-                <p className="text-sm text-indigo-300">
+                <p className="text-sm ink-vermilion">
                   Candidate's behavioral score is <span className="font-bold">{selectedNomination.behavioral_score.toFixed(1)}/5</span>.
                   Suggested tier: <span className="font-bold">{TIER_CONFIG[getSuggestedTier(selectedNomination.behavioral_score)].label}</span>
                 </p>
@@ -1629,7 +1634,7 @@ const TalentVisaReview = () => {
                   setShowApprovalModal(false);
                   setSelectedNomination(null);
                 }}
-                className="flex-1 border-white/20 text-white hover:bg-black"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -1708,8 +1713,8 @@ const EmployersManagement = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Employer Management</h1>
-        <p className="text-gray-400">Verify and manage employer accounts.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Employer Management</h1>
+        <p className="text-foreground/60">Verify and manage employer accounts.</p>
       </motion.div>
 
       <motion.div variants={itemVariants}>
@@ -1718,7 +1723,7 @@ const EmployersManagement = () => {
             {employers.map((employer) => (
               <div
                 key={employer.id}
-                className="p-4 rounded-xl bg-black border border-white/30 flex items-center justify-between"
+                className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   {employer.company_logo_url ? (
@@ -1733,8 +1738,8 @@ const EmployersManagement = () => {
                     </div>
                   )}
                   <div>
-                    <p className="font-semibold text-white">{employer.company_name}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="font-semibold text-foreground">{employer.company_name}</p>
+                    <p className="text-sm text-foreground/60">
                       {employer.profile?.first_name} {employer.profile?.last_name} - {employer.industry}
                     </p>
                   </div>
@@ -1759,9 +1764,9 @@ const EmployersManagement = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <Building2 className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No employers registered yet</p>
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Building2 className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No employers registered yet</p>
           </div>
         )}
       </motion.div>
@@ -1839,22 +1844,22 @@ const SchoolsManagement = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Schools Management</h1>
-          <p className="text-gray-400">Manage and verify school accounts.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Schools Management</h1>
+          <p className="text-foreground/60">Manage and verify school accounts.</p>
         </div>
-        <div className="text-sm text-gray-400">{schools.length} school{schools.length !== 1 ? "s" : ""}</div>
+        <div className="text-sm text-foreground/60">{schools.length} school{schools.length !== 1 ? "s" : ""}</div>
       </motion.div>
 
       {schools.length > 0 && (
         <motion.div variants={itemVariants}>
           <div className="relative max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/850" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search schools..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-red-500 focus:outline-none"
             />
           </div>
         </motion.div>
@@ -1862,21 +1867,21 @@ const SchoolsManagement = () => {
 
       {/* Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-black border border-white/30">
-          <p className="text-2xl font-bold text-white">{schools.length}</p>
-          <p className="text-xs text-gray-400">Total Schools</p>
+        <div className="p-4 rounded-xl bg-background border border-foreground/25">
+          <p className="text-2xl font-bold text-foreground">{schools.length}</p>
+          <p className="text-xs text-foreground/60">Total Schools</p>
         </div>
-        <div className="p-4 rounded-xl bg-black border border-white/30">
+        <div className="p-4 rounded-xl bg-background border border-foreground/25">
           <p className="text-2xl font-bold text-emerald-400">{schools.filter((s) => s.is_verified).length}</p>
-          <p className="text-xs text-gray-400">Verified</p>
+          <p className="text-xs text-foreground/60">Verified</p>
         </div>
-        <div className="p-4 rounded-xl bg-black border border-white/30">
+        <div className="p-4 rounded-xl bg-background border border-foreground/25">
           <p className="text-2xl font-bold text-amber-400">{schools.filter((s) => !s.is_verified).length}</p>
-          <p className="text-xs text-gray-400">Pending Verification</p>
+          <p className="text-xs text-foreground/60">Pending Verification</p>
         </div>
-        <div className="p-4 rounded-xl bg-black border border-white/30">
+        <div className="p-4 rounded-xl bg-background border border-foreground/25">
           <p className="text-2xl font-bold text-blue-400">{schools.reduce((sum, s) => sum + (s.total_students || 0), 0)}</p>
-          <p className="text-xs text-gray-400">Total Students</p>
+          <p className="text-xs text-foreground/60">Total Students</p>
         </div>
       </motion.div>
 
@@ -1886,7 +1891,7 @@ const SchoolsManagement = () => {
             {filteredSchools.map((school) => (
               <div
                 key={school.id}
-                className="p-5 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-5 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -1894,11 +1899,11 @@ const SchoolsManagement = () => {
                       {school.school_name?.[0]}
                     </div>
                     <div>
-                      <p className="font-semibold text-white text-lg">{school.school_name}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="font-semibold text-foreground text-lg">{school.school_name}</p>
+                      <p className="text-sm text-foreground/60">
                         {school.profile?.first_name} {school.profile?.last_name} &middot; {school.profile?.email}
                       </p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-foreground/850">
                         <span className="capitalize">{school.school_type?.replace("_", " ")}</span>
                         {school.district && <span>{school.district}</span>}
                         <span>{school.total_students || 0} students</span>
@@ -1925,9 +1930,9 @@ const SchoolsManagement = () => {
             ))}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">{searchQuery ? "No schools match your search" : "No schools registered yet"}</p>
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <GraduationCap className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">{searchQuery ? "No schools match your search" : "No schools registered yet"}</p>
           </div>
         )}
       </motion.div>
@@ -2036,30 +2041,30 @@ const Reports = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Reports & Analytics</h1>
-        <p className="text-gray-400">Platform performance and real-time insights.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Reports & Analytics</h1>
+        <p className="text-foreground/60">Platform performance and real-time insights.</p>
       </motion.div>
 
       {/* Key Metrics */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Behavioral Evidence Reports", value: reportStats.passports, icon: Shield, color: "text-indigo-400" },
-          { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "text-purple-400" },
+          { label: "Behavioral Evidence Reports", value: reportStats.passports, icon: Shield, color: "ink-vermilion" },
+          { label: "Mentor Observations", value: reportStats.observations, icon: Eye, color: "ink-vermilion" },
           { label: "Projects", value: reportStats.projects, icon: Briefcase, color: "text-cyan-400" },
           { label: "Connections", value: reportStats.connections, icon: Activity, color: "text-pink-400" },
         ].map((stat) => (
-          <div key={stat.label} className="p-5 rounded-xl bg-black border border-white/30">
+          <div key={stat.label} className="p-5 rounded-xl bg-background border border-foreground/25">
             <stat.icon className={`w-6 h-6 ${stat.color} mb-2`} />
-            <p className="text-2xl font-bold text-white">{stat.value}</p>
-            <p className="text-sm text-gray-400">{stat.label}</p>
+            <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+            <p className="text-sm text-foreground/60">{stat.label}</p>
           </div>
         ))}
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         {/* Activity Trend Chart */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">Activity Trend (6 months)</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">Activity Trend (6 months)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={activityTrend}>
@@ -2076,8 +2081,8 @@ const Reports = () => {
         </div>
 
         {/* Role Distribution */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">User Distribution</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">User Distribution</h3>
           <div className="space-y-4">
             {[
               { role: "Candidates", count: reportStats.candidates, color: "bg-emerald-500" },
@@ -2089,10 +2094,10 @@ const Reports = () => {
               return (
                 <div key={item.role}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-400">{item.role}</span>
-                    <span className="text-white">{item.count} ({pct}%)</span>
+                    <span className="text-foreground/60">{item.role}</span>
+                    <span className="text-foreground">{item.count} ({pct}%)</span>
                   </div>
-                  <div className="h-2 bg-black rounded-full overflow-hidden">
+                  <div className="h-2 bg-background rounded-full overflow-hidden">
                     <div className={`h-full ${item.color} rounded-full transition-all`} style={{ width: `${Math.max(pct, 2)}%` }} />
                   </div>
                 </div>
@@ -2100,7 +2105,7 @@ const Reports = () => {
             })}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10">
+          <div className="mt-6 pt-4 border-t border-foreground/15">
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -2238,49 +2243,49 @@ const CommunicationsPage = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Communications</h1>
-        <p className="text-gray-400">Send emails and notifications to users.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Communications</h1>
+        <p className="text-foreground/60">Send emails and notifications to users.</p>
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* User Selection */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Select Recipients</h2>
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Select Recipients</h2>
 
           {/* Filters */}
           <div className="flex gap-4 mb-4">
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+              className="bg-background border border-foreground/25 rounded-lg px-3 py-2 text-foreground text-sm"
             >
-              <option value="all" className="bg-gray-900">All Roles</option>
-              <option value="candidate" className="bg-gray-900">Candidates</option>
-              <option value="mentor" className="bg-gray-900">Mentors</option>
-              <option value="employer" className="bg-gray-900">Employers</option>
-              <option value="school_admin" className="bg-gray-900">School Admins</option>
+              <option value="all" className="bg-background/50">All Roles</option>
+              <option value="candidate" className="bg-background/50">Candidates</option>
+              <option value="mentor" className="bg-background/50">Mentors</option>
+              <option value="employer" className="bg-background/50">Employers</option>
+              <option value="school_admin" className="bg-background/50">School Admins</option>
             </select>
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/850" />
               <input
                 type="text"
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black border border-white/30 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-gray-500 text-sm"
+                className="w-full bg-background border border-foreground/25 rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-foreground/850 text-sm"
               />
             </div>
           </div>
 
           {/* Select All */}
-          <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/30">
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-foreground/25">
             <button
               onClick={selectAll}
-              className="text-sm text-indigo-400 hover:text-indigo-300"
+              className="text-sm ink-vermilion hover:ink-vermilion"
             >
               {selectedUsers.length === filteredUsers.length ? "Deselect All" : "Select All"}
             </button>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-foreground/850">
               {selectedUsers.length} of {filteredUsers.length} selected
             </span>
           </div>
@@ -2293,22 +2298,22 @@ const CommunicationsPage = () => {
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                   selectedUsers.includes(user.id)
                     ? "bg-red-500/30 border border-red-500/30"
-                    : "bg-black hover:bg-black"
+                    : "bg-background hover:bg-foreground/5"
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={selectedUsers.includes(user.id)}
                   onChange={() => toggleUser(user.id)}
-                  className="rounded border-white/20"
+                  className="rounded border-foreground/25"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {user.first_name} {user.last_name}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  <p className="text-xs text-foreground/850 truncate">{user.email}</p>
                 </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-black text-gray-400 capitalize">
+                <span className="text-xs px-2 py-1 rounded-full bg-background text-foreground/60 capitalize">
                   {user.role}
                 </span>
               </label>
@@ -2317,12 +2322,12 @@ const CommunicationsPage = () => {
         </motion.div>
 
         {/* Message Composition */}
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Compose Message</h2>
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Compose Message</h2>
 
           {/* Send Type */}
           <div className="mb-6">
-            <label className="block text-sm text-gray-400 mb-2">Send as</label>
+            <label className="block text-sm text-foreground/60 mb-2">Send as</label>
             <div className="flex gap-2">
               {[
                 { value: "notification", label: "In-App Notification", icon: Bell },
@@ -2334,8 +2339,8 @@ const CommunicationsPage = () => {
                   onClick={() => setSendType(option.value as typeof sendType)}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-colors ${
                     sendType === option.value
-                      ? "bg-red-500/20 border-red-500/50 text-white"
-                      : "border-white/30 text-gray-400 hover:bg-black"
+                      ? "bg-red-500/20 border-red-500/50 text-foreground"
+                      : "border-foreground/25 text-foreground/60 hover:bg-foreground/5"
                   }`}
                 >
                   <option.icon className="w-4 h-4" />
@@ -2349,23 +2354,23 @@ const CommunicationsPage = () => {
           {(sendType === "notification" || sendType === "both") && (
             <div className="space-y-4 mb-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Notification Title</label>
+                <label className="block text-sm text-foreground/60 mb-2">Notification Title</label>
                 <input
                   type="text"
                   value={notificationTitle}
                   onChange={(e) => setNotificationTitle(e.target.value)}
                   placeholder="Important Update"
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Notification Message</label>
+                <label className="block text-sm text-foreground/60 mb-2">Notification Message</label>
                 <textarea
                   value={notificationMessage}
                   onChange={(e) => setNotificationMessage(e.target.value)}
                   placeholder="Enter your notification message..."
                   rows={3}
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850 resize-none"
                 />
               </div>
             </div>
@@ -2375,23 +2380,23 @@ const CommunicationsPage = () => {
           {(sendType === "email" || sendType === "both") && (
             <div className="space-y-4 mb-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Email Subject</label>
+                <label className="block text-sm text-foreground/60 mb-2">Email Subject</label>
                 <input
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Subject line"
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Email Body</label>
+                <label className="block text-sm text-foreground/60 mb-2">Email Body</label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Enter your email message..."
                   rows={5}
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 resize-none"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-3 text-foreground placeholder:text-foreground/850 resize-none"
                 />
               </div>
             </div>
@@ -2400,7 +2405,7 @@ const CommunicationsPage = () => {
           <Button
             onClick={sendCommunication}
             disabled={isSending || selectedUsers.length === 0}
-            className="w-full bg-red-600 hover:bg-red-500 text-white"
+            className="w-full bg-red-600 hover:bg-red-500 text-foreground"
           >
             {isSending ? (
               <>
@@ -2441,16 +2446,16 @@ const SettingsPage = () => {
   };
 
   const ToggleSwitch = ({ enabled, onToggle, label, description }: { enabled: boolean; onToggle: () => void; label: string; description: string }) => (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/10">
+    <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-foreground/15">
       <div>
-        <p className="font-medium text-white">{label}</p>
-        <p className="text-sm text-gray-400">{description}</p>
+        <p className="font-medium text-foreground">{label}</p>
+        <p className="text-sm text-foreground/60">{description}</p>
       </div>
       <button onClick={onToggle} className="flex-shrink-0">
         {enabled ? (
           <ToggleRight className="w-10 h-10 text-emerald-400" />
         ) : (
-          <ToggleLeft className="w-10 h-10 text-gray-500" />
+          <ToggleLeft className="w-10 h-10 text-foreground/850" />
         )}
       </button>
     </div>
@@ -2465,8 +2470,8 @@ const SettingsPage = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Admin Settings</h1>
-          <p className="text-gray-400">Platform configuration and preferences.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Admin Settings</h1>
+          <p className="text-foreground/60">Platform configuration and preferences.</p>
         </div>
         <Button
           onClick={handleSave}
@@ -2484,38 +2489,38 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* General Settings */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
           <Globe className="w-5 h-5 text-blue-400" />
-          <h2 className="text-lg font-semibold text-white">General</h2>
+          <h2 className="text-lg font-semibold text-foreground">General</h2>
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Platform Name</label>
+            <label className="block text-sm text-foreground/60 mb-1">Platform Name</label>
             <input
               type="text"
               value={platformName}
               onChange={(e) => setPlatformName(e.target.value)}
-              className="w-full max-w-md bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+              className="w-full max-w-md bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-red-500"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Support Email</label>
+            <label className="block text-sm text-foreground/60 mb-1">Support Email</label>
             <input
               type="email"
               value={supportEmail}
               onChange={(e) => setSupportEmail(e.target.value)}
-              className="w-full max-w-md bg-black border border-white/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-500"
+              className="w-full max-w-md bg-background border border-foreground/25 rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-red-500"
             />
           </div>
         </div>
       </motion.div>
 
       {/* Access Control */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="w-5 h-5 text-red-400" />
-          <h2 className="text-lg font-semibold text-white">Access Control</h2>
+          <h2 className="text-lg font-semibold text-foreground">Access Control</h2>
         </div>
         <div className="space-y-3">
           <ToggleSwitch
@@ -2534,10 +2539,10 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Approvals */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
         <div className="flex items-center gap-3 mb-6">
           <CheckCircle className="w-5 h-5 text-emerald-400" />
-          <h2 className="text-lg font-semibold text-white">Auto-Approval</h2>
+          <h2 className="text-lg font-semibold text-foreground">Auto-Approval</h2>
         </div>
         <div className="space-y-3">
           <ToggleSwitch
@@ -2562,19 +2567,19 @@ const SettingsPage = () => {
           <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
         </div>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-red-500/10">
             <div>
-              <p className="font-medium text-white">Reset All Notifications</p>
-              <p className="text-sm text-gray-400">Clear all pending notifications across the platform</p>
+              <p className="font-medium text-foreground">Reset All Notifications</p>
+              <p className="text-sm text-foreground/60">Clear all pending notifications across the platform</p>
             </div>
             <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
               Reset
             </Button>
           </div>
-          <div className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-red-500/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-background/40 border border-red-500/10">
             <div>
-              <p className="font-medium text-white">Purge Inactive Users</p>
-              <p className="text-sm text-gray-400">Remove users who haven't logged in for 6+ months</p>
+              <p className="font-medium text-foreground">Purge Inactive Users</p>
+              <p className="text-sm text-foreground/60">Remove users who haven't logged in for 6+ months</p>
             </div>
             <Button variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
               Purge
@@ -2587,19 +2592,17 @@ const SettingsPage = () => {
 };
 
 // Main Dashboard component
+const ADMIN_SECTIONS: DashboardSection[] = [
+  { id: "main", label: "§ I · Administration" },
+];
+
 const AdminDashboard = () => {
-  const { user, profile, signOut } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
       if (!user?.id) return;
-
       const { data } = await supabase
         .from("notifications")
         .select("*")
@@ -2607,298 +2610,52 @@ const AdminDashboard = () => {
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(10);
-
       setNotifications(data || []);
     };
-
     fetchNotifications();
   }, [user?.id]);
 
-  const markAsRead = async (notificationId: string) => {
-    await supabase
-      .from("notifications")
-      .update({ is_read: true })
-      .eq("id", notificationId);
-
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  const markAsRead = async (id: string) => {
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
-
   const markAllAsRead = async () => {
     if (!user?.id) return;
-
-    await supabase
-      .from("notifications")
-      .update({ is_read: true })
-      .eq("user_id", user.id)
-      .eq("is_read", false);
-
+    await supabase.from("notifications").update({ is_read: true }).eq("user_id", user.id).eq("is_read", false);
     setNotifications([]);
-    setShowNotifications(false);
   };
 
-  const unreadCount = notifications.length;
-
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
-  // Get current page title
-  const getCurrentPageTitle = () => {
-    const current = navItems.find((item) => location.pathname === item.href);
-    return current?.name || "Overview";
-  };
+  const navWithSection: DashboardNavItem[] = navItems.map((n) => ({
+    ...n,
+    section: "main",
+  }));
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
-            {sidebarCollapsed ? (
-              <Link to="/" className="flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-orange-600 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-white" />
-                </div>
-              </Link>
-            ) : (
-              <Link to="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-orange-600 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
-                  Admin Panel
-                </span>
-              </Link>
-            )}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  title={sidebarCollapsed ? item.name : undefined}
-                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-gradient-to-r from-red-600/20 to-orange-600/20 text-white border border-red-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && item.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* User */}
-          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
-            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt="Profile"
-                  className={`${sidebarCollapsed ? "w-8 h-8" : "w-10 h-10"} rounded-full object-cover`}
-                />
-              ) : (
-                <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold`}>
-                  {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-                </div>
-              )}
-              {!sidebarCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white truncate">
-                    {profile?.first_name} {profile?.last_name}
-                  </p>
-                  <p className="text-xs text-red-400 truncate">Administrator</p>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleSignOut}
-              className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-2"} w-full ${sidebarCollapsed ? "p-2" : "px-4 py-2"} text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors`}
-              title={sidebarCollapsed ? "Sign Out" : undefined}
-            >
-              <LogOut className="w-4 h-4" />
-              {!sidebarCollapsed && "Sign Out"}
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        {/* Enhanced Header */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 md:px-8 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-
-          {/* Page Title */}
-          <div className="flex-1">
-            <h2 className="text-lg font-semibold text-white hidden md:block">{getCurrentPageTitle()}</h2>
-          </div>
-
-          {/* Header Actions */}
-          <div className="flex items-center gap-3">
-            {/* Quick Search */}
-            <div className="hidden md:block relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Quick search..."
-                className="bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-red-500/50 w-48 focus:w-64 transition-all"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && e.currentTarget.value) {
-                    navigate("/dashboard/admin/users");
-                  }
-                }}
-              />
-            </div>
-
-            {/* Notifications */}
-            <div className="relative">
-              <button
-                className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <Bell className="w-5 h-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center text-white font-bold">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Notifications Dropdown */}
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-96 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden">
-                  <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                    <h3 className="font-semibold text-white">Notifications</h3>
-                    <div className="flex items-center gap-2">
-                      {notifications.length > 0 && (
-                        <button
-                          onClick={markAllAsRead}
-                          className="text-xs text-red-400 hover:text-red-300"
-                        >
-                          Mark all as read
-                        </button>
-                      )}
-                      <button
-                        onClick={() => setShowNotifications(false)}
-                        className="text-gray-500 hover:text-white p-1"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  {notifications.length > 0 ? (
-                    <div className="max-h-96 overflow-y-auto">
-                      {notifications.map((notification) => (
-                        <div
-                          key={notification.id}
-                          className="p-4 hover:bg-white/5 border-b border-white/5 flex items-start gap-3 transition-colors"
-                        >
-                          <div className="w-2 h-2 rounded-full bg-red-500 mt-2 flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white">{notification.title}</p>
-                            <p className="text-xs text-gray-400 mt-1 line-clamp-2">{notification.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {new Date(notification.created_at).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => markAsRead(notification.id)}
-                            className="text-gray-500 hover:text-white p-1 flex-shrink-0"
-                            title="Dismiss"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="p-8 text-center">
-                      <Bell className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-                      <p className="text-sm text-gray-400">No new notifications</p>
-                      <p className="text-xs text-gray-500 mt-1">You're all caught up</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Admin avatar */}
-            <div className="hidden md:flex items-center gap-2 pl-3 border-l border-white/10">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">
-                  {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-                </div>
-              )}
-              <span className="text-sm text-gray-300">{profile?.first_name}</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Page content */}
-        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
-          <Routes>
-            <Route index element={<Overview />} />
-            <Route path="users" element={<UsersManagement />} />
-            <Route path="talentvisa" element={<TalentVisaReview />} />
-            <Route path="employers" element={<EmployersManagement />} />
-            <Route path="schools" element={<SchoolsManagement />} />
-            <Route path="communications" element={<CommunicationsPage />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="agent" element={<AIAgent />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
+    <DashboardLayout
+      role="Administrator"
+      roleTagline="You keep the register itself in good order — governance for the governance."
+      nav={navWithSection}
+      sections={ADMIN_SECTIONS}
+      notifications={notifications}
+      onMarkNotificationRead={markAsRead}
+      onMarkAllRead={markAllAsRead}
+      notificationsHref="/dashboard/admin"
+    >
+      <Routes>
+        <Route index element={<Overview />} />
+        <Route path="users" element={<UsersManagement />} />
+        <Route path="talentvisa" element={<TalentVisaReview />} />
+        <Route path="employers" element={<EmployersManagement />} />
+        <Route path="schools" element={<SchoolsManagement />} />
+        <Route path="communications" element={<CommunicationsPage />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="agent" element={<AIAgent />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Routes>
+    </DashboardLayout>
   );
 };
+
+// legacy shell removed
 
 export default AdminDashboard;
