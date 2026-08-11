@@ -1969,6 +1969,134 @@ function toolIcon(name: string) {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+// ─── Tool Call Badge (expandable, module-scoped so its open state survives
+//     the parent's re-renders) ────────────────────────────────────────────
+
+function ToolBadge({ tc }: { tc: OpenAIToolCall }) {
+  const [open, setOpen] = useState(false);
+  let args: Record<string, unknown> = {};
+  try { args = JSON.parse(tc.function.arguments); } catch { /* */ }
+  const Icon = toolIcon(tc.function.name);
+  const label = toolDisplayName(tc.function.name, args);
+  const hasDetails = Object.keys(args).length > 0;
+
+  return (
+    <span className="inline-flex flex-col">
+      <button
+        type="button"
+        onClick={() => hasDetails && setOpen((v) => !v)}
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion ${
+          hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"
+        }`}
+        aria-expanded={open}
+      >
+        <Icon className="w-3 h-3" />
+        <span className="font-medium">{label}</span>
+        {hasDetails && (
+          <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+        )}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && hasDetails && (
+          <motion.pre
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15 }}
+            className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
+          >
+            {JSON.stringify(args, null, 2)}
+          </motion.pre>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function StatusBadge({ status }: { status: StatusEvent }) {
+  const [open, setOpen] = useState(false);
+  const Icon = toolIcon(status.name);
+  const isDone = status.type === "tool_done";
+  const label = toolDisplayName(status.name, status.arguments || {});
+  const hasDetails = !!status.arguments && Object.keys(status.arguments).length > 0;
+
+  return (
+    <span className="inline-flex flex-col">
+      <button
+        type="button"
+        onClick={() => hasDetails && setOpen((v) => !v)}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
+          isDone
+            ? "bg-foreground/[0.05] border border-foreground/40 ink-vermilion"
+            : "bg-vermilion/10 border border-vermilion ink-vermilion"
+        } ${hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"}`}
+        aria-expanded={open}
+      >
+        {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
+        <Icon className="w-3 h-3" />
+        {label}
+        {hasDetails && (
+          <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+        )}
+      </button>
+      <AnimatePresence initial={false}>
+        {open && hasDetails && (
+          <motion.pre
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15 }}
+            className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
+          >
+            {JSON.stringify(status.arguments, null, 2)}
+          </motion.pre>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function ReasoningBlock({ reasoning, closed }: { reasoning: string; closed: boolean }) {
+  const [open, setOpen] = useState(!closed);
+  const prevClosed = useRef(closed);
+  useEffect(() => {
+    if (!prevClosed.current && closed) setOpen(false);
+    prevClosed.current = closed;
+  }, [closed]);
+  if (!reasoning) return null;
+  return (
+    <div className="mb-2 rounded-md border border-foreground/15 bg-foreground/[0.03] overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-1.5 text-[11px] mono-label text-foreground/60 hover:text-foreground"
+        aria-expanded={open}
+      >
+        <span className="inline-flex items-center gap-1.5">
+          {closed ? <Brain className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
+          {closed ? "Reasoning" : "Reasoning…"}
+        </span>
+        <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15 }}
+            className="border-t border-foreground/10"
+          >
+            <div className="px-3 py-2 text-[12.5px] text-foreground/70 whitespace-pre-wrap font-serif leading-relaxed">
+              {reasoning}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function AIAgent() {
  const { profile, user } = useAuth();
  const navigateFn = useNavigate();
@@ -2604,146 +2732,6 @@ export default function AIAgent() {
  el.style.height = "auto";
  el.style.height = Math.min(el.scrollHeight, 200) + "px";
  };
-
- // ─── Tool Call Badge (expandable) ────────────────────────────────────
-
- function ToolBadge({ tc }: { tc: OpenAIToolCall; }) {
- const [open, setOpen] = useState(false);
- let args: Record<string, unknown> = {};
- try { args = JSON.parse(tc.function.arguments); } catch { /* */ }
- const Icon = toolIcon(tc.function.name);
- const label = toolDisplayName(tc.function.name, args);
- const hasDetails = Object.keys(args).length > 0;
-
- return (
- <span className="inline-flex flex-col">
- <button
- type="button"
- onClick={() => hasDetails && setOpen((v) => !v)}
- className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 ink-vermilion ${
- hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"
- }`}
- aria-expanded={open}
- >
- <Icon className="w-3 h-3" />
- <span className="font-medium">{label}</span>
- {hasDetails && (
- <ChevronDown
- className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
- />
- )}
- </button>
- <AnimatePresence initial={false}>
- {open && hasDetails && (
- <motion.pre
- initial={{ opacity: 0, height: 0 }}
- animate={{ opacity: 1, height: "auto" }}
- exit={{ opacity: 0, height: 0 }}
- transition={{ duration: 0.15 }}
- className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
- >
- {JSON.stringify(args, null, 2)}
- </motion.pre>
- )}
- </AnimatePresence>
- </span>
- );
- }
-
- // ─── Status Badge (for built-in tools executed by backend, expandable) ─
-
- function StatusBadge({ status }: { status: StatusEvent }) {
- const [open, setOpen] = useState(false);
- const Icon = toolIcon(status.name);
- const isDone = status.type === "tool_done";
- const label = toolDisplayName(status.name, status.arguments || {});
- const hasDetails = !!status.arguments && Object.keys(status.arguments).length > 0;
-
- return (
- <span className="inline-flex flex-col">
- <button
- type="button"
- onClick={() => hasDetails && setOpen((v) => !v)}
- className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
- isDone
- ? "bg-foreground/[0.05] border border-foreground/40 ink-vermilion"
- : "bg-vermilion/10 border border-vermilion ink-vermilion"
- } ${hasDetails ? "cursor-pointer hover:bg-foreground/10" : "cursor-default"}`}
- aria-expanded={open}
- >
- {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
- <Icon className="w-3 h-3" />
- {label}
- {hasDetails && (
- <ChevronDown
- className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
- />
- )}
- </button>
- <AnimatePresence initial={false}>
- {open && hasDetails && (
- <motion.pre
- initial={{ opacity: 0, height: 0 }}
- animate={{ opacity: 1, height: "auto" }}
- exit={{ opacity: 0, height: 0 }}
- transition={{ duration: 0.15 }}
- className="mt-1 text-[10.5px] font-mono bg-foreground/[0.04] border border-foreground/15 rounded-md px-3 py-2 overflow-x-auto text-foreground/80 whitespace-pre-wrap"
- >
- {JSON.stringify(status.arguments, null, 2)}
- </motion.pre>
- )}
- </AnimatePresence>
- </span>
- );
- }
-
- // ─── Reasoning Accordion — <thinking>…</thinking> ─────────────────────
-
- function ReasoningBlock({ reasoning, closed }: { reasoning: string; closed: boolean }) {
- // Open while reasoning is streaming; auto-collapse on close tag.
- const [open, setOpen] = useState(!closed);
- const prevClosed = useRef(closed);
- useEffect(() => {
- if (!prevClosed.current && closed) setOpen(false);
- prevClosed.current = closed;
- }, [closed]);
- if (!reasoning) return null;
- return (
- <div className="mb-2 rounded-md border border-foreground/15 bg-foreground/[0.03] overflow-hidden">
- <button
- type="button"
- onClick={() => setOpen((v) => !v)}
- className="w-full flex items-center justify-between gap-2 px-3 py-1.5 text-[11px] mono-label text-foreground/60 hover:text-foreground"
- aria-expanded={open}
- >
- <span className="inline-flex items-center gap-1.5">
- {closed ? (
- <Brain className="w-3 h-3" />
- ) : (
- <Loader2 className="w-3 h-3 animate-spin" />
- )}
- {closed ? "Reasoning" : "Reasoning…"}
- </span>
- <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
- </button>
- <AnimatePresence initial={false}>
- {open && (
- <motion.div
- initial={{ opacity: 0, height: 0 }}
- animate={{ opacity: 1, height: "auto" }}
- exit={{ opacity: 0, height: 0 }}
- transition={{ duration: 0.15 }}
- className="border-t border-foreground/10"
- >
- <div className="px-3 py-2 text-[12.5px] text-foreground/70 whitespace-pre-wrap font-serif leading-relaxed">
- {reasoning}
- </div>
- </motion.div>
- )}
- </AnimatePresence>
- </div>
- );
- }
 
  // ─── Message Action Buttons ─────────────────────────────────────────────
 
