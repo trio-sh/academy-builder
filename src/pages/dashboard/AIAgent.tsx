@@ -53,10 +53,26 @@ import { supabase } from "@/lib/supabase";
 
 // ─── IndexedDB Schema ─────────────────────────────────────────────────────────
 
+interface SessionRow {
+ id: string;             // `${userId}:${sessionId}`
+ userId: string;
+ sessionId: string;
+ title: string;
+ createdAt: string;
+ updatedAt: string;
+ apiMessages: ApiMessage[];
+ uiMessages: SerializedUIMessage[];
+}
+
 interface AgentDBSchema extends DBSchema {
  messages: {
  key: string;
  value: { id: string; apiMessages: ApiMessage[]; uiMessages: SerializedUIMessage[] };
+ };
+ sessions: {
+ key: string;
+ value: SessionRow;
+ indexes: { "by-user": string };
  };
 }
 
@@ -68,49 +84,167 @@ interface SerializedUIMessage {
  statuses?: StatusEvent[];
 }
 
+export interface SessionMeta {
+ id: string;
+ title: string;
+ createdAt: Date;
+ updatedAt: Date;
+ messageCount: number;
+}
+
 let dbInstance: IDBPDatabase<AgentDBSchema> | null = null;
 
 async function getDB(): Promise<IDBPDatabase<AgentDBSchema>> {
  if (dbInstance) return dbInstance;
- dbInstance = await openDB<AgentDBSchema>("AgentDB", 2, {
- upgrade(db) {
- if (db.objectStoreNames.contains("messages")) {
+ dbInstance = await openDB<AgentDBSchema>("AgentDB", 3, {
+ upgrade(db, oldVersion) {
+ if (oldVersion < 2 && db.objectStoreNames.contains("messages")) {
  db.deleteObjectStore("messages");
  }
+ if (!db.objectStoreNames.contains("messages")) {
  db.createObjectStore("messages", { keyPath: "id" });
+ }
+ if (!db.objectStoreNames.contains("sessions")) {
+ const store = db.createObjectStore("sessions", { keyPath: "id" });
+ store.createIndex("by-user", "userId");
+ }
  },
  });
  return dbInstance;
 }
 
-async function saveConversation(userId: string, apiMessages: ApiMessage[], uiMessages: UIMessage[]): Promise<void> {
- try {
+function newSessionId(): string {
+ // Short client-side id — enough to disambiguate per-user
+ return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/**
+ * On first load, migrate the pre-existing single-chat entry
+ * (id = `agent-chat-${userId}`) into a proper session row so it
+ * appears in the session list instead of being orphaned.
+ */
+async function migrateLegacySingleChat(userId: string): Promise<void> {
  const db = await getDB();
- const serialized: SerializedUIMessage[] = uiMessages.map(m => ({
- ...m,
- timestamp: m.timestamp.toISOString(),
- }));
- await db.put("messages", { id: `agent-chat-${userId}`, apiMessages, uiMessages: serialized });
+ const legacy = await db.get("messages", `agent-chat-${userId}`);
+ if (!legacy) return;
+ // Check we haven't already migrated (would leave a session with matching content)
+ const idx = db.transaction("sessions").store.index("by-user");
+ const existing = await idx.getAll(userId);
+ if (existing.length > 0) return; // already migrated or user has real sessions
+ const sessionId = newSessionId();
+ const now = new Date().toISOString();
+ const firstUser = (legacy.uiMessages || []).find((m) => m.role === "user");
+ const title = firstUser?.content?.trim().slice(0, 60) || "Earlier conversation";
+ await db.put("sessions", {
+ id: `${userId}:${sessionId}`,
+ userId,
+ sessionId,
+ title,
+ createdAt: now,
+ updatedAt: now,
+ apiMessages: legacy.apiMessages || [],
+ uiMessages: legacy.uiMessages || [],
+ });
+ await db.delete("messages", `agent-chat-${userId}`);
+}
+
+export async function listSessions(userId: string): Promise<SessionMeta[]> {
+ try {
+ await migrateLegacySingleChat(userId);
+ const db = await getDB();
+ const rows = await db.getAllFromIndex("sessions", "by-user", userId);
+ return rows
+ .map((r) => ({
+ id: r.sessionId,
+ title: r.title,
+ createdAt: new Date(r.createdAt),
+ updatedAt: new Date(r.updatedAt),
+ messageCount: r.uiMessages.length,
+ }))
+ .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
  } catch (e) {
- console.error("Failed to save agent messages:", e);
+ console.error("Failed to list sessions:", e);
+ return [];
  }
 }
 
-async function loadConversation(userId: string): Promise<{ apiMessages: ApiMessage[]; uiMessages: UIMessage[] }> {
+export async function loadSession(
+ userId: string,
+ sessionId: string
+): Promise<{ apiMessages: ApiMessage[]; uiMessages: UIMessage[]; title: string } | null> {
  try {
  const db = await getDB();
- const stored = await db.get("messages", `agent-chat-${userId}`);
- if (!stored) return { apiMessages: [], uiMessages: [] };
+ const row = await db.get("sessions", `${userId}:${sessionId}`);
+ if (!row) return null;
  return {
- apiMessages: stored.apiMessages || [],
- uiMessages: (stored.uiMessages || []).map(m => ({
+ apiMessages: row.apiMessages || [],
+ uiMessages: (row.uiMessages || []).map((m) => ({
  ...m,
  timestamp: new Date(m.timestamp),
  })),
+ title: row.title,
  };
  } catch (e) {
- console.error("Failed to load agent messages:", e);
- return { apiMessages: [], uiMessages: [] };
+ console.error("Failed to load session:", e);
+ return null;
+ }
+}
+
+export async function saveSession(
+ userId: string,
+ sessionId: string,
+ title: string,
+ apiMessages: ApiMessage[],
+ uiMessages: UIMessage[]
+): Promise<void> {
+ try {
+ const db = await getDB();
+ const key = `${userId}:${sessionId}`;
+ const existing = await db.get("sessions", key);
+ const serialized: SerializedUIMessage[] = uiMessages.map((m) => ({
+ ...m,
+ timestamp: m.timestamp.toISOString(),
+ }));
+ const now = new Date().toISOString();
+ await db.put("sessions", {
+ id: key,
+ userId,
+ sessionId,
+ title,
+ createdAt: existing?.createdAt || now,
+ updatedAt: now,
+ apiMessages,
+ uiMessages: serialized,
+ });
+ } catch (e) {
+ console.error("Failed to save session:", e);
+ }
+}
+
+export async function deleteSession(userId: string, sessionId: string): Promise<void> {
+ try {
+ const db = await getDB();
+ await db.delete("sessions", `${userId}:${sessionId}`);
+ } catch (e) {
+ console.error("Failed to delete session:", e);
+ }
+}
+
+export async function renameSession(
+ userId: string,
+ sessionId: string,
+ title: string
+): Promise<void> {
+ try {
+ const db = await getDB();
+ const key = `${userId}:${sessionId}`;
+ const row = await db.get("sessions", key);
+ if (!row) return;
+ row.title = title;
+ row.updatedAt = new Date().toISOString();
+ await db.put("sessions", row);
+ } catch (e) {
+ console.error("Failed to rename session:", e);
  }
 }
 
@@ -1572,6 +1706,18 @@ function toolDisplayName(name: string, args: Record<string, unknown>): string {
  }
 }
 
+function relativeTime(d: Date): string {
+ const diff = Date.now() - d.getTime();
+ const min = Math.round(diff / 60000);
+ if (min < 1) return "just now";
+ if (min < 60) return `${min}m ago`;
+ const hr = Math.round(min / 60);
+ if (hr < 24) return `${hr}h ago`;
+ const day = Math.round(hr / 24);
+ if (day < 7) return `${day}d ago`;
+ return d.toLocaleDateString();
+}
+
 function toolIcon(name: string) {
  switch (name) {
  case "web_search": return Search;
@@ -1618,24 +1764,107 @@ export default function AIAgent() {
  const [fileProcessing, setFileProcessing] = useState(false);
  const fileInputRef = useRef<HTMLInputElement>(null);
 
- // Load persisted conversation from IndexedDB (scoped to user)
- useEffect(() => {
+ // Multi-session state
+ const [sessions, setSessions] = useState<SessionMeta[]>([]);
+ const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+ const [activeTitle, setActiveTitle] = useState<string>("New chat");
+ const [sessionPickerOpen, setSessionPickerOpen] = useState(false);
+ const [sidebarOpen, setSidebarOpen] = useState(false);
+
+ const refreshSessions = useCallback(async () => {
  if (!user?.id) return;
- loadConversation(user.id).then(stored => {
- if (stored.apiMessages.length > 0) {
- setApiMessages(stored.apiMessages);
- setUiMessages(stored.uiMessages);
- }
- setDataLoaded(true);
- });
+ const list = await listSessions(user.id);
+ setSessions(list);
  }, [user?.id]);
 
- // Persist conversation (scoped to user)
+ // On first mount: pick or create an active session and load it
  useEffect(() => {
- if (dataLoaded && user?.id) {
- saveConversation(user.id, apiMessages, uiMessages);
+ if (!user?.id) return;
+ let cancelled = false;
+ (async () => {
+ const list = await listSessions(user.id);
+ if (cancelled) return;
+ setSessions(list);
+ const target = list[0]?.id ?? newSessionId();
+ setActiveSessionId(target);
+ if (list[0]) {
+ const loaded = await loadSession(user.id, target);
+ if (cancelled) return;
+ if (loaded) {
+ setApiMessages(loaded.apiMessages);
+ setUiMessages(loaded.uiMessages);
+ setActiveTitle(loaded.title);
  }
- }, [apiMessages, uiMessages, dataLoaded, user?.id]);
+ } else {
+ setApiMessages([]);
+ setUiMessages([]);
+ setActiveTitle("New chat");
+ }
+ setDataLoaded(true);
+ })();
+ return () => { cancelled = true; };
+ }, [user?.id]);
+
+ // Persist current session on any change (title derived from first user message)
+ useEffect(() => {
+ if (!dataLoaded || !user?.id || !activeSessionId) return;
+ if (apiMessages.length === 0 && uiMessages.length === 0) return;
+ const firstUser = uiMessages.find((m) => m.role === "user");
+ const derivedTitle =
+ activeTitle && activeTitle !== "New chat"
+ ? activeTitle
+ : firstUser?.content?.trim().slice(0, 60) || "New chat";
+ if (derivedTitle !== activeTitle) setActiveTitle(derivedTitle);
+ saveSession(user.id, activeSessionId, derivedTitle, apiMessages, uiMessages).then(() => {
+ void refreshSessions();
+ });
+ }, [apiMessages, uiMessages, dataLoaded, user?.id, activeSessionId, activeTitle, refreshSessions]);
+
+ const startNewSession = useCallback(() => {
+ const id = newSessionId();
+ setActiveSessionId(id);
+ setUiMessages([]);
+ setApiMessages([]);
+ setStreamingContent("");
+ setActiveStatuses([]);
+ setActiveTitle("New chat");
+ setSessionPickerOpen(false);
+ setSidebarOpen(false);
+ inputRef.current?.focus();
+ }, []);
+
+ const switchSession = useCallback(async (id: string) => {
+ if (!user?.id || id === activeSessionId) {
+ setSessionPickerOpen(false);
+ setSidebarOpen(false);
+ return;
+ }
+ const loaded = await loadSession(user.id, id);
+ if (loaded) {
+ setActiveSessionId(id);
+ setApiMessages(loaded.apiMessages);
+ setUiMessages(loaded.uiMessages);
+ setActiveTitle(loaded.title);
+ setStreamingContent("");
+ setActiveStatuses([]);
+ }
+ setSessionPickerOpen(false);
+ setSidebarOpen(false);
+ }, [user?.id, activeSessionId]);
+
+ const removeSession = useCallback(async (id: string) => {
+ if (!user?.id) return;
+ await deleteSession(user.id, id);
+ const list = await listSessions(user.id);
+ setSessions(list);
+ if (id === activeSessionId) {
+ if (list[0]) {
+ await switchSession(list[0].id);
+ } else {
+ startNewSession();
+ }
+ }
+ }, [user?.id, activeSessionId, switchSession, startNewSession]);
 
  // Load user context
  useEffect(() => {
@@ -1942,6 +2171,9 @@ export default function AIAgent() {
  }
  }, [searchParams, setSearchParams, dataLoaded, userContext, sendMessage]);
 
+ // Clear the CURRENT session's messages but keep the session shell so
+ // the user doesn't lose their place in the sidebar. To start over cleanly,
+ // use "New chat" (startNewSession) instead.
  const clearChat = () => {
  setUiMessages([]);
  setApiMessages([]);
@@ -2117,7 +2349,169 @@ export default function AIAgent() {
  }
 
  return (
- <div className="flex flex-col h-full w-full">
+ <div className="flex flex-col h-full w-full relative">
+
+ {/* Session bar */}
+ <div className="flex items-center justify-between gap-2 px-4 sm:px-6 py-2.5 border-b border-foreground/10 bg-background/60 backdrop-blur">
+ <div className="flex items-center gap-2 min-w-0">
+ <button
+ type="button"
+ onClick={() => setSidebarOpen(true)}
+ className="lg:hidden p-1.5 rounded-md text-foreground/60 hover:text-foreground hover:bg-foreground/5"
+ title="Chat history"
+ aria-label="Open chat history"
+ >
+ <ChevronDown className="w-4 h-4 -rotate-90" />
+ </button>
+ <div className="relative min-w-0">
+ <button
+ type="button"
+ onClick={() => setSessionPickerOpen((v) => !v)}
+ className="hidden lg:flex items-center gap-1.5 max-w-[42ch] text-sm text-foreground/80 hover:text-foreground truncate"
+ title="Switch chat"
+ >
+ <span className="mono-label text-[0.65rem] text-foreground/40">§</span>
+ <span className="truncate">{activeTitle || "New chat"}</span>
+ <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${sessionPickerOpen ? "rotate-180" : ""}`} />
+ </button>
+ <span className="lg:hidden text-sm text-foreground/80 truncate max-w-[24ch] inline-block">{activeTitle || "New chat"}</span>
+ <AnimatePresence>
+ {sessionPickerOpen && (
+ <motion.div
+ initial={{ opacity: 0, y: -4 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0, y: -4 }}
+ transition={{ duration: 0.12 }}
+ className="absolute left-0 top-full mt-1 z-40 w-[22rem] max-w-[calc(100vw-2rem)] bg-background border border-foreground/20 rounded-md shadow-lg overflow-hidden"
+ role="menu"
+ >
+ <div className="max-h-[60vh] overflow-y-auto">
+ {sessions.length === 0 ? (
+ <div className="p-4 text-xs text-foreground/50">No past chats yet.</div>
+ ) : (
+ sessions.map((s) => (
+ <div
+ key={s.id}
+ className={`flex items-center gap-2 px-3 py-2 border-b border-foreground/5 last:border-b-0 hover:bg-foreground/5 cursor-pointer ${
+ s.id === activeSessionId ? "bg-foreground/5" : ""
+ }`}
+ onClick={() => switchSession(s.id)}
+ >
+ <div className="flex-1 min-w-0">
+ <div className="text-sm text-foreground/90 truncate">{s.title || "Untitled"}</div>
+ <div className="mono-label text-[0.6rem] text-foreground/40 mt-0.5">
+ {s.messageCount} msg · {relativeTime(s.updatedAt)}
+ </div>
+ </div>
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ if (window.confirm(`Delete "${s.title || "Untitled"}"?`)) {
+ void removeSession(s.id);
+ }
+ }}
+ className="p-1 rounded text-foreground/40 hover:text-foreground hover:bg-foreground/10"
+ title="Delete chat"
+ aria-label="Delete chat"
+ >
+ <Trash2 className="w-3.5 h-3.5" />
+ </button>
+ </div>
+ ))
+ )}
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </div>
+ </div>
+ <button
+ type="button"
+ onClick={startNewSession}
+ className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-foreground/25 text-xs text-foreground hover:bg-foreground/5"
+ title="New chat"
+ >
+ <Plus className="w-3.5 h-3.5" />
+ <span className="hidden sm:inline">New chat</span>
+ </button>
+ </div>
+
+ {/* Mobile sidebar */}
+ <AnimatePresence>
+ {sidebarOpen && (
+ <>
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ exit={{ opacity: 0 }}
+ className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40 lg:hidden"
+ onClick={() => setSidebarOpen(false)}
+ />
+ <motion.aside
+ initial={{ x: "-100%" }}
+ animate={{ x: 0 }}
+ exit={{ x: "-100%" }}
+ transition={{ type: "tween", duration: 0.2 }}
+ className="fixed top-0 left-0 bottom-0 w-[85vw] max-w-[20rem] bg-background border-r border-foreground/15 z-50 flex flex-col lg:hidden"
+ >
+ <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10">
+ <span className="mono-label text-[0.65rem] text-foreground/50">§ Praxis history</span>
+ <button
+ type="button"
+ onClick={() => setSidebarOpen(false)}
+ className="p-1 rounded text-foreground/50 hover:text-foreground"
+ aria-label="Close"
+ >
+ <X className="w-4 h-4" />
+ </button>
+ </div>
+ <button
+ type="button"
+ onClick={startNewSession}
+ className="mx-3 mt-3 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-foreground/25 text-sm text-foreground hover:bg-foreground/5"
+ >
+ <Plus className="w-4 h-4" /> New chat
+ </button>
+ <div className="flex-1 overflow-y-auto mt-3">
+ {sessions.length === 0 ? (
+ <div className="p-4 text-xs text-foreground/50">No past chats yet.</div>
+ ) : (
+ sessions.map((s) => (
+ <div
+ key={s.id}
+ className={`flex items-center gap-2 px-3 py-2 border-b border-foreground/5 hover:bg-foreground/5 cursor-pointer ${
+ s.id === activeSessionId ? "bg-foreground/5" : ""
+ }`}
+ onClick={() => switchSession(s.id)}
+ >
+ <div className="flex-1 min-w-0">
+ <div className="text-sm text-foreground/90 truncate">{s.title || "Untitled"}</div>
+ <div className="mono-label text-[0.6rem] text-foreground/40 mt-0.5">
+ {s.messageCount} msg · {relativeTime(s.updatedAt)}
+ </div>
+ </div>
+ <button
+ type="button"
+ onClick={(e) => {
+ e.stopPropagation();
+ if (window.confirm(`Delete "${s.title || "Untitled"}"?`)) {
+ void removeSession(s.id);
+ }
+ }}
+ className="p-1 rounded text-foreground/40 hover:text-foreground hover:bg-foreground/10"
+ aria-label="Delete chat"
+ >
+ <Trash2 className="w-3.5 h-3.5" />
+ </button>
+ </div>
+ ))
+ )}
+ </div>
+ </motion.aside>
+ </>
+ )}
+ </AnimatePresence>
 
  {/* Messages Area */}
  <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-6 space-y-6">
