@@ -38,6 +38,7 @@ import {
  ChevronUp,
  ScanSearch,
  Brain,
+ Pencil,
  Plus,
  ArrowUp,
  Wrench,
@@ -2074,6 +2075,11 @@ export default function AIAgent() {
  const inputRef = useRef<HTMLTextAreaElement>(null);
  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
  const [expandedMsgs, setExpandedMsgs] = useState<Set<number>>(new Set());
+ // Edit + branch: while set, the user message at this ui-index renders
+ // as an editable textarea. Saving truncates the conversation to just
+ // before that turn and re-runs sendMessage with the new content.
+ const [editingIdx, setEditingIdx] = useState<number | null>(null);
+ const [editingText, setEditingText] = useState("");
  const [attachedFiles, setAttachedFiles] = useState<{ name: string; text: string }[]>([]);
  const [fileProcessing, setFileProcessing] = useState(false);
  const fileInputRef = useRef<HTMLInputElement>(null);
@@ -2604,7 +2610,10 @@ export default function AIAgent() {
  // ─── Send message with tool loop ─────────────────────────────────────────
 
  const sendMessage = useCallback(
- async (content: string) => {
+ async (
+ content: string,
+ override?: { ui: UIMessage[]; api: ApiMessage[] }
+ ) => {
  if (!content.trim() || isStreaming) return;
 
  // Build system prompt with fresh page context
@@ -2628,18 +2637,27 @@ export default function AIAgent() {
  : content.trim();
  const userUiMsg: UIMessage = { role: "user", content: displayContent, timestamp: new Date() };
 
+ // override lets the edit-and-branch flow pass a truncated history
+ // explicitly, so we don't race React's stale closure of state.
+ const baseUi = override?.ui ?? uiMessages;
+ const baseApi = override?.api ?? apiMessages;
+ if (override) {
+ setUiMessages([...override.ui, userUiMsg]);
+ setApiMessages([...override.api, userApiMsg]);
+ } else {
  setUiMessages(prev => [...prev, userUiMsg]);
+ setApiMessages(prev => [...prev, userApiMsg]);
+ }
  setInput("");
  setAttachedFiles([]);
 
  // Build API messages: system + condensed prior transcript + new user message.
  // Prior tool_calls / tool_results are folded into text stand-ins so the
  // model still knows what happened without shipping multi-KB payloads.
- const recentApiMessages = apiMessages.slice(-40);
+ const recentApiMessages = baseApi.slice(-40);
  const condensed = condenseHistory(recentApiMessages) as ApiMessage[];
  const systemMsg: ApiMessage = { role: "system", content: systemPrompt };
  let currentMessages: ApiMessage[] = [systemMsg, ...condensed, userApiMsg];
- setApiMessages(prev => [...prev, userApiMsg]);
 
  // Tool calling loop
  let maxLoops = 30;
@@ -2649,7 +2667,7 @@ export default function AIAgent() {
  currentMessages = [systemMsg, ...result.messages.slice(1)]; // keep system prompt at front
  }
  },
- [apiMessages, isStreaming, sendRequest, userContext, role, attachedFiles]
+ [apiMessages, uiMessages, isStreaming, sendRequest, userContext, role, attachedFiles]
  );
 
  const handleSubmit = (e: React.FormEvent) => {
@@ -2726,6 +2744,48 @@ export default function AIAgent() {
  }
  };
 
+ const beginEdit = (idx: number, content: string) => {
+ setEditingIdx(idx);
+ setEditingText(content);
+ };
+ const cancelEdit = () => {
+ setEditingIdx(null);
+ setEditingText("");
+ };
+ /**
+  * Save an edited user prompt and branch — truncate everything from
+  * this user turn onward (both uiMessages and the parallel
+  * apiMessages entries) and re-run sendMessage with the new content.
+  */
+ const saveEdit = (uiIdx: number) => {
+ const next = editingText.trim();
+ setEditingIdx(null);
+ setEditingText("");
+ if (!next) return;
+
+ // How many user turns precede this one in the UI history?
+ const targetUserTurnNumber = uiMessages
+ .slice(0, uiIdx)
+ .filter((m) => m.role === "user").length;
+
+ // Find the corresponding user entry in apiMessages and truncate there.
+ let apiCutoff = apiMessages.length;
+ let seen = 0;
+ for (let i = 0; i < apiMessages.length; i++) {
+ if (apiMessages[i].role === "user") {
+ if (seen === targetUserTurnNumber) {
+ apiCutoff = i;
+ break;
+ }
+ seen++;
+ }
+ }
+
+ const truncatedUi = uiMessages.slice(0, uiIdx);
+ const truncatedApi = apiMessages.slice(0, apiCutoff);
+ void sendMessage(next, { ui: truncatedUi, api: truncatedApi });
+ };
+
  const wordCount = (text: string) => text.trim().split(/\s+/).length;
 
  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -2747,6 +2807,15 @@ export default function AIAgent() {
  >
  {copiedIdx === idx ? <Check className="w-3.5 h-3.5 text-foreground" /> : <Copy className="w-3.5 h-3.5" />}
  </button>
+ {isUser && !isStreaming && editingIdx !== idx && (
+ <button
+ onClick={() => beginEdit(idx, content)}
+ className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors"
+ title="Edit and re-run"
+ >
+ <Pencil className="w-3.5 h-3.5" />
+ </button>
+ )}
  {!isUser && (
  <>
  <button className="p-1 rounded-md text-foreground/40 hover:text-foreground/75 hover:bg-foreground/5 transition-colors" title="Good response">
@@ -2951,12 +3020,51 @@ export default function AIAgent() {
  </div>
  ) : msg.role === "user" ? (
  <div className="group max-w-[85%] inline-block">
+ {editingIdx === idx ? (
+ <div className="w-[32rem] max-w-[85vw] space-y-2">
+ <textarea
+ value={editingText}
+ onChange={(e) => setEditingText(e.target.value)}
+ onKeyDown={(e) => {
+ if (e.key === "Escape") { e.preventDefault(); cancelEdit(); }
+ if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+ e.preventDefault();
+ saveEdit(idx);
+ }
+ }}
+ rows={Math.min(8, Math.max(2, editingText.split("\n").length))}
+ className="w-full bg-background border border-foreground/40 p-2.5 text-sm leading-relaxed text-foreground resize-none outline-none focus:border-foreground rounded-md"
+ autoFocus
+ />
+ <div className="flex items-center gap-2 mono-label text-[0.65rem]">
+ <button
+ type="button"
+ onClick={() => saveEdit(idx)}
+ disabled={!editingText.trim() || isStreaming}
+ className="inline-flex items-center gap-1 px-2 py-1 border border-foreground text-foreground hover:bg-foreground hover:text-background disabled:opacity-40 disabled:cursor-not-allowed rounded-md"
+ >
+ <Check className="w-3 h-3" /> Save &amp; re-run
+ </button>
+ <button
+ type="button"
+ onClick={cancelEdit}
+ className="inline-flex items-center gap-1 px-2 py-1 border border-foreground/30 text-foreground/70 hover:text-foreground hover:border-foreground/60 rounded-md"
+ >
+ <X className="w-3 h-3" /> Cancel
+ </button>
+ <span className="text-foreground/40 ml-auto normal-case tracking-normal">⌘/Ctrl + Enter · Esc</span>
+ </div>
+ </div>
+ ) : (
+ <>
  <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-foreground/20 border border-foreground/15 text-foreground/80">
  <UserMessageContent content={msg.content} idx={idx} />
  </div>
  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
  <MessageActions content={msg.content} idx={idx} isUser={true} />
  </div>
+ </>
+ )}
  </div>
  ) : null}
  </motion.div>
