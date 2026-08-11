@@ -102,6 +102,7 @@ export interface ProblemSolvingScenario {
 }
 
 export interface JudgmentScenario {
+  [key: string]: unknown;
   id?: string;
   situation: string;
   stakeholders?: string[];
