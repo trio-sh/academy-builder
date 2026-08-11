@@ -76,6 +76,11 @@ const ALLOWLIST = new Set([
   "supabase/migrations/20260810190240_20cadeb7-ad8f-47f8-bfe8-e0e4e50cd36b.sql",
   "supabase/migrations/20260811083459_935cc976-55c4-43f4-9ae1-17910c6010ca.sql",
 
+  // Legacy deprecation migration: intentionally names each retired table
+  // (skill_passports, etc.) in COMMENT bodies so the deprecation is
+  // discoverable from a live \d+. Not a new writer of the forbidden term.
+  "supabase/migrations/20260811200000_t3a_spec_002_legacy_deprecation.sql",
+
   // Legacy tests referencing the old shape — migrate alongside the
   // schema rename PR.
   "src/test/candidate-employer-e2e-flow.test.ts",
