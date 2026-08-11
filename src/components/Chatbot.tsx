@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { BrandSeal } from "@/components/BrandSeal";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -1228,19 +1230,19 @@ export function Chatbot() {
 
   function ActionBadge({ result }: { result: ActionResult }) {
     const IconComp = actionIcon(result.action as ActionType);
-    const statusColors = {
-      pending: "bg-gray-800 border-gray-600 text-gray-400",
-      running: "bg-indigo-950 border-indigo-500/50 text-indigo-300",
-      done: "bg-emerald-950 border-emerald-500/30 text-emerald-300",
-      error: "bg-red-950 border-red-500/30 text-red-300",
+    const statusStyles: Record<ActionResult["status"], string> = {
+      pending: "border-foreground/25 text-foreground/60",
+      running: "border-foreground text-foreground bg-foreground/[0.04]",
+      done: "border-foreground text-foreground",
+      error: "border-vermilion text-vermilion bg-vermilion/[0.06]",
     };
 
+    // NB: no `layout` prop and no animate on width/scale — badges must not
+    // reflow on every parent re-render (e.g. while the user is typing).
     return (
-      <motion.div
-        className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs ${statusColors[result.status]}`}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        layout
+      <span
+        className={`inline-flex items-center gap-1.5 px-2 py-1 border text-[0.65rem] uppercase tracking-widest ${statusStyles[result.status]}`}
+        style={{ fontFamily: '"JetBrains Mono", monospace' }}
       >
         {result.status === "running" ? (
           <Loader2 className="w-3 h-3 animate-spin" />
@@ -1251,11 +1253,11 @@ export function Chatbot() {
         ) : (
           <IconComp className="w-3 h-3" />
         )}
-        <span className="truncate max-w-[200px]">{result.label}</span>
+        <span className="truncate max-w-[200px] normal-case tracking-normal">{result.label}</span>
         {result.status === "error" && result.detail && (
-          <span className="text-red-400/70 truncate max-w-[120px]">— {result.detail}</span>
+          <span className="text-vermilion/70 truncate max-w-[120px] normal-case tracking-normal">— {result.detail}</span>
         )}
-      </motion.div>
+      </span>
     );
   }
 
@@ -1294,23 +1296,7 @@ export function Chatbot() {
               <div className="absolute inset-1.5 pointer-events-none border border-dashed border-[#1D1815]/25" />
 
               <div className="relative flex items-center gap-3">
-                {/* Wax-seal circle with tinted logo */}
-                <div className="relative w-11 h-11 flex-shrink-0">
-                  <div
-                    className="absolute inset-0 rounded-full bg-[#B84A22] flex items-center justify-center shadow-[inset_1px_-2px_3px_rgba(0,0,0,0.25)]"
-                    style={{ transform: "rotate(-6deg)" }}
-                  >
-                    <img
-                      src="/logo.png"
-                      alt=""
-                      className="w-8 h-8 rounded-full object-cover opacity-90"
-                      style={{ filter: "grayscale(1) brightness(1.8) contrast(0.9)" }}
-                    />
-                  </div>
-                  {/* Wax edges — decorative dots */}
-                  <span className="absolute -top-0.5 -left-0.5 w-1.5 h-1.5 rounded-full bg-[#B84A22]" />
-                  <span className="absolute -bottom-1 right-0 w-1 h-1 rounded-full bg-[#B84A22]/70" />
-                </div>
+                <BrandSeal size={44} withDots />
 
                 <div className="text-left leading-tight">
                   <div
@@ -1360,7 +1346,7 @@ export function Chatbot() {
             {/* Masthead */}
             <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-foreground bg-background/70 backdrop-blur-sm">
               <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="" className="w-10 h-10 rounded-full ring-1 ring-foreground/25 logo-ink" />
+                <BrandSeal size={40} />
                 <div>
                   <div className="display-serif text-lg leading-none text-foreground">Editor's Desk</div>
                   <div className="mono-label text-foreground/60 mt-1">
@@ -1497,9 +1483,13 @@ export function Chatbot() {
                           : "border-foreground/40"
                       }`}
                     >
-                      <p className="text-[0.9375rem] leading-[1.65] whitespace-pre-wrap text-foreground">
-                        {message.content}
-                      </p>
+                      {message.role === "assistant" ? (
+                        <MarkdownRenderer content={message.content} />
+                      ) : (
+                        <p className="text-[0.9375rem] leading-[1.65] whitespace-pre-wrap text-foreground">
+                          {message.content}
+                        </p>
+                      )}
                     </div>
 
                     {message.actions && message.actions.length > 0 && (
