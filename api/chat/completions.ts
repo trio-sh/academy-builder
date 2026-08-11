@@ -1970,10 +1970,17 @@ async function runAgentLoop(
     a0Messages = [];
     const toolSystemPrompt = buildToolSystemPrompt(userTools);
 
-    // Build combined system prompt: default base + user's system prompt + tool instructions
+    // Build combined system prompt.
+    // If the CALLER supplies its own system prompt (e.g. Praxis on The
+    // 3rd Academy), respect it as the identity/instructions of record —
+    // do NOT prepend DEFAULT_SYSTEM_PROMPT ("You are PiPilot…"), which
+    // would fight the caller's identity and make the model answer as
+    // PiPilot instead. Only fall back to DEFAULT_SYSTEM_PROMPT when the
+    // caller sends no system message. Tool instructions still append.
     const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
     const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
-    const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+    const baseSystem = hasSystemMsg ? userSystemPrompt : DEFAULT_SYSTEM_PROMPT;
+    const combinedSystem = [baseSystem, toolSystemPrompt]
       .filter(Boolean)
       .join("\n\n");
     a0Messages.push({ role: "system", content: combinedSystem });
@@ -2430,9 +2437,12 @@ async function streamAgentLoop(
     a0Messages = [];
     const toolSystemPrompt = buildToolSystemPrompt(userTools);
 
+    // Respect the caller's system prompt as the identity of record;
+    // only fall back to DEFAULT_SYSTEM_PROMPT if none was supplied.
     const hasSystemMsg = messages.length > 0 && messages[0].role === "system";
     const userSystemPrompt = hasSystemMsg ? messages[0].content : "";
-    const combinedSystem = [DEFAULT_SYSTEM_PROMPT, userSystemPrompt, toolSystemPrompt]
+    const baseSystem = hasSystemMsg ? userSystemPrompt : DEFAULT_SYSTEM_PROMPT;
+    const combinedSystem = [baseSystem, toolSystemPrompt]
       .filter(Boolean)
       .join("\n\n");
     a0Messages.push({ role: "system", content: combinedSystem });
