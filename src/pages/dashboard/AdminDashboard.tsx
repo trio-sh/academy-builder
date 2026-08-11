@@ -4,6 +4,7 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import EvidenceReview from "@/pages/dashboard/admin/EvidenceReview";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
@@ -63,6 +64,7 @@ import {
   ChevronRight,
   Activity,
   FileText,
+  ShieldCheck,
   Briefcase,
   UserCheck,
   AlertCircle,
@@ -151,6 +153,7 @@ const navItems = [
   { name: "Schools", href: "/dashboard/admin/schools", icon: GraduationCap },
   { name: "Communications", href: "/dashboard/admin/communications", icon: Mail },
   { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
+  { name: "Evidence Review", href: "/dashboard/admin/evidence-review", icon: ShieldCheck },
   { name: "Praxis", href: "/dashboard/admin/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
 ];
@@ -2609,6 +2612,7 @@ const AdminDashboard = () => {
         <Route path="schools" element={<SchoolsManagement />} />
         <Route path="communications" element={<CommunicationsPage />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="evidence-review" element={<EvidenceReview />} />
         <Route path="agent" element={<AIAgent />} />
         <Route path="settings" element={<SettingsPage />} />
       </Routes>
