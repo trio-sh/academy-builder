@@ -102,7 +102,6 @@ export interface ProblemSolvingScenario {
 }
 
 export interface JudgmentScenario {
-  [key: string]: unknown;
   id?: string;
   situation: string;
   stakeholders?: string[];
@@ -116,6 +115,17 @@ export interface JudgmentScenario {
     practicalScore?: number;
     feedback: string;
   }[];
+}
+
+/** Metrics captured from a spoken response during a voice challenge. */
+export interface SpeechMetrics {
+  wordsPerMinute?: number;
+  fillerWordCount?: number;
+  pauseCount?: number;
+  durationSeconds?: number;
+  clarityScore?: number;
+  confidenceScore?: number;
+  [key: string]: unknown;
 }
 
 // Enhanced Assessment Scene Types
