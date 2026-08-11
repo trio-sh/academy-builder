@@ -1960,10 +1960,127 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_growth_log_entry: {
+        Args: {
+          p_candidate_id: string
+          p_description?: string
+          p_event_type: string
+          p_metadata?: Json
+          p_source_component?: string
+          p_source_id?: string
+          p_title: string
+        }
+        Returns: string
+      }
+      apply_to_project: {
+        Args: { p_cover_letter?: string; p_project_id: string }
+        Returns: string
+      }
+      complete_observation_loop: {
+        Args: {
+          p_bars_score?: number
+          p_endorsement_decision?: string
+          p_loop_id: string
+        }
+        Returns: boolean
+      }
+      create_notification: {
+        Args: {
+          p_action_url?: string
+          p_message: string
+          p_metadata?: Json
+          p_priority?: string
+          p_title: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: string
+      }
+      get_dashboard_stats: { Args: never; Returns: Json }
+      get_or_create_direct_conversation: {
+        Args: { p_other_user_id: string }
+        Returns: string
+      }
       is_admin: { Args: never; Returns: boolean }
+      issue_behavioral_evidence_report: {
+        Args: {
+          p_behavioral_scores?: Json
+          p_candidate_id: string
+          p_readiness_tier?: string
+        }
+        Returns: Json
+      }
+      list_conversations: { Args: never; Returns: Json }
+      mark_all_notifications_read: { Args: never; Returns: number }
+      mark_conversation_read: {
+        Args: { p_conversation_id: string }
+        Returns: boolean
+      }
+      mark_notification_read: { Args: { p_id: string }; Returns: boolean }
       my_candidate_id: { Args: never; Returns: string }
       my_employer_id: { Args: never; Returns: string }
       my_mentor_id: { Args: never; Returns: string }
+      poll_updates: { Args: { since?: string }; Returns: Json }
+      queue_email: {
+        Args: {
+          p_template: string
+          p_template_data?: Json
+          p_to_email: string
+          p_to_name: string
+        }
+        Returns: string
+      }
+      record_observation: {
+        Args: {
+          p_areas_for_improvement?: string[]
+          p_assignment_id: string
+          p_behavioral_scores: Json
+          p_candidate_id: string
+          p_notes?: string
+          p_session_date: string
+          p_strengths?: string[]
+        }
+        Returns: string
+      }
+      request_connection: {
+        Args: { p_candidate_id: string; p_message?: string }
+        Returns: string
+      }
+      respond_to_connection: {
+        Args: { p_accept: boolean; p_connection_id: string }
+        Returns: boolean
+      }
+      send_message: {
+        Args: {
+          p_content: string
+          p_conversation_id: string
+          p_file_url?: string
+          p_message_type?: string
+          p_reply_to_id?: string
+        }
+        Returns: string
+      }
+      start_observation_loop: {
+        Args: {
+          p_assignment_id?: string
+          p_candidate_id: string
+          p_dimension_id: string
+          p_observation_level: number
+        }
+        Returns: Json
+      }
+      submit_endorsement: {
+        Args: {
+          p_assignment_id: string
+          p_candidate_id: string
+          p_decision: string
+          p_justification?: string
+          p_redirect_module_id?: string
+          p_redirect_to?: string
+        }
+        Returns: string
+      }
+      verify_behavioral_evidence: { Args: { p_code: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
