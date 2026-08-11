@@ -3959,24 +3959,13 @@ const MentorMessagesPage = () => {
     };
     fetchConversations();
 
-    // Real-time conversation updates
+    // Poll the conversation list instead of holding a realtime channel open
     if (!user?.id) return;
-    const convChannel = supabase
-      .channel(`conv-updates-mentor-${user.id}`)
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "conversations" }, (payload) => {
-        const updated = payload.new as any;
-        setConversations((prev) => {
-          const idx = prev.findIndex((c) => c.id === updated.id);
-          if (idx === -1) return prev;
-          const updatedList = [...prev];
-          updatedList[idx] = { ...updatedList[idx], ...updated };
-          updatedList.sort((a, b) => new Date(b.last_message_at || 0).getTime() - new Date(a.last_message_at || 0).getTime());
-          return updatedList;
-        });
-      })
-      .subscribe();
+    const convTimer = setInterval(() => {
+      if (!document.hidden) void fetchConversations();
+    }, 15000);
 
-    return () => { supabase.removeChannel(convChannel); };
+    return () => clearInterval(convTimer);
   }, [user?.id]);
 
   useEffect(() => {
@@ -3994,11 +3983,33 @@ const MentorMessagesPage = () => {
       await supabase.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).eq("conversation_id", activeConversation.id).eq("user_id", user?.id);
     };
     fetchMessages();
-    const channel = supabase.channel(`messages:${activeConversation.id}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${activeConversation.id}` }, async (payload) => {
-      const { data: newMsg } = await supabase.from("messages").select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)").eq("id", payload.new.id).single();
-      if (newMsg) setMessages((prev) => [...prev, newMsg]);
-    }).subscribe();
-    return () => { supabase.removeChannel(channel); };
+    // Poll for inbound messages instead of a realtime channel
+    let lastAt: string | null = null;
+    const tick = async () => {
+      let query = supabase
+        .from("messages")
+        .select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)")
+        .eq("conversation_id", activeConversation.id)
+        .neq("sender_id", user?.id ?? "")
+        .order("created_at", { ascending: true })
+        .limit(50);
+      if (lastAt) query = query.gt("created_at", lastAt);
+      const { data: incoming } = await query;
+      if (incoming?.length) {
+        lastAt = (incoming[incoming.length - 1] as { created_at: string }).created_at;
+        setMessages((prev) => {
+          const seen = new Set(prev.map((m: { id: string }) => m.id));
+          const fresh = incoming.filter((m: { id: string }) => !seen.has(m.id));
+          return fresh.length ? [...prev, ...fresh] : prev;
+        });
+      } else if (!lastAt) {
+        lastAt = new Date().toISOString();
+      }
+    };
+    const msgTimer = setInterval(() => {
+      if (!document.hidden) void tick();
+    }, 5000);
+    return () => clearInterval(msgTimer);
   }, [activeConversation?.id, user?.id]);
 
   const sendMessage = async () => {
@@ -4410,21 +4421,12 @@ const MentorDashboardInner = () => {
 
     fetchNotifications();
 
-    // Real-time notification subscription
-    const channel = supabase
-      .channel(`notifications-mentor-${user?.id}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user?.id}` },
-        (payload) => {
-          setNotifications((prev) => [payload.new as any, ...prev].slice(0, 5));
-        }
-      )
-      .subscribe();
+    // Poll for new notifications instead of a realtime channel
+    const notifTimer = setInterval(() => {
+      if (!document.hidden) void fetchNotifications();
+    }, 15000);
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => clearInterval(notifTimer);
   }, [user?.id]);
 
   const handleSignOut = async () => {
