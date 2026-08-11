@@ -780,21 +780,21 @@ export const TrainingModuleViewer = () => {
               <div className="h-6 w-px bg-black hidden md:block" />
               {/* Desktop: Horizontal badges */}
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/30 border border-amber-500/20">
-                  <Star className="w-4 h-4 text-amber-400" />
-                  <span className="text-amber-400 font-semibold">{totalScore}</span>
-                  <span className="text-amber-400/50">/ {module.totalPoints}</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-vermilion/10 border border-vermilion">
+                  <Star className="w-4 h-4 ink-vermilion" />
+                  <span className="ink-vermilion font-semibold">{totalScore}</span>
+                  <span className="ink-vermilion/50">/ {module.totalPoints}</span>
                 </div>
                 {/* Countdown Timer */}
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
                   isExtraTime
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
-                      ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                      ? 'bg-vermilion/10 border border-vermilion animate-pulse'
                       : 'bg-black border border-white/30'
                 }`}>
-                  <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
-                  <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-white'}`}>
                     {formatTime(timeRemaining)}
                   </span>
                   {isExtraTime && <span className="text-xs text-red-400">+3</span>}
@@ -802,19 +802,19 @@ export const TrainingModuleViewer = () => {
               </div>
               {/* Mobile: Stacked compact badges */}
               <div className="flex md:hidden flex-col gap-1">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/30 border border-amber-500/20">
-                  <Star className="w-3 h-3 text-amber-400" />
-                  <span className="text-amber-400 font-semibold text-xs">{totalScore}/{module.totalPoints}</span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-vermilion/10 border border-vermilion">
+                  <Star className="w-3 h-3 ink-vermilion" />
+                  <span className="ink-vermilion font-semibold text-xs">{totalScore}/{module.totalPoints}</span>
                 </div>
                 <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full ${
                   isExtraTime
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
-                      ? 'bg-amber-500/20 border border-amber-500/30'
+                      ? 'bg-vermilion/10 border border-vermilion'
                       : 'bg-black border border-white/30'
                 }`}>
-                  <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
-                  <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-white'}`}>
                     {formatTime(timeRemaining)}
                   </span>
                 </div>
@@ -893,17 +893,17 @@ export const TrainingModuleViewer = () => {
               <div className="px-8 pt-8 pb-6 border-b border-white/5">
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`p-2 rounded-xl ${
-                    currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
+                    currentScene?.type === 'narrative' ? 'bg-foreground/[0.05]' :
                     currentScene?.type === 'choice' ? 'bg-purple-500/30' :
-                    currentScene?.type === 'reflection' ? 'bg-amber-500/30' :
-                    currentScene?.type === 'quiz' ? 'bg-emerald-500/30' :
-                    'bg-amber-500/30'
+                    currentScene?.type === 'reflection' ? 'bg-vermilion/10' :
+                    currentScene?.type === 'quiz' ? 'bg-foreground/[0.05]' :
+                    'bg-vermilion/10'
                   }`}>
-                    {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-blue-400" />}
+                    {currentScene?.type === 'narrative' && <BookOpen className="w-5 h-5 text-foreground" />}
                     {currentScene?.type === 'choice' && <Target className="w-5 h-5 text-purple-400" />}
-                    {currentScene?.type === 'reflection' && <MessageSquare className="w-5 h-5 text-amber-400" />}
+                    {currentScene?.type === 'reflection' && <MessageSquare className="w-5 h-5 ink-vermilion" />}
                     {currentScene?.type === 'quiz' && <FileText className="w-5 h-5 text-emerald-400" />}
-                    {currentScene?.type === 'completion' && <Award className="w-5 h-5 text-amber-400" />}
+                    {currentScene?.type === 'completion' && <Award className="w-5 h-5 ink-vermilion" />}
                   </div>
                   <span className="text-sm text-gray-400 capitalize font-medium">{currentScene?.type}</span>
                   <span className="text-gray-600">•</span>
@@ -1005,11 +1005,11 @@ export const TrainingModuleViewer = () => {
                             selectedChoice === choice.id
                               ? showFeedback
                                 ? choice.isCorrect
-                                  ? 'bg-emerald-500/20 border-emerald-500/50'
+                                  ? 'bg-foreground/[0.05] border-foreground/40'
                                   : 'bg-red-500/20 border-red-500/50'
                                 : 'bg-indigo-500/20 border-indigo-500/50'
                               : 'bg-black border-white/30 hover:bg-black hover:border-white/20'
-                          } ${showFeedback && choice.isCorrect ? 'bg-emerald-500/20 border-emerald-500/50' : ''}`}
+                          } ${showFeedback && choice.isCorrect ? 'bg-foreground/[0.05] border-foreground/40' : ''}`}
                         >
                           <div className="flex items-start gap-3">
                             <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
@@ -1038,15 +1038,15 @@ export const TrainingModuleViewer = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className={`mt-6 p-4 rounded-xl ${
                           currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect
-                            ? 'bg-emerald-500/30 border border-emerald-500/30'
-                            : 'bg-amber-500/30 border border-amber-500/30'
+                            ? 'bg-foreground/[0.05] border border-foreground/40'
+                            : 'bg-vermilion/10 border border-vermilion'
                         }`}
                       >
                         <div className="flex items-start gap-3">
                           {currentSceneWithAI.choices?.find(c => c.id === selectedChoice)?.isCorrect ? (
                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                           ) : (
-                            <Target className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <Target className="w-5 h-5 ink-vermilion flex-shrink-0 mt-0.5" />
                           )}
                           <div>
                             <p className="font-medium text-white mb-1">
@@ -1088,8 +1088,8 @@ export const TrainingModuleViewer = () => {
                       </div>
                     )}
                     <p className="text-gray-300 mb-4" dangerouslySetInnerHTML={{ __html: currentSceneWithAI.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
-                    <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/30 mb-4">
-                      <p className="text-amber-400 text-sm">{currentSceneWithAI.reflection?.prompt}</p>
+                    <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion mb-4">
+                      <p className="ink-vermilion text-sm">{currentSceneWithAI.reflection?.prompt}</p>
                     </div>
                     <textarea
                       value={reflectionText}
@@ -1149,11 +1149,11 @@ export const TrainingModuleViewer = () => {
                                   quizAnswers[qIndex] === oIndex
                                     ? quizSubmitted
                                       ? oIndex === q.correctIndex
-                                        ? 'bg-emerald-500/20 border border-emerald-500/50'
+                                        ? 'bg-foreground/[0.05] border border-foreground/40'
                                         : 'bg-red-500/20 border border-red-500/50'
                                       : 'bg-indigo-500/20 border border-indigo-500/50'
                                     : quizSubmitted && oIndex === q.correctIndex
-                                    ? 'bg-emerald-500/20 border border-emerald-500/50'
+                                    ? 'bg-foreground/[0.05] border border-foreground/40'
                                     : 'bg-black border border-white/30 hover:bg-black'
                                 }`}
                               >
@@ -1244,7 +1244,7 @@ export const TrainingModuleViewer = () => {
                       </Button>
                     ) : (
                       <div className="space-y-4">
-                        <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 mb-4">
+                        <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40 mb-4">
                           <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                           <p className="text-emerald-400 font-medium">Module Completed!</p>
                         </div>
@@ -1252,7 +1252,7 @@ export const TrainingModuleViewer = () => {
                           <Button
                             onClick={downloadCertificate}
                             variant="outline"
-                            className="border-amber-500/50 text-amber-400 hover:bg-amber-500/30"
+                            className="border-vermilion ink-vermilion hover:bg-vermilion/10"
                           >
                             <Download className="w-4 h-4 mr-2" />
                             Download Certificate

@@ -1083,7 +1083,7 @@ const Analytics = () => {
 
       {/* Stats Cards */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
-        <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-teal-500/20">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-teal-500/30 to-cyan-500/30 border border-foreground/40">
           <TrendingUp className="w-8 h-8 text-foreground mb-3" />
           <p className="text-3xl font-bold text-foreground">+12%</p>
           <p className="text-sm text-foreground/60">Average Score Improvement</p>
@@ -1263,7 +1263,7 @@ const SchoolMessagesPage = () => {
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-background/90 border border-teal-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-background/90 border border-foreground/40 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-foreground font-medium">Find someone to message</p>
                 <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-teal-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">

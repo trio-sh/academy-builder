@@ -1594,8 +1594,8 @@ const ObservationPathway = () => {
           <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion inline-flex items-start gap-3 max-w-lg text-left">
             <AlertCircle className="w-5 h-5 ink-vermilion shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm text-amber-300 font-medium">Mentor Assignment Required</p>
-              <p className="text-sm text-amber-300/70 mt-1">
+              <p className="text-sm ink-vermilion font-medium">Mentor Assignment Required</p>
+              <p className="text-sm ink-vermilion/70 mt-1">
                 No observation activity can begin until a mentor is assigned and has selected your behavioral dimensions for assessment. Find a mentor to get started.
               </p>
             </div>
@@ -1768,7 +1768,7 @@ const ObservationPathway = () => {
             const decisionColors: Record<string, string> = {
               proceed: "bg-foreground/[0.06] border-foreground/40",
               redirect: "bg-vermilion/10 border-vermilion",
-              pause: "bg-vermilion/10 border-orange-500/30",
+              pause: "bg-vermilion/10 border-vermilion",
               escalate: "bg-vermilion/15 border-vermilion",
             };
             const decisionLabels: Record<string, { label: string; color: string; desc: string }> = {
@@ -2115,7 +2115,7 @@ const SelfAssessmentPage = () => {
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 ink-vermilion shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-300">
+          <p className="text-sm ink-vermilion">
             This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Behavioral Evidence Report. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
           </p>
         </div>
@@ -2201,7 +2201,7 @@ const SelfAssessmentPage = () => {
               </p>
               <div className="mt-4 px-4 py-2 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 ink-vermilion shrink-0" />
-                <p className="text-xs text-amber-300">
+                <p className="text-xs ink-vermilion">
                   Preparation only — not part of your formal observation. Results do not appear in your Behavioral Evidence Report.
                 </p>
               </div>
@@ -2634,7 +2634,7 @@ const SelfAssessmentPage = () => {
                   <div className="space-y-2">
                     {improvements.length > 0 ? (
                       improvements.map((s) => (
-                        <div key={s} className="p-2 rounded-lg bg-vermilion/10 text-amber-300 text-sm">
+                        <div key={s} className="p-2 rounded-lg bg-vermilion/10 ink-vermilion text-sm">
                           {ASSESSMENT_DESCRIPTIONS[s].title}
                         </div>
                       ))
@@ -2842,7 +2842,7 @@ const Training = () => {
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 ink-vermilion shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-300">
+          <p className="text-sm ink-vermilion">
             BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Behavioral Evidence Report.
           </p>
         </div>
@@ -5295,7 +5295,7 @@ const FindMentor = () => {
                     {/* Action Button */}
                     <div className="mt-4">
                       {isAssigned ? (
-                        <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                        <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Currently Assigned
                         </Button>
@@ -5446,17 +5446,17 @@ const FindMentor = () => {
                   {/* Action Button */}
                   <div className="mt-4">
                     {isAssigned ? (
-                      <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Currently Assigned
                       </Button>
                     ) : isPending ? (
-                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
                         <Clock className="w-4 h-4 mr-2" />
                         Pending Approval
                       </Button>
                     ) : hasSentRequest ? (
-                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
                         <Clock className="w-4 h-4 mr-2" />
                         Pending Approval
                       </Button>

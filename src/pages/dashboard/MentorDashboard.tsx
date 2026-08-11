@@ -2838,7 +2838,7 @@ const Endorsements = () => {
                                     : option.color === "amber"
                                     ? "bg-vermilion/10 border-vermilion"
                                     : option.color === "orange"
-                                    ? "bg-vermilion/10 border-orange-500/50"
+                                    ? "bg-vermilion/10 border-vermilion"
                                     : "bg-vermilion/15 border-vermilion"
                                   : "bg-background border-foreground/25 hover:border-foreground/25"
                               }`}
