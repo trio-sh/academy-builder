@@ -13,11 +13,21 @@ import { cn } from "@/lib/utils";
  * account so they can sign in with Google going forward, and lets
  * them unlink it later.
  *
- * Requires "Manual linking" to be enabled in the Supabase project's
- * Auth settings. The Supabase OAuth callback is fixed by the project:
- *   https://<project>.supabase.co/auth/v1/callback
- * We only pass an app-side `redirectTo` so the user lands back on
- * this page with a confirmation banner.
+ * Manual linking (`supabase.auth.linkIdentity`) requires the
+ * project setting "Manual linking" to be enabled. When it is not,
+ * Supabase returns `manual_linking_disabled` / 404. To stay working
+ * in that mode we fall back to the reauth-style flow:
+ *
+ *   supabase.auth.signInWithOAuth({ provider: 'google',
+ *     options: { queryParams: { prompt: 'select_account' } } })
+ *
+ * When the returning Google account's email matches the currently
+ * signed-in user's email, Supabase adds Google to that user's
+ * identities and keeps them signed in on the same auth.users row.
+ * If the picked Google account uses a different email, Supabase
+ * signs the user out of the current session and into the Google one
+ * (creating that user if needed) — we warn about this before opening
+ * the flow so the user knows to pick the matching Google account.
  */
 export function GoogleAuthLink({ className }: { className?: string }) {
   const { user } = useAuth();
@@ -70,20 +80,64 @@ export function GoogleAuthLink({ className }: { className?: string }) {
   const handleLink = async () => {
     setBusy(true);
     try {
-      // Land back on this page with a marker so we can toast.
+      const currentEmail = user?.email ?? "";
       const redirectTo = `${window.location.origin}${window.location.pathname}?google_linked=1`;
-      const { error } = await supabase.auth.linkIdentity({
+
+      // 1. Try manual linking first (works when the setting is enabled).
+      const linkResult = await supabase.auth.linkIdentity({
         provider: "google",
         options: { redirectTo },
       });
-      if (error) {
+
+      // On success the browser has already been redirected — nothing more to do.
+      if (!linkResult.error) return;
+
+      // 2. Fall back to reauth-style OAuth when manual linking is off.
+      //    Supabase returns `manual_linking_disabled` (403/404) in that case.
+      const err = linkResult.error as { message?: string; code?: string; status?: number };
+      const isManualLinkingDisabled =
+        err?.code === "manual_linking_disabled" ||
+        err?.status === 404 ||
+        /manual linking is disabled/i.test(err?.message ?? "");
+
+      if (!isManualLinkingDisabled) {
         toast({
           title: "Could not link Google",
-          description: error.message,
+          description: err?.message ?? "Unknown error",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Warn: reauth flow will match by email; picking a different Google
+      // account signs the user out of this account and into that one.
+      const proceed = window.confirm(
+        `Manual linking is disabled on this project — we'll use Google sign-in as a fallback.\n\n` +
+          `On the next screen, pick the Google account that uses ${currentEmail || "your account email"}. ` +
+          `Google will then be added to this account.\n\n` +
+          `Picking a different Google account will sign you into that account instead.\n\nContinue?`
+      );
+      if (!proceed) return;
+
+      const { error: oauthErr } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+          queryParams: {
+            prompt: "select_account",
+            // hint the picker toward the current account's email
+            login_hint: currentEmail,
+          },
+        },
+      });
+      if (oauthErr) {
+        toast({
+          title: "Could not open Google",
+          description: oauthErr.message,
           variant: "destructive",
         });
       }
-      // On success the browser is redirected — nothing more to do here.
+      // On success the browser is redirected.
     } catch (err) {
       toast({
         title: "Could not link Google",

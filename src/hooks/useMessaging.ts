@@ -62,25 +62,45 @@ export function useUnreadMessageCount(userId: string | undefined) {
 /**
  * Hook to update user's last_seen timestamp for online/offline presence.
  * Updates every 60 seconds while active, and on mount.
+ *
+ * Resilient to missing schema: if `profiles.last_seen` doesn't exist yet
+ * (fresh env, migration pending), the presence update is disabled for the
+ * rest of the session instead of spamming PGRST204 errors on every tick.
  */
+let presenceDisabled = false;
+
 export function usePresence(userId: string | undefined) {
   useEffect(() => {
     if (!userId) return;
 
     const updateLastSeen = async () => {
-      await supabase
+      if (presenceDisabled) return;
+      const { error } = await supabase
         .from("profiles")
         .update({ last_seen: new Date().toISOString() })
         .eq("id", userId);
+
+      if (!error) return;
+
+      // Column missing → disable for the rest of the session.
+      // PGRST204: PostgREST schema-cache miss (column not in cache / not created).
+      // 42703:    Postgres "undefined column".
+      const code = (error as { code?: string }).code;
+      if (code === "PGRST204" || code === "42703") {
+        presenceDisabled = true;
+        console.warn(
+          "[usePresence] profiles.last_seen is not available — presence disabled for this session. Run the latest migration to enable it."
+        );
+        return;
+      }
+
+      // Any other error: log once, keep trying (transient network / RLS issue).
+      console.warn("[usePresence] last_seen update failed:", error);
     };
 
-    // Update immediately on mount
     updateLastSeen();
-
-    // Update every 60 seconds
     const interval = setInterval(updateLastSeen, 60000);
 
-    // Update on visibility change (tab becomes visible)
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         updateLastSeen();
