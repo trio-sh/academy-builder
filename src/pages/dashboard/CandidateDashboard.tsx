@@ -16,6 +16,16 @@ import { InteractiveSkillAssessment } from "@/components/assessment/InteractiveS
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import {
+  DashboardPageHeader,
+  DashSection,
+  LedgerStat,
+  LedgerBadge,
+  LedgerLoading,
+  EmptyState,
+} from "@/components/dashboard/primitives";
+import { cn } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -320,128 +330,146 @@ const Overview = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-      </div>
-    );
+    return <LedgerLoading />;
   }
 
+  const nextSteps = getNextSteps();
+  const completedSteps = nextSteps.filter((s) => s.completed).length;
+
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      {/* Welcome */}
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Welcome back, {profile?.first_name || "Candidate"}
-        </h1>
-        <p className="text-gray-400">
-          Track your progress and continue your observation journey.
-        </p>
-      </motion.div>
+    <div>
+      {/* Page header */}
+      <DashboardPageHeader
+        eyebrow={`§ Register · ${profile?.first_name || "Candidate"}'s desk`}
+        title={
+          <>
+            Welcome back,{" "}
+            <span className="italic display-serif-italic ink-vermilion">
+              {profile?.first_name || "candidate"}
+            </span>
+            .
+          </>
+        }
+        meta={`${completedSteps} of ${nextSteps.length} steps entered · Continue where the observation left off.`}
+      />
 
-      {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
-          >
-            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-indigo-600 to-purple-600 transition-opacity" />
-            <div className="relative">
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                <stat.icon className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-sm text-gray-400 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
+      {/* Standing figures */}
+      <DashSection eyebrow="§ I · Standing figures" title="At a glance">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {stats.map((stat) => (
+            <LedgerStat key={stat.label} label={stat.label} value={stat.value} />
+          ))}
+        </div>
+      </DashSection>
 
-      {/* Next Steps */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Your Journey</h2>
-        <div className="space-y-3">
-          {getNextSteps().map((step, index) => (
+      {/* Journey checklist as a numbered register */}
+      <DashSection
+        eyebrow="§ II · Your journey"
+        title={
+          <>
+            <span className="italic display-serif-italic">From profile</span> to evidence
+          </>
+        }
+      >
+        <div className="border-t-2 border-foreground">
+          {nextSteps.map((step, index) => (
             <Link
               key={index}
               to={step.href}
-              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+              className="row-hover grid grid-cols-12 gap-4 py-6 px-2 md:px-4 border-b border-foreground/20 items-baseline group"
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                step.completed
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-black text-gray-400"
-              }`}>
+              <div className="col-span-2 md:col-span-1">
+                <span
+                  className={cn(
+                    "ledger-num text-4xl leading-none",
+                    step.completed ? "text-foreground/30 line-through" : "text-foreground"
+                  )}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="col-span-8 md:col-span-8">
+                <h4
+                  className={cn(
+                    "display-serif text-xl md:text-2xl leading-tight",
+                    step.completed ? "text-foreground/40 line-through" : "text-foreground group-hover:italic transition-all"
+                  )}
+                >
+                  {step.title}
+                </h4>
+                <p className="text-foreground/70 text-[0.9375rem] mt-1 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+              <div className="col-span-2 md:col-span-3 text-right">
                 {step.completed ? (
-                  <CheckCircle className="w-5 h-5" />
+                  <LedgerBadge variant="outline">
+                    <CheckCircle className="w-3 h-3" /> Filed
+                  </LedgerBadge>
                 ) : (
-                  <span className="text-sm font-medium">{index + 1}</span>
+                  <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                    Enter →
+                  </span>
                 )}
               </div>
-              <div className="flex-1">
-                <p className={`font-medium ${step.completed ? "text-gray-400 line-through" : "text-white"}`}>
-                  {step.title}
-                </p>
-                <p className="text-sm text-gray-500">{step.description}</p>
-              </div>
-              {!step.completed && (
-                <ChevronRight className="w-5 h-5 text-gray-500" />
-              )}
             </Link>
           ))}
         </div>
-      </motion.div>
+      </DashSection>
 
-      {/* Recent Activity */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Recent Activity</h2>
+      {/* Recent activity */}
+      <DashSection eyebrow="§ III · Recent activity" title="Latest entries in your record">
         {recentActivity.length > 0 ? (
-          <div className="space-y-3">
-            {recentActivity.map((entry) => {
-              const Icon = getEventIcon(entry.event_type);
-              return (
-                <div
-                  key={entry.id}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-black border border-white/30"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-indigo-400" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white">{entry.title}</p>
-                    {entry.description && (
-                      <p className="text-sm text-gray-400 mt-1">{entry.description}</p>
-                    )}
-                    <p className="text-xs text-gray-500 mt-2">
-                      {new Date(entry.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
+          <div className="border-t-2 border-foreground">
+            {recentActivity.map((entry, index) => (
+              <div
+                key={entry.id}
+                className="grid grid-cols-12 gap-4 py-5 px-2 md:px-4 border-b border-foreground/20 items-baseline"
+              >
+                <div className="col-span-3 md:col-span-2">
+                  <span className="mono-num text-foreground/50 text-xs">
+                    {new Date(entry.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
                 </div>
-              );
-            })}
+                <div className="col-span-1 mono-label text-foreground/40">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+                <div className="col-span-8 md:col-span-9">
+                  <p className="display-serif text-lg text-foreground leading-tight">
+                    {entry.title}
+                  </p>
+                  {entry.description && (
+                    <p className="text-foreground/70 text-[0.875rem] mt-1 leading-relaxed">
+                      {entry.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
-            <AlertCircle className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No recent activity</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Complete your profile to get started
-            </p>
-          </div>
+          <EmptyState
+            eyebrow="§ No entries yet"
+            title={
+              <>
+                Your register is <span className="italic display-serif-italic">open.</span>
+              </>
+            }
+            body="Complete your profile and connect with a mentor to begin adding entries to the record."
+            action={
+              <Link to="/dashboard/candidate/profile">
+                <Button className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6">
+                  Complete profile →
+                </Button>
+              </Link>
+            }
+          />
         )}
-      </motion.div>
-    </motion.div>
+      </DashSection>
+    </div>
   );
 };
 
@@ -558,11 +586,11 @@ const SkillPassport = () => {
       developing: { label: "Developing", color: "text-amber-400" },
       emerging: { label: "Emerging", color: "text-blue-400" },
       ready: { label: "Job Ready", color: "text-emerald-400" },
-      silver: { label: "Silver", color: "text-gray-300" },
+      silver: { label: "Silver", color: "text-foreground/75" },
       gold: { label: "Gold", color: "text-amber-400" },
       platinum: { label: "Platinum", color: "text-emerald-400" },
     };
-    return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-gray-400" };
+    return labels[tier || "developing"] || { label: tier || "Unknown", color: "text-foreground/60" };
   };
 
   if (isLoading) {
@@ -582,21 +610,21 @@ const SkillPassport = () => {
         className="space-y-8"
       >
         <motion.div variants={itemVariants}>
-          <h1 className="text-3xl font-bold text-white mb-2">Behavioral Evidence Report</h1>
-          <p className="text-gray-400">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Behavioral Evidence Report</h1>
+          <p className="text-foreground/60">
             Your behavioral readiness documentation for the workplace.
           </p>
         </motion.div>
 
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 border border-indigo-500/20 text-center"
+          className="p-8 rounded-2xl bg-foreground/[0.04] border border-foreground/25 text-center"
         >
           <div className="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-10 h-10 text-indigo-400" />
+            <Shield className="w-10 h-10 ink-vermilion" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Earn Your Behavioral Evidence Report</h2>
-          <p className="text-gray-400 max-w-md mx-auto mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Earn Your Behavioral Evidence Report</h2>
+          <p className="text-foreground/60 max-w-md mx-auto mb-6">
             Complete L1 + L2 observations and receive a "Proceed" endorsement from your mentor.
             Your Behavioral Evidence Report documents observed behavioral readiness — earned, not generated.
           </p>
@@ -608,22 +636,22 @@ const SkillPassport = () => {
             return (
               <>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <CheckCircle className={`w-5 h-5 ${hasL1 ? "text-emerald-400" : "text-gray-600"}`} />
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <CheckCircle className={`w-5 h-5 ${hasL1 ? "text-emerald-400" : "text-foreground/40"}`} />
                     <span>L1 AI Observation</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <CheckCircle className={`w-5 h-5 ${hasL2 ? "text-emerald-400" : "text-gray-600"}`} />
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <CheckCircle className={`w-5 h-5 ${hasL2 ? "text-emerald-400" : "text-foreground/40"}`} />
                     <span>L2 Mentor Observation</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <CheckCircle className={`w-5 h-5 ${mdcMet ? "text-emerald-400" : "text-gray-600"}`} />
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <CheckCircle className={`w-5 h-5 ${mdcMet ? "text-emerald-400" : "text-foreground/40"}`} />
                     <span>MDC-3 ({dimensionsObserved}/3 dimensions)</span>
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <CheckCircle className={`w-5 h-5 text-gray-600`} />
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <CheckCircle className={`w-5 h-5 text-foreground/40`} />
                     <span>Mentor Endorsement (Proceed)</span>
                   </div>
                 </div>
@@ -634,7 +662,7 @@ const SkillPassport = () => {
           {/* Show dimension-level observation progress if any feedback exists */}
           {observationProgress.length > 0 && assignedDimensionIds.length > 0 && (
             <div className="mt-8 max-w-lg mx-auto">
-              <p className="text-sm text-gray-500 mb-3">Observation Evidence</p>
+              <p className="text-sm text-foreground/850 mb-3">Observation Evidence</p>
               <div className="space-y-3">
                 {assignedDimensionIds.map(dimId => {
                   const dimInfo = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
@@ -644,17 +672,17 @@ const SkillPassport = () => {
                   const latestScore = dimFeedback.find(f => f.bars_score)?.bars_score;
 
                   return (
-                    <div key={dimId} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/10">
+                    <div key={dimId} className="flex items-center justify-between p-3 rounded-xl bg-background border border-foreground/15">
                       <div className="flex items-center gap-3">
                         <div className={`w-2 h-2 rounded-full ${hasL1 || hasL2 ? "bg-emerald-400" : "bg-gray-600"}`} />
-                        <span className="text-sm text-white">{dimInfo?.label || dimId}</span>
+                        <span className="text-sm text-foreground">{dimInfo?.label || dimId}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         {latestScore && (
-                          <span className="text-xs text-gray-400">BARS: {latestScore}/4</span>
+                          <span className="text-xs text-foreground/60">BARS: {latestScore}/4</span>
                         )}
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL1 ? "bg-emerald-500/20 text-emerald-400" : "bg-white/5 text-gray-500"}`}>L1</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL2 ? "bg-blue-500/20 text-blue-400" : "bg-white/5 text-gray-500"}`}>L2</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL1 ? "bg-emerald-500/20 text-emerald-400" : "bg-white/5 text-foreground/850"}`}>L1</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL2 ? "bg-blue-500/20 text-blue-400" : "bg-white/5 text-foreground/850"}`}>L2</span>
                       </div>
                     </div>
                   );
@@ -665,7 +693,7 @@ const SkillPassport = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <h2 className="text-xl font-semibold text-white mb-4">How It Works</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {[
               {
@@ -686,13 +714,13 @@ const SkillPassport = () => {
             ].map((item) => (
               <div
                 key={item.step}
-                className="p-6 rounded-xl bg-black border border-white/30"
+                className="p-6 rounded-xl bg-background border border-foreground/25"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold mb-4">
+                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-foreground font-bold mb-4">
                   {item.step}
                 </div>
-                <h3 className="font-semibold text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-400">{item.description}</p>
+                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-foreground/60">{item.description}</p>
               </div>
             ))}
           </div>
@@ -714,13 +742,13 @@ const SkillPassport = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Your Behavioral Evidence Report</h1>
-          <p className="text-gray-400">Your documented behavioral readiness assessment for employers.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your Behavioral Evidence Report</h1>
+          <p className="text-foreground/60">Your documented behavioral readiness assessment for employers.</p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-black"
+            className="border-foreground/25 text-foreground hover:bg-foreground/5"
             onClick={sharePassport}
           >
             <Share2 className="w-4 h-4 mr-2" />
@@ -755,12 +783,12 @@ const SkillPassport = () => {
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt="Profile" className="w-16 h-16 rounded-2xl object-cover" />
               ) : (
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-foreground font-bold text-xl">
                   {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                 </div>
               )}
               <div>
-                <h2 className="text-2xl font-bold text-white">
+                <h2 className="text-2xl font-bold text-foreground">
                   {profile?.first_name} {profile?.last_name}
                 </h2>
                 <p className="text-emerald-400 font-medium">{profile?.headline || "Candidate"}</p>
@@ -776,17 +804,17 @@ const SkillPassport = () => {
 
           {/* Tier & Stats */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
-              <p className="text-sm text-gray-400 mb-1">Readiness Tier</p>
+            <div className="p-4 rounded-xl bg-background/20 backdrop-blur">
+              <p className="text-sm text-foreground/60 mb-1">Readiness Tier</p>
               <p className={`text-xl font-bold ${tierInfo.color}`}>{tierInfo.label}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
-              <p className="text-sm text-gray-400 mb-1">Dimensions Observed</p>
-              <p className="text-xl font-bold text-white">{Object.keys(behavioralScores).length}</p>
+            <div className="p-4 rounded-xl bg-background/20 backdrop-blur">
+              <p className="text-sm text-foreground/60 mb-1">Dimensions Observed</p>
+              <p className="text-xl font-bold text-foreground">{Object.keys(behavioralScores).length}</p>
             </div>
-            <div className="p-4 rounded-xl bg-black/20 backdrop-blur">
-              <p className="text-sm text-gray-400 mb-1">Valid Until</p>
-              <p className="text-xl font-bold text-white">
+            <div className="p-4 rounded-xl bg-background/20 backdrop-blur">
+              <p className="text-sm text-foreground/60 mb-1">Valid Until</p>
+              <p className="text-xl font-bold text-foreground">
                 {passportData?.expires_at
                   ? new Date(passportData.expires_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })
                   : "N/A"}
@@ -795,13 +823,13 @@ const SkillPassport = () => {
           </div>
 
           {/* Verification Code */}
-          <div className="p-4 rounded-xl bg-black/20 backdrop-blur mb-8">
+          <div className="p-4 rounded-xl bg-background/20 backdrop-blur mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <QrCode className="w-8 h-8 text-emerald-400" />
                 <div>
-                  <p className="text-xs text-gray-400 mb-1">Verification Code</p>
-                  <p className="text-lg font-mono font-bold text-white tracking-wider">
+                  <p className="text-xs text-foreground/60 mb-1">Verification Code</p>
+                  <p className="text-lg font-mono font-bold text-foreground tracking-wider">
                     {passportData?.verification_code || "N/A"}
                   </p>
                 </div>
@@ -819,7 +847,7 @@ const SkillPassport = () => {
           </div>
 
           {/* Issue Date */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center justify-between text-sm text-foreground/850">
             <span>
               Issued: {passportData?.issued_at
                 ? new Date(passportData.issued_at).toLocaleDateString()
@@ -832,7 +860,7 @@ const SkillPassport = () => {
 
       {/* Behavioral Scores — Only observed dimensions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Behavioral Assessment (BARS 4-Point Scale)</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Behavioral Assessment (BARS 4-Point Scale)</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {Object.entries(behavioralScores).filter(([, v]) => v > 0).map(([dimId, score]) => {
             const dimension = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
@@ -842,9 +870,9 @@ const SkillPassport = () => {
             const barsColor = score >= 3.5 ? "text-emerald-400" : score >= 2.5 ? "text-blue-400" : score >= 1.5 ? "text-amber-400" : "text-orange-400";
 
             return (
-              <div key={dimId} className="p-4 rounded-xl bg-black border border-white/10">
+              <div key={dimId} className="p-4 rounded-xl bg-background border border-foreground/15">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-white">{dimension.label}</span>
+                  <span className="font-medium text-foreground">{dimension.label}</span>
                   <span className={`text-lg font-bold ${barsColor}`}>{score.toFixed(1)}/4</span>
                 </div>
                 <p className={`text-xs mb-2 ${barsColor}`}>{barsLabel}</p>
@@ -865,18 +893,18 @@ const SkillPassport = () => {
         const scored = Object.values(behavioralScores).filter(v => v > 0);
         const avg = scored.length > 0 ? scored.reduce((a, b) => a + b, 0) / scored.length : 0;
         const label = avg >= 3.5 ? "Strong" : avg >= 2.5 ? "Competent" : avg >= 1.5 ? "Emerging" : "—";
-        const color = avg >= 3.5 ? "text-emerald-400" : avg >= 2.5 ? "text-blue-400" : avg >= 1.5 ? "text-amber-400" : "text-gray-400";
+        const color = avg >= 3.5 ? "text-emerald-400" : avg >= 2.5 ? "text-blue-400" : avg >= 1.5 ? "text-amber-400" : "text-foreground/60";
         return (
           <motion.div variants={itemVariants}>
             <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 mb-1">Overall Behavioral Readiness</p>
+                  <p className="text-foreground/60 mb-1">Overall Behavioral Readiness</p>
                   <p className={`text-3xl font-bold ${color}`}>{avg > 0 ? avg.toFixed(1) : "N/A"}/4</p>
                   <p className={`text-sm ${color}`}>{label}</p>
                 </div>
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                  <Award className="w-10 h-10 text-purple-400" />
+                  <Award className="w-10 h-10 ink-vermilion" />
                 </div>
               </div>
             </div>
@@ -886,10 +914,10 @@ const SkillPassport = () => {
 
       {/* Verification Info */}
       <motion.div variants={itemVariants}>
-        <div className="p-4 rounded-xl bg-black border border-white/30">
+        <div className="p-4 rounded-xl bg-background border border-foreground/25">
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-emerald-400" />
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-foreground/60">
               Employers can review this documentation at{" "}
               <span className="text-emerald-400 font-mono">
                 {window.location.origin}/verify/{passportData?.verification_code}
@@ -1068,8 +1096,8 @@ const GrowthLog = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Growth Log</h1>
-          <p className="text-gray-400">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Growth Log</h1>
+          <p className="text-foreground/60">
             Your complete behavioral development timeline.
           </p>
         </div>
@@ -1078,7 +1106,7 @@ const GrowthLog = () => {
             variant={viewMode === "charts" ? "default" : "outline"}
             size="sm"
             onClick={() => setViewMode("charts")}
-            className={viewMode === "charts" ? "bg-indigo-600" : "border-white/20 text-white"}
+            className={viewMode === "charts" ? "bg-indigo-600" : "border-foreground/25 text-foreground"}
           >
             <BarChart3 className="w-4 h-4 mr-2" />
             Analytics
@@ -1087,7 +1115,7 @@ const GrowthLog = () => {
             variant={viewMode === "timeline" ? "default" : "outline"}
             size="sm"
             onClick={() => setViewMode("timeline")}
-            className={viewMode === "timeline" ? "bg-indigo-600" : "border-white/20 text-white"}
+            className={viewMode === "timeline" ? "bg-indigo-600" : "border-foreground/25 text-foreground"}
           >
             <Clock className="w-4 h-4 mr-2" />
             Timeline
@@ -1098,30 +1126,30 @@ const GrowthLog = () => {
       {/* Stats Overview */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border border-blue-500/20">
-          <p className="text-sm text-gray-400 mb-1">Total Activities</p>
-          <p className="text-2xl font-bold text-white">{entries.length}</p>
+          <p className="text-sm text-foreground/60 mb-1">Total Activities</p>
+          <p className="text-2xl font-bold text-foreground">{entries.length}</p>
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border border-emerald-500/20">
-          <p className="text-sm text-gray-400 mb-1">This Week</p>
-          <p className="text-2xl font-bold text-white">{growthStats.thisWeek}</p>
+          <p className="text-sm text-foreground/60 mb-1">This Week</p>
+          <p className="text-2xl font-bold text-foreground">{growthStats.thisWeek}</p>
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/20">
-          <p className="text-sm text-gray-400 mb-1">Growth Rate</p>
+          <p className="text-sm text-foreground/60 mb-1">Growth Rate</p>
           <p className={`text-2xl font-bold ${growthStats.growthRate >= 0 ? "text-emerald-400" : "text-red-400"}`}>
             {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
           </p>
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 border border-amber-500/20">
-          <p className="text-sm text-gray-400 mb-1">Event Types</p>
-          <p className="text-2xl font-bold text-white">{eventDistribution.length}</p>
+          <p className="text-sm text-foreground/60 mb-1">Event Types</p>
+          <p className="text-2xl font-bold text-foreground">{eventDistribution.length}</p>
         </div>
       </motion.div>
 
       {viewMode === "charts" && (
         <>
           {/* Activity Trends Chart */}
-          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-            <h2 className="text-lg font-semibold text-white mb-4">Activity Trends (Last 30 Days)</h2>
+          <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+            <h2 className="text-lg font-semibold text-foreground mb-4">Activity Trends (Last 30 Days)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={activityData}>
@@ -1165,8 +1193,8 @@ const GrowthLog = () => {
 
           {/* Behavioral Dimensions Radar */}
           <div className="grid md:grid-cols-2 gap-6">
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-              <h2 className="text-lg font-semibold text-white mb-4">Behavioral Profile</h2>
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+              <h2 className="text-lg font-semibold text-foreground mb-4">Behavioral Profile</h2>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData}>
@@ -1201,8 +1229,8 @@ const GrowthLog = () => {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-              <h2 className="text-lg font-semibold text-white mb-4">Activity Breakdown</h2>
+            <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+              <h2 className="text-lg font-semibold text-foreground mb-4">Activity Breakdown</h2>
               <div className="space-y-3">
                 {eventDistribution.map((item) => {
                   const maxCount = Math.max(...eventDistribution.map((e) => e.count));
@@ -1210,12 +1238,12 @@ const GrowthLog = () => {
                   return (
                     <div key={item.type}>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-400">{item.type}</span>
-                        <span className="text-white font-medium">{item.count}</span>
+                        <span className="text-foreground/60">{item.type}</span>
+                        <span className="text-foreground font-medium">{item.count}</span>
                       </div>
-                      <div className="h-2 bg-black rounded-full overflow-hidden">
+                      <div className="h-2 bg-background rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                          className="h-full bg-foreground rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -1223,7 +1251,7 @@ const GrowthLog = () => {
                   );
                 })}
                 {eventDistribution.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No activities recorded yet</p>
+                  <p className="text-foreground/850 text-center py-4">No activities recorded yet</p>
                 )}
               </div>
             </motion.div>
@@ -1236,7 +1264,7 @@ const GrowthLog = () => {
           {entries.length > 0 ? (
             <motion.div variants={itemVariants} className="relative">
               {/* Timeline line */}
-              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-foreground" />
 
               <div className="space-y-6">
                 {entries.map((entry, index) => {
@@ -1251,13 +1279,13 @@ const GrowthLog = () => {
                     >
                       {/* Timeline dot */}
                       <div className={`absolute left-0 w-10 h-10 rounded-xl bg-gradient-to-br ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
-                        <Icon className="w-5 h-5 text-white" />
+                        <Icon className="w-5 h-5 text-foreground" />
                       </div>
 
-                      <div className="p-5 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors">
+                      <div className="p-5 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors">
                         <div className="flex items-start justify-between mb-2">
-                          <h3 className="font-semibold text-white">{entry.title}</h3>
-                          <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                          <h3 className="font-semibold text-foreground">{entry.title}</h3>
+                          <span className="text-xs text-foreground/850 whitespace-nowrap ml-4">
                             {new Date(entry.created_at).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -1266,10 +1294,10 @@ const GrowthLog = () => {
                           </span>
                         </div>
                         {entry.description && (
-                          <p className="text-sm text-gray-400">{entry.description}</p>
+                          <p className="text-sm text-foreground/60">{entry.description}</p>
                         )}
                         {entry.source_component && (
-                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-black text-gray-400">
+                          <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-background text-foreground/60">
                             {entry.source_component}
                           </span>
                         )}
@@ -1282,11 +1310,11 @@ const GrowthLog = () => {
           ) : (
             <motion.div
               variants={itemVariants}
-              className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+              className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
             >
-              <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400">No entries yet</p>
-              <p className="text-sm text-gray-500 mt-1">
+              <TrendingUp className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+              <p className="text-foreground/60">No entries yet</p>
+              <p className="text-sm text-foreground/850 mt-1">
                 Your growth log will populate as you complete activities
               </p>
             </motion.div>
@@ -1533,7 +1561,7 @@ const ObservationPathway = () => {
       case 2: return "text-amber-400";
       case 3: return "text-blue-400";
       case 4: return "text-emerald-400";
-      default: return "text-gray-400";
+      default: return "text-foreground/60";
     }
   };
 
@@ -1555,11 +1583,11 @@ const ObservationPathway = () => {
         className="max-w-3xl mx-auto space-y-8"
       >
         <motion.div variants={itemVariants} className="text-center py-12">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-10 h-10 text-indigo-400" />
+          <div className="w-20 h-20 rounded-2xl bg-foreground/[0.03] flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-10 h-10 ink-vermilion" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Observation Pathway</h1>
-          <p className="text-gray-400 max-w-xl mx-auto mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-3">Observation Pathway</h1>
+          <p className="text-foreground/60 max-w-xl mx-auto mb-6">
             The Observation Pathway requires an active mentor assignment. Your mentor will assign behavioral dimensions for observation and guide you through the assessment process.
           </p>
           <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 inline-flex items-start gap-3 max-w-lg text-left">
@@ -1575,7 +1603,7 @@ const ObservationPathway = () => {
             <Link to="/dashboard/candidate/mentors">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="bg-foreground hover:bg-foreground/90"
               >
                 <GraduationCap className="w-5 h-5 mr-2" />
                 Find a Mentor
@@ -1589,12 +1617,12 @@ const ObservationPathway = () => {
               { step: "2", title: "Dimensions Assigned", desc: "Your mentor selects behavioral dimensions for observation" },
               { step: "3", title: "Begin Observations", desc: "Complete L1–L4 observation sessions on assigned dimensions" },
             ].map((item) => (
-              <div key={item.step} className="p-4 rounded-xl bg-black border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm mb-3">
+              <div key={item.step} className="p-4 rounded-xl bg-background border border-foreground/15">
+                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center ink-vermilion font-bold text-sm mb-3">
                   {item.step}
                 </div>
-                <h3 className="font-semibold text-white text-sm">{item.title}</h3>
-                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                <h3 className="font-semibold text-foreground text-sm">{item.title}</h3>
+                <p className="text-xs text-foreground/850 mt-1">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -1613,28 +1641,28 @@ const ObservationPathway = () => {
         className="max-w-3xl mx-auto space-y-8"
       >
         <motion.div variants={itemVariants}>
-          <h1 className="text-3xl font-bold text-white mb-2">Observation Pathway</h1>
-          <p className="text-gray-400">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Observation Pathway</h1>
+          <p className="text-foreground/60">
             You are assigned to mentor {mentorProfile?.first_name} {mentorProfile?.last_name}.
           </p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black border border-white/10 text-center">
+        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-background border border-foreground/15 text-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto mb-4">
             <Clock className="w-8 h-8 text-amber-400" />
           </div>
-          <h2 className="text-xl font-semibold text-white mb-2">Awaiting Dimension Assignment</h2>
-          <p className="text-gray-400 max-w-md mx-auto">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Awaiting Dimension Assignment</h2>
+          <p className="text-foreground/60 max-w-md mx-auto">
             Your mentor has not yet assigned behavioral dimensions for your observation. Once dimensions are assigned, you will be able to begin your L1 observation session.
           </p>
-          <p className="text-sm text-gray-500 mt-4">
+          <p className="text-sm text-foreground/850 mt-4">
             Your mentor will be notified that you are ready to begin.
           </p>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-            <p className="text-sm text-indigo-300">
+          <div className="p-4 rounded-xl bg-indigo-500/10 border border-foreground/25">
+            <p className="text-sm ink-vermilion">
               While you wait, you can use the <Link to="/dashboard/candidate/assessment" className="underline font-medium">Readiness Reflection</Link> tool in the Preparation section to self-assess your behavioral readiness. This is personal and will not appear in your Behavioral Evidence Report.
             </p>
           </div>
@@ -1655,8 +1683,8 @@ const ObservationPathway = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Your Observation Pathway</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Your Observation Pathway</h1>
+        <p className="text-foreground/60">
           Observation sessions on your mentor-assigned dimensions. All feedback is documented and assessed by your mentor.
         </p>
         <div className="mt-3 flex items-center gap-3">
@@ -1664,7 +1692,7 @@ const ObservationPathway = () => {
             <CheckCircle className="w-4 h-4" />
             Mentor: {mentorProfile?.first_name} {mentorProfile?.last_name}
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 text-sm text-indigo-400">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 text-sm ink-vermilion">
             <ClipboardCheck className="w-4 h-4" />
             {assignedDimensions.length} Dimensions Assigned
           </div>
@@ -1673,7 +1701,7 @@ const ObservationPathway = () => {
 
       {/* MVP Observation Pipeline: L1 → L2 → Endorsement */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Observation Pipeline</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Observation Pipeline</h2>
         <div className="grid md:grid-cols-3 gap-4">
           {/* L1 — AI Scenarios */}
           {(() => {
@@ -1682,13 +1710,13 @@ const ObservationPathway = () => {
             const l1AllComplete = assignedDimensions.length > 0 && assignedDimensions.every(d => l1ScoredDims.has(d));
             const l1Partial = l1Feedback.length > 0 && !l1AllComplete;
             return (
-              <div className={`p-5 rounded-xl border ${l1AllComplete ? "bg-emerald-500/10 border-emerald-500/30" : l1Partial ? "bg-amber-500/10 border-amber-500/30" : "bg-black border-white/10"}`}>
+              <div className={`p-5 rounded-xl border ${l1AllComplete ? "bg-emerald-500/10 border-emerald-500/30" : l1Partial ? "bg-amber-500/10 border-amber-500/30" : "bg-background border-foreground/15"}`}>
                 <div className="flex items-center justify-between mb-3">
                   <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400">L1</span>
                   {l1AllComplete && <CheckCircle className="w-4 h-4 text-emerald-400" />}
                 </div>
-                <h3 className="font-semibold text-white mb-1">AI-Driven Scenarios</h3>
-                <p className="text-xs text-gray-400 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
+                <h3 className="font-semibold text-foreground mb-1">AI-Driven Scenarios</h3>
+                <p className="text-xs text-foreground/60 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
                 {l1AllComplete ? (
                   <p className="text-xs text-emerald-400 font-medium">L1 Complete — {l1ScoredDims.size}/{assignedDimensions.length} dimensions scored</p>
                 ) : (
@@ -1714,19 +1742,19 @@ const ObservationPathway = () => {
             const l2Complete = l2Feedback.length > 0;
             const l1Complete = observationFeedback.some(f => f.feedback_level === 1);
             return (
-              <div className={`p-5 rounded-xl border ${l2Complete ? "bg-blue-500/10 border-blue-500/30" : l1Complete ? "bg-black border-white/10" : "bg-black/50 border-white/5 opacity-60"}`}>
+              <div className={`p-5 rounded-xl border ${l2Complete ? "bg-blue-500/10 border-blue-500/30" : l1Complete ? "bg-background border-foreground/15" : "bg-background/50 border-foreground/10 opacity-60"}`}>
                 <div className="flex items-center justify-between mb-3">
                   <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400">L2</span>
                   {l2Complete && <CheckCircle className="w-4 h-4 text-blue-400" />}
                 </div>
-                <h3 className="font-semibold text-white mb-1">Mentor Live Observation</h3>
-                <p className="text-xs text-gray-400 mb-4">Solo, synchronous. Your mentor observes your behaviour in a live session using structured prompts.</p>
+                <h3 className="font-semibold text-foreground mb-1">Mentor Live Observation</h3>
+                <p className="text-xs text-foreground/60 mb-4">Solo, synchronous. Your mentor observes your behaviour in a live session using structured prompts.</p>
                 {l2Complete ? (
                   <p className="text-xs text-blue-400 font-medium">L2 Complete — Mentor reviewed</p>
                 ) : l1Complete ? (
                   <p className="text-xs text-amber-400 font-medium">Awaiting mentor scheduling</p>
                 ) : (
-                  <p className="text-xs text-gray-500">Complete L1 first</p>
+                  <p className="text-xs text-foreground/850">Complete L1 first</p>
                 )}
               </div>
             );
@@ -1750,24 +1778,24 @@ const ObservationPathway = () => {
             };
             const decision = endorsementDecision ? decisionLabels[endorsementDecision] : null;
             return (
-              <div className={`p-5 rounded-xl border ${endorsementDecision ? decisionColors[endorsementDecision] || "bg-black border-white/10" : "bg-black border-white/10"} ${!l1Complete ? "opacity-60" : ""}`}>
+              <div className={`p-5 rounded-xl border ${endorsementDecision ? decisionColors[endorsementDecision] || "bg-background border-foreground/15" : "bg-background border-foreground/15"} ${!l1Complete ? "opacity-60" : ""}`}>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-400">Decision</span>
+                  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 ink-vermilion">Decision</span>
                   {endorsementDecision === "proceed" && <Award className="w-4 h-4 text-emerald-400" />}
                 </div>
-                <h3 className="font-semibold text-white mb-1">Mentor Endorsement</h3>
-                <p className="text-xs text-gray-400 mb-4">Your mentor reviews all observation evidence and makes an endorsement decision.</p>
+                <h3 className="font-semibold text-foreground mb-1">Mentor Endorsement</h3>
+                <p className="text-xs text-foreground/60 mb-4">Your mentor reviews all observation evidence and makes an endorsement decision.</p>
                 {decision ? (
                   <div>
                     <p className={`text-sm font-bold ${decision.color}`}>{decision.label}</p>
-                    <p className="text-xs text-gray-400 mt-1">{decision.desc}</p>
+                    <p className="text-xs text-foreground/60 mt-1">{decision.desc}</p>
                   </div>
                 ) : l1Complete && l2Complete ? (
                   <p className="text-xs text-amber-400 font-medium">Awaiting mentor endorsement</p>
                 ) : l1Complete ? (
-                  <p className="text-xs text-gray-500">Complete L2 first</p>
+                  <p className="text-xs text-foreground/850">Complete L2 first</p>
                 ) : (
-                  <p className="text-xs text-gray-500">Complete L1 and L2 first</p>
+                  <p className="text-xs text-foreground/850">Complete L1 and L2 first</p>
                 )}
               </div>
             );
@@ -1775,16 +1803,16 @@ const ObservationPathway = () => {
         </div>
 
         {/* L3/L4 Post-Launch notice */}
-        <div className="mt-4 p-3 rounded-xl bg-black/50 border border-white/5">
-          <p className="text-xs text-gray-500">
-            <span className="font-medium text-gray-400">Coming post-launch:</span> L3 Work Sample Evaluation and L4 Peer/Team Simulation will be added to strengthen your behavioral evidence profile.
+        <div className="mt-4 p-3 rounded-xl bg-background/50 border border-foreground/10">
+          <p className="text-xs text-foreground/850">
+            <span className="font-medium text-foreground/60">Coming post-launch:</span> L3 Work Sample Evaluation and L4 Peer/Team Simulation will be added to strengthen your behavioral evidence profile.
           </p>
         </div>
       </motion.div>
 
       {/* Assigned Dimensions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Assigned Dimensions</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Assigned Dimensions</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {mvpDimensions.map((dim) => {
             const dimFeedback = observationFeedback.filter(f => f.dimension_id === dim.id);
@@ -1792,11 +1820,11 @@ const ObservationPathway = () => {
             const completedLevels = new Set(dimFeedback.filter(f => f.status === 'ai_delivered' || f.status === 'approved').map(f => f.feedback_level)).size;
 
             return (
-              <div key={dim.id} className="p-5 rounded-xl bg-black border border-white/10">
+              <div key={dim.id} className="p-5 rounded-xl bg-background border border-foreground/15">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="font-semibold text-white">{dim.label}</h3>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <h3 className="font-semibold text-foreground">{dim.label}</h3>
+                    <p className="text-xs text-foreground/850 mt-1">
                       {completedLevels}/2 levels documented
                     </p>
                   </div>
@@ -1827,7 +1855,7 @@ const ObservationPathway = () => {
                             ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                             : isPending
                             ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                            : "bg-white/5 text-gray-500 border border-white/10"
+                            : "bg-white/5 text-foreground/850 border border-foreground/15"
                         }`}
                         title={`${label}: ${isComplete ? "Complete" : isPending ? "Awaiting review" : "Not started"}`}
                       >
@@ -1843,7 +1871,7 @@ const ObservationPathway = () => {
                   const hasCooldown = latest.cooldown_ends_at && new Date(latest.cooldown_ends_at) > new Date();
                   return (
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-[10px] text-gray-500">Loop {dimLoops.length}/3</span>
+                      <span className="text-[10px] text-foreground/850">Loop {dimLoops.length}/3</span>
                       {hasCooldown && <span className="text-[10px] text-amber-400">Cooldown active</span>}
                       {latest.endorsement_decision === 'proceed' && <span className="text-[10px] text-emerald-400">Endorsed</span>}
                     </div>
@@ -1858,20 +1886,20 @@ const ObservationPathway = () => {
       {/* Feedback History */}
       {observationFeedback.filter(f => f.final_feedback).length > 0 && (
         <motion.div variants={itemVariants}>
-          <h2 className="text-xl font-semibold text-white mb-4">Observation Feedback</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Observation Feedback</h2>
           <div className="space-y-3">
             {observationFeedback
               .filter(f => f.final_feedback)
               .map((fb, i) => {
                 const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === fb.dimension_id);
                 return (
-                  <div key={i} className="p-4 rounded-xl bg-black border border-white/10">
+                  <div key={i} className="p-4 rounded-xl bg-background border border-foreground/15">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-400">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 ink-vermilion">
                           L{fb.feedback_level}
                         </span>
-                        <span className="font-medium text-white text-sm">{dim?.label}</span>
+                        <span className="font-medium text-foreground text-sm">{dim?.label}</span>
                       </div>
                       {fb.bars_score && (
                         <span className={`font-bold ${getBarsColor(fb.bars_score)}`}>
@@ -1879,7 +1907,7 @@ const ObservationPathway = () => {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-400">{fb.final_feedback}</p>
+                    <p className="text-sm text-foreground/60">{fb.final_feedback}</p>
                   </div>
                 );
               })}
@@ -1889,8 +1917,8 @@ const ObservationPathway = () => {
 
       {/* BARS Scale Reference */}
       <motion.div variants={itemVariants}>
-        <div className="p-4 rounded-xl bg-black border border-white/10">
-          <h3 className="text-sm font-semibold text-gray-400 mb-3">4-Point BARS Scoring Reference</h3>
+        <div className="p-4 rounded-xl bg-background border border-foreground/15">
+          <h3 className="text-sm font-semibold text-foreground/60 mb-3">4-Point BARS Scoring Reference</h3>
           <div className="grid grid-cols-4 gap-3">
             {[
               { score: 1, label: "Not Yet Demonstrated", desc: "Behaviour not observed or inconsistent", color: "text-orange-400" },
@@ -1901,7 +1929,7 @@ const ObservationPathway = () => {
               <div key={item.score} className="text-center">
                 <span className={`text-lg font-bold ${item.color}`}>{item.score}</span>
                 <p className={`text-xs font-medium ${item.color}`}>{item.label}</p>
-                <p className="text-[10px] text-gray-500 mt-1">{item.desc}</p>
+                <p className="text-[10px] text-foreground/850 mt-1">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -2080,8 +2108,8 @@ const SelfAssessmentPage = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Readiness Reflection</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Readiness Reflection</h1>
+        <p className="text-foreground/60">
           A personal reflection tool to help you prepare for your formal observation sessions.
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
@@ -2103,18 +2131,18 @@ const SelfAssessmentPage = () => {
             <CheckCircle className="w-5 h-5 text-emerald-400" />
             <span className="text-emerald-300">Reflection saved successfully!</span>
           </div>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30">
+          <div className="p-6 rounded-xl bg-foreground/[0.03] border border-foreground/25">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shrink-0">
-                <GraduationCap className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center shrink-0">
+                <GraduationCap className="w-6 h-6 text-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-white mb-1">Ready for the Next Step?</h3>
-                <p className="text-sm text-gray-400 mb-4">
+                <h3 className="font-semibold text-foreground mb-1">Ready for the Next Step?</h3>
+                <p className="text-sm text-foreground/60 mb-4">
                   Now that you have completed your self-reflection, connect with a mentor to begin your formal Observation Pathway. Your mentor will guide you through behavioral assessments and help you earn your Behavioral Evidence Report.
                 </p>
                 <Link to="/dashboard/candidate/mentors">
-                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                  <Button className="bg-foreground hover:bg-foreground/90">
                     <GraduationCap className="w-4 h-4 mr-2" />
                     Find a Mentor
                     <ArrowRight className="w-4 h-4 ml-2" />
@@ -2134,22 +2162,22 @@ const SelfAssessmentPage = () => {
               onClick={() => setActiveStep(index)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 activeStep === index
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-indigo-600 text-foreground"
                   : activeStep > index
                   ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-black text-gray-400 hover:bg-black"
+                  : "bg-background text-foreground/60 hover:bg-foreground/5"
               }`}
             >
               {activeStep > index ? (
                 <CheckCircle className="w-4 h-4" />
               ) : (
-                <span className="w-5 h-5 rounded-full bg-black flex items-center justify-center text-xs">
+                <span className="w-5 h-5 rounded-full bg-background flex items-center justify-center text-xs">
                   {index + 1}
                 </span>
               )}
               <span className="hidden sm:inline">{step}</span>
             </button>
-            {index < 4 && <ChevronRight className="w-4 h-4 text-gray-600 mx-1" />}
+            {index < 4 && <ChevronRight className="w-4 h-4 text-foreground/40 mx-1" />}
           </div>
         ))}
       </motion.div>
@@ -2166,8 +2194,8 @@ const SelfAssessmentPage = () => {
           <div className="space-y-6">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Readiness Reflection</h1>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <h1 className="text-3xl font-bold text-foreground mb-2">Readiness Reflection</h1>
+              <p className="text-foreground/60 max-w-2xl mx-auto">
                 A self-directed preparation tool to reflect on your behavioral readiness before your formal observation sessions.
               </p>
               <div className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 inline-flex items-center gap-2">
@@ -2185,15 +2213,15 @@ const SelfAssessmentPage = () => {
                   <Sparkles className="w-7 h-7 text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-1">Guided Self-Reflection</h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <h3 className="text-lg font-semibold text-foreground mb-1">Guided Self-Reflection</h3>
+                  <p className="text-foreground/60 text-sm mb-4">
                     A guided, immersive journey through all 14 behavioral dimensions with narrative introductions,
                     thoughtful prompts, and voice narration. Rate yourself through self-reflection.
                   </p>
                   <Link to="/dashboard/candidate/assessment/interactive">
                     <Button
                       variant="outline"
-                      className="border-amber-500/30 text-gray-300 hover:bg-amber-500/10"
+                      className="border-amber-500/30 text-foreground/75 hover:bg-amber-500/10"
                     >
                       Start Guided Reflection
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -2204,20 +2232,20 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Quick Reflection */}
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
               <div className="flex flex-col md:flex-row items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center">
-                  <Sliders className="w-7 h-7 text-gray-400" />
+                <div className="w-14 h-14 rounded-xl bg-foreground/[0.06] flex items-center justify-center">
+                  <Sliders className="w-7 h-7 text-foreground/60" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-1">Quick Reflection</h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <h3 className="text-lg font-semibold text-foreground mb-1">Quick Reflection</h3>
+                  <p className="text-foreground/60 text-sm mb-4">
                     Rate all 14 dimensions directly with sliders. Best for quick updates or when you are already familiar
                     with the reflection process.
                   </p>
                   <Button
                     variant="outline"
-                    className="border-white/20 text-gray-300 hover:bg-black"
+                    className="border-foreground/25 text-foreground/75 hover:bg-foreground/5"
                     onClick={() => setActiveStep(1)}
                   >
                     Start Quick Reflection
@@ -2232,40 +2260,40 @@ const SelfAssessmentPage = () => {
               {[
                 { icon: Target, text: "Identify strengths & growth areas", color: "text-emerald-400" },
                 { icon: TrendingUp, text: "Track progress over time", color: "text-blue-400" },
-                { icon: Users, text: "Prepare for mentor observations", color: "text-purple-400" },
+                { icon: Users, text: "Prepare for mentor observations", color: "ink-vermilion" },
                 { icon: Award, text: "Personal development only", color: "text-amber-400" },
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-black border border-white/30 text-center">
+                <div key={i} className="p-4 rounded-xl bg-background border border-foreground/25 text-center">
                   <item.icon className={`w-6 h-6 ${item.color} mx-auto mb-2`} />
-                  <span className="text-sm text-gray-400">{item.text}</span>
+                  <span className="text-sm text-foreground/60">{item.text}</span>
                 </div>
               ))}
             </div>
 
             {/* Readiness Reflection History */}
             {assessments.length > 0 && (
-              <div className="p-6 rounded-2xl bg-black border border-white/30">
-                <h3 className="text-lg font-semibold text-white mb-4">Your Readiness Reflections</h3>
+              <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Your Readiness Reflections</h3>
                 <div className="space-y-3">
                   {assessments.slice(0, 3).map((assessment, i) => {
                     const scores = assessment.behavioral_scores as Record<string, number>;
                     const overall = scores ? Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length : 0;
                     return (
-                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-black">
+                      <div key={assessment.id} className="flex items-center justify-between p-3 rounded-lg bg-background">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                            <ClipboardCheck className="w-5 h-5 text-indigo-400" />
+                            <ClipboardCheck className="w-5 h-5 ink-vermilion" />
                           </div>
                           <div>
-                            <p className="text-sm text-white">Readiness Reflection</p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-sm text-foreground">Readiness Reflection</p>
+                            <p className="text-xs text-foreground/850">
                               {new Date(assessment.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
                           <p className={`text-lg font-bold ${getScoreColor(overall)}`}>{overall.toFixed(1)}</p>
-                          <p className="text-xs text-gray-500">{getScoreLabel(overall)}</p>
+                          <p className="text-xs text-foreground/850">{getScoreLabel(overall)}</p>
                         </div>
                       </div>
                     );
@@ -2279,9 +2307,9 @@ const SelfAssessmentPage = () => {
         {/* Rate Skills Step */}
         {activeStep === 1 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-2">Rate Your Behavioral Skills</h2>
-              <p className="text-gray-400 mb-6">
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-2">Rate Your Behavioral Skills</h2>
+              <p className="text-foreground/60 mb-6">
                 Use the sliders to rate yourself on each dimension from 1 (Beginning) to 5 (Excellent).
               </p>
 
@@ -2291,11 +2319,11 @@ const SelfAssessmentPage = () => {
                   const score = currentScores[dim.id] || 3;
 
                   return (
-                    <div key={dim.id} className="p-4 rounded-xl bg-black border border-white/30">
+                    <div key={dim.id} className="p-4 rounded-xl bg-background border border-foreground/25">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h3 className="font-semibold text-white">{info.title}</h3>
-                          <p className="text-sm text-gray-400">{info.description}</p>
+                          <h3 className="font-semibold text-foreground">{info.title}</h3>
+                          <p className="text-sm text-foreground/60">{info.description}</p>
                         </div>
                         <div className="text-right">
                           <span className={`text-2xl font-bold ${getScoreColor(score)}`}>{score.toFixed(1)}</span>
@@ -2310,10 +2338,10 @@ const SelfAssessmentPage = () => {
                         step="0.5"
                         value={score}
                         onChange={(e) => setCurrentScores({ ...currentScores, [dim.id]: parseFloat(e.target.value) })}
-                        className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                        className="w-full h-2 bg-background rounded-lg appearance-none cursor-pointer accent-indigo-500"
                       />
 
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <div className="flex justify-between text-xs text-foreground/850 mt-1">
                         <span>Beginning</span>
                         <span>Emerging</span>
                         <span>Developing</span>
@@ -2323,7 +2351,7 @@ const SelfAssessmentPage = () => {
 
                       <div className="mt-3 flex flex-wrap gap-2">
                         {info.examples.map((ex) => (
-                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-black text-gray-400">
+                          <span key={ex} className="px-2 py-1 text-xs rounded-full bg-background text-foreground/60">
                             {ex}
                           </span>
                         ))}
@@ -2335,8 +2363,8 @@ const SelfAssessmentPage = () => {
             </div>
 
             {/* Radar Preview */}
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h3 className="text-lg font-semibold text-white mb-4">Your Skills Profile</h3>
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Your Skills Profile</h3>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={getRadarData()}>
@@ -2354,17 +2382,17 @@ const SelfAssessmentPage = () => {
                 </ResponsiveContainer>
               </div>
               <div className="text-center mt-4">
-                <span className="text-3xl font-bold text-white">{getOverallScore().toFixed(1)}</span>
-                <span className="text-gray-400 ml-2">/ 5.0 Overall</span>
+                <span className="text-3xl font-bold text-foreground">{getOverallScore().toFixed(1)}</span>
+                <span className="text-foreground/60 ml-2">/ 5.0 Overall</span>
               </div>
             </div>
 
             <div className="flex justify-between">
-              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(0)}>
+              <Button variant="outline" className="border-foreground/25" onClick={() => setActiveStep(0)}>
                 Back
               </Button>
               <Button
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="bg-foreground hover:bg-foreground/90"
                 onClick={() => setActiveStep(2)}
               >
                 Continue to Reflect
@@ -2377,9 +2405,9 @@ const SelfAssessmentPage = () => {
         {/* Reflect Step */}
         {activeStep === 2 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-2">Identify Your Strengths</h2>
-              <p className="text-gray-400 mb-6">
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-2">Identify Your Strengths</h2>
+              <p className="text-foreground/60 mb-6">
                 Select up to 3 dimensions that you consider your strongest areas.
               </p>
 
@@ -2391,38 +2419,38 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       strengths.includes(dim.id)
                         ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
-                        : "bg-black border-white/30 hover:border-white/20"
+                        : "bg-background border-foreground/25 hover:border-foreground/25"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-black"
+                          strengths.includes(dim.id) ? "bg-emerald-500" : "bg-background"
                         }`}
                       >
                         {strengths.includes(dim.id) ? (
-                          <CheckCircle className="w-5 h-5 text-white" />
+                          <CheckCircle className="w-5 h-5 text-foreground" />
                         ) : (
-                          <Target className="w-5 h-5 text-gray-400" />
+                          <Target className="w-5 h-5 text-foreground/60" />
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
-                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                        <p className="font-medium text-foreground">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-foreground/60">Score: {currentScores[dim.id].toFixed(1)}</p>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground/850 mt-4">
                 {strengths.length}/3 selected
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-2">Areas for Improvement</h2>
-              <p className="text-gray-400 mb-6">
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-2">Areas for Improvement</h2>
+              <p className="text-foreground/60 mb-6">
                 Select up to 3 dimensions you want to focus on improving.
               </p>
 
@@ -2434,52 +2462,52 @@ const SelfAssessmentPage = () => {
                     className={`p-4 rounded-xl border text-left transition-all ${
                       improvements.includes(dim.id)
                         ? "bg-amber-500/20 border-amber-500/50 ring-2 ring-amber-500/30"
-                        : "bg-black border-white/30 hover:border-white/20"
+                        : "bg-background border-foreground/25 hover:border-foreground/25"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-black"
+                          improvements.includes(dim.id) ? "bg-amber-500" : "bg-background"
                         }`}
                       >
                         {improvements.includes(dim.id) ? (
-                          <CheckCircle className="w-5 h-5 text-white" />
+                          <CheckCircle className="w-5 h-5 text-foreground" />
                         ) : (
-                          <TrendingUp className="w-5 h-5 text-gray-400" />
+                          <TrendingUp className="w-5 h-5 text-foreground/60" />
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-white">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
-                        <p className="text-sm text-gray-400">Score: {currentScores[dim.id].toFixed(1)}</p>
+                        <p className="font-medium text-foreground">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</p>
+                        <p className="text-sm text-foreground/60">Score: {currentScores[dim.id].toFixed(1)}</p>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground/850 mt-4">
                 {improvements.length}/3 selected
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-4">Additional Notes</h2>
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-4">Additional Notes</h2>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add any reflections on your current skill levels..."
-                className="w-full p-4 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-background border border-foreground/25 text-foreground placeholder:text-foreground/850 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={4}
               />
             </div>
 
             <div className="flex justify-between">
-              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(1)}>
+              <Button variant="outline" className="border-foreground/25" onClick={() => setActiveStep(1)}>
                 Back
               </Button>
               <Button
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="bg-foreground hover:bg-foreground/90"
                 onClick={() => setActiveStep(3)}
               >
                 Continue to Goals
@@ -2492,9 +2520,9 @@ const SelfAssessmentPage = () => {
         {/* Goals Step */}
         {activeStep === 3 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-2">Set Your Goals</h2>
-              <p className="text-gray-400 mb-6">
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-2">Set Your Goals</h2>
+              <p className="text-foreground/60 mb-6">
                 What do you want to achieve in your professional development journey?
               </p>
 
@@ -2502,26 +2530,26 @@ const SelfAssessmentPage = () => {
                 value={goals}
                 onChange={(e) => setGoals(e.target.value)}
                 placeholder="Example: I want to improve my communication skills by actively participating in team meetings and seeking feedback from my mentor. I also aim to develop better time management habits by using task prioritization techniques..."
-                className="w-full p-4 rounded-xl bg-black border border-white/30 text-white placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 rounded-xl bg-background border border-foreground/25 text-foreground placeholder:text-foreground/850 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 rows={6}
               />
             </div>
 
             {improvements.length > 0 && (
-              <div className="p-6 rounded-2xl bg-black border border-white/30">
-                <h3 className="text-lg font-semibold text-white mb-4">Suggested Focus Areas</h3>
-                <p className="text-gray-400 mb-4">Based on your areas for improvement:</p>
+              <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Suggested Focus Areas</h3>
+                <p className="text-foreground/60 mb-4">Based on your areas for improvement:</p>
 
                 <div className="space-y-4">
                   {improvements.map((imp) => {
                     const info = ASSESSMENT_DESCRIPTIONS[imp];
                     return (
-                      <div key={imp} className="p-4 rounded-xl bg-black border border-white/30">
-                        <h4 className="font-medium text-white mb-2">{info.title}</h4>
-                        <ul className="text-sm text-gray-400 space-y-1">
+                      <div key={imp} className="p-4 rounded-xl bg-background border border-foreground/25">
+                        <h4 className="font-medium text-foreground mb-2">{info.title}</h4>
+                        <ul className="text-sm text-foreground/60 space-y-1">
                           {info.examples.map((ex) => (
                             <li key={ex} className="flex items-center gap-2">
-                              <ChevronRight className="w-3 h-3 text-indigo-400" />
+                              <ChevronRight className="w-3 h-3 ink-vermilion" />
                               {ex}
                             </li>
                           ))}
@@ -2534,11 +2562,11 @@ const SelfAssessmentPage = () => {
             )}
 
             <div className="flex justify-between">
-              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(2)}>
+              <Button variant="outline" className="border-foreground/25" onClick={() => setActiveStep(2)}>
                 Back
               </Button>
               <Button
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="bg-foreground hover:bg-foreground/90"
                 onClick={() => setActiveStep(4)}
               >
                 Review Assessment
@@ -2551,15 +2579,15 @@ const SelfAssessmentPage = () => {
         {/* Review Step */}
         {activeStep === 4 && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-black border border-white/30">
-              <h2 className="text-xl font-semibold text-white mb-6">Review Your Readiness Reflection</h2>
+            <div className="p-6 rounded-2xl bg-background border border-foreground/25">
+              <h2 className="text-xl font-semibold text-foreground mb-6">Review Your Readiness Reflection</h2>
 
               {/* Readiness Profile */}
-              <div className="flex items-center justify-center gap-6 p-6 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 mb-6">
+              <div className="flex items-center justify-center gap-6 p-6 rounded-xl bg-foreground/[0.03] border border-foreground/25 mb-6">
                 <div className="text-center">
-                  <p className="text-5xl font-bold text-white">{getOverallScore().toFixed(1)}</p>
-                  <p className="text-gray-400">Readiness Reflection Index</p>
-                  <p className="text-xs text-gray-500 mt-1">Personal reflection only — not formal observation</p>
+                  <p className="text-5xl font-bold text-foreground">{getOverallScore().toFixed(1)}</p>
+                  <p className="text-foreground/60">Readiness Reflection Index</p>
+                  <p className="text-xs text-foreground/850 mt-1">Personal reflection only — not formal observation</p>
                 </div>
                 <div className={`text-xl font-semibold ${getScoreColor(getOverallScore())}`}>
                   {getScoreLabel(getOverallScore())}
@@ -2569,8 +2597,8 @@ const SelfAssessmentPage = () => {
               {/* Skills Grid */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {BEHAVIORAL_DIMENSIONS.map((dim) => (
-                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-black">
-                    <span className="text-gray-300">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
+                  <div key={dim.id} className="flex items-center justify-between p-3 rounded-lg bg-background">
+                    <span className="text-foreground/75">{ASSESSMENT_DESCRIPTIONS[dim.id].title}</span>
                     <span className={`font-semibold ${getScoreColor(currentScores[dim.id])}`}>
                       {currentScores[dim.id].toFixed(1)}
                     </span>
@@ -2581,7 +2609,7 @@ const SelfAssessmentPage = () => {
               {/* Strengths & Improvements */}
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                     <Star className="w-4 h-4 text-emerald-400" />
                     Strengths
                   </h3>
@@ -2593,12 +2621,12 @@ const SelfAssessmentPage = () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 text-sm">No strengths selected</p>
+                      <p className="text-foreground/850 text-sm">No strengths selected</p>
                     )}
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-amber-400" />
                     Areas for Improvement
                   </h3>
@@ -2610,7 +2638,7 @@ const SelfAssessmentPage = () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500 text-sm">No areas selected</p>
+                      <p className="text-foreground/850 text-sm">No areas selected</p>
                     )}
                   </div>
                 </div>
@@ -2619,26 +2647,26 @@ const SelfAssessmentPage = () => {
               {/* Goals */}
               {goals && (
                 <div className="mb-6">
-                  <h3 className="font-semibold text-white mb-3">Goals</h3>
-                  <p className="text-gray-300 whitespace-pre-wrap">{goals}</p>
+                  <h3 className="font-semibold text-foreground mb-3">Goals</h3>
+                  <p className="text-foreground/75 whitespace-pre-wrap">{goals}</p>
                 </div>
               )}
 
               {/* Notes */}
               {notes && (
                 <div>
-                  <h3 className="font-semibold text-white mb-3">Notes</h3>
-                  <p className="text-gray-300 whitespace-pre-wrap">{notes}</p>
+                  <h3 className="font-semibold text-foreground mb-3">Notes</h3>
+                  <p className="text-foreground/75 whitespace-pre-wrap">{notes}</p>
                 </div>
               )}
             </div>
 
             <div className="flex justify-between">
-              <Button variant="outline" className="border-white/20" onClick={() => setActiveStep(3)}>
+              <Button variant="outline" className="border-foreground/25" onClick={() => setActiveStep(3)}>
                 Back
               </Button>
               <Button
-                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                className="bg-foreground hover:from-emerald-700 hover:to-teal-700"
                 onClick={saveAssessment}
                 disabled={isSaving}
               >
@@ -2661,8 +2689,8 @@ const SelfAssessmentPage = () => {
 
       {/* Previous Readiness Reflections */}
       {assessments.length > 0 && (
-        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-black border border-white/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Reflection History</h2>
+        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-background border border-foreground/25">
+          <h2 className="text-xl font-semibold text-foreground mb-4">Reflection History</h2>
           <div className="space-y-3">
             {assessments.slice(0, 5).map((assessment) => {
               const scores = assessment.behavioral_scores as Record<string, number>;
@@ -2671,21 +2699,21 @@ const SelfAssessmentPage = () => {
               return (
                 <div
                   key={assessment.id}
-                  className="flex items-center justify-between p-4 rounded-xl bg-black hover:bg-black transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-background hover:bg-foreground/5 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                      <ClipboardCheck className="w-5 h-5 text-indigo-400" />
+                      <ClipboardCheck className="w-5 h-5 ink-vermilion" />
                     </div>
                     <div>
-                      <p className="text-white font-medium">
+                      <p className="text-foreground font-medium">
                         {new Date(assessment.created_at).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
                           year: "numeric",
                         })}
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-foreground/60">
                         {assessment.strengths?.length || 0} strengths, {assessment.areas_for_improvement?.length || 0} areas to improve
                       </p>
                     </div>
@@ -2694,7 +2722,7 @@ const SelfAssessmentPage = () => {
                     <span className={`text-xl font-bold ${getScoreColor(avgScore)}`}>
                       {avgScore.toFixed(1)}
                     </span>
-                    <p className="text-xs text-gray-500">Overall</p>
+                    <p className="text-xs text-foreground/850">Overall</p>
                   </div>
                 </div>
               );
@@ -2807,8 +2835,8 @@ const Training = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">BridgeFast</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">BridgeFast</h1>
+        <p className="text-foreground/60">
           Skill development programs to build workplace readiness before or between your observation sessions.
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-amber-500/30 border border-amber-500/20 inline-flex items-start gap-2 max-w-2xl">
@@ -2821,26 +2849,26 @@ const Training = () => {
 
       {/* Progress Overview */}
       <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <BookOpen className="w-8 h-8 text-indigo-400 mb-3" />
-          <p className="text-3xl font-bold text-white">{INTERACTIVE_MODULES.length}</p>
-          <p className="text-sm text-gray-400">Total Programs</p>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <BookOpen className="w-8 h-8 ink-vermilion mb-3" />
+          <p className="text-3xl font-bold text-foreground">{INTERACTIVE_MODULES.length}</p>
+          <p className="text-sm text-foreground/60">Total Programs</p>
         </div>
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <Play className="w-8 h-8 text-amber-400 mb-3" />
-          <p className="text-3xl font-bold text-white">{inProgressCount}</p>
-          <p className="text-sm text-gray-400">In Progress</p>
+          <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
+          <p className="text-sm text-foreground/60">In Progress</p>
         </div>
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <CheckCircle className="w-8 h-8 text-emerald-400 mb-3" />
-          <p className="text-3xl font-bold text-white">{completedCount}</p>
-          <p className="text-sm text-gray-400">Completed</p>
+          <p className="text-3xl font-bold text-foreground">{completedCount}</p>
+          <p className="text-sm text-foreground/60">Completed</p>
         </div>
       </motion.div>
 
       {/* Modules Grid */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">BridgeFast Programs</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">BridgeFast Programs</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {INTERACTIVE_MODULES.map((module, index) => {
             const moduleProgress = progress[module.id];
@@ -2854,10 +2882,10 @@ const Training = () => {
                 whileHover={!locked ? { scale: 1.02 } : {}}
                 className={`relative p-6 rounded-xl border transition-all cursor-pointer overflow-hidden ${
                   locked
-                    ? 'bg-gray-800/50 border-gray-700 cursor-not-allowed'
+                    ? 'bg-foreground/[0.06]/50 border-foreground/25 cursor-not-allowed'
                     : isCompleted
                     ? 'bg-emerald-500/30 border-emerald-500/30 hover:border-emerald-500/50'
-                    : 'bg-black border-white/30 hover:border-white/30'
+                    : 'bg-background border-foreground/25 hover:border-foreground/25'
                 }`}
                 onClick={() => !locked && openModule(module.slug)}
               >
@@ -2872,7 +2900,7 @@ const Training = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       {locked ? (
-                        <Lock className="w-5 h-5 text-gray-500" />
+                        <Lock className="w-5 h-5 text-foreground/850" />
                       ) : isCompleted ? (
                         <div className="flex items-center gap-1 text-emerald-400">
                           <CheckCircle className="w-5 h-5" />
@@ -2886,19 +2914,19 @@ const Training = () => {
 
                   {/* Content */}
                   <div className="mb-4">
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs mb-2 bg-gradient-to-r ${module.color} bg-opacity-20 text-white`}>
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs mb-2 bg-gradient-to-r ${module.color} bg-opacity-20 text-foreground`}>
                       {module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1)}
                     </span>
-                    <h3 className="font-semibold text-white text-lg">{module.title}</h3>
-                    <p className="text-sm text-gray-500">{module.subtitle}</p>
+                    <h3 className="font-semibold text-foreground text-lg">{module.title}</h3>
+                    <p className="text-sm text-foreground/850">{module.subtitle}</p>
                   </div>
 
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                  <p className="text-sm text-foreground/60 mb-4 line-clamp-2">
                     {module.description}
                   </p>
 
                   {/* Meta info */}
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                  <div className="flex items-center gap-4 text-sm text-foreground/850 mb-4">
                     <span className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       {module.duration}
@@ -2918,13 +2946,13 @@ const Training = () => {
                     {module.competencies.slice(0, 3).map((comp, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-xs bg-black text-gray-400"
+                        className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60"
                       >
                         {comp}
                       </span>
                     ))}
                     {module.competencies.length > 3 && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
                         +{module.competencies.length - 3}
                       </span>
                     )}
@@ -2934,10 +2962,10 @@ const Training = () => {
                   {status === 'in_progress' && moduleProgress?.progress_percent && (
                     <div className="mb-4">
                       <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="text-gray-400">Progress</span>
+                        <span className="text-foreground/60">Progress</span>
                         <span className="text-amber-400">{moduleProgress.progress_percent}%</span>
                       </div>
-                      <div className="h-1.5 bg-black rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-background rounded-full overflow-hidden">
                         <div
                           className={`h-full bg-gradient-to-r ${module.color} transition-all`}
                           style={{ width: `${moduleProgress.progress_percent}%` }}
@@ -2988,14 +3016,14 @@ const Training = () => {
       </motion.div>
 
       {/* Info section */}
-      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/30 border border-indigo-500/30">
+      <motion.div variants={itemVariants} className="p-6 rounded-xl bg-indigo-500/30 border border-foreground/25">
         <div className="flex items-start gap-4">
           <div className="p-3 rounded-xl bg-indigo-500/20">
-            <Sparkles className="w-6 h-6 text-indigo-400" />
+            <Sparkles className="w-6 h-6 ink-vermilion" />
           </div>
           <div>
-            <h3 className="font-semibold text-white mb-1">Immersive Learning Experience</h3>
-            <p className="text-sm text-gray-400">
+            <h3 className="font-semibold text-foreground mb-1">Immersive Learning Experience</h3>
+            <p className="text-sm text-foreground/60">
               Each module features realistic workplace scenarios, interactive choices, reflection prompts,
               and knowledge checks. Navigate through multi-scene experiences that test and develop your
               professional judgment across key behavioral competencies.
@@ -3138,8 +3166,8 @@ const Projects = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">LiveWorks Projects</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">LiveWorks Projects</h1>
+        <p className="text-foreground/60">
           Apply to real projects with employer partners to build experience.
         </p>
       </motion.div>
@@ -3150,8 +3178,8 @@ const Projects = () => {
           onClick={() => setActiveTab("browse")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "browse"
-              ? "bg-indigo-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-indigo-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           Browse Projects
@@ -3160,8 +3188,8 @@ const Projects = () => {
           onClick={() => setActiveTab("applied")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "applied"
-              ? "bg-indigo-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-indigo-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           My Applications
@@ -3183,17 +3211,17 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                  className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="font-semibold text-white text-lg">{project.title}</h3>
-                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+                      <h3 className="font-semibold text-foreground text-lg">{project.title}</h3>
+                      <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 ink-vermilion mt-1">
                         {project.category}
                       </span>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-400">{project.duration_days} days</p>
+                      <p className="text-sm text-foreground/60">{project.duration_days} days</p>
                       {project.budget_min && project.budget_max && (
                         <p className="text-sm text-emerald-400">
                           ${project.budget_min} - ${project.budget_max}
@@ -3201,7 +3229,7 @@ const Projects = () => {
                       )}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">{project.description}</p>
+                  <p className="text-sm text-foreground/60 mb-4 line-clamp-2">{project.description}</p>
                   <div className="flex items-center justify-between">
                     <span className={`text-xs px-2 py-1 rounded ${
                       project.skill_level === 'beginner'
@@ -3240,11 +3268,11 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
           >
-            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No open projects available</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <Briefcase className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No open projects available</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Check back soon for new opportunities
             </p>
           </motion.div>
@@ -3257,12 +3285,12 @@ const Projects = () => {
               return (
                 <div
                   key={project.id}
-                  className="p-6 rounded-xl bg-black border border-white/30"
+                  className="p-6 rounded-xl bg-background border border-foreground/25"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-semibold text-white">{project.title}</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-semibold text-foreground">{project.title}</h3>
+                      <p className="text-sm text-foreground/850">
                         Applied {new Date(application.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -3278,7 +3306,7 @@ const Projects = () => {
                     </span>
                   </div>
                   {application.cover_letter && (
-                    <p className="text-sm text-gray-400 bg-black/20 p-3 rounded-lg line-clamp-2">
+                    <p className="text-sm text-foreground/60 bg-background/20 p-3 rounded-lg line-clamp-2">
                       {application.cover_letter}
                     </p>
                   )}
@@ -3289,11 +3317,11 @@ const Projects = () => {
         ) : (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
           >
-            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No applications yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <Briefcase className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No applications yet</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Browse open projects and start applying
             </p>
             <Button
@@ -3310,43 +3338,43 @@ const Projects = () => {
       {showApplyModal && selectedProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black"
+            className="absolute inset-0 bg-background"
             onClick={() => !isSubmitting && setShowApplyModal(false)}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/25"
           >
             {applicationSuccess ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Application Submitted!</h3>
-                <p className="text-gray-400">
+                <h3 className="text-xl font-bold text-foreground mb-2">Application Submitted!</h3>
+                <p className="text-foreground/60">
                   Your application has been sent to the employer.
                 </p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-white">Apply to Project</h2>
+                  <h2 className="text-xl font-bold text-foreground">Apply to Project</h2>
                   <button
                     onClick={() => setShowApplyModal(false)}
                     disabled={isSubmitting}
-                    className="text-gray-400 hover:text-white"
+                    className="text-foreground/60 hover:text-foreground"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 {/* Project Preview */}
-                <div className="p-4 rounded-xl bg-black mb-6">
-                  <h3 className="font-semibold text-white">{selectedProject.title}</h3>
+                <div className="p-4 rounded-xl bg-background mb-6">
+                  <h3 className="font-semibold text-foreground">{selectedProject.title}</h3>
                   <div className="flex items-center gap-3 mt-2 text-sm">
-                    <span className="text-purple-400">{selectedProject.category}</span>
-                    <span className="text-gray-500">{selectedProject.duration_days} days</span>
+                    <span className="ink-vermilion">{selectedProject.category}</span>
+                    <span className="text-foreground/850">{selectedProject.duration_days} days</span>
                     <span className={`px-2 py-0.5 rounded ${
                       selectedProject.skill_level === 'beginner'
                         ? 'bg-green-500/20 text-green-400'
@@ -3361,7 +3389,7 @@ const Projects = () => {
 
                 {/* Cover Letter */}
                 <div className="mb-6">
-                  <label className="text-sm text-gray-400 block mb-2">
+                  <label className="text-sm text-foreground/60 block mb-2">
                     Cover Letter (optional)
                   </label>
                   <textarea
@@ -3369,7 +3397,7 @@ const Projects = () => {
                     onChange={(e) => setCoverLetter(e.target.value)}
                     placeholder="Tell the employer why you're a great fit for this project..."
                     rows={5}
-                    className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none resize-none"
                   />
                 </div>
 
@@ -3379,7 +3407,7 @@ const Projects = () => {
                     variant="outline"
                     onClick={() => setShowApplyModal(false)}
                     disabled={isSubmitting}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Cancel
                   </Button>
@@ -3535,8 +3563,8 @@ const Connections = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Employer Connections</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Employer Connections</h1>
+        <p className="text-foreground/60">
           Manage connection requests from employers interested in your profile.
         </p>
       </motion.div>
@@ -3544,7 +3572,7 @@ const Connections = () => {
       {/* Pending Requests */}
       {pendingConnections.length > 0 && (
         <motion.div variants={itemVariants}>
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-amber-400" />
             Pending Requests ({pendingConnections.length})
           </h2>
@@ -3555,25 +3583,25 @@ const Connections = () => {
                 className="p-6 rounded-xl bg-gradient-to-r from-amber-500/30 to-orange-500/30 border border-amber-500/20"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-foreground">
                     <Building2 className="w-7 h-7" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-white text-lg">
+                    <h3 className="font-semibold text-foreground text-lg">
                       {connection.employer_profile?.company_name || "Unknown Company"}
                     </h3>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-foreground/60">
                       {connection.employer_profile?.industry || "Industry not specified"}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-foreground/850 mt-1">
                       Requested {new Date(connection.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
 
                 {connection.message && (
-                  <div className="mt-4 p-3 rounded-lg bg-black/20">
-                    <p className="text-sm text-gray-300">{connection.message}</p>
+                  <div className="mt-4 p-3 rounded-lg bg-background/20">
+                    <p className="text-sm text-foreground/75">{connection.message}</p>
                   </div>
                 )}
 
@@ -3596,7 +3624,7 @@ const Connections = () => {
                     variant="outline"
                     onClick={() => respondToConnection(connection.id, false)}
                     disabled={respondingTo === connection.id}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     <ThumbsDown className="w-4 h-4 mr-2" />
                     Decline
@@ -3610,13 +3638,13 @@ const Connections = () => {
 
       {/* Connection History */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Connection History</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Connection History</h2>
         {respondedConnections.length > 0 ? (
           <div className="space-y-3">
             {respondedConnections.map((connection) => (
               <div
                 key={connection.id}
-                className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4"
+                className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   connection.status === "accepted"
@@ -3626,14 +3654,14 @@ const Connections = () => {
                   <Building2 className={`w-5 h-5 ${
                     connection.status === "accepted"
                       ? "text-emerald-400"
-                      : "text-gray-400"
+                      : "text-foreground/60"
                   }`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white">
+                  <p className="font-medium text-foreground">
                     {connection.employer_profile?.company_name || "Unknown Company"}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-foreground/850">
                     {connection.responded_at
                       ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
                       : `Requested ${new Date(connection.created_at).toLocaleDateString()}`}
@@ -3643,7 +3671,7 @@ const Connections = () => {
                   connection.status === "accepted"
                     ? "bg-emerald-500/20 text-emerald-400"
                     : connection.status === "declined"
-                    ? "bg-gray-500/20 text-gray-400"
+                    ? "bg-gray-500/20 text-foreground/60"
                     : "bg-amber-500/20 text-amber-400"
                 }`}>
                   {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
@@ -3652,15 +3680,15 @@ const Connections = () => {
             ))}
           </div>
         ) : pendingConnections.length === 0 ? (
-          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
-            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No connection requests yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No connection requests yet</p>
+            <p className="text-sm text-foreground/850 mt-1">
               When employers are interested in your profile, you'll see their requests here
             </p>
           </div>
         ) : (
-          <p className="text-gray-500 text-sm">No previous connections</p>
+          <p className="text-foreground/850 text-sm">No previous connections</p>
         )}
       </motion.div>
     </motion.div>
@@ -4181,8 +4209,8 @@ const Profile = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Your Profile</h1>
-          <p className="text-gray-400">Manage your personal information</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your Profile</h1>
+          <p className="text-foreground/60">Manage your personal information</p>
         </div>
         {!isEditing ? (
           <Button onClick={() => setIsEditing(true)} className="bg-indigo-600 hover:bg-indigo-500">
@@ -4193,7 +4221,7 @@ const Profile = () => {
             <Button
               variant="outline"
               onClick={() => setIsEditing(false)}
-              className="border-white/20"
+              className="border-foreground/25"
             >
               Cancel
             </Button>
@@ -4211,7 +4239,7 @@ const Profile = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Avatar and basic info */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative group">
               {profile?.avatar_url ? (
@@ -4221,16 +4249,16 @@ const Profile = () => {
                   className="w-20 h-20 rounded-2xl object-cover"
                 />
               ) : (
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-3xl text-white font-bold">
+                <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-foreground font-bold">
                   {formData.first_name?.[0]}{formData.last_name?.[0]}
                 </div>
               )}
               {/* Upload overlay */}
-              <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <label className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                 {isUploadingAvatar ? (
-                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                  <Loader2 className="w-6 h-6 text-foreground animate-spin" />
                 ) : (
-                  <Upload className="w-6 h-6 text-white" />
+                  <Upload className="w-6 h-6 text-foreground" />
                 )}
                 <input
                   type="file"
@@ -4244,7 +4272,7 @@ const Profile = () => {
               {profile?.avatar_url && (
                 <button
                   onClick={handleDeleteAvatar}
-                  className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                   title="Remove photo"
                 >
                   <X className="w-4 h-4" />
@@ -4252,11 +4280,11 @@ const Profile = () => {
               )}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 {formData.first_name} {formData.last_name}
               </h2>
-              <p className="text-gray-400">{profile?.email}</p>
-              <p className="text-xs text-gray-500 mt-1">Hover over photo to change</p>
+              <p className="text-foreground/60">{profile?.email}</p>
+              <p className="text-xs text-foreground/850 mt-1">Hover over photo to change</p>
             </div>
           </div>
 
@@ -4269,42 +4297,42 @@ const Profile = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">First Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">First Name</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-foreground focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.first_name}</p>
+                <p className="text-foreground">{formData.first_name}</p>
               )}
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Last Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">Last Name</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-foreground focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.last_name}</p>
+                <p className="text-foreground">{formData.last_name}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Resume Upload */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold text-white">Resume</h3>
-              <p className="text-sm text-gray-400">Upload your resume to start the observation process</p>
+              <h3 className="text-lg font-semibold text-foreground">Resume</h3>
+              <p className="text-sm text-foreground/60">Upload your resume to start the observation process</p>
             </div>
-            <FileText className="w-8 h-8 text-indigo-400" />
+            <FileText className="w-8 h-8 ink-vermilion" />
           </div>
 
           {candidateProfile?.resume_url ? (
@@ -4314,8 +4342,8 @@ const Profile = () => {
                   <CheckCircle className="w-6 h-6 text-emerald-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white">Resume Uploaded</p>
-                  <p className="text-sm text-gray-400 truncate">
+                  <p className="font-medium text-foreground">Resume Uploaded</p>
+                  <p className="text-sm text-foreground/60 truncate">
                     Your resume is on file and ready for review
                   </p>
                 </div>
@@ -4325,7 +4353,7 @@ const Profile = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowResumeViewer(true)}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-foreground transition-colors flex items-center gap-2"
                 >
                   <Eye className="w-4 h-4" />
                   View Resume
@@ -4333,7 +4361,7 @@ const Profile = () => {
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-background text-foreground hover:bg-foreground/10 transition-colors flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4342,7 +4370,7 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-background text-foreground hover:bg-foreground/10 transition-colors flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
@@ -4357,8 +4385,8 @@ const Profile = () => {
               </div>
 
               {/* Replace option */}
-              <div className="pt-2 border-t border-white/30">
-                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white hover:bg-black transition-colors text-sm">
+              <div className="pt-2 border-t border-foreground/25">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-foreground/25 text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors text-sm">
                   <Upload className="w-4 h-4" />
                   Replace Resume
                   <input
@@ -4373,15 +4401,15 @@ const Profile = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="p-6 rounded-lg border-2 border-dashed border-white/20 text-center hover:border-indigo-500/50 transition-colors">
-                <Upload className="w-10 h-10 text-gray-500 mx-auto mb-3" />
-                <p className="text-gray-400 mb-2">
+              <div className="p-6 rounded-lg border-2 border-dashed border-foreground/25 text-center hover:border-foreground/25 transition-colors">
+                <Upload className="w-10 h-10 text-foreground/850 mx-auto mb-3" />
+                <p className="text-foreground/60 mb-2">
                   Drop your resume here or click to upload
                 </p>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-xs text-foreground/850 mb-4">
                   Supports PDF, DOC, DOCX (max 10MB)
                 </p>
-                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors">
                   {isUploading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -4418,21 +4446,21 @@ const Profile = () => {
               )}
 
               {isEnhancing && (
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                <div className="flex items-center gap-3 p-4 rounded-lg bg-indigo-500/10 border border-foreground/25 ink-vermilion text-sm">
                   <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
                   <div>
                     <p className="font-medium">Resume Enhancer AI is analyzing your resume...</p>
-                    <p className="text-xs text-gray-400 mt-1">Creating your Basic Profile and identifying observation areas</p>
+                    <p className="text-xs text-foreground/60 mt-1">Creating your Basic Profile and identifying observation areas</p>
                   </div>
                 </div>
               )}
 
               {enhancerSummary && !isEnhancing && (
-                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-indigo-500/10 border border-foreground/25 ink-vermilion text-sm">
                   <Sparkles className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-indigo-400">AI Analysis Complete</p>
-                    <p className="text-gray-300 mt-1">{enhancerSummary}</p>
+                    <p className="font-medium ink-vermilion">AI Analysis Complete</p>
+                    <p className="text-foreground/75 mt-1">{enhancerSummary}</p>
                   </div>
                 </div>
               )}
@@ -4442,30 +4470,30 @@ const Profile = () => {
 
         {/* Resume Enhancer — Basic Profile */}
         {candidateProfile?.has_basic_profile && (
-          <div className="p-6 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20">
+          <div className="p-6 rounded-xl bg-foreground/[0.02] border border-foreground/25">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-indigo-400" />
+                <FileText className="w-5 h-5 ink-vermilion" />
               </div>
               <div>
-                <h3 className="font-semibold text-white">Basic Profile</h3>
-                <p className="text-xs text-gray-400">Created by Resume Enhancer AI (non-credentialed)</p>
+                <h3 className="font-semibold text-foreground">Basic Profile</h3>
+                <p className="text-xs text-foreground/60">Created by Resume Enhancer AI (non-credentialed)</p>
               </div>
-              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-medium">
+              <span className="ml-auto px-3 py-1 rounded-full bg-indigo-500/20 ink-vermilion text-xs font-medium">
                 Active
               </span>
             </div>
             {candidateProfile.observation_areas && candidateProfile.observation_areas.length > 0 && (
               <div>
-                <p className="text-sm text-gray-400 mb-2">Observation Areas Identified</p>
+                <p className="text-sm text-foreground/60 mb-2">Observation Areas Identified</p>
                 <div className="flex flex-wrap gap-2">
                   {candidateProfile.observation_areas.map((area: string, i: number) => (
-                    <span key={i} className="px-3 py-1 rounded-lg bg-black/60 text-sm text-indigo-300 border border-indigo-500/20">
+                    <span key={i} className="px-3 py-1 rounded-lg bg-background/60 text-sm ink-vermilion border border-foreground/25">
                       {area.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-foreground/850 mt-3">
                   These dimensions will be assessed by your assigned mentor through structured observations (BASD protocol).
                 </p>
               </div>
@@ -4474,72 +4502,72 @@ const Profile = () => {
         )}
 
         {/* Headline and Bio */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <div className="mb-4">
-            <label className="text-sm text-gray-400 block mb-2">Headline</label>
+            <label className="text-sm text-foreground/60 block mb-2">Headline</label>
             {isEditing ? (
               <input
                 type="text"
                 value={formData.headline}
                 onChange={(e) => setFormData((prev) => ({ ...prev, headline: e.target.value }))}
                 placeholder="e.g., Software Developer | Career Changer"
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none"
               />
             ) : (
-              <p className="text-white">{formData.headline || "No headline set"}</p>
+              <p className="text-foreground">{formData.headline || "No headline set"}</p>
             )}
           </div>
           <div>
-            <label className="text-sm text-gray-400 block mb-2">Bio</label>
+            <label className="text-sm text-foreground/60 block mb-2">Bio</label>
             {isEditing ? (
               <textarea
                 value={formData.bio}
                 onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
                 placeholder="Tell us about yourself..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none resize-none"
               />
             ) : (
-              <p className="text-white whitespace-pre-wrap">{formData.bio || "No bio set"}</p>
+              <p className="text-foreground whitespace-pre-wrap">{formData.bio || "No bio set"}</p>
             )}
           </div>
         </div>
 
         {/* Location */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <label className="text-sm text-gray-400 block mb-2">Location</label>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <label className="text-sm text-foreground/60 block mb-2">Location</label>
           {isEditing ? (
             <input
               type="text"
               value={formData.location}
               onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
               placeholder="City, State"
-              className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none"
             />
           ) : (
-            <p className="text-white">{formData.location || "Not specified"}</p>
+            <p className="text-foreground">{formData.location || "Not specified"}</p>
           )}
         </div>
 
         {/* Skills */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <label className="text-sm text-gray-400 block mb-3">Skills</label>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <label className="text-sm text-foreground/60 block mb-3">Skills</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.skills.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-500/20 ink-vermilion text-sm"
               >
                 {skill}
                 {isEditing && (
-                  <button onClick={() => removeSkill(skill)} className="hover:text-white">
+                  <button onClick={() => removeSkill(skill)} className="hover:text-foreground">
                     <X className="w-3 h-3" />
                   </button>
                 )}
               </span>
             ))}
             {formData.skills.length === 0 && !isEditing && (
-              <p className="text-gray-500">No skills added</p>
+              <p className="text-foreground/850">No skills added</p>
             )}
           </div>
           {isEditing && (
@@ -4550,7 +4578,7 @@ const Profile = () => {
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                 placeholder="Add a skill..."
-                className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none"
               />
               <Button onClick={addSkill} size="sm" className="bg-indigo-600 hover:bg-indigo-500">
                 <Plus className="w-4 h-4" />
@@ -4565,31 +4593,31 @@ const Profile = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowResumeViewer(false)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-5xl h-[90vh] flex flex-col"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-5xl h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/30">
+            <div className="flex items-center justify-between p-4 border-b border-foreground/25">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <FileText className="w-5 h-5 ink-vermilion" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Your Resume</h2>
-                  <p className="text-sm text-gray-400">View and review your uploaded resume</p>
+                  <h2 className="text-lg font-semibold text-foreground">Your Resume</h2>
+                  <p className="text-sm text-foreground/60">View and review your uploaded resume</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <a
                   href={candidateProfile.resume_url}
                   download
-                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-background text-foreground hover:bg-foreground/10 transition-colors flex items-center gap-2 text-sm"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -4598,14 +4626,14 @@ const Profile = () => {
                   href={candidateProfile.resume_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2 rounded-lg bg-black text-white hover:bg-white/20 transition-colors flex items-center gap-2 text-sm"
+                  className="px-3 py-2 rounded-lg bg-background text-foreground hover:bg-foreground/10 transition-colors flex items-center gap-2 text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   Open in New Tab
                 </a>
                 <button
                   onClick={() => setShowResumeViewer(false)}
-                  className="p-2 rounded-lg hover:bg-black text-gray-400 hover:text-white transition-colors"
+                  className="p-2 rounded-lg hover:bg-foreground/5 text-foreground/60 hover:text-foreground transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -4623,10 +4651,10 @@ const Profile = () => {
               ) : (
                 <div className="h-full flex flex-col items-center justify-center p-8 text-center">
                   <div className="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4">
-                    <FileText className="w-10 h-10 text-indigo-400" />
+                    <FileText className="w-10 h-10 ink-vermilion" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Document Preview</h3>
-                  <p className="text-gray-400 mb-6 max-w-md">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Document Preview</h3>
+                  <p className="text-foreground/60 mb-6 max-w-md">
                     This document format cannot be previewed directly in the browser.
                     You can download it or open it in a new tab to view the contents.
                   </p>
@@ -4634,7 +4662,7 @@ const Profile = () => {
                     <a
                       href={candidateProfile.resume_url}
                       download
-                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors flex items-center gap-2"
                     >
                       <Download className="w-5 h-5" />
                       Download Resume
@@ -4643,7 +4671,7 @@ const Profile = () => {
                       href={`https://docs.google.com/viewer?url=${encodeURIComponent(candidateProfile.resume_url)}&embedded=true`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl bg-black hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-background hover:bg-foreground/10 text-foreground font-medium transition-colors flex items-center gap-2"
                     >
                       <ExternalLink className="w-5 h-5" />
                       Open with Google Docs
@@ -4729,22 +4757,22 @@ const SettingsPage = () => {
       className="max-w-2xl space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-gray-400">Manage your account preferences</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
+        <p className="text-foreground/60">Manage your account preferences</p>
       </motion.div>
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Account</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-400">Email Address</p>
-              <p className="text-white">{user?.email}</p>
+              <p className="text-sm text-foreground/60">Email Address</p>
+              <p className="text-foreground">{user?.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Account Created</p>
-              <p className="text-white">
+              <p className="text-sm text-foreground/60">Account Created</p>
+              <p className="text-foreground">
                 {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "Unknown"}
               </p>
             </div>
@@ -4752,11 +4780,11 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Security</h2>
           <Button
             variant="outline"
-            className="border-white/20 text-white hover:bg-black"
+            className="border-foreground/25 text-foreground hover:bg-foreground/5"
             onClick={() => {
               setPasswordForm({ newPassword: "", confirmPassword: "" });
               setPasswordError(null);
@@ -4770,20 +4798,20 @@ const SettingsPage = () => {
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Email notifications</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Progress updates</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Progress updates</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Project opportunities</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Project opportunities</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
           </div>
         </div>
@@ -4791,7 +4819,7 @@ const SettingsPage = () => {
         {/* Danger Zone */}
         <div className="p-6 rounded-xl bg-red-500/30 border border-red-500/20">
           <h2 className="text-lg font-semibold text-red-400 mb-4">Danger Zone</h2>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-foreground/60 mb-4">
             Once you delete your account, there is no going back. Please be certain.
           </p>
           <Button
@@ -4808,32 +4836,32 @@ const SettingsPage = () => {
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black"
+            className="absolute inset-0 bg-background"
             onClick={() => !isChangingPassword && setShowPasswordModal(false)}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/25"
           >
             {passwordSuccess ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Password Updated!</h3>
-                <p className="text-gray-400">
+                <h3 className="text-xl font-bold text-foreground mb-2">Password Updated!</h3>
+                <p className="text-foreground/60">
                   Your password has been successfully changed.
                 </p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-white">Change Password</h2>
+                  <h2 className="text-xl font-bold text-foreground">Change Password</h2>
                   <button
                     onClick={() => setShowPasswordModal(false)}
                     disabled={isChangingPassword}
-                    className="text-gray-400 hover:text-white"
+                    className="text-foreground/60 hover:text-foreground"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -4848,38 +4876,38 @@ const SettingsPage = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm text-gray-400 block mb-2">New Password</label>
+                    <label className="text-sm text-foreground/60 block mb-2">New Password</label>
                     <div className="relative">
                       <input
                         type={showNewPassword ? "text" : "password"}
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
                         placeholder="Enter new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/850 hover:text-foreground/75"
                       >
                         {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 block mb-2">Confirm Password</label>
+                    <label className="text-sm text-foreground/60 block mb-2">Confirm Password</label>
                     <div className="relative">
                       <input
                         type={showConfirmPassword ? "text" : "password"}
                         value={passwordForm.confirmPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
                         placeholder="Confirm new password"
-                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full px-4 py-2.5 pr-12 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/850 hover:text-foreground/75"
                       >
                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
@@ -4887,7 +4915,7 @@ const SettingsPage = () => {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500 mt-4">
+                <p className="text-xs text-foreground/850 mt-4">
                   Password must be at least 8 characters long.
                 </p>
 
@@ -4896,7 +4924,7 @@ const SettingsPage = () => {
                     variant="outline"
                     onClick={() => setShowPasswordModal(false)}
                     disabled={isChangingPassword}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Cancel
                   </Button>
@@ -5020,7 +5048,7 @@ const FindMentor = () => {
       case "fair":
         return "bg-amber-500/20 text-amber-400 border-amber-500/30";
       default:
-        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+        return "bg-gray-500/20 text-foreground/60 border-gray-500/30";
     }
   };
 
@@ -5034,7 +5062,7 @@ const FindMentor = () => {
         description: "Please add your first and last name before requesting a mentor.",
         variant: "destructive",
         action: (
-          <Button size="sm" variant="outline" className="border-white/20 text-white" onClick={() => navigate("/dashboard/candidate/profile")}>
+          <Button size="sm" variant="outline" className="border-foreground/25 text-foreground" onClick={() => navigate("/dashboard/candidate/profile")}>
             Go to Profile
           </Button>
         ),
@@ -5101,8 +5129,8 @@ const FindMentor = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Find a Mentor</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Find a Mentor</h1>
+        <p className="text-foreground/60">
           Connect with experienced professionals who can guide your career growth.
         </p>
       </motion.div>
@@ -5117,11 +5145,11 @@ const FindMentor = () => {
             <CheckCircle className="w-5 h-5 text-emerald-400" />
             <h3 className="font-semibold text-emerald-400">Active Mentorship</h3>
           </div>
-          <p className="text-gray-300">
+          <p className="text-foreground/75">
             You have an active mentor. Complete your L1 and L2 observations across your assigned dimensions to progress toward endorsement.
           </p>
-          <p className="text-sm text-gray-400 mt-2">
-            Visit your <Link to="/dashboard/candidate/observations" className="text-indigo-400 underline">Observation Pathway</Link> to begin.
+          <p className="text-sm text-foreground/60 mt-2">
+            Visit your <Link to="/dashboard/candidate/observations" className="ink-vermilion underline">Observation Pathway</Link> to begin.
           </p>
         </motion.div>
       )}
@@ -5136,7 +5164,7 @@ const FindMentor = () => {
             <Clock className="w-5 h-5 text-amber-400" />
             <h3 className="font-semibold text-amber-400">Mentor Request Pending</h3>
           </div>
-          <p className="text-gray-300">
+          <p className="text-foreground/75">
             Your mentor request has been sent and is awaiting approval. You will be notified once your mentor accepts.
           </p>
         </motion.div>
@@ -5147,17 +5175,17 @@ const FindMentor = () => {
         <motion.div variants={itemVariants} className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Recommended For You</h2>
-                <p className="text-sm text-gray-400">Based on your skills and goals</p>
+                <h2 className="text-xl font-semibold text-foreground">Recommended For You</h2>
+                <p className="text-sm text-foreground/60">Based on your skills and goals</p>
               </div>
             </div>
             <button
               onClick={() => setShowRecommended(!showRecommended)}
-              className="text-indigo-400 hover:text-indigo-300 text-sm"
+              className="ink-vermilion hover:ink-vermilion text-sm"
             >
               {showRecommended ? "Hide" : "Show"} recommendations
             </button>
@@ -5176,7 +5204,7 @@ const FindMentor = () => {
                     key={mentor.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="relative p-6 rounded-2xl bg-gradient-to-br from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 hover:border-indigo-500/40 transition-colors"
+                    className="relative p-6 rounded-2xl bg-foreground/[0.04] border border-foreground/25 hover:border-foreground/25 transition-colors"
                   >
                     {/* Match Score Badge */}
                     <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -5197,21 +5225,21 @@ const FindMentor = () => {
                           className="w-16 h-16 rounded-xl object-cover"
                         />
                       ) : (
-                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                        <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
                           {mentor.profile?.first_name?.[0]}
                           {mentor.profile?.last_name?.[0]}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-white text-lg">
+                        <h3 className="font-semibold text-foreground text-lg">
                           {mentor.profile?.first_name} {mentor.profile?.last_name}
                         </h3>
-                        <p className="text-sm text-indigo-400">
+                        <p className="text-sm ink-vermilion">
                           {mentor.job_title} {mentor.company && `at ${mentor.company}`}
                         </p>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <div className="flex items-center gap-3 mt-2 text-xs text-foreground/60">
                           <span>{mentor.years_experience} years exp</span>
-                          <span className="px-2 py-0.5 rounded bg-black">
+                          <span className="px-2 py-0.5 rounded bg-background">
                             {mentor.industry}
                           </span>
                           {mentor.avg_rating && (
@@ -5230,7 +5258,7 @@ const FindMentor = () => {
                         {match.matchReasons.map((reason, i) => (
                           <span
                             key={i}
-                            className="px-2 py-1 rounded-full text-xs bg-black text-gray-300 border border-white/30"
+                            className="px-2 py-1 rounded-full text-xs bg-background text-foreground/75 border border-foreground/25"
                           >
                             {reason}
                           </span>
@@ -5248,13 +5276,13 @@ const FindMentor = () => {
                         { label: "Rating", value: match.score.ratingScore, color: "bg-rose-500" },
                       ].map((item) => (
                         <div key={item.label} className="text-center">
-                          <div className="h-1 rounded-full bg-black mb-1">
+                          <div className="h-1 rounded-full bg-background mb-1">
                             <div
                               className={`h-full rounded-full ${item.color}`}
                               style={{ width: `${item.value}%` }}
                             />
                           </div>
-                          <span className="text-xs text-gray-500">{item.label}</span>
+                          <span className="text-xs text-foreground/850">{item.label}</span>
                         </div>
                       ))}
                     </div>
@@ -5276,7 +5304,7 @@ const FindMentor = () => {
                           onClick={() =>
                             setSelectedMentor({ ...mentor, profile: mentor.profile })
                           }
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                          className="w-full bg-foreground hover:bg-foreground/90"
                         >
                           <Send className="w-4 h-4 mr-2" />
                           Request This Mentor
@@ -5301,8 +5329,8 @@ const FindMentor = () => {
           onClick={() => setIndustryFilter("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             industryFilter === "all"
-              ? "bg-indigo-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-indigo-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           All Industries
@@ -5313,8 +5341,8 @@ const FindMentor = () => {
             onClick={() => setIndustryFilter(industry)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               industryFilter === industry
-                ? "bg-indigo-600 text-white"
-                : "bg-black text-gray-400 hover:text-white"
+                ? "bg-indigo-600 text-foreground"
+                : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
             {industry}
@@ -5343,7 +5371,7 @@ const FindMentor = () => {
                       ? "bg-emerald-500/30 border-emerald-500/30"
                       : isPending
                       ? "bg-amber-500/10 border-amber-500/30"
-                      : "bg-black border-white/30 hover:border-white/20"
+                      : "bg-background border-foreground/25 hover:border-foreground/25"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -5354,20 +5382,20 @@ const FindMentor = () => {
                         className="w-16 h-16 rounded-xl object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                      <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
                         {mentor.profile?.first_name?.[0]}{mentor.profile?.last_name?.[0]}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-white text-lg">
+                      <h3 className="font-semibold text-foreground text-lg">
                         {mentor.profile?.first_name} {mentor.profile?.last_name}
                       </h3>
-                      <p className="text-sm text-indigo-400">
+                      <p className="text-sm ink-vermilion">
                         {mentor.job_title} {mentor.company && `at ${mentor.company}`}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-foreground/60">
                         <span>{mentor.years_experience} years exp</span>
-                        <span className="px-2 py-0.5 rounded bg-black">
+                        <span className="px-2 py-0.5 rounded bg-background">
                           {mentor.industry}
                         </span>
                       </div>
@@ -5385,13 +5413,13 @@ const FindMentor = () => {
                       {mentor.specializations.slice(0, 3).map((spec, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400"
+                          className="px-2 py-1 rounded text-xs bg-purple-500/20 ink-vermilion"
                         >
                           {spec}
                         </span>
                       ))}
                       {mentor.specializations.length > 3 && (
-                        <span className="px-2 py-1 rounded text-xs bg-black text-gray-400">
+                        <span className="px-2 py-1 rounded text-xs bg-background text-foreground/60">
                           +{mentor.specializations.length - 3}
                         </span>
                       )}
@@ -5399,7 +5427,7 @@ const FindMentor = () => {
                   )}
 
                   {/* Stats */}
-                  <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
+                  <div className="mt-4 flex items-center gap-4 text-sm text-foreground/60">
                     <span className="flex items-center gap-1">
                       <Award className="w-4 h-4" />
                       {mentor.total_observations} observations
@@ -5447,10 +5475,10 @@ const FindMentor = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <GraduationCap className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No mentors available</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <GraduationCap className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No mentors available</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Check back later for available mentors
             </p>
           </div>
@@ -5462,13 +5490,13 @@ const FindMentor = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedMentor(null)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-4 mb-6">
@@ -5479,22 +5507,22 @@ const FindMentor = () => {
                   className="w-16 h-16 rounded-xl object-cover"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
                   {selectedMentor.profile?.first_name?.[0]}{selectedMentor.profile?.last_name?.[0]}
                 </div>
               )}
               <div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-foreground">
                   Request {selectedMentor.profile?.first_name} as your mentor
                 </h2>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-foreground/60">
                   {selectedMentor.job_title} {selectedMentor.company && `at ${selectedMentor.company}`}
                 </p>
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">
+              <label className="text-sm text-foreground/60 block mb-2">
                 Introduction Message (Optional)
               </label>
               <textarea
@@ -5502,7 +5530,7 @@ const FindMentor = () => {
                 onChange={(e) => setRequestMessage(e.target.value)}
                 placeholder="Tell the mentor why you'd like them to guide you..."
                 rows={4}
-                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none resize-none"
               />
             </div>
 
@@ -5510,7 +5538,7 @@ const FindMentor = () => {
               <Button
                 variant="outline"
                 onClick={() => setSelectedMentor(null)}
-                className="flex-1 border-white/20 text-white hover:bg-black"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -5544,33 +5572,33 @@ const FindMentor = () => {
 
       {showDisclaimer && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/80" onClick={() => setShowDisclaimer(false)} />
+          <div className="absolute inset-0 bg-background/80" onClick={() => setShowDisclaimer(false)} />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10 max-h-[80vh] overflow-y-auto"
+            className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/15 max-h-[80vh] overflow-y-auto"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Candidate Disclaimer & Consent</h2>
-            <div className="text-sm text-gray-300 space-y-3 mb-6">
+            <h2 className="text-xl font-bold text-foreground mb-4">Candidate Disclaimer & Consent</h2>
+            <div className="text-sm text-foreground/75 space-y-3 mb-6">
               <p>By requesting a mentor and entering the T3A Observation Protocol, you acknowledge and agree to the following:</p>
-              <p><strong className="text-white">1. No Employment Guarantee.</strong> The Behavioral Evidence Report is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
-              <p><strong className="text-white">2. Endorsement Outcomes.</strong> Mentor endorsement decisions (Proceed, Redirect, Pause, or Escalate) are evidence-based protocol outcomes determined by trained evaluators using the T3A Behavioural Assessment Standard. They are not personal judgments.</p>
-              <p><strong className="text-white">3. Permanent Growth Log.</strong> All observation data, session recordings, feedback, and endorsement decisions are recorded in your Growth Log, which is append-only and permanent. Records cannot be deleted or modified after creation.</p>
-              <p><strong className="text-white">4. Session Recording Consent.</strong> Observation sessions may be recorded for quality assurance, audit compliance, and evidence documentation purposes.</p>
-              <p><strong className="text-white">5. Loop & Cooldown Rules.</strong> Re-attempts are subject to cooldown periods and a maximum of 3 loops per dimension per level within a rolling 6-month window. These rules exist to maintain assessment integrity.</p>
-              <p><strong className="text-white">6. Data Usage.</strong> Your Behavioral Evidence Report data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
+              <p><strong className="text-foreground">1. No Employment Guarantee.</strong> The Behavioral Evidence Report is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
+              <p><strong className="text-foreground">2. Endorsement Outcomes.</strong> Mentor endorsement decisions (Proceed, Redirect, Pause, or Escalate) are evidence-based protocol outcomes determined by trained evaluators using the T3A Behavioural Assessment Standard. They are not personal judgments.</p>
+              <p><strong className="text-foreground">3. Permanent Growth Log.</strong> All observation data, session recordings, feedback, and endorsement decisions are recorded in your Growth Log, which is append-only and permanent. Records cannot be deleted or modified after creation.</p>
+              <p><strong className="text-foreground">4. Session Recording Consent.</strong> Observation sessions may be recorded for quality assurance, audit compliance, and evidence documentation purposes.</p>
+              <p><strong className="text-foreground">5. Loop & Cooldown Rules.</strong> Re-attempts are subject to cooldown periods and a maximum of 3 loops per dimension per level within a rolling 6-month window. These rules exist to maintain assessment integrity.</p>
+              <p><strong className="text-foreground">6. Data Usage.</strong> Your Behavioral Evidence Report data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
             </div>
-            <label className="flex items-start gap-3 p-3 rounded-lg bg-black border border-white/10 cursor-pointer mb-4">
+            <label className="flex items-start gap-3 p-3 rounded-lg bg-background border border-foreground/15 cursor-pointer mb-4">
               <input
                 type="checkbox"
                 checked={disclaimerAccepted}
                 onChange={(e) => setDisclaimerAccepted(e.target.checked)}
-                className="mt-1 w-4 h-4 rounded border-white/30 bg-black text-emerald-500 focus:ring-emerald-500"
+                className="mt-1 w-4 h-4 rounded border-foreground/25 bg-background text-emerald-500 focus:ring-emerald-500"
               />
-              <span className="text-sm text-gray-300">I have read, understood, and agree to the above terms. I give my informed consent to participate in the T3A Observation Protocol.</span>
+              <span className="text-sm text-foreground/75">I have read, understood, and agree to the above terms. I give my informed consent to participate in the T3A Observation Protocol.</span>
             </label>
             <div className="flex gap-3">
-              <Button variant="outline" onClick={() => setShowDisclaimer(false)} className="flex-1 border-white/20 text-white">Cancel</Button>
+              <Button variant="outline" onClick={() => setShowDisclaimer(false)} className="flex-1 border-foreground/25 text-foreground">Cancel</Button>
               <Button
                 disabled={!disclaimerAccepted}
                 onClick={() => { setShowDisclaimer(false); requestMentor(); }}
@@ -6089,18 +6117,18 @@ const MessagesPage = () => {
       className="h-[calc(100vh-12rem)]"
     >
       <motion.div variants={itemVariants} className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-        <p className="text-gray-400">Connect with mentors and employers.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Messages</h1>
+        <p className="text-foreground/60">Connect with mentors and employers.</p>
       </motion.div>
 
       <motion.div
         variants={itemVariants}
-        className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex"
+        className="h-[calc(100%-5rem)] rounded-xl bg-background border border-foreground/25 overflow-hidden flex"
       >
         {/* Conversations List */}
-        <div className="w-80 border-r border-white/30 flex flex-col">
+        <div className="w-80 border-r border-foreground/25 flex flex-col">
           {/* Search + New Chat */}
-          <div className="p-4 border-b border-white/30 space-y-3">
+          <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
                 <input
@@ -6108,7 +6136,7 @@ const MessagesPage = () => {
                   placeholder="Search conversations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-foreground"
                 />
               </div>
               <Button
@@ -6122,15 +6150,15 @@ const MessagesPage = () => {
 
             {/* New Chat User Search */}
             {showNewChat && (
-              <div className="bg-black/90 border border-indigo-500/30 rounded-xl p-3 space-y-3">
-                <p className="text-xs text-indigo-400 font-medium">Find someone to message</p>
+              <div className="bg-background/90 border border-foreground/25 rounded-xl p-3 space-y-3">
+                <p className="text-xs ink-vermilion font-medium">Find someone to message</p>
                 <input
                   type="text"
                   placeholder="Search by name..."
                   value={userSearchQuery}
                   onChange={(e) => setUserSearchQuery(e.target.value)}
                   autoFocus
-                  className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-foreground"
                 />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && (
@@ -6139,10 +6167,10 @@ const MessagesPage = () => {
                     </div>
                   )}
                   {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && (
-                    <p className="text-xs text-gray-500 text-center py-2">No users found</p>
+                    <p className="text-xs text-foreground/850 text-center py-2">No users found</p>
                   )}
                   {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && (
-                    <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>
+                    <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>
                   )}
                   {searchResults.map((result) => (
                     <button
@@ -6151,20 +6179,20 @@ const MessagesPage = () => {
                       disabled={isCreatingConversation}
                       className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-500/10 transition-colors text-left"
                     >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-foreground/[0.03] flex items-center justify-center flex-shrink-0">
                         {result.avatar_url ? (
                           <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" />
                         ) : (
-                          <User className="w-4 h-4 text-indigo-400" />
+                          <User className="w-4 h-4 ink-vermilion" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {result.first_name} {result.last_name}
                         </p>
-                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
                       </div>
-                      <Send className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                      <Send className="w-3.5 h-3.5 ink-vermilion flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -6176,10 +6204,10 @@ const MessagesPage = () => {
           <div className="flex-1 overflow-y-auto">
             {filteredConversations.length === 0 ? (
               <div className="p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No conversations yet</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Click the <span className="text-indigo-400">+</span> button to find and message anyone on the platform
+                <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+                <p className="text-foreground/60">No conversations yet</p>
+                <p className="text-sm text-foreground/850 mt-1">
+                  Click the <span className="ink-vermilion">+</span> button to find and message anyone on the platform
                 </p>
               </div>
             ) : (
@@ -6190,12 +6218,12 @@ const MessagesPage = () => {
                   <button
                     key={conv.id}
                     onClick={() => setActiveConversation(conv)}
-                    className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${
-                      activeConversation?.id === conv.id ? "bg-indigo-500/30 border-l-2 border-indigo-500" : ""
+                    className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${
+                      activeConversation?.id === conv.id ? "bg-indigo-500/30 border-l-2 border-foreground" : ""
                     }`}
                   >
                     <div className="relative">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-foreground/[0.03] flex items-center justify-center flex-shrink-0">
                         {conv.other_user?.avatar_url ? (
                           <img
                             src={conv.other_user.avatar_url}
@@ -6203,7 +6231,7 @@ const MessagesPage = () => {
                             className="w-full h-full rounded-full object-cover"
                           />
                         ) : (
-                          <User className="w-6 h-6 text-indigo-400" />
+                          <User className="w-6 h-6 ink-vermilion" />
                         )}
                       </div>
                       {hasUnread ? (
@@ -6214,14 +6242,14 @@ const MessagesPage = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className={`font-medium truncate ${hasUnread ? "text-white" : "text-gray-300"}`}>
+                        <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>
                           {conv.other_user?.first_name} {conv.other_user?.last_name}
                         </p>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-foreground/850">
                           {conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}
                         </span>
                       </div>
-                      <p className={`text-sm truncate ${hasUnread ? "text-gray-300" : "text-gray-500"}`}>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>
                         {conv.last_message_preview || "No messages yet"}
                       </p>
                     </div>
@@ -6237,9 +6265,9 @@ const MessagesPage = () => {
           {activeConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 border-b border-white/30 flex items-center gap-4">
+              <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-foreground/[0.03] flex items-center justify-center">
                     {activeConversation.other_user?.avatar_url ? (
                       <img
                         src={activeConversation.other_user.avatar_url}
@@ -6247,16 +6275,16 @@ const MessagesPage = () => {
                         className="w-full h-full rounded-full object-cover"
                       />
                     ) : (
-                      <User className="w-5 h-5 text-indigo-400" />
+                      <User className="w-5 h-5 ink-vermilion" />
                     )}
                   </div>
                   <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
                 </div>
                 <div>
-                  <p className="font-medium text-white">
+                  <p className="font-medium text-foreground">
                     {activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-foreground/850">
                     {isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? (
                       <span className="text-emerald-400">Online</span>
                     ) : (
@@ -6290,7 +6318,7 @@ const MessagesPage = () => {
                                 className="w-full h-full rounded-full object-cover"
                               />
                             ) : (
-                              <User className="w-4 h-4 text-purple-400" />
+                              <User className="w-4 h-4 ink-vermilion" />
                             )}
                           </div>
                         )}
@@ -6300,7 +6328,7 @@ const MessagesPage = () => {
                           <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
                             <button
                               onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }}
-                              className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-indigo-500/50 transition-colors"
+                              className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/25 transition-colors"
                               title="Reply"
                             >
                               <Reply className="w-3.5 h-3.5" />
@@ -6311,7 +6339,7 @@ const MessagesPage = () => {
                                 navigator.clipboard.writeText(msg.content || "");
                                 toast({ title: "Copied", description: "Message copied to clipboard." });
                               }}
-                              className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-indigo-500/50 transition-colors"
+                              className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/25 transition-colors"
                               title="Copy"
                             >
                               <Copy className="w-3.5 h-3.5" />
@@ -6324,7 +6352,7 @@ const MessagesPage = () => {
                               className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${
                                 isOwn
                                   ? "bg-indigo-700/40 border-indigo-400/60 text-indigo-200"
-                                  : "bg-white/5 border-indigo-400/40 text-gray-400"
+                                  : "bg-white/5 border-indigo-400/40 text-foreground/60"
                               }`}
                               onClick={() => {
                                 const el = document.getElementById(`msg-${msg.reply_to.id}`);
@@ -6343,8 +6371,8 @@ const MessagesPage = () => {
                             onClick={() => setActiveMsgId(showActions ? null : msg.id)}
                             className={`px-4 py-2 rounded-2xl transition-all duration-300 cursor-pointer ${
                               isOwn
-                                ? "bg-indigo-600 text-white rounded-br-md"
-                                : "bg-black text-gray-200 rounded-bl-md"
+                                ? "bg-indigo-600 text-foreground rounded-br-md"
+                                : "bg-background text-foreground/80 rounded-bl-md"
                             }`}
                           >
                             {msg.content && !msg.content.startsWith("Sent a file:") && (
@@ -6360,12 +6388,12 @@ const MessagesPage = () => {
                                 <div className="mt-1">
                                   {isImg ? (
                                     <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
-                                      <img src={msg.file_url} alt={fileName} className="max-w-[280px] rounded-lg border border-white/10" />
+                                      <img src={msg.file_url} alt={fileName} className="max-w-[280px] rounded-lg border border-foreground/15" />
                                     </a>
                                   ) : (
                                     <a href={msg.file_url} target="_blank" rel="noopener noreferrer"
                                       className={`flex items-center gap-3 px-3 py-2 rounded-xl border transition-colors ${
-                                        isOwn ? "border-white/15 bg-white/5 hover:bg-white/10" : "border-indigo-500/25 bg-indigo-950/30 hover:bg-indigo-950/50"
+                                        isOwn ? "border-white/15 bg-white/5 hover:bg-foreground/8" : "border-foreground/25 bg-indigo-950/30 hover:bg-indigo-950/50"
                                       }`}>
                                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
                                         isOwn ? "bg-white/10" : "bg-indigo-600/30"
@@ -6383,7 +6411,7 @@ const MessagesPage = () => {
                               );
                             })()}
                           </div>
-                          <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>
+                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>
                             {formatMessageTime(msg.created_at)}
                           </p>
                         </div>
@@ -6394,25 +6422,25 @@ const MessagesPage = () => {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t border-white/30">
+              <div className="p-4 border-t border-foreground/25">
                 {replyTo && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                    <Reply className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-foreground/25">
+                    <Reply className="w-4 h-4 ink-vermilion flex-shrink-0" />
                     <div className="flex-1 min-w-0 border-l-2 border-indigo-400/50 pl-2">
-                      <p className="text-xs font-medium text-indigo-300">{replyTo.sender?.first_name || "User"}</p>
-                      <p className="text-xs text-gray-400 truncate">{replyTo.content?.substring(0, 100)}</p>
+                      <p className="text-xs font-medium ink-vermilion">{replyTo.sender?.first_name || "User"}</p>
+                      <p className="text-xs text-foreground/60 truncate">{replyTo.content?.substring(0, 100)}</p>
                     </div>
-                    <button onClick={() => setReplyTo(null)} className="text-gray-400 hover:text-white flex-shrink-0">
+                    <button onClick={() => setReplyTo(null)} className="text-foreground/60 hover:text-foreground flex-shrink-0">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 )}
                 {attachedFile && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                    <Paperclip className="w-4 h-4 text-indigo-400 flex-shrink-0" />
-                    <span className="text-sm text-indigo-300 truncate flex-1">{attachedFile.name}</span>
-                    <span className="text-xs text-gray-500">{formatFileSize(attachedFile.size)}</span>
-                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-foreground/25">
+                    <Paperclip className="w-4 h-4 ink-vermilion flex-shrink-0" />
+                    <span className="text-sm ink-vermilion truncate flex-1">{attachedFile.name}</span>
+                    <span className="text-xs text-foreground/850">{formatFileSize(attachedFile.size)}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-foreground/60 hover:text-foreground">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
@@ -6428,7 +6456,7 @@ const MessagesPage = () => {
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isProcessingFile}
-                    className="p-3 rounded-xl border border-white/30 text-gray-400 hover:text-white hover:border-indigo-500 transition-colors disabled:opacity-50"
+                    className="p-3 rounded-xl border border-foreground/25 text-foreground/60 hover:text-foreground hover:border-foreground transition-colors disabled:opacity-50"
                     title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)"
                   >
                     {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
@@ -6445,7 +6473,7 @@ const MessagesPage = () => {
                           sendMessage();
                         }
                       }}
-                      className="w-full bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-foreground"
                     />
                   </div>
                   <Button
@@ -6465,9 +6493,9 @@ const MessagesPage = () => {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
-                <p className="text-gray-400 max-w-sm mb-4">
+                <MessageSquare className="w-16 h-16 text-foreground/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">Select a Conversation</h3>
+                <p className="text-foreground/60 max-w-sm mb-4">
                   Choose a conversation from the list or start a new one.
                 </p>
                 <Button
@@ -6574,11 +6602,11 @@ const NotificationsPage = () => {
         return "text-emerald-400 bg-emerald-500/20";
       case "endorsement":
       case "passport_issued":
-        return "text-purple-400 bg-purple-500/20";
+        return "ink-vermilion bg-purple-500/20";
       case "training_assigned":
         return "text-amber-400 bg-amber-500/20";
       default:
-        return "text-gray-400 bg-gray-500/20";
+        return "text-foreground/60 bg-gray-500/20";
     }
   };
 
@@ -6601,11 +6629,11 @@ const NotificationsPage = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
-          <p className="text-gray-400">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Notifications</h1>
+          <p className="text-foreground/60">
             Stay updated on your activity.
             {unreadCount > 0 && (
-              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-sm">
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/20 ink-vermilion text-sm">
                 {unreadCount} unread
               </span>
             )}
@@ -6615,7 +6643,7 @@ const NotificationsPage = () => {
           <Button
             onClick={markAllAsRead}
             variant="outline"
-            className="border-white/20 text-white hover:bg-black"
+            className="border-foreground/25 text-foreground hover:bg-foreground/5"
           >
             <CheckCircle className="w-4 h-4 mr-2" />
             Mark all as read
@@ -6631,8 +6659,8 @@ const NotificationsPage = () => {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
-                ? "bg-indigo-600 text-white"
-                : "bg-black text-gray-400 hover:text-white"
+                ? "bg-indigo-600 text-foreground"
+                : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
             {f}
@@ -6654,8 +6682,8 @@ const NotificationsPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 className={`p-4 rounded-xl border transition-colors ${
                   notification.is_read
-                    ? "bg-black border-white/30"
-                    : "bg-gradient-to-r from-indigo-500/30 to-purple-500/30 border-indigo-500/20"
+                    ? "bg-background border-foreground/25"
+                    : "bg-foreground/[0.04] border-foreground/25"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -6665,24 +6693,24 @@ const NotificationsPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className={`font-medium ${notification.is_read ? "text-gray-300" : "text-white"}`}>
+                        <p className={`font-medium ${notification.is_read ? "text-foreground/75" : "text-foreground"}`}>
                           {notification.title}
                         </p>
-                        <p className="text-sm text-gray-400 mt-1">{notification.message}</p>
+                        <p className="text-sm text-foreground/60 mt-1">{notification.message}</p>
                       </div>
                       {!notification.is_read && (
                         <div className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0 mt-2" />
                       )}
                     </div>
                     <div className="flex items-center gap-4 mt-3">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-foreground/850">
                         {new Date(notification.created_at).toLocaleString()}
                       </span>
                       <div className="flex gap-2">
                         {!notification.is_read && (
                           <button
                             onClick={() => markAsRead(notification.id)}
-                            className="text-xs text-indigo-400 hover:text-indigo-300"
+                            className="text-xs ink-vermilion hover:ink-vermilion"
                           >
                             Mark as read
                           </button>
@@ -6701,10 +6729,10 @@ const NotificationsPage = () => {
             );
           })
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No notifications</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Bell className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No notifications</p>
+            <p className="text-sm text-foreground/850 mt-1">
               {filter === "unread"
                 ? "You're all caught up!"
                 : filter === "read"
@@ -6718,21 +6746,22 @@ const NotificationsPage = () => {
   );
 };
 
+const CANDIDATE_SECTIONS: import("@/components/dashboard/DashboardLayout").DashboardSection[] = [
+  { id: "observation", label: "§ I · Observation Platform" },
+  { id: "preparation", label: "§ II · Preparation", chip: { text: "Self-directed" } },
+  { id: "liveworks", label: "§ III · LiveWorks" },
+  { id: "account", label: "§ IV · Account" },
+];
+
 const CandidateDashboard = () => {
-  const { profile, signOut, user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
   const { unreadCount: unreadMessageCount } = useUnreadMessageCount(user?.id);
   usePresence(user?.id);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       if (!user?.id) return;
-
       const { data } = await supabase
         .from("notifications")
         .select("*")
@@ -6740,327 +6769,68 @@ const CandidateDashboard = () => {
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);
-
       setNotifications(data || []);
     };
-
     fetchNotifications();
-
-    // Poll for new notifications instead of a realtime channel
     const timer = setInterval(() => {
       if (!document.hidden) void fetchNotifications();
     }, 15000);
-
     return () => clearInterval(timer);
   }, [user?.id]);
 
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
   const markAsRead = async (notificationId: string) => {
-    await supabase
-      .from("notifications")
-      .update({ is_read: true })
-      .eq("id", notificationId);
-
+    await supabase.from("notifications").update({ is_read: true }).eq("id", notificationId);
     setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
   };
 
   const markAllAsRead = async () => {
     if (!user?.id) return;
-
     await supabase
       .from("notifications")
       .update({ is_read: true })
       .eq("user_id", user.id)
       .eq("is_read", false);
-
     setNotifications([]);
-    setShowNotifications(false);
   };
 
-  const unreadCount = notifications.length;
+  const navWithBadges = navItems.map((n) =>
+    n.name === "Messages" ? { ...n, badge: unreadMessageCount } : n
+  );
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
-            {sidebarCollapsed ? (
-              <Link to="/" className="flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-              </Link>
-            ) : (
-              <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-                <span className="font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                  The 3rd Academy
-                </span>
-              </Link>
-            )}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Navigation - scrollable */}
-          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent`}>
-            {navItems.map((item, index) => {
-              const isActive = location.pathname === item.href;
-              const prevSection = index > 0 ? navItems[index - 1].section : null;
-              const showSectionLabel = item.section !== prevSection;
-
-              return (
-                <div key={item.name}>
-                  {/* Section divider labels */}
-                  {!sidebarCollapsed && showSectionLabel && item.section === "observation" && (
-                    <p className="px-2 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Observation Platform
-                    </p>
-                  )}
-                  {!sidebarCollapsed && showSectionLabel && item.section === "preparation" && (
-                    <div className="mt-3 mb-1">
-                      <div className="border-t border-white/30 mb-3" />
-                      <div className="flex items-center gap-2 px-2 pb-1">
-                        <p className="text-xs font-semibold text-amber-400/80 uppercase tracking-wider">
-                          Preparation
-                        </p>
-                        <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-400 font-medium">
-                          Self-Directed
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  {!sidebarCollapsed && showSectionLabel && item.section === "liveworks" && (
-                    <div className="mt-3 mb-1">
-                      <div className="border-t border-white/30 mb-3" />
-                      <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        LiveWorks
-                      </p>
-                    </div>
-                  )}
-                  {!sidebarCollapsed && showSectionLabel && item.section === "account" && (
-                    <div className="mt-3 mb-1">
-                      <div className="border-t border-white/30 mb-3" />
-                      <p className="px-2 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Account
-                      </p>
-                    </div>
-                  )}
-                  {sidebarCollapsed && showSectionLabel && index > 0 && (
-                    <div className="border-t border-white/10 my-2 mx-1" />
-                  )}
-                  <Link
-                    to={item.href}
-                    title={sidebarCollapsed ? item.name : undefined}
-                    className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors mb-0.5 ${
-                      isActive
-                        ? item.section === "preparation"
-                          ? "bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white border border-amber-500/30"
-                          : "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-white border border-indigo-500/30"
-                        : "text-gray-400 hover:text-white hover:bg-black"
-                    }`}
-                  >
-                    <div className="relative flex-shrink-0">
-                      <item.icon className={`w-5 h-5 ${item.section === "preparation" && isActive ? "text-amber-400" : ""}`} />
-                      {item.name === "Messages" && unreadMessageCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-indigo-500 text-white text-[10px] font-bold px-1">
-                          {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
-                        </span>
-                      )}
-                    </div>
-                    {!sidebarCollapsed && item.name}
-                  </Link>
-                </div>
-              );
-            })}
-          </nav>
-
-          {/* Collapse toggle — desktop only */}
-          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* User */}
-          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
-            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt="Profile"
-                  className={`${sidebarCollapsed ? "w-8 h-8" : "w-10 h-10"} rounded-full object-cover`}
-                />
-              ) : (
-                <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium`}>
-                  {profile?.first_name?.[0]}
-                  {profile?.last_name?.[0]}
-                </div>
-              )}
-              {!sidebarCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {profile?.first_name} {profile?.last_name}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
-                </div>
-              )}
-            </div>
-            {sidebarCollapsed ? (
-              <button
-                onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
-                onClick={handleSignOut}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex-1" />
-          <div className="relative">
-            <button
-              className="relative text-gray-400 hover:text-white"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-indigo-500 rounded-full text-xs flex items-center justify-center text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {/* Notifications dropdown */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-96 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/30 flex items-center justify-between">
-                  <h3 className="font-semibold text-white">Notifications</h3>
-                  {notifications.length > 0 && (
-                    <button
-                      onClick={markAllAsRead}
-                      className="text-xs text-indigo-400 hover:text-indigo-300"
-                    >
-                      Mark all as read
-                    </button>
-                  )}
-                </div>
-                {notifications.length > 0 ? (
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className="p-3 hover:bg-black border-b border-white/5 flex items-start gap-3"
-                      >
-                        <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-white">{notification.title}</p>
-                          <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {new Date(notification.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => markAsRead(notification.id)}
-                          className="text-gray-500 hover:text-white p-1"
-                          title="Mark as read"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center">
-                    <Bell className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-400">No new notifications</p>
-                  </div>
-                )}
-                <div className="p-2 border-t border-white/30">
-                  <button
-                    onClick={() => {
-                      setShowNotifications(false);
-                      navigate("/dashboard/candidate/notifications");
-                    }}
-                    className="w-full px-3 py-2 text-sm text-center text-indigo-400 hover:bg-black rounded-lg"
-                  >
-                    View all notifications
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </header>
-
-        {/* Page content */}
-        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
-          <Routes>
-            <Route index element={<Overview />} />
-            <Route path="observations" element={<ObservationPathway />} />
-            <Route path="observations/session" element={<InteractiveSkillAssessment />} />
-            <Route path="passport" element={<SkillPassport />} />
-            <Route path="growth" element={<GrowthLog />} />
-            <Route path="assessment" element={<SelfAssessmentPage />} />
-            <Route path="assessment/interactive" element={<AssessmentViewer />} />
-            <Route path="training" element={<Training />} />
-            <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="mentors" element={<FindMentor />} />
-            <Route path="connections" element={<Connections />} />
-            <Route path="messages" element={<MessagesPage />} />
-            <Route path="notifications" element={<NotificationsPage />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="agent" element={<AIAgent />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
+    <DashboardLayout
+      role="Candidate"
+      roleTagline="Your record of observed conduct — the register kept in your name."
+      nav={navWithBadges}
+      sections={CANDIDATE_SECTIONS}
+      notifications={notifications}
+      onMarkNotificationRead={markAsRead}
+      onMarkAllRead={markAllAsRead}
+      notificationsHref="/dashboard/candidate/notifications"
+    >
+      <Routes>
+        <Route index element={<Overview />} />
+        <Route path="observations" element={<ObservationPathway />} />
+        <Route path="observations/session" element={<InteractiveSkillAssessment />} />
+        <Route path="passport" element={<SkillPassport />} />
+        <Route path="growth" element={<GrowthLog />} />
+        <Route path="assessment" element={<SelfAssessmentPage />} />
+        <Route path="assessment/interactive" element={<AssessmentViewer />} />
+        <Route path="training" element={<Training />} />
+        <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="mentors" element={<FindMentor />} />
+        <Route path="connections" element={<Connections />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="agent" element={<AIAgent />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Routes>
+    </DashboardLayout>
   );
 };
+
+// ─── LEGACY SHELL BELOW: intentionally unreachable; kept for reference until removal.
 
 export default CandidateDashboard;

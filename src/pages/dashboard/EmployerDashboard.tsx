@@ -8,6 +8,11 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { extractDocumentText } from "@/lib/documentExtractor";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import {
+  DashboardLayout,
+  type DashboardNavItem,
+  type DashboardSection,
+} from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -195,10 +200,10 @@ const Overview = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           Welcome back, {profile?.first_name || "Employer"}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-foreground/60">
           Find verified talent and manage your hiring pipeline.
         </p>
       </motion.div>
@@ -223,15 +228,15 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-background/70 backdrop-blur-md border border-foreground/25 hover:border-foreground/25 transition-colors"
           >
-            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-emerald-600 to-teal-600 transition-opacity" />
+            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-foreground transition-opacity" />
             <div className="relative">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                <stat.icon className="w-5 h-5 text-white" />
+                <stat.icon className="w-5 h-5 text-foreground" />
               </div>
-              <p className="text-sm text-gray-400 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-sm text-foreground/60 mb-1">{stat.label}</p>
+              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -239,53 +244,53 @@ const Overview = () => {
 
       <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
           <div className="space-y-3">
             <Link
               to="/dashboard/employer/search"
-              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-background border border-foreground/25 hover:border-emerald-500/30 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                <Search className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
+                <Search className="w-5 h-5 text-foreground" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-white group-hover:text-emerald-400 transition-colors">Search T3X Exchange</p>
-                <p className="text-sm text-gray-500">Browse verified candidates</p>
+                <p className="font-medium text-foreground group-hover:text-emerald-400 transition-colors">Search T3X Exchange</p>
+                <p className="text-sm text-foreground/850">Browse verified candidates</p>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-emerald-400" />
+              <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-emerald-400" />
             </Link>
             <Link
               to="/dashboard/employer/projects"
-              className="flex items-center gap-4 p-4 rounded-xl bg-black border border-white/30 hover:border-emerald-500/30 transition-colors group"
+              className="flex items-center gap-4 p-4 rounded-xl bg-background border border-foreground/25 hover:border-emerald-500/30 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-foreground" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-white group-hover:text-emerald-400 transition-colors">Post a Project</p>
-                <p className="text-sm text-gray-500">Create a LiveWorks project</p>
+                <p className="font-medium text-foreground group-hover:text-emerald-400 transition-colors">Post a Project</p>
+                <p className="text-sm text-foreground/850">Create a LiveWorks project</p>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-emerald-400" />
+              <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-emerald-400" />
             </Link>
           </div>
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-white mb-4">Platform Benefits</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Platform Benefits</h2>
           <div className="p-6 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border border-emerald-500/20">
-            <h3 className="font-semibold text-white mb-4">Why Use The 3rd Academy?</h3>
+            <h3 className="font-semibold text-foreground mb-4">Why Use The 3rd Academy?</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-gray-400">Pre-vetted candidates with verified Behavioral Evidence Reports</span>
+                <span className="text-foreground/60">Pre-vetted candidates with verified Behavioral Evidence Reports</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-gray-400">Mentor-validated behavioral readiness</span>
+                <span className="text-foreground/60">Mentor-validated behavioral readiness</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-gray-400">Real work samples through LiveWorks projects</span>
+                <span className="text-foreground/60">Real work samples through LiveWorks projects</span>
               </li>
             </ul>
           </div>
@@ -510,23 +515,23 @@ const SearchTalent = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">T3X Talent Exchange</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">T3X Talent Exchange</h1>
+        <p className="text-foreground/60">
           Search for verified Behavioral Evidence Report holders.
         </p>
       </motion.div>
 
       {/* Filters */}
-      <motion.div variants={itemVariants} className="p-4 rounded-xl bg-black border border-white/10">
+      <motion.div variants={itemVariants} className="p-4 rounded-xl bg-background border border-foreground/15">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-400">Filters:</span>
+            <Filter className="w-4 h-4 text-foreground/60" />
+            <span className="text-sm text-foreground/60">Filters:</span>
           </div>
           <select
             value={filters.tier}
             onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
-            className="px-3 py-1.5 rounded-lg bg-black border border-white/20 text-white text-sm focus:border-emerald-500 focus:outline-none"
+            className="px-3 py-1.5 rounded-lg bg-background border border-foreground/25 text-foreground text-sm focus:border-emerald-500 focus:outline-none"
           >
             <option value="">All Tiers</option>
             <option value="silver">Silver</option>
@@ -546,7 +551,7 @@ const SearchTalent = () => {
                 className={`px-2 py-1 rounded-full text-[11px] font-medium transition-colors ${
                   filters.dimensions.includes(dim.id)
                     ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
-                    : "bg-white/5 text-gray-500 border border-white/10 hover:text-gray-300"
+                    : "bg-white/5 text-foreground/850 border border-foreground/15 hover:text-foreground/75"
                 }`}
               >
                 {dim.label}
@@ -556,7 +561,7 @@ const SearchTalent = () => {
           {filters.dimensions.length > 0 && (
             <button
               onClick={() => setFilters(prev => ({ ...prev, dimensions: [] }))}
-              className="text-xs text-gray-500 hover:text-white"
+              className="text-xs text-foreground/850 hover:text-foreground"
             >
               Clear
             </button>
@@ -577,7 +582,7 @@ const SearchTalent = () => {
         return filtered.length > 0 ? (
           <motion.div variants={itemVariants} className="space-y-2">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-gray-400">{filtered.length} candidate{filtered.length !== 1 ? "s" : ""} found</p>
+              <p className="text-sm text-foreground/60">{filtered.length} candidate{filtered.length !== 1 ? "s" : ""} found</p>
             </div>
 
             {/* List rows */}
@@ -586,32 +591,32 @@ const SearchTalent = () => {
               const connectionStatus = getConnectionStatus(candidate.id);
 
               return (
-                <div key={candidate.id} className="rounded-xl bg-black border border-white/10 overflow-hidden">
+                <div key={candidate.id} className="rounded-xl bg-background border border-foreground/15 overflow-hidden">
                   {/* List row — always visible */}
                   <div
-                    className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-foreground/5 transition-colors"
                     onClick={() => setExpandedCandidate(isExpanded ? null : candidate.id)}
                   >
                     {candidate.profile?.avatar_url ? (
                       <img src={candidate.profile.avatar_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">
                         {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{candidate.profile?.first_name} {candidate.profile?.last_name}</span>
+                        <span className="font-medium text-foreground">{candidate.profile?.first_name} {candidate.profile?.last_name}</span>
                         <Award className="w-3.5 h-3.5 text-emerald-400" />
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                           candidate.current_tier === "platinum" ? "bg-emerald-500/20 text-emerald-400" :
                           candidate.current_tier === "gold" ? "bg-amber-500/20 text-amber-400" :
-                          "bg-gray-500/20 text-gray-400"
+                          "bg-gray-500/20 text-foreground/60"
                         }`}>
                           Silver
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
+                      <p className="text-xs text-foreground/850 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-2">
                       <span className="text-xs text-emerald-400 flex items-center gap-1">
@@ -628,26 +633,26 @@ const SearchTalent = () => {
                           Connect
                         </Button>
                       )}
-                      <ChevronRight className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                      <ChevronRight className={`w-4 h-4 text-foreground/850 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                     </div>
                   </div>
 
                   {/* Expanded card — Behavioral Evidence Report view */}
                   {isExpanded && (
-                    <div className="border-t border-white/5 p-5 bg-white/[0.02]">
+                    <div className="border-t border-foreground/10 p-5 bg-white/[0.02]">
                       <div className="flex items-start gap-4 mb-4">
                         {candidate.profile?.avatar_url ? (
                           <img src={candidate.profile.avatar_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
                         ) : (
-                          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                          <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-lg">
                             {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
                           </div>
                         )}
                         <div>
-                          <h3 className="text-lg font-semibold text-white">{candidate.profile?.first_name} {candidate.profile?.last_name}</h3>
-                          <p className="text-sm text-gray-400">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
+                          <h3 className="text-lg font-semibold text-foreground">{candidate.profile?.first_name} {candidate.profile?.last_name}</h3>
+                          <p className="text-sm text-foreground/60">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-gray-400 font-medium">Silver</span>
+                            <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-foreground/60 font-medium">Silver</span>
                             <span className="text-xs text-emerald-400 flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Behavioral Evidence Report</span>
                           </div>
                         </div>
@@ -666,8 +671,8 @@ const SearchTalent = () => {
                               const label = getBarsLabel(score);
                               const color = getBarsColor(score);
                               return (
-                                <div key={dim.id} className="p-2.5 rounded-lg bg-black border border-white/10">
-                                  <p className="text-[10px] text-gray-500 mb-1">{dim.label}</p>
+                                <div key={dim.id} className="p-2.5 rounded-lg bg-background border border-foreground/15">
+                                  <p className="text-[10px] text-foreground/850 mb-1">{dim.label}</p>
                                   <p className={`text-sm font-semibold ${color}`}>{label}</p>
                                 </div>
                               );
@@ -679,13 +684,13 @@ const SearchTalent = () => {
                       <div className="flex gap-2">
                         {candidate.verificationCode ? (
                           <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
+                            <Button size="sm" variant="outline" className="border-foreground/25 text-foreground hover:bg-foreground/5">
                               <Shield className="w-4 h-4 mr-1" />
                               View Behavioral Evidence Report
                             </Button>
                           </a>
                         ) : (
-                          <Button size="sm" variant="outline" className="border-white/20 text-gray-600" disabled>
+                          <Button size="sm" variant="outline" className="border-foreground/25 text-foreground/40" disabled>
                             <Shield className="w-4 h-4 mr-1" />
                             View Behavioral Evidence Report
                           </Button>
@@ -704,10 +709,10 @@ const SearchTalent = () => {
             })}
           </motion.div>
         ) : (
-          <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-black border border-white/10 text-center">
-            <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No candidates found</p>
-            <p className="text-sm text-gray-500 mt-1">Try adjusting your filters or check back later</p>
+          <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-background border border-foreground/15 text-center">
+            <Search className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No candidates found</p>
+            <p className="text-sm text-foreground/850 mt-1">Try adjusting your filters or check back later</p>
           </motion.div>
         );
       })()}
@@ -716,48 +721,48 @@ const SearchTalent = () => {
       {showConnectModal && selectedCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/80"
+            className="absolute inset-0 bg-background/80"
             onClick={() => !isSendingConnection && setShowConnectModal(false)}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/30"
+            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/25"
           >
             {connectionSuccess ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
-                <p className="text-gray-400">
+                <h3 className="text-xl font-bold text-foreground mb-2">Request Sent!</h3>
+                <p className="text-foreground/60">
                   Your connection request has been sent to {selectedCandidate.profile?.first_name}.
                 </p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-white">Send Connection Request</h2>
+                  <h2 className="text-xl font-bold text-foreground">Send Connection Request</h2>
                   <button
                     onClick={() => setShowConnectModal(false)}
                     disabled={isSendingConnection}
-                    className="text-gray-400 hover:text-white"
+                    className="text-foreground/60 hover:text-foreground"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 {/* Candidate Preview */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-black mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-background mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
                     {selectedCandidate.profile?.first_name?.[0]}
                     {selectedCandidate.profile?.last_name?.[0]}
                   </div>
                   <div>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-foreground">
                       {selectedCandidate.profile?.first_name} {selectedCandidate.profile?.last_name}
                     </p>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-foreground/60">
                       {selectedCandidate.profile?.headline || "Behavioral Evidence Report Holder"}
                     </p>
                   </div>
@@ -765,7 +770,7 @@ const SearchTalent = () => {
 
                 {/* Message Input */}
                 <div className="mb-6">
-                  <label className="text-sm text-gray-400 block mb-2">
+                  <label className="text-sm text-foreground/60 block mb-2">
                     Add a message (optional)
                   </label>
                   <textarea
@@ -773,7 +778,7 @@ const SearchTalent = () => {
                     onChange={(e) => setConnectionMessage(e.target.value)}
                     placeholder="Introduce yourself and explain why you'd like to connect..."
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none resize-none"
                   />
                 </div>
 
@@ -783,7 +788,7 @@ const SearchTalent = () => {
                     variant="outline"
                     onClick={() => setShowConnectModal(false)}
                     disabled={isSendingConnection}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Cancel
                   </Button>
@@ -889,7 +894,7 @@ const Connections = () => {
       case "accepted": return "bg-emerald-500/20 text-emerald-400";
       case "pending": return "bg-amber-500/20 text-amber-400";
       case "declined": return "bg-red-500/20 text-red-400";
-      default: return "bg-gray-500/20 text-gray-400";
+      default: return "bg-gray-500/20 text-foreground/60";
     }
   };
 
@@ -928,8 +933,8 @@ const Connections = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Connections</h1>
-        <p className="text-gray-400">Manage your candidate connections.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Connections</h1>
+        <p className="text-foreground/60">Manage your candidate connections.</p>
       </motion.div>
 
       {/* Tabs */}
@@ -938,8 +943,8 @@ const Connections = () => {
           onClick={() => setActiveTab("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "all"
-              ? "bg-emerald-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-emerald-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           All ({connections.length})
@@ -948,8 +953,8 @@ const Connections = () => {
           onClick={() => setActiveTab("accepted")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "accepted"
-              ? "bg-emerald-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-emerald-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           Accepted
@@ -963,8 +968,8 @@ const Connections = () => {
           onClick={() => setActiveTab("pending")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "pending"
-              ? "bg-emerald-600 text-white"
-              : "bg-black text-gray-400 hover:text-white"
+              ? "bg-emerald-600 text-foreground"
+              : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
           Awaiting Response
@@ -989,7 +994,7 @@ const Connections = () => {
                 className={`p-6 rounded-xl border transition-colors ${
                   connection.status === "accepted"
                     ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-emerald-500/20"
-                    : "bg-black border-white/30 hover:border-white/20"
+                    : "bg-background border-foreground/25 hover:border-foreground/25"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -1001,31 +1006,31 @@ const Connections = () => {
                         className="w-14 h-14 rounded-xl object-cover"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                      <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-lg">
                         {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                       </div>
                     )}
                     <div>
-                      <p className="font-semibold text-white text-lg">
+                      <p className="font-semibold text-foreground text-lg">
                         {profile?.first_name || "Candidate"} {profile?.last_name || ""}
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-foreground/60">
                           {profile?.headline || "Behavioral Evidence Report Holder"}
                         </p>
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-500/20 text-gray-400 flex items-center gap-1">
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-500/20 text-foreground/60 flex items-center gap-1">
                           <Award className="w-2.5 h-2.5" />Silver
                         </span>
                       </div>
                       {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {candidateProfile.skills.slice(0, 4).map((skill, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
+                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
                               {skill}
                             </span>
                           ))}
                           {candidateProfile.skills.length > 4 && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-black text-gray-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
                               +{candidateProfile.skills.length - 4}
                             </span>
                           )}
@@ -1038,7 +1043,7 @@ const Connections = () => {
                       <StatusIcon className="w-4 h-4" />
                       {connection.status === "pending" ? "Awaiting Response" : connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
                     </span>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-foreground/850 mt-2">
                       {connection.responded_at
                         ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
                         : `Sent ${new Date(connection.created_at).toLocaleDateString()}`}
@@ -1047,19 +1052,19 @@ const Connections = () => {
                 </div>
 
                 {connection.message && (
-                  <p className="mt-4 text-sm text-gray-400 bg-black/20 p-3 rounded-lg">
-                    <span className="text-gray-500">Your message: </span>
+                  <p className="mt-4 text-sm text-foreground/60 bg-background/20 p-3 rounded-lg">
+                    <span className="text-foreground/850">Your message: </span>
                     {connection.message}
                   </p>
                 )}
 
                 {/* Actions for accepted connections */}
                 {connection.status === "accepted" && profile?.email && (
-                  <div className="mt-4 pt-4 border-t border-white/30 flex gap-2">
+                  <div className="mt-4 pt-4 border-t border-foreground/25 flex gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-black"
+                      className="border-foreground/25 text-foreground hover:bg-foreground/5"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View Full Profile
@@ -1080,11 +1085,11 @@ const Connections = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+          className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
         >
-          <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No connections yet</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+          <p className="text-foreground/60">No connections yet</p>
+          <p className="text-sm text-foreground/850 mt-1">
             Search for candidates and send connection requests
           </p>
           <Link to="/dashboard/employer/search">
@@ -1385,7 +1390,7 @@ const Projects = () => {
 
   const getEscrowStatusBadge = (status: string | null) => {
     const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
-      pending: { label: "Not Funded", color: "text-gray-400 bg-gray-500/20", icon: Wallet },
+      pending: { label: "Not Funded", color: "text-foreground/60 bg-gray-500/20", icon: Wallet },
       funded: { label: "In Escrow", color: "text-amber-400 bg-amber-500/20", icon: Lock },
       released: { label: "Released", color: "text-emerald-400 bg-emerald-500/20", icon: Unlock },
       refunded: { label: "Refunded", color: "text-red-400 bg-red-500/20", icon: ArrowRight },
@@ -1494,8 +1499,8 @@ const Projects = () => {
       case "open": return "bg-emerald-500/20 text-emerald-400";
       case "in_progress": return "bg-amber-500/20 text-amber-400";
       case "completed": return "bg-blue-500/20 text-blue-400";
-      case "draft": return "bg-gray-500/20 text-gray-400";
-      default: return "bg-gray-500/20 text-gray-400";
+      case "draft": return "bg-gray-500/20 text-foreground/60";
+      default: return "bg-gray-500/20 text-foreground/60";
     }
   };
 
@@ -1516,8 +1521,8 @@ const Projects = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">LiveWorks Projects</h1>
-          <p className="text-gray-400">Create and manage project postings.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">LiveWorks Projects</h1>
+          <p className="text-foreground/60">Create and manage project postings.</p>
         </div>
         <Button
           onClick={() => setShowNewProject(true)}
@@ -1533,58 +1538,58 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-xl bg-black border border-white/30"
+          className="p-6 rounded-xl bg-background border border-foreground/25"
         >
-          <h2 className="text-lg font-semibold text-white mb-4">Create New Project</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Create New Project</h2>
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Project Title</label>
+              <label className="text-sm text-foreground/60 block mb-2">Project Title</label>
               <input
                 type="text"
                 value={newProject.title}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g., Build a Landing Page"
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Description</label>
+              <label className="text-sm text-foreground/60 block mb-2">Description</label>
               <textarea
                 value={newProject.description}
                 onChange={(e) => setNewProject((prev) => ({ ...prev, description: e.target.value }))}
                 placeholder="Describe the project requirements..."
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Category</label>
+                <label className="text-sm text-foreground/60 block mb-2">Category</label>
                 <input
                   type="text"
                   value={newProject.category}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, category: e.target.value }))}
                   placeholder="e.g., Web Development"
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Duration (days)</label>
+                <label className="text-sm text-foreground/60 block mb-2">Duration (days)</label>
                 <input
                   type="number"
                   value={newProject.duration_days}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, duration_days: parseInt(e.target.value) || 14 }))}
                   min={7}
                   max={90}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Skill Level</label>
+                <label className="text-sm text-foreground/60 block mb-2">Skill Level</label>
                 <select
                   value={newProject.skill_level}
                   onChange={(e) => setNewProject((prev) => ({ ...prev, skill_level: e.target.value as "beginner" | "intermediate" | "advanced" }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
@@ -1597,29 +1602,29 @@ const Projects = () => {
             <div className="p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
               <div className="flex items-center gap-2 mb-3">
                 <DollarSign className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-medium text-white">Project Budget</h3>
+                <h3 className="font-medium text-foreground">Project Budget</h3>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Minimum Budget ($)</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Minimum Budget ($)</label>
                   <input
                     type="number"
                     value={newProject.budget_min}
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_min: e.target.value }))}
                     placeholder="e.g., 500"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Maximum Budget ($)</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Maximum Budget ($)</label>
                   <input
                     type="number"
                     value={newProject.budget_max}
                     onChange={(e) => setNewProject((prev) => ({ ...prev, budget_max: e.target.value }))}
                     placeholder="e.g., 1000"
                     min={0}
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1628,7 +1633,7 @@ const Projects = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowNewProject(false)}
-                className="border-white/20"
+                className="border-foreground/25"
               >
                 Cancel
               </Button>
@@ -1655,17 +1660,17 @@ const Projects = () => {
             return (
               <div
                 key={project.id}
-                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{project.title}</h3>
+                    <h3 className="font-semibold text-foreground text-lg">{project.title}</h3>
                     <div className="flex items-center gap-3 mt-2">
                       <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
                         {project.status.replace("_", " ")}
                       </span>
-                      <span className="text-sm text-gray-500">{project.category}</span>
-                      <span className="text-sm text-gray-500">{project.duration_days} days</span>
+                      <span className="text-sm text-foreground/850">{project.category}</span>
+                      <span className="text-sm text-foreground/850">{project.duration_days} days</span>
                       {applicationCount > 0 && (
                         <span className="text-sm text-emerald-400 flex items-center gap-1">
                           <UserPlus className="w-3 h-3" />
@@ -1685,7 +1690,7 @@ const Projects = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-white/20 text-white hover:bg-black"
+                        className="border-foreground/25 text-foreground hover:bg-foreground/5"
                         onClick={() => setShowStatusMenu(showStatusMenu === project.id ? null : project.id)}
                       >
                         <Edit className="w-4 h-4 mr-1" />
@@ -1693,12 +1698,12 @@ const Projects = () => {
                         <ChevronDown className="w-3 h-3 ml-1" />
                       </Button>
                       {showStatusMenu === project.id && (
-                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-gray-900 border border-white/30 shadow-xl z-10">
+                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-background/50 border border-foreground/25 shadow-xl z-10">
                           {statusActions.map((action) => (
                             <button
                               key={action.status}
                               onClick={() => updateProjectStatus(project.id, action.status)}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-black flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                              className="w-full px-4 py-2 text-left text-sm text-foreground/75 hover:bg-foreground/5 flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
                             >
                               <action.icon className="w-4 h-4" />
                               {action.label}
@@ -1717,17 +1722,17 @@ const Projects = () => {
                     </Button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-400 line-clamp-2">{project.description}</p>
+                <p className="text-sm text-foreground/60 line-clamp-2">{project.description}</p>
 
                 {/* Show applicants preview if any */}
                 {project.applications && project.applications.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-white/30">
-                    <p className="text-xs text-gray-500 mb-2">Recent Applicants:</p>
+                  <div className="mt-4 pt-4 border-t border-foreground/25">
+                    <p className="text-xs text-foreground/850 mb-2">Recent Applicants:</p>
                     <div className="flex items-center gap-2">
                       {project.applications.slice(0, 4).map((app) => (
                         <div
                           key={app.id}
-                          className="flex items-center gap-2 px-2 py-1 rounded bg-black"
+                          className="flex items-center gap-2 px-2 py-1 rounded bg-background"
                         >
                           {app.candidate?.profile?.avatar_url ? (
                             <img
@@ -1736,11 +1741,11 @@ const Projects = () => {
                               className="w-6 h-6 rounded-full object-cover"
                             />
                           ) : (
-                            <div className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs">
+                            <div className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-foreground text-xs">
                               {app.candidate?.profile?.first_name?.[0]}
                             </div>
                           )}
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-foreground/60">
                             {app.candidate?.profile?.first_name}
                           </span>
                           <span className={`px-1.5 py-0.5 rounded text-xs ${
@@ -1755,7 +1760,7 @@ const Projects = () => {
                         </div>
                       ))}
                       {project.applications.length > 4 && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-foreground/850">
                           +{project.applications.length - 4} more
                         </span>
                       )}
@@ -1770,11 +1775,11 @@ const Projects = () => {
         !showNewProject && (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
           >
-            <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No projects yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <Briefcase className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No projects yet</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Create a LiveWorks project to find candidates
             </p>
           </motion.div>
@@ -1786,31 +1791,31 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedProject(null)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-3xl max-h-[80vh] overflow-hidden"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-3xl max-h-[80vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-white/30">
+            <div className="p-6 border-b border-foreground/25">
               <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white">{selectedProject.title}</h2>
+                  <h2 className="text-xl font-bold text-foreground">{selectedProject.title}</h2>
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(selectedProject.status)}`}>
                       {selectedProject.status.replace("_", " ")}
                     </span>
-                    <span className="text-sm text-gray-500">{selectedProject.category}</span>
+                    <span className="text-sm text-foreground/850">{selectedProject.category}</span>
                   </div>
                 </div>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => setSelectedProject(null)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-foreground/60 hover:text-foreground"
                 >
                   <X className="w-5 h-5" />
                 </Button>
@@ -1819,34 +1824,34 @@ const Projects = () => {
 
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               <div className="mb-6">
-                <h3 className="text-sm text-gray-400 mb-2">Description</h3>
-                <p className="text-gray-300">{selectedProject.description}</p>
+                <h3 className="text-sm text-foreground/60 mb-2">Description</h3>
+                <p className="text-foreground/75">{selectedProject.description}</p>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-black">
-                  <p className="text-xs text-gray-500">Duration</p>
-                  <p className="text-white font-medium">{selectedProject.duration_days} days</p>
+                <div className="p-3 rounded-lg bg-background">
+                  <p className="text-xs text-foreground/850">Duration</p>
+                  <p className="text-foreground font-medium">{selectedProject.duration_days} days</p>
                 </div>
-                <div className="p-3 rounded-lg bg-black">
-                  <p className="text-xs text-gray-500">Skill Level</p>
-                  <p className="text-white font-medium capitalize">{selectedProject.skill_level}</p>
+                <div className="p-3 rounded-lg bg-background">
+                  <p className="text-xs text-foreground/850">Skill Level</p>
+                  <p className="text-foreground font-medium capitalize">{selectedProject.skill_level}</p>
                 </div>
-                <div className="p-3 rounded-lg bg-black">
-                  <p className="text-xs text-gray-500">Applicants</p>
-                  <p className="text-white font-medium">{selectedProject.applications?.length || 0}</p>
+                <div className="p-3 rounded-lg bg-background">
+                  <p className="text-xs text-foreground/850">Applicants</p>
+                  <p className="text-foreground font-medium">{selectedProject.applications?.length || 0}</p>
                 </div>
               </div>
 
               {/* Applicants List */}
               <div>
-                <h3 className="text-sm text-gray-400 mb-3">Applicants</h3>
+                <h3 className="text-sm text-foreground/60 mb-3">Applicants</h3>
                 {selectedProject.applications && selectedProject.applications.length > 0 ? (
                   <div className="space-y-3">
                     {selectedProject.applications.map((app) => (
                       <div
                         key={app.id}
-                        className="p-4 rounded-lg bg-black border border-white/30"
+                        className="p-4 rounded-lg bg-background border border-foreground/25"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
@@ -1857,18 +1862,18 @@ const Projects = () => {
                                 className="w-12 h-12 rounded-xl object-cover"
                               />
                             ) : (
-                              <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
+                              <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-foreground font-bold">
                                 {app.candidate?.profile?.first_name?.[0]}{app.candidate?.profile?.last_name?.[0]}
                               </div>
                             )}
                             <div>
-                              <p className="font-medium text-white">
+                              <p className="font-medium text-foreground">
                                 {app.candidate?.profile?.first_name} {app.candidate?.profile?.last_name}
                               </p>
-                              <p className="text-sm text-gray-400">
+                              <p className="text-sm text-foreground/60">
                                 {app.candidate?.profile?.headline || "Candidate"}
                               </p>
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-xs text-foreground/850 mt-1">
                                 Applied {new Date(app.created_at).toLocaleDateString()}
                               </p>
                             </div>
@@ -1969,19 +1974,19 @@ const Projects = () => {
                           </div>
                         </div>
                         {app.cover_letter && (
-                          <div className="mt-3 p-3 rounded bg-black/20">
-                            <p className="text-xs text-gray-500 mb-1">Cover Letter</p>
-                            <p className="text-sm text-gray-300">{app.cover_letter}</p>
+                          <div className="mt-3 p-3 rounded bg-background/20">
+                            <p className="text-xs text-foreground/850 mb-1">Cover Letter</p>
+                            <p className="text-sm text-foreground/75">{app.cover_letter}</p>
                           </div>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-black text-center">
-                    <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-400">No applicants yet</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                  <div className="p-6 rounded-lg bg-background text-center">
+                    <Users className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
+                    <p className="text-foreground/60">No applicants yet</p>
+                    <p className="text-xs text-foreground/850 mt-1">
                       Applicants will appear here when candidates apply
                     </p>
                   </div>
@@ -1989,14 +1994,14 @@ const Projects = () => {
               </div>
 
               {/* Milestones Section */}
-              <div className="mt-6 pt-6 border-t border-white/30">
+              <div className="mt-6 pt-6 border-t border-foreground/25">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm text-gray-400">Project Milestones</h3>
+                  <h3 className="text-sm text-foreground/60">Project Milestones</h3>
                   <Button
                     size="sm"
                     onClick={() => setShowMilestoneForm(!showMilestoneForm)}
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-black"
+                    className="border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     Add Milestone
@@ -2005,37 +2010,37 @@ const Projects = () => {
 
                 {/* Add Milestone Form */}
                 {showMilestoneForm && (
-                  <div className="mb-4 p-4 rounded-lg bg-black border border-white/30">
+                  <div className="mb-4 p-4 rounded-lg bg-background border border-foreground/25">
                     <div className="space-y-3">
                       <input
                         type="text"
                         value={newMilestone.title}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, title: e.target.value }))}
                         placeholder="Milestone title..."
-                        className="w-full px-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <input
                         type="text"
                         value={newMilestone.description}
                         onChange={(e) => setNewMilestone(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Description (optional)..."
-                        className="w-full px-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none text-sm"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <input
                           type="date"
                           value={newMilestone.dueDate}
                           onChange={(e) => setNewMilestone(prev => ({ ...prev, dueDate: e.target.value }))}
-                          className="px-3 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none text-sm"
+                          className="px-3 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-emerald-500 focus:outline-none text-sm"
                         />
                         <div className="relative">
-                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/850" />
                           <input
                             type="number"
                             value={newMilestone.paymentAmount}
                             onChange={(e) => setNewMilestone(prev => ({ ...prev, paymentAmount: e.target.value }))}
                             placeholder="Payment amount"
-                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none text-sm"
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none text-sm"
                           />
                         </div>
                       </div>
@@ -2055,7 +2060,7 @@ const Projects = () => {
                             setShowMilestoneForm(false);
                             setNewMilestone({ title: "", description: "", dueDate: "", paymentAmount: "" });
                           }}
-                          className="text-gray-400 hover:text-white"
+                          className="text-foreground/60 hover:text-foreground"
                         >
                           Cancel
                         </Button>
@@ -2074,7 +2079,7 @@ const Projects = () => {
                           case "submitted": return "bg-blue-500/20 text-blue-400";
                           case "in_progress": return "bg-amber-500/20 text-amber-400";
                           case "revision_requested": return "bg-red-500/20 text-red-400";
-                          default: return "bg-gray-500/20 text-gray-400";
+                          default: return "bg-gray-500/20 text-foreground/60";
                         }
                       };
 
@@ -2087,7 +2092,7 @@ const Projects = () => {
                           className={`p-4 rounded-lg border transition-colors ${
                             milestone.status === "approved"
                               ? "bg-emerald-500/5 border-emerald-500/20"
-                              : "bg-black border-white/30"
+                              : "bg-background border-foreground/25"
                           }`}
                         >
                           <div className="flex items-start justify-between">
@@ -2095,18 +2100,18 @@ const Projects = () => {
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
                                 milestone.status === "approved"
                                   ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-black text-gray-400"
+                                  : "bg-background text-foreground/60"
                               }`}>
                                 {index + 1}
                               </div>
                               <div>
-                                <p className="font-medium text-white">{milestone.title}</p>
+                                <p className="font-medium text-foreground">{milestone.title}</p>
                                 {milestone.description && (
-                                  <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
+                                  <p className="text-sm text-foreground/60 mt-1">{milestone.description}</p>
                                 )}
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                   {milestone.due_date && (
-                                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                                    <span className="text-xs text-foreground/850 flex items-center gap-1">
                                       <Calendar className="w-3 h-3" />
                                       Due: {new Date(milestone.due_date).toLocaleDateString()}
                                     </span>
@@ -2193,7 +2198,7 @@ const Projects = () => {
                                       setEscrowAction(null);
                                       setShowEscrowModal(true);
                                     }}
-                                    className="border-white/20 text-gray-400 hover:text-white h-7 px-2"
+                                    className="border-foreground/25 text-foreground/60 hover:text-foreground h-7 px-2"
                                   >
                                     <Eye className="w-3 h-3 mr-1" />
                                     View
@@ -2207,10 +2212,10 @@ const Projects = () => {
                     })}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-lg bg-black text-center">
-                    <Briefcase className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-400">No milestones yet</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                  <div className="p-6 rounded-lg bg-background text-center">
+                    <Briefcase className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
+                    <p className="text-foreground/60">No milestones yet</p>
+                    <p className="text-xs text-foreground/850 mt-1">
                       Add milestones to track project progress
                     </p>
                   </div>
@@ -2226,7 +2231,7 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-[60] p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-[60] p-4"
           onClick={() => {
             setShowEscrowModal(false);
             setSelectedMilestone(null);
@@ -2236,7 +2241,7 @@ const Projects = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             {escrowAction === "fund" ? (
@@ -2244,19 +2249,19 @@ const Projects = () => {
                 {/* Share Payment Credentials */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-                    <Wallet className="w-6 h-6 text-indigo-400" />
+                    <Wallet className="w-6 h-6 ink-vermilion" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Share Payment Details</h3>
-                    <p className="text-sm text-gray-400">Provide payment credentials for the candidate</p>
+                    <h3 className="text-lg font-semibold text-foreground">Share Payment Details</h3>
+                    <p className="text-sm text-foreground/60">Provide payment credentials for the candidate</p>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
-                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
-                  <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/30">
-                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                <div className="p-4 rounded-lg bg-background border border-foreground/25 mb-4">
+                  <p className="text-sm text-foreground/60 mb-1">Milestone</p>
+                  <p className="text-foreground font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-foreground/25">
+                    <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
@@ -2265,11 +2270,11 @@ const Projects = () => {
 
                 <div className="space-y-4 mb-4">
                   <div>
-                    <label className="text-sm text-gray-400 block mb-2">Payment Method</label>
+                    <label className="text-sm text-foreground/60 block mb-2">Payment Method</label>
                     <select
                       value={paymentDetails.method}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, method: e.target.value }))}
-                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-indigo-500 focus:outline-none"
                     >
                       <option value="paypal">PayPal</option>
                       <option value="bank_transfer">Bank Transfer</option>
@@ -2283,7 +2288,7 @@ const Projects = () => {
                   </div>
 
                   <div>
-                    <label className="text-sm text-gray-400 block mb-2">
+                    <label className="text-sm text-foreground/60 block mb-2">
                       Payment Credentials
                       <span className="text-red-400">*</span>
                     </label>
@@ -2300,18 +2305,18 @@ const Projects = () => {
                           : "Enter payment details..."
                       }
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-indigo-500 focus:outline-none resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm text-gray-400 block mb-2">Additional Notes (Optional)</label>
+                    <label className="text-sm text-foreground/60 block mb-2">Additional Notes (Optional)</label>
                     <input
                       type="text"
                       value={paymentDetails.notes}
                       onChange={(e) => setPaymentDetails((prev) => ({ ...prev, notes: e.target.value }))}
                       placeholder="Any special instructions..."
-                      className="w-full px-4 py-2.5 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-4 py-2.5 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2333,7 +2338,7 @@ const Projects = () => {
                       setSelectedMilestone(null);
                       setPaymentDetails({ method: "paypal", credentials: "", notes: "" });
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Cancel
                   </Button>
@@ -2355,36 +2360,36 @@ const Projects = () => {
                     <CheckCircle className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Verify Payment</h3>
-                    <p className="text-sm text-gray-400">Confirm you received the payment</p>
+                    <h3 className="text-lg font-semibold text-foreground">Verify Payment</h3>
+                    <p className="text-sm text-foreground/60">Confirm you received the payment</p>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
-                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
-                  <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/30">
-                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                <div className="p-4 rounded-lg bg-background border border-foreground/25 mb-4">
+                  <p className="text-sm text-foreground/60 mb-1">Milestone</p>
+                  <p className="text-foreground font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-foreground/25">
+                    <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
                   {selectedMilestone.payment_method && (
-                    <div className="mt-3 pt-3 border-t border-white/30">
-                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
-                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    <div className="mt-3 pt-3 border-t border-foreground/25">
+                      <p className="text-sm text-foreground/60 mb-1">Payment Method</p>
+                      <p className="text-foreground capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
                     </div>
                   )}
                 </div>
 
                 {selectedMilestone.payment_proof_url && (
-                  <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
-                    <p className="text-sm text-gray-400 mb-2">Payment Proof Submitted</p>
+                  <div className="p-4 rounded-lg bg-background border border-foreground/25 mb-4">
+                    <p className="text-sm text-foreground/60 mb-2">Payment Proof Submitted</p>
                     <a
                       href={selectedMilestone.payment_proof_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300"
+                      className="flex items-center gap-2 ink-vermilion hover:ink-vermilion"
                     >
                       <ExternalLink className="w-4 h-4" />
                       View Screenshot / Receipt
@@ -2408,7 +2413,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Cancel
                   </Button>
@@ -2429,30 +2434,30 @@ const Projects = () => {
                     <DollarSign className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Payment Details</h3>
-                    <p className="text-sm text-gray-400">Milestone payment information</p>
+                    <h3 className="text-lg font-semibold text-foreground">Payment Details</h3>
+                    <p className="text-sm text-foreground/60">Milestone payment information</p>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-black border border-white/30 mb-4">
-                  <p className="text-sm text-gray-400 mb-1">Milestone</p>
-                  <p className="text-white font-medium">{selectedMilestone.title}</p>
-                  <div className="mt-3 pt-3 border-t border-white/30">
-                    <p className="text-sm text-gray-400 mb-1">Payment Amount</p>
+                <div className="p-4 rounded-lg bg-background border border-foreground/25 mb-4">
+                  <p className="text-sm text-foreground/60 mb-1">Milestone</p>
+                  <p className="text-foreground font-medium">{selectedMilestone.title}</p>
+                  <div className="mt-3 pt-3 border-t border-foreground/25">
+                    <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
                     <p className="text-2xl font-bold text-emerald-400">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
                   {selectedMilestone.payment_method && (
-                    <div className="mt-3 pt-3 border-t border-white/30">
-                      <p className="text-sm text-gray-400 mb-1">Payment Method</p>
-                      <p className="text-white capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
+                    <div className="mt-3 pt-3 border-t border-foreground/25">
+                      <p className="text-sm text-foreground/60 mb-1">Payment Method</p>
+                      <p className="text-foreground capitalize">{selectedMilestone.payment_method.replace("_", " ")}</p>
                     </div>
                   )}
                   {selectedMilestone.payment_credentials && (
-                    <div className="mt-3 pt-3 border-t border-white/30">
-                      <p className="text-sm text-gray-400 mb-1">Payment Credentials</p>
-                      <p className="text-white text-sm whitespace-pre-wrap">{selectedMilestone.payment_credentials}</p>
+                    <div className="mt-3 pt-3 border-t border-foreground/25">
+                      <p className="text-sm text-foreground/60 mb-1">Payment Credentials</p>
+                      <p className="text-foreground text-sm whitespace-pre-wrap">{selectedMilestone.payment_credentials}</p>
                     </div>
                   )}
                 </div>
@@ -2464,7 +2469,7 @@ const Projects = () => {
                       setShowEscrowModal(false);
                       setSelectedMilestone(null);
                     }}
-                    className="flex-1 border-white/20 text-white hover:bg-black"
+                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
                   >
                     Close
                   </Button>
@@ -2665,8 +2670,8 @@ const Feedback = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Hire Feedback</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Hire Feedback</h1>
+        <p className="text-foreground/60">
           Provide 30/60/90 day performance feedback for your hires.
         </p>
       </motion.div>
@@ -2679,7 +2684,7 @@ const Feedback = () => {
         <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
         <div>
           <p className="text-emerald-400 font-medium">Why feedback matters</p>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-foreground/60 mt-1">
             Your feedback helps improve the accuracy of Behavioral Evidence Reports and the overall
             quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
           </p>
@@ -2697,7 +2702,7 @@ const Feedback = () => {
               return (
                 <div
                   key={hire.connection.id}
-                  className="p-6 rounded-xl bg-black border border-white/30"
+                  className="p-6 rounded-xl bg-background border border-foreground/25"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -2714,15 +2719,15 @@ const Feedback = () => {
                         </div>
                       )}
                       <div>
-                        <p className="font-semibold text-white text-lg">
+                        <p className="font-semibold text-foreground text-lg">
                           {hire.candidate?.profile?.first_name} {hire.candidate?.profile?.last_name}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-foreground/60">
                           Hired {days} days ago
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                           {hire.candidate?.current_tier && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 text-indigo-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 ink-vermilion">
                               {hire.candidate.current_tier.replace("_", " ")}
                             </span>
                           )}
@@ -2742,10 +2747,10 @@ const Feedback = () => {
                             className={`px-3 py-2 rounded-lg text-center ${
                               feedback
                                 ? "bg-emerald-500/20 border border-emerald-500/30"
-                                : "bg-black border border-white/30"
+                                : "bg-background border border-foreground/25"
                             }`}
                           >
-                            <p className="text-xs text-gray-500">{typeLabel}</p>
+                            <p className="text-xs text-foreground/850">{typeLabel}</p>
                             {feedback ? (
                               <div className="flex items-center justify-center gap-1 mt-1">
                                 <Star className="w-3 h-3 text-amber-400" />
@@ -2754,7 +2759,7 @@ const Feedback = () => {
                                 </span>
                               </div>
                             ) : (
-                              <p className="text-xs text-gray-600 mt-1">Pending</p>
+                              <p className="text-xs text-foreground/40 mt-1">Pending</p>
                             )}
                           </div>
                         );
@@ -2764,7 +2769,7 @@ const Feedback = () => {
 
                   {/* Action Buttons */}
                   {availableTypes.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/30 flex gap-2">
+                    <div className="mt-4 pt-4 border-t border-foreground/25 flex gap-2">
                       {availableTypes.map((type) => (
                         <Button
                           key={type}
@@ -2784,16 +2789,16 @@ const Feedback = () => {
 
                   {/* Show completed feedback summary */}
                   {hire.feedbacks && hire.feedbacks.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/30">
-                      <p className="text-sm text-gray-500 mb-2">Previous Feedback</p>
+                    <div className="mt-4 pt-4 border-t border-foreground/25">
+                      <p className="text-sm text-foreground/850 mb-2">Previous Feedback</p>
                       <div className="space-y-2">
                         {hire.feedbacks.map((fb) => (
                           <div
                             key={fb.id || fb.feedback_type}
-                            className="flex items-center justify-between p-3 rounded-lg bg-black/20"
+                            className="flex items-center justify-between p-3 rounded-lg bg-background/20"
                           >
                             <div className="flex items-center gap-3">
-                              <span className="text-sm text-gray-400">{fb.feedback_type.replace("_", " ")}</span>
+                              <span className="text-sm text-foreground/60">{fb.feedback_type.replace("_", " ")}</span>
                               <div className="flex items-center gap-1">
                                 {Array.from({ length: 5 }).map((_, i) => (
                                   <Star
@@ -2801,7 +2806,7 @@ const Feedback = () => {
                                     className={`w-3 h-3 ${
                                       i < fb.performance_rating
                                         ? "text-amber-400 fill-amber-400"
-                                        : "text-gray-600"
+                                        : "text-foreground/40"
                                     }`}
                                   />
                                 ))}
@@ -2824,10 +2829,10 @@ const Feedback = () => {
             })}
           </div>
         ) : (
-          <div className="p-12 rounded-2xl bg-black border border-white/30 text-center">
-            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No hires yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No hires yet</p>
+            <p className="text-sm text-foreground/850 mt-1">
               When candidates accept your connection requests, they'll appear here for feedback.
             </p>
           </div>
@@ -2839,25 +2844,25 @@ const Feedback = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowFeedbackModal(false)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               {feedbackType.replace("_", " ")} Feedback
             </h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-foreground/60 mb-6">
               Share your experience with {selectedHire.candidate?.profile?.first_name}
             </p>
 
             {/* Performance Rating */}
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">
+              <label className="text-sm text-foreground/60 block mb-2">
                 Overall Performance Rating
               </label>
               <div className="flex gap-2">
@@ -2870,7 +2875,7 @@ const Feedback = () => {
                     className={`p-3 rounded-lg transition-colors ${
                       feedbackForm.performanceRating >= rating
                         ? "bg-amber-500/20 text-amber-400"
-                        : "bg-black text-gray-500 hover:bg-black"
+                        : "bg-background text-foreground/850 hover:bg-foreground/5"
                     }`}
                   >
                     <Star
@@ -2885,7 +2890,7 @@ const Feedback = () => {
 
             {/* Readiness Accuracy */}
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">
+              <label className="text-sm text-foreground/60 block mb-2">
                 How accurate was their Behavioral Evidence Report tier?
               </label>
               <div className="flex gap-2">
@@ -2897,15 +2902,15 @@ const Feedback = () => {
                     }
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                       feedbackForm.readinessAccuracy === rating
-                        ? "bg-emerald-600 text-white"
-                        : "bg-black text-gray-400 hover:bg-black"
+                        ? "bg-emerald-600 text-foreground"
+                        : "bg-background text-foreground/60 hover:bg-foreground/5"
                     }`}
                   >
                     {rating}
                   </button>
                 ))}
               </div>
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div className="flex justify-between text-xs text-foreground/850 mt-1">
                 <span>Not accurate</span>
                 <span>Very accurate</span>
               </div>
@@ -2913,7 +2918,7 @@ const Feedback = () => {
 
             {/* Would Hire Again */}
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">
+              <label className="text-sm text-foreground/60 block mb-2">
                 Would you hire this person again?
               </label>
               <div className="flex gap-3">
@@ -2923,8 +2928,8 @@ const Feedback = () => {
                   }
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     feedbackForm.wouldHireAgain
-                      ? "bg-emerald-600 text-white"
-                      : "bg-black text-gray-400 hover:bg-black"
+                      ? "bg-emerald-600 text-foreground"
+                      : "bg-background text-foreground/60 hover:bg-foreground/5"
                   }`}
                 >
                   <ThumbsUp className="w-5 h-5" />
@@ -2936,8 +2941,8 @@ const Feedback = () => {
                   }
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     !feedbackForm.wouldHireAgain
-                      ? "bg-red-600 text-white"
-                      : "bg-black text-gray-400 hover:bg-black"
+                      ? "bg-red-600 text-foreground"
+                      : "bg-background text-foreground/60 hover:bg-foreground/5"
                   }`}
                 >
                   <ThumbsDown className="w-5 h-5" />
@@ -2948,7 +2953,7 @@ const Feedback = () => {
 
             {/* Comments */}
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">
+              <label className="text-sm text-foreground/60 block mb-2">
                 Additional Comments (Optional)
               </label>
               <textarea
@@ -2958,7 +2963,7 @@ const Feedback = () => {
                 }
                 placeholder="Share specific observations about their work..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -2967,7 +2972,7 @@ const Feedback = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowFeedbackModal(false)}
-                className="flex-1 border-white/20 text-white hover:bg-black"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -3209,32 +3214,32 @@ const EmployerMessagesPage = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
       <motion.div variants={itemVariants} className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-        <p className="text-gray-400">Connect with candidates, mentors, and other employers.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Messages</h1>
+        <p className="text-foreground/60">Connect with candidates, mentors, and other employers.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
-        <div className="w-80 border-r border-white/30 flex flex-col">
-          <div className="p-4 border-b border-white/30 space-y-3">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-background border border-foreground/25 overflow-hidden flex">
+        <div className="w-80 border-r border-foreground/25 flex flex-col">
+          <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-emerald-600 hover:bg-emerald-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-emerald-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-background/90 border border-emerald-500/30 rounded-xl p-3 space-y-3">
                 <p className="text-xs text-emerald-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-emerald-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
                     <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-emerald-500/10 transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
                         {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-emerald-400" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                        <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
+                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
                       </div>
                       <Send className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                     </button>
@@ -3246,14 +3251,14 @@ const EmployerMessagesPage = () => {
           <div className="flex-1 overflow-y-auto">
             {filteredConversations.length === 0 ? (
               <div className="p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No conversations yet</p>
-                <p className="text-sm text-gray-500 mt-1">Click the <span className="text-emerald-400">+</span> button to find and message anyone</p>
+                <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+                <p className="text-foreground/60">No conversations yet</p>
+                <p className="text-sm text-foreground/850 mt-1">Click the <span className="text-emerald-400">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-emerald-400" />}
@@ -3266,13 +3271,13 @@ const EmployerMessagesPage = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className={`font-medium truncate ${hasUnread ? "text-white" : "text-gray-300"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-gray-500">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
+                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 capitalize">{conv.other_user?.role}</span>
-                      <span className="text-gray-600">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-gray-300" : "text-gray-500"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-foreground/40">·</span>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -3283,7 +3288,7 @@ const EmployerMessagesPage = () => {
         <div className="flex-1 flex flex-col">
           {activeConversation ? (
             <>
-              <div className="p-4 border-b border-white/30 flex items-center gap-4">
+              <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
                     {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-emerald-400" />}
@@ -3291,8 +3296,8 @@ const EmployerMessagesPage = () => {
                   <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
                 </div>
                 <div>
-                  <p className="font-medium text-white">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-gray-500">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
+                  <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
+                  <p className="text-xs text-foreground/850">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -3312,72 +3317,72 @@ const EmployerMessagesPage = () => {
                         <div className="relative">
                           {/* Action buttons */}
                           <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
-                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-emerald-500/50 transition-colors" title="Reply">
+                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-emerald-500/50 transition-colors" title="Reply">
                               <Reply className="w-3.5 h-3.5" />
                             </button>
-                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); toast({ title: "Copied", description: "Message copied to clipboard." }); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-emerald-500/50 transition-colors" title="Copy">
+                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); toast({ title: "Copied", description: "Message copied to clipboard." }); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-emerald-500/50 transition-colors" title="Copy">
                               <Copy className="w-3.5 h-3.5" />
                             </button>
                           </div>
                           {/* Reply quote */}
                           {msg.reply_to && (
-                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-emerald-700/40 border-emerald-400/60 text-emerald-200" : "bg-white/5 border-emerald-400/40 text-gray-400"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-emerald-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-emerald-500/50"), 2000); } }}>
+                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-emerald-700/40 border-emerald-400/60 text-emerald-200" : "bg-white/5 border-emerald-400/40 text-foreground/60"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-emerald-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-emerald-500/50"), 2000); } }}>
                               <p className="font-medium text-[11px] mb-0.5">{msg.reply_to.sender?.first_name || "User"}</p>
                               <p className="truncate opacity-80">{msg.reply_to.content?.substring(0, 80)}</p>
                             </div>
                           )}
-                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-emerald-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
+                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-emerald-600 text-foreground rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                             {msg.file_url && (
                               <div className="mt-2">
                                 {isImageFile(msg.file_url, msg.metadata) ? (
                                   <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
-                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-white/10" />
+                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-foreground/15" />
                                   </a>
                                 ) : (
-                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 text-sm">
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-background/50 border border-foreground/15 hover:border-foreground/25 text-sm">
                                     <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                                     <span className="text-emerald-400 truncate">{msg.metadata?.file_name || 'Attachment'}</span>
-                                    {msg.metadata?.file_size && <span className="text-gray-500 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                    {msg.metadata?.file_size && <span className="text-foreground/850 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
                                   </a>
                                 )}
                               </div>
                             )}
                           </div>
-                          <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="p-4 border-t border-white/30">
+              <div className="p-4 border-t border-foreground/25">
                 {replyTo && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <Reply className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <div className="flex-1 min-w-0 border-l-2 border-emerald-400/50 pl-2">
                       <p className="text-xs font-medium text-emerald-300">{replyTo.sender?.first_name || "User"}</p>
-                      <p className="text-xs text-gray-400 truncate">{replyTo.content?.substring(0, 100)}</p>
+                      <p className="text-xs text-foreground/60 truncate">{replyTo.content?.substring(0, 100)}</p>
                     </div>
-                    <button onClick={() => setReplyTo(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
+                    <button onClick={() => setReplyTo(null)} className="text-foreground/60 hover:text-foreground flex-shrink-0"><X className="w-4 h-4" /></button>
                   </div>
                 )}
                 {attachedFile && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <span className="text-sm text-emerald-300 truncate flex-1">{attachedFile.name}</span>
-                    <span className="text-xs text-gray-500 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
-                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white">
+                    <span className="text-xs text-foreground/850 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-foreground/60 hover:text-foreground">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 )}
                 <div className="flex items-center gap-3">
                   <input type="file" ref={fileInputRef} onChange={handleFileAttach} accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp" className="hidden" />
-                  <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingFile} className="p-3 rounded-xl border border-white/30 text-gray-400 hover:text-white hover:border-emerald-500 transition-colors disabled:opacity-50" title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)">
+                  <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingFile} className="p-3 rounded-xl border border-foreground/25 text-foreground/60 hover:text-foreground hover:border-emerald-500 transition-colors disabled:opacity-50" title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)">
                     {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
                   </button>
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
                   <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -3387,9 +3392,9 @@ const EmployerMessagesPage = () => {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
-                <p className="text-gray-400 max-w-sm mb-4">Choose a conversation or start a new one.</p>
+                <MessageSquare className="w-16 h-16 text-foreground/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">Select a Conversation</h3>
+                <p className="text-foreground/60 max-w-sm mb-4">Choose a conversation or start a new one.</p>
                 <Button onClick={() => setShowNewChat(true)} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6"><Plus className="w-4 h-4 mr-2" />New Conversation</Button>
               </div>
             </div>
@@ -3486,8 +3491,8 @@ const Company = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Company Profile</h1>
-          <p className="text-gray-400">Manage your company information</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Company Profile</h1>
+          <p className="text-foreground/60">Manage your company information</p>
         </div>
         {!isEditing ? (
           <Button onClick={() => setIsEditing(true)} className="bg-emerald-600 hover:bg-emerald-500">
@@ -3495,7 +3500,7 @@ const Company = () => {
           </Button>
         ) : (
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsEditing(false)} className="border-white/20">
+            <Button variant="outline" onClick={() => setIsEditing(false)} className="border-foreground/25">
               Cancel
             </Button>
             <Button onClick={handleSave} disabled={isSaving} className="bg-emerald-600 hover:bg-emerald-500">
@@ -3508,60 +3513,60 @@ const Company = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Contact Info */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">Contact Information</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">Contact Information</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-400">Contact Name</p>
-              <p className="text-white">{profile?.first_name} {profile?.last_name}</p>
+              <p className="text-sm text-foreground/60">Contact Name</p>
+              <p className="text-foreground">{profile?.first_name} {profile?.last_name}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Email</p>
-              <p className="text-white">{profile?.email}</p>
+              <p className="text-sm text-foreground/60">Email</p>
+              <p className="text-foreground">{profile?.email}</p>
             </div>
           </div>
         </div>
 
         {/* Company Info */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">Company Details</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">Company Details</h3>
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Company Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">Company Name</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.company_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_name: e.target.value }))}
                   placeholder="Your company name"
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.company_name || "Not set"}</p>
+                <p className="text-foreground">{formData.company_name || "Not set"}</p>
               )}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Industry</label>
+                <label className="text-sm text-foreground/60 block mb-2">Industry</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.industry}
                     onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                     placeholder="e.g., Technology"
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                   />
                 ) : (
-                  <p className="text-white">{formData.industry || "Not set"}</p>
+                  <p className="text-foreground">{formData.industry || "Not set"}</p>
                 )}
               </div>
               <div>
-                <label className="text-sm text-gray-400 block mb-2">Company Size</label>
+                <label className="text-sm text-foreground/60 block mb-2">Company Size</label>
                 {isEditing ? (
                   <select
                     value={formData.company_size}
                     onChange={(e) => setFormData((prev) => ({ ...prev, company_size: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-emerald-500 focus:outline-none"
                   >
                     <option value="">Select size</option>
                     <option value="1-10">1-10 employees</option>
@@ -3571,26 +3576,26 @@ const Company = () => {
                     <option value="500+">500+ employees</option>
                   </select>
                 ) : (
-                  <p className="text-white">{formData.company_size || "Not set"}</p>
+                  <p className="text-foreground">{formData.company_size || "Not set"}</p>
                 )}
               </div>
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Company Website</label>
+              <label className="text-sm text-foreground/60 block mb-2">Company Website</label>
               {isEditing ? (
                 <input
                   type="url"
                   value={formData.company_website}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company_website: e.target.value }))}
                   placeholder="https://yourcompany.com"
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                 />
               ) : formData.company_website ? (
                 <a href={formData.company_website} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
                   {formData.company_website} <ExternalLink className="w-4 h-4" />
                 </a>
               ) : (
-                <p className="text-white">Not set</p>
+                <p className="text-foreground">Not set</p>
               )}
             </div>
           </div>
@@ -3608,7 +3613,7 @@ const Company = () => {
                 <CheckCircle className="w-6 h-6 text-emerald-400" />
                 <div>
                   <p className="font-semibold text-emerald-400">Verified Company</p>
-                  <p className="text-sm text-gray-400">Your company has been verified</p>
+                  <p className="text-sm text-foreground/60">Your company has been verified</p>
                 </div>
               </>
             ) : (
@@ -3616,7 +3621,7 @@ const Company = () => {
                 <Clock className="w-6 h-6 text-amber-400" />
                 <div>
                   <p className="font-semibold text-amber-400">Pending Verification</p>
-                  <p className="text-sm text-gray-400">Complete your profile to get verified</p>
+                  <p className="text-sm text-foreground/60">Complete your profile to get verified</p>
                 </div>
               </>
             )}
@@ -3639,48 +3644,48 @@ const SettingsPage = () => {
       className="max-w-2xl space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-gray-400">Manage your account preferences</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
+        <p className="text-foreground/60">Manage your account preferences</p>
       </motion.div>
 
       <motion.div variants={itemVariants} className="space-y-4">
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Account</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-400">Email Address</p>
-              <p className="text-white">{user?.email}</p>
+              <p className="text-sm text-foreground/60">Email Address</p>
+              <p className="text-foreground">{user?.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Account Created</p>
-              <p className="text-white">
+              <p className="text-sm text-foreground/60">Account Created</p>
+              <p className="text-foreground">
                 {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "Unknown"}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-black">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Security</h2>
+          <Button variant="outline" className="border-foreground/25 text-foreground hover:bg-foreground/5">
             Change Password
           </Button>
         </div>
 
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Email notifications</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">New candidate matches</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">New candidate matches</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Connection responses</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Connection responses</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
           </div>
         </div>
@@ -3725,28 +3730,28 @@ const EmployerNotificationsPage = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
       <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Notifications</h1>
+        <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
         {notifications.some(n => !n.is_read) && (
-          <Button size="sm" variant="outline" onClick={markAllAsRead} className="border-white/20 text-gray-400">
+          <Button size="sm" variant="outline" onClick={markAllAsRead} className="border-foreground/25 text-foreground/60">
             Mark all as read
           </Button>
         )}
       </motion.div>
       <motion.div variants={itemVariants} className="space-y-2">
         {notifications.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No notifications yet</p>
+          <p className="text-foreground/850 text-center py-8">No notifications yet</p>
         ) : notifications.map(n => (
           <div
             key={n.id}
-            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-black border-white/5" : "bg-emerald-500/5 border-emerald-500/20"}`}
+            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-emerald-500/5 border-emerald-500/20"}`}
             onClick={() => markAsRead(n.id)}
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className={`font-medium ${n.is_read ? "text-gray-400" : "text-white"}`}>{n.title}</p>
-                <p className="text-sm text-gray-500 mt-1">{n.message}</p>
+                <p className={`font-medium ${n.is_read ? "text-foreground/60" : "text-foreground"}`}>{n.title}</p>
+                <p className="text-sm text-foreground/850 mt-1">{n.message}</p>
               </div>
-              <span className="text-xs text-gray-600 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
+              <span className="text-xs text-foreground/40 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         ))}
@@ -3755,240 +3760,78 @@ const EmployerNotificationsPage = () => {
   );
 };
 
+const EMPLOYER_SECTIONS: DashboardSection[] = [
+  { id: "main", label: "§ I · Reading Room" },
+];
+
 const EmployerDashboard = () => {
-  const { profile, signOut, user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; type?: string }[]>([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const location = useLocation();
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; type?: string; created_at: string; is_read: boolean; user_id: string }[]>([]);
   const { unreadCount: unreadMessageCount } = useUnreadMessageCount(user?.id);
   usePresence(user?.id);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       if (!user?.id) return;
-
       const { data } = await supabase
         .from("notifications")
-        .select("id, title, message, type")
+        .select("*")
         .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);
-
-      setNotifications(data || []);
+      setNotifications((data as typeof notifications) || []);
     };
-
     fetchNotifications();
-
-    // Poll for new notifications instead of a realtime channel
     const notifTimer = setInterval(() => {
       if (!document.hidden) void fetchNotifications();
     }, 15000);
-
     return () => clearInterval(notifTimer);
   }, [user?.id]);
 
-  const handleSignOut = async () => {
-    await signOut();
+  const markAsRead = async (id: string) => {
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+    await supabase.from("notifications").update({ is_read: true }).eq("user_id", user.id).eq("is_read", false);
+    setNotifications([]);
   };
 
-  const unreadCount = notifications.length;
+  const navWithBadges: DashboardNavItem[] = navItems.map((n) => ({
+    ...n,
+    section: "main",
+    badge: n.name === "Messages" ? unreadMessageCount : undefined,
+  }));
 
   return (
-    <div className="min-h-screen bg-black">
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
-            {sidebarCollapsed ? (
-              <Link to="/" className="flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-              </Link>
-            ) : (
-              <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-                <span className="font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                  The 3rd Academy
-                </span>
-              </Link>
-            )}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  title={sidebarCollapsed ? item.name : undefined}
-                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-gradient-to-r from-emerald-600/20 to-teal-600/20 text-white border border-emerald-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black"
-                  }`}
-                >
-                  <div className="relative flex-shrink-0">
-                    <item.icon className="w-5 h-5" />
-                    {item.name === "Messages" && unreadMessageCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-emerald-500 text-white text-[10px] font-bold px-1">
-                        {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
-                      </span>
-                    )}
-                  </div>
-                  {!sidebarCollapsed && item.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-          </div>
-
-          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
-            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
-              <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-medium`}>
-                {profile?.first_name?.[0]}
-                {profile?.last_name?.[0]}
-              </div>
-              {!sidebarCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {profile?.first_name} {profile?.last_name}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
-                </div>
-              )}
-            </div>
-            {sidebarCollapsed ? (
-              <button
-                onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
-                onClick={handleSignOut}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex-1" />
-          <div className="relative">
-            <button
-              className="relative text-gray-400 hover:text-white"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full text-xs flex items-center justify-center text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/30">
-                  <h3 className="font-semibold text-white">Notifications</h3>
-                </div>
-                {notifications.length > 0 ? (
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <Link
-                        key={notification.id}
-                        to={
-                          notification.type === 'connection_request' ? '/dashboard/employer/connections' :
-                          notification.type === 'message' ? '/dashboard/employer/messages' :
-                          '/dashboard/employer/notifications'
-                        }
-                        onClick={() => setShowNotifications(false)}
-                        className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-colors border-b border-white/5"
-                      >
-                        <p className="text-sm font-medium text-white">{notification.title}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center">
-                    <Bell className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-400">No new notifications</p>
-                  </div>
-                )}
-                <div className="border-t border-white/10 p-2">
-                  <Link
-                    to="/dashboard/employer/notifications"
-                    className="block w-full text-center py-2 text-sm text-indigo-400 hover:bg-black rounded-lg"
-                    onClick={() => setShowNotifications(false)}
-                  >
-                    View all notifications
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </header>
-
-        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
-          <Routes>
-            <Route index element={<Overview />} />
-            <Route path="search" element={<SearchTalent />} />
-            <Route path="connections" element={<Connections />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="feedback" element={<Feedback />} />
-            <Route path="messages" element={<EmployerMessagesPage />} />
-            <Route path="company" element={<Company />} />
-            <Route path="agent" element={<AIAgent />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="notifications" element={<EmployerNotificationsPage />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
+    <DashboardLayout
+      role="Employer"
+      roleTagline="You read what candidates have released to you — nothing more, nothing hidden."
+      nav={navWithBadges}
+      sections={EMPLOYER_SECTIONS}
+      notifications={notifications}
+      onMarkNotificationRead={markAsRead}
+      onMarkAllRead={markAllAsRead}
+      notificationsHref="/dashboard/employer/notifications"
+    >
+      <Routes>
+        <Route index element={<Overview />} />
+        <Route path="search" element={<SearchTalent />} />
+        <Route path="connections" element={<Connections />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="feedback" element={<Feedback />} />
+        <Route path="messages" element={<EmployerMessagesPage />} />
+        <Route path="company" element={<Company />} />
+        <Route path="agent" element={<AIAgent />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="notifications" element={<EmployerNotificationsPage />} />
+      </Routes>
+    </DashboardLayout>
   );
 };
+
+// legacy shell removed
 
 export default EmployerDashboard;

@@ -8,6 +8,11 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { Button } from "@/components/ui/button";
+import {
+  DashboardLayout,
+  type DashboardNavItem,
+  type DashboardSection,
+} from "@/components/dashboard/DashboardLayout";
 import type { Database } from "@/types/database.types";
 import {
   Users,
@@ -415,25 +420,25 @@ const ObservationFormModal = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={closeModal}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-gray-900 border border-white/30 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+          className="bg-background/50 border border-foreground/25 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/30">
+          <div className="flex items-center justify-between p-6 border-b border-foreground/25">
             <div>
-              <h2 className="text-xl font-bold text-white">Record Observation</h2>
-              <p className="text-sm text-gray-400 mt-1">
+              <h2 className="text-xl font-bold text-foreground">Record Observation</h2>
+              <p className="text-sm text-foreground/60 mt-1">
                 Step {step} of 3: {step === 1 ? "Select Candidate" : step === 2 ? "Behavioral Scoring" : "Summary & Submit"}
               </p>
             </div>
-            <button onClick={closeModal} className="text-gray-400 hover:text-white">
+            <button onClick={closeModal} className="text-foreground/60 hover:text-foreground">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -445,7 +450,7 @@ const ObservationFormModal = () => {
                 <div
                   key={s}
                   className={`h-1 flex-1 rounded-full transition-colors ${
-                    s <= step ? "bg-purple-500" : "bg-black"
+                    s <= step ? "bg-purple-500" : "bg-background"
                   }`}
                 />
               ))}
@@ -461,7 +466,7 @@ const ObservationFormModal = () => {
             ) : step === 1 ? (
               // Step 1: Select Candidate
               <div className="space-y-4">
-                <p className="text-gray-400">Select a mentee to record an observation for:</p>
+                <p className="text-foreground/60">Select a mentee to record an observation for:</p>
                 {assignments.length > 0 ? (
                   assignments.map(assignment => {
                     const profile = assignment.candidate_profile?.profile;
@@ -469,23 +474,23 @@ const ObservationFormModal = () => {
                       <button
                         key={assignment.id}
                         onClick={() => selectCandidate(assignment.id, assignment.candidate_id)}
-                        className="w-full p-4 rounded-xl bg-black border border-white/30 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
+                        className="w-full p-4 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
+                        <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
                           {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-white">{profile?.first_name} {profile?.last_name}</p>
-                          <p className="text-sm text-gray-400">Loop {assignment.loop_number} of 3</p>
+                          <p className="font-medium text-foreground">{profile?.first_name} {profile?.last_name}</p>
+                          <p className="text-sm text-foreground/60">Loop {assignment.loop_number} of 3</p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-gray-500" />
+                        <ChevronRight className="w-5 h-5 text-foreground/850" />
                       </button>
                     );
                   })
                 ) : (
                   <div className="p-8 text-center">
-                    <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400">No active mentees assigned</p>
+                    <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+                    <p className="text-foreground/60">No active mentees assigned</p>
                   </div>
                 )}
               </div>
@@ -493,39 +498,39 @@ const ObservationFormModal = () => {
               // Step 2: Behavioral Scoring
               <div className="space-y-6">
                 {selectedAssignment && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-black">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
+                    <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-foreground font-bold text-sm">
                       {selectedAssignment.candidate_profile?.profile?.first_name?.[0]}
                       {selectedAssignment.candidate_profile?.profile?.last_name?.[0]}
                     </div>
                     <div>
-                      <p className="text-white font-medium">
+                      <p className="text-foreground font-medium">
                         {selectedAssignment.candidate_profile?.profile?.first_name} {selectedAssignment.candidate_profile?.profile?.last_name}
                       </p>
-                      <p className="text-xs text-gray-400">Observation Session</p>
+                      <p className="text-xs text-foreground/60">Observation Session</p>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Session Date</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Session Date</label>
                   <input
                     type="date"
                     value={formData.sessionDate}
                     onChange={e => setFormData(prev => ({ ...prev, sessionDate: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-purple-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <details className="mb-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                    <summary className="text-sm font-medium text-indigo-400 cursor-pointer hover:text-indigo-300">
+                    <summary className="text-sm font-medium ink-vermilion cursor-pointer hover:ink-vermilion">
                       L2 Session Script (Read before starting)
                     </summary>
-                    <div className="mt-3 text-sm text-gray-300 space-y-3">
-                      <p className="text-indigo-300 font-medium">Opening Script — Read verbatim to candidate:</p>
-                      <blockquote className="pl-3 border-l-2 border-indigo-500/50 text-gray-400 italic space-y-2">
-                        <p>"Hello <span className="text-white">[Candidate Name]</span>, my name is <span className="text-white">[Mentor Name]</span>, and I'll be conducting your L2 live observation session today.</p>
+                    <div className="mt-3 text-sm text-foreground/75 space-y-3">
+                      <p className="ink-vermilion font-medium">Opening Script — Read verbatim to candidate:</p>
+                      <blockquote className="pl-3 border-l-2 border-indigo-500/50 text-foreground/60 italic space-y-2">
+                        <p>"Hello <span className="text-foreground">[Candidate Name]</span>, my name is <span className="text-foreground">[Mentor Name]</span>, and I'll be conducting your L2 live observation session today.</p>
                         <p>Before we begin, I want to confirm a few things:</p>
                         <p>This session will be used to observe and document your behavioural responses in a structured professional context. Your responses will be scored using The 3rd Academy's 4-point Behaviourally Anchored Rating Scale.</p>
                         <p>This session may be recorded for quality assurance and audit purposes. Do you consent to proceed with the session under these conditions?</p>
@@ -533,29 +538,29 @@ const ObservationFormModal = () => {
                         <p>Thank you. During this session, I'll present you with scenarios related to your assigned behavioural dimensions. Please respond as naturally and honestly as you can — there are no trick questions, and this is not a test you can fail. The purpose is to observe how you approach workplace situations.</p>
                         <p>Do you have any questions before we begin?"</p>
                       </blockquote>
-                      <p className="text-xs text-gray-500 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>
+                      <p className="text-xs text-foreground/850 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>
                     </div>
                   </details>
-                  <p className="text-sm text-gray-400 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
-                  <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-black/60 border border-white/10 text-center">
-                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-gray-500">Not Yet Demonstrated</p></div>
-                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-gray-500">Emerging</p></div>
-                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-gray-500">Competent</p></div>
-                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-gray-500">Strong</p></div>
+                  <p className="text-sm text-foreground/60 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
+                  <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-background/60 border border-foreground/15 text-center">
+                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-foreground/850">Not Yet Demonstrated</p></div>
+                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-foreground/850">Emerging</p></div>
+                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-foreground/850">Competent</p></div>
+                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-foreground/850">Strong</p></div>
                   </div>
                   <div className="space-y-4">
                     {scoringDimensions.map(dimension => {
                       const l1 = l1Feedback.find(f => f.dimension_id === dimension.id);
                       return (
-                        <div key={dimension.id} className="p-4 rounded-lg bg-black border border-white/30">
+                        <div key={dimension.id} className="p-4 rounded-lg bg-background border border-foreground/25">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <p className="font-medium text-white">{dimension.label}</p>
-                              <p className="text-xs text-gray-500">{dimension.description}</p>
+                              <p className="font-medium text-foreground">{dimension.label}</p>
+                              <p className="text-xs text-foreground/850">{dimension.description}</p>
                             </div>
                             {l1 && l1.bars_score && (
                               <div className="text-right flex-shrink-0 ml-3">
-                                <p className="text-[10px] text-gray-500 uppercase">L1 AI Score</p>
+                                <p className="text-[10px] text-foreground/850 uppercase">L1 AI Score</p>
                                 <span className={`text-sm font-bold ${
                                   l1.bars_score >= 4 ? "text-emerald-400" : l1.bars_score >= 3 ? "text-blue-400" : l1.bars_score >= 2 ? "text-amber-400" : "text-orange-400"
                                 }`}>{l1.bars_score}/4</span>
@@ -564,10 +569,10 @@ const ObservationFormModal = () => {
                           </div>
                           {l1 && l1.ai_draft_feedback && (
                             <details className="mb-2">
-                              <summary className="text-xs text-indigo-400/80 p-2 rounded bg-indigo-500/10 border border-indigo-500/20 cursor-pointer hover:bg-indigo-500/20 transition-colors">
+                              <summary className="text-xs ink-vermilion/80 p-2 rounded bg-indigo-500/10 border border-indigo-500/20 cursor-pointer hover:bg-indigo-500/20 transition-colors">
                                 L1 AI: {l1.ai_draft_feedback.length > 100 ? l1.ai_draft_feedback.substring(0, 100) + "..." : l1.ai_draft_feedback}
                               </summary>
-                              <p className="text-xs text-indigo-400/70 p-2 mt-1 rounded bg-indigo-500/5 border border-indigo-500/10 whitespace-pre-wrap">
+                              <p className="text-xs ink-vermilion/70 p-2 mt-1 rounded bg-indigo-500/5 border border-indigo-500/10 whitespace-pre-wrap">
                                 {l1.ai_draft_feedback}
                               </p>
                             </details>
@@ -585,8 +590,8 @@ const ObservationFormModal = () => {
                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleScoreChange(dimension.id, score); }}
                                 className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${
                                   formData.scores[dimension.id] === score
-                                    ? `${color} text-white`
-                                    : "bg-black text-gray-400 hover:bg-white/20"
+                                    ? `${color} text-foreground`
+                                    : "bg-background text-foreground/60 hover:bg-foreground/10"
                                 }`}
                                 title={label}
                               >
@@ -605,12 +610,12 @@ const ObservationFormModal = () => {
               <div className="space-y-6">
                 {/* Strengths */}
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Observed Strengths</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Observed Strengths</label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {formData.strengths.map(s => (
                       <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm">
                         {s}
-                        <button onClick={() => removeStrength(s)} className="hover:text-white">
+                        <button onClick={() => removeStrength(s)} className="hover:text-foreground">
                           <X className="w-3 h-3" />
                         </button>
                       </span>
@@ -623,7 +628,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewStrength(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addStrength())}
                       placeholder="Add a strength..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addStrength} size="sm" className="bg-emerald-600 hover:bg-emerald-500">
                       <Plus className="w-4 h-4" />
@@ -633,12 +638,12 @@ const ObservationFormModal = () => {
 
                 {/* Areas for Improvement */}
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Areas for Improvement</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Areas for Improvement</label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {formData.areasForImprovement.map(i => (
                       <span key={i} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm">
                         {i}
-                        <button onClick={() => removeImprovement(i)} className="hover:text-white">
+                        <button onClick={() => removeImprovement(i)} className="hover:text-foreground">
                           <X className="w-3 h-3" />
                         </button>
                       </span>
@@ -651,7 +656,7 @@ const ObservationFormModal = () => {
                       onChange={e => setNewImprovement(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImprovement())}
                       placeholder="Add an area for improvement..."
-                      className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                      className="flex-1 px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
                     />
                     <Button onClick={addImprovement} size="sm" className="bg-amber-600 hover:bg-amber-500">
                       <Plus className="w-4 h-4" />
@@ -661,30 +666,30 @@ const ObservationFormModal = () => {
 
                 {/* Notes */}
                 <div>
-                  <label className="text-sm text-gray-400 block mb-2">Additional Notes</label>
+                  <label className="text-sm text-foreground/60 block mb-2">Additional Notes</label>
                   <textarea
                     value={formData.notes}
                     onChange={e => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                     placeholder="Any additional observations or context..."
                     rows={4}
-                    className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                    className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none resize-none"
                   />
                 </div>
 
                 {/* Score Summary */}
                 <div className="p-4 rounded-lg bg-purple-500/30 border border-purple-500/20">
-                  <h3 className="font-medium text-white mb-3">Score Summary</h3>
+                  <h3 className="font-medium text-foreground mb-3">Score Summary</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {BEHAVIORAL_DIMENSIONS.map(d => (
                       <div key={d.id} className="flex justify-between">
-                        <span className="text-gray-400">{d.label}:</span>
-                        <span className="text-white font-medium">{formData.scores[d.id] || "-"}/4</span>
+                        <span className="text-foreground/60">{d.label}:</span>
+                        <span className="text-foreground font-medium">{formData.scores[d.id] || "-"}/4</span>
                       </div>
                     ))}
                   </div>
                   <div className="mt-3 pt-3 border-t border-purple-500/20 flex justify-between">
-                    <span className="text-gray-400">Average Score:</span>
-                    <span className="text-purple-400 font-bold">
+                    <span className="text-foreground/60">Average Score:</span>
+                    <span className="ink-vermilion font-bold">
                       {Object.values(formData.scores).length > 0
                         ? (Object.values(formData.scores).reduce((a, b) => a + b, 0) / Object.values(formData.scores).length).toFixed(1)
                         : "-"}/4
@@ -696,12 +701,12 @@ const ObservationFormModal = () => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between p-6 border-t border-white/30">
+          <div className="flex items-center justify-between p-6 border-t border-foreground/25">
             {step > 1 ? (
               <Button
                 variant="outline"
                 onClick={() => setStep(s => s - 1)}
-                className="border-white/20 text-white hover:bg-black"
+                className="border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Back
               </Button>
@@ -714,7 +719,7 @@ const ObservationFormModal = () => {
                   variant="outline"
                   onClick={() => handleSubmit(true)}
                   disabled={isSaving}
-                  className="border-white/20 text-white hover:bg-black"
+                  className="border-foreground/25 text-foreground hover:bg-foreground/5"
                 >
                   Save as Draft
                 </Button>
@@ -902,10 +907,10 @@ const Overview = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           Welcome back, {profile?.first_name || "Mentor"}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-foreground/60">
           Manage your mentees and track your observations.
         </p>
       </motion.div>
@@ -922,11 +927,11 @@ const Overview = () => {
                 <div className="flex items-center gap-3">
                   <Bell className="w-5 h-5 text-amber-400" />
                   <div>
-                    <p className="font-medium text-white">{pendingRequests} Pending Mentee Request{pendingRequests > 1 ? 's' : ''}</p>
-                    <p className="text-xs text-gray-400">Candidates waiting for your approval</p>
+                    <p className="font-medium text-foreground">{pendingRequests} Pending Mentee Request{pendingRequests > 1 ? 's' : ''}</p>
+                    <p className="text-xs text-foreground/60">Candidates waiting for your approval</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-500" />
+                <ChevronRight className="w-5 h-5 text-foreground/850" />
               </div>
             </Link>
           )}
@@ -936,11 +941,11 @@ const Overview = () => {
                 <div className="flex items-center gap-3">
                   <ClipboardCheck className="w-5 h-5 text-blue-400" />
                   <div>
-                    <p className="font-medium text-white">{needsL2} Candidate{needsL2 > 1 ? 's' : ''} Ready for L2 Observation</p>
-                    <p className="text-xs text-gray-400">L1 complete — schedule live observation</p>
+                    <p className="font-medium text-foreground">{needsL2} Candidate{needsL2 > 1 ? 's' : ''} Ready for L2 Observation</p>
+                    <p className="text-xs text-foreground/60">L1 complete — schedule live observation</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-500" />
+                <ChevronRight className="w-5 h-5 text-foreground/850" />
               </div>
             </Link>
           )}
@@ -950,11 +955,11 @@ const Overview = () => {
                 <div className="flex items-center gap-3">
                   <Award className="w-5 h-5 text-emerald-400" />
                   <div>
-                    <p className="font-medium text-white">{readyForEndorsement} Candidate{readyForEndorsement > 1 ? 's' : ''} Ready for Endorsement</p>
-                    <p className="text-xs text-gray-400">L1 + L2 complete — submit endorsement decision</p>
+                    <p className="font-medium text-foreground">{readyForEndorsement} Candidate{readyForEndorsement > 1 ? 's' : ''} Ready for Endorsement</p>
+                    <p className="text-xs text-foreground/60">L1 + L2 complete — submit endorsement decision</p>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-500" />
+                <ChevronRight className="w-5 h-5 text-foreground/850" />
               </div>
             </Link>
           )}
@@ -981,15 +986,15 @@ const Overview = () => {
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="relative group p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30 hover:border-white/20 transition-colors"
+            className="relative group p-6 rounded-2xl bg-background/70 backdrop-blur-md border border-foreground/25 hover:border-foreground/25 transition-colors"
           >
-            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-gradient-to-r from-purple-600 to-pink-600 transition-opacity" />
+            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-foreground transition-opacity" />
             <div className="relative">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                <stat.icon className="w-5 h-5 text-white" />
+                <stat.icon className="w-5 h-5 text-foreground" />
               </div>
-              <p className="text-sm text-gray-400 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-sm text-foreground/60 mb-1">{stat.label}</p>
+              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -997,43 +1002,43 @@ const Overview = () => {
 
       {/* Quick Actions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link
             to="/dashboard/mentor/mentees"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
           >
-            <Users className="w-8 h-8 text-purple-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">View Mentees</h3>
-            <p className="text-sm text-gray-400">Manage your assigned candidates</p>
-            <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-purple-400 mt-3 transition-colors" />
+            <Users className="w-8 h-8 ink-vermilion mb-3" />
+            <h3 className="font-semibold text-foreground mb-1">View Mentees</h3>
+            <p className="text-sm text-foreground/60">Manage your assigned candidates</p>
+            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
           </Link>
 
           <Link
             to="/dashboard/mentor/observations"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
           >
             <ClipboardCheck className="w-8 h-8 text-emerald-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">Record Observation</h3>
-            <p className="text-sm text-gray-400">Document candidate behaviors</p>
-            <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-purple-400 mt-3 transition-colors" />
+            <h3 className="font-semibold text-foreground mb-1">Record Observation</h3>
+            <p className="text-sm text-foreground/60">Document candidate behaviors</p>
+            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
           </Link>
 
           <Link
             to="/dashboard/mentor/schedule"
-            className="p-6 rounded-xl bg-black border border-white/30 hover:border-purple-500/30 transition-colors group"
+            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
           >
             <Calendar className="w-8 h-8 text-amber-400 mb-3" />
-            <h3 className="font-semibold text-white mb-1">Manage Schedule</h3>
-            <p className="text-sm text-gray-400">Set your availability</p>
-            <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-purple-400 mt-3 transition-colors" />
+            <h3 className="font-semibold text-foreground mb-1">Manage Schedule</h3>
+            <p className="text-sm text-foreground/60">Set your availability</p>
+            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
           </Link>
         </div>
       </motion.div>
 
       {/* Pending Actions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Pending Actions</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Pending Actions</h2>
         {pendingRequests > 0 || pendingObservations > 0 ? (
           <div className="space-y-3">
             {pendingRequests > 0 && (
@@ -1043,31 +1048,31 @@ const Overview = () => {
                     <Users className="w-5 h-5 text-amber-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-white">{pendingRequests} mentee request{pendingRequests > 1 ? "s" : ""} awaiting approval</p>
-                    <p className="text-sm text-gray-400">Review and accept or decline</p>
+                    <p className="font-medium text-foreground">{pendingRequests} mentee request{pendingRequests > 1 ? "s" : ""} awaiting approval</p>
+                    <p className="text-sm text-foreground/60">Review and accept or decline</p>
                   </div>
                   <ChevronRight className="w-5 h-5 text-amber-400" />
                 </div>
               </Link>
             )}
             {pendingObservations > 0 && (
-              <div className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4">
+              <div className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                   <ClipboardCheck className="w-5 h-5 text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-white">{pendingObservations} pending observations</p>
-                  <p className="text-sm text-gray-400">Complete your scheduled observations</p>
+                  <p className="font-medium text-foreground">{pendingObservations} pending observations</p>
+                  <p className="text-sm text-foreground/60">Complete your scheduled observations</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-600" />
+                <ChevronRight className="w-5 h-5 text-foreground/40" />
               </div>
             )}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
+          <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
             <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-            <p className="text-gray-400">No pending actions</p>
-            <p className="text-sm text-gray-500 mt-1">You're all caught up!</p>
+            <p className="text-foreground/60">No pending actions</p>
+            <p className="text-sm text-foreground/850 mt-1">You're all caught up!</p>
           </div>
         )}
       </motion.div>
@@ -1324,9 +1329,9 @@ const Mentees = () => {
       animate="visible"
       className="space-y-8"
     >
-      <motion.div variants={itemVariants} className="sticky top-0 z-10 bg-black/95 backdrop-blur-sm pb-4 -mx-4 px-4 pt-2 -mt-2 border-b border-white/10">
-        <h1 className="text-3xl font-bold text-white mb-2">My Mentees</h1>
-        <p className="text-gray-400">
+      <motion.div variants={itemVariants} className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 pt-2 -mt-2 border-b border-foreground/15">
+        <h1 className="text-3xl font-bold text-foreground mb-2">My Mentees</h1>
+        <p className="text-foreground/60">
           View and manage your assigned candidates.
         </p>
       </motion.div>
@@ -1351,16 +1356,16 @@ const Mentees = () => {
                 className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-foreground font-bold">
                     {profile?.first_name?.[0]}
                     {profile?.last_name?.[0]}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-white">
+                    <h3 className="font-semibold text-foreground">
                       {profile?.first_name} {profile?.last_name}
                     </h3>
-                    <p className="text-sm text-gray-400">{profile?.email}</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-sm text-foreground/60">{profile?.email}</p>
+                    <p className="text-xs text-foreground/850 mt-1">
                       Requested {new Date(assignment.created_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -1418,23 +1423,23 @@ const Mentees = () => {
             return (
               <div
                 key={assignment.id}
-                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
+                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
                     {profile?.first_name?.[0]}
                     {profile?.last_name?.[0]}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <Link to={`/dashboard/mentor/mentees/${assignment.id}`} className="font-semibold text-white hover:text-indigo-400 transition-colors">
+                      <Link to={`/dashboard/mentor/mentees/${assignment.id}`} className="font-semibold text-foreground hover:ink-vermilion transition-colors">
                         {profile?.first_name} {profile?.last_name}
                       </Link>
                       <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">
                         active
                       </span>
                     </div>
-                    <p className="text-sm text-gray-400">{profile?.email}</p>
+                    <p className="text-sm text-foreground/60">{profile?.email}</p>
                     <div className="flex flex-wrap items-center gap-3 mt-3 text-sm">
                       {assignment.l1_completed ? (
                         <span className="flex items-center gap-1 text-emerald-400">
@@ -1444,10 +1449,10 @@ const Mentees = () => {
                       ) : (
                         <span className="text-amber-400">L1 Not started</span>
                       )}
-                      <span className="text-gray-500">
+                      <span className="text-foreground/850">
                         {assignment.observation_count || 0} L2 observations
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-foreground/850">
                         Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
                       </span>
                     </div>
@@ -1456,7 +1461,7 @@ const Mentees = () => {
                         {assignment.assigned_dimensions.map(dimId => {
                           const dim = BEHAVIORAL_DIMENSIONS.find(d => d.id === dimId);
                           return (
-                            <span key={dimId} className="px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/20">
+                            <span key={dimId} className="px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 ink-vermilion border border-indigo-500/20">
                               {dim?.label || dimId}
                             </span>
                           );
@@ -1485,7 +1490,7 @@ const Mentees = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                        className="border-indigo-500/30 ink-vermilion hover:bg-indigo-500/10"
                       >
                         <Star className="w-4 h-4 mr-1" />
                         Dimensions
@@ -1509,11 +1514,11 @@ const Mentees = () => {
         !pendingRequests.length && (
           <motion.div
             variants={itemVariants}
-            className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+            className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
           >
-            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No mentees assigned yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No mentees assigned yet</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Candidates will request you as their mentor
             </p>
           </motion.div>
@@ -1525,19 +1530,19 @@ const Mentees = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setRecommendModal(null)}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-2xl border border-white/30 w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto"
+            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Recommend BridgeFast Modules
             </h2>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-sm text-foreground/60 mb-6">
               Select modules to recommend to {recommendModal.candidateName}.
             </p>
 
@@ -1548,7 +1553,7 @@ const Mentees = () => {
                   className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     selectedModules.includes(module.id)
                       ? "bg-indigo-500/20 border-indigo-500/30"
-                      : "bg-black border-white/10 hover:border-white/20"
+                      : "bg-background border-foreground/15 hover:border-foreground/25"
                   }`}
                 >
                   <input
@@ -1564,21 +1569,21 @@ const Mentees = () => {
                     className="rounded border-gray-600"
                   />
                   <div>
-                    <p className="text-white text-sm">{module.title}</p>
-                    <p className="text-xs text-gray-500">{module.behavioral_dimension}</p>
+                    <p className="text-foreground text-sm">{module.title}</p>
+                    <p className="text-xs text-foreground/850">{module.behavioral_dimension}</p>
                   </div>
                 </label>
               ))}
             </div>
 
             <div className="mb-6">
-              <label className="text-sm text-gray-400 block mb-2">Note to Candidate (Optional)</label>
+              <label className="text-sm text-foreground/60 block mb-2">Note to Candidate (Optional)</label>
               <textarea
                 value={recommendNote}
                 onChange={(e) => setRecommendNote(e.target.value)}
                 placeholder="Add a note about why you recommend these modules..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-indigo-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-indigo-500 focus:outline-none resize-none"
               />
             </div>
 
@@ -1586,7 +1591,7 @@ const Mentees = () => {
               <Button
                 variant="outline"
                 onClick={() => { setRecommendModal(null); setSelectedModules([]); setRecommendNote(""); }}
-                className="flex-1 border-white/20 text-white hover:bg-black"
+                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
               >
                 Cancel
               </Button>
@@ -1761,18 +1766,18 @@ const AssignDimensions = () => {
       className="max-w-4xl mx-auto space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <Link to="/dashboard/mentor/mentees" className="text-sm text-indigo-400 hover:text-indigo-300 mb-4 inline-block">
+        <Link to="/dashboard/mentor/mentees" className="text-sm ink-vermilion hover:ink-vermilion mb-4 inline-block">
           &larr; Back to Mentees
         </Link>
-        <h1 className="text-3xl font-bold text-white mb-2">Assign Observation Dimensions</h1>
-        <p className="text-gray-400">
-          Select the behavioral dimensions for <span className="text-white font-medium">{candidateName}</span> to be observed on. The candidate cannot begin any observation activity until dimensions are assigned.
+        <h1 className="text-3xl font-bold text-foreground mb-2">Assign Observation Dimensions</h1>
+        <p className="text-foreground/60">
+          Select the behavioral dimensions for <span className="text-foreground font-medium">{candidateName}</span> to be observed on. The candidate cannot begin any observation activity until dimensions are assigned.
         </p>
       </motion.div>
 
       {/* MVP Dimensions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold text-white mb-3">MVP Dimensions (Active)</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-3">MVP Dimensions (Active)</h2>
         <div className="grid md:grid-cols-2 gap-3">
           {mvpDimensions.map(dim => (
             <button
@@ -1781,22 +1786,22 @@ const AssignDimensions = () => {
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
                   ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
-                  : "bg-black border-white/10 hover:border-white/20"
+                  : "bg-background border-foreground/15 hover:border-foreground/25"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  selectedDimensions.includes(dim.id) ? "bg-emerald-500" : "bg-black/60"
+                  selectedDimensions.includes(dim.id) ? "bg-emerald-500" : "bg-background/60"
                 }`}>
                   {selectedDimensions.includes(dim.id) ? (
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <CheckCircle className="w-5 h-5 text-foreground" />
                   ) : (
-                    <Target className="w-5 h-5 text-gray-400" />
+                    <Target className="w-5 h-5 text-foreground/60" />
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-white">{dim.label}</p>
-                  <p className="text-xs text-gray-500">{dim.description}</p>
+                  <p className="font-medium text-foreground">{dim.label}</p>
+                  <p className="text-xs text-foreground/850">{dim.description}</p>
                 </div>
               </div>
             </button>
@@ -1806,7 +1811,7 @@ const AssignDimensions = () => {
 
       {/* Future Dimensions */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold text-white mb-3">Additional Dimensions (Post-MVP)</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-3">Additional Dimensions (Post-MVP)</h2>
         <div className="grid md:grid-cols-2 gap-3">
           {futureDimensions.map(dim => (
             <button
@@ -1815,22 +1820,22 @@ const AssignDimensions = () => {
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
                   ? "bg-indigo-500/20 border-indigo-500/50 ring-2 ring-indigo-500/30"
-                  : "bg-black border-white/10 hover:border-white/20"
+                  : "bg-background border-foreground/15 hover:border-foreground/25"
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  selectedDimensions.includes(dim.id) ? "bg-indigo-500" : "bg-black/60"
+                  selectedDimensions.includes(dim.id) ? "bg-indigo-500" : "bg-background/60"
                 }`}>
                   {selectedDimensions.includes(dim.id) ? (
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <CheckCircle className="w-5 h-5 text-foreground" />
                   ) : (
-                    <Target className="w-5 h-5 text-gray-400" />
+                    <Target className="w-5 h-5 text-foreground/60" />
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-white">{dim.label}</p>
-                  <p className="text-xs text-gray-500">{dim.description}</p>
+                  <p className="font-medium text-foreground">{dim.label}</p>
+                  <p className="text-xs text-foreground/850">{dim.description}</p>
                 </div>
               </div>
             </button>
@@ -1839,9 +1844,9 @@ const AssignDimensions = () => {
       </motion.div>
 
       {/* Save */}
-      <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-xl bg-black border border-white/10">
+      <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-xl bg-background border border-foreground/15">
         <div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-foreground/60">
             {selectedDimensions.length} dimension{selectedDimensions.length !== 1 ? "s" : ""} selected
           </p>
           {selectedDimensions.length === 0 && (
@@ -1977,7 +1982,7 @@ const MenteeDetail = () => {
       case 2: return "text-amber-400";
       case 3: return "text-blue-400";
       case 4: return "text-emerald-400";
-      default: return "text-gray-400";
+      default: return "text-foreground/60";
     }
   };
 
@@ -1992,8 +1997,8 @@ const MenteeDetail = () => {
   if (!assignment || !candidateProfile) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-400">Mentee not found.</p>
-        <Button variant="ghost" onClick={() => navigate("/dashboard/mentor/mentees")} className="mt-4 text-indigo-400">
+        <p className="text-foreground/60">Mentee not found.</p>
+        <Button variant="ghost" onClick={() => navigate("/dashboard/mentor/mentees")} className="mt-4 ink-vermilion">
           Back to Mentees
         </Button>
       </div>
@@ -2013,28 +2018,28 @@ const MenteeDetail = () => {
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
-        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/mentor/mentees")} className="text-gray-400 hover:text-white mb-4">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/mentor/mentees")} className="text-foreground/60 hover:text-foreground mb-4">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Mentees
         </Button>
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">
+          <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
             {profile?.first_name?.[0]}{profile?.last_name?.[0]}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-white">{profile?.first_name} {profile?.last_name}</h1>
-            <p className="text-gray-400">{profile?.email}</p>
+            <h1 className="text-2xl font-bold text-foreground">{profile?.first_name} {profile?.last_name}</h1>
+            <p className="text-foreground/60">{profile?.email}</p>
             <div className="flex items-center gap-3 mt-2">
               <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-400">
                 {assignment.status}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-foreground/850">
                 Tier: {candidateProfile.current_tier?.replace("_", " ") || "Not assessed"}
               </span>
             </div>
           </div>
           <div className="flex gap-2">
             <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
-              <Button size="sm" variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
+              <Button size="sm" variant="outline" className="border-indigo-500/30 ink-vermilion hover:bg-indigo-500/10">
                 <Star className="w-4 h-4 mr-1" /> Dimensions
               </Button>
             </Link>
@@ -2047,25 +2052,25 @@ const MenteeDetail = () => {
 
       {/* Observation Pipeline Status */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold text-white mb-3">Observation Pipeline</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-3">Observation Pipeline</h2>
         <div className="grid grid-cols-3 gap-4">
-          <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-black border-white/10"}`}>
+          <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-emerald-400">L1 AI Scenarios</span>
               {l1Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-emerald-400" />}
             </div>
-            <p className="text-white font-bold">{l1Feedback.length > 0 ? `${l1Feedback.length} dimensions scored` : "Not started"}</p>
+            <p className="text-foreground font-bold">{l1Feedback.length > 0 ? `${l1Feedback.length} dimensions scored` : "Not started"}</p>
           </div>
-          <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-blue-500/10 border-blue-500/30" : "bg-black border-white/10"}`}>
+          <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-blue-500/10 border-blue-500/30" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-blue-400">L2 Mentor Live</span>
               {l2Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-blue-400" />}
             </div>
-            <p className="text-white font-bold">{l2Feedback.length > 0 ? `${l2Feedback.length} dimensions scored` : observations.length > 0 ? `${observations.length} observations recorded` : "Not started"}</p>
+            <p className="text-foreground font-bold">{l2Feedback.length > 0 ? `${l2Feedback.length} dimensions scored` : observations.length > 0 ? `${observations.length} observations recorded` : "Not started"}</p>
           </div>
-          <div className={`p-4 rounded-xl border ${endorsement ? "bg-indigo-500/10 border-indigo-500/30" : "bg-black border-white/10"}`}>
+          <div className={`p-4 rounded-xl border ${endorsement ? "bg-indigo-500/10 border-indigo-500/30" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-indigo-400">Endorsement</span>
+              <span className="text-xs font-semibold ink-vermilion">Endorsement</span>
               {endorsement?.decision === "proceed" && <Award className="w-4 h-4 text-emerald-400" />}
             </div>
             {endorsement ? (
@@ -2075,7 +2080,7 @@ const MenteeDetail = () => {
                 endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
               }`}>{endorsement.decision}</p>
             ) : (
-              <p className="text-white font-bold">Pending</p>
+              <p className="text-foreground font-bold">Pending</p>
             )}
           </div>
         </div>
@@ -2083,9 +2088,9 @@ const MenteeDetail = () => {
 
       {/* Assigned Dimensions with L1/L2 Scores */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-lg font-semibold text-white mb-3">Dimensions ({assignedDims.length} assigned)</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-3">Dimensions ({assignedDims.length} assigned)</h2>
         {assignedDims.length === 0 ? (
-          <div className="p-6 rounded-xl bg-black border border-white/10 text-center">
+          <div className="p-6 rounded-xl bg-background border border-foreground/15 text-center">
             <p className="text-amber-400">No dimensions assigned yet.</p>
             <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
               <Button size="sm" className="mt-3 bg-indigo-600 hover:bg-indigo-500">Assign Dimensions</Button>
@@ -2104,11 +2109,11 @@ const MenteeDetail = () => {
               const cooldownDays = hasCooldown ? Math.ceil((new Date(latestLoop.cooldown_ends_at!).getTime() - Date.now()) / (24 * 60 * 60 * 1000)) : 0;
 
               return (
-                <div key={dimId} className="p-4 rounded-xl bg-black border border-white/10">
+                <div key={dimId} className="p-4 rounded-xl bg-background border border-foreground/15">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-medium text-white">{dim?.label || dimId}</h3>
-                      <p className="text-xs text-gray-500">{dim?.description}</p>
+                      <h3 className="font-medium text-foreground">{dim?.label || dimId}</h3>
+                      <p className="text-xs text-foreground/850">{dim?.description}</p>
                     </div>
                     {/* Loop tracking badge */}
                     <div className="flex items-center gap-2 flex-shrink-0">
@@ -2117,7 +2122,7 @@ const MenteeDetail = () => {
                           latestLoop?.endorsement_decision === 'proceed' ? 'bg-emerald-500/20 text-emerald-400' :
                           hasCooldown ? 'bg-amber-500/20 text-amber-400' :
                           loopCount >= 3 ? 'bg-red-500/20 text-red-400' :
-                          'bg-indigo-500/20 text-indigo-400'
+                          'bg-indigo-500/20 ink-vermilion'
                         }`}>
                           Loop {loopCount}/3
                           {latestLoop?.endorsement_decision === 'proceed' && ' ✓'}
@@ -2126,12 +2131,12 @@ const MenteeDetail = () => {
                         </span>
                       )}
                       {loopCount === 0 && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-gray-500">No loops</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-foreground/850">No loops</span>
                       )}
                       {loopCount >= 3 && latestLoop?.endorsement_decision !== 'proceed' && (
                         <button
                           onClick={() => setOverrideModal({ dimId, dimLabel: dim?.label || dimId })}
-                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-500/20 text-purple-400 hover:bg-purple-500/30"
+                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-500/20 ink-vermilion hover:bg-purple-500/30"
                         >
                           Override
                         </button>
@@ -2146,43 +2151,43 @@ const MenteeDetail = () => {
                           loop.endorsement_decision === 'proceed' ? 'bg-emerald-500/10 text-emerald-400' :
                           loop.endorsement_decision === 'redirect' ? 'bg-amber-500/10 text-amber-400' :
                           loop.endorsement_decision === 'pause' ? 'bg-orange-500/10 text-orange-400' :
-                          'bg-white/5 text-gray-500'
+                          'bg-white/5 text-foreground/850'
                         }`}>
                           L{loop.loop_number}: {loop.bars_score ? `${loop.bars_score}/4` : '—'} {loop.endorsement_decision ? `(${loop.endorsement_decision})` : ''}
-                          {loop.completed_at && <span className="text-gray-600 ml-1">{new Date(loop.completed_at).toLocaleDateString()}</span>}
+                          {loop.completed_at && <span className="text-foreground/40 ml-1">{new Date(loop.completed_at).toLocaleDateString()}</span>}
                         </div>
                       ))}
                     </div>
                   )}
                   <div className="grid grid-cols-2 gap-3 mt-3">
-                    <div className={`p-3 rounded-lg ${l1 ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-white/5 border border-white/5"}`}>
-                      <p className="text-[10px] text-gray-500 uppercase mb-1">L1 AI Score</p>
+                    <div className={`p-3 rounded-lg ${l1 ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-white/5 border border-foreground/10"}`}>
+                      <p className="text-[10px] text-foreground/850 uppercase mb-1">L1 AI Score</p>
                       {l1 && l1.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l1.bars_score)}`}>{l1.bars_score}/4</span>
                           <span className={`text-xs ml-2 ${getBarsColor(l1.bars_score)}`}>{getBarsLabel(l1.bars_score)}</span>
                           {l1.ai_draft_feedback && (
                             <details className="mt-1">
-                              <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
+                              <summary className="text-xs text-foreground/60 cursor-pointer hover:text-foreground/75">
                                 {l1.ai_draft_feedback.length > 80 ? l1.ai_draft_feedback.substring(0, 80) + "..." : l1.ai_draft_feedback}
                               </summary>
-                              <p className="text-xs text-gray-400 mt-1 whitespace-pre-wrap">{l1.ai_draft_feedback}</p>
+                              <p className="text-xs text-foreground/60 mt-1 whitespace-pre-wrap">{l1.ai_draft_feedback}</p>
                             </details>
                           )}
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-500">—</p>
+                        <p className="text-sm text-foreground/850">—</p>
                       )}
                     </div>
-                    <div className={`p-3 rounded-lg ${l2 ? "bg-blue-500/10 border border-blue-500/20" : "bg-white/5 border border-white/5"}`}>
-                      <p className="text-[10px] text-gray-500 uppercase mb-1">L2 Mentor Score</p>
+                    <div className={`p-3 rounded-lg ${l2 ? "bg-blue-500/10 border border-blue-500/20" : "bg-white/5 border border-foreground/10"}`}>
+                      <p className="text-[10px] text-foreground/850 uppercase mb-1">L2 Mentor Score</p>
                       {l2 && l2.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l2.bars_score)}`}>{l2.bars_score}/4</span>
                           <span className={`text-xs ml-2 ${getBarsColor(l2.bars_score)}`}>{getBarsLabel(l2.bars_score)}</span>
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-500">—</p>
+                        <p className="text-sm text-foreground/850">—</p>
                       )}
                     </div>
                   </div>
@@ -2196,11 +2201,11 @@ const MenteeDetail = () => {
       {/* Endorsement Detail */}
       {endorsement && (
         <motion.div variants={itemVariants}>
-          <h2 className="text-lg font-semibold text-white mb-3">Endorsement Record</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-3">Endorsement Record</h2>
           <div className={`p-5 rounded-xl border ${
             endorsement.decision === "proceed" ? "bg-emerald-500/10 border-emerald-500/30" :
             endorsement.decision === "redirect" ? "bg-amber-500/10 border-amber-500/30" :
-            "bg-black border-white/10"
+            "bg-background border-foreground/15"
           }`}>
             <div className="flex items-center gap-3 mb-2">
               <span className={`text-lg font-bold capitalize ${
@@ -2208,10 +2213,10 @@ const MenteeDetail = () => {
                 endorsement.decision === "redirect" ? "text-amber-400" :
                 endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
               }`}>{endorsement.decision}</span>
-              <span className="text-xs text-gray-500">{new Date(endorsement.created_at).toLocaleDateString()}</span>
+              <span className="text-xs text-foreground/850">{new Date(endorsement.created_at).toLocaleDateString()}</span>
             </div>
             {endorsement.justification && (
-              <p className="text-sm text-gray-300">{endorsement.justification}</p>
+              <p className="text-sm text-foreground/75">{endorsement.justification}</p>
             )}
           </div>
         </motion.div>
@@ -2238,21 +2243,21 @@ const MenteeDetail = () => {
       {/* Override modal */}
       {overrideModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/80" onClick={() => setOverrideModal(null)} />
-          <div className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-gray-900 border border-white/10">
-            <h3 className="text-lg font-bold text-white mb-2">Override Loop Limit</h3>
-            <p className="text-sm text-gray-400 mb-4">
-              Grant an additional attempt for <strong className="text-white">{overrideModal.dimLabel}</strong> beyond the 3-loop maximum. This requires documented justification.
+          <div className="absolute inset-0 bg-background/80" onClick={() => setOverrideModal(null)} />
+          <div className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/15">
+            <h3 className="text-lg font-bold text-foreground mb-2">Override Loop Limit</h3>
+            <p className="text-sm text-foreground/60 mb-4">
+              Grant an additional attempt for <strong className="text-foreground">{overrideModal.dimLabel}</strong> beyond the 3-loop maximum. This requires documented justification.
             </p>
             <textarea
               value={overrideReason}
               onChange={(e) => setOverrideReason(e.target.value)}
               placeholder="Reason for override (required)..."
               rows={3}
-              className="w-full px-4 py-3 rounded-lg bg-black border border-white/20 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none mb-4"
+              className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none resize-none mb-4"
             />
             <div className="flex gap-3">
-              <Button variant="outline" onClick={() => { setOverrideModal(null); setOverrideReason(""); }} className="flex-1 border-white/20 text-white">Cancel</Button>
+              <Button variant="outline" onClick={() => { setOverrideModal(null); setOverrideReason(""); }} className="flex-1 border-foreground/25 text-foreground">Cancel</Button>
               <Button
                 disabled={!overrideReason.trim()}
                 onClick={async () => {
@@ -2348,8 +2353,8 @@ const Observations = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Observations</h1>
-          <p className="text-gray-400">Record and review behavioral observations.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Observations</h1>
+          <p className="text-foreground/60">Record and review behavioral observations.</p>
         </div>
         <Button className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal()}>
           <Plus className="w-4 h-4 mr-2" />
@@ -2362,16 +2367,16 @@ const Observations = () => {
           {observations.map((observation) => (
             <div
               key={observation.id}
-              className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+              className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-foreground/60">
                     Session Date: {new Date(observation.session_date).toLocaleDateString()}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     {observation.is_locked ? (
-                      <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-gray-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-foreground/60">
                         Locked
                       </span>
                     ) : (
@@ -2384,7 +2389,7 @@ const Observations = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-black"
+                  className="border-foreground/25 text-foreground hover:bg-foreground/5"
                 >
                   <Eye className="w-4 h-4 mr-1" />
                   View
@@ -2393,7 +2398,7 @@ const Observations = () => {
 
               {observation.strengths && observation.strengths.length > 0 && (
                 <div className="mb-3">
-                  <p className="text-sm text-gray-400 mb-2">Strengths:</p>
+                  <p className="text-sm text-foreground/60 mb-2">Strengths:</p>
                   <div className="flex flex-wrap gap-2">
                     {observation.strengths.map((s, i) => (
                       <span key={i} className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">
@@ -2405,7 +2410,7 @@ const Observations = () => {
               )}
 
               {observation.notes && (
-                <p className="text-sm text-gray-500 mt-3 line-clamp-2">{observation.notes}</p>
+                <p className="text-sm text-foreground/850 mt-3 line-clamp-2">{observation.notes}</p>
               )}
             </div>
           ))}
@@ -2413,11 +2418,11 @@ const Observations = () => {
       ) : (
         <motion.div
           variants={itemVariants}
-          className="p-8 rounded-2xl bg-black border border-white/30 text-center"
+          className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
         >
-          <ClipboardCheck className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">No observations recorded yet</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <ClipboardCheck className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+          <p className="text-foreground/60">No observations recorded yet</p>
+          <p className="text-sm text-foreground/850 mt-1">
             Start recording observations for your mentees
           </p>
         </motion.div>
@@ -2809,15 +2814,15 @@ const Endorsements = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Endorsements</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Endorsements</h1>
+        <p className="text-foreground/60">
           Issue endorsements for candidates who have completed 3 mentor observations.
         </p>
       </motion.div>
 
       {/* Ready for Endorsement */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Ready for Endorsement</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Ready for Endorsement</h2>
         {readyForEndorsement.length > 0 ? (
           <div className="space-y-4">
             {readyForEndorsement.map((assignment) => {
@@ -2830,19 +2835,19 @@ const Endorsements = () => {
                   className={`p-6 rounded-xl border transition-colors ${
                     isSelected
                       ? "bg-purple-500/30 border-purple-500/30"
-                      : "bg-black border-white/30 hover:border-white/20"
+                      : "bg-background border-foreground/25 hover:border-foreground/25"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
                         {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-white">
+                        <h3 className="font-semibold text-foreground">
                           {profile?.first_name} {profile?.last_name}
                         </h3>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-foreground/60">
                           {assignment.observation_count} observations completed
                         </p>
                         <span className="inline-block px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400 mt-1">
@@ -2866,11 +2871,11 @@ const Endorsements = () => {
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
-                      className="mt-6 pt-6 border-t border-white/30 space-y-6"
+                      className="mt-6 pt-6 border-t border-foreground/25 space-y-6"
                     >
                       {/* Decision Selector */}
                       <div>
-                        <label className="text-sm text-gray-400 block mb-3">Decision</label>
+                        <label className="text-sm text-foreground/60 block mb-3">Decision</label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           {[
                             { value: "proceed", label: "Proceed", desc: "Ready to advance", color: "emerald" },
@@ -2890,7 +2895,7 @@ const Endorsements = () => {
                                     : option.color === "orange"
                                     ? "bg-orange-500/20 border-orange-500/50"
                                     : "bg-red-500/20 border-red-500/50"
-                                  : "bg-black border-white/30 hover:border-white/20"
+                                  : "bg-background border-foreground/25 hover:border-foreground/25"
                               }`}
                             >
                               <p className={`font-medium ${
@@ -2900,7 +2905,7 @@ const Endorsements = () => {
                               }`}>
                                 {option.label}
                               </p>
-                              <p className="text-xs text-gray-500 mt-1">{option.desc}</p>
+                              <p className="text-xs text-foreground/850 mt-1">{option.desc}</p>
                             </button>
                           ))}
                         </div>
@@ -2914,11 +2919,11 @@ const Endorsements = () => {
                           </p>
                           <div className="space-y-3">
                             <div>
-                              <label className="text-sm text-gray-400 block mb-2">BridgeFast Module</label>
+                              <label className="text-sm text-foreground/60 block mb-2">BridgeFast Module</label>
                               <select
                                 value={endorsementForm.redirectModule}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectModule: e.target.value, redirectToLiveworks: false }))}
-                                className="w-full px-4 py-2 rounded-lg bg-black/50 border border-white/30 text-white focus:border-amber-500 focus:outline-none"
+                                className="w-full px-4 py-2 rounded-lg bg-background/50 border border-foreground/25 text-foreground focus:border-amber-500 focus:outline-none"
                               >
                                 <option value="">Select a module...</option>
                                 {bridgefastModules.map(m => (
@@ -2927,16 +2932,16 @@ const Endorsements = () => {
                               </select>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-gray-400 text-sm">or</span>
+                              <span className="text-foreground/60 text-sm">or</span>
                             </div>
                             <label className="flex items-center gap-3 cursor-pointer">
                               <input
                                 type="checkbox"
                                 checked={endorsementForm.redirectToLiveworks}
                                 onChange={(e) => setEndorsementForm(prev => ({ ...prev, redirectToLiveworks: e.target.checked, redirectModule: "" }))}
-                                className="w-5 h-5 rounded bg-black border-white/20"
+                                className="w-5 h-5 rounded bg-background border-foreground/25"
                               />
-                              <span className="text-white">Redirect to LiveWorks project experience</span>
+                              <span className="text-foreground">Redirect to LiveWorks project experience</span>
                             </label>
                           </div>
                         </div>
@@ -2949,13 +2954,13 @@ const Endorsements = () => {
                             <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
                             <div>
                               <p className="text-sm text-red-400 font-medium">Governance Review Flag</p>
-                              <p className="text-xs text-gray-400 mt-1">
+                              <p className="text-xs text-foreground/60 mt-1">
                                 This will flag a serious concern identified during observation. The candidate will be informed through a formal process and the case will be reviewed by governance.
                               </p>
                             </div>
                           </div>
                           <div>
-                            <label className="text-sm text-gray-400 block mb-2">
+                            <label className="text-sm text-foreground/60 block mb-2">
                               Nature of Concern <span className="text-red-400">*</span>
                             </label>
                             <textarea
@@ -2963,7 +2968,7 @@ const Endorsements = () => {
                               onChange={(e) => setEndorsementForm(prev => ({ ...prev, escalateConcern: e.target.value }))}
                               placeholder="Document the specific concern observed during the observation period..."
                               rows={3}
-                              className="w-full px-4 py-3 rounded-lg bg-black border border-red-500/30 text-white placeholder:text-gray-600 focus:border-red-500 focus:outline-none resize-none"
+                              className="w-full px-4 py-3 rounded-lg bg-background border border-red-500/30 text-foreground placeholder:text-foreground/40 focus:border-red-500 focus:outline-none resize-none"
                             />
                           </div>
                         </div>
@@ -2971,7 +2976,7 @@ const Endorsements = () => {
 
                       {/* Justification */}
                       <div>
-                        <label className="text-sm text-gray-400 block mb-2">
+                        <label className="text-sm text-foreground/60 block mb-2">
                           Justification <span className="text-red-400">*</span>
                         </label>
                         <textarea
@@ -2979,7 +2984,7 @@ const Endorsements = () => {
                           onChange={(e) => setEndorsementForm(prev => ({ ...prev, justification: e.target.value }))}
                           placeholder="Explain your decision and provide feedback for the candidate..."
                           rows={4}
-                          className="w-full px-4 py-3 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none resize-none"
+                          className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none resize-none"
                         />
                       </div>
 
@@ -2997,7 +3002,7 @@ const Endorsements = () => {
                               redirectToLiveworks: false,
                             });
                           }}
-                          className="border-white/20 text-white hover:bg-black"
+                          className="border-foreground/25 text-foreground hover:bg-foreground/5"
                         >
                           Cancel
                         </Button>
@@ -3026,10 +3031,10 @@ const Endorsements = () => {
             })}
           </div>
         ) : (
-          <div className="p-8 rounded-2xl bg-black border border-white/30 text-center">
-            <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">No candidates ready for endorsement</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
+            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+            <p className="text-foreground/60">No candidates ready for endorsement</p>
+            <p className="text-sm text-foreground/850 mt-1">
               Candidates need 3 completed observations before endorsement
             </p>
           </div>
@@ -3038,13 +3043,13 @@ const Endorsements = () => {
 
       {/* Past Endorsements */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-white mb-4">Endorsement History</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Endorsement History</h2>
         {pastEndorsements.length > 0 ? (
           <div className="space-y-3">
             {pastEndorsements.map((endorsement) => (
               <div
                 key={endorsement.id}
-                className="p-4 rounded-xl bg-black border border-white/30 flex items-center gap-4"
+                className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center gap-4"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   endorsement.decision === "proceed"
@@ -3067,7 +3072,7 @@ const Endorsements = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-foreground">
                       {endorsement.profile?.first_name} {endorsement.profile?.last_name}
                     </p>
                     <span className={`px-2 py-0.5 rounded text-xs ${
@@ -3082,18 +3087,18 @@ const Endorsements = () => {
                       {endorsement.decision.charAt(0).toUpperCase() + endorsement.decision.slice(1)}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 truncate">{endorsement.justification}</p>
+                  <p className="text-sm text-foreground/850 truncate">{endorsement.justification}</p>
                 </div>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-foreground/40">
                   {new Date(endorsement.created_at).toLocaleDateString()}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <div className="p-6 rounded-xl bg-black border border-white/30 text-center">
-            <Award className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-400 text-sm">No endorsements given yet</p>
+          <div className="p-6 rounded-xl bg-background border border-foreground/25 text-center">
+            <Award className="w-10 h-10 text-foreground/40 mx-auto mb-3" />
+            <p className="text-foreground/60 text-sm">No endorsements given yet</p>
           </div>
         )}
       </motion.div>
@@ -3269,11 +3274,11 @@ const Schedule = () => {
     const styles: Record<string, string> = {
       scheduled: "bg-blue-500/20 text-blue-400",
       confirmed: "bg-emerald-500/20 text-emerald-400",
-      completed: "bg-purple-500/20 text-purple-400",
+      completed: "bg-purple-500/20 ink-vermilion",
       cancelled: "bg-red-500/20 text-red-400",
       no_show: "bg-amber-500/20 text-amber-400",
     };
-    return styles[status] || "bg-gray-500/20 text-gray-400";
+    return styles[status] || "bg-gray-500/20 text-foreground/60";
   };
 
   if (isLoading) {
@@ -3292,8 +3297,8 @@ const Schedule = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Schedule</h1>
-        <p className="text-gray-400">Manage your availability and upcoming sessions.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Schedule</h1>
+        <p className="text-foreground/60">Manage your availability and upcoming sessions.</p>
       </motion.div>
 
       {/* Tabs */}
@@ -3301,7 +3306,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "availability" ? "default" : "outline"}
           onClick={() => setActiveTab("availability")}
-          className={activeTab === "availability" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black"}
+          className={activeTab === "availability" ? "bg-purple-600" : "border-foreground/25 text-foreground hover:bg-foreground/5"}
         >
           <Clock className="w-4 h-4 mr-2" />
           Availability
@@ -3309,7 +3314,7 @@ const Schedule = () => {
         <Button
           variant={activeTab === "sessions" ? "default" : "outline"}
           onClick={() => setActiveTab("sessions")}
-          className={activeTab === "sessions" ? "bg-purple-600" : "border-white/20 text-white hover:bg-black"}
+          className={activeTab === "sessions" ? "bg-purple-600" : "border-foreground/25 text-foreground hover:bg-foreground/5"}
         >
           <Calendar className="w-4 h-4 mr-2" />
           Sessions ({sessions.length})
@@ -3317,9 +3322,9 @@ const Schedule = () => {
       </motion.div>
 
       {activeTab === "availability" && (
-        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-6">Weekly Availability</h2>
-          <p className="text-sm text-gray-400 mb-6">
+        <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-6">Weekly Availability</h2>
+          <p className="text-sm text-foreground/60 mb-6">
             Set your available hours for each day. Candidates can book sessions during these times.
           </p>
 
@@ -3334,7 +3339,7 @@ const Schedule = () => {
                   className={`p-4 rounded-lg border transition-colors ${
                     isActive
                       ? "bg-purple-500/30 border-purple-500/30"
-                      : "bg-black border-white/30"
+                      : "bg-background border-foreground/25"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -3346,9 +3351,9 @@ const Schedule = () => {
                           checked={isActive || false}
                           onChange={() => toggleDayAvailability(day.value)}
                         />
-                        <div className="w-11 h-6 bg-black peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        <div className="w-11 h-6 bg-background peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                       </label>
-                      <span className={`font-medium ${isActive ? "text-white" : "text-gray-500"}`}>
+                      <span className={`font-medium ${isActive ? "text-foreground" : "text-foreground/850"}`}>
                         {day.label}
                       </span>
                     </div>
@@ -3358,22 +3363,22 @@ const Schedule = () => {
                         <select
                           value={dayAvail?.startTime || "09:00"}
                           onChange={(e) => updateDayTime(day.value, "startTime", e.target.value)}
-                          className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-background border border-foreground/25 rounded-lg px-3 py-2 text-foreground text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
-                            <option key={t} value={t} className="bg-gray-900">
+                            <option key={t} value={t} className="bg-background/50">
                               {t}
                             </option>
                           ))}
                         </select>
-                        <span className="text-gray-400">to</span>
+                        <span className="text-foreground/60">to</span>
                         <select
                           value={dayAvail?.endTime || "17:00"}
                           onChange={(e) => updateDayTime(day.value, "endTime", e.target.value)}
-                          className="bg-black border border-white/30 rounded-lg px-3 py-2 text-white text-sm"
+                          className="bg-background border border-foreground/25 rounded-lg px-3 py-2 text-foreground text-sm"
                         >
                           {TIME_SLOTS.map((t) => (
-                            <option key={t} value={t} className="bg-gray-900">
+                            <option key={t} value={t} className="bg-background/50">
                               {t}
                             </option>
                           ))}
@@ -3409,10 +3414,10 @@ const Schedule = () => {
       {activeTab === "sessions" && (
         <motion.div variants={itemVariants} className="space-y-4">
           {sessions.length === 0 ? (
-            <div className="p-12 rounded-xl bg-black border border-white/30 text-center">
-              <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Upcoming Sessions</h3>
-              <p className="text-gray-400 max-w-md mx-auto">
+            <div className="p-12 rounded-xl bg-background border border-foreground/25 text-center">
+              <Calendar className="w-16 h-16 text-foreground/40 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">No Upcoming Sessions</h3>
+              <p className="text-foreground/60 max-w-md mx-auto">
                 When candidates book sessions with you, they'll appear here. Make sure your availability is set up.
               </p>
             </div>
@@ -3420,7 +3425,7 @@ const Schedule = () => {
             sessions.map((session) => (
               <div
                 key={session.id}
-                className="p-6 rounded-xl bg-black border border-white/30 hover:border-white/20 transition-colors"
+                className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -3432,14 +3437,14 @@ const Schedule = () => {
                           className="w-full h-full rounded-xl object-cover"
                         />
                       ) : (
-                        <User className="w-6 h-6 text-purple-400" />
+                        <User className="w-6 h-6 ink-vermilion" />
                       )}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">
+                      <h3 className="font-semibold text-foreground">
                         {session.candidate?.first_name} {session.candidate?.last_name}
                       </h3>
-                      <p className="text-sm text-gray-400">{session.candidate?.email}</p>
+                      <p className="text-sm text-foreground/60">{session.candidate?.email}</p>
                     </div>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(session.status)}`}>
@@ -3449,22 +3454,22 @@ const Schedule = () => {
 
                 <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-500">Date & Time</p>
-                    <p className="text-white font-medium">{formatSessionDate(session.scheduled_at)}</p>
+                    <p className="text-foreground/850">Date & Time</p>
+                    <p className="text-foreground font-medium">{formatSessionDate(session.scheduled_at)}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Duration</p>
-                    <p className="text-white font-medium">{session.duration_minutes} minutes</p>
+                    <p className="text-foreground/850">Duration</p>
+                    <p className="text-foreground font-medium">{session.duration_minutes} minutes</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Type</p>
-                    <p className="text-white font-medium capitalize">{session.session_type?.replace("_", " ")}</p>
+                    <p className="text-foreground/850">Type</p>
+                    <p className="text-foreground font-medium capitalize">{session.session_type?.replace("_", " ")}</p>
                   </div>
                 </div>
 
                 {session.notes && (
-                  <div className="mt-4 p-3 rounded-lg bg-black">
-                    <p className="text-sm text-gray-400">{session.notes}</p>
+                  <div className="mt-4 p-3 rounded-lg bg-background">
+                    <p className="text-sm text-foreground/60">{session.notes}</p>
                   </div>
                 )}
 
@@ -3494,7 +3499,7 @@ const Schedule = () => {
                         rel="noopener noreferrer"
                         className="ml-auto"
                       >
-                        <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-black">
+                        <Button size="sm" variant="outline" className="border-foreground/25 text-foreground hover:bg-foreground/5">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Join Meeting
                         </Button>
@@ -3650,8 +3655,8 @@ const ProfilePage = () => {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Your Profile</h1>
-          <p className="text-gray-400">Manage your mentor profile</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your Profile</h1>
+          <p className="text-foreground/60">Manage your mentor profile</p>
         </div>
         {!isEditing ? (
           <Button onClick={() => setIsEditing(true)} className="bg-purple-600 hover:bg-purple-500">
@@ -3659,7 +3664,7 @@ const ProfilePage = () => {
           </Button>
         ) : (
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsEditing(false)} className="border-white/20">
+            <Button variant="outline" onClick={() => setIsEditing(false)} className="border-foreground/25">
               Cancel
             </Button>
             <Button onClick={handleSave} disabled={isSaving} className="bg-purple-600 hover:bg-purple-500">
@@ -3672,17 +3677,17 @@ const ProfilePage = () => {
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Basic Info */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-3xl text-white font-bold">
+            <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-foreground font-bold">
               {formData.first_name?.[0]}{formData.last_name?.[0]}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 {formData.first_name} {formData.last_name}
               </h2>
-              <p className="text-gray-400">{profile?.email}</p>
-              <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400 mt-1">
+              <p className="text-foreground/60">{profile?.email}</p>
+              <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 ink-vermilion mt-1">
                 Mentor
               </span>
             </div>
@@ -3690,102 +3695,102 @@ const ProfilePage = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">First Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">First Name</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.first_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, first_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-purple-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.first_name}</p>
+                <p className="text-foreground">{formData.first_name}</p>
               )}
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Last Name</label>
+              <label className="text-sm text-foreground/60 block mb-2">Last Name</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.last_name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, last_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-purple-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.last_name}</p>
+                <p className="text-foreground">{formData.last_name}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Professional Info */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">Professional Information</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">Professional Information</h3>
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Company</label>
+              <label className="text-sm text-foreground/60 block mb-2">Company</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                   placeholder="Your company"
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.company || "Not set"}</p>
+                <p className="text-foreground">{formData.company || "Not set"}</p>
               )}
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Job Title</label>
+              <label className="text-sm text-foreground/60 block mb-2">Job Title</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.job_title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, job_title: e.target.value }))}
                   placeholder="Your title"
-                  className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.job_title || "Not set"}</p>
+                <p className="text-foreground">{formData.job_title || "Not set"}</p>
               )}
             </div>
           </div>
           <div>
-            <label className="text-sm text-gray-400 block mb-2">Industry</label>
+            <label className="text-sm text-foreground/60 block mb-2">Industry</label>
             {isEditing ? (
               <input
                 type="text"
                 value={formData.industry}
                 onChange={(e) => setFormData((prev) => ({ ...prev, industry: e.target.value }))}
                 placeholder="e.g., Technology, Healthcare, Finance"
-                className="w-full px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
               />
             ) : (
-              <p className="text-white">{formData.industry || "Not set"}</p>
+              <p className="text-foreground">{formData.industry || "Not set"}</p>
             )}
           </div>
         </div>
 
         {/* Specializations */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <label className="text-sm text-gray-400 block mb-3">Specializations</label>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <label className="text-sm text-foreground/60 block mb-3">Specializations</label>
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.specializations.map((spec) => (
               <span
                 key={spec}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 ink-vermilion text-sm"
               >
                 {spec}
                 {isEditing && (
-                  <button onClick={() => removeSpec(spec)} className="hover:text-white">
+                  <button onClick={() => removeSpec(spec)} className="hover:text-foreground">
                     <X className="w-3 h-3" />
                   </button>
                 )}
               </span>
             ))}
             {formData.specializations.length === 0 && !isEditing && (
-              <p className="text-gray-500">No specializations added</p>
+              <p className="text-foreground/850">No specializations added</p>
             )}
           </div>
           {isEditing && (
@@ -3796,7 +3801,7 @@ const ProfilePage = () => {
                 onChange={(e) => setNewSpec(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSpec())}
                 placeholder="Add a specialization..."
-                className="flex-1 px-4 py-2 rounded-lg bg-black border border-white/30 text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none"
+                className="flex-1 px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-purple-500 focus:outline-none"
               />
               <Button onClick={addSpec} size="sm" className="bg-purple-600 hover:bg-purple-500">
                 <Plus className="w-4 h-4" />
@@ -3806,13 +3811,13 @@ const ProfilePage = () => {
         </div>
 
         {/* Mentor Settings */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h3 className="font-semibold text-white mb-4">Mentor Settings</h3>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h3 className="font-semibold text-foreground mb-4">Mentor Settings</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white">Accepting New Mentees</p>
-                <p className="text-sm text-gray-500">Allow new candidates to be assigned to you</p>
+                <p className="text-foreground">Accepting New Mentees</p>
+                <p className="text-sm text-foreground/850">Allow new candidates to be assigned to you</p>
               </div>
               {isEditing ? (
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -3822,18 +3827,18 @@ const ProfilePage = () => {
                     onChange={(e) => setFormData((prev) => ({ ...prev, is_accepting: e.target.checked }))}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-black peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  <div className="w-11 h-6 bg-background peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                 </label>
               ) : (
                 <span className={`px-2 py-1 rounded text-xs ${
-                  formData.is_accepting ? "bg-emerald-500/20 text-emerald-400" : "bg-gray-500/20 text-gray-400"
+                  formData.is_accepting ? "bg-emerald-500/20 text-emerald-400" : "bg-gray-500/20 text-foreground/60"
                 }`}>
                   {formData.is_accepting ? "Yes" : "No"}
                 </span>
               )}
             </div>
             <div>
-              <label className="text-sm text-gray-400 block mb-2">Maximum Mentees</label>
+              <label className="text-sm text-foreground/60 block mb-2">Maximum Mentees</label>
               {isEditing ? (
                 <input
                   type="number"
@@ -3841,10 +3846,10 @@ const ProfilePage = () => {
                   onChange={(e) => setFormData((prev) => ({ ...prev, max_mentees: parseInt(e.target.value) || 5 }))}
                   min={1}
                   max={20}
-                  className="w-24 px-4 py-2 rounded-lg bg-black border border-white/30 text-white focus:border-purple-500 focus:outline-none"
+                  className="w-24 px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-purple-500 focus:outline-none"
                 />
               ) : (
-                <p className="text-white">{formData.max_mentees}</p>
+                <p className="text-foreground">{formData.max_mentees}</p>
               )}
             </div>
           </div>
@@ -4061,35 +4066,35 @@ const MentorMessagesPage = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
       <motion.div variants={itemVariants} className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-        <p className="text-gray-400">Connect with candidates, employers, and other mentors.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Messages</h1>
+        <p className="text-foreground/60">Connect with candidates, employers, and other mentors.</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-black border border-white/30 overflow-hidden flex">
+      <motion.div variants={itemVariants} className="h-[calc(100%-5rem)] rounded-xl bg-background border border-foreground/25 overflow-hidden flex">
         {/* Conversations List */}
-        <div className="w-80 border-r border-white/30 flex flex-col">
-          <div className="p-4 border-b border-white/30 space-y-3">
+        <div className="w-80 border-r border-foreground/25 flex flex-col">
+          <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-black border border-white/30 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-purple-600 hover:bg-purple-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-black/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
-                <p className="text-xs text-purple-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-black border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+              <div className="bg-background/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
+                <p className="text-xs ink-vermilion font-medium">Find someone to message</p>
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
                   {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-purple-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-gray-500 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-gray-500 text-center py-2">Type at least 2 characters</p>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
                     <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-purple-500/10 transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
-                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-purple-400" />}
+                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 ink-vermilion" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-gray-500 capitalize">{result.role}</p>
+                        <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
+                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
                       </div>
-                      <Send className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                      <Send className="w-3.5 h-3.5 ink-vermilion flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -4099,17 +4104,17 @@ const MentorMessagesPage = () => {
           <div className="flex-1 overflow-y-auto">
             {filteredConversations.length === 0 ? (
               <div className="p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No conversations yet</p>
-                <p className="text-sm text-gray-500 mt-1">Click the <span className="text-purple-400">+</span> button to find and message anyone</p>
+                <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
+                <p className="text-foreground/60">No conversations yet</p>
+                <p className="text-sm text-foreground/850 mt-1">Click the <span className="ink-vermilion">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-black transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
-                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-purple-400" />}
+                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 ink-vermilion" />}
                     </div>
                     {hasUnread ? (
                       <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-purple-500" />
@@ -4119,13 +4124,13 @@ const MentorMessagesPage = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className={`font-medium truncate ${hasUnread ? "text-white" : "text-gray-300"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-gray-500">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
+                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 capitalize">{conv.other_user?.role}</span>
-                      <span className="text-gray-600">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-gray-300" : "text-gray-500"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-foreground/40">·</span>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -4137,16 +4142,16 @@ const MentorMessagesPage = () => {
         <div className="flex-1 flex flex-col">
           {activeConversation ? (
             <>
-              <div className="p-4 border-b border-white/30 flex items-center gap-4">
+              <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                    {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-purple-400" />}
+                    {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 ink-vermilion" />}
                   </div>
                   <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
                 </div>
                 <div>
-                  <p className="font-medium text-white">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-gray-500">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
+                  <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
+                  <p className="text-xs text-foreground/850">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -4159,69 +4164,69 @@ const MentorMessagesPage = () => {
                       <div className={`flex gap-2 max-w-[70%] ${isOwn ? "flex-row-reverse" : ""}`}>
                         {!isOwn && showAvatar && (
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
-                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-purple-400" />}
+                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 ink-vermilion" />}
                           </div>
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div className="relative">
                           {/* Action buttons */}
                           <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
-                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-purple-500/50 transition-colors" title="Reply">
+                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-purple-500/50 transition-colors" title="Reply">
                               <Reply className="w-3.5 h-3.5" />
                             </button>
-                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); }} className="p-1.5 rounded-lg bg-black/80 border border-white/10 text-gray-400 hover:text-white hover:border-purple-500/50 transition-colors" title="Copy">
+                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-purple-500/50 transition-colors" title="Copy">
                               <Copy className="w-3.5 h-3.5" />
                             </button>
                           </div>
                           {/* Reply quote */}
                           {msg.reply_to && (
-                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-purple-700/40 border-purple-400/60 text-purple-200" : "bg-white/5 border-purple-400/40 text-gray-400"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-purple-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-purple-500/50"), 2000); } }}>
+                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-purple-700/40 border-purple-400/60 text-purple-200" : "bg-white/5 border-purple-400/40 text-foreground/60"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-purple-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-purple-500/50"), 2000); } }}>
                               <p className="font-medium text-[11px] mb-0.5">{msg.reply_to.sender?.first_name || "User"}</p>
                               <p className="truncate opacity-80">{msg.reply_to.content?.substring(0, 80)}</p>
                             </div>
                           )}
-                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-purple-600 text-white rounded-br-md" : "bg-black text-gray-200 rounded-bl-md"}`}>
+                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-purple-600 text-foreground rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                             {msg.file_url && (
                               <div className="mt-2">
                                 {isImageFile(msg.file_url, msg.metadata) ? (
                                   <a href={msg.file_url} target="_blank" rel="noopener noreferrer">
-                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-white/10" />
+                                    <img src={msg.file_url} alt={msg.metadata?.file_name || 'attachment'} className="max-w-xs rounded-lg border border-foreground/15" />
                                   </a>
                                 ) : (
-                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 text-sm">
-                                    <Paperclip className="w-4 h-4 text-indigo-400 flex-shrink-0" />
-                                    <span className="text-indigo-400 truncate">{msg.metadata?.file_name || 'Attachment'}</span>
-                                    {msg.metadata?.file_size && <span className="text-gray-500 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                  <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-background/50 border border-foreground/15 hover:border-foreground/25 text-sm">
+                                    <Paperclip className="w-4 h-4 ink-vermilion flex-shrink-0" />
+                                    <span className="ink-vermilion truncate">{msg.metadata?.file_name || 'Attachment'}</span>
+                                    {msg.metadata?.file_size && <span className="text-foreground/850 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
                                   </a>
                                 )}
                               </div>
                             )}
                           </div>
-                          <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="p-4 border-t border-white/30">
+              <div className="p-4 border-t border-foreground/25">
                 {replyTo && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <Reply className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <Reply className="w-4 h-4 ink-vermilion flex-shrink-0" />
                     <div className="flex-1 min-w-0 border-l-2 border-purple-400/50 pl-2">
                       <p className="text-xs font-medium text-purple-300">{replyTo.sender?.first_name || "User"}</p>
-                      <p className="text-xs text-gray-400 truncate">{replyTo.content?.substring(0, 100)}</p>
+                      <p className="text-xs text-foreground/60 truncate">{replyTo.content?.substring(0, 100)}</p>
                     </div>
-                    <button onClick={() => setReplyTo(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
+                    <button onClick={() => setReplyTo(null)} className="text-foreground/60 hover:text-foreground flex-shrink-0"><X className="w-4 h-4" /></button>
                   </div>
                 )}
                 {attachedFile && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <Paperclip className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <Paperclip className="w-4 h-4 ink-vermilion flex-shrink-0" />
                     <span className="text-sm text-purple-300 truncate flex-1">{attachedFile.name}</span>
-                    <span className="text-xs text-gray-500 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
-                    <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-white flex-shrink-0"><X className="w-4 h-4" /></button>
+                    <span className="text-xs text-foreground/850 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
+                    <button onClick={() => setAttachedFile(null)} className="text-foreground/60 hover:text-foreground flex-shrink-0"><X className="w-4 h-4" /></button>
                   </div>
                 )}
                 <div className="flex items-center gap-3">
@@ -4234,13 +4239,13 @@ const MentorMessagesPage = () => {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    className="p-2 text-foreground/60 hover:text-foreground transition-colors"
                     disabled={isUploading}
                     title="Attach file"
                   >
                     {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
                   </button>
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-black border border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
                   <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -4250,9 +4255,9 @@ const MentorMessagesPage = () => {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select a Conversation</h3>
-                <p className="text-gray-400 max-w-sm mb-4">Choose a conversation or start a new one.</p>
+                <MessageSquare className="w-16 h-16 text-foreground/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">Select a Conversation</h3>
+                <p className="text-foreground/60 max-w-sm mb-4">Choose a conversation or start a new one.</p>
                 <Button onClick={() => setShowNewChat(true)} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6"><Plus className="w-4 h-4 mr-2" />New Conversation</Button>
               </div>
             </div>
@@ -4299,28 +4304,28 @@ const MentorNotificationsPage = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
       <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Notifications</h1>
+        <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
         {notifications.some(n => !n.is_read) && (
-          <Button size="sm" variant="outline" onClick={markAllAsRead} className="border-white/20 text-gray-400">
+          <Button size="sm" variant="outline" onClick={markAllAsRead} className="border-foreground/25 text-foreground/60">
             Mark all as read
           </Button>
         )}
       </motion.div>
       <motion.div variants={itemVariants} className="space-y-2">
         {notifications.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No notifications yet</p>
+          <p className="text-foreground/850 text-center py-8">No notifications yet</p>
         ) : notifications.map(n => (
           <div
             key={n.id}
-            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-black border-white/5" : "bg-purple-500/5 border-purple-500/20"}`}
+            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-purple-500/5 border-purple-500/20"}`}
             onClick={() => markAsRead(n.id)}
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className={`font-medium ${n.is_read ? "text-gray-400" : "text-white"}`}>{n.title}</p>
-                <p className="text-sm text-gray-500 mt-1">{n.message}</p>
+                <p className={`font-medium ${n.is_read ? "text-foreground/60" : "text-foreground"}`}>{n.title}</p>
+                <p className="text-sm text-foreground/850 mt-1">{n.message}</p>
               </div>
-              <span className="text-xs text-gray-600 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
+              <span className="text-xs text-foreground/40 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         ))}
@@ -4340,22 +4345,22 @@ const SettingsPage = () => {
       className="max-w-2xl space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-gray-400">Manage your account preferences</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
+        <p className="text-foreground/60">Manage your account preferences</p>
       </motion.div>
 
       <motion.div variants={itemVariants} className="space-y-4">
         {/* Account */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Account</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Account</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-400">Email Address</p>
-              <p className="text-white">{user?.email}</p>
+              <p className="text-sm text-foreground/60">Email Address</p>
+              <p className="text-foreground">{user?.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Account Created</p>
-              <p className="text-white">
+              <p className="text-sm text-foreground/60">Account Created</p>
+              <p className="text-foreground">
                 {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "Unknown"}
               </p>
             </div>
@@ -4363,28 +4368,28 @@ const SettingsPage = () => {
         </div>
 
         {/* Security */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Security</h2>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-black">
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Security</h2>
+          <Button variant="outline" className="border-foreground/25 text-foreground hover:bg-foreground/5">
             Change Password
           </Button>
         </div>
 
         {/* Notifications */}
-        <div className="p-6 rounded-xl bg-black border border-white/30">
-          <h2 className="text-lg font-semibold text-white mb-4">Notifications</h2>
+        <div className="p-6 rounded-xl bg-background border border-foreground/25">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Notifications</h2>
           <div className="space-y-4">
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Email notifications</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Email notifications</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">New mentee assignments</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">New mentee assignments</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
             <label className="flex items-center justify-between">
-              <span className="text-gray-400">Session reminders</span>
-              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-black border-white/20" />
+              <span className="text-foreground/60">Session reminders</span>
+              <input type="checkbox" defaultChecked className="w-5 h-5 rounded bg-background border-foreground/25" />
             </label>
           </div>
         </div>
@@ -4394,246 +4399,80 @@ const SettingsPage = () => {
 };
 
 // Inner dashboard component (to be wrapped with context)
+const MENTOR_SECTIONS: DashboardSection[] = [
+  { id: "main", label: "§ I · Register" },
+];
+
 const MentorDashboardInner = () => {
-  const { profile, signOut, user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; type?: string }[]>([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const location = useLocation();
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; type?: string; created_at: string; is_read: boolean; user_id: string }[]>([]);
   const { unreadCount: unreadMessageCount } = useUnreadMessageCount(user?.id);
   usePresence(user?.id);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       if (!user?.id) return;
-
       const { data } = await supabase
         .from("notifications")
-        .select("id, title, message, type")
+        .select("*")
         .eq("user_id", user.id)
         .eq("is_read", false)
         .order("created_at", { ascending: false })
         .limit(5);
-
-      setNotifications(data || []);
+      setNotifications((data as typeof notifications) || []);
     };
-
     fetchNotifications();
-
-    // Poll for new notifications instead of a realtime channel
     const notifTimer = setInterval(() => {
       if (!document.hidden) void fetchNotifications();
     }, 15000);
-
     return () => clearInterval(notifTimer);
   }, [user?.id]);
 
-  const handleSignOut = async () => {
-    await signOut();
+  const markAsRead = async (id: string) => {
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
+  const markAllAsRead = async () => {
+    if (!user?.id) return;
+    await supabase.from("notifications").update({ is_read: true }).eq("user_id", user.id).eq("is_read", false);
+    setNotifications([]);
   };
 
-  const unreadCount = notifications.length;
+  const navWithBadges: DashboardNavItem[] = navItems.map((n) => ({
+    ...n,
+    section: "main",
+    badge: n.name === "Messages" ? unreadMessageCount : undefined,
+  }));
 
   return (
-    <div className="min-h-screen bg-black">
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full ${sidebarCollapsed ? "w-16" : "w-64"} bg-black/90 backdrop-blur-xl border-r border-white/30 transform transition-all duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+    <>
+      <DashboardLayout
+        role="Mentor"
+        roleTagline="You are the pen the register writes with. Observation is the craft — evidence follows."
+        nav={navWithBadges}
+        sections={MENTOR_SECTIONS}
+        notifications={notifications}
+        onMarkNotificationRead={markAsRead}
+        onMarkAllRead={markAllAsRead}
+        notificationsHref="/dashboard/mentor/notifications"
       >
-        <div className="flex flex-col h-full">
-          <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"} p-4 border-b border-white/30`}>
-            {sidebarCollapsed ? (
-              <Link to="/" className="flex items-center justify-center">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-              </Link>
-            ) : (
-              <Link to="/" className="flex items-center gap-2">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-full logo-ink" />
-                <span className="font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  The 3rd Academy
-                </span>
-              </Link>
-            )}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <nav className={`flex-1 ${sidebarCollapsed ? "p-2" : "p-4"} space-y-1 overflow-y-auto`}>
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  title={sidebarCollapsed ? item.name : undefined}
-                  className={`flex items-center ${sidebarCollapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"} rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border border-purple-500/30"
-                      : "text-gray-400 hover:text-white hover:bg-black"
-                  }`}
-                >
-                  <div className="relative flex-shrink-0">
-                    <item.icon className="w-5 h-5" />
-                    {item.name === "Messages" && unreadMessageCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-purple-500 text-white text-[10px] font-bold px-1">
-                        {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
-                      </span>
-                    )}
-                  </div>
-                  {!sidebarCollapsed && item.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Collapse toggle — desktop only */}
-          <div className="hidden lg:flex justify-center py-2 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-          </div>
-
-          <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-t border-white/30`}>
-            <div className={`flex items-center ${sidebarCollapsed ? "justify-center" : "gap-3"} mb-4`}>
-              <div className={`${sidebarCollapsed ? "w-8 h-8 text-xs" : "w-10 h-10"} rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-medium`}>
-                {profile?.first_name?.[0]}
-                {profile?.last_name?.[0]}
-              </div>
-              {!sidebarCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {profile?.first_name} {profile?.last_name}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
-                </div>
-              )}
-            </div>
-            {sidebarCollapsed ? (
-              <button
-                onClick={handleSignOut}
-                className="flex items-center justify-center w-full p-2 text-gray-400 hover:text-white hover:bg-black rounded-lg transition-colors"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full border-white/20 text-gray-400 hover:text-white hover:bg-black"
-                onClick={handleSignOut}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      <div className={`transition-all duration-300 ${sidebarCollapsed ? "lg:pl-16" : "lg:pl-64"} ${location.pathname.endsWith("/agent") ? "h-screen flex flex-col overflow-hidden" : ""}`}>
-        <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-4 bg-black backdrop-blur-xl border-b border-white/30 flex-shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex-1" />
-          <div className="relative">
-            <button
-              className="relative text-gray-400 hover:text-white"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-purple-500 rounded-full text-xs flex items-center justify-center text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-black/95 border border-white/30 shadow-xl overflow-hidden">
-                <div className="p-3 border-b border-white/30">
-                  <h3 className="font-semibold text-white">Notifications</h3>
-                </div>
-                {notifications.length > 0 ? (
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <Link
-                        key={notification.id}
-                        to={
-                          notification.type === 'mentee_request' ? '/dashboard/mentor/mentees' :
-                          notification.type === 'endorsement' ? '/dashboard/mentor/endorsements' :
-                          notification.type === 'message' ? '/dashboard/mentor/messages' :
-                          '/dashboard/mentor/notifications'
-                        }
-                        onClick={() => setShowNotifications(false)}
-                        className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-colors border-b border-white/5"
-                      >
-                        <p className="text-sm font-medium text-white">{notification.title}</p>
-                        <p className="text-xs text-gray-400 mt-1">{notification.message}</p>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center">
-                    <Bell className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm text-gray-400">No new notifications</p>
-                  </div>
-                )}
-                <div className="border-t border-white/10 p-2">
-                  <Link
-                    to="/dashboard/mentor/notifications"
-                    className="block w-full text-center py-2 text-sm text-indigo-400 hover:bg-black rounded-lg"
-                    onClick={() => setShowNotifications(false)}
-                  >
-                    View all notifications
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </header>
-
-        <main className={`p-4 md:p-8 ${location.pathname.endsWith("/agent") ? "flex-1 overflow-hidden !p-0" : ""}`}>
-          <Routes>
-            <Route index element={<Overview />} />
-            <Route path="mentees" element={<Mentees />} />
-            <Route path="mentees/:assignmentId" element={<MenteeDetail />} />
-            <Route path="assign-dimensions/:assignmentId/:candidateId" element={<AssignDimensions />} />
-            <Route path="observations" element={<Observations />} />
-            <Route path="endorsements" element={<Endorsements />} />
-            <Route path="schedule" element={<Schedule />} />
-            <Route path="messages" element={<MentorMessagesPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="agent" element={<AIAgent />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="notifications" element={<MentorNotificationsPage />} />
-          </Routes>
-        </main>
-      </div>
-
-      {/* Observation Form Modal */}
+        <Routes>
+          <Route index element={<Overview />} />
+          <Route path="mentees" element={<Mentees />} />
+          <Route path="mentees/:assignmentId" element={<MenteeDetail />} />
+          <Route path="assign-dimensions/:assignmentId/:candidateId" element={<AssignDimensions />} />
+          <Route path="observations" element={<Observations />} />
+          <Route path="endorsements" element={<Endorsements />} />
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="messages" element={<MentorMessagesPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="agent" element={<AIAgent />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="notifications" element={<MentorNotificationsPage />} />
+        </Routes>
+      </DashboardLayout>
       <ObservationFormModal />
-    </div>
+    </>
   );
 };
 

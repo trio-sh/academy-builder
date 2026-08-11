@@ -493,7 +493,7 @@ const GetStarted = () => {
       <main className="pt-16">
         {/* Hero */}
         <section className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
+          <div className="absolute inset-0 paper-grain" />
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto">
@@ -506,7 +506,7 @@ const GetStarted = () => {
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium",
                         step >= s
                           ? "bg-foreground text-foreground"
-                          : "bg-gray-900 text-foreground/80 border border-gray-700"
+                          : "bg-background text-foreground/80 border border-foreground/25"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
@@ -514,7 +514,7 @@ const GetStarted = () => {
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5",
-                        step > s ? "bg-foreground" : "bg-gray-800"
+                        step > s ? "bg-foreground" : "bg-foreground/[0.06]"
                       )} />
                     )}
                   </div>
@@ -524,7 +524,7 @@ const GetStarted = () => {
               {/* Step 1: Role Selection */}
               {step === 1 && (
                 <div className="max-w-2xl mx-auto">
-                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
                     <h2 className="text-2xl font-bold text-center text-foreground mb-8">
                       Choose Your Role
                     </h2>
@@ -537,8 +537,8 @@ const GetStarted = () => {
                           className={cn(
                             "p-4 rounded-xl text-left border-2",
                             selectedRole === role.id
-                              ? "bg-gray-900 border-indigo-500"
-                              : "bg-gray-900 border-gray-700 hover:border-gray-600"
+                              ? "bg-background border-foreground"
+                              : "bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 hover:border-foreground/40"
                           )}
                         >
                           <div className="flex items-center gap-3 mb-2">
@@ -571,8 +571,8 @@ const GetStarted = () => {
                               className={cn(
                                 "p-4 rounded-xl text-left border-2",
                                 selectedPath === path.id
-                                  ? "bg-gray-900 border-indigo-500"
-                                  : "bg-gray-900 border-gray-700 hover:border-gray-600"
+                                  ? "bg-background border-foreground"
+                                  : "bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 hover:border-foreground/40"
                               )}
                             >
                               {path.recommended && (
@@ -621,7 +621,7 @@ const GetStarted = () => {
               {/* Step 2: Account Details */}
               {step === 2 && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
                     <div className="flex items-center gap-3 mb-6">
                       {selectedRoleInfo && (
                         <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
@@ -632,7 +632,7 @@ const GetStarted = () => {
                     </div>
 
                     {error && (
-                      <div className="mb-6 p-4 rounded-xl bg-red-950 border border-red-800 flex items-start gap-3">
+                      <div className="mb-6 p-4 rounded-xl border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-red-400">{error}</p>
                       </div>
@@ -648,7 +648,7 @@ const GetStarted = () => {
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                           />
                         </div>
                         <div className="space-y-2">
@@ -659,7 +659,7 @@ const GetStarted = () => {
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                           />
                         </div>
                       </div>
@@ -672,7 +672,7 @@ const GetStarted = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           disabled={isLoading}
-                          className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                          className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                         />
                       </div>
                       <div className="space-y-2">
@@ -684,7 +684,7 @@ const GetStarted = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           disabled={isLoading}
-                          className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                          className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                         />
                       </div>
 
@@ -697,7 +697,7 @@ const GetStarted = () => {
                               value={companyName}
                               onChange={(e) => setCompanyName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                             />
                           </div>
                           <div className="space-y-2">
@@ -708,7 +708,7 @@ const GetStarted = () => {
                               value={industry}
                               onChange={(e) => setIndustry(e.target.value)}
                               disabled={isLoading}
-                              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                             />
                           </div>
                         </>
@@ -722,7 +722,7 @@ const GetStarted = () => {
                             value={schoolName}
                             onChange={(e) => setSchoolName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                           />
                         </div>
                       )}
@@ -737,7 +737,7 @@ const GetStarted = () => {
                               value={industry}
                               onChange={(e) => setIndustry(e.target.value)}
                               disabled={isLoading}
-                              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                             />
                           </div>
                           <div className="space-y-2">
@@ -748,7 +748,7 @@ const GetStarted = () => {
                               value={yearsExperience}
                               onChange={(e) => setYearsExperience(e.target.value)}
                               disabled={isLoading}
-                              className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800"
+                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
                             />
                           </div>
                         </>
@@ -760,7 +760,7 @@ const GetStarted = () => {
                         variant="outline"
                         onClick={() => setStep(1)}
                         disabled={isLoading}
-                        className="flex-1 border-gray-700 text-foreground hover:bg-gray-900"
+                        className="flex-1 border-foreground/25 text-foreground hover:bg-background"
                       >
                         Back
                       </Button>
@@ -795,7 +795,7 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: Resume Upload */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
                     <h2 className="text-2xl font-bold text-center text-foreground mb-8">
                       {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
                     </h2>
@@ -809,7 +809,7 @@ const GetStarted = () => {
                     />
 
                     {uploadError && (
-                      <div className="mb-4 p-3 rounded-xl bg-red-950 border border-red-800 flex items-start gap-2">
+                      <div className="mb-4 p-3 rounded-xl border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-red-400">{uploadError}</p>
                       </div>
@@ -817,7 +817,7 @@ const GetStarted = () => {
 
                     {!uploadedFile ? (
                       <div
-                        className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-indigo-500 cursor-pointer"
+                        className="border-2 border-dashed border-foreground/25 rounded-2xl p-12 text-center hover:border-foreground cursor-pointer"
                         onClick={() => fileInputRef.current?.click()}
                       >
                         {isUploading || isEnhancing ? (
@@ -833,7 +833,7 @@ const GetStarted = () => {
                             <Upload className="w-12 h-12 text-foreground/80 mx-auto mb-4" />
                             <p className="text-foreground font-medium mb-2">Click to upload your resume</p>
                             <p className="text-sm text-foreground/800 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                            <Button variant="outline" size="sm" className="border-gray-700 text-foreground hover:bg-gray-900" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                            <Button variant="outline" size="sm" className="border-foreground/25 text-foreground hover:bg-background" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                           </>
                         )}
                       </div>
@@ -856,7 +856,7 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-foreground hover:bg-gray-900">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-foreground/25 text-foreground hover:bg-background">Back</Button>
                       )}
                       <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground">
                         {isCompletingSetup ? (
@@ -873,21 +873,21 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: LiveWorks Profile */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
                     <h2 className="text-2xl font-bold text-center text-foreground mb-8">Set Up Your Profile</h2>
 
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="headline" className="text-foreground/80">Professional Headline</Label>
-                        <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800" />
+                        <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="skills" className="text-foreground/80">Primary Skills</Label>
-                        <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800" />
+                        <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="experience" className="text-foreground/80">Years of Experience</Label>
-                        <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-foreground placeholder:text-foreground/800" />
+                        <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
                       </div>
                     </div>
 
@@ -902,7 +902,7 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-foreground hover:bg-gray-900">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-foreground/25 text-foreground hover:bg-background">Back</Button>
                       )}
                       <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-foreground">
                         {isCompletingSetup ? (
@@ -919,7 +919,7 @@ const GetStarted = () => {
               {/* Step 3 for Non-Candidate Roles: Welcome */}
               {step === 3 && selectedRole !== "candidate" && (
                 <div className="max-w-md mx-auto text-center">
-                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="w-10 h-10 text-foreground" />
                     </div>
