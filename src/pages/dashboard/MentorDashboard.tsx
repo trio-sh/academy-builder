@@ -486,7 +486,7 @@ const ObservationFormModal = () => {
                         onClick={() => selectCandidate(assignment.id, assignment.candidate_id)}
                         className="w-full p-4 rounded-xl bg-background border border-foreground/25 hover:border-foreground/40 transition-colors text-left flex items-center gap-4"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
+                        <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-background font-bold">
                           {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                         </div>
                         <div className="flex-1">
@@ -509,7 +509,7 @@ const ObservationFormModal = () => {
               <div className="space-y-6">
                 {selectedAssignment && (
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
-                    <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-foreground font-bold text-sm">
+                    <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-background font-bold text-sm">
                       {selectedAssignment.candidate_profile?.profile?.first_name?.[0]}
                       {selectedAssignment.candidate_profile?.profile?.last_name?.[0]}
                     </div>
@@ -1371,7 +1371,7 @@ const Mentees = () => {
                 className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
+                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-background font-bold">
                     {profile?.first_name?.[0]}
                     {profile?.last_name?.[0]}
                   </div>
@@ -1967,7 +1967,7 @@ const MenteeDetail = () => {
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to Mentees
         </Button>
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
+          <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
             {profile?.first_name?.[0]}{profile?.last_name?.[0]}
           </div>
           <div className="flex-1">
@@ -2785,7 +2785,7 @@ const Endorsements = () => {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
+                      <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-background font-bold">
                         {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                       </div>
                       <div>
@@ -3624,7 +3624,7 @@ const ProfilePage = () => {
         {/* Basic Info */}
         <div className="p-6 rounded-xl bg-background border border-foreground/25">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-foreground font-bold">
+            <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-background font-bold">
               {formData.first_name?.[0]}{formData.last_name?.[0]}
             </div>
             <div>

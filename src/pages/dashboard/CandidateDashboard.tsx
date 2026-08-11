@@ -2165,7 +2165,7 @@ const SelfAssessmentPage = () => {
  activeStep === index
  ? "bg-foreground text-background"
  : activeStep > index
- ? "bg-foreground/[0.06] text-foreground"
+ ? "bg-foreground/[0.06] text-background"
  : "bg-background text-foreground/60 hover:bg-foreground/5"
  }`}
  >
@@ -3180,7 +3180,7 @@ const Projects = () => {
  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
  activeTab === "browse"
  ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-foreground"
+ : "bg-background text-foreground/60 hover:text-background"
  }`}
  >
  Browse Projects
@@ -3190,7 +3190,7 @@ const Projects = () => {
  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
  activeTab === "applied"
  ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-foreground"
+ : "bg-background text-foreground/60 hover:text-background"
  }`}
  >
  My Applications
@@ -4250,7 +4250,7 @@ const Profile = () => {
  className="w-20 h-20 rounded-2xl object-cover"
  />
  ) : (
- <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-foreground font-bold">
+ <div className="w-20 h-20 rounded-2xl bg-foreground flex items-center justify-center text-3xl text-background font-bold">
  {formData.first_name?.[0]}{formData.last_name?.[0]}
  </div>
  )}
@@ -5230,7 +5230,7 @@ const FindMentor = () => {
  className="w-16 h-16 rounded-xl object-cover"
  />
  ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
+ <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
  {mentor.profile?.first_name?.[0]}
  {mentor.profile?.last_name?.[0]}
  </div>
@@ -5335,7 +5335,7 @@ const FindMentor = () => {
  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
  industryFilter === "all"
  ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-foreground"
+ : "bg-background text-foreground/60 hover:text-background"
  }`}
  >
  All Industries
@@ -5347,7 +5347,7 @@ const FindMentor = () => {
  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
  industryFilter === industry
  ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-foreground"
+ : "bg-background text-foreground/60 hover:text-background"
  }`}
  >
  {industry}
@@ -5387,7 +5387,7 @@ const FindMentor = () => {
  className="w-16 h-16 rounded-xl object-cover"
  />
  ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
+ <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
  {mentor.profile?.first_name?.[0]}{mentor.profile?.last_name?.[0]}
  </div>
  )}
@@ -5512,7 +5512,7 @@ const FindMentor = () => {
  className="w-16 h-16 rounded-xl object-cover"
  />
  ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-xl">
+ <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
  {selectedMentor.profile?.first_name?.[0]}{selectedMentor.profile?.last_name?.[0]}
  </div>
  )}
@@ -6665,7 +6665,7 @@ const NotificationsPage = () => {
  className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
  filter === f
  ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-foreground"
+ : "bg-background text-foreground/60 hover:text-background"
  }`}
  >
  {f}

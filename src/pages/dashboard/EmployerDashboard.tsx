@@ -579,7 +579,7 @@ const SearchTalent = () => {
                     {candidate.profile?.avatar_url ? (
                       <img src={candidate.profile.avatar_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-background font-bold text-sm flex-shrink-0">
                         {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
                       </div>
                     )}
@@ -623,7 +623,7 @@ const SearchTalent = () => {
                         {candidate.profile?.avatar_url ? (
                           <img src={candidate.profile.avatar_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
                         ) : (
-                          <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-lg">
+                          <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-lg">
                             {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
                           </div>
                         )}
@@ -733,7 +733,7 @@ const SearchTalent = () => {
 
                 {/* Candidate Preview */}
                 <div className="flex items-center gap-4 p-4 rounded-xl bg-background mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
+                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-background font-bold">
                     {selectedCandidate.profile?.first_name?.[0]}
                     {selectedCandidate.profile?.last_name?.[0]}
                   </div>
@@ -923,7 +923,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "all"
               ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-foreground"
+              : "bg-background text-foreground/60 hover:text-background"
           }`}
         >
           All ({connections.length})
@@ -933,7 +933,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "accepted"
               ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-foreground"
+              : "bg-background text-foreground/60 hover:text-background"
           }`}
         >
           Accepted
@@ -948,7 +948,7 @@ const Connections = () => {
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "pending"
               ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-foreground"
+              : "bg-background text-foreground/60 hover:text-background"
           }`}
         >
           Awaiting Response
@@ -985,7 +985,7 @@ const Connections = () => {
                         className="w-14 h-14 rounded-xl object-cover"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold text-lg">
+                      <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-lg">
                         {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                       </div>
                     )}

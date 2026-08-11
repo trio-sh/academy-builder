@@ -37,7 +37,8 @@ export interface DashboardSection {
 
 interface DashboardLayoutProps {
   role: string;
-  roleTagline: string;
+  /** Deprecated — no longer rendered. Kept to avoid breaking callers. */
+  roleTagline?: string;
   nav: DashboardNavItem[];
   sections: DashboardSection[];
   children: ReactNode;
@@ -49,7 +50,6 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({
   role,
-  roleTagline,
   nav,
   sections,
   children,
@@ -125,13 +125,6 @@ export function DashboardLayout({
               <X className="w-5 h-5" />
             </button>
           </div>
-
-          {/* Tagline strip */}
-          {!collapsed && (
-            <div className="px-5 py-3 border-b border-foreground/20">
-              <p className="marginalia text-[0.8rem]">{roleTagline}</p>
-            </div>
-          )}
 
           {/* Nav */}
           <nav

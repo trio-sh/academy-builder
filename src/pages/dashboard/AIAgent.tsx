@@ -2195,7 +2195,7 @@ export default function AIAgent() {
  <div className="group">
  <div className="flex items-start gap-3">
  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
- <Bot className="w-3.5 h-3.5 text-foreground" />
+ <Bot className="w-3.5 h-3.5 text-background" />
  </div>
  <div className="flex-1 min-w-0">
  {msg.content && (
@@ -2264,7 +2264,7 @@ export default function AIAgent() {
  >
  <div className="flex items-start gap-3">
  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
- <Bot className="w-3.5 h-3.5 text-foreground" />
+ <Bot className="w-3.5 h-3.5 text-background" />
  </div>
  <div className="flex-1 min-w-0 text-foreground/80">
  {streamingContent ? (() => {
