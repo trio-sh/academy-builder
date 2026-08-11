@@ -211,6 +211,34 @@ export function EmptyState({
   );
 }
 
+// ─── Legacy deprecation banner ────────────────────────────────────
+// Placed at the top of a dashboard surface whose backing tables are
+// spec-superseded (see docs/legacy-schema-mapping.md). Points the
+// reader at the new T3A-DEV-SPEC-002 surface that supersedes it.
+export function LegacyBanner({
+  eyebrow = "§ Legacy surface",
+  body,
+  linkHref,
+  linkLabel,
+}: {
+  eyebrow?: string;
+  body: ReactNode;
+  linkHref: string;
+  linkLabel: string;
+}) {
+  return (
+    <div className="border-2 border-vermilion bg-vermilion/[0.06] p-4 mb-8">
+      <div className="mono-label ink-vermilion mb-1">{eyebrow}</div>
+      <p className="text-sm text-foreground leading-relaxed">
+        {body}{" "}
+        <a href={linkHref} className="underline underline-offset-4 hover:no-underline ink-vermilion">
+          {linkLabel} →
+        </a>
+      </p>
+    </div>
+  );
+}
+
 // ─── Loading state ────────────────────────────────────────────────
 export function LedgerLoading({ text = "Retrieving from the register…" }: { text?: string }) {
   return (

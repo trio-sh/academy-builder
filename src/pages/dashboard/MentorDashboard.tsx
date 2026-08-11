@@ -22,6 +22,7 @@ import {
   LedgerBadge,
   LedgerLoading,
   EmptyState,
+  LegacyBanner,
 } from "@/components/dashboard/primitives";
 import { cn } from "@/lib/utils";
 import type { Database } from "@/types/database.types";
@@ -2298,6 +2299,11 @@ const Observations = () => {
       animate="visible"
       className="space-y-8"
     >
+      <LegacyBanner
+        body="This surface reads the legacy mentor_observations + observation_feedback tables (BARS-score model). It is superseded by the T3A-DEV-SPEC-002 §7.3 + §11 determination flow — mentors answer bounded determination questions and record a progression decision against a stage_instance, and statements compose server-side from the approved statement library."
+        linkHref="/dashboard/mentor/determinations"
+        linkLabel="Open the new Determinations surface"
+      />
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Observations</h1>
@@ -2760,6 +2766,11 @@ const Endorsements = () => {
       animate="visible"
       className="space-y-8"
     >
+      <LegacyBanner
+        body="The endorsements concept is retired per T3A-DEV-SPEC-002 §5.1.1 + §21.4. Its replacement is the progression decision (proceed / redirect / pause) recorded against a stage_instance in the new Determinations surface."
+        linkHref="/dashboard/mentor/determinations"
+        linkLabel="Open the new Determinations surface"
+      />
       <motion.div variants={itemVariants}>
         <h1 className="text-3xl font-bold text-foreground mb-2">Endorsements</h1>
         <p className="text-foreground/60">

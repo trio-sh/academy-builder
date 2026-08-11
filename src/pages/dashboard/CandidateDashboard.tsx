@@ -26,6 +26,7 @@ import {
  LedgerBadge,
  LedgerLoading,
  EmptyState,
+ LegacyBanner,
 } from "@/components/dashboard/primitives";
 import { cn } from "@/lib/utils";
 import {
@@ -613,6 +614,11 @@ const SkillPassport = () => {
  animate="visible"
  className="space-y-8"
  >
+ <LegacyBanner
+   body="This surface reads the legacy skill_passports + observation_feedback tables. It is superseded by the new pre-issue review surface, which reads t3a_ber_report and lets you challenge any statement or observation."
+   linkHref="/dashboard/candidate/report-review"
+   linkLabel="Open the new Report Review surface"
+ />
  <motion.div variants={itemVariants}>
  <h1 className="text-3xl font-bold text-foreground mb-2">Behavioral Evidence Report</h1>
  <p className="text-foreground/60">
