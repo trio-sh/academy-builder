@@ -2105,6 +2105,11 @@ export default function AIAgent() {
  // hammering scrollIntoView on every streamed token otherwise fights
  // their selection and reads as the whole page "shaking".
  const stickToBottomRef = useRef(true);
+ // True while the user is actively dragging inside the messages pane
+ // (holding the mouse / touch down). We freeze auto-scroll for the
+ // whole gesture so text selection can complete without the viewport
+ // jumping under the cursor.
+ const isPointerDownRef = useRef(false);
  const [showJumpToBottom, setShowJumpToBottom] = useState(false);
  const inputRef = useRef<HTMLTextAreaElement>(null);
  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -2364,30 +2369,50 @@ export default function AIAgent() {
  }
  }, [user?.id, profile?.role]);
 
- // Auto-scroll — only when user is pinned to the bottom and NOT
- // actively selecting text. Uses instant scroll during streaming so
- // the viewport doesn't animate on every token.
+ // Auto-scroll — only when user is pinned to the bottom, NOT
+ // actively dragging (selecting text), and has no highlight range yet.
+ // Instant scroll during streaming so nothing animates on every token.
  useEffect(() => {
+ if (isPointerDownRef.current) return;
  if (!stickToBottomRef.current) return;
  const sel = typeof window !== "undefined" ? window.getSelection?.() : null;
  if (sel && sel.toString().length > 0) return;
  messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
  }, [uiMessages, streamingContent, activeStatuses, isStreaming]);
 
- // Track whether the user is scrolled to the bottom of the messages pane.
+ // Track whether the user is scrolled to the bottom of the messages pane
+ // AND watch for pointer-down/pointer-up so we can pause auto-scroll for
+ // the whole duration of a selection drag.
  useEffect(() => {
  const el = scrollContainerRef.current;
  if (!el) return;
  const NEAR_BOTTOM_PX = 80;
- const handler = () => {
+ const scrollHandler = () => {
  const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
  const atBottom = distance <= NEAR_BOTTOM_PX;
  stickToBottomRef.current = atBottom;
  setShowJumpToBottom(!atBottom && (isStreaming || uiMessages.length > 0));
  };
- handler();
- el.addEventListener("scroll", handler, { passive: true });
- return () => el.removeEventListener("scroll", handler);
+ scrollHandler();
+ el.addEventListener("scroll", scrollHandler, { passive: true });
+
+ const pointerDown = (e: PointerEvent) => {
+ // Ignore clicks on buttons — only text-region drags freeze scroll.
+ const t = e.target as HTMLElement | null;
+ if (t && t.closest("button, a, input, textarea")) return;
+ isPointerDownRef.current = true;
+ };
+ const pointerUp = () => { isPointerDownRef.current = false; };
+ el.addEventListener("pointerdown", pointerDown);
+ window.addEventListener("pointerup", pointerUp);
+ window.addEventListener("pointercancel", pointerUp);
+
+ return () => {
+ el.removeEventListener("scroll", scrollHandler);
+ el.removeEventListener("pointerdown", pointerDown);
+ window.removeEventListener("pointerup", pointerUp);
+ window.removeEventListener("pointercancel", pointerUp);
+ };
  }, [isStreaming, uiMessages.length]);
 
  const jumpToBottom = useCallback(() => {
@@ -2912,11 +2937,12 @@ export default function AIAgent() {
  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
  <Bot className="w-3.5 h-3.5 text-background" />
  </div>
- <div className="flex-1 min-w-0">
+ <div className="flex-1 min-w-0 select-text">
  {msg.content && (() => {
  const parsed = parseReasoning(msg.content);
  return (
- <div className="text-foreground/80">
+ <div className="text-foreground/80 select-text"
+ style={{ WebkitUserSelect: "text", userSelect: "text" }}>
  {parsed.hasReasoning && (
  <ReasoningBlock reasoning={parsed.reasoning} closed={parsed.closed} />
  )}
@@ -2987,7 +3013,7 @@ export default function AIAgent() {
  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0 mt-0.5">
  <Bot className="w-3.5 h-3.5 text-background" />
  </div>
- <div className="flex-1 min-w-0 text-foreground/80">
+ <div className="flex-1 min-w-0 text-foreground/80 select-text" style={{ WebkitUserSelect: "text", userSelect: "text" }}>
  {streamingContent ? (() => {
  const parsed = parseReasoning(streamingContent);
  const { cleaned, hasPdfBlock } = cleanStreamingPdfContent(parsed.cleaned);
