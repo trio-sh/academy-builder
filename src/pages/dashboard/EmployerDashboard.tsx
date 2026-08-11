@@ -8,6 +8,7 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { extractDocumentText } from "@/lib/documentExtractor";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import T3XDiscovery from "@/pages/dashboard/employer/T3XDiscovery";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
@@ -110,6 +111,7 @@ const itemVariants = {
 const navItems = [
   { name: "Overview", href: "/dashboard/employer", icon: TrendingUp },
   { name: "Find Talent", href: "/dashboard/employer/search", icon: Search },
+  { name: "T3X Discovery", href: "/dashboard/employer/t3x", icon: Eye },
   { name: "Connections", href: "/dashboard/employer/connections", icon: Users },
   { name: "Projects", href: "/dashboard/employer/projects", icon: Briefcase },
   { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
@@ -3802,6 +3804,7 @@ const EmployerDashboard = () => {
       <Routes>
         <Route index element={<Overview />} />
         <Route path="search" element={<SearchTalent />} />
+        <Route path="t3x" element={<T3XDiscovery />} />
         <Route path="connections" element={<Connections />} />
         <Route path="projects" element={<Projects />} />
         <Route path="feedback" element={<Feedback />} />
