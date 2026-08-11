@@ -700,11 +700,11 @@ function PdfDownloadCard({ pdf }: { pdf: { title: string; url: string; rawJson?:
   const isError = !pdf.url;
 
   return (
-    <div className={`rounded-xl border overflow-hidden ${isError ? "border-vermilion bg-amber-950/20" : "border-indigo-500/25 bg-indigo-950/30"}`}>
+    <div className={`rounded-xl border overflow-hidden ${isError ? "border-vermilion bg-vermilion/10" : "border-indigo-500/25 bg-indigo-950/30"}`}>
       {/* Download button row */}
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-amber-600/30" : "bg-indigo-600/30"}`}>
-          {isError ? <AlertCircle className="w-4.5 h-4.5 text-amber-300" /> : <FileText className="w-4.5 h-4.5 ink-vermilion" />}
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${isError ? "bg-vermilion/10" : "bg-indigo-600/30"}`}>
+          {isError ? <AlertCircle className="w-4.5 h-4.5 ink-vermilion" /> : <FileText className="w-4.5 h-4.5 ink-vermilion" />}
         </div>
         <div className="flex-1 min-w-0">
           <span className="font-medium text-sm text-foreground truncate block">
@@ -2007,7 +2007,7 @@ export default function AIAgent() {
 
     return (
       <motion.div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-emerald-950/80 border-foreground/40 text-emerald-300"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs bg-foreground/[0.05] border-foreground/40 text-emerald-300"
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         layout
@@ -2028,8 +2028,8 @@ export default function AIAgent() {
     return (
       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] ${
         isDone
-          ? "bg-emerald-950/60 border border-foreground/40 text-emerald-300"
-          : "bg-amber-950/60 border border-vermilion text-amber-300"
+          ? "bg-foreground/[0.05] border border-foreground/40 text-emerald-300"
+          : "bg-vermilion/10 border border-vermilion ink-vermilion"
       }`}>
         {isDone ? <CheckCircle2 className="w-3 h-3" /> : <Loader2 className="w-3 h-3 animate-spin" />}
         {label}
@@ -2208,7 +2208,7 @@ export default function AIAgent() {
                     {msg.statuses && msg.statuses.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {msg.statuses.filter(s => s.type === "tool_start").map((s, i) => (
-                          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-foreground/40 text-[11px] text-emerald-300">
+                          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-foreground/[0.05] border border-foreground/40 text-[11px] text-emerald-300">
                             <Globe className="w-3 h-3" />
                             {toolDisplayName(s.name, s.arguments || {})}
                             <CheckCircle2 className="w-3 h-3" />

@@ -112,9 +112,8 @@ export function GoogleAuthLink({ className }: { className?: string }) {
       // Warn: reauth flow will match by email; picking a different Google
       // account signs the user out of this account and into that one.
       const proceed = window.confirm(
-        `Manual linking is disabled on this project — we'll use Google sign-in as a fallback.\n\n` +
-          `On the next screen, pick the Google account that uses ${currentEmail || "your account email"}. ` +
-          `Google will then be added to this account.\n\n` +
+        `On the next screen, pick the Google account that uses ${currentEmail || "your account email"}. ` +
+          `Google will then be added as a way to sign in to your account.\n\n` +
           `Picking a different Google account will sign you into that account instead.\n\nContinue?`
       );
       if (!proceed) return;

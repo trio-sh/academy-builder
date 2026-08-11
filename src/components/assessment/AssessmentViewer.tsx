@@ -739,13 +739,13 @@ export const AssessmentViewer = () => {
           </div>
 
           {improvements.length > 0 && (
-            <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-              <p className="text-sm text-amber-400 mb-2">Focus areas based on your selections:</p>
+            <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+              <p className="text-sm ink-vermilion mb-2">Focus areas based on your selections:</p>
               <div className="flex flex-wrap gap-2">
                 {improvements.map(id => {
                   const dim = getDimension(id);
                   return dim ? (
-                    <span key={id} className="px-2 py-1 rounded-full bg-amber-500/20 text-amber-300 text-sm">
+                    <span key={id} className="px-2 py-1 rounded-full bg-vermilion/10 ink-vermilion text-sm">
                       {dim.title}
                     </span>
                   ) : null;
@@ -840,7 +840,7 @@ export const AssessmentViewer = () => {
 
           {/* Strengths & Improvements */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20">
+            <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40">
               <p className="text-sm text-emerald-400 font-medium mb-2">Strengths</p>
               <div className="space-y-1">
                 {strengths.map(id => {
@@ -851,8 +851,8 @@ export const AssessmentViewer = () => {
                 })}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-              <p className="text-sm text-amber-400 font-medium mb-2">Growth Areas</p>
+            <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+              <p className="text-sm ink-vermilion font-medium mb-2">Growth Areas</p>
               <div className="space-y-1">
                 {improvements.map(id => {
                   const dim = getDimension(id);
@@ -904,7 +904,7 @@ export const AssessmentViewer = () => {
               <p className="text-xs text-gray-400">Strengths</p>
             </div>
             <div className="p-4 rounded-xl bg-black border border-white/30">
-              <p className="text-2xl font-bold text-amber-400">{improvements.length}</p>
+              <p className="text-2xl font-bold ink-vermilion">{improvements.length}</p>
               <p className="text-xs text-gray-400">Growth Areas</p>
             </div>
           </div>
@@ -929,7 +929,7 @@ export const AssessmentViewer = () => {
             </Button>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/30 max-w-sm mx-auto">
+              <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40 max-w-sm mx-auto">
                 <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                 <p className="text-emerald-400 font-medium">Assessment Saved!</p>
               </div>
@@ -954,18 +954,18 @@ export const AssessmentViewer = () => {
     switch (scene.type) {
       case 'welcome':
       case 'narrative':
-        return <BookOpen className="w-5 h-5 text-blue-400" />;
+        return <BookOpen className="w-5 h-5 text-foreground" />;
       case 'dimension':
       case 'multi-dimension':
         return <Sliders className="w-5 h-5 text-purple-400" />;
       case 'selection':
-        return <Target className="w-5 h-5 text-amber-400" />;
+        return <Target className="w-5 h-5 ink-vermilion" />;
       case 'goals':
-        return <Sparkles className="w-5 h-5 text-cyan-400" />;
+        return <Sparkles className="w-5 h-5 text-foreground" />;
       case 'review':
         return <MessageSquare className="w-5 h-5 text-emerald-400" />;
       case 'completion':
-        return <Award className="w-5 h-5 text-amber-400" />;
+        return <Award className="w-5 h-5 ink-vermilion" />;
       default:
         return <Star className="w-5 h-5 text-gray-400" />;
     }
@@ -1078,11 +1078,11 @@ export const AssessmentViewer = () => {
                   isExtraTime
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
-                      ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse'
+                      ? 'bg-vermilion/10 border border-vermilion animate-pulse'
                       : 'bg-black border border-white/30'
                 }`}>
-                  <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
-                  <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  <Clock className={`w-4 h-4 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-white'}`}>
                     {formatTime(timeRemaining)}
                   </span>
                   {isExtraTime && <span className="text-xs text-red-400">+3</span>}
@@ -1098,11 +1098,11 @@ export const AssessmentViewer = () => {
                   isExtraTime
                     ? 'bg-red-500/20 border border-red-500/30'
                     : timeRemaining < 60
-                      ? 'bg-amber-500/20 border border-amber-500/30'
+                      ? 'bg-vermilion/10 border border-vermilion'
                       : 'bg-black border border-white/30'
                 }`}>
-                  <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-gray-400'}`} />
-                  <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'text-amber-400' : 'text-white'}`}>
+                  <Clock className={`w-3 h-3 ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-gray-400'}`} />
+                  <span className={`font-mono font-semibold text-xs ${isExtraTime ? 'text-red-400' : timeRemaining < 60 ? 'ink-vermilion' : 'text-white'}`}>
                     {formatTime(timeRemaining)}
                   </span>
                 </div>
@@ -1138,12 +1138,12 @@ export const AssessmentViewer = () => {
                 <div className="px-8 pt-8 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`p-2 rounded-xl ${
-                      currentScene?.type === 'welcome' || currentScene?.type === 'narrative' ? 'bg-blue-500/30' :
+                      currentScene?.type === 'welcome' || currentScene?.type === 'narrative' ? 'bg-foreground/[0.05]' :
                       currentScene?.type === 'dimension' || currentScene?.type === 'multi-dimension' ? 'bg-purple-500/30' :
-                      currentScene?.type === 'selection' ? 'bg-amber-500/30' :
-                      currentScene?.type === 'goals' ? 'bg-cyan-500/30' :
-                      currentScene?.type === 'review' ? 'bg-emerald-500/30' :
-                      'bg-amber-500/30'
+                      currentScene?.type === 'selection' ? 'bg-vermilion/10' :
+                      currentScene?.type === 'goals' ? 'bg-foreground/[0.05]' :
+                      currentScene?.type === 'review' ? 'bg-foreground/[0.05]' :
+                      'bg-vermilion/10'
                     }`}>
                       {getSceneIcon()}
                     </div>

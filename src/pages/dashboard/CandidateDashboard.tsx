@@ -717,7 +717,7 @@ const SkillPassport = () => {
                 key={item.step}
                 className="p-6 rounded-xl bg-background border border-foreground/25"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-foreground font-bold mb-4">
+                <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center text-background font-bold mb-4">
                   {item.step}
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
@@ -1594,8 +1594,8 @@ const ObservationPathway = () => {
           <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion inline-flex items-start gap-3 max-w-lg text-left">
             <AlertCircle className="w-5 h-5 ink-vermilion shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm text-amber-300 font-medium">Mentor Assignment Required</p>
-              <p className="text-sm text-amber-300/70 mt-1">
+              <p className="text-sm ink-vermilion font-medium">Mentor Assignment Required</p>
+              <p className="text-sm ink-vermilion/70 mt-1">
                 No observation activity can begin until a mentor is assigned and has selected your behavioral dimensions for assessment. Find a mentor to get started.
               </p>
             </div>
@@ -1768,7 +1768,7 @@ const ObservationPathway = () => {
             const decisionColors: Record<string, string> = {
               proceed: "bg-foreground/[0.06] border-foreground/40",
               redirect: "bg-vermilion/10 border-vermilion",
-              pause: "bg-vermilion/10 border-orange-500/30",
+              pause: "bg-vermilion/10 border-vermilion",
               escalate: "bg-vermilion/15 border-vermilion",
             };
             const decisionLabels: Record<string, { label: string; color: string; desc: string }> = {
@@ -2115,7 +2115,7 @@ const SelfAssessmentPage = () => {
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 ink-vermilion shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-300">
+          <p className="text-sm ink-vermilion">
             This is a personal preparation tool. It is not part of your formal T3A observation pathway and will not appear in your Behavioral Evidence Report. Your formal observation is conducted through the Observation Pathway with your assigned mentor.
           </p>
         </div>
@@ -2163,7 +2163,7 @@ const SelfAssessmentPage = () => {
               onClick={() => setActiveStep(index)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 activeStep === index
-                  ? "bg-indigo-600 text-foreground"
+                  ? "bg-foreground text-background"
                   : activeStep > index
                   ? "bg-foreground/[0.06] text-foreground"
                   : "bg-background text-foreground/60 hover:bg-foreground/5"
@@ -2201,7 +2201,7 @@ const SelfAssessmentPage = () => {
               </p>
               <div className="mt-4 px-4 py-2 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 ink-vermilion shrink-0" />
-                <p className="text-xs text-amber-300">
+                <p className="text-xs ink-vermilion">
                   Preparation only — not part of your formal observation. Results do not appear in your Behavioral Evidence Report.
                 </p>
               </div>
@@ -2634,7 +2634,7 @@ const SelfAssessmentPage = () => {
                   <div className="space-y-2">
                     {improvements.length > 0 ? (
                       improvements.map((s) => (
-                        <div key={s} className="p-2 rounded-lg bg-vermilion/10 text-amber-300 text-sm">
+                        <div key={s} className="p-2 rounded-lg bg-vermilion/10 ink-vermilion text-sm">
                           {ASSESSMENT_DESCRIPTIONS[s].title}
                         </div>
                       ))
@@ -2842,7 +2842,7 @@ const Training = () => {
         </p>
         <div className="mt-3 px-4 py-2.5 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-start gap-2 max-w-2xl">
           <AlertCircle className="w-4 h-4 ink-vermilion shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-300">
+          <p className="text-sm ink-vermilion">
             BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Behavioral Evidence Report.
           </p>
         </div>
@@ -3179,7 +3179,7 @@ const Projects = () => {
           onClick={() => setActiveTab("browse")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "browse"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -3189,7 +3189,7 @@ const Projects = () => {
           onClick={() => setActiveTab("applied")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "applied"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -4354,7 +4354,7 @@ const Profile = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowResumeViewer(true)}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-foreground transition-colors flex items-center gap-2"
+                  className="px-4 py-2 rounded-none bg-foreground hover:bg-foreground/90 text-background transition-colors flex items-center gap-2 shadow-none"
                 >
                   <Eye className="w-4 h-4" />
                   View Resume
@@ -4410,7 +4410,7 @@ const Profile = () => {
                 <p className="text-xs text-foreground/50 mb-4">
                   Supports PDF, DOC, DOCX (max 10MB)
                 </p>
-                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none font-medium transition-colors">
                   {isUploading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -4663,7 +4663,7 @@ const Profile = () => {
                     <a
                       href={candidateProfile.resume_url}
                       download
-                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-foreground font-medium transition-colors flex items-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none font-medium transition-colors flex items-center gap-2"
                     >
                       <Download className="w-5 h-5" />
                       Download Resume
@@ -5295,7 +5295,7 @@ const FindMentor = () => {
                     {/* Action Button */}
                     <div className="mt-4">
                       {isAssigned ? (
-                        <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                        <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Currently Assigned
                         </Button>
@@ -5334,7 +5334,7 @@ const FindMentor = () => {
           onClick={() => setIndustryFilter("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             industryFilter === "all"
-              ? "bg-indigo-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -5346,7 +5346,7 @@ const FindMentor = () => {
             onClick={() => setIndustryFilter(industry)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               industryFilter === industry
-                ? "bg-indigo-600 text-foreground"
+                ? "bg-foreground text-background"
                 : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >
@@ -5446,17 +5446,17 @@ const FindMentor = () => {
                   {/* Action Button */}
                   <div className="mt-4">
                     {isAssigned ? (
-                      <Button disabled className="w-full bg-emerald-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Currently Assigned
                       </Button>
                     ) : isPending ? (
-                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
                         <Clock className="w-4 h-4 mr-2" />
                         Pending Approval
                       </Button>
                     ) : hasSentRequest ? (
-                      <Button disabled className="w-full bg-amber-600/50 cursor-not-allowed">
+                      <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
                         <Clock className="w-4 h-4 mr-2" />
                         Pending Approval
                       </Button>
@@ -6376,7 +6376,7 @@ const MessagesPage = () => {
                             onClick={() => setActiveMsgId(showActions ? null : msg.id)}
                             className={`px-4 py-2 rounded-2xl transition-all duration-300 cursor-pointer ${
                               isOwn
-                                ? "bg-indigo-600 text-foreground rounded-br-md"
+                                ? "bg-foreground text-background rounded-br-md"
                                 : "bg-background text-foreground/80 rounded-bl-md"
                             }`}
                           >
@@ -6664,7 +6664,7 @@ const NotificationsPage = () => {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg font-medium transition-colors capitalize ${
               filter === f
-                ? "bg-indigo-600 text-foreground"
+                ? "bg-foreground text-background"
                 : "bg-background text-foreground/60 hover:text-foreground"
             }`}
           >

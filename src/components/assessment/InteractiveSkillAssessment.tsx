@@ -759,8 +759,8 @@ export const InteractiveSkillAssessment = () => {
             <p className="text-gray-300">{scene.voicePrompt.scenario}</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-            <p className="text-amber-300 font-medium mb-2">Your Task:</p>
+          <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+            <p className="ink-vermilion font-medium mb-2">Your Task:</p>
             <p className="text-gray-300">{scene.voicePrompt.prompt}</p>
           </div>
 
@@ -837,7 +837,7 @@ export const InteractiveSkillAssessment = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full space-y-4"
                   >
-                    <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+                    <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -869,7 +869,7 @@ export const InteractiveSkillAssessment = () => {
             <div className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400">
               Type: {challenge.type}
             </div>
-            <div className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400">
+            <div className="px-3 py-1 rounded-full bg-foreground/[0.05] text-foreground">
               To: {challenge.recipient}
             </div>
             {challenge.constraints?.maxWords && (
@@ -918,7 +918,7 @@ export const InteractiveSkillAssessment = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+              <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -939,7 +939,7 @@ export const InteractiveSkillAssessment = () => {
 
           {timeRemaining > 0 && !prioritizationSubmitted && (
             <div className={`flex items-center gap-2 px-3 py-2 rounded-full ${
-              timeRemaining < 30 ? 'bg-red-500/20 text-red-400' : 'bg-amber-500/20 text-amber-400'
+              timeRemaining < 30 ? 'bg-red-500/20 text-red-400' : 'bg-vermilion/10 ink-vermilion'
             } w-fit`}>
               <Clock className="w-4 h-4" />
               <span className="font-mono">{formatTime(timeRemaining)}</span>
@@ -951,8 +951,8 @@ export const InteractiveSkillAssessment = () => {
               const task = scene.prioritizationTasks!.find(t => t.id === taskId)!;
               const urgencyColors = {
                 critical: 'border-red-500/50 bg-red-500/30',
-                high: 'border-orange-500/50 bg-orange-500/30',
-                medium: 'border-yellow-500/50 bg-yellow-500/30',
+                high: 'border-vermilion bg-vermilion/10',
+                medium: 'border-vermilion bg-vermilion/10',
                 low: 'border-gray-500/50 bg-gray-500/30'
               };
 
@@ -1001,7 +1001,7 @@ export const InteractiveSkillAssessment = () => {
               Submit Prioritization
             </Button>
           ) : (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1062,7 +1062,7 @@ export const InteractiveSkillAssessment = () => {
           </div>
 
           {dialogueChoices.length >= 2 && (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1081,8 +1081,8 @@ export const InteractiveSkillAssessment = () => {
 
       return (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-            <p className="text-amber-300 font-medium mb-2">{problem.title}</p>
+          <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+            <p className="ink-vermilion font-medium mb-2">{problem.title}</p>
             <p className="text-gray-300">{problem.initialSituation}</p>
           </div>
 
@@ -1106,7 +1106,7 @@ export const InteractiveSkillAssessment = () => {
                 <button
                   key={choice.id}
                   onClick={() => handleProblemChoice(choice)}
-                  className="w-full p-4 text-left rounded-xl bg-black border border-white/30 hover:bg-black hover:border-amber-500/50 transition-all"
+                  className="w-full p-4 text-left rounded-xl bg-black border border-white/30 hover:bg-black hover:border-vermilion transition-all"
                 >
                   <p className="text-gray-300">{choice.text}</p>
                 </button>
@@ -1115,7 +1115,7 @@ export const InteractiveSkillAssessment = () => {
           )}
 
           {problemChoices.length >= 1 && !currentBranchData && (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1257,8 +1257,8 @@ export const InteractiveSkillAssessment = () => {
         <div className="space-y-6">
           <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: scene.content.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>') }} />
 
-          <div className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-            <p className="text-amber-300">Scenario:</p>
+          <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+            <p className="ink-vermilion">Scenario:</p>
             <p className="text-gray-300 mt-2">
               You've finished your assigned work early. Your teammate is visibly struggling with their task.
               Your manager didn't specifically ask you to help. What do you do?
@@ -1267,7 +1267,7 @@ export const InteractiveSkillAssessment = () => {
 
           {timeRemaining > 0 && !quickResponseSubmitted && (
             <div className={`flex items-center gap-2 px-3 py-2 rounded-full ${
-              timeRemaining < 10 ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-amber-500/20 text-amber-400'
+              timeRemaining < 10 ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-vermilion/10 ink-vermilion'
             } w-fit`}>
               <Zap className="w-4 h-4" />
               <span className="font-mono">{timeRemaining}s remaining</span>
@@ -1292,7 +1292,7 @@ export const InteractiveSkillAssessment = () => {
               Submit Response
             </Button>
           ) : (
-            <div className="p-5 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-3">
+            <div className="p-5 rounded-xl bg-foreground/[0.05] border border-foreground/40 flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-emerald-300 font-medium">Response recorded.</p>
@@ -1349,7 +1349,7 @@ export const InteractiveSkillAssessment = () => {
                   </div>
                   <span className={`text-lg font-bold ${
                     score >= 4 ? 'text-emerald-400' :
-                    score >= 3 ? 'text-amber-400' : 'text-gray-400'
+                    score >= 3 ? 'ink-vermilion' : 'text-gray-400'
                   }`}>
                     {score > 0 ? score.toFixed(1) : '-'}
                   </span>
@@ -1443,27 +1443,27 @@ export const InteractiveSkillAssessment = () => {
     switch (scene.type) {
       case 'welcome':
       case 'narrative':
-        return <BookOpen className="w-5 h-5 text-blue-400" />;
+        return <BookOpen className="w-5 h-5 text-foreground" />;
       case 'voice-response':
         return <Mic className="w-5 h-5 text-red-400" />;
       case 'written-challenge':
         return <MessageSquare className="w-5 h-5 text-purple-400" />;
       case 'prioritization':
-        return <ListOrdered className="w-5 h-5 text-amber-400" />;
+        return <ListOrdered className="w-5 h-5 ink-vermilion" />;
       case 'role-play':
         return <Users className="w-5 h-5 text-pink-400" />;
       case 'problem-solving':
-        return <Lightbulb className="w-5 h-5 text-orange-400" />;
+        return <Lightbulb className="w-5 h-5 ink-vermilion" />;
       case 'active-listening':
-        return <Volume2 className="w-5 h-5 text-cyan-400" />;
+        return <Volume2 className="w-5 h-5 text-foreground" />;
       case 'judgment':
         return <Briefcase className="w-5 h-5 text-slate-400" />;
       case 'quick-response':
-        return <Zap className="w-5 h-5 text-yellow-400" />;
+        return <Zap className="w-5 h-5 ink-vermilion" />;
       case 'review':
         return <Target className="w-5 h-5 text-emerald-400" />;
       case 'completion':
-        return <Award className="w-5 h-5 text-amber-400" />;
+        return <Award className="w-5 h-5 ink-vermilion" />;
       default:
         return <Star className="w-5 h-5 text-gray-400" />;
     }
@@ -1506,8 +1506,8 @@ export const InteractiveSkillAssessment = () => {
         </div>
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center">
-            <div className="w-20 h-20 rounded-full bg-amber-500/30 border border-amber-500/20 flex items-center justify-center mx-auto mb-6">
-              <Clock className="w-10 h-10 text-amber-400" />
+            <div className="w-20 h-20 rounded-full bg-vermilion/10 border border-vermilion flex items-center justify-center mx-auto mb-6">
+              <Clock className="w-10 h-10 ink-vermilion" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Session Closed</h2>
             <p className="text-gray-400 mb-2">
@@ -1608,9 +1608,9 @@ export const InteractiveSkillAssessment = () => {
 
       {/* Build Rule 9 — Per-dimension loop cooldown warning banner */}
       {dimensionCooldownMessage && (
-        <div className="absolute top-[76px] left-0 right-0 z-40 px-4 py-2 bg-amber-500/20 border-b border-amber-500/30 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
-          <p className="text-xs text-amber-300">{dimensionCooldownMessage}</p>
+        <div className="absolute top-[76px] left-0 right-0 z-40 px-4 py-2 bg-vermilion/10 border-b border-vermilion flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 ink-vermilion flex-shrink-0" />
+          <p className="text-xs ink-vermilion">{dimensionCooldownMessage}</p>
         </div>
       )}
 

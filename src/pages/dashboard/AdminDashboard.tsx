@@ -124,7 +124,7 @@ const TIER_CONFIG = {
     icon: Star,
     color: "ink-vermilion",
     bgColor: "bg-vermilion/10",
-    borderColor: "border-orange-500/30",
+    borderColor: "border-vermilion",
     minScore: 3.5,
     description: "Top 30% - Strong candidates",
   },
@@ -786,7 +786,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => openEditModal(user)}
-                          className="text-foreground hover:text-blue-300"
+                          className="text-foreground hover:text-foreground"
                           title="Edit profile"
                         >
                           <Edit className="w-4 h-4" />
@@ -804,7 +804,7 @@ const UsersManagement = () => {
                           size="sm"
                           variant="ghost"
                           onClick={() => toggleUserStatus(user.id, user.is_active)}
-                          className={user.is_active ? "ink-vermilion hover:text-amber-300" : "text-foreground hover:text-emerald-300"}
+                          className={user.is_active ? "ink-vermilion hover:ink-vermilion" : "text-foreground hover:text-emerald-300"}
                           title={user.is_active ? "Deactivate" : "Activate"}
                         >
                           {user.is_active ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}

@@ -922,7 +922,7 @@ const Connections = () => {
           onClick={() => setActiveTab("all")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === "all"
-              ? "bg-emerald-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -932,7 +932,7 @@ const Connections = () => {
           onClick={() => setActiveTab("accepted")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "accepted"
-              ? "bg-emerald-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -947,7 +947,7 @@ const Connections = () => {
           onClick={() => setActiveTab("pending")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
             activeTab === "pending"
-              ? "bg-emerald-600 text-foreground"
+              ? "bg-foreground text-background"
               : "bg-background text-foreground/60 hover:text-foreground"
           }`}
         >
@@ -2303,7 +2303,7 @@ const Projects = () => {
                 <div className="p-3 rounded-lg bg-vermilion/10 border border-vermilion mb-4">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 ink-vermilion mt-0.5" />
-                    <p className="text-sm text-amber-300">
+                    <p className="text-sm ink-vermilion">
                       Payment is handled outside the platform. Share your payment details so the candidate can send payment. You'll verify receipt manually.
                     </p>
                   </div>
@@ -2881,7 +2881,7 @@ const Feedback = () => {
                     }
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                       feedbackForm.readinessAccuracy === rating
-                        ? "bg-emerald-600 text-foreground"
+                        ? "bg-foreground text-background"
                         : "bg-background text-foreground/60 hover:bg-foreground/5"
                     }`}
                   >
@@ -2907,7 +2907,7 @@ const Feedback = () => {
                   }
                   className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
                     feedbackForm.wouldHireAgain
-                      ? "bg-emerald-600 text-foreground"
+                      ? "bg-foreground text-background"
                       : "bg-background text-foreground/60 hover:bg-foreground/5"
                   }`}
                 >
@@ -3305,12 +3305,12 @@ const EmployerMessagesPage = () => {
                           </div>
                           {/* Reply quote */}
                           {msg.reply_to && (
-                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-emerald-700/40 border-emerald-400/60 text-emerald-200" : "bg-white/5 border-emerald-400/40 text-foreground/60"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-emerald-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-emerald-500/50"), 2000); } }}>
+                            <div className={`mb-1 px-3 py-1.5 rounded-lg border-l-2 text-xs cursor-pointer ${isOwn ? "bg-foreground/[0.05] border-foreground/40 text-emerald-200" : "bg-white/5 border-foreground/40 text-foreground/60"}`} onClick={() => { const el = document.getElementById(`msg-${msg.reply_to.id}`); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("ring-2", "ring-emerald-500/50"); setTimeout(() => el.classList.remove("ring-2", "ring-emerald-500/50"), 2000); } }}>
                               <p className="font-medium text-[11px] mb-0.5">{msg.reply_to.sender?.first_name || "User"}</p>
                               <p className="truncate opacity-80">{msg.reply_to.content?.substring(0, 80)}</p>
                             </div>
                           )}
-                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-emerald-600 text-foreground rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
+                          <div id={`msg-${msg.id}`} onClick={() => setActiveMsgId(showActions ? null : msg.id)} className={`px-4 py-2 rounded-2xl cursor-pointer transition-all duration-300 ${isOwn ? "bg-foreground text-background rounded-br-md" : "bg-background text-foreground/80 rounded-bl-md"}`}>
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                             {msg.file_url && (
                               <div className="mt-2">
@@ -3339,7 +3339,7 @@ const EmployerMessagesPage = () => {
                 {replyTo && (
                   <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.06] border border-foreground/40">
                     <Reply className="w-4 h-4 text-foreground flex-shrink-0" />
-                    <div className="flex-1 min-w-0 border-l-2 border-emerald-400/50 pl-2">
+                    <div className="flex-1 min-w-0 border-l-2 border-foreground/40 pl-2">
                       <p className="text-xs font-medium text-emerald-300">{replyTo.sender?.first_name || "User"}</p>
                       <p className="text-xs text-foreground/60 truncate">{replyTo.content?.substring(0, 100)}</p>
                     </div>
