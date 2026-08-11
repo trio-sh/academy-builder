@@ -1,260 +1,168 @@
-import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
-import { useRef, useEffect } from "react";
-import {
-  FileText,
-  Users,
-  Award,
-  BarChart3,
-  GraduationCap,
-  Building2,
-  CheckCircle2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
+const rise = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number = 0) => ({
     opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
-  },
+    y: 0,
+    transition: { duration: 0.8, delay: 0.05 + i * 0.06, ease: [0.19, 1, 0.22, 1] },
+  }),
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+type Entry = {
+  n: string;
+  title: string;
+  body: string;
+  meta: string;
+  aside?: string;
+  highlight?: boolean;
 };
 
-const journeySteps = [
+const entries: Entry[] = [
   {
-    step: "01",
+    n: "01",
     title: "Basic Profile",
-    description:
-      "Initial profile created from your resume or participation. A starting point for your professional development journey.",
-    icon: FileText,
-    gradient: "from-gray-600 to-gray-700",
-    highlight: false,
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=450&fit=crop&crop=faces",
+    meta: "Entry · Résumé or participation",
+    body: "You file a starting profile — the initial page in your record. Résumé data is imported without adornment. Nothing is graded here.",
   },
   {
-    step: "02",
+    n: "02",
     title: "Growth Log",
-    description:
-      "Your activity and experiences contribute to a continuously evolving development record.",
-    icon: BarChart3,
-    gradient: "from-indigo-600 to-indigo-700",
-    highlight: false,
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=450&fit=crop&crop=faces",
+    meta: "Ongoing · Continuously evolving",
+    body: "Activity, projects, mentorship notes — appended chronologically. The log is yours; it accrues at the pace of your work, not on a schedule.",
+    aside: "Kept in your name. Not aggregated into a score.",
   },
   {
-    step: "03",
+    n: "03",
     title: "Mentor Guidance",
-    description:
-      "Participants engage with experienced professionals who provide guidance and feedback throughout their journey.",
-    icon: Users,
-    gradient: "from-purple-500 to-purple-600",
+    meta: "Key stage · Human-led observation",
+    body: "You work with an experienced professional who observes what actually happens under workplace pressure. Guidance is separate from evaluation.",
     highlight: true,
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=450&fit=crop&crop=faces",
   },
   {
-    step: "04",
+    n: "04",
     title: "Behavioral Evidence Report (BER)",
-    description:
-      "A dated account of what you were asked to do, what you did, where the conduct held, and where it did not. Evidence of your behaviour under workplace pressure moments.",
-    icon: Award,
-    gradient: "from-emerald-500 to-emerald-600",
-    highlight: false,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop&crop=faces",
+    meta: "The record itself",
+    body: "A dated account of what you were asked to do, what you did, where the conduct held, and where it did not. Evidence — not a rating.",
+    aside: "Every line is legible. Every difference stays visible.",
   },
   {
-    step: "05",
+    n: "05",
     title: "TalentVisa",
-    description:
-      "Turn your visibility to employers on and off. Employers see that you have a current record — never what is in it.",
-    icon: GraduationCap,
-    gradient: "from-amber-500 to-amber-600",
-    highlight: false,
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&h=450&fit=crop&crop=faces",
+    meta: "Visibility switch",
+    body: "You turn your visibility to employers on and off. Employers see that you have a current record — never what is in it, without your consent.",
   },
   {
-    step: "06",
+    n: "06",
     title: "T3X Exchange",
-    description:
-      "Employers can discover and review participant profiles and Behavioral Evidence Reports when considering candidates.",
-    icon: Building2,
-    gradient: "from-pink-500 to-pink-600",
-    highlight: false,
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=450&fit=crop&crop=faces",
+    meta: "The reading room",
+    body: "Employers discover and review Behavioral Evidence Reports when considering candidates. Nothing is surfaced that you did not release.",
   },
 ];
 
-// Animated stat counter component
-function AnimatedStat({ to }: { to: number }) {
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-
-  useEffect(() => {
-    if (inView) {
-      animate(count, to, { duration: 2, ease: "easeOut" });
-    }
-  }, [inView, count, to]);
-
-  return <motion.span ref={ref}>{rounded}</motion.span>;
-}
-
 export function JourneySection() {
   return (
-    <motion.section
-      className="py-32 relative overflow-hidden bg-black"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-    >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
-
-      {/* Animated background blobs */}
-      <motion.div
-        className="absolute top-20 right-20 w-80 h-80 bg-purple-600 rounded-full opacity-10 blur-[100px]"
-        animate={{ scale: [1, 1.3, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-20 left-20 w-96 h-96 bg-indigo-600 rounded-full opacity-10 blur-[100px]"
-        animate={{ scale: [1.2, 1, 1.2] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
-          <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-            The Behavioral Readiness Journey
-          </span>
-          <h2 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="text-white">
-              From Profile to
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Evidence
-            </span>
-          </h2>
-          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
-            Behavioral evidence is built through mentor-led observation over time — no shortcuts,
-            no self-assessments. Professional guidance throughout.
-          </p>
+    <section className="paper-grain relative py-24 md:py-32 border-t border-foreground/50">
+      <div className="max-w-[1400px] mx-auto px-6">
+        {/* Section header */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={rise}
+          custom={0}
+          className="grid md:grid-cols-12 gap-6 md:gap-10 items-end mb-16 md:mb-24"
+        >
+          <div className="md:col-span-8">
+            <div className="mono-label text-foreground/60 mb-4">
+              § II · The Behavioural Readiness Journey
+            </div>
+            <h2 className="display-serif text-5xl md:text-7xl lg:text-[5.5rem] text-foreground leading-[0.95]">
+              From <span className="italic display-serif-italic">Profile</span> to{" "}
+              <span className="ink-vermilion">Evidence</span>.
+            </h2>
+          </div>
+          <div className="md:col-span-4">
+            <p className="text-foreground/80 text-base md:text-lg leading-relaxed border-l-2 border-foreground pl-5">
+              Behavioral evidence is built through mentor-led observation over time —
+              no shortcuts, no self-assessments. Six entries. One record.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Journey Steps - Alternating Layout */}
-        <div className="max-w-6xl mx-auto space-y-6">
-          {journeySteps.map((step, index) => (
-            <motion.div
-              key={step.step}
-              variants={itemVariants}
-              className={cn(
-                "group relative flex flex-col md:flex-row gap-6 items-center",
-                index % 2 === 1 && "md:flex-row-reverse"
-              )}
+        {/* Ledger entries */}
+        <div className="border-t-2 border-foreground">
+          {entries.map((entry, i) => (
+            <motion.article
+              key={entry.n}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={rise}
+              custom={i}
+              className={
+                "row-hover grid grid-cols-12 gap-4 md:gap-8 py-10 md:py-12 px-2 md:px-4 border-b border-foreground/25 transition-colors group " +
+                (entry.highlight ? "bg-foreground/[0.025]" : "")
+              }
             >
-              {/* Image Side */}
-              <motion.div
-                className="w-full md:w-1/2 relative rounded-2xl overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="relative h-48 md:h-56">
-                  <img
-                    src={step.image}
-                    alt={step.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-                  <div className={cn(
-                    "absolute top-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br shadow-lg",
-                    step.gradient,
-                    step.highlight && "shadow-purple-500/40"
-                  )}>
-                    <step.icon className="w-6 h-6 text-white" />
-                  </div>
-                  {step.highlight && (
-                    <span className="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-purple-500/30 text-white rounded-full border border-purple-500/30 backdrop-blur-sm">
-                      Key Stage
-                    </span>
-                  )}
+              {/* Big numeral */}
+              <div className="col-span-2 md:col-span-1">
+                <div className="ledger-num text-5xl md:text-7xl text-foreground leading-none">
+                  {entry.n}
                 </div>
-              </motion.div>
-
-              {/* Content Side */}
-              <div className="w-full md:w-1/2">
-                <motion.div
-                  className={cn(
-                    "relative p-6 md:p-8 rounded-2xl transition-all duration-500",
-                    step.highlight
-                      ? "bg-black backdrop-blur-xl border-2 border-purple-500/30 group-hover:border-purple-500/50"
-                      : "bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20"
-                  )}
-                  whileHover={{ y: -5 }}
-                >
-                  {step.highlight && (
-                    <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
-                  )}
-                  <div className="relative">
-                    <span className={cn(
-                      "text-xs font-bold uppercase tracking-wider",
-                      step.highlight ? "text-purple-400" : "text-gray-500"
-                    )}>
-                      Step {step.step}
-                    </span>
-                    <h3 className="text-2xl font-bold text-white mt-1 mb-3">{step.title}</h3>
-                    <p className="text-gray-400 leading-relaxed">{step.description}</p>
-                  </div>
-                </motion.div>
               </div>
-            </motion.div>
+
+              {/* Title + meta */}
+              <div className="col-span-10 md:col-span-4">
+                <div className="mono-label text-foreground/50 mb-2">
+                  {entry.meta}
+                </div>
+                <h3 className="display-serif text-3xl md:text-[2.25rem] leading-tight text-foreground">
+                  {entry.title}
+                  {entry.highlight && (
+                    <span className="ml-3 stamp align-middle inline-flex normal-case">
+                      Key stage
+                    </span>
+                  )}
+                </h3>
+              </div>
+
+              {/* Body */}
+              <div className="col-span-12 md:col-span-5 md:pl-4 md:border-l md:border-foreground/25">
+                <p className="text-foreground/85 text-base md:text-[1.0625rem] leading-[1.75]">
+                  {entry.body}
+                </p>
+              </div>
+
+              {/* Marginalia */}
+              <div className="col-span-12 md:col-span-2">
+                {entry.aside && (
+                  <p className="marginalia">
+                    ↳ {entry.aside}
+                  </p>
+                )}
+              </div>
+            </motion.article>
           ))}
         </div>
 
-        {/* Our Promise */}
+        {/* Colophon-style promise */}
         <motion.div
-          variants={itemVariants}
-          className="max-w-3xl mx-auto mt-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          variants={rise}
+          custom={0}
+          className="mt-20 md:mt-24 max-w-3xl mx-auto text-center"
         >
-          <div className="relative group">
-            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500" />
-            <div className="relative p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500">
-              <h3 className="text-lg font-bold text-white mb-6 text-center">
-                Our Promise
-              </h3>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  "Professional guidance at every step",
-                  "Behavioral evidence that reflects real experience",
-                  "Growth that speaks for itself",
-                  "Results employers can trust",
-                ].map((principle, index) => (
-                  <motion.div
-                    key={principle}
-                    className="flex items-center gap-3"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-300">{principle}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <div className="mono-label text-foreground/50 mb-4">Our promise</div>
+          <p className="display-serif text-2xl md:text-3xl leading-snug text-foreground">
+            Professional guidance at every step.
+            <span className="ink-vermilion"> Evidence</span> that reflects real experience.
+            Growth that speaks for itself. Results employers can trust.
+          </p>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

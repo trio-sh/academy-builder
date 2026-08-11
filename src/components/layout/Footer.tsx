@@ -1,135 +1,106 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 
 const footerLinks = {
-  platform: [
-    { name: "Platform Overview", href: "/platform" },
-    { name: "For Candidates", href: "/get-started" },
-    { name: "For Employers", href: "/employers" },
-    { name: "For Schools", href: "/schools" },
-  ],
-  company: [
-    { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Press", href: "/press" },
-    { name: "Contact", href: "/contact" },
-  ],
-  resources: [
-    { name: "Get Started", href: "/get-started" },
-    { name: "Blog", href: "/blog" },
-    { name: "Help Center", href: "/help" },
-  ],
-  legal: [
-    { name: "Privacy", href: "/privacy" },
-    { name: "Terms", href: "/terms" },
-    { name: "Security", href: "/security" },
-  ],
+  platform: {
+    label: "The Platform",
+    items: [
+      { name: "Platform Overview", href: "/platform" },
+      { name: "For Job Seekers", href: "/get-started" },
+      { name: "For Employers", href: "/employers" },
+      { name: "For Schools", href: "/schools" },
+    ],
+  },
+  company: {
+    label: "The Academy",
+    items: [
+      { name: "About", href: "/about" },
+      { name: "Careers", href: "/careers" },
+      { name: "Press", href: "/press" },
+      { name: "Contact", href: "/contact" },
+    ],
+  },
+  resources: {
+    label: "Reading Room",
+    items: [
+      { name: "Get Started", href: "/get-started" },
+      { name: "Journal", href: "/blog" },
+      { name: "Help Centre", href: "/help" },
+    ],
+  },
+  legal: {
+    label: "Record & Rights",
+    items: [
+      { name: "Privacy", href: "/privacy" },
+      { name: "Terms", href: "/terms" },
+      { name: "Security", href: "/security" },
+    ],
+  },
 };
 
 export function Footer() {
   return (
-    <footer className="relative z-10 bg-black/95 backdrop-blur-xl border-t border-white/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center mb-6">
-              <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
-                <img
-                  src="/icon-192.png"
-                  alt="The 3rd Academy Logo"
-                  className="h-10 w-10 mr-2 rounded-full shadow-lg"
-                />
-                <span className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                  The 3rd Academy
-                </span>
-              </motion.div>
+    <footer className="relative z-10 bg-background text-foreground border-t border-foreground">
+      {/* Colophon strip */}
+      <div className="border-b border-foreground/15 py-3">
+        <div className="max-w-[1400px] mx-auto px-6 flex flex-wrap items-center justify-between gap-2">
+          <span className="mono-label text-foreground/60">
+            End of Register · Turn page for colophon
+          </span>
+          <span className="mono-label text-foreground/60">
+            Set in Fraunces &amp; Instrument Sans
+          </span>
+        </div>
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-6 py-16 md:py-24">
+        {/* Masthead */}
+        <div className="grid md:grid-cols-12 gap-10 mb-16">
+          <div className="md:col-span-6">
+            <Link to="/" className="inline-flex items-center gap-3 mb-6">
+              <div className="h-11 w-11 flex items-center justify-center rounded-full border border-foreground">
+                <span className="display-serif text-xl leading-none pt-0.5">T³</span>
+              </div>
+              <span className="display-serif text-2xl tracking-tight">The 3rd Academy</span>
             </Link>
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Bridging the gap between credentials and workplace readiness through
-              mentor-gated behavioral validation.
+            <p className="display-serif text-3xl md:text-4xl leading-[1.1] max-w-lg text-foreground">
+              Focused on <span className="italic display-serif-italic">Behavioral Workplace Readiness</span> — how conduct shows up in the environment where work happens, when knowledge and capability alone are no longer enough.
+            </p>
+            <p className="mono-label text-foreground/50 mt-8">
+              Behavioral Workplace Readiness · est. MMXXV
             </p>
           </div>
 
-          {/* Platform Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Platform</h3>
-            <ul className="space-y-3">
-              {footerLinks.platform.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Legal</h3>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            {Object.entries(footerLinks).map(([key, group]) => (
+              <div key={key}>
+                <h3 className="mono-label text-foreground/50 pb-2 mb-3 border-b border-foreground/15">
+                  {group.label}
+                </h3>
+                <ul className="space-y-2.5">
+                  {group.items.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        to={link.href}
+                        className="text-sm text-foreground/80 hover:text-foreground hover:italic transition-all"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-white/30 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} The 3rd Academy. All rights reserved.
+        <div className="pt-8 border-t border-foreground/20 flex flex-col md:flex-row items-baseline justify-between gap-4">
+          <p className="mono-label text-foreground/60">
+            © {new Date().getFullYear()} · The 3rd Academy · All rights reserved
           </p>
-          <div className="flex items-center gap-6">
-            <span className="text-xs text-gray-400 bg-black px-3 py-1 rounded-full">
-              Behavioral Readiness Platform
-            </span>
-          </div>
+          <p className="mono-label text-foreground/60">
+            Filed under: Behavioral Evidence · Vol. 01
+          </p>
         </div>
       </div>
     </footer>

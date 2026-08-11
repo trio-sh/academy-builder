@@ -14,9 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Poppins"', "system-ui", "-apple-system", "sans-serif"],
-        display: ['"Poppins"', "system-ui", "sans-serif"],
-        serif: ['"Poppins"', "system-ui", "sans-serif"],
+        sans: ['"Instrument Sans"', '"Poppins"', "system-ui", "-apple-system", "sans-serif"],
+        display: ['"Fraunces"', "Georgia", "serif"],
+        serif: ['"Fraunces"', "Georgia", "serif"],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
         elite: ['"Poppins"', "system-ui", "sans-serif"],
       },
       fontSize: {
