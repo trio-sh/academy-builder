@@ -33,8 +33,13 @@ Tables not listed here (e.g. `profiles`, `bridgefast_*`, `messages`, `notificati
 
 ## Rewire checklist (rolling)
 
-- [ ] `src/pages/dashboard/MentorDashboard.tsx` — 30 legacy references
-- [ ] `src/pages/dashboard/CandidateDashboard.tsx` — 9 legacy references
+Each surface is either **banner-gated** (a `<LegacyBanner>` is placed at the top of the legacy surface pointing at the new-schema replacement — legacy queries still run, but the user sees the deprecation and the direct link) or **fully rewired** (legacy queries removed, only the new-schema surface remains).
+
+- [x] `src/pages/dashboard/MentorDashboard.tsx` § Observations tab — banner → `/dashboard/mentor/determinations`
+- [x] `src/pages/dashboard/MentorDashboard.tsx` § Endorsements tab — banner → `/dashboard/mentor/determinations`
+- [x] `src/pages/dashboard/CandidateDashboard.tsx` § SkillPassport tab — banner → `/dashboard/candidate/report-review`
+- [ ] `src/pages/dashboard/MentorDashboard.tsx` — 30 legacy query sites remain (full rewire)
+- [ ] `src/pages/dashboard/CandidateDashboard.tsx` — 9 legacy query sites remain (full rewire)
 - [ ] `src/pages/dashboard/AdminDashboard.tsx` — 6 legacy references
 - [ ] `src/pages/dashboard/EmployerDashboard.tsx` — 1 legacy reference
 - [ ] `src/pages/dashboard/AIAgent.tsx` — 6 legacy references
