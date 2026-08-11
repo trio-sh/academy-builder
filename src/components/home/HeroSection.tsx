@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
 
 // Fade-in-up on load, staggered
 const rise = {
@@ -40,7 +41,7 @@ export function HeroSection() {
           </div>
           <div className="text-right md:text-right">
             <span className="mono-label text-foreground/60 block">
-              MMXXVI — Q3
+              {todayStamp()}
             </span>
             <span className="mono-label text-foreground/40 mt-1 block">
               Iss. 04 · pp. 001–024

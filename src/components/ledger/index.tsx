@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { todayStamp } from "@/lib/dateStamp";
 
 /* ─────────────────────────────────────────────────────────────
    LEDGER PRIMITIVES
@@ -273,7 +274,7 @@ export function LedgerHero({
             {stamp && <div className="stamp">{stamp}</div>}
           </div>
           <div className="text-right">
-            <span className="mono-label text-foreground/60 block">MMXXVI — Q3</span>
+            <span className="mono-label text-foreground/60 block">{todayStamp()}</span>
             <span className="mono-label text-foreground/40 mt-1 block">Iss. 04 · Register</span>
           </div>
         </motion.div>
