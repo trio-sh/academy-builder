@@ -4,6 +4,7 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
+import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
   type DashboardNavItem,
@@ -2541,6 +2542,10 @@ const SettingsPage = () => {
             </Button>
           </div>
         </div>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <GoogleAuthLink />
       </motion.div>
     </motion.div>
   );

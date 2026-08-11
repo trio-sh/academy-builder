@@ -17,6 +17,7 @@ import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardPageHeader,
   DashSection,
@@ -4213,7 +4214,7 @@ const Profile = () => {
           <p className="text-foreground/60">Manage your personal information</p>
         </div>
         {!isEditing ? (
-          <Button onClick={() => setIsEditing(true)} className="bg-indigo-600 hover:bg-indigo-500">
+          <Button onClick={() => setIsEditing(true)} className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
             Edit Profile
           </Button>
         ) : (
@@ -4683,6 +4684,10 @@ const Profile = () => {
           </motion.div>
         </motion.div>
       )}
+
+      <motion.div variants={itemVariants}>
+        <GoogleAuthLink />
+      </motion.div>
     </motion.div>
   );
 };
