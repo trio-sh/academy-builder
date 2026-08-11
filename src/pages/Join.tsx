@@ -44,7 +44,7 @@ const roleOptions = [
     description: "Build your behavioral credential and find opportunities",
     icon: Users,
     gradient: "from-indigo-600 to-indigo-700",
-    features: ["Get mentor-observed", "Earn Skill Passport", "Access job marketplace"],
+    features: ["Get mentor-observed", "Earn Behavioral Evidence Report", "Access job marketplace"],
   },
   {
     id: "mentor" as UserRole,

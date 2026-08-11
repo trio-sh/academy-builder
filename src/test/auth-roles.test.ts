@@ -76,7 +76,7 @@ describe("Role-Based Dashboard Routes", () => {
 
 describe("Candidate Navigation Items", () => {
   const CANDIDATE_NAV = [
-    "Overview", "Observation Pathway", "Skill Passport", "Growth Log",
+    "Overview", "Observation Pathway", "Behavioral Evidence Report", "Growth Log",
     "BridgeFast", "Readiness Reflection", "Projects",
     "Find Mentor", "Connections", "Messages", "Notifications",
     "Profile", "Settings",
@@ -88,7 +88,7 @@ describe("Candidate Navigation Items", () => {
 
   it("should include core observation items", () => {
     expect(CANDIDATE_NAV).toContain("Observation Pathway");
-    expect(CANDIDATE_NAV).toContain("Skill Passport");
+    expect(CANDIDATE_NAV).toContain("Behavioral Evidence Report");
     expect(CANDIDATE_NAV).toContain("Growth Log");
   });
 

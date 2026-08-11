@@ -96,7 +96,7 @@ const App = () => (
             {/* Password reset */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            {/* Skill Passport verification (public) */}
+            {/* Behavioral Evidence Report verification (public) */}
             <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}

@@ -36,7 +36,7 @@ const roleOptions = [
     description: "Build your behavioral credential and find opportunities",
     icon: Users,
     gradient: "from-indigo-600 to-indigo-700",
-    features: ["Get mentor-observed", "Earn Skill Passport", "Access job marketplace"],
+    features: ["Get mentor-observed", "Earn Behavioral Evidence Report", "Access job marketplace"],
   },
   {
     id: "mentor" as UserRole,
@@ -898,7 +898,7 @@ const GetStarted = () => {
                     <div className="mt-6 p-4 rounded-xl bg-purple-950 border border-purple-800">
                       <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
                       <ul className="space-y-2 text-sm text-gray-50">
-                        {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Skill Passport"].map((item) => (
+                        {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Behavioral Evidence Report"].map((item) => (
                           <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                         ))}
                       </ul>

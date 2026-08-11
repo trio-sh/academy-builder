@@ -190,7 +190,7 @@ export const OBS_COPY = {
   PAUSE: "Pause",
 
   /** Credential labels */
-  SKILL_PASSPORT: "Skill Passport",
+  SKILL_PASSPORT: "Behavioral Evidence Report",
   TALENT_VISA: "TalentVisa",
 
   /** Status */
@@ -199,5 +199,5 @@ export const OBS_COPY = {
 
   /** BridgeFast disclaimer — Section 1.3 Drift Test */
   BRIDGEFAST_DISCLAIMER:
-    "This is a BridgeFast development exercise. It is separate from your observation sessions and will not be recorded in your Skill Passport.",
+    "This is a BridgeFast development exercise. It is separate from your observation sessions and will not be recorded in your Behavioral Evidence Report.",
 };

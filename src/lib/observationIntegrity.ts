@@ -313,7 +313,7 @@ export async function getMentorLoops(
 /**
  * Increments the mentor_loops count on candidate_profiles after a completed observation.
  * Tracks how many observation cycles the candidate has completed.
- * Skill Passport is ONLY awarded via mentor endorsement (Proceed decision), NOT here.
+ * Behavioral Evidence Report is ONLY awarded via mentor endorsement (Proceed decision), NOT here.
  */
 export async function incrementMentorLoops(
   candidateProfileId: string

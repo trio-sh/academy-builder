@@ -118,7 +118,7 @@ export function StakeholdersSection() {
         {/* Stakeholder Cards */}
         <motion.div variants={containerVariants} className="grid lg:grid-cols-3 gap-8">
           {stakeholders.map((stakeholder) => {
-            const isComingSoon = stakeholder.title === "For Schools";
+            const isComingSoon = false;
             return (
               <motion.div
                 key={stakeholder.title}

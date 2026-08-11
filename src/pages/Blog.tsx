@@ -49,7 +49,7 @@ At The 3rd Academy, we've built this into a three-loop validation process throug
 
 **Loop 2: Applied Challenge** — Candidates tackle real-world projects under mentor supervision, generating tangible evidence of their capabilities.
 
-**Loop 3: Validation & Credential** — Final assessment synthesizes all observations into a Skill Passport — an evidence-linked credential that employers can trust.
+**Loop 3: Validation & Credential** — Final assessment synthesizes all observations into a Behavioral Evidence Report — an evidence-linked credential that employers can trust.
 
 Early data from our pilot programs shows that candidates with behavioral credentials are 3.2x more likely to pass their 90-day employment review compared to those hired through traditional resume screening alone.
 
@@ -111,11 +111,11 @@ What makes MentorLink different is the structured evidence trail. Every observat
     image: "https://api.a0.dev/assets/image?text=Graduate+celebrating+success&aspect=16:9&seed=blog_3",
     body: `The transition from education to employment is one of the most challenging moments in any career. Traditional pathways — submit a resume, hope for an interview, prove yourself on the job — leave too much to chance. Here are three stories of candidates who took a different path.
 
-**Maria's Story** — After graduating with a communications degree, Maria spent eight months applying to jobs with no callbacks. Through The 3rd Academy, she completed the MentorLink validation process and earned her Skill Passport. Within three weeks of publishing her credential on T3X Exchange, she had three interview requests and accepted an offer at a PR firm.
+**Maria's Story** — After graduating with a communications degree, Maria spent eight months applying to jobs with no callbacks. Through The 3rd Academy, she completed the MentorLink validation process and earned her Behavioral Evidence Report. Within three weeks of publishing her credential on T3X Exchange, she had three interview requests and accepted an offer at a PR firm.
 
 **David's Story** — David was a career changer moving from retail management to tech. His resume showed no relevant experience, but his MentorLink observations highlighted exceptional problem-solving and team leadership skills. His behavioral credential helped hiring managers see past the resume gap.
 
-**Priya's Story** — As an international student, Priya faced additional barriers in the job market. The Skill Passport gave her a way to demonstrate her capabilities through evidence rather than just credentials, leveling the playing field.`,
+**Priya's Story** — As an international student, Priya faced additional barriers in the job market. The Behavioral Evidence Report gave her a way to demonstrate her capabilities through evidence rather than just credentials, leveling the playing field.`,
   },
   {
     id: "science-behavioral-credentials",
@@ -157,7 +157,7 @@ Since launching in September 2025, Civic Access Lab has been adopted by 47 schoo
   },
   {
     id: "skill-passport-guide",
-    title: "Building Your Skill Passport: A Complete Guide",
+    title: "Building Your Behavioral Evidence Report: A Complete Guide",
     excerpt:
       "Everything you need to know about earning and leveraging your behavioral credentials.",
     author: "David Kim",
@@ -165,7 +165,7 @@ Since launching in September 2025, Civic Access Lab has been adopted by 47 schoo
     readTime: "12 min read",
     category: "Guides",
     image: "https://api.a0.dev/assets/image?text=Digital+skill+passport&aspect=16:9&seed=blog_6",
-    body: `Your Skill Passport is your evidence-linked behavioral credential — a verified record of your workplace readiness that employers can trust. Here's how to earn yours.
+    body: `Your Behavioral Evidence Report is your evidence-linked behavioral credential — a verified record of your workplace readiness that employers can trust. Here's how to earn yours.
 
 **Step 1: Choose Your Entry Point** — Start with a resume upload (Entry A) for AI-powered analysis, or jump into LiveWorks Studio (Entry C) for hands-on project experience.
 
@@ -175,7 +175,7 @@ Since launching in September 2025, Civic Access Lab has been adopted by 47 schoo
 
 **Step 4: Build Your Evidence Trail** — Every observation, project, and interaction generates evidence that links to your credential. This isn't self-reported — it's professionally verified.
 
-**Step 5: Earn & Share Your Passport** — Once validated, your Skill Passport becomes available on T3X Exchange where employers actively search for credentialed candidates.
+**Step 5: Earn & Share Your Passport** — Once validated, your Behavioral Evidence Report becomes available on T3X Exchange where employers actively search for credentialed candidates.
 
 The entire process typically takes 4–6 weeks, and your credential never expires — though you can continue adding evidence to strengthen your profile over time.`,
   },

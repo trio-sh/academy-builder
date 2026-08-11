@@ -1259,7 +1259,7 @@ function summarizeUserContext(ctx: UserContext, role: string): string {
 
   if (role === "candidate" && ctx.roleProfile) {
     const cp = ctx.roleProfile as Record<string, unknown>;
-    parts.push(`Candidate Profile: Entry path: ${cp.entry_path || "N/A"}, Tier: ${cp.current_tier || "None"}, Experience: ${cp.experience_years || 0} years, Skills: ${(cp.skills as string[] || []).join(", ") || "None"}, Has Skill Passport: ${cp.has_skill_passport ? "Yes" : "No"}, Has TalentVisa: ${cp.has_talentvisa ? "Yes" : "No"}, Mentor loops completed: ${cp.mentor_loops || 0}`);
+    parts.push(`Candidate Profile: Entry path: ${cp.entry_path || "N/A"}, Tier: ${cp.current_tier || "None"}, Experience: ${cp.experience_years || 0} years, Skills: ${(cp.skills as string[] || []).join(", ") || "None"}, Has Behavioral Evidence Report: ${cp.has_skill_passport ? "Yes" : "No"}, Has TalentVisa: ${cp.has_talentvisa ? "Yes" : "No"}, Mentor loops completed: ${cp.mentor_loops || 0}`);
   }
 
   if (role === "mentor" && ctx.roleProfile) {
@@ -1300,7 +1300,7 @@ function summarizeUserContext(ctx: UserContext, role: string): string {
 
   if (ctx.skillPassport) {
     const sp = ctx.skillPassport as Record<string, unknown>;
-    parts.push(`Skill Passport: Tier ${sp.readiness_tier}, Issued ${new Date(sp.issued_at as string).toLocaleDateString()}, Verification: ${sp.verification_code}`);
+    parts.push(`Behavioral Evidence Report: Tier ${sp.readiness_tier}, Issued ${new Date(sp.issued_at as string).toLocaleDateString()}, Verification: ${sp.verification_code}`);
   }
 
   if (ctx.notifications?.length) {
@@ -1336,7 +1336,7 @@ Example responses to architecture questions:
 
 ## What You Know About The Platform (user-facing only)
 The 3rd Academy bridges credentials and workplace readiness through mentor-gated behavioral validation.
-- Skill Passport: Evidence-linked credential earned through mentor validation
+- Behavioral Evidence Report: Evidence-linked credential earned through mentor validation
 - MentorLink: Human validation process — mentors observe candidates across 3 loops
 - Growth Log: Timeline of behavioral growth events
 - BridgeFast: Training modules for addressing behavioral gaps
@@ -1438,7 +1438,7 @@ ${role === "candidate" ? `
 **Candidate Dashboard Routes:**
 - Overview/Home: ${dashboardBase}
 - Observation Pathway: ${dashboardBase}/observations
-- Skill Passport: ${dashboardBase}/passport
+- Behavioral Evidence Report: ${dashboardBase}/passport
 - Growth Log: ${dashboardBase}/growth
 - Self Assessment: ${dashboardBase}/assessment
 - Training/BridgeFast: ${dashboardBase}/training
@@ -1508,7 +1508,7 @@ function getQuickActions(role: string): { label: string; icon: typeof Bot; messa
         { label: "My Progress", icon: TrendingUp, message: "Summarize my current progress — tier, growth log, training, and what I should do next." },
         { label: "Find a Mentor", icon: GraduationCap, message: "Help me find and connect with a mentor that matches my skills and goals." },
         { label: "Growth Log", icon: BookOpen, message: "Open my Growth Log and tell me about my recent activity." },
-        { label: "Skill Passport", icon: Award, message: "What's the status of my Skill Passport? What do I need to complete it?" },
+        { label: "Behavioral Evidence Report", icon: Award, message: "What's the status of my Behavioral Evidence Report? What do I need to complete it?" },
         { label: "Training", icon: ClipboardCheck, message: "Show me available training modules and my progress." },
         ...common,
       ];
