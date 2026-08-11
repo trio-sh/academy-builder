@@ -1011,6 +1011,10 @@ export function Chatbot() {
   // jumping and defaulting to a full-page selection.
   const isPointerDownRef = useRef(false);
   const stickToBottomRef = useRef(true);
+  // See AIAgent — freeze auto-scroll while the browser reports a text
+  // selection anywhere in the messages pane so double/triple-click
+  // selections aren't nuked by the next re-render's scrollIntoView.
+  const hasSelectionRef = useRef(false);
 
   // Message editing (branching): while set, a user message at that
   // index renders as an editable textarea. Saving truncates the
@@ -1072,9 +1076,8 @@ export function Chatbot() {
   useEffect(() => {
     if (!isOpen) return;
     if (isPointerDownRef.current) return;
+    if (hasSelectionRef.current) return;
     if (!stickToBottomRef.current) return;
-    const sel = typeof window !== "undefined" ? window.getSelection?.() : null;
-    if (sel && sel.toString().length > 0) return;
     messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [messages, isTyping, isExecuting, isOpen]);
 
@@ -1101,11 +1104,24 @@ export function Chatbot() {
     el.addEventListener("pointerdown", pointerDown);
     window.addEventListener("pointerup", pointerUp);
     window.addEventListener("pointercancel", pointerUp);
+
+    const selectionHandler = () => {
+      const sel = window.getSelection?.();
+      if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) {
+        hasSelectionRef.current = false;
+        return;
+      }
+      const range = sel.getRangeAt(0);
+      hasSelectionRef.current = el.contains(range.commonAncestorContainer);
+    };
+    document.addEventListener("selectionchange", selectionHandler);
+
     return () => {
       el.removeEventListener("scroll", scrollHandler);
       el.removeEventListener("pointerdown", pointerDown);
       window.removeEventListener("pointerup", pointerUp);
       window.removeEventListener("pointercancel", pointerUp);
+      document.removeEventListener("selectionchange", selectionHandler);
     };
   }, [isOpen]);
 
