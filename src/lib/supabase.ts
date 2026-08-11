@@ -15,7 +15,7 @@ export const signUp = async (
   metadata: {
     firstName: string;
     lastName: string;
-    role: 'candidate' | 'mentor' | 'employer' | 'school_admin';
+    role: 'candidate' | 'mentor' | 'employer' | 'school_admin' | 'admin';
     entryPath?: 'resume_upload' | 'liveworks' | 'civic_access';
     companyName?: string;
     schoolName?: string;

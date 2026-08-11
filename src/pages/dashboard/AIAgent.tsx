@@ -2164,7 +2164,7 @@ export default function AIAgent() {
                 <div className="text-xs text-gray-500 space-y-0.5">
                   {userContext.profile && (
                     <p>
-                      <span className="text-gray-400">{(userContext.profile as Record<string, unknown>).first_name} {(userContext.profile as Record<string, unknown>).last_name}</span>
+                      <span className="text-gray-400">{String((userContext.profile as Record<string, unknown>).first_name ?? "")} {String((userContext.profile as Record<string, unknown>).last_name ?? "")}</span>
                       {" — "}
                       <span className="capitalize">{role}</span>
                       {(userContext.profile as Record<string, unknown>).location && ` • ${(userContext.profile as Record<string, unknown>).location}`}
@@ -2172,7 +2172,7 @@ export default function AIAgent() {
                   )}
                   {role === "candidate" && userContext.roleProfile && (
                     <p>
-                      Tier: <span className="text-indigo-400 capitalize">{(userContext.roleProfile as Record<string, unknown>).current_tier || "None"}</span>
+                      Tier: <span className="text-indigo-400 capitalize">{String((userContext.roleProfile as Record<string, unknown>).current_tier ?? "None")}</span>
                       {" • Skills: "}{((userContext.roleProfile as Record<string, unknown>).skills as string[] || []).slice(0, 5).join(", ") || "None set"}
                     </p>
                   )}

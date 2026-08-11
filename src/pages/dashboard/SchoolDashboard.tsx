@@ -1185,11 +1185,33 @@ const SchoolMessagesPage = () => {
       await supabase.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).eq("conversation_id", activeConversation.id).eq("user_id", user?.id);
     };
     fetchMessages();
-    const channel = supabase.channel(`messages:${activeConversation.id}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${activeConversation.id}` }, async (payload) => {
-      const { data: newMsg } = await supabase.from("messages").select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)").eq("id", payload.new.id).single();
-      if (newMsg) setMessages((prev) => [...prev, newMsg]);
-    }).subscribe();
-    return () => { supabase.removeChannel(channel); };
+    // Poll for inbound messages instead of a realtime channel
+    let lastAt: string | null = null;
+    const tick = async () => {
+      let query = supabase
+        .from("messages")
+        .select("*, sender:profiles!messages_sender_id_fkey(id, first_name, last_name, avatar_url)")
+        .eq("conversation_id", activeConversation.id)
+        .neq("sender_id", user?.id ?? "")
+        .order("created_at", { ascending: true })
+        .limit(50);
+      if (lastAt) query = query.gt("created_at", lastAt);
+      const { data: incoming } = await query;
+      if (incoming?.length) {
+        lastAt = (incoming[incoming.length - 1] as { created_at: string }).created_at;
+        setMessages((prev) => {
+          const seen = new Set(prev.map((m: any) => m.id));
+          const fresh = incoming.filter((m: any) => !seen.has(m.id));
+          return fresh.length ? [...prev, ...fresh] : prev;
+        });
+      } else if (!lastAt) {
+        lastAt = new Date().toISOString();
+      }
+    };
+    const msgTimer = setInterval(() => {
+      if (!document.hidden) void tick();
+    }, 5000);
+    return () => clearInterval(msgTimer);
   }, [activeConversation?.id, user?.id]);
 
   const sendMessage = async () => {

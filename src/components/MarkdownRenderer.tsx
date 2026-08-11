@@ -8,9 +8,9 @@ interface MarkdownRendererProps {
 
 export function MarkdownRenderer({ content, className = "" }: MarkdownRendererProps) {
   return (
+    <div className={`markdown-body ${className}`}>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      className={`markdown-body ${className}`}
       components={{
         // Headings
         h1: ({ children }) => (
@@ -130,5 +130,6 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
     >
       {content}
     </ReactMarkdown>
+    </div>
   );
 }

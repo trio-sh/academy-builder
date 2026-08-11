@@ -102,18 +102,23 @@ export interface ProblemSolvingScenario {
 }
 
 export interface JudgmentScenario {
-  id: string;
+  id?: string;
   situation: string;
-  stakeholders: string[];
+  stakeholders?: string[];
   options: {
     id: string;
-    action: string;
-    reasoning: string;
-    ethicalScore: number;
-    practicalScore: number;
+    action?: string;
+    text?: string;
+    reasoning?: string;
+    quality?: 'poor' | 'fair' | 'good' | 'excellent';
+    ethicalScore?: number;
+    practicalScore?: number;
     feedback: string;
   }[];
 }
+
+/** Metrics captured from a spoken response during a voice challenge. */
+export type { SpeechMetrics } from '@/services/speechRecognition';
 
 // Enhanced Assessment Scene Types
 export type InteractiveSceneType =
