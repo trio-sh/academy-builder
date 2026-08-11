@@ -28,7 +28,7 @@ const stakeholders = [
     benefits: [
       "Resume enhancement without bias",
       "Assigned mentor guidance",
-      "Skill Passport credential",
+      "Behavioral Evidence Report",
       "Direct employer access via T3X",
     ],
     cta: "Start Your Journey",
@@ -44,7 +44,7 @@ const stakeholders = [
     benefits: [
       "Mentor-vetted candidates",
       "Behavioral evidence, not just resumes",
-      "TalentVisa premium tier access",
+      "TalentVisa access",
       "Follow-through insights after hiring",
     ],
     cta: "Explore T3X Exchange",

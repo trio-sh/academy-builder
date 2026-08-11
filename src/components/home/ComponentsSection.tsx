@@ -32,11 +32,11 @@ const itemVariants = {
 
 const components = [
   {
-    id: "skill-passport",
-    name: "Skill Passport",
-    tagline: "Earned Credential",
+    id: "behavioral-evidence-report",
+    name: "Behavioral Evidence Report",
+    tagline: "Behavioral Evidence Record",
     description:
-      "Professional credential reflecting your workplace readiness journey. Earned through demonstrated growth and guided evaluation.",
+      "A dated account of what you were asked to do, what you did, where the conduct held, and where it did not — built through mentor-led observation over time.",
     icon: Award,
     gradient: "from-emerald-500 to-emerald-600",
     hoverGlow: "group-hover:shadow-emerald-500/30",

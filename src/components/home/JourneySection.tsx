@@ -60,9 +60,9 @@ const journeySteps = [
   },
   {
     step: "04",
-    title: "Skill Passport",
+    title: "Behavioral Evidence Report (BER)",
     description:
-      "A professional credential reflecting progress, experience, and demonstrated workplace readiness.",
+      "A dated account of what you were asked to do, what you did, where the conduct held, and where it did not. Evidence of your behaviour under workplace pressure moments.",
     icon: Award,
     gradient: "from-emerald-500 to-emerald-600",
     highlight: false,
@@ -72,7 +72,7 @@ const journeySteps = [
     step: "05",
     title: "TalentVisa",
     description:
-      "Advanced recognition tiers for participants demonstrating strong readiness signals. Silver, Gold, and Platinum levels.",
+      "Turn your visibility to employers on and off. Employers see that you have a current record — never what is in it.",
     icon: GraduationCap,
     gradient: "from-amber-500 to-amber-600",
     highlight: false,
@@ -82,7 +82,7 @@ const journeySteps = [
     step: "06",
     title: "T3X Exchange",
     description:
-      "Employers can discover and review participant profiles and credentials when considering candidates.",
+      "Employers can discover and review participant profiles and Behavioral Evidence Reports when considering candidates.",
     icon: Building2,
     gradient: "from-pink-500 to-pink-600",
     highlight: false,
@@ -134,7 +134,7 @@ export function JourneySection() {
         {/* Section Header */}
         <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-            The Credentialing Journey
+            The Behavioral Readiness Journey
           </span>
           <h2 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="text-white">
@@ -142,12 +142,12 @@ export function JourneySection() {
             </span>
             <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Placement
+              Evidence
             </span>
           </h2>
           <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
-            Credentials are earned through guided professional evaluation over time — no shortcuts,
-            no self-assessments. Professional guidance throughout the process.
+            Behavioral evidence is built through mentor-led observation over time — no shortcuts,
+            no self-assessments. Professional guidance throughout.
           </p>
         </motion.div>
 
@@ -234,7 +234,7 @@ export function JourneySection() {
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
                   "Professional guidance at every step",
-                  "Credentials that reflect real experience",
+                  "Behavioral evidence that reflects real experience",
                   "Growth that speaks for itself",
                   "Results employers can trust",
                 ].map((principle, index) => (

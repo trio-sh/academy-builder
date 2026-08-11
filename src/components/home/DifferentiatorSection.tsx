@@ -20,29 +20,46 @@ const itemVariants = {
 
 const comparisons = [
   {
-    criteria: "Who judges readiness?",
-    t3a: "Human mentor (mandatory)",
-    competitors: "Automated scoring or self-assessment",
+    criteria: "The question asked",
+    t3a: "How does conduct show up when the job goes sideways?",
+    competitors: "Can this person demonstrate the capability required for the role or task?",
+    note: "Doing the job well and being trusted at work are not the same thing.",
   },
   {
-    criteria: "What gets validated?",
-    t3a: "Behavioral patterns over time",
-    competitors: "Knowledge tests or course completion",
+    criteria: "Practice",
+    t3a: "Private rehearsal is kept separate from evidence",
+    competitors: "Practice and evaluation happen inside the same exercise",
+    note: "If practising is being judged, people perform instead of learning.",
   },
   {
-    criteria: "When is credential issued?",
-    t3a: "After demonstrated readiness over time",
-    competitors: "Immediately after passing test/course",
+    criteria: "What you receive",
+    t3a: "A dated record of observed conduct",
+    competitors: "Evidence of capability or proficiency",
+    note: "A result requires people to accept a conclusion. A record lets them see what happened.",
   },
   {
-    criteria: "Can candidates game it?",
-    t3a: "No — human-led evaluation",
-    competitors: "Yes — study for test, get badge",
+    criteria: "How evidence builds",
+    t3a: "Evidence accumulates across situations and over time",
+    competitors: "The result reflects a defined occasion",
+    note: "A single response shows a moment. A pattern needs more than one.",
   },
   {
-    criteria: "Why results are trusted",
-    t3a: "Observed performance history",
-    competitors: "Content library (easily copied)",
+    criteria: "When evidence differs",
+    t3a: "Differences remain visible in the record",
+    competitors: "Differences are resolved into a single result",
+    note: "One number hides the moment you struggled inside the ones you did not.",
+  },
+  {
+    criteria: "Limits",
+    t3a: "The record says what the evidence supports, and where it stops",
+    competitors: "The result stands on its own terms",
+    note: "When limits go unstated, absence of evidence looks like evidence.",
+  },
+  {
+    criteria: "If it is wrong",
+    t3a: "You read every line and can challenge it",
+    competitors: "The result goes to whoever commissioned it",
+    note: "An error nobody can see is an error nobody can correct.",
   },
 ];
 
@@ -74,7 +91,7 @@ export function DifferentiatorSection() {
         {/* Section Header */}
         <motion.div variants={itemVariants} className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-3">
-            Why We're Different
+            A Different Question
           </span>
           <h2 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="text-white">
@@ -86,8 +103,12 @@ export function DifferentiatorSection() {
             </span>
           </h2>
           <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
-            Others test a moment. We document what actually happens at work —
-            with human-led evaluation over time.
+            Others test a moment. We document behaviour across workplace pressure moments —
+            with accountable human confirmation.
+          </p>
+          <p className="text-base md:text-lg text-gray-400 leading-relaxed mt-6 max-w-2xl mx-auto">
+            We do not ask only whether someone can perform the task. We govern how observed
+            conduct becomes evidence.
           </p>
         </motion.div>
 
@@ -135,21 +156,27 @@ export function DifferentiatorSection() {
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.1 }}
                       className={cn(
-                        "grid grid-cols-[1.2fr_1.5fr_1.5fr]",
                         index !== comparisons.length - 1 && "border-b border-white/10"
                       )}
                     >
-                      <div className="p-4 border-r border-white/10 flex items-start">
-                        <span className="text-sm font-medium text-white leading-relaxed">{row.criteria}</span>
+                      <div className="grid grid-cols-[1.2fr_1.5fr_1.5fr]">
+                        <div className="p-4 border-r border-white/10 flex items-start">
+                          <span className="text-sm font-medium text-white leading-relaxed">{row.criteria}</span>
+                        </div>
+                        <div className="p-4 border-r border-white/10 bg-emerald-500/5 flex items-start gap-3">
+                          <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-sm text-gray-300 leading-relaxed">{row.t3a}</span>
+                        </div>
+                        <div className="p-4 flex items-start gap-3">
+                          <X className="w-5 h-5 text-red-400/50 flex-shrink-0 mt-0.5" />
+                          <span className="text-sm text-gray-500 leading-relaxed">{row.competitors}</span>
+                        </div>
                       </div>
-                      <div className="p-4 border-r border-white/10 bg-emerald-500/5 flex items-start gap-3">
-                        <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-300 leading-relaxed">{row.t3a}</span>
-                      </div>
-                      <div className="p-4 flex items-start gap-3">
-                        <X className="w-5 h-5 text-red-400/50 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-500 leading-relaxed">{row.competitors}</span>
-                      </div>
+                      {row.note && (
+                        <div className="px-4 pb-4 pt-0 text-xs italic text-gray-400 leading-relaxed">
+                          {row.note}
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -187,6 +214,11 @@ export function DifferentiatorSection() {
                         </div>
                         <p className="text-sm text-gray-500 leading-relaxed ml-8">{row.competitors}</p>
                       </div>
+                      {row.note && (
+                        <div className="px-4 py-3 border-t border-white/10 text-xs italic text-gray-400 leading-relaxed">
+                          {row.note}
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </div>
@@ -196,14 +228,13 @@ export function DifferentiatorSection() {
         </div>
 
         {/* Quote */}
-        <motion.div variants={itemVariants} className="max-w-2xl mx-auto mt-20 text-center">
+        <motion.div variants={itemVariants} className="max-w-3xl mx-auto mt-20 text-center">
           <blockquote className="text-2xl md:text-3xl font-medium text-white italic leading-relaxed">
-            "The flowchart is the map. The data is the territory.
+            A badge says what you completed. A score says how you were rated.
             <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              We share the map selectively. We never share the territory.
+              A Behavioral Evidence Report shows how you conducted yourself when the work stopped going to plan.
             </span>
-            "
           </blockquote>
         </motion.div>
       </div>
