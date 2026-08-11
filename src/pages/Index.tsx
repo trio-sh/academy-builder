@@ -12,10 +12,13 @@ const Index = () => {
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Scroll Progress Bar */}
+    <div
+      data-theme="paper"
+      className="min-h-screen bg-background text-foreground antialiased selection:bg-foreground selection:text-background"
+    >
+      {/* Ink progress rule */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 z-[60] origin-left"
+        className="fixed top-0 left-0 right-0 h-[2px] bg-foreground z-[60] origin-left"
         style={{ scaleX }}
       />
 

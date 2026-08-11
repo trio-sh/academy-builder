@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, LayoutDashboard, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Database } from "@/types/database.types";
@@ -12,9 +12,9 @@ type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
 const navigation = [
   { name: "Platform", href: "/platform" },
-  { name: "For Job Seekers", href: "/get-started" },
-  { name: "For Employers", href: "/employers" },
-  { name: "For Schools", href: "/schools" },
+  { name: "Job Seekers", href: "/get-started" },
+  { name: "Employers", href: "/employers" },
+  { name: "Schools", href: "/schools" },
   { name: "About", href: "/about" },
 ];
 
@@ -40,47 +40,52 @@ export function Header() {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-xl border-b border-white/30"
-      initial={{ y: -100 }}
+      className="fixed top-0 left-0 right-0 z-50 bg-background/85 backdrop-blur-md border-b border-foreground/15"
+      initial={{ y: -60 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
     >
-      <nav className="container flex items-center justify-between h-16 px-4 md:px-6">
+      {/* Ledger meta strip */}
+      <div className="hidden md:flex items-center justify-between px-6 py-1.5 border-b border-foreground/10 text-foreground/60">
+        <span className="mono-label">The 3rd Academy · Behavioral Readiness Register</span>
+        <span className="mono-label">Vol. 01 · Iss. 04 · MMXXVI</span>
+      </div>
+
+      <nav className="flex items-center justify-between h-16 px-4 md:px-6 max-w-[1400px] mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
-            <img
-              src="/icon-192.png"
-              alt="The 3rd Academy Logo"
-              className="h-10 w-10 mr-2 rounded-full shadow-lg"
-            />
-            <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="relative h-9 w-9 flex items-center justify-center rounded-full border border-foreground text-foreground group-hover:bg-foreground group-hover:text-background transition-colors">
+            <span className="display-serif text-lg leading-none pt-0.5">T³</span>
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="display-serif text-[1.05rem] tracking-tight text-foreground">
               The 3rd Academy
-            </h1>
-          </motion.div>
+            </span>
+            <span className="mono-label text-foreground/50 mt-0.5">est. MMXXV</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-1">
-          {navigation.map((item) => (
+        <div className="hidden lg:flex items-center">
+          {navigation.map((item, i) => (
             <Link
               key={item.name}
               to={item.href}
               className={cn(
-                "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors",
-                location.pathname === item.href
-                  ? "text-white"
-                  : "text-white hover:text-white"
+                "relative px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors",
+                i > 0 && "border-l border-foreground/15",
+                location.pathname === item.href && "text-foreground"
               )}
             >
-              {location.pathname === item.href && (
-                <motion.div
-                  className="absolute inset-0 bg-black rounded-lg"
-                  layoutId="activeNav"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <span className="relative z-10">{item.name}</span>
+              <span className="relative">
+                {item.name}
+                {location.pathname === item.href && (
+                  <motion.span
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-foreground"
+                  />
+                )}
+              </span>
             </Link>
           ))}
         </div>
@@ -88,29 +93,27 @@ export function Header() {
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
           {isLoading ? (
-            <div className="w-20 h-8 bg-black rounded-lg animate-pulse" />
+            <div className="w-24 h-8 bg-foreground/5 animate-pulse" />
           ) : isAuthenticated && profile ? (
             <>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-                  asChild
-                >
-                  <Link to={userDashboard}>
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Link>
-                </Button>
-              </motion.div>
               <Button
-                variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white hover:bg-black"
+                variant="ghost"
+                className="text-foreground hover:bg-foreground/5 rounded-none font-medium"
                 onClick={handleSignOut}
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
+                <LogOut className="w-3.5 h-3.5 mr-1.5" />
+                Sign out
+              </Button>
+              <Button
+                size="sm"
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-none font-medium shadow-none"
+                asChild
+              >
+                <Link to={userDashboard}>
+                  <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
+                  Dashboard
+                </Link>
               </Button>
             </>
           ) : (
@@ -118,101 +121,102 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white hover:bg-black"
+                className="text-foreground hover:bg-foreground/5 rounded-none font-medium"
                 asChild
               >
-                <Link to="/login">Sign In</Link>
+                <Link to="/login">Sign in</Link>
               </Button>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-600/30"
-                  asChild
-                >
-                  <Link to="/get-started">Get Started</Link>
-                </Button>
-              </motion.div>
+              <Button
+                size="sm"
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-none font-medium shadow-none px-5"
+                asChild
+              >
+                <Link to="/get-started">
+                  Enter the record
+                  <span className="ml-2">→</span>
+                </Link>
+              </Button>
             </>
           )}
         </div>
 
         {/* Mobile Menu */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-black">
+          <SheetTrigger asChild className="lg:hidden">
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/5 rounded-none">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs bg-black/95 backdrop-blur-xl border-white/30">
-            <div className="flex flex-col gap-6 mt-8">
-              {navigation.map((item) => (
+          <SheetContent side="right" className="w-full max-w-xs bg-background border-l border-foreground/20 text-foreground">
+            <div className="flex flex-col gap-1 mt-10">
+              <span className="mono-label text-foreground/50 mb-4">Contents</span>
+              {navigation.map((item, i) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "text-lg font-medium transition-colors",
-                    location.pathname === item.href
-                      ? "text-white"
-                      : "text-white hover:text-white"
-                  )}
+                  className="flex items-baseline justify-between py-3 border-b border-foreground/10 group"
                 >
-                  {item.name}
+                  <span className="display-serif text-xl text-foreground group-hover:italic transition-all">
+                    {item.name}
+                  </span>
+                  <span className="mono-label text-foreground/40">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </Link>
               ))}
-              <div className="pt-6 border-t border-white/30 flex flex-col gap-3">
+              <div className="pt-6 flex flex-col gap-3">
                 {isLoading ? (
-                  <div className="w-full h-10 bg-black rounded-lg animate-pulse" />
+                  <div className="w-full h-10 bg-foreground/5 animate-pulse" />
                 ) : isAuthenticated && profile ? (
                   <>
-                    {/* User info */}
-                    <div className="flex items-center gap-3 py-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-medium">
+                    <div className="flex items-center gap-3 py-3 border-b border-foreground/10">
+                      <div className="w-10 h-10 rounded-full border border-foreground flex items-center justify-center text-foreground font-medium display-serif">
                         {profile.first_name?.[0]}{profile.last_name?.[0]}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {profile.first_name} {profile.last_name}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">{profile.email}</p>
+                        <p className="mono-label text-foreground/50 truncate normal-case">{profile.email}</p>
                       </div>
                     </div>
                     <Button
-                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                      className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                       asChild
                     >
                       <Link to={userDashboard} onClick={() => setMobileMenuOpen(false)}>
                         <LayoutDashboard className="w-4 h-4 mr-2" />
-                        Go to Dashboard
+                        Dashboard
                       </Link>
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full border-white/20 text-white hover:bg-black"
+                      className="w-full border-foreground/30 text-foreground rounded-none hover:bg-foreground/5"
                       onClick={handleSignOut}
                     >
                       <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
+                      Sign out
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button
                       variant="outline"
-                      className="w-full border-white/20 text-white hover:bg-black"
+                      className="w-full border-foreground/30 text-foreground rounded-none hover:bg-foreground/5"
                       asChild
                     >
                       <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                        Sign In
+                        Sign in
                       </Link>
                     </Button>
                     <Button
-                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                      className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                       asChild
                     >
                       <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
-                        Get Started
+                        Enter the record →
                       </Link>
                     </Button>
                   </>

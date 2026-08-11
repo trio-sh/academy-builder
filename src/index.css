@@ -91,6 +91,174 @@
     --sidebar-border: 0 0% 15%;
     --sidebar-ring: 239 84% 67%;
   }
+
+  /* ─────────────────────────────────────────────────────────────
+     THE LEDGER — editorial paper theme
+     Scoped to [data-theme="paper"]; leaves dashboards untouched.
+     Warm parchment ground · deep ink · single vermilion accent.
+     ───────────────────────────────────────────────────────────── */
+  [data-theme="paper"] {
+    /* Ledger palette (raw) */
+    --paper: 40 33% 92%;         /* #EFE9DA warm parchment */
+    --paper-deep: 38 22% 86%;    /* #DED6C2 kraft   */
+    --ink: 30 12% 10%;           /* #1D1815 deep ink */
+    --ink-soft: 30 6% 32%;       /* #55504A body ink */
+    --ink-mute: 30 4% 52%;       /* #857F77 muted */
+    --rule: 30 12% 10%;          /* uses ink at alpha via var(--rule-alpha) */
+    --rule-alpha: 0.14;
+    --vermilion: 12 76% 42%;     /* #B84A22 burnt vermilion */
+    --vermilion-warm: 12 84% 48%;
+    --stamp: 12 76% 42%;
+
+    /* Wire into shadcn tokens */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: var(--paper);
+    --card-foreground: var(--ink);
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-deep);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-deep);
+    --muted-foreground: var(--ink-mute);
+    --accent: var(--vermilion);
+    --accent-foreground: var(--paper);
+    --destructive: 0 60% 45%;
+    --destructive-foreground: var(--paper);
+    --border: 30 12% 10%;
+    --input: 30 12% 10%;
+    --ring: var(--vermilion);
+  }
+}
+
+@layer utilities {
+  [data-theme="paper"] {
+    color-scheme: light;
+  }
+
+  /* Paper grain — subtle noise so the ground doesn't read as flat CSS */
+  .paper-grain {
+    background-color: hsl(var(--paper));
+    background-image:
+      radial-gradient(hsl(var(--ink) / 0.035) 1px, transparent 1px),
+      radial-gradient(hsl(var(--ink) / 0.025) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 2px;
+  }
+
+  /* Full-width hairline rule */
+  .rule-h {
+    border-top: 1px solid hsl(var(--ink) / var(--rule-alpha));
+  }
+  .rule-b {
+    border-bottom: 1px solid hsl(var(--ink) / var(--rule-alpha));
+  }
+  .rule-l {
+    border-left: 1px solid hsl(var(--ink) / var(--rule-alpha));
+  }
+  .rule-r {
+    border-right: 1px solid hsl(var(--ink) / var(--rule-alpha));
+  }
+  .rule-ink {
+    border-color: hsl(var(--ink));
+  }
+  .rule-thick {
+    border-top-width: 2px;
+  }
+
+  /* Mono metadata label */
+  .mono-label {
+    font-family: '"JetBrains Mono"', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Small caps setup for Instrument Sans */
+  .small-caps {
+    font-variant: all-small-caps;
+    letter-spacing: 0.08em;
+  }
+
+  /* Fraunces expressive display */
+  .display-serif {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 40, "WONK" 1;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+    font-weight: 460;
+  }
+  .display-serif-italic {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-weight: 500;
+  }
+
+  /* Vermilion "stamp" text */
+  .ink-vermilion {
+    color: hsl(var(--vermilion));
+  }
+  .bg-vermilion {
+    background-color: hsl(var(--vermilion));
+  }
+
+  /* Ledger row hover — subtle warm wash */
+  .row-hover:hover {
+    background-color: hsl(var(--ink) / 0.03);
+  }
+
+  /* Big ledger numerals with lining figures */
+  .ledger-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: "lnum", "tnum";
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+
+  /* Tabular mono figures for metadata */
+  .mono-num {
+    font-family: '"JetBrains Mono"', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Marginalia — small notes to the side of body copy */
+  .marginalia {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: hsl(var(--ink-mute));
+    font-variation-settings: "SOFT" 100;
+  }
+
+  /* Stamp — like an inked rubber stamp */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border: 1.5px solid hsl(var(--vermilion));
+    color: hsl(var(--vermilion));
+    font-family: '"JetBrains Mono"', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transform: rotate(-1.5deg);
+    background: hsl(var(--vermilion) / 0.04);
+  }
+}
+
+/* Selection color for paper theme */
+[data-theme="paper"] ::selection {
+  background: hsl(var(--vermilion));
+  color: hsl(var(--paper));
 }
 
 @layer base {
