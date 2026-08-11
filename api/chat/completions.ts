@@ -351,7 +351,7 @@ You excel at:
 ## TOOLS AVAILABLE
 
 Built-in tools (use when needed):
-- **web_search** - Search the web for current information: { "query": "search terms" }
+- **web_search** - Search the web AND auto-read the top N pages in one call: { "query": "search terms", "extract_top": 5 } (default 5, max 10)
 - **web_extract** - Extract content from URLs: { "url": "https://..." }
 - **image_generation** - Generate images: { "prompt": "description", "aspect": "16:9", "seed": 123 }
 
@@ -880,13 +880,21 @@ const BUILTIN_TOOLS = [
     function: {
       name: "web_search",
       description:
-        "Search the web for real-time information. Returns top search results with snippets. Use when the user asks about current events, facts, or any information that may need to be looked up.",
+        "Search the web AND auto-read the top N result pages in one call. Returns a JSON object with { query, snippets, results: [{title, url, content}], extracted_count }. Use this whenever the user asks about current events, facts, or anything that needs a lookup — you do NOT need to follow up with web_extract for the top results, this call already did that in parallel.",
       parameters: {
         type: "object",
         properties: {
           query: {
             type: "string",
             description: "The search query to look up on the web.",
+          },
+          extract_top: {
+            type: "integer",
+            description:
+              "How many top result URLs to fully extract in parallel. Default 5. Set to 0 to skip auto-extraction and only receive snippets. Max 10.",
+            default: 5,
+            minimum: 0,
+            maximum: 10,
           },
         },
         required: ["query"],
@@ -979,20 +987,150 @@ const BUILTIN_TOOLS = [
 
 // ─── Tool Executors ──────────────────────────────────────────────────────────
 
-async function executeWebSearch(query: string): Promise<string> {
+// ─── URL harvesting from Jina/DuckDuckGo search output ─────────────────────
+//
+// Jina Reader returns the DuckDuckGo HTML results as markdown-ish text.
+// We pull out the outbound result links (skipping DDG internal + tracker
+// URLs), dedupe by host+path, and return them in visual order.
+
+const SEARCH_HOST_BLOCKLIST = /(?:^|\.)(?:duckduckgo\.com|bing\.com|google\.com|youtube\.com\/redirect)/i;
+
+function normalizeDuckUrl(raw: string): string | null {
   try {
-    const searchUrl = `${JINA_READER_URL}/${DUCKDUCKGO_HTML}?q=${encodeURIComponent(query)}`;
-    const res = await fetch(searchUrl, {
-      headers: {
-        Accept: "text/plain",
-        "X-Return-Format": "text",
-      },
+    // DDG wraps results in /l/?uddg=<encoded>
+    if (raw.startsWith("/l/") || raw.includes("duckduckgo.com/l/")) {
+      const url = new URL(raw, "https://duckduckgo.com");
+      const wrapped = url.searchParams.get("uddg");
+      if (wrapped) return decodeURIComponent(wrapped);
+    }
+    if (raw.startsWith("http")) return raw;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function harvestSearchUrls(text: string, limit: number): { url: string; title: string }[] {
+  const out: { url: string; title: string }[] = [];
+  const seen = new Set<string>();
+  // Match markdown links: [title](url)
+  const linkRe = /\[([^\]]+?)\]\(([^)]+?)\)/g;
+  let m: RegExpExecArray | null;
+  while ((m = linkRe.exec(text)) && out.length < limit) {
+    const title = m[1].trim();
+    const raw = m[2].trim();
+    const normalized = normalizeDuckUrl(raw);
+    if (!normalized) continue;
+    try {
+      const u = new URL(normalized);
+      if (SEARCH_HOST_BLOCKLIST.test(u.host)) continue;
+      const key = `${u.host}${u.pathname}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ url: u.toString(), title });
+    } catch {
+      // Skip malformed URLs
+    }
+  }
+  // Fallback: bare URL scan if the markdown parse turned up nothing.
+  if (out.length === 0) {
+    const bareRe = /https?:\/\/[^\s)>\]]+/g;
+    let b: RegExpExecArray | null;
+    while ((b = bareRe.exec(text)) && out.length < limit) {
+      try {
+        const u = new URL(b[0]);
+        if (SEARCH_HOST_BLOCKLIST.test(u.host)) continue;
+        const key = `${u.host}${u.pathname}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push({ url: u.toString(), title: u.host });
+      } catch { /* skip */ }
+    }
+  }
+  return out;
+}
+
+/**
+ * Fetch raw DuckDuckGo results via Jina Reader. Returns the raw text
+ * body (with a size cap) so callers can either read the snippets
+ * directly OR harvest links for downstream extraction.
+ */
+async function fetchSearchSnippets(query: string, cap = 6000): Promise<string> {
+  const searchUrl = `${JINA_READER_URL}/${DUCKDUCKGO_HTML}?q=${encodeURIComponent(query)}`;
+  const res = await fetch(searchUrl, {
+    headers: {
+      Accept: "text/plain",
+      "X-Return-Format": "text",
+    },
+  });
+  if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+  const text = await res.text();
+  return text.slice(0, cap);
+}
+
+/**
+ * web_search — searches DuckDuckGo AND auto-extracts the top N result
+ * URLs so the model gets ready-to-summarize page content in one call
+ * instead of having to loop through web_extract itself.
+ *
+ * extractTop defaults to 5, is clamped to [0, 10]. Pass 0 to skip the
+ * auto-extract step and just return the snippets (legacy behavior).
+ *
+ * The return value is JSON so the model can consume it structurally:
+ *   {
+ *     query, snippets, results: [{ title, url, content }],
+ *     extract_top, extracted_count, skipped, error?
+ *   }
+ * Failures on individual URLs are logged into `skipped` and never
+ * fail the whole call.
+ */
+async function executeWebSearch(query: string, extractTop = 5): Promise<string> {
+  try {
+    const snippets = await fetchSearchSnippets(query);
+    const n = Math.max(0, Math.min(10, Math.floor(extractTop)));
+    if (n === 0) {
+      return JSON.stringify({
+        query,
+        snippets,
+        results: [],
+        extract_top: 0,
+        extracted_count: 0,
+      });
+    }
+    const targets = harvestSearchUrls(snippets, n);
+    const skipped: { url: string; reason: string }[] = [];
+    const settled = await Promise.all(
+      targets.map(async (t) => {
+        try {
+          const content = await executeWebExtract(t.url);
+          if (content.startsWith("Error extracting web content")) {
+            skipped.push({ url: t.url, reason: content });
+            return null;
+          }
+          return { title: t.title, url: t.url, content };
+        } catch (err: any) {
+          skipped.push({ url: t.url, reason: String(err?.message ?? err) });
+          return null;
+        }
+      })
+    );
+    const results = settled.filter((r): r is { title: string; url: string; content: string } => r !== null);
+    return JSON.stringify({
+      query,
+      snippets: snippets.slice(0, 2000),
+      results,
+      extract_top: n,
+      extracted_count: results.length,
+      skipped,
     });
-    if (!res.ok) throw new Error(`Search failed: ${res.status}`);
-    const text = await res.text();
-    return text.slice(0, 8000);
   } catch (err: any) {
-    return `Error performing web search: ${err.message}`;
+    return JSON.stringify({
+      query,
+      error: `Error performing web search: ${err.message}`,
+      results: [],
+      extract_top: extractTop,
+      extracted_count: 0,
+    });
   }
 }
 
@@ -1047,13 +1185,21 @@ const TASK_AGENT_TOOLS = [
     function: {
       name: "web_search",
       description:
-        "Search the web for real-time information. Returns top search results with snippets. Use when you need current events, facts, or any information that should be looked up.",
+        "Search the web AND auto-read the top N result pages in one call. Returns { query, snippets, results: [{title, url, content}], extracted_count }. No need to follow up with web_extract for those top results — they are already fetched in parallel.",
       parameters: {
         type: "object",
         properties: {
           query: {
             type: "string",
             description: "The search query to look up on the web.",
+          },
+          extract_top: {
+            type: "integer",
+            description:
+              "How many top result URLs to fully extract in parallel. Default 5. Set to 0 to skip auto-extraction and only receive snippets. Max 10.",
+            default: 5,
+            minimum: 0,
+            maximum: 10,
           },
         },
         required: ["query"],
@@ -1126,7 +1272,7 @@ async function executeTaskAgentTool(
   let result: string;
   switch (name) {
     case "web_search":
-      result = await executeWebSearch(args.query);
+      result = await executeWebSearch(args.query, args.extract_top);
       break;
     case "web_extract":
       result = await executeWebExtract(args.url);
@@ -1456,7 +1602,7 @@ async function executeTool(
   let result: string;
   switch (name) {
     case "web_search":
-      result = await executeWebSearch(args.query);
+      result = await executeWebSearch(args.query, args.extract_top);
       break;
     case "web_extract":
       result = await executeWebExtract(args.url);
@@ -1750,7 +1896,7 @@ function buildToolSystemPrompt(userTools?: any[]): string {
   let prompt = `You have access to tools. When you need to use a tool, respond with a JSON tool call block.
 
 Built-in tools (executed automatically):
-1. **web_search** - Search the web. Params: { "query": "search terms" }
+1. **web_search** - Search the web AND auto-read the top N pages. Params: { "query": "search terms", "extract_top": 5 } (default 5, max 10)
 2. **web_extract** - Extract content from a URL. Params: { "url": "https://..." }
 3. **image_generation** - Generate an image. Params: { "prompt": "description", "aspect": "1:1", "seed": 123 }
 4. **task_agent** - Delegate complex tasks to a powerful AI model that has its OWN built-in tools (web_search, web_extract, image_generation). It can autonomously search the web, read pages, and generate images as part of its work. Params: { "prompt": "full detailed task description", "system_prompt": "optional role/instructions", "max_tokens": 16384 }. ALWAYS use this for: HTML pages, landing pages, full websites, long code, research tasks, or any task needing a large output. Do NOT pass a "model" parameter — the system selects the best model automatically.
