@@ -505,8 +505,8 @@ const GetStarted = () => {
                       className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium",
                         step >= s
-                          ? "bg-foreground text-foreground"
-                          : "bg-background text-foreground/80 border border-foreground/25"
+                          ? "bg-foreground text-background"
+                          : "bg-background text-foreground/60 border border-foreground/25"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
@@ -601,7 +601,7 @@ const GetStarted = () => {
                         size="lg"
                         onClick={() => setStep(2)}
                         disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
-                        className="px-10 py-6 bg-foreground hover:from-indigo-700 hover:to-purple-700 text-foreground"
+                        className="px-10 py-6 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                       >
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />
@@ -767,7 +767,7 @@ const GetStarted = () => {
                       <Button
                         onClick={handleSignUp}
                         disabled={isLoading || !firstName || !lastName || !email || !password}
-                        className="flex-1 bg-foreground hover:from-indigo-700 hover:to-purple-700 text-foreground"
+                        className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
                       >
                         {isLoading ? (
                           <>

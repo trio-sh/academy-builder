@@ -13,6 +13,14 @@ import {
   type DashboardNavItem,
   type DashboardSection,
 } from "@/components/dashboard/DashboardLayout";
+import {
+  DashboardPageHeader,
+  DashSection,
+  LedgerStat,
+  LedgerBadge,
+  LedgerLoading,
+} from "@/components/dashboard/primitives";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { Database } from "@/types/database.types";
 import {
@@ -184,119 +192,89 @@ const Overview = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
-      </div>
-    );
-  }
+  if (isLoading) return <LedgerLoading />;
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Welcome back, {profile?.first_name || "Employer"}
-        </h1>
-        <p className="text-foreground/60">
-          Find verified talent and manage your hiring pipeline.
-        </p>
-      </motion.div>
-
-      {/* Verification status */}
-      {employerProfile && !employerProfile.is_verified && (
-        <motion.div
-          variants={itemVariants}
-          className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
-        >
-          <AlertCircle className="w-5 h-5 text-amber-400" />
-          <p className="text-amber-400">
-            Your company is pending verification. Complete your company profile to get verified.
-            <Link to="/dashboard/employer/company" className="underline ml-2">
-              Update profile
+    <div>
+      <DashboardPageHeader
+        eyebrow={`§ Reading Room · ${profile?.first_name || "Employer"}'s desk`}
+        title={
+          <>
+            Welcome back,{" "}
+            <span className="italic display-serif-italic ink-vermilion">
+              {profile?.first_name || "hiring desk"}
+            </span>
+            .
+          </>
+        }
+        meta="You read what candidates have released to you — nothing more, nothing hidden."
+        actions={
+          employerProfile && !employerProfile.is_verified ? (
+            <Link to="/dashboard/employer/company">
+              <LedgerBadge variant="stamp">Verification pending</LedgerBadge>
             </Link>
+          ) : (
+            <LedgerBadge variant="outline">Verified</LedgerBadge>
+          )
+        }
+      />
+
+      <DashSection eyebrow="§ I · Standing figures" title="At the desk">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {stats.map((s) => (
+            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          ))}
+        </div>
+      </DashSection>
+
+      <DashSection eyebrow="§ II · Common entries" title="Where you likely wanted to go">
+        <div className="grid md:grid-cols-2 border-t-2 border-foreground border-b border-foreground/40">
+          {[
+            {
+              n: "01",
+              title: "Search T3X Exchange",
+              body: "Browse candidates who have released their Behavioral Evidence Report to your organization.",
+              href: "/dashboard/employer/search",
+            },
+            {
+              n: "02",
+              title: "Post a LiveWorks project",
+              body: "Offer a supervised project that generates evidence for the register.",
+              href: "/dashboard/employer/projects",
+            },
+          ].map((q, i) => (
+            <Link
+              key={q.n}
+              to={q.href}
+              className={cn(
+                "p-8 hover:bg-foreground/[0.025] transition-colors group",
+                i > 0 && "border-t md:border-t-0 md:border-l border-foreground/25"
+              )}
+            >
+              <div className="ledger-num text-4xl text-foreground mb-3">{q.n}</div>
+              <h3 className="display-serif text-2xl md:text-3xl text-foreground mb-3 group-hover:italic transition-all">
+                {q.title}
+              </h3>
+              <p className="text-foreground/75 text-[0.9375rem] mb-5 leading-relaxed">{q.body}</p>
+              <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                Enter →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </DashSection>
+
+      <DashSection eyebrow="§ III · Editorial note" title="What the report is">
+        <div className="border-l-2 border-foreground pl-8 max-w-3xl">
+          <p className="display-serif text-2xl md:text-3xl leading-[1.35] text-foreground mb-6">
+            The Behavioral Evidence Report is <span className="italic display-serif-italic">an additional source of evidence</span> — not a hiring verdict, prediction, or pre-vetting mechanism.
           </p>
-        </motion.div>
-      )}
-
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="relative group p-6 rounded-2xl bg-background/70 backdrop-blur-md border border-foreground/25 hover:border-foreground/25 transition-colors"
-          >
-            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-foreground transition-opacity" />
-            <div className="relative">
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                <stat.icon className="w-5 h-5 text-foreground" />
-              </div>
-              <p className="text-sm text-foreground/60 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-
-      <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
-          <div className="space-y-3">
-            <Link
-              to="/dashboard/employer/search"
-              className="flex items-center gap-4 p-4 rounded-xl bg-background border border-foreground/25 hover:border-emerald-500/30 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
-                <Search className="w-5 h-5 text-foreground" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-foreground group-hover:text-emerald-400 transition-colors">Search T3X Exchange</p>
-                <p className="text-sm text-foreground/850">Browse verified candidates</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-emerald-400" />
-            </Link>
-            <Link
-              to="/dashboard/employer/projects"
-              className="flex items-center gap-4 p-4 rounded-xl bg-background border border-foreground/25 hover:border-emerald-500/30 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-foreground" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-foreground group-hover:text-emerald-400 transition-colors">Post a Project</p>
-                <p className="text-sm text-foreground/850">Create a LiveWorks project</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:text-emerald-400" />
-            </Link>
-          </div>
+          <p className="mono-label text-foreground border-t border-foreground/25 pt-4">
+            No scores. No rankings. No recommendations.
+          </p>
         </div>
-
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">Platform Benefits</h2>
-          <div className="p-6 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border border-emerald-500/20">
-            <h3 className="font-semibold text-foreground mb-4">Why Use The 3rd Academy?</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-foreground/60">Pre-vetted candidates with verified Behavioral Evidence Reports</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-foreground/60">Mentor-validated behavioral readiness</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                <span className="text-foreground/60">Real work samples through LiveWorks projects</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+      </DashSection>
+    </div>
   );
 };
 
@@ -339,10 +317,10 @@ const SearchTalent = () => {
   };
 
   const getBarsColor = (score: number) => {
-    if (score >= 3.5) return "text-emerald-400";
-    if (score >= 2.5) return "text-blue-400";
-    if (score >= 1.5) return "text-amber-400";
-    return "text-orange-400";
+    if (score >= 3.5) return "text-foreground";
+    if (score >= 2.5) return "text-foreground";
+    if (score >= 1.5) return "ink-vermilion";
+    return "ink-vermilion";
   };
 
   // Connection modal state
@@ -502,7 +480,7 @@ const SearchTalent = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -550,8 +528,8 @@ const SearchTalent = () => {
                 }))}
                 className={`px-2 py-1 rounded-full text-[11px] font-medium transition-colors ${
                   filters.dimensions.includes(dim.id)
-                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
-                    : "bg-white/5 text-foreground/850 border border-foreground/15 hover:text-foreground/75"
+                    ? "bg-foreground/[0.06] text-foreground border border-foreground/40"
+                    : "bg-white/5 text-foreground/50 border border-foreground/15 hover:text-foreground/75"
                 }`}
               >
                 {dim.label}
@@ -561,7 +539,7 @@ const SearchTalent = () => {
           {filters.dimensions.length > 0 && (
             <button
               onClick={() => setFilters(prev => ({ ...prev, dimensions: [] }))}
-              className="text-xs text-foreground/850 hover:text-foreground"
+              className="text-xs text-foreground/50 hover:text-foreground"
             >
               Clear
             </button>
@@ -607,33 +585,33 @@ const SearchTalent = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-foreground">{candidate.profile?.first_name} {candidate.profile?.last_name}</span>
-                        <Award className="w-3.5 h-3.5 text-emerald-400" />
+                        <Award className="w-3.5 h-3.5 text-foreground" />
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                          candidate.current_tier === "platinum" ? "bg-emerald-500/20 text-emerald-400" :
-                          candidate.current_tier === "gold" ? "bg-amber-500/20 text-amber-400" :
+                          candidate.current_tier === "platinum" ? "bg-foreground/[0.06] text-foreground" :
+                          candidate.current_tier === "gold" ? "bg-vermilion/10 ink-vermilion" :
                           "bg-gray-500/20 text-foreground/60"
                         }`}>
                           Silver
                         </span>
                       </div>
-                      <p className="text-xs text-foreground/850 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
+                      <p className="text-xs text-foreground/50 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-2">
-                      <span className="text-xs text-emerald-400 flex items-center gap-1">
+                      <span className="text-xs text-foreground flex items-center gap-1">
                         <Shield className="w-3 h-3" /> Verified
                       </span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {connectionStatus === "accepted" ? (
-                        <span className="text-xs text-emerald-400">Connected</span>
+                        <span className="text-xs text-foreground">Connected</span>
                       ) : connectionStatus === "pending" ? (
-                        <span className="text-xs text-amber-400">Awaiting Response</span>
+                        <span className="text-xs ink-vermilion">Awaiting Response</span>
                       ) : (
                         <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-xs h-7" onClick={(e) => { e.stopPropagation(); openConnectModal(candidate); }}>
                           Connect
                         </Button>
                       )}
-                      <ChevronRight className={`w-4 h-4 text-foreground/850 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                      <ChevronRight className={`w-4 h-4 text-foreground/50 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                     </div>
                   </div>
 
@@ -653,7 +631,7 @@ const SearchTalent = () => {
                           <p className="text-sm text-foreground/60">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-foreground/60 font-medium">Silver</span>
-                            <span className="text-xs text-emerald-400 flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Behavioral Evidence Report</span>
+                            <span className="text-xs text-foreground flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Behavioral Evidence Report</span>
                           </div>
                         </div>
                       </div>
@@ -661,7 +639,7 @@ const SearchTalent = () => {
                       {/* BehaviourMatch™ — 7 MVP dimensions, BARS labels only */}
                       {candidate.behavioralScores && Object.keys(candidate.behavioralScores).length > 0 && (
                         <div className="mb-4">
-                          <p className="text-xs text-emerald-400 font-medium mb-3 flex items-center gap-1">
+                          <p className="text-xs text-foreground font-medium mb-3 flex items-center gap-1">
                             <Target className="w-3 h-3" /> BehaviourMatch™ — Behavioral Readiness Profile
                           </p>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -672,7 +650,7 @@ const SearchTalent = () => {
                               const color = getBarsColor(score);
                               return (
                                 <div key={dim.id} className="p-2.5 rounded-lg bg-background border border-foreground/15">
-                                  <p className="text-[10px] text-foreground/850 mb-1">{dim.label}</p>
+                                  <p className="text-[10px] text-foreground/50 mb-1">{dim.label}</p>
                                   <p className={`text-sm font-semibold ${color}`}>{label}</p>
                                 </div>
                               );
@@ -712,7 +690,7 @@ const SearchTalent = () => {
           <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-background border border-foreground/15 text-center">
             <Search className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No candidates found</p>
-            <p className="text-sm text-foreground/850 mt-1">Try adjusting your filters or check back later</p>
+            <p className="text-sm text-foreground/50 mt-1">Try adjusting your filters or check back later</p>
           </motion.div>
         );
       })()}
@@ -731,8 +709,8 @@ const SearchTalent = () => {
           >
             {connectionSuccess ? (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                <div className="w-16 h-16 rounded-full bg-foreground/[0.06] flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-foreground" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">Request Sent!</h3>
                 <p className="text-foreground/60">
@@ -891,9 +869,9 @@ const Connections = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "accepted": return "bg-emerald-500/20 text-emerald-400";
-      case "pending": return "bg-amber-500/20 text-amber-400";
-      case "declined": return "bg-red-500/20 text-red-400";
+      case "accepted": return "bg-foreground/[0.06] text-foreground";
+      case "pending": return "bg-vermilion/10 ink-vermilion";
+      case "declined": return "bg-vermilion/15 ink-vermilion";
       default: return "bg-gray-500/20 text-foreground/60";
     }
   };
@@ -920,7 +898,7 @@ const Connections = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -993,7 +971,7 @@ const Connections = () => {
                 key={connection.id}
                 className={`p-6 rounded-xl border transition-colors ${
                   connection.status === "accepted"
-                    ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-emerald-500/20"
+                    ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-foreground/40"
                     : "bg-background border-foreground/25 hover:border-foreground/25"
                 }`}
               >
@@ -1043,7 +1021,7 @@ const Connections = () => {
                       <StatusIcon className="w-4 h-4" />
                       {connection.status === "pending" ? "Awaiting Response" : connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
                     </span>
-                    <p className="text-xs text-foreground/850 mt-2">
+                    <p className="text-xs text-foreground/50 mt-2">
                       {connection.responded_at
                         ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
                         : `Sent ${new Date(connection.created_at).toLocaleDateString()}`}
@@ -1053,7 +1031,7 @@ const Connections = () => {
 
                 {connection.message && (
                   <p className="mt-4 text-sm text-foreground/60 bg-background/20 p-3 rounded-lg">
-                    <span className="text-foreground/850">Your message: </span>
+                    <span className="text-foreground/50">Your message: </span>
                     {connection.message}
                   </p>
                 )}
@@ -1089,7 +1067,7 @@ const Connections = () => {
         >
           <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
           <p className="text-foreground/60">No connections yet</p>
-          <p className="text-sm text-foreground/850 mt-1">
+          <p className="text-sm text-foreground/50 mt-1">
             Search for candidates and send connection requests
           </p>
           <Link to="/dashboard/employer/search">
@@ -1391,9 +1369,9 @@ const Projects = () => {
   const getEscrowStatusBadge = (status: string | null) => {
     const badges: Record<string, { label: string; color: string; icon: typeof Lock }> = {
       pending: { label: "Not Funded", color: "text-foreground/60 bg-gray-500/20", icon: Wallet },
-      funded: { label: "In Escrow", color: "text-amber-400 bg-amber-500/20", icon: Lock },
-      released: { label: "Released", color: "text-emerald-400 bg-emerald-500/20", icon: Unlock },
-      refunded: { label: "Refunded", color: "text-red-400 bg-red-500/20", icon: ArrowRight },
+      funded: { label: "In Escrow", color: "ink-vermilion bg-vermilion/10", icon: Lock },
+      released: { label: "Released", color: "text-foreground bg-foreground/[0.06]", icon: Unlock },
+      refunded: { label: "Refunded", color: "ink-vermilion bg-vermilion/15", icon: ArrowRight },
     };
     return badges[status || "pending"] || badges.pending;
   };
@@ -1496,9 +1474,9 @@ const Projects = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-emerald-500/20 text-emerald-400";
-      case "in_progress": return "bg-amber-500/20 text-amber-400";
-      case "completed": return "bg-blue-500/20 text-blue-400";
+      case "open": return "bg-foreground/[0.06] text-foreground";
+      case "in_progress": return "bg-vermilion/10 ink-vermilion";
+      case "completed": return "bg-foreground/[0.06] text-foreground";
       case "draft": return "bg-gray-500/20 text-foreground/60";
       default: return "bg-gray-500/20 text-foreground/60";
     }
@@ -1507,7 +1485,7 @@ const Projects = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -1599,9 +1577,9 @@ const Projects = () => {
             </div>
 
             {/* Budget Section */}
-            <div className="p-4 rounded-lg bg-emerald-500/30 border border-emerald-500/20">
+            <div className="p-4 rounded-lg bg-foreground/[0.06] border border-foreground/40">
               <div className="flex items-center gap-2 mb-3">
-                <DollarSign className="w-5 h-5 text-emerald-400" />
+                <DollarSign className="w-5 h-5 text-foreground" />
                 <h3 className="font-medium text-foreground">Project Budget</h3>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
@@ -1669,14 +1647,14 @@ const Projects = () => {
                       <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(project.status)}`}>
                         {project.status.replace("_", " ")}
                       </span>
-                      <span className="text-sm text-foreground/850">{project.category}</span>
-                      <span className="text-sm text-foreground/850">{project.duration_days} days</span>
+                      <span className="text-sm text-foreground/50">{project.category}</span>
+                      <span className="text-sm text-foreground/50">{project.duration_days} days</span>
                       {applicationCount > 0 && (
-                        <span className="text-sm text-emerald-400 flex items-center gap-1">
+                        <span className="text-sm text-foreground flex items-center gap-1">
                           <UserPlus className="w-3 h-3" />
                           {applicationCount} applicant{applicationCount !== 1 ? "s" : ""}
                           {pendingApps > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs ml-1">
+                            <span className="px-1.5 py-0.5 rounded bg-vermilion/10 ink-vermilion text-xs ml-1">
                               {pendingApps} new
                             </span>
                           )}
@@ -1727,7 +1705,7 @@ const Projects = () => {
                 {/* Show applicants preview if any */}
                 {project.applications && project.applications.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-foreground/25">
-                    <p className="text-xs text-foreground/850 mb-2">Recent Applicants:</p>
+                    <p className="text-xs text-foreground/50 mb-2">Recent Applicants:</p>
                     <div className="flex items-center gap-2">
                       {project.applications.slice(0, 4).map((app) => (
                         <div
@@ -1750,17 +1728,17 @@ const Projects = () => {
                           </span>
                           <span className={`px-1.5 py-0.5 rounded text-xs ${
                             app.status === "pending"
-                              ? "bg-amber-500/20 text-amber-400"
+                              ? "bg-vermilion/10 ink-vermilion"
                               : app.status === "accepted"
-                              ? "bg-emerald-500/20 text-emerald-400"
-                              : "bg-red-500/20 text-red-400"
+                              ? "bg-foreground/[0.06] text-foreground"
+                              : "bg-vermilion/15 ink-vermilion"
                           }`}>
                             {app.status}
                           </span>
                         </div>
                       ))}
                       {project.applications.length > 4 && (
-                        <span className="text-xs text-foreground/850">
+                        <span className="text-xs text-foreground/50">
                           +{project.applications.length - 4} more
                         </span>
                       )}
@@ -1779,7 +1757,7 @@ const Projects = () => {
           >
             <Briefcase className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No projects yet</p>
-            <p className="text-sm text-foreground/850 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               Create a LiveWorks project to find candidates
             </p>
           </motion.div>
@@ -1808,7 +1786,7 @@ const Projects = () => {
                     <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(selectedProject.status)}`}>
                       {selectedProject.status.replace("_", " ")}
                     </span>
-                    <span className="text-sm text-foreground/850">{selectedProject.category}</span>
+                    <span className="text-sm text-foreground/50">{selectedProject.category}</span>
                   </div>
                 </div>
                 <Button
@@ -1830,15 +1808,15 @@ const Projects = () => {
 
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="p-3 rounded-lg bg-background">
-                  <p className="text-xs text-foreground/850">Duration</p>
+                  <p className="text-xs text-foreground/50">Duration</p>
                   <p className="text-foreground font-medium">{selectedProject.duration_days} days</p>
                 </div>
                 <div className="p-3 rounded-lg bg-background">
-                  <p className="text-xs text-foreground/850">Skill Level</p>
+                  <p className="text-xs text-foreground/50">Skill Level</p>
                   <p className="text-foreground font-medium capitalize">{selectedProject.skill_level}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-background">
-                  <p className="text-xs text-foreground/850">Applicants</p>
+                  <p className="text-xs text-foreground/50">Applicants</p>
                   <p className="text-foreground font-medium">{selectedProject.applications?.length || 0}</p>
                 </div>
               </div>
@@ -1873,7 +1851,7 @@ const Projects = () => {
                               <p className="text-sm text-foreground/60">
                                 {app.candidate?.profile?.headline || "Candidate"}
                               </p>
-                              <p className="text-xs text-foreground/850 mt-1">
+                              <p className="text-xs text-foreground/50 mt-1">
                                 Applied {new Date(app.created_at).toLocaleDateString()}
                               </p>
                             </div>
@@ -1954,7 +1932,7 @@ const Projects = () => {
                                       )
                                     );
                                   }}
-                                  className="border-red-500/30 text-red-400 hover:bg-red-500/30"
+                                  className="border-vermilion ink-vermilion hover:bg-vermilion/15"
                                 >
                                   <XCircle className="w-4 h-4 mr-1" />
                                   Decline
@@ -1964,8 +1942,8 @@ const Projects = () => {
                               <span
                                 className={`px-3 py-1 rounded-full text-sm ${
                                   app.status === "accepted"
-                                    ? "bg-emerald-500/20 text-emerald-400"
-                                    : "bg-red-500/20 text-red-400"
+                                    ? "bg-foreground/[0.06] text-foreground"
+                                    : "bg-vermilion/15 ink-vermilion"
                                 }`}
                               >
                                 {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
@@ -1975,7 +1953,7 @@ const Projects = () => {
                         </div>
                         {app.cover_letter && (
                           <div className="mt-3 p-3 rounded bg-background/20">
-                            <p className="text-xs text-foreground/850 mb-1">Cover Letter</p>
+                            <p className="text-xs text-foreground/50 mb-1">Cover Letter</p>
                             <p className="text-sm text-foreground/75">{app.cover_letter}</p>
                           </div>
                         )}
@@ -1986,7 +1964,7 @@ const Projects = () => {
                   <div className="p-6 rounded-lg bg-background text-center">
                     <Users className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
                     <p className="text-foreground/60">No applicants yet</p>
-                    <p className="text-xs text-foreground/850 mt-1">
+                    <p className="text-xs text-foreground/50 mt-1">
                       Applicants will appear here when candidates apply
                     </p>
                   </div>
@@ -2034,7 +2012,7 @@ const Projects = () => {
                           className="px-3 py-2 rounded-lg bg-background border border-foreground/25 text-foreground focus:border-emerald-500 focus:outline-none text-sm"
                         />
                         <div className="relative">
-                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/850" />
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50" />
                           <input
                             type="number"
                             value={newMilestone.paymentAmount}
@@ -2075,10 +2053,10 @@ const Projects = () => {
                     {selectedProject.milestones.map((milestone, index) => {
                       const getMilestoneStatusColor = (status: string) => {
                         switch (status) {
-                          case "approved": return "bg-emerald-500/20 text-emerald-400";
-                          case "submitted": return "bg-blue-500/20 text-blue-400";
-                          case "in_progress": return "bg-amber-500/20 text-amber-400";
-                          case "revision_requested": return "bg-red-500/20 text-red-400";
+                          case "approved": return "bg-foreground/[0.06] text-foreground";
+                          case "submitted": return "bg-foreground/[0.06] text-foreground";
+                          case "in_progress": return "bg-vermilion/10 ink-vermilion";
+                          case "revision_requested": return "bg-vermilion/15 ink-vermilion";
                           default: return "bg-gray-500/20 text-foreground/60";
                         }
                       };
@@ -2091,7 +2069,7 @@ const Projects = () => {
                           key={milestone.id}
                           className={`p-4 rounded-lg border transition-colors ${
                             milestone.status === "approved"
-                              ? "bg-emerald-500/5 border-emerald-500/20"
+                              ? "bg-foreground/[0.06] border-foreground/40"
                               : "bg-background border-foreground/25"
                           }`}
                         >
@@ -2099,7 +2077,7 @@ const Projects = () => {
                             <div className="flex items-start gap-3">
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
                                 milestone.status === "approved"
-                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  ? "bg-foreground/[0.06] text-foreground"
                                   : "bg-background text-foreground/60"
                               }`}>
                                 {index + 1}
@@ -2111,13 +2089,13 @@ const Projects = () => {
                                 )}
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                   {milestone.due_date && (
-                                    <span className="text-xs text-foreground/850 flex items-center gap-1">
+                                    <span className="text-xs text-foreground/50 flex items-center gap-1">
                                       <Calendar className="w-3 h-3" />
                                       Due: {new Date(milestone.due_date).toLocaleDateString()}
                                     </span>
                                   )}
                                   {milestone.payment_amount && (
-                                    <span className="text-xs text-emerald-400 flex items-center gap-1">
+                                    <span className="text-xs text-foreground flex items-center gap-1">
                                       <DollarSign className="w-3 h-3" />
                                       ${milestone.payment_amount.toLocaleString()}
                                     </span>
@@ -2151,7 +2129,7 @@ const Projects = () => {
                                       size="sm"
                                       variant="outline"
                                       onClick={() => updateMilestoneStatus(milestone.id, "revision_requested")}
-                                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/30 h-7 px-2"
+                                      className="border-vermilion ink-vermilion hover:bg-vermilion/10 h-7 px-2"
                                     >
                                       <Edit className="w-3 h-3" />
                                     </Button>
@@ -2215,7 +2193,7 @@ const Projects = () => {
                   <div className="p-6 rounded-lg bg-background text-center">
                     <Briefcase className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
                     <p className="text-foreground/60">No milestones yet</p>
-                    <p className="text-xs text-foreground/850 mt-1">
+                    <p className="text-xs text-foreground/50 mt-1">
                       Add milestones to track project progress
                     </p>
                   </div>
@@ -2262,7 +2240,7 @@ const Projects = () => {
                   <p className="text-foreground font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-foreground/25">
                     <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
-                    <p className="text-2xl font-bold text-emerald-400">
+                    <p className="text-2xl font-bold text-foreground">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
@@ -2290,7 +2268,7 @@ const Projects = () => {
                   <div>
                     <label className="text-sm text-foreground/60 block mb-2">
                       Payment Credentials
-                      <span className="text-red-400">*</span>
+                      <span className="ink-vermilion">*</span>
                     </label>
                     <textarea
                       value={paymentDetails.credentials}
@@ -2321,9 +2299,9 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-amber-500/30 border border-amber-500/20 mb-4">
+                <div className="p-3 rounded-lg bg-vermilion/10 border border-vermilion mb-4">
                   <div className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 ink-vermilion mt-0.5" />
                     <p className="text-sm text-amber-300">
                       Payment is handled outside the platform. Share your payment details so the candidate can send payment. You'll verify receipt manually.
                     </p>
@@ -2356,8 +2334,8 @@ const Projects = () => {
               <>
                 {/* Verify Payment Received */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-emerald-400" />
+                  <div className="w-12 h-12 rounded-xl bg-foreground/[0.06] flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-foreground" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Verify Payment</h3>
@@ -2370,7 +2348,7 @@ const Projects = () => {
                   <p className="text-foreground font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-foreground/25">
                     <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
-                    <p className="text-2xl font-bold text-emerald-400">
+                    <p className="text-2xl font-bold text-foreground">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
@@ -2397,9 +2375,9 @@ const Projects = () => {
                   </div>
                 )}
 
-                <div className="p-3 rounded-lg bg-emerald-500/30 border border-emerald-500/20 mb-4">
+                <div className="p-3 rounded-lg bg-foreground/[0.06] border border-foreground/40 mb-4">
                   <div className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5" />
+                    <CheckCircle className="w-4 h-4 text-foreground mt-0.5" />
                     <p className="text-sm text-emerald-300">
                       By clicking "Confirm Payment Received", you verify that you have received the payment from the candidate.
                     </p>
@@ -2430,8 +2408,8 @@ const Projects = () => {
               <>
                 {/* View Payment Status */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-blue-400" />
+                  <div className="w-12 h-12 rounded-xl bg-foreground/[0.06] flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-foreground" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Payment Details</h3>
@@ -2444,7 +2422,7 @@ const Projects = () => {
                   <p className="text-foreground font-medium">{selectedMilestone.title}</p>
                   <div className="mt-3 pt-3 border-t border-foreground/25">
                     <p className="text-sm text-foreground/60 mb-1">Payment Amount</p>
-                    <p className="text-2xl font-bold text-emerald-400">
+                    <p className="text-2xl font-bold text-foreground">
                       ${selectedMilestone.payment_amount?.toLocaleString()}
                     </p>
                   </div>
@@ -2657,7 +2635,7 @@ const Feedback = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -2679,11 +2657,11 @@ const Feedback = () => {
       {/* Info Banner */}
       <motion.div
         variants={itemVariants}
-        className="p-4 rounded-xl bg-emerald-500/30 border border-emerald-500/20 flex items-start gap-4"
+        className="p-4 rounded-xl bg-foreground/[0.06] border border-foreground/40 flex items-start gap-4"
       >
-        <AlertCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+        <AlertCircle className="w-5 h-5 text-foreground flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-emerald-400 font-medium">Why feedback matters</p>
+          <p className="text-foreground font-medium">Why feedback matters</p>
           <p className="text-sm text-foreground/60 mt-1">
             Your feedback helps improve the accuracy of Behavioral Evidence Reports and the overall
             quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
@@ -2713,7 +2691,7 @@ const Feedback = () => {
                           className="w-14 h-14 rounded-xl object-cover"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                        <div className="w-14 h-14 rounded-xl bg-foreground/[0.06] flex items-center justify-center text-foreground font-bold text-lg">
                           {hire.candidate?.profile?.first_name?.[0]}
                           {hire.candidate?.profile?.last_name?.[0]}
                         </div>
@@ -2746,15 +2724,15 @@ const Feedback = () => {
                             key={type}
                             className={`px-3 py-2 rounded-lg text-center ${
                               feedback
-                                ? "bg-emerald-500/20 border border-emerald-500/30"
+                                ? "bg-foreground/[0.06] border border-foreground/40"
                                 : "bg-background border border-foreground/25"
                             }`}
                           >
-                            <p className="text-xs text-foreground/850">{typeLabel}</p>
+                            <p className="text-xs text-foreground/50">{typeLabel}</p>
                             {feedback ? (
                               <div className="flex items-center justify-center gap-1 mt-1">
-                                <Star className="w-3 h-3 text-amber-400" />
-                                <span className="text-sm text-emerald-400">
+                                <Star className="w-3 h-3 ink-vermilion" />
+                                <span className="text-sm text-foreground">
                                   {feedback.performance_rating}/5
                                 </span>
                               </div>
@@ -2790,7 +2768,7 @@ const Feedback = () => {
                   {/* Show completed feedback summary */}
                   {hire.feedbacks && hire.feedbacks.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-foreground/25">
-                      <p className="text-sm text-foreground/850 mb-2">Previous Feedback</p>
+                      <p className="text-sm text-foreground/50 mb-2">Previous Feedback</p>
                       <div className="space-y-2">
                         {hire.feedbacks.map((fb) => (
                           <div
@@ -2805,7 +2783,7 @@ const Feedback = () => {
                                     key={i}
                                     className={`w-3 h-3 ${
                                       i < fb.performance_rating
-                                        ? "text-amber-400 fill-amber-400"
+                                        ? "ink-vermilion fill-amber-400"
                                         : "text-foreground/40"
                                     }`}
                                   />
@@ -2814,7 +2792,7 @@ const Feedback = () => {
                             </div>
                             <span
                               className={`text-sm ${
-                                fb.would_hire_again ? "text-emerald-400" : "text-red-400"
+                                fb.would_hire_again ? "text-foreground" : "ink-vermilion"
                               }`}
                             >
                               {fb.would_hire_again ? "Would hire again" : "Would not hire again"}
@@ -2832,7 +2810,7 @@ const Feedback = () => {
           <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No hires yet</p>
-            <p className="text-sm text-foreground/850 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               When candidates accept your connection requests, they'll appear here for feedback.
             </p>
           </div>
@@ -2874,8 +2852,8 @@ const Feedback = () => {
                     }
                     className={`p-3 rounded-lg transition-colors ${
                       feedbackForm.performanceRating >= rating
-                        ? "bg-amber-500/20 text-amber-400"
-                        : "bg-background text-foreground/850 hover:bg-foreground/5"
+                        ? "bg-vermilion/10 ink-vermilion"
+                        : "bg-background text-foreground/50 hover:bg-foreground/5"
                     }`}
                   >
                     <Star
@@ -2910,7 +2888,7 @@ const Feedback = () => {
                   </button>
                 ))}
               </div>
-              <div className="flex justify-between text-xs text-foreground/850 mt-1">
+              <div className="flex justify-between text-xs text-foreground/50 mt-1">
                 <span>Not accurate</span>
                 <span>Very accurate</span>
               </div>
@@ -3209,7 +3187,7 @@ const EmployerMessagesPage = () => {
     return otherName.includes(searchQuery.toLowerCase());
   });
 
-  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-foreground" /></div>;
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
@@ -3221,27 +3199,27 @@ const EmployerMessagesPage = () => {
         <div className="w-80 border-r border-foreground/25 flex flex-col">
           <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-emerald-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-emerald-600 hover:bg-emerald-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-background/90 border border-emerald-500/30 rounded-xl p-3 space-y-3">
-                <p className="text-xs text-emerald-400 font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
+              <div className="bg-background/90 border border-foreground/40 rounded-xl p-3 space-y-3">
+                <p className="text-xs text-foreground font-medium">Find someone to message</p>
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-emerald-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
-                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-emerald-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
+                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-foreground" /></div>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/50 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/50 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
-                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-emerald-500/10 transition-colors text-left">
+                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/[0.06] transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
-                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-emerald-400" />}
+                        {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-foreground" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
+                        <p className="text-xs text-foreground/50 capitalize">{result.role}</p>
                       </div>
-                      <Send className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                      <Send className="w-3.5 h-3.5 text-foreground flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -3253,15 +3231,15 @@ const EmployerMessagesPage = () => {
               <div className="p-8 text-center">
                 <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
                 <p className="text-foreground/60">No conversations yet</p>
-                <p className="text-sm text-foreground/850 mt-1">Click the <span className="text-emerald-400">+</span> button to find and message anyone</p>
+                <p className="text-sm text-foreground/50 mt-1">Click the <span className="text-foreground">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-emerald-500/30 border-l-2 border-emerald-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-foreground/[0.06] border-l-2 border-emerald-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
-                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-emerald-400" />}
+                      {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 text-foreground" />}
                     </div>
                     {hasUnread ? (
                       <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500" />
@@ -3272,12 +3250,12 @@ const EmployerMessagesPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <span className="text-xs text-foreground/50">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-xs text-foreground/50 capitalize">{conv.other_user?.role}</span>
                       <span className="text-foreground/40">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/50"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -3291,13 +3269,13 @@ const EmployerMessagesPage = () => {
               <div className="p-4 border-b border-foreground/25 flex items-center gap-4">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                    {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-emerald-400" />}
+                    {activeConversation.other_user?.avatar_url ? <img src={activeConversation.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5 text-foreground" />}
                   </div>
                   <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? "bg-emerald-500" : "bg-gray-600"}`} />
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-foreground/850">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
+                  <p className="text-xs text-foreground/50">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-foreground">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -3310,17 +3288,17 @@ const EmployerMessagesPage = () => {
                       <div className={`flex gap-2 max-w-[70%] ${isOwn ? "flex-row-reverse" : ""}`}>
                         {!isOwn && showAvatar && (
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center flex-shrink-0">
-                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-emerald-400" />}
+                            {msg.sender?.avatar_url ? <img src={msg.sender.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 text-foreground" />}
                           </div>
                         )}
                         {!isOwn && !showAvatar && <div className="w-8" />}
                         <div className="relative">
                           {/* Action buttons */}
                           <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
-                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-emerald-500/50 transition-colors" title="Reply">
+                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors" title="Reply">
                               <Reply className="w-3.5 h-3.5" />
                             </button>
-                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); toast({ title: "Copied", description: "Message copied to clipboard." }); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-emerald-500/50 transition-colors" title="Copy">
+                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); toast({ title: "Copied", description: "Message copied to clipboard." }); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors" title="Copy">
                               <Copy className="w-3.5 h-3.5" />
                             </button>
                           </div>
@@ -3341,15 +3319,15 @@ const EmployerMessagesPage = () => {
                                   </a>
                                 ) : (
                                   <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-background/50 border border-foreground/15 hover:border-foreground/25 text-sm">
-                                    <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                                    <span className="text-emerald-400 truncate">{msg.metadata?.file_name || 'Attachment'}</span>
-                                    {msg.metadata?.file_size && <span className="text-foreground/850 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                    <Paperclip className="w-4 h-4 text-foreground flex-shrink-0" />
+                                    <span className="text-foreground truncate">{msg.metadata?.file_name || 'Attachment'}</span>
+                                    {msg.metadata?.file_size && <span className="text-foreground/50 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
                                   </a>
                                 )}
                               </div>
                             )}
                           </div>
-                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/50 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
@@ -3358,8 +3336,8 @@ const EmployerMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-foreground/25">
                 {replyTo && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <Reply className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.06] border border-foreground/40">
+                    <Reply className="w-4 h-4 text-foreground flex-shrink-0" />
                     <div className="flex-1 min-w-0 border-l-2 border-emerald-400/50 pl-2">
                       <p className="text-xs font-medium text-emerald-300">{replyTo.sender?.first_name || "User"}</p>
                       <p className="text-xs text-foreground/60 truncate">{replyTo.content?.substring(0, 100)}</p>
@@ -3368,10 +3346,10 @@ const EmployerMessagesPage = () => {
                   </div>
                 )}
                 {attachedFile && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <Paperclip className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.06] border border-foreground/40">
+                    <Paperclip className="w-4 h-4 text-foreground flex-shrink-0" />
                     <span className="text-sm text-emerald-300 truncate flex-1">{attachedFile.name}</span>
-                    <span className="text-xs text-foreground/850 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
+                    <span className="text-xs text-foreground/50 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
                     <button onClick={() => setAttachedFile(null)} className="text-foreground/60 hover:text-foreground">
                       <X className="w-4 h-4" />
                     </button>
@@ -3382,7 +3360,7 @@ const EmployerMessagesPage = () => {
                   <button onClick={() => fileInputRef.current?.click()} disabled={isProcessingFile} className="p-3 rounded-xl border border-foreground/25 text-foreground/60 hover:text-foreground hover:border-emerald-500 transition-colors disabled:opacity-50" title="Attach document (PDF, DOC, DOCX, TXT - max 5MB)">
                     {isProcessingFile ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
                   </button>
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-emerald-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-emerald-500" />
                   <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-emerald-600 hover:bg-emerald-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -3591,7 +3569,7 @@ const Company = () => {
                   className="w-full px-4 py-2 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none"
                 />
               ) : formData.company_website ? (
-                <a href={formData.company_website} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
+                <a href={formData.company_website} target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline flex items-center gap-1">
                   {formData.company_website} <ExternalLink className="w-4 h-4" />
                 </a>
               ) : (
@@ -3604,23 +3582,23 @@ const Company = () => {
         {/* Verification Status */}
         <div className={`p-6 rounded-xl border ${
           employerProfile?.is_verified
-            ? "bg-emerald-500/30 border-emerald-500/20"
-            : "bg-amber-500/30 border-amber-500/20"
+            ? "bg-foreground/[0.06] border-foreground/40"
+            : "bg-vermilion/10 border-vermilion"
         }`}>
           <div className="flex items-center gap-3">
             {employerProfile?.is_verified ? (
               <>
-                <CheckCircle className="w-6 h-6 text-emerald-400" />
+                <CheckCircle className="w-6 h-6 text-foreground" />
                 <div>
-                  <p className="font-semibold text-emerald-400">Verified Company</p>
+                  <p className="font-semibold text-foreground">Verified Company</p>
                   <p className="text-sm text-foreground/60">Your company has been verified</p>
                 </div>
               </>
             ) : (
               <>
-                <Clock className="w-6 h-6 text-amber-400" />
+                <Clock className="w-6 h-6 ink-vermilion" />
                 <div>
-                  <p className="font-semibold text-amber-400">Pending Verification</p>
+                  <p className="font-semibold ink-vermilion">Pending Verification</p>
                   <p className="text-sm text-foreground/60">Complete your profile to get verified</p>
                 </div>
               </>
@@ -3725,7 +3703,7 @@ const EmployerNotificationsPage = () => {
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
   };
 
-  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-foreground" /></div>;
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
@@ -3739,17 +3717,17 @@ const EmployerNotificationsPage = () => {
       </motion.div>
       <motion.div variants={itemVariants} className="space-y-2">
         {notifications.length === 0 ? (
-          <p className="text-foreground/850 text-center py-8">No notifications yet</p>
+          <p className="text-foreground/50 text-center py-8">No notifications yet</p>
         ) : notifications.map(n => (
           <div
             key={n.id}
-            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-emerald-500/5 border-emerald-500/20"}`}
+            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-foreground/[0.06] border-foreground/40"}`}
             onClick={() => markAsRead(n.id)}
           >
             <div className="flex items-start justify-between">
               <div>
                 <p className={`font-medium ${n.is_read ? "text-foreground/60" : "text-foreground"}`}>{n.title}</p>
-                <p className="text-sm text-foreground/850 mt-1">{n.message}</p>
+                <p className="text-sm text-foreground/50 mt-1">{n.message}</p>
               </div>
               <span className="text-xs text-foreground/40 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
             </div>

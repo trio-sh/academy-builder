@@ -64,7 +64,7 @@ export function Footer() {
               />
               <span className="display-serif text-2xl tracking-tight">The 3rd Academy</span>
             </Link>
-            <p className="display-serif text-3xl md:text-4xl leading-[1.1] max-w-lg text-foreground">
+            <p className="display-serif text-xl md:text-2xl leading-[1.35] max-w-lg text-foreground">
               Focused on <span className="italic display-serif-italic">Behavioral Workplace Readiness</span> — how conduct shows up in the environment where work happens, when knowledge and capability alone are no longer enough.
             </p>
             <p className="mono-label text-foreground/50 mt-8">

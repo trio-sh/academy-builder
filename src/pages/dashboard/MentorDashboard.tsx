@@ -13,6 +13,15 @@ import {
   type DashboardNavItem,
   type DashboardSection,
 } from "@/components/dashboard/DashboardLayout";
+import {
+  DashboardPageHeader,
+  DashSection,
+  LedgerStat,
+  LedgerBadge,
+  LedgerLoading,
+  EmptyState,
+} from "@/components/dashboard/primitives";
+import { cn } from "@/lib/utils";
 import type { Database } from "@/types/database.types";
 import {
   Users,
@@ -461,7 +470,7 @@ const ObservationFormModal = () => {
           <div className="p-6 overflow-y-auto max-h-[60vh]">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
               </div>
             ) : step === 1 ? (
               // Step 1: Select Candidate
@@ -474,7 +483,7 @@ const ObservationFormModal = () => {
                       <button
                         key={assignment.id}
                         onClick={() => selectCandidate(assignment.id, assignment.candidate_id)}
-                        className="w-full p-4 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/50 transition-colors text-left flex items-center gap-4"
+                        className="w-full p-4 rounded-xl bg-background border border-foreground/25 hover:border-foreground/40 transition-colors text-left flex items-center gap-4"
                       >
                         <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-foreground font-bold">
                           {profile?.first_name?.[0]}{profile?.last_name?.[0]}
@@ -483,7 +492,7 @@ const ObservationFormModal = () => {
                           <p className="font-medium text-foreground">{profile?.first_name} {profile?.last_name}</p>
                           <p className="text-sm text-foreground/60">Loop {assignment.loop_number} of 3</p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-foreground/850" />
+                        <ChevronRight className="w-5 h-5 text-foreground/50" />
                       </button>
                     );
                   })
@@ -538,15 +547,15 @@ const ObservationFormModal = () => {
                         <p>Thank you. During this session, I'll present you with scenarios related to your assigned behavioural dimensions. Please respond as naturally and honestly as you can — there are no trick questions, and this is not a test you can fail. The purpose is to observe how you approach workplace situations.</p>
                         <p>Do you have any questions before we begin?"</p>
                       </blockquote>
-                      <p className="text-xs text-foreground/850 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>
+                      <p className="text-xs text-foreground/50 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>
                     </div>
                   </details>
                   <p className="text-sm text-foreground/60 mb-2">Assess each behavioral dimension using the 4-point BARS scale:</p>
                   <div className="grid grid-cols-4 gap-2 mb-4 p-3 rounded-lg bg-background/60 border border-foreground/15 text-center">
-                    <div><span className="text-orange-400 font-bold text-sm">1</span><p className="text-[10px] text-foreground/850">Not Yet Demonstrated</p></div>
-                    <div><span className="text-amber-400 font-bold text-sm">2</span><p className="text-[10px] text-foreground/850">Emerging</p></div>
-                    <div><span className="text-blue-400 font-bold text-sm">3</span><p className="text-[10px] text-foreground/850">Competent</p></div>
-                    <div><span className="text-emerald-400 font-bold text-sm">4</span><p className="text-[10px] text-foreground/850">Strong</p></div>
+                    <div><span className="ink-vermilion font-bold text-sm">1</span><p className="text-[10px] text-foreground/50">Not Yet Demonstrated</p></div>
+                    <div><span className="ink-vermilion font-bold text-sm">2</span><p className="text-[10px] text-foreground/50">Emerging</p></div>
+                    <div><span className="text-foreground font-bold text-sm">3</span><p className="text-[10px] text-foreground/50">Competent</p></div>
+                    <div><span className="text-foreground font-bold text-sm">4</span><p className="text-[10px] text-foreground/50">Strong</p></div>
                   </div>
                   <div className="space-y-4">
                     {scoringDimensions.map(dimension => {
@@ -556,13 +565,13 @@ const ObservationFormModal = () => {
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <p className="font-medium text-foreground">{dimension.label}</p>
-                              <p className="text-xs text-foreground/850">{dimension.description}</p>
+                              <p className="text-xs text-foreground/50">{dimension.description}</p>
                             </div>
                             {l1 && l1.bars_score && (
                               <div className="text-right flex-shrink-0 ml-3">
-                                <p className="text-[10px] text-foreground/850 uppercase">L1 AI Score</p>
+                                <p className="text-[10px] text-foreground/50 uppercase">L1 AI Score</p>
                                 <span className={`text-sm font-bold ${
-                                  l1.bars_score >= 4 ? "text-emerald-400" : l1.bars_score >= 3 ? "text-blue-400" : l1.bars_score >= 2 ? "text-amber-400" : "text-orange-400"
+                                  l1.bars_score >= 4 ? "text-foreground" : l1.bars_score >= 3 ? "text-foreground" : l1.bars_score >= 2 ? "ink-vermilion" : "ink-vermilion"
                                 }`}>{l1.bars_score}/4</span>
                               </div>
                             )}
@@ -613,7 +622,7 @@ const ObservationFormModal = () => {
                   <label className="text-sm text-foreground/60 block mb-2">Observed Strengths</label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {formData.strengths.map(s => (
-                      <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm">
+                      <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-foreground/[0.06] text-foreground text-sm">
                         {s}
                         <button onClick={() => removeStrength(s)} className="hover:text-foreground">
                           <X className="w-3 h-3" />
@@ -641,7 +650,7 @@ const ObservationFormModal = () => {
                   <label className="text-sm text-foreground/60 block mb-2">Areas for Improvement</label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {formData.areasForImprovement.map(i => (
-                      <span key={i} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm">
+                      <span key={i} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-vermilion/10 ink-vermilion text-sm">
                         {i}
                         <button onClick={() => removeImprovement(i)} className="hover:text-foreground">
                           <X className="w-3 h-3" />
@@ -677,7 +686,7 @@ const ObservationFormModal = () => {
                 </div>
 
                 {/* Score Summary */}
-                <div className="p-4 rounded-lg bg-purple-500/30 border border-purple-500/20">
+                <div className="p-4 rounded-lg bg-foreground/[0.06] border border-foreground/40">
                   <h3 className="font-medium text-foreground mb-3">Score Summary</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {BEHAVIORAL_DIMENSIONS.map(d => (
@@ -687,7 +696,7 @@ const ObservationFormModal = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-purple-500/20 flex justify-between">
+                  <div className="mt-3 pt-3 border-t border-foreground/40 flex justify-between">
                     <span className="text-foreground/60">Average Score:</span>
                     <span className="ink-vermilion font-bold">
                       {Object.values(formData.scores).length > 0
@@ -891,192 +900,127 @@ const Overview = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-      </div>
-    );
-  }
+  if (isLoading) return <LedgerLoading />;
+
+  const actionRequired = [
+    { count: pendingRequests, label: "Pending mentee request", note: "Candidates waiting for your approval", href: "/dashboard/mentor/mentees" },
+    { count: needsL2, label: "Ready for L2 observation", note: "L1 complete — schedule the live observation", href: "/dashboard/mentor/mentees" },
+    { count: readyForEndorsement, label: "Ready for endorsement", note: "L1 + L2 complete — submit endorsement decision", href: "/dashboard/mentor/endorsements" },
+  ].filter((x) => x.count > 0);
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Welcome back, {profile?.first_name || "Mentor"}
-        </h1>
-        <p className="text-foreground/60">
-          Manage your mentees and track your observations.
-        </p>
-      </motion.div>
-
-      {/* Action Required alerts */}
-      {(pendingRequests > 0 || needsL2 > 0 || readyForEndorsement > 0) && (
-        <motion.div variants={itemVariants} className="space-y-3">
-          <h2 className="text-lg font-semibold text-amber-400 flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5" /> Action Required
-          </h2>
-          {pendingRequests > 0 && (
-            <Link to="/dashboard/mentor/mentees">
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between hover:bg-amber-500/15 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Bell className="w-5 h-5 text-amber-400" />
-                  <div>
-                    <p className="font-medium text-foreground">{pendingRequests} Pending Mentee Request{pendingRequests > 1 ? 's' : ''}</p>
-                    <p className="text-xs text-foreground/60">Candidates waiting for your approval</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-foreground/850" />
-              </div>
+    <div>
+      <DashboardPageHeader
+        eyebrow={`§ Register · ${profile?.first_name || "Mentor"}'s desk`}
+        title={
+          <>
+            Welcome back,{" "}
+            <span className="italic display-serif-italic ink-vermilion">
+              {profile?.first_name || "mentor"}
+            </span>
+            .
+          </>
+        }
+        meta="Observation is the craft — evidence follows. Continue where the observation left off."
+        actions={
+          !mentorProfile?.is_accepting ? (
+            <Link to="/dashboard/mentor/profile">
+              <LedgerBadge variant="stamp">Not accepting</LedgerBadge>
             </Link>
-          )}
-          {needsL2 > 0 && (
-            <Link to="/dashboard/mentor/mentees">
-              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between hover:bg-blue-500/15 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <ClipboardCheck className="w-5 h-5 text-blue-400" />
-                  <div>
-                    <p className="font-medium text-foreground">{needsL2} Candidate{needsL2 > 1 ? 's' : ''} Ready for L2 Observation</p>
-                    <p className="text-xs text-foreground/60">L1 complete — schedule live observation</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-foreground/850" />
-              </div>
-            </Link>
-          )}
-          {readyForEndorsement > 0 && (
-            <Link to="/dashboard/mentor/endorsements">
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between hover:bg-emerald-500/15 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <Award className="w-5 h-5 text-emerald-400" />
-                  <div>
-                    <p className="font-medium text-foreground">{readyForEndorsement} Candidate{readyForEndorsement > 1 ? 's' : ''} Ready for Endorsement</p>
-                    <p className="text-xs text-foreground/60">L1 + L2 complete — submit endorsement decision</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-foreground/850" />
-              </div>
-            </Link>
-          )}
-        </motion.div>
-      )}
+          ) : null
+        }
+      />
 
-      {/* Alert if not accepting mentees */}
-      {mentorProfile && !mentorProfile.is_accepting && (
-        <motion.div
-          variants={itemVariants}
-          className="p-4 rounded-xl bg-amber-500/30 border border-amber-500/20 flex items-center gap-3"
-        >
-          <AlertCircle className="w-5 h-5 text-amber-400" />
-          <p className="text-amber-400">
-            You are currently not accepting new mentees.
-            <Link to="/dashboard/mentor/profile" className="underline ml-2">
-              Update your preferences
-            </Link>
-          </p>
-        </motion.div>
-      )}
-
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="relative group p-6 rounded-2xl bg-background/70 backdrop-blur-md border border-foreground/25 hover:border-foreground/25 transition-colors"
-          >
-            <div className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl bg-foreground transition-opacity" />
-            <div className="relative">
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4`}>
-                <stat.icon className="w-5 h-5 text-foreground" />
-              </div>
-              <p className="text-sm text-foreground/60 mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Quick Actions */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          <Link
-            to="/dashboard/mentor/mentees"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
-          >
-            <Users className="w-8 h-8 ink-vermilion mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">View Mentees</h3>
-            <p className="text-sm text-foreground/60">Manage your assigned candidates</p>
-            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
-          </Link>
-
-          <Link
-            to="/dashboard/mentor/observations"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
-          >
-            <ClipboardCheck className="w-8 h-8 text-emerald-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">Record Observation</h3>
-            <p className="text-sm text-foreground/60">Document candidate behaviors</p>
-            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
-          </Link>
-
-          <Link
-            to="/dashboard/mentor/schedule"
-            className="p-6 rounded-xl bg-background border border-foreground/25 hover:border-purple-500/30 transition-colors group"
-          >
-            <Calendar className="w-8 h-8 text-amber-400 mb-3" />
-            <h3 className="font-semibold text-foreground mb-1">Manage Schedule</h3>
-            <p className="text-sm text-foreground/60">Set your availability</p>
-            <ChevronRight className="w-5 h-5 text-foreground/40 group-hover:ink-vermilion mt-3 transition-colors" />
-          </Link>
+      {/* Standing figures */}
+      <DashSection eyebrow="§ I · Standing figures" title="At the desk">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          {stats.map((s) => (
+            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          ))}
         </div>
-      </motion.div>
+      </DashSection>
 
-      {/* Pending Actions */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Pending Actions</h2>
-        {pendingRequests > 0 || pendingObservations > 0 ? (
-          <div className="space-y-3">
-            {pendingRequests > 0 && (
-              <Link to="/dashboard/mentor/mentees" className="block">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 flex items-center gap-4 hover:border-amber-500/50 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-amber-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-foreground">{pendingRequests} mentee request{pendingRequests > 1 ? "s" : ""} awaiting approval</p>
-                    <p className="text-sm text-foreground/60">Review and accept or decline</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-amber-400" />
+      {/* Action required */}
+      {actionRequired.length > 0 && (
+        <DashSection
+          eyebrow="§ II · Action required"
+          title={
+            <>
+              Awaiting <span className="italic display-serif-italic">your</span> hand.
+            </>
+          }
+        >
+          <div className="border-t-2 border-foreground">
+            {actionRequired.map((a, i) => (
+              <Link
+                key={i}
+                to={a.href}
+                className="row-hover grid grid-cols-12 gap-4 py-6 px-2 md:px-4 border-b border-foreground/20 items-baseline group"
+              >
+                <div className="col-span-2 md:col-span-1">
+                  <span className="ledger-num text-4xl text-foreground leading-none">
+                    {String(a.count).padStart(2, "0")}
+                  </span>
+                </div>
+                <div className="col-span-8 md:col-span-9">
+                  <h4 className="display-serif text-xl md:text-2xl text-foreground leading-tight group-hover:italic transition-all">
+                    {a.label}
+                    {a.count > 1 ? "s" : ""}
+                  </h4>
+                  <p className="text-foreground/70 text-[0.9375rem] mt-1">{a.note}</p>
+                </div>
+                <div className="col-span-2 text-right mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                  Attend →
                 </div>
               </Link>
-            )}
-            {pendingObservations > 0 && (
-              <div className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                  <ClipboardCheck className="w-5 h-5 text-amber-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-foreground">{pendingObservations} pending observations</p>
-                  <p className="text-sm text-foreground/60">Complete your scheduled observations</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-foreground/40" />
+            ))}
+          </div>
+        </DashSection>
+      )}
+
+      {/* Quick actions */}
+      <DashSection eyebrow="§ III · At a glance" title="Common entries">
+        <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
+          {[
+            { title: "View mentees", body: "Manage your assigned candidates.", href: "/dashboard/mentor/mentees" },
+            { title: "Record an observation", body: "Document candidate conduct.", href: "/dashboard/mentor/observations" },
+            { title: "Manage schedule", body: "Set your availability for sessions.", href: "/dashboard/mentor/schedule" },
+          ].map((q, i) => (
+            <Link
+              key={q.title}
+              to={q.href}
+              className={cn(
+                "p-8 hover:bg-foreground/[0.025] transition-colors group",
+                i > 0 && "border-t md:border-t-0 md:border-l border-foreground/25"
+              )}
+            >
+              <div className="mono-label text-foreground/50 mb-3">
+                {String(i + 1).padStart(2, "0")}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
-            <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-            <p className="text-foreground/60">No pending actions</p>
-            <p className="text-sm text-foreground/850 mt-1">You're all caught up!</p>
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
+              <h3 className="display-serif text-2xl text-foreground mb-3 group-hover:italic transition-all">
+                {q.title}
+              </h3>
+              <p className="text-foreground/70 text-[0.9375rem] mb-5">{q.body}</p>
+              <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+                Enter →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </DashSection>
+
+      {pendingObservations === 0 && actionRequired.length === 0 && (
+        <EmptyState
+          eyebrow="§ Nothing awaits"
+          title={
+            <>
+              You are <span className="italic display-serif-italic">all caught up.</span>
+            </>
+          }
+          body="No pending actions. New mentee requests will surface here."
+        />
+      )}
+    </div>
   );
 };
 
@@ -1314,7 +1258,7 @@ const Mentees = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -1340,10 +1284,10 @@ const Mentees = () => {
       {pendingRequests.length > 0 && (
         <motion.div variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
-              <Bell className="w-4 h-4 text-amber-400" />
+            <div className="w-8 h-8 rounded-lg bg-vermilion/10 flex items-center justify-center">
+              <Bell className="w-4 h-4 ink-vermilion" />
             </div>
-            <h2 className="text-lg font-semibold text-amber-400">
+            <h2 className="text-lg font-semibold ink-vermilion">
               Pending Requests ({pendingRequests.length})
             </h2>
           </div>
@@ -1353,10 +1297,10 @@ const Mentees = () => {
             return (
               <div
                 key={assignment.id}
-                className="p-6 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30"
+                className="p-6 rounded-xl bg-vermilion/[0.08] border border-vermilion"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-foreground font-bold">
+                  <div className="w-12 h-12 rounded-xl bg-vermilion/[0.08] flex items-center justify-center text-foreground font-bold">
                     {profile?.first_name?.[0]}
                     {profile?.last_name?.[0]}
                   </div>
@@ -1365,7 +1309,7 @@ const Mentees = () => {
                       {profile?.first_name} {profile?.last_name}
                     </h3>
                     <p className="text-sm text-foreground/60">{profile?.email}</p>
-                    <p className="text-xs text-foreground/850 mt-1">
+                    <p className="text-xs text-foreground/50 mt-1">
                       Requested {new Date(assignment.created_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -1388,7 +1332,7 @@ const Mentees = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                      className="border-vermilion ink-vermilion hover:bg-vermilion/15"
                       onClick={() => handleDeclineRequest(assignment.id, assignment.candidate_id)}
                       disabled={isProcessing === assignment.id}
                     >
@@ -1408,10 +1352,10 @@ const Mentees = () => {
         <motion.div variants={itemVariants} className="space-y-4">
           {pendingRequests.length > 0 && (
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                <Users className="w-4 h-4 text-emerald-400" />
+              <div className="w-8 h-8 rounded-lg bg-foreground/[0.06] flex items-center justify-center">
+                <Users className="w-4 h-4 text-foreground" />
               </div>
-              <h2 className="text-lg font-semibold text-emerald-400">
+              <h2 className="text-lg font-semibold text-foreground">
                 Active Mentees ({activeMentees.length})
               </h2>
             </div>
@@ -1435,24 +1379,24 @@ const Mentees = () => {
                       <Link to={`/dashboard/mentor/mentees/${assignment.id}`} className="font-semibold text-foreground hover:ink-vermilion transition-colors">
                         {profile?.first_name} {profile?.last_name}
                       </Link>
-                      <span className="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-foreground/[0.06] text-foreground">
                         active
                       </span>
                     </div>
                     <p className="text-sm text-foreground/60">{profile?.email}</p>
                     <div className="flex flex-wrap items-center gap-3 mt-3 text-sm">
                       {assignment.l1_completed ? (
-                        <span className="flex items-center gap-1 text-emerald-400">
+                        <span className="flex items-center gap-1 text-foreground">
                           <CheckCircle className="w-3.5 h-3.5" />
                           L1 Complete ({assignment.l1_dimensions_scored} dims)
                         </span>
                       ) : (
-                        <span className="text-amber-400">L1 Not started</span>
+                        <span className="ink-vermilion">L1 Not started</span>
                       )}
-                      <span className="text-foreground/850">
+                      <span className="text-foreground/50">
                         {assignment.observation_count || 0} L2 observations
                       </span>
-                      <span className="text-foreground/850">
+                      <span className="text-foreground/50">
                         Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
                       </span>
                     </div>
@@ -1469,14 +1413,14 @@ const Mentees = () => {
                       </div>
                     )}
                     {(!assignment.assigned_dimensions || assignment.assigned_dimensions.length === 0) && (
-                      <p className="text-xs text-amber-400 mt-2">No dimensions assigned yet</p>
+                      <p className="text-xs ink-vermilion mt-2">No dimensions assigned yet</p>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                      className="border-vermilion ink-vermilion hover:bg-vermilion/10"
                       onClick={() => setRecommendModal({
                         assignmentId: assignment.id,
                         candidateProfileId: assignment.candidate_id,
@@ -1518,7 +1462,7 @@ const Mentees = () => {
           >
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No mentees assigned yet</p>
-            <p className="text-sm text-foreground/850 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               Candidates will request you as their mentor
             </p>
           </motion.div>
@@ -1570,7 +1514,7 @@ const Mentees = () => {
                   />
                   <div>
                     <p className="text-foreground text-sm">{module.title}</p>
-                    <p className="text-xs text-foreground/850">{module.behavioral_dimension}</p>
+                    <p className="text-xs text-foreground/50">{module.behavioral_dimension}</p>
                   </div>
                 </label>
               ))}
@@ -1753,7 +1697,7 @@ const AssignDimensions = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -1785,7 +1729,7 @@ const AssignDimensions = () => {
               onClick={() => toggleDimension(dim.id)}
               className={`p-4 rounded-xl border text-left transition-all ${
                 selectedDimensions.includes(dim.id)
-                  ? "bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30"
+                  ? "bg-foreground/[0.06] border-foreground/40 ring-2 ring-emerald-500/30"
                   : "bg-background border-foreground/15 hover:border-foreground/25"
               }`}
             >
@@ -1801,7 +1745,7 @@ const AssignDimensions = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{dim.label}</p>
-                  <p className="text-xs text-foreground/850">{dim.description}</p>
+                  <p className="text-xs text-foreground/50">{dim.description}</p>
                 </div>
               </div>
             </button>
@@ -1835,7 +1779,7 @@ const AssignDimensions = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{dim.label}</p>
-                  <p className="text-xs text-foreground/850">{dim.description}</p>
+                  <p className="text-xs text-foreground/50">{dim.description}</p>
                 </div>
               </div>
             </button>
@@ -1850,7 +1794,7 @@ const AssignDimensions = () => {
             {selectedDimensions.length} dimension{selectedDimensions.length !== 1 ? "s" : ""} selected
           </p>
           {selectedDimensions.length === 0 && (
-            <p className="text-xs text-amber-400 mt-1">At least one dimension must be assigned for the candidate to begin observations.</p>
+            <p className="text-xs ink-vermilion mt-1">At least one dimension must be assigned for the candidate to begin observations.</p>
           )}
         </div>
         <Button
@@ -1978,10 +1922,10 @@ const MenteeDetail = () => {
 
   const getBarsColor = (score: number) => {
     switch (score) {
-      case 1: return "text-orange-400";
-      case 2: return "text-amber-400";
-      case 3: return "text-blue-400";
-      case 4: return "text-emerald-400";
+      case 1: return "ink-vermilion";
+      case 2: return "ink-vermilion";
+      case 3: return "text-foreground";
+      case 4: return "text-foreground";
       default: return "text-foreground/60";
     }
   };
@@ -1989,7 +1933,7 @@ const MenteeDetail = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -2029,10 +1973,10 @@ const MenteeDetail = () => {
             <h1 className="text-2xl font-bold text-foreground">{profile?.first_name} {profile?.last_name}</h1>
             <p className="text-foreground/60">{profile?.email}</p>
             <div className="flex items-center gap-3 mt-2">
-              <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-400">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-foreground/[0.06] text-foreground">
                 {assignment.status}
               </span>
-              <span className="text-sm text-foreground/850">
+              <span className="text-sm text-foreground/50">
                 Tier: {candidateProfile.current_tier?.replace("_", " ") || "Not assessed"}
               </span>
             </div>
@@ -2054,30 +1998,30 @@ const MenteeDetail = () => {
       <motion.div variants={itemVariants}>
         <h2 className="text-lg font-semibold text-foreground mb-3">Observation Pipeline</h2>
         <div className="grid grid-cols-3 gap-4">
-          <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-emerald-500/10 border-emerald-500/30" : "bg-background border-foreground/15"}`}>
+          <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-foreground/[0.06] border-foreground/40" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-emerald-400">L1 AI Scenarios</span>
-              {l1Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-emerald-400" />}
+              <span className="text-xs font-semibold text-foreground">L1 AI Scenarios</span>
+              {l1Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-foreground" />}
             </div>
             <p className="text-foreground font-bold">{l1Feedback.length > 0 ? `${l1Feedback.length} dimensions scored` : "Not started"}</p>
           </div>
-          <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-blue-500/10 border-blue-500/30" : "bg-background border-foreground/15"}`}>
+          <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-foreground/[0.06] border-foreground/40" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-blue-400">L2 Mentor Live</span>
-              {l2Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-blue-400" />}
+              <span className="text-xs font-semibold text-foreground">L2 Mentor Live</span>
+              {l2Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-foreground" />}
             </div>
             <p className="text-foreground font-bold">{l2Feedback.length > 0 ? `${l2Feedback.length} dimensions scored` : observations.length > 0 ? `${observations.length} observations recorded` : "Not started"}</p>
           </div>
           <div className={`p-4 rounded-xl border ${endorsement ? "bg-indigo-500/10 border-indigo-500/30" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold ink-vermilion">Endorsement</span>
-              {endorsement?.decision === "proceed" && <Award className="w-4 h-4 text-emerald-400" />}
+              {endorsement?.decision === "proceed" && <Award className="w-4 h-4 text-foreground" />}
             </div>
             {endorsement ? (
               <p className={`font-bold capitalize ${
-                endorsement.decision === "proceed" ? "text-emerald-400" :
-                endorsement.decision === "redirect" ? "text-amber-400" :
-                endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
+                endorsement.decision === "proceed" ? "text-foreground" :
+                endorsement.decision === "redirect" ? "ink-vermilion" :
+                endorsement.decision === "pause" ? "ink-vermilion" : "ink-vermilion"
               }`}>{endorsement.decision}</p>
             ) : (
               <p className="text-foreground font-bold">Pending</p>
@@ -2091,7 +2035,7 @@ const MenteeDetail = () => {
         <h2 className="text-lg font-semibold text-foreground mb-3">Dimensions ({assignedDims.length} assigned)</h2>
         {assignedDims.length === 0 ? (
           <div className="p-6 rounded-xl bg-background border border-foreground/15 text-center">
-            <p className="text-amber-400">No dimensions assigned yet.</p>
+            <p className="ink-vermilion">No dimensions assigned yet.</p>
             <Link to={`/dashboard/mentor/assign-dimensions/${assignment.id}/${assignment.candidate_id}`}>
               <Button size="sm" className="mt-3 bg-indigo-600 hover:bg-indigo-500">Assign Dimensions</Button>
             </Link>
@@ -2113,15 +2057,15 @@ const MenteeDetail = () => {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-medium text-foreground">{dim?.label || dimId}</h3>
-                      <p className="text-xs text-foreground/850">{dim?.description}</p>
+                      <p className="text-xs text-foreground/50">{dim?.description}</p>
                     </div>
                     {/* Loop tracking badge */}
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {loopCount > 0 && (
                         <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
-                          latestLoop?.endorsement_decision === 'proceed' ? 'bg-emerald-500/20 text-emerald-400' :
-                          hasCooldown ? 'bg-amber-500/20 text-amber-400' :
-                          loopCount >= 3 ? 'bg-red-500/20 text-red-400' :
+                          latestLoop?.endorsement_decision === 'proceed' ? 'bg-foreground/[0.06] text-foreground' :
+                          hasCooldown ? 'bg-vermilion/10 ink-vermilion' :
+                          loopCount >= 3 ? 'bg-vermilion/15 ink-vermilion' :
                           'bg-indigo-500/20 ink-vermilion'
                         }`}>
                           Loop {loopCount}/3
@@ -2131,12 +2075,12 @@ const MenteeDetail = () => {
                         </span>
                       )}
                       {loopCount === 0 && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-foreground/850">No loops</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white/5 text-foreground/50">No loops</span>
                       )}
                       {loopCount >= 3 && latestLoop?.endorsement_decision !== 'proceed' && (
                         <button
                           onClick={() => setOverrideModal({ dimId, dimLabel: dim?.label || dimId })}
-                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-500/20 ink-vermilion hover:bg-purple-500/30"
+                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-foreground/[0.06] ink-vermilion hover:bg-foreground/[0.06]"
                         >
                           Override
                         </button>
@@ -2148,10 +2092,10 @@ const MenteeDetail = () => {
                     <div className="flex items-center gap-1 mt-2">
                       {dimLoops.map((loop, i) => (
                         <div key={i} className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] ${
-                          loop.endorsement_decision === 'proceed' ? 'bg-emerald-500/10 text-emerald-400' :
-                          loop.endorsement_decision === 'redirect' ? 'bg-amber-500/10 text-amber-400' :
-                          loop.endorsement_decision === 'pause' ? 'bg-orange-500/10 text-orange-400' :
-                          'bg-white/5 text-foreground/850'
+                          loop.endorsement_decision === 'proceed' ? 'bg-foreground/[0.06] text-foreground' :
+                          loop.endorsement_decision === 'redirect' ? 'bg-vermilion/10 ink-vermilion' :
+                          loop.endorsement_decision === 'pause' ? 'bg-vermilion/10 ink-vermilion' :
+                          'bg-white/5 text-foreground/50'
                         }`}>
                           L{loop.loop_number}: {loop.bars_score ? `${loop.bars_score}/4` : '—'} {loop.endorsement_decision ? `(${loop.endorsement_decision})` : ''}
                           {loop.completed_at && <span className="text-foreground/40 ml-1">{new Date(loop.completed_at).toLocaleDateString()}</span>}
@@ -2160,8 +2104,8 @@ const MenteeDetail = () => {
                     </div>
                   )}
                   <div className="grid grid-cols-2 gap-3 mt-3">
-                    <div className={`p-3 rounded-lg ${l1 ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-white/5 border border-foreground/10"}`}>
-                      <p className="text-[10px] text-foreground/850 uppercase mb-1">L1 AI Score</p>
+                    <div className={`p-3 rounded-lg ${l1 ? "bg-foreground/[0.06] border border-foreground/40" : "bg-white/5 border border-foreground/10"}`}>
+                      <p className="text-[10px] text-foreground/50 uppercase mb-1">L1 AI Score</p>
                       {l1 && l1.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l1.bars_score)}`}>{l1.bars_score}/4</span>
@@ -2176,18 +2120,18 @@ const MenteeDetail = () => {
                           )}
                         </div>
                       ) : (
-                        <p className="text-sm text-foreground/850">—</p>
+                        <p className="text-sm text-foreground/50">—</p>
                       )}
                     </div>
-                    <div className={`p-3 rounded-lg ${l2 ? "bg-blue-500/10 border border-blue-500/20" : "bg-white/5 border border-foreground/10"}`}>
-                      <p className="text-[10px] text-foreground/850 uppercase mb-1">L2 Mentor Score</p>
+                    <div className={`p-3 rounded-lg ${l2 ? "bg-foreground/[0.06] border border-foreground/40" : "bg-white/5 border border-foreground/10"}`}>
+                      <p className="text-[10px] text-foreground/50 uppercase mb-1">L2 Mentor Score</p>
                       {l2 && l2.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l2.bars_score)}`}>{l2.bars_score}/4</span>
                           <span className={`text-xs ml-2 ${getBarsColor(l2.bars_score)}`}>{getBarsLabel(l2.bars_score)}</span>
                         </div>
                       ) : (
-                        <p className="text-sm text-foreground/850">—</p>
+                        <p className="text-sm text-foreground/50">—</p>
                       )}
                     </div>
                   </div>
@@ -2203,17 +2147,17 @@ const MenteeDetail = () => {
         <motion.div variants={itemVariants}>
           <h2 className="text-lg font-semibold text-foreground mb-3">Endorsement Record</h2>
           <div className={`p-5 rounded-xl border ${
-            endorsement.decision === "proceed" ? "bg-emerald-500/10 border-emerald-500/30" :
-            endorsement.decision === "redirect" ? "bg-amber-500/10 border-amber-500/30" :
+            endorsement.decision === "proceed" ? "bg-foreground/[0.06] border-foreground/40" :
+            endorsement.decision === "redirect" ? "bg-vermilion/10 border-vermilion" :
             "bg-background border-foreground/15"
           }`}>
             <div className="flex items-center gap-3 mb-2">
               <span className={`text-lg font-bold capitalize ${
-                endorsement.decision === "proceed" ? "text-emerald-400" :
-                endorsement.decision === "redirect" ? "text-amber-400" :
-                endorsement.decision === "pause" ? "text-orange-400" : "text-red-400"
+                endorsement.decision === "proceed" ? "text-foreground" :
+                endorsement.decision === "redirect" ? "ink-vermilion" :
+                endorsement.decision === "pause" ? "ink-vermilion" : "ink-vermilion"
               }`}>{endorsement.decision}</span>
-              <span className="text-xs text-foreground/850">{new Date(endorsement.created_at).toLocaleDateString()}</span>
+              <span className="text-xs text-foreground/50">{new Date(endorsement.created_at).toLocaleDateString()}</span>
             </div>
             {endorsement.justification && (
               <p className="text-sm text-foreground/75">{endorsement.justification}</p>
@@ -2231,7 +2175,7 @@ const MenteeDetail = () => {
             </Button>
             {observations.filter(o => o.is_locked).length >= 1 && l1Feedback.length > 0 && (
               <Link to="/dashboard/mentor/endorsements">
-                <Button variant="outline" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                <Button variant="outline" className="border-foreground/40 text-foreground hover:bg-foreground/[0.06]">
                   <Award className="w-4 h-4 mr-2" /> Submit Endorsement
                 </Button>
               </Link>
@@ -2339,7 +2283,7 @@ const Observations = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -2380,7 +2324,7 @@ const Observations = () => {
                         Locked
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded text-xs bg-amber-500/20 text-amber-400">
+                      <span className="px-2 py-0.5 rounded text-xs bg-vermilion/10 ink-vermilion">
                         Draft
                       </span>
                     )}
@@ -2401,7 +2345,7 @@ const Observations = () => {
                   <p className="text-sm text-foreground/60 mb-2">Strengths:</p>
                   <div className="flex flex-wrap gap-2">
                     {observation.strengths.map((s, i) => (
-                      <span key={i} className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">
+                      <span key={i} className="px-2 py-1 rounded bg-foreground/[0.06] text-foreground text-xs">
                         {s}
                       </span>
                     ))}
@@ -2410,7 +2354,7 @@ const Observations = () => {
               )}
 
               {observation.notes && (
-                <p className="text-sm text-foreground/850 mt-3 line-clamp-2">{observation.notes}</p>
+                <p className="text-sm text-foreground/50 mt-3 line-clamp-2">{observation.notes}</p>
               )}
             </div>
           ))}
@@ -2422,7 +2366,7 @@ const Observations = () => {
         >
           <ClipboardCheck className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
           <p className="text-foreground/60">No observations recorded yet</p>
-          <p className="text-sm text-foreground/850 mt-1">
+          <p className="text-sm text-foreground/50 mt-1">
             Start recording observations for your mentees
           </p>
         </motion.div>
@@ -2801,7 +2745,7 @@ const Endorsements = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -2834,7 +2778,7 @@ const Endorsements = () => {
                   key={assignment.id}
                   className={`p-6 rounded-xl border transition-colors ${
                     isSelected
-                      ? "bg-purple-500/30 border-purple-500/30"
+                      ? "bg-foreground/[0.06] border-foreground/40"
                       : "bg-background border-foreground/25 hover:border-foreground/25"
                   }`}
                 >
@@ -2850,7 +2794,7 @@ const Endorsements = () => {
                         <p className="text-sm text-foreground/60">
                           {assignment.observation_count} observations completed
                         </p>
-                        <span className="inline-block px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400 mt-1">
+                        <span className="inline-block px-2 py-0.5 rounded text-xs bg-foreground/[0.06] text-foreground mt-1">
                           Ready for endorsement
                         </span>
                       </div>
@@ -2889,23 +2833,23 @@ const Endorsements = () => {
                               className={`p-4 rounded-xl border text-left transition-colors ${
                                 endorsementForm.decision === option.value
                                   ? option.color === "emerald"
-                                    ? "bg-emerald-500/20 border-emerald-500/50"
+                                    ? "bg-foreground/[0.06] border-foreground/40"
                                     : option.color === "amber"
-                                    ? "bg-amber-500/20 border-amber-500/50"
+                                    ? "bg-vermilion/10 border-vermilion"
                                     : option.color === "orange"
-                                    ? "bg-orange-500/20 border-orange-500/50"
-                                    : "bg-red-500/20 border-red-500/50"
+                                    ? "bg-vermilion/10 border-orange-500/50"
+                                    : "bg-vermilion/15 border-vermilion"
                                   : "bg-background border-foreground/25 hover:border-foreground/25"
                               }`}
                             >
                               <p className={`font-medium ${
-                                option.color === "emerald" ? "text-emerald-400" :
-                                option.color === "amber" ? "text-amber-400" :
-                                option.color === "orange" ? "text-orange-400" : "text-red-400"
+                                option.color === "emerald" ? "text-foreground" :
+                                option.color === "amber" ? "ink-vermilion" :
+                                option.color === "orange" ? "ink-vermilion" : "ink-vermilion"
                               }`}>
                                 {option.label}
                               </p>
-                              <p className="text-xs text-foreground/850 mt-1">{option.desc}</p>
+                              <p className="text-xs text-foreground/50 mt-1">{option.desc}</p>
                             </button>
                           ))}
                         </div>
@@ -2913,8 +2857,8 @@ const Endorsements = () => {
 
                       {/* Redirect Options */}
                       {endorsementForm.decision === "redirect" && (
-                        <div className="space-y-4 p-4 rounded-xl bg-amber-500/30 border border-amber-500/20">
-                          <p className="text-sm text-amber-400">
+                        <div className="space-y-4 p-4 rounded-xl bg-vermilion/10 border border-vermilion">
+                          <p className="text-sm ink-vermilion">
                             Select where to redirect the candidate:
                           </p>
                           <div className="space-y-3">
@@ -2949,11 +2893,11 @@ const Endorsements = () => {
 
                       {/* Escalate Options */}
                       {endorsementForm.decision === "escalate" && (
-                        <div className="space-y-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <div className="space-y-4 p-4 rounded-xl bg-vermilion/15 border border-vermilion">
                           <div className="flex items-start gap-3">
-                            <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                            <AlertTriangle className="w-5 h-5 ink-vermilion mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-red-400 font-medium">Governance Review Flag</p>
+                              <p className="text-sm ink-vermilion font-medium">Governance Review Flag</p>
                               <p className="text-xs text-foreground/60 mt-1">
                                 This will flag a serious concern identified during observation. The candidate will be informed through a formal process and the case will be reviewed by governance.
                               </p>
@@ -2961,14 +2905,14 @@ const Endorsements = () => {
                           </div>
                           <div>
                             <label className="text-sm text-foreground/60 block mb-2">
-                              Nature of Concern <span className="text-red-400">*</span>
+                              Nature of Concern <span className="ink-vermilion">*</span>
                             </label>
                             <textarea
                               value={endorsementForm.escalateConcern}
                               onChange={(e) => setEndorsementForm(prev => ({ ...prev, escalateConcern: e.target.value }))}
                               placeholder="Document the specific concern observed during the observation period..."
                               rows={3}
-                              className="w-full px-4 py-3 rounded-lg bg-background border border-red-500/30 text-foreground placeholder:text-foreground/40 focus:border-red-500 focus:outline-none resize-none"
+                              className="w-full px-4 py-3 rounded-lg bg-background border border-vermilion text-foreground placeholder:text-foreground/40 focus:border-red-500 focus:outline-none resize-none"
                             />
                           </div>
                         </div>
@@ -2977,7 +2921,7 @@ const Endorsements = () => {
                       {/* Justification */}
                       <div>
                         <label className="text-sm text-foreground/60 block mb-2">
-                          Justification <span className="text-red-400">*</span>
+                          Justification <span className="ink-vermilion">*</span>
                         </label>
                         <textarea
                           value={endorsementForm.justification}
@@ -3034,7 +2978,7 @@ const Endorsements = () => {
           <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
             <p className="text-foreground/60">No candidates ready for endorsement</p>
-            <p className="text-sm text-foreground/850 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               Candidates need 3 completed observations before endorsement
             </p>
           </div>
@@ -3053,21 +2997,21 @@ const Endorsements = () => {
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   endorsement.decision === "proceed"
-                    ? "bg-emerald-500/20"
+                    ? "bg-foreground/[0.06]"
                     : endorsement.decision === "redirect"
-                    ? "bg-amber-500/20"
+                    ? "bg-vermilion/10"
                     : endorsement.decision === "escalate"
-                    ? "bg-red-500/20"
-                    : "bg-orange-500/20"
+                    ? "bg-vermilion/15"
+                    : "bg-vermilion/10"
                 }`}>
                   {endorsement.decision === "proceed" ? (
-                    <ThumbsUp className={`w-5 h-5 text-emerald-400`} />
+                    <ThumbsUp className={`w-5 h-5 text-foreground`} />
                   ) : endorsement.decision === "redirect" ? (
-                    <ArrowRight className={`w-5 h-5 text-amber-400`} />
+                    <ArrowRight className={`w-5 h-5 ink-vermilion`} />
                   ) : endorsement.decision === "escalate" ? (
-                    <AlertTriangle className={`w-5 h-5 text-red-400`} />
+                    <AlertTriangle className={`w-5 h-5 ink-vermilion`} />
                   ) : (
-                    <AlertCircle className={`w-5 h-5 text-orange-400`} />
+                    <AlertCircle className={`w-5 h-5 ink-vermilion`} />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -3077,17 +3021,17 @@ const Endorsements = () => {
                     </p>
                     <span className={`px-2 py-0.5 rounded text-xs ${
                       endorsement.decision === "proceed"
-                        ? "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-foreground/[0.06] text-foreground"
                         : endorsement.decision === "redirect"
-                        ? "bg-amber-500/20 text-amber-400"
+                        ? "bg-vermilion/10 ink-vermilion"
                         : endorsement.decision === "escalate"
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-orange-500/20 text-orange-400"
+                        ? "bg-vermilion/15 ink-vermilion"
+                        : "bg-vermilion/10 ink-vermilion"
                     }`}>
                       {endorsement.decision.charAt(0).toUpperCase() + endorsement.decision.slice(1)}
                     </span>
                   </div>
-                  <p className="text-sm text-foreground/850 truncate">{endorsement.justification}</p>
+                  <p className="text-sm text-foreground/50 truncate">{endorsement.justification}</p>
                 </div>
                 <p className="text-xs text-foreground/40">
                   {new Date(endorsement.created_at).toLocaleDateString()}
@@ -3272,11 +3216,11 @@ const Schedule = () => {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      scheduled: "bg-blue-500/20 text-blue-400",
-      confirmed: "bg-emerald-500/20 text-emerald-400",
-      completed: "bg-purple-500/20 ink-vermilion",
-      cancelled: "bg-red-500/20 text-red-400",
-      no_show: "bg-amber-500/20 text-amber-400",
+      scheduled: "bg-foreground/[0.06] text-foreground",
+      confirmed: "bg-foreground/[0.06] text-foreground",
+      completed: "bg-foreground/[0.06] ink-vermilion",
+      cancelled: "bg-vermilion/15 ink-vermilion",
+      no_show: "bg-vermilion/10 ink-vermilion",
     };
     return styles[status] || "bg-gray-500/20 text-foreground/60";
   };
@@ -3284,7 +3228,7 @@ const Schedule = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin ink-vermilion" />
       </div>
     );
   }
@@ -3338,7 +3282,7 @@ const Schedule = () => {
                   key={day.value}
                   className={`p-4 rounded-lg border transition-colors ${
                     isActive
-                      ? "bg-purple-500/30 border-purple-500/30"
+                      ? "bg-foreground/[0.06] border-foreground/40"
                       : "bg-background border-foreground/25"
                   }`}
                 >
@@ -3353,7 +3297,7 @@ const Schedule = () => {
                         />
                         <div className="w-11 h-6 bg-background peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                       </label>
-                      <span className={`font-medium ${isActive ? "text-foreground" : "text-foreground/850"}`}>
+                      <span className={`font-medium ${isActive ? "text-foreground" : "text-foreground/50"}`}>
                         {day.label}
                       </span>
                     </div>
@@ -3454,15 +3398,15 @@ const Schedule = () => {
 
                 <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <p className="text-foreground/850">Date & Time</p>
+                    <p className="text-foreground/50">Date & Time</p>
                     <p className="text-foreground font-medium">{formatSessionDate(session.scheduled_at)}</p>
                   </div>
                   <div>
-                    <p className="text-foreground/850">Duration</p>
+                    <p className="text-foreground/50">Duration</p>
                     <p className="text-foreground font-medium">{session.duration_minutes} minutes</p>
                   </div>
                   <div>
-                    <p className="text-foreground/850">Type</p>
+                    <p className="text-foreground/50">Type</p>
                     <p className="text-foreground font-medium capitalize">{session.session_type?.replace("_", " ")}</p>
                   </div>
                 </div>
@@ -3487,7 +3431,7 @@ const Schedule = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => updateSessionStatus(session.id, "cancelled")}
-                      className="border-red-500/30 text-red-400 hover:bg-red-500/30"
+                      className="border-vermilion ink-vermilion hover:bg-vermilion/15"
                     >
                       <X className="w-4 h-4 mr-2" />
                       Cancel
@@ -3687,7 +3631,7 @@ const ProfilePage = () => {
                 {formData.first_name} {formData.last_name}
               </h2>
               <p className="text-foreground/60">{profile?.email}</p>
-              <span className="inline-block px-2 py-0.5 rounded text-xs bg-purple-500/20 ink-vermilion mt-1">
+              <span className="inline-block px-2 py-0.5 rounded text-xs bg-foreground/[0.06] ink-vermilion mt-1">
                 Mentor
               </span>
             </div>
@@ -3779,7 +3723,7 @@ const ProfilePage = () => {
             {formData.specializations.map((spec) => (
               <span
                 key={spec}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 ink-vermilion text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-foreground/[0.06] ink-vermilion text-sm"
               >
                 {spec}
                 {isEditing && (
@@ -3790,7 +3734,7 @@ const ProfilePage = () => {
               </span>
             ))}
             {formData.specializations.length === 0 && !isEditing && (
-              <p className="text-foreground/850">No specializations added</p>
+              <p className="text-foreground/50">No specializations added</p>
             )}
           </div>
           {isEditing && (
@@ -3817,7 +3761,7 @@ const ProfilePage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground">Accepting New Mentees</p>
-                <p className="text-sm text-foreground/850">Allow new candidates to be assigned to you</p>
+                <p className="text-sm text-foreground/50">Allow new candidates to be assigned to you</p>
               </div>
               {isEditing ? (
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -3831,7 +3775,7 @@ const ProfilePage = () => {
                 </label>
               ) : (
                 <span className={`px-2 py-1 rounded text-xs ${
-                  formData.is_accepting ? "bg-emerald-500/20 text-emerald-400" : "bg-gray-500/20 text-foreground/60"
+                  formData.is_accepting ? "bg-foreground/[0.06] text-foreground" : "bg-gray-500/20 text-foreground/60"
                 }`}>
                   {formData.is_accepting ? "Yes" : "No"}
                 </span>
@@ -4061,7 +4005,7 @@ const MentorMessagesPage = () => {
     return otherName.includes(searchQuery.toLowerCase());
   });
 
-  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin ink-vermilion" /></div>;
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="h-[calc(100vh-12rem)]">
@@ -4074,25 +4018,25 @@ const MentorMessagesPage = () => {
         <div className="w-80 border-r border-foreground/25 flex flex-col">
           <div className="p-4 border-b border-foreground/25 space-y-3">
             <div className="flex items-center gap-2">
-              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
+              <input type="text" placeholder="Search conversations..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="flex-1 bg-background border border-foreground/25 rounded-lg px-4 py-2 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-purple-500" />
               <Button onClick={() => setShowNewChat(!showNewChat)} className="bg-purple-600 hover:bg-purple-500 rounded-lg px-3 py-2 flex-shrink-0" title="New conversation"><Plus className="w-4 h-4" /></Button>
             </div>
             {showNewChat && (
-              <div className="bg-background/90 border border-purple-500/30 rounded-xl p-3 space-y-3">
+              <div className="bg-background/90 border border-foreground/40 rounded-xl p-3 space-y-3">
                 <p className="text-xs ink-vermilion font-medium">Find someone to message</p>
-                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
+                <input type="text" placeholder="Search by name..." value={userSearchQuery} onChange={(e) => setUserSearchQuery(e.target.value)} autoFocus className="w-full bg-background border border-foreground/25 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-purple-500" />
                 <div className="max-h-48 overflow-y-auto space-y-1">
-                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-purple-500" /></div>}
-                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/850 text-center py-2">No users found</p>}
-                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/850 text-center py-2">Type at least 2 characters</p>}
+                  {isSearching && <div className="flex items-center justify-center py-3"><Loader2 className="w-4 h-4 animate-spin ink-vermilion" /></div>}
+                  {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && <p className="text-xs text-foreground/50 text-center py-2">No users found</p>}
+                  {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && <p className="text-xs text-foreground/50 text-center py-2">Type at least 2 characters</p>}
                   {searchResults.map((result) => (
-                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-purple-500/10 transition-colors text-left">
+                    <button key={result.id} onClick={() => startConversation(result.id)} disabled={isCreatingConversation} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/[0.06] transition-colors text-left">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
                         {result.avatar_url ? <img src={result.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-4 h-4 ink-vermilion" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">{result.first_name} {result.last_name}</p>
-                        <p className="text-xs text-foreground/850 capitalize">{result.role}</p>
+                        <p className="text-xs text-foreground/50 capitalize">{result.role}</p>
                       </div>
                       <Send className="w-3.5 h-3.5 ink-vermilion flex-shrink-0" />
                     </button>
@@ -4106,12 +4050,12 @@ const MentorMessagesPage = () => {
               <div className="p-8 text-center">
                 <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
                 <p className="text-foreground/60">No conversations yet</p>
-                <p className="text-sm text-foreground/850 mt-1">Click the <span className="ink-vermilion">+</span> button to find and message anyone</p>
+                <p className="text-sm text-foreground/50 mt-1">Click the <span className="ink-vermilion">+</span> button to find and message anyone</p>
               </div>
             ) : filteredConversations.map((conv) => {
               const hasUnread = conv.last_message_at && (!conv.last_read_at || new Date(conv.last_message_at) > new Date(conv.last_read_at));
               return (
-                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-purple-500/30 border-l-2 border-purple-500" : ""}`}>
+                <button key={conv.id} onClick={() => setActiveConversation(conv)} className={`w-full p-4 flex items-start gap-3 hover:bg-foreground/5 transition-colors text-left ${activeConversation?.id === conv.id ? "bg-foreground/[0.06] border-l-2 border-purple-500" : ""}`}>
                   <div className="relative">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center flex-shrink-0">
                       {conv.other_user?.avatar_url ? <img src={conv.other_user.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : <User className="w-6 h-6 ink-vermilion" />}
@@ -4125,12 +4069,12 @@ const MentorMessagesPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className={`font-medium truncate ${hasUnread ? "text-foreground" : "text-foreground/75"}`}>{conv.other_user?.first_name} {conv.other_user?.last_name}</p>
-                      <span className="text-xs text-foreground/850">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
+                      <span className="text-xs text-foreground/50">{conv.last_message_at ? formatMessageTime(conv.last_message_at) : ""}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-foreground/850 capitalize">{conv.other_user?.role}</span>
+                      <span className="text-xs text-foreground/50 capitalize">{conv.other_user?.role}</span>
                       <span className="text-foreground/40">·</span>
-                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/850"}`}>{conv.last_message_preview || "No messages yet"}</p>
+                      <p className={`text-sm truncate ${hasUnread ? "text-foreground/75" : "text-foreground/50"}`}>{conv.last_message_preview || "No messages yet"}</p>
                     </div>
                   </div>
                 </button>
@@ -4151,7 +4095,7 @@ const MentorMessagesPage = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">{activeConversation.other_user?.first_name} {activeConversation.other_user?.last_name}</p>
-                  <p className="text-xs text-foreground/850">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-emerald-400">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
+                  <p className="text-xs text-foreground/50">{isUserOnline(onlineUsers[activeConversation.other_user?.id]) ? <span className="text-foreground">Online</span> : <span className="capitalize">{activeConversation.other_user?.role}</span>}</p>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -4171,10 +4115,10 @@ const MentorMessagesPage = () => {
                         <div className="relative">
                           {/* Action buttons */}
                           <div className={`flex items-center gap-1 mb-1 transition-opacity duration-150 ${showActions ? "opacity-100" : "opacity-0 pointer-events-none"} ${isOwn ? "justify-end" : "justify-start"}`}>
-                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-purple-500/50 transition-colors" title="Reply">
+                            <button onClick={(e) => { e.stopPropagation(); setReplyTo(msg); setActiveMsgId(null); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors" title="Reply">
                               <Reply className="w-3.5 h-3.5" />
                             </button>
-                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-purple-500/50 transition-colors" title="Copy">
+                            <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(msg.content || ""); }} className="p-1.5 rounded-lg bg-background/80 border border-foreground/15 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors" title="Copy">
                               <Copy className="w-3.5 h-3.5" />
                             </button>
                           </div>
@@ -4197,13 +4141,13 @@ const MentorMessagesPage = () => {
                                   <a href={msg.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg bg-background/50 border border-foreground/15 hover:border-foreground/25 text-sm">
                                     <Paperclip className="w-4 h-4 ink-vermilion flex-shrink-0" />
                                     <span className="ink-vermilion truncate">{msg.metadata?.file_name || 'Attachment'}</span>
-                                    {msg.metadata?.file_size && <span className="text-foreground/850 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
+                                    {msg.metadata?.file_size && <span className="text-foreground/50 text-xs flex-shrink-0">{formatFileSize(msg.metadata.file_size)}</span>}
                                   </a>
                                 )}
                               </div>
                             )}
                           </div>
-                          <p className={`text-xs text-foreground/850 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
+                          <p className={`text-xs text-foreground/50 mt-1 ${isOwn ? "text-right" : ""}`}>{formatMessageTime(msg.created_at)}</p>
                         </div>
                       </div>
                     </div>
@@ -4212,7 +4156,7 @@ const MentorMessagesPage = () => {
               </div>
               <div className="p-4 border-t border-foreground/25">
                 {replyTo && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.06] border border-foreground/40">
                     <Reply className="w-4 h-4 ink-vermilion flex-shrink-0" />
                     <div className="flex-1 min-w-0 border-l-2 border-purple-400/50 pl-2">
                       <p className="text-xs font-medium text-purple-300">{replyTo.sender?.first_name || "User"}</p>
@@ -4222,10 +4166,10 @@ const MentorMessagesPage = () => {
                   </div>
                 )}
                 {attachedFile && (
-                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.06] border border-foreground/40">
                     <Paperclip className="w-4 h-4 ink-vermilion flex-shrink-0" />
                     <span className="text-sm text-purple-300 truncate flex-1">{attachedFile.name}</span>
-                    <span className="text-xs text-foreground/850 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
+                    <span className="text-xs text-foreground/50 flex-shrink-0">{formatFileSize(attachedFile.size)}</span>
                     <button onClick={() => setAttachedFile(null)} className="text-foreground/60 hover:text-foreground flex-shrink-0"><X className="w-4 h-4" /></button>
                   </div>
                 )}
@@ -4245,7 +4189,7 @@ const MentorMessagesPage = () => {
                   >
                     {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
                   </button>
-                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/850 focus:outline-none focus:border-purple-500" />
+                  <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }} className="flex-1 bg-background border border-foreground/25 rounded-xl px-4 py-3 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-purple-500" />
                   <Button onClick={sendMessage} disabled={(!newMessage.trim() && !attachedFile) || isSending} className="bg-purple-600 hover:bg-purple-500 rounded-xl px-6">
                     {isSending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </Button>
@@ -4299,7 +4243,7 @@ const MentorNotificationsPage = () => {
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
   };
 
-  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
+  if (isLoading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin ink-vermilion" /></div>;
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
@@ -4313,17 +4257,17 @@ const MentorNotificationsPage = () => {
       </motion.div>
       <motion.div variants={itemVariants} className="space-y-2">
         {notifications.length === 0 ? (
-          <p className="text-foreground/850 text-center py-8">No notifications yet</p>
+          <p className="text-foreground/50 text-center py-8">No notifications yet</p>
         ) : notifications.map(n => (
           <div
             key={n.id}
-            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-purple-500/5 border-purple-500/20"}`}
+            className={`p-4 rounded-xl border transition-colors cursor-pointer ${n.is_read ? "bg-background border-foreground/10" : "bg-foreground/[0.06] border-foreground/40"}`}
             onClick={() => markAsRead(n.id)}
           >
             <div className="flex items-start justify-between">
               <div>
                 <p className={`font-medium ${n.is_read ? "text-foreground/60" : "text-foreground"}`}>{n.title}</p>
-                <p className="text-sm text-foreground/850 mt-1">{n.message}</p>
+                <p className="text-sm text-foreground/50 mt-1">{n.message}</p>
               </div>
               <span className="text-xs text-foreground/40 flex-shrink-0">{new Date(n.created_at).toLocaleDateString()}</span>
             </div>

@@ -56,7 +56,7 @@ export function HeroSection() {
             animate="visible"
             variants={rise}
             custom={1}
-            className="md:col-span-8 display-serif text-[3.75rem] sm:text-[5rem] md:text-[7.5rem] lg:text-[9rem] text-foreground"
+            className="md:col-span-8 display-serif text-[2.75rem] sm:text-[3.75rem] md:text-[5.25rem] lg:text-[6.5rem] text-foreground"
           >
             <span className="block">Beyond</span>
             <span className="block italic display-serif-italic text-foreground/90">
