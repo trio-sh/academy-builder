@@ -1,96 +1,117 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0f0a1e"/>
-      <stop offset="50%" stop-color="#1a1040"/>
-      <stop offset="100%" stop-color="#0d0820"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#a855f7"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f59e0b"/>
-      <stop offset="100%" stop-color="#d97706"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="20" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <!-- Paper grain: subtle noise-like speckle via repeating dots -->
+    <pattern id="grain" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#EFE9DA"/>
+      <circle cx="1" cy="1" r="0.35" fill="#1D1815" fill-opacity="0.05"/>
+      <circle cx="4" cy="3.5" r="0.28" fill="#1D1815" fill-opacity="0.04"/>
+    </pattern>
+    <!-- Ledger rule lines: very faint horizontal ruling every 24px -->
+    <pattern id="rule" x="0" y="0" width="1200" height="24" patternUnits="userSpaceOnUse">
+      <rect width="1200" height="24" fill="none"/>
+      <line x1="0" y1="24" x2="1200" y2="24" stroke="#1D1815" stroke-opacity="0.05" stroke-width="0.5"/>
+    </pattern>
   </defs>
 
-  <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Warm paper base -->
+  <rect width="1200" height="630" fill="url(#grain)"/>
+  <rect width="1200" height="630" fill="url(#rule)"/>
 
-  <!-- Subtle grid pattern -->
-  <g opacity="0.05" stroke="#6366f1" stroke-width="0.5">
-    <line x1="0" y1="0" x2="0" y2="630"/><line x1="60" y1="0" x2="60" y2="630"/>
-    <line x1="120" y1="0" x2="120" y2="630"/><line x1="180" y1="0" x2="180" y2="630"/>
-    <line x1="240" y1="0" x2="240" y2="630"/><line x1="300" y1="0" x2="300" y2="630"/>
-    <line x1="360" y1="0" x2="360" y2="630"/><line x1="420" y1="0" x2="420" y2="630"/>
-    <line x1="480" y1="0" x2="480" y2="630"/><line x1="540" y1="0" x2="540" y2="630"/>
-    <line x1="600" y1="0" x2="600" y2="630"/><line x1="660" y1="0" x2="660" y2="630"/>
-    <line x1="720" y1="0" x2="720" y2="630"/><line x1="780" y1="0" x2="780" y2="630"/>
-    <line x1="840" y1="0" x2="840" y2="630"/><line x1="900" y1="0" x2="900" y2="630"/>
-    <line x1="960" y1="0" x2="960" y2="630"/><line x1="1020" y1="0" x2="1020" y2="630"/>
-    <line x1="1080" y1="0" x2="1080" y2="630"/><line x1="1140" y1="0" x2="1140" y2="630"/>
-    <line x1="0" y1="60" x2="1200" y2="60"/><line x1="0" y1="120" x2="1200" y2="120"/>
-    <line x1="0" y1="180" x2="1200" y2="180"/><line x1="0" y1="240" x2="1200" y2="240"/>
-    <line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="360" x2="1200" y2="360"/>
-    <line x1="0" y1="420" x2="1200" y2="420"/><line x1="0" y1="480" x2="1200" y2="480"/>
-    <line x1="0" y1="540" x2="1200" y2="540"/>
+  <!-- Deckle edge — top thin ink rule -->
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#1D1815" stroke-width="1"/>
+  <!-- Bottom rule -->
+  <line x1="60" y1="570" x2="1140" y2="570" stroke="#1D1815" stroke-width="1"/>
+
+  <!-- ── Masthead row ─────────────────────────────────────────── -->
+  <!-- Left: mono label -->
+  <text x="72" y="98" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+        font-size="14" font-weight="500" fill="#1D1815" fill-opacity="0.65"
+        letter-spacing="2.5" text-transform="uppercase">§ REGISTER · VOLUME I</text>
+  <!-- Right: date stamp -->
+  <text x="1128" y="98" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+        font-size="14" font-weight="500" fill="#1D1815" fill-opacity="0.65"
+        letter-spacing="2.5" text-anchor="end">STAMPED · 12 · VIII · MMXXVI</text>
+
+  <!-- Thick brand rule -->
+  <line x1="60" y1="120" x2="1140" y2="120" stroke="#1D1815" stroke-width="2"/>
+
+  <!-- ── Wordmark ────────────────────────────────────────────── -->
+  <!-- Vermilion seal on the left (rotated disc) -->
+  <g transform="translate(120, 200) rotate(-6)">
+    <circle cx="60" cy="60" r="60" fill="#B84A22"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="#EFE9DA" stroke-width="1.5" stroke-opacity="0.9"/>
+    <text x="60" y="79" font-family="Georgia, 'Times New Roman', serif"
+          font-size="60" font-weight="700" font-style="italic" fill="#EFE9DA"
+          text-anchor="middle">3</text>
   </g>
 
-  <!-- Decorative glow orbs -->
-  <circle cx="200" cy="500" r="200" fill="#6366f1" opacity="0.08" filter="url(#glow)"/>
-  <circle cx="1000" cy="150" r="180" fill="#a855f7" opacity="0.06" filter="url(#glow)"/>
+  <!-- Serif display: The 3rd Academy -->
+  <text x="270" y="215" font-family="Georgia, 'Times New Roman', serif"
+        font-size="72" font-weight="600" fill="#1D1815" letter-spacing="-1.5">The 3rd</text>
+  <text x="270" y="285" font-family="Georgia, 'Times New Roman', serif"
+        font-size="72" font-weight="500" font-style="italic" fill="#B84A22" letter-spacing="-1.5">Academy.</text>
 
-  <!-- Logo mark: T3A shield/passport icon -->
-  <g transform="translate(80, 180)">
-    <!-- Shield shape -->
-    <path d="M60 0 L120 30 L120 90 Q120 140 60 170 Q0 140 0 90 L0 30 Z" fill="url(#accent)" opacity="0.9"/>
-    <!-- Inner shield -->
-    <path d="M60 12 L110 38 L110 88 Q110 130 60 158 Q10 130 10 88 L10 38 Z" fill="#0f0a1e" opacity="0.6"/>
-    <!-- "3" inside shield -->
-    <text x="60" y="105" font-family="Poppins, Arial, sans-serif" font-size="60" font-weight="800" fill="white" text-anchor="middle">3</text>
-    <!-- Checkmark at bottom -->
-    <path d="M42 125 L55 138 L80 113" stroke="#10b981" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Marginalia rule under wordmark -->
+  <line x1="270" y1="310" x2="410" y2="310" stroke="#B84A22" stroke-width="2"/>
+
+  <!-- ── Lede ────────────────────────────────────────────────── -->
+  <text x="270" y="360" font-family="Georgia, 'Times New Roman', serif"
+        font-size="28" font-weight="400" fill="#1D1815" fill-opacity="0.82">
+    Observed conduct — recorded, not inferred.
+  </text>
+  <text x="270" y="398" font-family="Georgia, 'Times New Roman', serif"
+        font-size="22" font-weight="400" fill="#55504A">
+    A public register of behavioral evidence for the workplace.
+  </text>
+
+  <!-- ── Ledger columns ──────────────────────────────────────── -->
+  <!-- Column separator lines -->
+  <line x1="60" y1="450" x2="1140" y2="450" stroke="#1D1815" stroke-opacity="0.3" stroke-width="0.75"/>
+
+  <g transform="translate(72, 490)">
+    <!-- Col 1 -->
+    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
+          letter-spacing="2">§ I · METHOD</text>
+    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
+      Sustained mentor
+    </text>
+    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
+      observation.
+    </text>
   </g>
 
-  <!-- Main title -->
-  <text x="230" y="240" font-family="Poppins, Arial, sans-serif" font-size="64" font-weight="800" fill="white" letter-spacing="-1">The 3rd Academy</text>
-
-  <!-- Tagline -->
-  <text x="230" y="295" font-family="Poppins, Arial, sans-serif" font-size="26" font-weight="400" fill="#a5b4fc" opacity="0.9">Beyond Credentials. Workplace Ready.</text>
-
-  <!-- Separator line -->
-  <rect x="230" y="320" width="120" height="3" rx="1.5" fill="url(#accent)"/>
-
-  <!-- Description -->
-  <text x="230" y="370" font-family="Poppins, Arial, sans-serif" font-size="20" fill="#94a3b8">Mentor-gated behavioral validation through sustained observation.</text>
-  <text x="230" y="400" font-family="Poppins, Arial, sans-serif" font-size="20" fill="#94a3b8">Earn your Skill Passport. Prove workplace readiness.</text>
-
-  <!-- Feature pills -->
-  <g transform="translate(230, 440)">
-    <rect x="0" y="0" width="160" height="36" rx="18" fill="#6366f1" opacity="0.2" stroke="#6366f1" stroke-width="1" stroke-opacity="0.3"/>
-    <text x="80" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#a5b4fc" text-anchor="middle">Skill Passport</text>
-
-    <rect x="175" y="0" width="180" height="36" rx="18" fill="#a855f7" opacity="0.2" stroke="#a855f7" stroke-width="1" stroke-opacity="0.3"/>
-    <text x="265" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#c084fc" text-anchor="middle">Mentor Validation</text>
-
-    <rect x="370" y="0" width="160" height="36" rx="18" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="1" stroke-opacity="0.3"/>
-    <text x="450" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#6ee7b7" text-anchor="middle">BridgeFast</text>
-
-    <rect x="545" y="0" width="180" height="36" rx="18" fill="#f59e0b" opacity="0.2" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3"/>
-    <text x="635" y="23" font-family="Poppins, Arial, sans-serif" font-size="13" font-weight="500" fill="#fcd34d" text-anchor="middle">Talent Exchange</text>
+  <g transform="translate(432, 490)">
+    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
+          letter-spacing="2">§ II · INSTRUMENT</text>
+    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
+      Behavioral
+    </text>
+    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19"
+          font-style="italic" fill="#B84A22">
+      Evidence Report.
+    </text>
   </g>
 
-  <!-- URL -->
-  <text x="230" y="545" font-family="Poppins, Arial, sans-serif" font-size="16" font-weight="500" fill="#6366f1" opacity="0.8">the3rdacademy.com</text>
+  <g transform="translate(792, 490)">
+    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
+          letter-spacing="2">§ III · REGISTER</text>
+    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
+      Publicly verifiable —
+    </text>
+    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
+      status only.
+    </text>
+  </g>
 
-  <!-- Bottom accent bar -->
-  <rect x="0" y="620" width="1200" height="10" fill="url(#accent)"/>
+  <!-- Bottom URL rule -->
+  <line x1="60" y1="600" x2="1140" y2="600" stroke="#1D1815" stroke-width="1"/>
+  <text x="72" y="622" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+        font-size="12" font-weight="500" fill="#1D1815" fill-opacity="0.7"
+        letter-spacing="2">the3rdacademy.com</text>
+  <text x="1128" y="622" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
+        font-size="12" font-weight="500" fill="#B84A22"
+        letter-spacing="2" text-anchor="end">§ VERIFIED AT /verify</text>
 </svg>
