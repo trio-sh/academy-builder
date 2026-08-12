@@ -85,36 +85,42 @@ const Platform = () => {
       <Header />
 
       {/* Hero */}
-      <section className="relative paper-grain pt-40 pb-24 md:pt-44 md:pb-32 border-b border-foreground/40">
-        <div className="max-w-[1400px] mx-auto px-6">
-          {/* Meta */}
+      <section className="relative paper-grain pt-28 pb-14 md:pt-44 md:pb-32 border-b border-foreground/40">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-6">
+          {/* Meta — mobile: one compact strip; desktop: full three-column */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={rise}
             custom={0}
-            className="grid md:grid-cols-3 gap-4 mb-14 items-end"
+            className="mb-8 md:mb-14 md:grid md:grid-cols-3 md:gap-4 md:items-end"
           >
-            <div>
+            {/* Mobile compact strip */}
+            <div className="md:hidden flex items-center justify-between text-[0.7rem]">
+              <span className="mono-label text-foreground/60">§ Platform Notes</span>
+              <span className="mono-label text-foreground/50">Iss. 04 · {todayStamp()}</span>
+            </div>
+            {/* Desktop columns */}
+            <div className="hidden md:block">
               <span className="mono-label text-foreground/60 block">§ Platform Notes</span>
               <span className="mono-label text-foreground/40 mt-1 block">Field 01 · Overview</span>
             </div>
             <div className="hidden md:block text-center">
               <div className="stamp">Layer III · Evidence</div>
             </div>
-            <div className="text-right">
+            <div className="hidden md:block text-right">
               <span className="mono-label text-foreground/60 block">Iss. 04 · {todayStamp()}</span>
               <span className="mono-label text-foreground/40 mt-1 block">Pp. 025–052</span>
             </div>
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline — sized down on mobile so it fits in one screen */}
           <motion.h1
             initial="hidden"
             animate="visible"
             variants={rise}
             custom={1}
-            className="display-serif text-[3.25rem] sm:text-[4.5rem] md:text-[6.5rem] lg:text-[8rem] text-foreground leading-[0.95]"
+            className="display-serif text-[2.25rem] leading-[1.02] sm:text-[3.5rem] sm:leading-[1] md:text-[6.5rem] md:leading-[0.95] lg:text-[8rem] text-foreground"
           >
             <span className="block">The Future of</span>
             <span className="block italic display-serif-italic">Workplace Readiness</span>
@@ -123,34 +129,36 @@ const Platform = () => {
             </span>
           </motion.h1>
 
+          {/* Lede — one paragraph on mobile, two-column on desktop */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={rise}
             custom={2}
-            className="mt-16 grid md:grid-cols-2 gap-10"
+            className="mt-8 md:mt-16 md:grid md:grid-cols-2 md:gap-10"
           >
-            <p className="display-serif text-2xl md:text-[1.75rem] leading-[1.35] text-foreground border-l-2 border-foreground pl-6">
+            <p className="display-serif text-lg leading-[1.5] sm:text-xl md:text-[1.75rem] md:leading-[1.35] text-foreground border-l-2 border-foreground pl-4 md:pl-6">
               A comprehensive platform connecting people, mentors, and employers through
               documented behavioral evidence.
             </p>
-            <p className="text-foreground/80 text-base md:text-lg leading-[1.75] md:pt-2">
+            {/* Second paragraph — desktop only; mobile keeps the hero tight */}
+            <p className="hidden md:block text-foreground/80 text-base md:text-lg leading-[1.75] md:pt-2">
               Everything you need to prepare for workplace moments, receive mentor-led
               observation, and build behavioral evidence over time.
             </p>
           </motion.div>
 
-          {/* CTAs */}
+          {/* CTAs — full-width primary on mobile, inline on desktop */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={rise}
             custom={3}
-            className="mt-12 pt-6 border-t border-foreground flex flex-col sm:flex-row gap-4 items-start"
+            className="mt-8 pt-5 md:mt-12 md:pt-6 border-t border-foreground flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-start"
           >
             <Button
               asChild
-              className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6 text-base font-medium"
+              className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-base font-medium justify-center sm:justify-start"
             >
               <Link to="/get-started">
                 Enter the record
@@ -160,7 +168,7 @@ const Platform = () => {
             <Button
               asChild
               variant="ghost"
-              className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-6 text-base font-medium underline underline-offset-8 decoration-1"
+              className="text-foreground hover:bg-foreground/5 rounded-none w-full sm:w-auto px-4 py-5 sm:py-6 text-base font-medium underline underline-offset-8 decoration-1 justify-center sm:justify-start"
             >
               <Link to="/about">Read the manifesto</Link>
             </Button>
