@@ -65,9 +65,23 @@ export function Footer() {
             <p className="display-serif text-xl md:text-2xl leading-[1.35] max-w-lg text-foreground">
               Focused on <span className="italic display-serif-italic">Behavioral Workplace Readiness</span> — how conduct shows up in the environment where work happens, when knowledge and capability alone are no longer enough.
             </p>
-            <p className="mono-label text-foreground/50 mt-8">
-              Behavioral Workplace Readiness · {todayStamp()}
-            </p>
+            <div className="mt-8 space-y-1">
+              <p className="mono-label text-foreground/50">
+                143 Saddlecrest Gardens NE · Calgary, AB · T4J 0C3 · Canada
+              </p>
+              <p className="mono-label text-foreground/50">
+                <a href="tel:+15877163135" className="hover:text-foreground transition-colors">
+                  +1 (587) 716-3135
+                </a>
+                {" · "}
+                <a href="mailto:hello@the3rdacademy.com" className="hover:text-foreground transition-colors">
+                  hello@the3rdacademy.com
+                </a>
+              </p>
+              <p className="mono-label text-foreground/50 pt-2">
+                Behavioral Workplace Readiness · {todayStamp()}
+              </p>
+            </div>
           </div>
 
           <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-8">

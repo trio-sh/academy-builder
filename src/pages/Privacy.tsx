@@ -118,15 +118,18 @@ Your continued use of our platform after changes become effective constitutes ac
 
 **Email:** privacy@the3rdacademy.com
 
+**Telephone:** +1 (587) 716-3135
+
 **Mail:**
 The 3rd Academy
 Privacy Team
-123 Innovation Way
-San Francisco, CA 94105
+143 Saddlecrest Gardens NE
+Calgary, Alberta T4J 0C3
+Canada
 
 **Data Protection Officer:** dpo@the3rdacademy.com
 
-For EU residents, you also have the right to lodge a complaint with your local data protection authority.`,
+For Alberta residents, you have the right to file a complaint with the Office of the Information and Privacy Commissioner of Alberta. Residents of other jurisdictions may lodge a complaint with their local data protection authority.`,
   },
 ];
 

@@ -161,13 +161,13 @@ Our total liability shall not exceed the amount you paid for the Service in the 
     title: "12. Dispute Resolution",
     content: `**Informal Resolution:** Before filing a formal dispute, you agree to contact us and attempt to resolve the matter informally.
 
-**Arbitration:** Any disputes not resolved informally shall be resolved through binding arbitration under the rules of the American Arbitration Association.
+**Arbitration:** Any disputes not resolved informally shall be resolved through binding arbitration under the ADR Institute of Canada Arbitration Rules.
 
-**Class Action Waiver:** You agree to resolve disputes individually and waive the right to participate in class actions.
+**Class Action Waiver:** You agree to resolve disputes individually and waive the right to participate in class actions, to the extent permitted by applicable law.
 
-**Governing Law:** These Terms are governed by the laws of the State of California.
+**Governing Law:** These Terms are governed by the laws of the Province of Alberta and the federal laws of Canada applicable therein.
 
-**Venue:** Any litigation shall be conducted in the state or federal courts located in San Francisco County, California.`,
+**Venue:** Any litigation shall be conducted in the courts of the Province of Alberta, located in Calgary.`,
   },
   {
     title: "13. General Provisions",
@@ -187,11 +187,14 @@ Our total liability shall not exceed the amount you paid for the Service in the 
 
 **Email:** legal@the3rdacademy.com
 
+**Telephone:** +1 (587) 716-3135
+
 **Mail:**
 The 3rd Academy
 Legal Department
-123 Innovation Way
-San Francisco, CA 94105
+143 Saddlecrest Gardens NE
+Calgary, Alberta T4J 0C3
+Canada
 
 For general support inquiries, please visit our [Help Center](/help) or contact support@the3rdacademy.com.`,
   },
