@@ -17,7 +17,8 @@ const contactReasons = [
 const info = [
   { label: "Editorial", value: "hello@the3rdacademy.com", href: "mailto:hello@the3rdacademy.com" },
   { label: "Support", value: "support@the3rdacademy.com", href: "mailto:support@the3rdacademy.com" },
-  { label: "Headquarters", value: "San Francisco, CA" },
+  { label: "Telephone", value: "+1 (587) 716-3135", href: "tel:+15877163135" },
+  { label: "Headquarters", value: "143 Saddlecrest Gardens NE, Calgary, AB T4J 0C3, Canada" },
 ];
 
 const Contact = () => {

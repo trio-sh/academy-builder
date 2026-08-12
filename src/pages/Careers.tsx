@@ -15,7 +15,7 @@ const openPositions = [
   { title: "Product Designer", dept: "Design", location: "Remote (Global)", type: "Full-time", body: "Shape the ergonomics of the record — for candidates, mentors, and employers." },
   { title: "Mentor Success Manager", dept: "Operations", location: "New York, NY", type: "Full-time", body: "Recruit, train, and support the network of industry mentors who keep the register." },
   { title: "Content & Curriculum Developer", dept: "Education", location: "Remote (US)", type: "Full-time", body: "Author the BridgeFast preparation modules and assessment frameworks." },
-  { title: "Enterprise Sales Representative", dept: "Sales", location: "San Francisco, CA", type: "Full-time", body: "Introduce the register to hiring desks. Long conversations, honest ones." },
+  { title: "Enterprise Sales Representative", dept: "Sales", location: "Calgary, AB", type: "Full-time", body: "Introduce the register to hiring desks. Long conversations, honest ones." },
   { title: "Data Scientist — Behavioral Analytics", dept: "Engineering", location: "Remote (US)", type: "Full-time", body: "Instruments for reading the register at scale. No prediction dressed as evidence." },
 ];
 
