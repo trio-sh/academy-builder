@@ -82,7 +82,7 @@ export function LaunchCountdown() {
   return (
     <section
       aria-labelledby="launch-countdown-title"
-      className="relative border-y-2 border-vermilion bg-vermilion/[0.06] paper-grain py-10 md:py-14"
+      className="relative bg-vermilion/[0.06] paper-grain py-10 md:py-14"
     >
       <div className="max-w-[1400px] mx-auto px-5 md:px-6">
         <motion.div
