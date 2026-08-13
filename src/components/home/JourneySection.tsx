@@ -85,12 +85,12 @@ export function JourneySection() {
           <div className="md:col-span-4">
             <p className="text-foreground/80 text-base md:text-lg leading-relaxed border-l-2 border-foreground pl-5">
               Behavioral evidence is built through mentor-led observation over time —
-              no shortcuts, no self-assessments. Six entries. One record.
+              no shortcuts, no self-assessments. Six steps. One record.
             </p>
           </div>
         </motion.div>
 
-        {/* Ledger entries */}
+        {/* Ledger steps */}
         <div className="border-t-2 border-foreground">
           {entries.map((entry, i) => (
             <motion.article

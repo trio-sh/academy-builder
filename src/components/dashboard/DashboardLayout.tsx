@@ -105,7 +105,7 @@ export function DashboardLayout({
   return (
     <DashboardHeaderContext.Provider value={{ slot: headerSlot, setSlot: setHeaderSlot }}>
     <div
-      data-theme="paper"
+     
       className={cn(
         "min-h-screen bg-background text-foreground antialiased selection:bg-foreground selection:text-background",
         isFullBleedRoute && "h-screen overflow-hidden"

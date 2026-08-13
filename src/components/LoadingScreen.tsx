@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 export function LoadingScreen({ message = "Retrieving from the register" }: { message?: string }) {
   return (
     <div
-      data-theme="paper"
+     
       className="min-h-screen bg-background text-foreground paper-grain flex items-center justify-center px-6"
     >
       <div className="relative max-w-lg w-full">
