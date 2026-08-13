@@ -1149,7 +1149,15 @@ const SchoolMessagesPage = () => {
       }
       const { data: conv } = await supabase.from("conversations").insert({ last_message_at: new Date().toISOString() }).select().single();
       if (conv) {
-        await supabase.from("conversation_participants").insert([{ conversation_id: conv.id, user_id: user.id }, { conversation_id: conv.id, user_id: targetUserId }]);
+        // Sequential inserts: RLS requires self-seed before adding a counterparty.
+        const { error: selfErr } = await supabase
+          .from("conversation_participants")
+          .insert({ conversation_id: conv.id, user_id: user.id });
+        if (selfErr) throw selfErr;
+        const { error: targetErr } = await supabase
+          .from("conversation_participants")
+          .insert({ conversation_id: conv.id, user_id: targetUserId });
+        if (targetErr) throw targetErr;
         const { data: targetProfile } = await supabase.from("profiles").select("id, first_name, last_name, avatar_url, role").eq("id", targetUserId).single();
         const newConv = { ...conv, other_user: targetProfile };
         setConversations((prev) => [newConv, ...prev]);
