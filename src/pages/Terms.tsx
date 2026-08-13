@@ -1,4 +1,21 @@
-import { PolicyDocument } from "@/components/ledger/PolicyDocument";
+import { motion } from "framer-motion";
+import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
+import { Footer } from "@/components/layout/Footer";
+import { FileText, Calendar, Mail } from "lucide-react";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const sections = [
   {
@@ -200,20 +217,139 @@ For general support inquiries, please visit our [Help Center](/help) or contact 
   },
 ];
 
-const Terms = () => (
-  <PolicyDocument
-    eyebrow="§ Terms · Service"
-    title={
-      <>
-        <span className="block">Terms of</span>
-        <span className="block italic display-serif-italic ink-vermilion">Service.</span>
-      </>
-    }
-    intro="Welcome to The 3rd Academy. These terms govern your use of our platform and services. By creating an account or using The 3rd Academy, you acknowledge that you have read, understood, and agree to be bound by these Terms."
-    lastUpdated="15 January 2026"
-    sections={sections}
-    contact="legal@the3rdacademy.com"
-  />
-);
+const Terms = () => {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/50 via-black to-black" />
+        <motion.div
+          className="absolute top-20 right-20 w-96 h-96 bg-indigo-900 rounded-full opacity-20 blur-3xl"
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/30 border border-indigo-500/20 text-indigo-400 text-sm">
+                <FileText className="w-4 h-4" />
+                Legal
+              </span>
+            </motion.div>
+            <motion.h1
+              variants={itemVariants}
+              className="text-3xl md:text-4xl font-display font-normal mb-6"
+            >
+              <span className="text-white">
+                Terms of
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Service
+              </span>
+            </motion.h1>
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center justify-center gap-4 text-sm text-gray-50"
+            >
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                Last updated: January 15, 2026
+              </span>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="py-20 relative">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-3xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {/* Introduction */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-12 p-6 rounded-2xl bg-black backdrop-blur-xl border border-white/30"
+            >
+              <p className="text-gray-50 leading-relaxed">
+                Welcome to The 3rd Academy. These Terms of Service govern your use of
+                our platform and services. Please read them carefully before using
+                our Service. By creating an account or using The 3rd Academy, you
+                acknowledge that you have read, understood, and agree to be bound
+                by these Terms.
+              </p>
+            </motion.div>
+
+            {/* Sections */}
+            <div className="space-y-8">
+              {sections.map((section, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  className="group"
+                >
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                    {section.title}
+                  </h2>
+                  <div className="text-gray-50 leading-relaxed whitespace-pre-line">
+                    {section.content.split('\n\n').map((paragraph, pIndex) => (
+                      <p key={pIndex} className="mb-4">
+                        {paragraph.split('**').map((part, partIndex) =>
+                          partIndex % 2 === 1 ? (
+                            <strong key={partIndex} className="text-white font-medium">
+                              {part}
+                            </strong>
+                          ) : (
+                            part
+                          )
+                        )}
+                      </p>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Contact Box */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-indigo-600/30 to-purple-600/30 border border-indigo-500/20 text-center"
+            >
+              <Mail className="w-8 h-8 text-indigo-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Questions About Our Terms?
+              </h3>
+              <p className="text-gray-50 mb-4">
+                Contact our legal team for any questions or concerns.
+              </p>
+              <a
+                href="mailto:legal@the3rdacademy.com"
+                className="text-indigo-400 hover:text-indigo-300 transition-colors"
+              >
+                legal@the3rdacademy.com
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default Terms;

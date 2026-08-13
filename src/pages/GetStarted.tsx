@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
+import { Footer } from "@/components/layout/Footer";
 import {
   FileText,
   Briefcase,
@@ -489,11 +491,13 @@ const GetStarted = () => {
   const totalSteps = selectedRole === "candidate" ? 3 : 3;
 
   return (
-    <PublicLayout>
+    <div className="min-h-screen bg-black">
+      <BackgroundVideo />
+      <Header />
       <main className="pt-16">
         {/* Hero */}
         <section className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 relative overflow-hidden">
-          <div className="absolute inset-0 paper-grain" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
 
           <div className="container px-4 md:px-6 relative z-10">
             <div className="max-w-4xl mx-auto">
@@ -505,8 +509,8 @@ const GetStarted = () => {
                       className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium",
                         step >= s
-                          ? "bg-foreground text-background"
-                          : "bg-background text-foreground/60 border border-foreground/25"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                          : "bg-gray-900 text-gray-50 border border-gray-700"
                       )}
                     >
                       {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
@@ -514,7 +518,7 @@ const GetStarted = () => {
                     {s < totalSteps && (
                       <div className={cn(
                         "w-16 h-0.5",
-                        step > s ? "bg-foreground" : "bg-foreground/[0.06]"
+                        step > s ? "bg-gradient-to-r from-indigo-600 to-purple-600" : "bg-gray-800"
                       )} />
                     )}
                   </div>
@@ -524,8 +528,8 @@ const GetStarted = () => {
               {/* Step 1: Role Selection */}
               {step === 1 && (
                 <div className="max-w-2xl mx-auto">
-                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
-                    <h2 className="text-2xl font-bold text-center text-foreground mb-8">
+                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                    <h2 className="text-2xl font-bold text-center text-white mb-8">
                       Choose Your Role
                     </h2>
 
@@ -537,22 +541,22 @@ const GetStarted = () => {
                           className={cn(
                             "p-4 rounded-xl text-left border-2",
                             selectedRole === role.id
-                              ? "bg-background border-foreground"
-                              : "bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 hover:border-foreground/40"
+                              ? "bg-gray-900 border-indigo-500"
+                              : "bg-gray-900 border-gray-700 hover:border-gray-600"
                           )}
                         >
                           <div className="flex items-center gap-3 mb-2">
                             <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", role.gradient)}>
-                              <role.icon className="w-5 h-5 text-foreground" />
+                              <role.icon className="w-5 h-5 text-white" />
                             </div>
-                            <h3 className="text-lg font-bold text-foreground">{role.title}</h3>
+                            <h3 className="text-lg font-bold text-white">{role.title}</h3>
                           </div>
-                          <p className="text-foreground/60 text-sm mb-3">{role.description}</p>
+                          <p className="text-gray-400 text-sm mb-3">{role.description}</p>
                           <ul className="space-y-1">
                             {role.features.map((feature) => (
                               <li key={feature} className="flex items-center gap-2 text-sm">
                                 <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-gray-600")} />
-                                <span className="text-foreground/60">{feature}</span>
+                                <span className="text-gray-400">{feature}</span>
                               </li>
                             ))}
                           </ul>
@@ -562,7 +566,7 @@ const GetStarted = () => {
 
                     {selectedRole === "candidate" && (
                       <div className="space-y-4 mt-6">
-                        <h3 className="text-lg font-bold text-center text-foreground">Choose Your Entry Point</h3>
+                        <h3 className="text-lg font-bold text-center text-white">Choose Your Entry Point</h3>
                         <div className="grid md:grid-cols-2 gap-4">
                           {entryPaths.map((path) => (
                             <button
@@ -571,25 +575,25 @@ const GetStarted = () => {
                               className={cn(
                                 "p-4 rounded-xl text-left border-2",
                                 selectedPath === path.id
-                                  ? "bg-background border-foreground"
-                                  : "bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 hover:border-foreground/40"
+                                  ? "bg-gray-900 border-indigo-500"
+                                  : "bg-gray-900 border-gray-700 hover:border-gray-600"
                               )}
                             >
                               {path.recommended && (
-                                <span className="inline-block mb-2 px-2 py-1 text-xs font-medium bg-foreground text-background rounded">
+                                <span className="inline-block mb-2 px-2 py-1 text-xs font-medium bg-emerald-600 text-white rounded">
                                   Recommended
                                 </span>
                               )}
                               <div className="flex items-center gap-3 mb-2">
                                 <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", path.gradient)}>
-                                  <path.icon className="w-5 h-5 text-foreground" />
+                                  <path.icon className="w-5 h-5 text-white" />
                                 </div>
                                 <div>
-                                  <span className="text-xs text-foreground/800">{path.entry}</span>
-                                  <h3 className="text-lg font-bold text-foreground">{path.title}</h3>
+                                  <span className="text-xs text-gray-500">{path.entry}</span>
+                                  <h3 className="text-lg font-bold text-white">{path.title}</h3>
                                 </div>
                               </div>
-                              <p className="text-foreground/60 text-sm mb-3">{path.description}</p>
+                              <p className="text-gray-400 text-sm mb-3">{path.description}</p>
                             </button>
                           ))}
                         </div>
@@ -601,14 +605,14 @@ const GetStarted = () => {
                         size="lg"
                         onClick={() => setStep(2)}
                         disabled={!selectedRole || (selectedRole === "candidate" && !selectedPath)}
-                        className="px-10 py-6 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
+                        className="px-10 py-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
                       >
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </div>
 
-                    <p className="text-center text-sm text-foreground/800 mt-6">
+                    <p className="text-center text-sm text-gray-500 mt-6">
                       Already have an account?{" "}
                       <Link to="/login" className="text-indigo-400 hover:text-indigo-300">
                         Sign In
@@ -621,18 +625,18 @@ const GetStarted = () => {
               {/* Step 2: Account Details */}
               {step === 2 && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
+                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
                     <div className="flex items-center gap-3 mb-6">
                       {selectedRoleInfo && (
                         <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br", selectedRoleInfo.gradient)}>
-                          <selectedRoleInfo.icon className="w-5 h-5 text-foreground" />
+                          <selectedRoleInfo.icon className="w-5 h-5 text-white" />
                         </div>
                       )}
-                      <h2 className="text-xl font-bold text-foreground">Create {selectedRoleInfo?.title} Account</h2>
+                      <h2 className="text-xl font-bold text-white">Create {selectedRoleInfo?.title} Account</h2>
                     </div>
 
                     {error && (
-                      <div className="mb-6 p-4 rounded-xl border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-3">
+                      <div className="mb-6 p-4 rounded-xl bg-red-950 border border-red-800 flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-red-400">{error}</p>
                       </div>
@@ -641,30 +645,30 @@ const GetStarted = () => {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="firstName" className="text-foreground/80">First Name</Label>
+                          <Label htmlFor="firstName" className="text-gray-50">First Name</Label>
                           <Input
                             id="firstName"
                             placeholder="John"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="lastName" className="text-foreground/80">Last Name</Label>
+                          <Label htmlFor="lastName" className="text-gray-50">Last Name</Label>
                           <Input
                             id="lastName"
                             placeholder="Doe"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-foreground/80">Email</Label>
+                        <Label htmlFor="email" className="text-gray-50">Email</Label>
                         <Input
                           id="email"
                           type="email"
@@ -672,11 +676,11 @@ const GetStarted = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           disabled={isLoading}
-                          className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                          className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="password" className="text-foreground/80">Password</Label>
+                        <Label htmlFor="password" className="text-gray-50">Password</Label>
                         <Input
                           id="password"
                           type="password"
@@ -684,31 +688,31 @@ const GetStarted = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           disabled={isLoading}
-                          className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                          className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                         />
                       </div>
 
                       {selectedRole === "employer" && (
                         <>
                           <div className="space-y-2">
-                            <Label htmlFor="companyName" className="text-foreground/80">Company Name</Label>
+                            <Label htmlFor="companyName" className="text-gray-50">Company Name</Label>
                             <Input
                               id="companyName"
                               value={companyName}
                               onChange={(e) => setCompanyName(e.target.value)}
                               disabled={isLoading}
-                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="industry" className="text-foreground/80">Industry</Label>
+                            <Label htmlFor="industry" className="text-gray-50">Industry</Label>
                             <Input
                               id="industry"
                               placeholder="e.g., Technology, Healthcare"
                               value={industry}
                               onChange={(e) => setIndustry(e.target.value)}
                               disabled={isLoading}
-                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                         </>
@@ -716,13 +720,13 @@ const GetStarted = () => {
 
                       {selectedRole === "school_admin" && (
                         <div className="space-y-2">
-                          <Label htmlFor="schoolName" className="text-foreground/80">School / Institution Name</Label>
+                          <Label htmlFor="schoolName" className="text-gray-50">School / Institution Name</Label>
                           <Input
                             id="schoolName"
                             value={schoolName}
                             onChange={(e) => setSchoolName(e.target.value)}
                             disabled={isLoading}
-                            className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                            className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                           />
                         </div>
                       )}
@@ -730,25 +734,25 @@ const GetStarted = () => {
                       {selectedRole === "mentor" && (
                         <>
                           <div className="space-y-2">
-                            <Label htmlFor="industry" className="text-foreground/80">Industry / Expertise</Label>
+                            <Label htmlFor="industry" className="text-gray-50">Industry / Expertise</Label>
                             <Input
                               id="industry"
                               placeholder="e.g., Software Engineering"
                               value={industry}
                               onChange={(e) => setIndustry(e.target.value)}
                               disabled={isLoading}
-                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="yearsExperience" className="text-foreground/80">Years of Experience</Label>
+                            <Label htmlFor="yearsExperience" className="text-gray-50">Years of Experience</Label>
                             <Input
                               id="yearsExperience"
                               type="number"
                               value={yearsExperience}
                               onChange={(e) => setYearsExperience(e.target.value)}
                               disabled={isLoading}
-                              className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40"
+                              className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
                             />
                           </div>
                         </>
@@ -760,14 +764,14 @@ const GetStarted = () => {
                         variant="outline"
                         onClick={() => setStep(1)}
                         disabled={isLoading}
-                        className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none"
+                        className="flex-1 border-gray-700 text-white hover:bg-gray-900"
                       >
                         Back
                       </Button>
                       <Button
                         onClick={handleSignUp}
                         disabled={isLoading || !firstName || !lastName || !email || !password}
-                        className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
+                        className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
                       >
                         {isLoading ? (
                           <>
@@ -783,7 +787,7 @@ const GetStarted = () => {
                       </Button>
                     </div>
 
-                    <p className="mt-4 text-center text-xs text-foreground/800">
+                    <p className="mt-4 text-center text-xs text-gray-500">
                       By creating an account, you agree to our{" "}
                       <a href="/terms" className="text-indigo-400 hover:text-indigo-300">Terms</a> and{" "}
                       <a href="/privacy" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>.
@@ -795,8 +799,8 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: Resume Upload */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "resume" && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
-                    <h2 className="text-2xl font-bold text-center text-foreground mb-8">
+                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                    <h2 className="text-2xl font-bold text-center text-white mb-8">
                       {isReturningUser ? "Welcome Back! Upload Your Resume" : "Upload Your Resume"}
                     </h2>
 
@@ -809,7 +813,7 @@ const GetStarted = () => {
                     />
 
                     {uploadError && (
-                      <div className="mb-4 p-3 rounded-xl border-l-2 border-foreground bg-foreground/[0.04] flex items-start gap-2">
+                      <div className="mb-4 p-3 rounded-xl bg-red-950 border border-red-800 flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                         <p className="text-sm text-red-400">{uploadError}</p>
                       </div>
@@ -817,37 +821,37 @@ const GetStarted = () => {
 
                     {!uploadedFile ? (
                       <div
-                        className="border-2 border-dashed border-foreground/25 rounded-2xl p-12 text-center hover:border-foreground cursor-pointer"
+                        className="border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center hover:border-indigo-500 cursor-pointer"
                         onClick={() => fileInputRef.current?.click()}
                       >
                         {isUploading || isEnhancing ? (
                           <>
                             <Loader2 className="w-12 h-12 text-indigo-400 mx-auto mb-4 animate-spin" />
-                            <p className="text-foreground font-medium mb-2">
+                            <p className="text-white font-medium mb-2">
                               {isEnhancing ? "AI analyzing your resume..." : "Uploading..."}
                             </p>
-                            <p className="text-sm text-foreground/800">This may take a moment</p>
+                            <p className="text-sm text-gray-500">This may take a moment</p>
                           </>
                         ) : (
                           <>
-                            <Upload className="w-12 h-12 text-foreground/80 mx-auto mb-4" />
-                            <p className="text-foreground font-medium mb-2">Click to upload your resume</p>
-                            <p className="text-sm text-foreground/800 mb-4">PDF, DOC, or DOCX up to 10MB</p>
-                            <Button variant="outline" size="sm" className="border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
+                            <Upload className="w-12 h-12 text-gray-50 mx-auto mb-4" />
+                            <p className="text-white font-medium mb-2">Click to upload your resume</p>
+                            <p className="text-sm text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
+                            <Button variant="outline" size="sm" className="border-gray-700 text-white hover:bg-gray-900" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Browse Files</Button>
                           </>
                         )}
                       </div>
                     ) : (
                       <div className="border-2 border-emerald-500 rounded-2xl p-8 text-center bg-emerald-950">
                         <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-                        <p className="text-foreground font-medium mb-1">Resume uploaded & analyzed!</p>
-                        <p className="text-sm text-foreground/60">{uploadedFile}</p>
+                        <p className="text-white font-medium mb-1">Resume uploaded & analyzed!</p>
+                        <p className="text-sm text-gray-400">{uploadedFile}</p>
                       </div>
                     )}
 
                     <div className="mt-6 p-4 rounded-xl bg-indigo-950 border border-indigo-800">
-                      <h3 className="text-sm font-medium text-foreground mb-3">What happens next?</h3>
-                      <ul className="space-y-2 text-sm text-foreground/80">
+                      <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
+                      <ul className="space-y-2 text-sm text-gray-50">
                         {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
                           <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                         ))}
@@ -856,9 +860,9 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-white hover:bg-gray-900">Back</Button>
                       )}
-                      <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
+                      <Button onClick={handleCompleteSetup} disabled={isUploading || isEnhancing || isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white">
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Matching mentor...</>
                         ) : (
@@ -873,27 +877,27 @@ const GetStarted = () => {
               {/* Step 3 for Candidates: LiveWorks Profile */}
               {step === 3 && selectedRole === "candidate" && selectedPath === "liveworks" && (
                 <div className="max-w-md mx-auto">
-                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
-                    <h2 className="text-2xl font-bold text-center text-foreground mb-8">Set Up Your Profile</h2>
+                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                    <h2 className="text-2xl font-bold text-center text-white mb-8">Set Up Your Profile</h2>
 
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="headline" className="text-foreground/80">Professional Headline</Label>
-                        <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
+                        <Label htmlFor="headline" className="text-gray-50">Professional Headline</Label>
+                        <Input id="headline" placeholder="e.g., Full Stack Developer" value={headline} onChange={(e) => setHeadline(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="skills" className="text-foreground/80">Primary Skills</Label>
-                        <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
+                        <Label htmlFor="skills" className="text-gray-50">Primary Skills</Label>
+                        <Input id="skills" placeholder="e.g., React, Node.js, Python" value={skills} onChange={(e) => setSkills(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="experience" className="text-foreground/80">Years of Experience</Label>
-                        <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-transparent border-x-0 border-t-0 border-b-2 border-foreground/40 focus:border-foreground focus-visible:ring-0 rounded-none px-0 text-foreground placeholder:text-foreground/40" />
+                        <Label htmlFor="experience" className="text-gray-50">Years of Experience</Label>
+                        <Input id="experience" type="number" placeholder="e.g., 3" value={yearsExperience} onChange={(e) => setYearsExperience(e.target.value)} disabled={isCompletingSetup} className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-500" />
                       </div>
                     </div>
 
-                    <div className="mt-6 p-4 rounded-xl bg-foreground/[0.03] border border-foreground/25">
-                      <h3 className="text-sm font-medium text-foreground mb-3">What happens next?</h3>
-                      <ul className="space-y-2 text-sm text-foreground/80">
+                    <div className="mt-6 p-4 rounded-xl bg-purple-950 border border-purple-800">
+                      <h3 className="text-sm font-medium text-white mb-3">What happens next?</h3>
+                      <ul className="space-y-2 text-sm text-gray-50">
                         {["Browse available projects", "Apply to projects matching your skills", "Complete work under mentor supervision", "Build evidence for your Behavioral Evidence Report"].map((item) => (
                           <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                         ))}
@@ -902,9 +906,9 @@ const GetStarted = () => {
 
                     <div className="flex gap-4 pt-6">
                       {!isReturningUser && (
-                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border border-foreground text-foreground hover:bg-foreground hover:text-background rounded-none shadow-none">Back</Button>
+                        <Button variant="outline" onClick={() => setStep(2)} disabled={isCompletingSetup} className="flex-1 border-gray-700 text-white hover:bg-gray-900">Back</Button>
                       )}
-                      <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none">
+                      <Button onClick={handleCompleteSetup} disabled={isCompletingSetup} className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white">
                         {isCompletingSetup ? (
                           <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
                         ) : (
@@ -919,15 +923,15 @@ const GetStarted = () => {
               {/* Step 3 for Non-Candidate Roles: Welcome */}
               {step === 3 && selectedRole !== "candidate" && (
                 <div className="max-w-md mx-auto text-center">
-                  <div className="p-8 rounded-2xl border-2 border-foreground bg-background/60">
-                    <div className="w-20 h-20 rounded-full bg-vermilion flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-10 h-10 text-background" />
+                  <div className="p-8 rounded-2xl bg-gray-950 border border-gray-800">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-10 h-10 text-white" />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-foreground mb-2">
+                    <h2 className="text-2xl font-bold text-white mb-2">
                       {isReturningUser ? "Welcome Back!" : "Welcome to The 3rd Academy!"}
                     </h2>
-                    <p className="text-foreground/80 mb-6">
+                    <p className="text-gray-50 mb-6">
                       {isReturningUser
                         ? `Let's finish setting up your ${selectedRoleInfo?.title} account. Click below to complete your setup and access your dashboard.`
                         : `Your ${selectedRoleInfo?.title} account has been created. Check your email to verify your account, then start exploring.`
@@ -937,7 +941,7 @@ const GetStarted = () => {
                     <Button
                       onClick={handleNonCandidateComplete}
                       disabled={isCompletingSetup}
-                      className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
                     >
                       {isCompletingSetup ? (
                         <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Setting up...</>
@@ -952,7 +956,8 @@ const GetStarted = () => {
           </div>
         </section>
       </main>
-    </PublicLayout>
+      <Footer />
+    </div>
   );
 };
 

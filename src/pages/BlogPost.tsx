@@ -1,11 +1,21 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Twitter, Linkedin, Mail } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock,
+  User,
+  Calendar,
+  Tag,
+  Share2,
+  Twitter,
+  Linkedin,
+  Mail,
+} from "lucide-react";
 import { blogPosts, featuredPost } from "./Blog";
-import { LedgerSection } from "@/components/ledger";
+import { useEffect } from "react";
 
 const BlogPost = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,23 +30,23 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <PublicLayout>
-        <section className="paper-grain min-h-[80vh] flex items-center justify-center pt-32">
-          <div className="text-center max-w-lg mx-auto px-6">
-            <div className="mono-label text-foreground/50 mb-4">§ 404 · Entry not filed</div>
-            <h1 className="display-serif text-5xl md:text-7xl text-foreground leading-[0.95] mb-8">
-              Post not <span className="italic display-serif-italic ink-vermilion">found.</span>
-            </h1>
+      <div className="min-h-screen bg-black text-white">
+        <Header />
+        <section className="min-h-[calc(100vh-64px)] flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
+            <p className="text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
             <Button
               onClick={() => navigate("/blog")}
-              className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6 py-5"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to the journal
+              Back to Blog
             </Button>
           </div>
         </section>
-      </PublicLayout>
+        <Footer />
+      </div>
     );
   }
 
@@ -45,124 +55,170 @@ const BlogPost = () => {
     .slice(0, 3);
 
   return (
-    <PublicLayout>
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+
       {/* Hero */}
-      <section className="paper-grain pt-40 pb-16 border-b border-foreground/40">
-        <div className="max-w-4xl mx-auto px-6">
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-2 mono-label text-foreground/60 hover:text-foreground mb-10"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to the journal
-          </Link>
+      <section className="pt-32 pb-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Blog
+            </Link>
 
-          <div className="mono-label text-foreground/60 mb-6">
-            {post.category} · {post.date} · {post.readTime}
-          </div>
+            <div className="mb-6">
+              <span className="px-3 py-1 rounded-full bg-indigo-600 text-white text-sm font-medium">
+                {post.category}
+              </span>
+            </div>
 
-          <h1 className="display-serif text-[3rem] sm:text-[4rem] md:text-[5.5rem] text-foreground leading-[0.98] mb-8">
-            {post.title}
-          </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              {post.title}
+            </h1>
 
-          <p className="display-serif text-2xl md:text-3xl leading-snug text-foreground/85 border-l-2 border-foreground pl-6 max-w-2xl">
-            {post.excerpt}
-          </p>
+            <p className="text-xl text-gray-300 mb-8">{post.excerpt}</p>
 
-          <div className="mt-12 pt-6 border-t border-foreground flex flex-wrap items-center gap-6 justify-between">
-            <div>
-              <div className="mono-label text-foreground/50 mb-1">By</div>
-              <div className="display-serif italic text-xl text-foreground">
-                {post.author}
+            <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-white">{post.author}</p>
+                  {post.role && <p className="text-sm text-gray-500">{post.role}</p>}
+                </div>
               </div>
-              {post.role && <div className="mono-label text-foreground/50 mt-1">{post.role}</div>}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="mono-label text-foreground/50">Share:</span>
-              <button className="p-2 border border-foreground/25 hover:border-foreground text-foreground rounded-none">
-                <Twitter className="w-4 h-4" />
-              </button>
-              <button className="p-2 border border-foreground/25 hover:border-foreground text-foreground rounded-none">
-                <Linkedin className="w-4 h-4" />
-              </button>
-              <button className="p-2 border border-foreground/25 hover:border-foreground text-foreground rounded-none">
-                <Mail className="w-4 h-4" />
-              </button>
+
+              <div className="flex items-center gap-4 text-sm text-gray-400">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{post.date}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{post.readTime}</span>
+                </div>
+              </div>
+
+              <div className="ml-auto flex items-center gap-2">
+                <span className="text-sm text-gray-500">Share:</span>
+                <button className="p-2 rounded-lg bg-gray-900 border border-gray-800 hover:border-indigo-500 text-gray-400 hover:text-white">
+                  <Twitter className="w-4 h-4" />
+                </button>
+                <button className="p-2 rounded-lg bg-gray-900 border border-gray-800 hover:border-indigo-500 text-gray-400 hover:text-white">
+                  <Linkedin className="w-4 h-4" />
+                </button>
+                <button className="p-2 rounded-lg bg-gray-900 border border-gray-800 hover:border-indigo-500 text-gray-400 hover:text-white">
+                  <Mail className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured image */}
-      <section className="paper-grain py-10">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="aspect-[16/9] overflow-hidden">
-            <img
-              src={post.image}
-              alt={post.title}
-              className="w-full h-full object-cover grayscale-[30%]"
-            />
+      {/* Featured Image */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="aspect-video rounded-2xl overflow-hidden border border-gray-800">
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Article body */}
-      <section className="paper-grain py-16 md:py-24">
-        <div className="max-w-3xl mx-auto px-6">
-          <article className="display-serif text-[1.375rem] leading-[1.65] text-foreground whitespace-pre-line first-letter:text-7xl first-letter:font-normal first-letter:float-left first-letter:pr-3 first-letter:pt-2 first-letter:leading-none">
-            {post.body}
-          </article>
+      {/* Content */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <article className="prose prose-invert prose-lg max-w-none">
+              <div className="text-gray-300 leading-relaxed whitespace-pre-line">
+                {post.body}
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
-      {/* Related */}
+      {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <LedgerSection>
-          <div className="mono-label text-foreground/60 mb-8 pb-3 border-b border-foreground/25">
-            More from {post.category}
+        <section className="py-20 border-t border-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-2xl font-bold text-white mb-8">Related Articles</h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <Link
+                    key={relatedPost.id}
+                    to={`/blog/${relatedPost.id}`}
+                    className="block rounded-2xl bg-gray-950 border border-gray-800 overflow-hidden hover:border-indigo-500"
+                  >
+                    <div className="aspect-video overflow-hidden">
+                      <img
+                        src={relatedPost.image}
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <span className="px-2 py-1 rounded-full bg-gray-800 text-indigo-400 text-xs">
+                        {relatedPost.category}
+                      </span>
+                      <h3 className="text-lg font-bold text-white mt-3 mb-2 line-clamp-2">
+                        {relatedPost.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Clock className="w-3 h-3" />
+                        <span>{relatedPost.readTime}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-10">
-            {relatedPosts.map((rp) => (
-              <Link key={rp.id} to={`/blog/${rp.id}`} className="block group border-t border-foreground pt-6">
-                <div className="aspect-[4/3] overflow-hidden mb-4">
-                  <img
-                    src={rp.image}
-                    alt={rp.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                  />
-                </div>
-                <div className="mono-label text-foreground/50 mb-2">
-                  {rp.category} · {rp.readTime}
-                </div>
-                <h3 className="display-serif text-2xl leading-tight text-foreground group-hover:italic transition-all">
-                  {rp.title}
-                </h3>
-              </Link>
-            ))}
-          </div>
-        </LedgerSection>
+        </section>
       )}
 
-      {/* Newsletter */}
-      <LedgerSection>
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mono-label text-foreground/60 mb-6">§ Subscribe</div>
-          <h2 className="display-serif text-4xl md:text-5xl text-foreground leading-[0.95] mb-8">
-            Never miss an <span className="italic display-serif-italic">entry</span>.
-          </h2>
-          <form className="flex flex-col sm:flex-row items-stretch gap-3 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="you@yourwork.com"
-              className="flex-1 rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 py-4 text-lg display-serif text-center"
-            />
-            <Button className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6">
-              Subscribe →
-            </Button>
-          </form>
+      {/* Newsletter CTA */}
+      <section className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="p-8 md:p-12 rounded-2xl bg-gray-950 border border-gray-800 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  Never Miss an Update
+                </span>
+              </h2>
+              <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                Get the latest insights on behavioral credentials and career readiness delivered to your inbox.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                />
+                <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">
+                  Subscribe
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
-      </LedgerSection>
-    </PublicLayout>
+      </section>
+
+      <Footer />
+    </div>
   );
 };
 
