@@ -1,157 +1,310 @@
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Header } from "@/components/layout/Header";
+import { BackgroundVideo } from "@/components/ui/BackgroundVideo";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import {
-  LedgerHero,
-  LedgerSection,
-  LedgerHeader,
-  LedgerLinkCTA,
-  rise,
-} from "@/components/ledger";
+  Briefcase,
+  MapPin,
+  Clock,
+  Users,
+  Rocket,
+  Heart,
+  GraduationCap,
+  Globe,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 
 const openPositions = [
-  { title: "Senior Full-Stack Engineer", dept: "Engineering", location: "Remote (US)", type: "Full-time", body: "Build and scale the register. React, Node.js, and quiet infrastructure." },
-  { title: "Product Designer", dept: "Design", location: "Remote (Global)", type: "Full-time", body: "Shape the ergonomics of the record — for candidates, mentors, and employers." },
-  { title: "Mentor Success Manager", dept: "Operations", location: "New York, NY", type: "Full-time", body: "Recruit, train, and support the network of industry mentors who keep the register." },
-  { title: "Content & Curriculum Developer", dept: "Education", location: "Remote (US)", type: "Full-time", body: "Author the BridgeFast preparation modules and assessment frameworks." },
-  { title: "Enterprise Sales Representative", dept: "Sales", location: "Calgary, AB", type: "Full-time", body: "Introduce the register to hiring desks. Long conversations, honest ones." },
-  { title: "Data Scientist — Behavioral Analytics", dept: "Engineering", location: "Remote (US)", type: "Full-time", body: "Instruments for reading the register at scale. No prediction dressed as evidence." },
+  {
+    title: "Senior Full-Stack Engineer",
+    department: "Engineering",
+    location: "Remote (US)",
+    type: "Full-time",
+    description:
+      "Build and scale our mentor validation platform. Work with React, Node.js, and AI/ML systems.",
+  },
+  {
+    title: "Product Designer",
+    department: "Design",
+    location: "Remote (Global)",
+    type: "Full-time",
+    description:
+      "Shape the future of credentialing UX. Design intuitive experiences for learners and mentors.",
+  },
+  {
+    title: "Mentor Success Manager",
+    department: "Operations",
+    location: "New York, NY",
+    type: "Full-time",
+    description:
+      "Recruit, train, and support our network of industry mentors. Build relationships that matter.",
+  },
+  {
+    title: "Content & Curriculum Developer",
+    department: "Education",
+    location: "Remote (US)",
+    type: "Full-time",
+    description:
+      "Create BridgeFast training modules and assessment frameworks. Transform learning outcomes.",
+  },
+  {
+    title: "Enterprise Sales Representative",
+    department: "Sales",
+    location: "Calgary, AB",
+    type: "Full-time",
+    description:
+      "Connect employers with verified talent through T3X Exchange. Drive B2B partnerships.",
+  },
+  {
+    title: "Data Scientist - Behavioral Analytics",
+    department: "Engineering",
+    location: "Remote (US)",
+    type: "Full-time",
+    description:
+      "Develop behavioral scoring models and validation algorithms. Turn observations into insights.",
+  },
 ];
 
 const benefits = [
-  { label: "Health & Wellness", body: "Full medical, dental, and vision for you and your family." },
-  { label: "Growth Budget", body: "$2,000 annual for books, courses, conferences, retreats." },
-  { label: "Remote-First", body: "Work from anywhere. Flexible hours. We trust you to deliver." },
-  { label: "The Register", body: "Free platform access — earn your own Behavioral Evidence Report." },
+  {
+    icon: Heart,
+    title: "Health & Wellness",
+    description: "Comprehensive medical, dental, and vision coverage for you and your family.",
+  },
+  {
+    icon: Rocket,
+    title: "Growth Budget",
+    description: "$2,000 annual learning budget for courses, conferences, and certifications.",
+  },
+  {
+    icon: Globe,
+    title: "Remote-First",
+    description: "Work from anywhere with flexible hours. We trust you to deliver results.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Behavioral Evidence Report",
+    description: "Free access to our platform. Earn your own behavioral credentials.",
+  },
+];
+
+const values = [
+  {
+    title: "Behavioral Truth",
+    description: "We believe credentials should reflect real capability, not just test scores.",
+  },
+  {
+    title: "Mentor-First",
+    description: "Human validation is our core. Technology enables, mentors validate.",
+  },
+  {
+    title: "Continuous Growth",
+    description: "Every observation is an opportunity. We embrace feedback and iteration.",
+  },
+  {
+    title: "Bridge Builders",
+    description: "We connect education to employment, potential to opportunity.",
+  },
 ];
 
 const Careers = () => {
   return (
-    <PublicLayout>
-      <LedgerHero
-        eyebrow="§ Careers · Notices"
-        meta="Positions currently open"
-        stamp="We are hiring"
-        title={
-          <>
-            <span className="block">Keep the</span>
-            <span className="block italic display-serif-italic">register</span>
-            <span className="block">
-              with <span className="ink-vermilion">us.</span>
-            </span>
-          </>
-        }
-        lede="Help us build the thing that measures what résumés never could — carefully, with a level of craft that matches the ambition."
-        ledeSide={
-          <>
-            <p className="mb-4">
-              We hire people who care about the difference between a record and a
-              rating, and are willing to defend it in code, copy, and policy.
+    <div className="min-h-screen bg-black text-white">
+      <BackgroundVideo />
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-indigo-100 text-sm">
+                <Sparkles className="w-4 h-4" />
+                We're Hiring
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-display font-normal mb-6">
+              <span className="text-white">
+                Build the Future of
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Credentialing
+              </span>
+            </h1>
+            <p className="text-lg text-gray-300 mb-8">
+              Join our mission to bridge the gap between credentials and workplace readiness.
+              We're building technology that validates real human capability.
             </p>
-            <p className="marginalia">
-              Applications are read by a human. Every one.
-            </p>
-          </>
-        }
-      />
-
-      <LedgerSection first>
-        <LedgerHeader
-          eyebrow="§ I · Open positions"
-          side={`${openPositions.length} roles currently listed for public reading`}
-        >
-          Open <span className="italic display-serif-italic">positions</span>.
-        </LedgerHeader>
-
-        <div className="border-t-2 border-foreground">
-          {openPositions.map((p, i) => (
-            <motion.a
-              key={p.title}
-              href="mailto:careers@the3rdacademy.com"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.15 }}
-              variants={rise}
-              custom={i}
-              className={
-                "row-hover grid grid-cols-12 gap-4 md:gap-8 py-8 md:py-10 px-2 md:px-4 border-b border-foreground/25 transition-colors group items-baseline"
-              }
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+              onClick={() => document.getElementById("positions")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <div className="col-span-2 md:col-span-1 ledger-num text-3xl text-foreground/60">
-                {String(i + 1).padStart(2, "0")}
-              </div>
-              <div className="col-span-10 md:col-span-5">
-                <h3 className="display-serif text-2xl md:text-3xl text-foreground group-hover:italic transition-all">
-                  {p.title}
-                </h3>
-                <div className="mono-label text-foreground/50 mt-2">{p.dept} · {p.location}</div>
-              </div>
-              <div className="col-span-12 md:col-span-5">
-                <p className="text-foreground/80 leading-[1.7] text-[0.95rem]">{p.body}</p>
-              </div>
-              <div className="col-span-12 md:col-span-1 md:text-right">
-                <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
-                  Apply →
-                </span>
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </LedgerSection>
-
-      <LedgerSection>
-        <LedgerHeader eyebrow="§ II · Benefits">
-          What we <span className="italic display-serif-italic">provide</span>.
-        </LedgerHeader>
-
-        <div className="grid md:grid-cols-4 border-t-2 border-foreground border-b border-foreground/40">
-          {benefits.map((b, i) => (
-            <motion.div
-              key={b.label}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={rise}
-              custom={i}
-              className={
-                "p-8 " +
-                (i > 0 ? "border-t md:border-t-0 md:border-l border-foreground/25" : "")
-              }
-            >
-              <div className="mono-label text-foreground/60 mb-3">{String(i + 1).padStart(2, "0")}</div>
-              <h3 className="display-serif text-2xl text-foreground mb-3">{b.label}</h3>
-              <p className="text-foreground/80 text-[0.9375rem] leading-relaxed">{b.body}</p>
-            </motion.div>
-          ))}
-        </div>
-      </LedgerSection>
-
-      <LedgerSection className="pt-24 pb-32">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={rise}
-          className="max-w-4xl"
-        >
-          <div className="mono-label text-foreground/60 mb-6">§ III · Write to us</div>
-          <h2 className="display-serif text-5xl md:text-7xl text-foreground leading-[0.95]">
-            Don't see your role?{" "}
-            <span className="italic display-serif-italic ink-vermilion">Write anyway.</span>
-          </h2>
-          <p className="mt-8 max-w-xl text-foreground/85 text-lg leading-relaxed border-l-2 border-foreground pl-6">
-            We hire ahead of listings when the person is right. Tell us what you would
-            build here.
-          </p>
-          <div className="mt-14 pt-6 border-t border-foreground">
-            <a href="mailto:careers@the3rdacademy.com">
-              <LedgerLinkCTA>careers@the3rdacademy.com</LedgerLinkCTA>
-            </a>
+              View Open Positions
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
-        </motion.div>
-      </LedgerSection>
-    </PublicLayout>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-20 relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Our Values
+              </span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              These principles guide everything we do at The 3rd Academy.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((value, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-2xl bg-gray-950 border border-gray-800 h-full hover:border-indigo-500"
+              >
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {value.title}
+                </h3>
+                <p className="text-gray-300 text-sm">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 relative border-t border-gray-800">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950/20 to-black" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Benefits & Perks
+              </span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              We take care of our team so they can focus on changing the future of work.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-2xl bg-gray-950 border border-gray-800 h-full hover:border-indigo-500"
+              >
+                <div className="w-12 h-12 rounded-xl bg-indigo-600/20 flex items-center justify-center mb-4">
+                  <benefit.icon className="w-6 h-6 text-indigo-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-gray-300 text-sm">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Open Positions */}
+      <section id="positions" className="py-20 relative border-t border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Open Positions
+              </span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Find your role in transforming how the world validates skills.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-4">
+            {openPositions.map((position, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs px-2 py-1 rounded-full bg-indigo-500/20 text-indigo-400">
+                        {position.department}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      {position.title}
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-4">
+                      {position.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        {position.location}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {position.type}
+                      </span>
+                    </div>
+                  </div>
+                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                    Apply Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 relative border-t border-gray-800">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 flex items-center justify-center mx-auto mb-6">
+              <Users className="w-8 h-8 text-indigo-400" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Don't See Your Role?
+              </span>
+            </h2>
+            <p className="text-gray-300 mb-8">
+              We're always looking for talented people who share our mission.
+              Send us your resume and tell us how you'd contribute.
+            </p>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-gray-700 text-white hover:bg-gray-900"
+              asChild
+            >
+              <Link to="/contact">
+                Get in Touch
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
   );
 };
 

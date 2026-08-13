@@ -1,12 +1,19 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
-import { LedgerHero, LedgerSection, rise } from "@/components/ledger";
-import { cn } from "@/lib/utils";
+import {
+  BookOpen,
+  Clock,
+  User,
+  ArrowRight,
+  Search,
+  Tag,
+  TrendingUp,
+  X,
+} from "lucide-react";
 
 export interface BlogPost {
   id: string;
@@ -216,177 +223,214 @@ const Blog = () => {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <PublicLayout>
-      <LedgerHero
-        eyebrow="§ Journal · Reading"
-        meta="Essays on evidence, observation, and hiring"
-        stamp="Weekly"
-        title={
-          <>
-            <span className="block">The 3rd Academy</span>
-            <span className="block italic display-serif-italic ink-vermilion">Journal.</span>
-          </>
-        }
-        ledeSide={
-          <div>
-            <div className="mono-label text-foreground/60 mb-3">Search the archive</div>
-            <div className="relative border-b-2 border-foreground">
-              <Search className="absolute right-0 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/60" />
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-white text-sm">
+                <BookOpen className="w-4 h-4" />
+                The 3rd Academy Blog
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="text-white">Insights on </span>
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Career Readiness
+              </span>
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Explore our latest thinking on behavioral credentials, mentor validation, and the future of hiring.
+            </p>
+
+            <div className="max-w-md mx-auto relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <Input
-                placeholder="Type a title or author…"
+                placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="rounded-none border-0 bg-transparent px-0 py-4 text-lg display-serif focus-visible:ring-0 pr-8"
+                className="w-full pl-12 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-indigo-500"
               />
-            </div>
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-2 mono-label text-foreground/60 hover:text-foreground inline-flex items-center gap-1"
-              >
-                <X className="w-3 h-3" /> Clear
-              </button>
-            )}
-          </div>
-        }
-      />
-
-      {/* Categories strip */}
-      <section className="paper-grain border-t border-foreground/40 py-6">
-        <div className="max-w-[1400px] mx-auto px-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <span className="mono-label text-foreground/50">Filter:</span>
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setSelectedCategory(c)}
-              className={cn(
-                "text-sm border-b transition-all",
-                selectedCategory === c
-                  ? "text-foreground border-foreground pb-1 font-medium"
-                  : "text-foreground/60 border-transparent hover:text-foreground hover:border-foreground/60 pb-1"
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               )}
-            >
-              {c}
-            </button>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Featured */}
+      {/* Categories */}
+      <section className="py-8 border-b border-gray-700">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm ${
+                  selectedCategory === category
+                    ? "bg-indigo-600 border border-indigo-500 text-white"
+                    : "bg-gray-900 border border-gray-700 text-gray-50 hover:border-gray-600 hover:text-white"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Post */}
       {showFeatured && (
-        <LedgerSection first className="py-20">
-          <div className="mono-label text-foreground/60 mb-6">Featured essay · Front page</div>
-          <Link to={`/blog/${featuredPost.id}`} className="group block border-t-2 border-b border-foreground pt-8 pb-10">
-            <div className="grid md:grid-cols-12 gap-8 md:gap-12">
-              <div className="md:col-span-7">
-                <div className="mono-label text-foreground/50 mb-4">
-                  {featuredPost.category} · {featuredPost.date} · {featuredPost.readTime}
-                </div>
-                <h2 className="display-serif text-4xl md:text-6xl lg:text-7xl text-foreground leading-[0.98] group-hover:italic transition-all">
-                  {featuredPost.title}
-                </h2>
-                <p className="mt-8 display-serif text-2xl leading-snug text-foreground/85 max-w-2xl">
-                  {featuredPost.excerpt}
-                </p>
-                <div className="mt-8 flex items-baseline gap-3">
-                  <span className="mono-label text-foreground/60">By</span>
-                  <span className="display-serif italic text-lg text-foreground">
-                    {featuredPost.author}
-                  </span>
-                  {featuredPost.role && (
-                    <span className="mono-label text-foreground/50">· {featuredPost.role}</span>
-                  )}
-                </div>
-              </div>
-              <div className="md:col-span-5 aspect-[4/5] overflow-hidden">
-                <img
-                  src={featuredPost.image}
-                  alt={featuredPost.title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                />
-              </div>
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-2 mb-8">
+              <TrendingUp className="w-5 h-5 text-indigo-400" />
+              <h2 className="text-xl font-semibold text-white">Featured</h2>
             </div>
-          </Link>
-        </LedgerSection>
+
+            <Link to={`/blog/${featuredPost.id}`} className="block">
+              <div className="grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500">
+                <div className="aspect-video rounded-xl overflow-hidden">
+                  <img
+                    src={featuredPost.image}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="px-3 py-1 rounded-full bg-indigo-600 text-white text-xs font-medium">
+                      {featuredPost.category}
+                    </span>
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Clock className="w-4 h-4" />
+                      <span>{featuredPost.readTime}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{featuredPost.title}</h3>
+                  <p className="text-gray-400 mb-6">{featuredPost.excerpt}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">{featuredPost.author}</p>
+                      <p className="text-xs text-gray-500">{featuredPost.role || "Contributor"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
       )}
 
-      {/* Grid */}
-      <LedgerSection>
-        <div className="mono-label text-foreground/60 mb-8 pb-3 border-b border-foreground/25">
-          All entries — {filteredPosts.length} of {filteredPosts.length}
-        </div>
-        {filteredPosts.length === 0 ? (
-          <div className="py-20 text-center">
-            <p className="marginalia mb-6">No entries match this search.</p>
-            <Button
-              onClick={() => { setSearchQuery(""); setSelectedCategory("All Posts"); }}
-              variant="ghost"
-              className="text-foreground hover:bg-foreground/5 rounded-none underline underline-offset-8 decoration-1"
-            >
-              Clear filters
-            </Button>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredPosts.map((post, i) => (
-              <motion.article
-                key={post.id}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.15 }}
-                variants={rise}
-                custom={i}
+      {/* Blog Posts Grid */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          {filteredPosts.length === 0 ? (
+            <div className="text-center py-20">
+              <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-medium text-white mb-2">No articles found</h3>
+              <p className="text-gray-500 mb-6">Try adjusting your search or filters</p>
+              <Button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("All Posts");
+                }}
+                variant="outline"
+                className="border-gray-700 text-white hover:bg-gray-900"
               >
-                <Link to={`/blog/${post.id}`} className="block group border-t border-foreground pt-6">
-                  <div className="aspect-[4/3] overflow-hidden mb-5">
+                Clear Filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.id}`}
+                  className="block h-full rounded-2xl bg-gray-950 border border-gray-800 overflow-hidden hover:border-indigo-500"
+                >
+                  <div className="aspect-video overflow-hidden">
                     <img
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="mono-label text-foreground/50 mb-2">
-                    {post.category} · {post.readTime}
-                  </div>
-                  <h3 className="display-serif text-2xl leading-tight text-foreground mb-3 group-hover:italic transition-all">
-                    {post.title}
-                  </h3>
-                  <p className="text-foreground/70 text-[0.9375rem] leading-relaxed mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="mono-label text-foreground/60">
-                    {post.author} · {post.date}
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="px-2 py-1 rounded-full bg-gray-800 text-indigo-400 text-xs">
+                        {post.category}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <Clock className="w-3 h-3" />
+                        <span>{post.readTime}</span>
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">{post.title}</h3>
+                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-white">{post.author}</p>
+                          <p className="text-xs text-gray-500">{post.date}</p>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-indigo-400" />
+                    </div>
                   </div>
                 </Link>
-              </motion.article>
-            ))}
-          </div>
-        )}
-      </LedgerSection>
-
-      {/* Newsletter */}
-      <LedgerSection>
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mono-label text-foreground/60 mb-6">§ Subscribe</div>
-          <h2 className="display-serif text-4xl md:text-6xl text-foreground leading-[0.95] mb-8">
-            Have the <span className="italic display-serif-italic">journal</span> delivered.
-          </h2>
-          <p className="text-foreground/80 mb-10">
-            The essays, monthly, to your inbox. No advertising. Unsubscribe with one click.
-          </p>
-          <form className="flex flex-col sm:flex-row items-stretch gap-3 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="you@yourwork.com"
-              className="flex-1 rounded-none border-foreground/40 border-x-0 border-t-0 border-b-2 focus-visible:border-foreground focus-visible:ring-0 bg-transparent px-0 py-4 text-lg display-serif text-center"
-            />
-            <Button className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6">
-              Subscribe →
-            </Button>
-          </form>
+              ))}
+            </div>
+          )}
         </div>
-      </LedgerSection>
-    </PublicLayout>
+      </section>
+
+      {/* Newsletter CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="p-8 md:p-12 rounded-2xl bg-gray-950 border border-gray-800 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  Stay Updated
+                </span>
+              </h2>
+              <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                Subscribe to our newsletter for the latest insights on
+                credentialing, career readiness, and platform updates.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 focus:border-indigo-500"
+                />
+                <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 w-full sm:w-auto">
+                  Subscribe
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
   );
 };
 
