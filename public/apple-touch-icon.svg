@@ -1,15 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none">
-  <!-- iOS applies its own corner mask; we still fill the full square with paper -->
-  <rect width="180" height="180" fill="#EFE9DA"/>
-  <!-- Faint ledger rule to echo the site voice at close inspection -->
-  <line x1="20" y1="30" x2="160" y2="30" stroke="#1D1815" stroke-opacity="0.15" stroke-width="1"/>
-  <line x1="20" y1="150" x2="160" y2="150" stroke="#1D1815" stroke-opacity="0.15" stroke-width="1"/>
-  <!-- Vermilion seal disc -->
-  <g transform="translate(90 90) rotate(-6)">
-    <circle r="60" fill="#B84A22"/>
-    <circle r="52" fill="none" stroke="#EFE9DA" stroke-opacity="0.9" stroke-width="1.5"/>
-    <text x="0" y="26" font-family="Georgia, 'Times New Roman', serif"
-          font-size="80" font-weight="700" font-style="italic"
-          fill="#EFE9DA" text-anchor="middle">3</text>
-  </g>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1A0B33"/>
+      <stop offset="100%" stop-color="#0B0713"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="90" cy="86" r="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0 L0 0 0 20" fill="none" stroke="#6366F1" stroke-opacity="0.06" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="180" height="180" fill="url(#bg)"/>
+  <rect width="180" height="180" fill="url(#grid)"/>
+  <circle cx="90" cy="86" r="70" fill="url(#halo)"/>
+
+  <!-- Shield -->
+  <path d="M90 22 L150 46 L150 100 Q150 148 90 168 Q30 148 30 100 L30 46 Z" fill="url(#shield)"/>
+  <!-- Inner shield well -->
+  <path d="M90 34 L142 55 L142 98 Q142 140 90 156 Q38 140 38 98 L38 55 Z" fill="#0B0713" opacity="0.55"/>
+
+  <!-- "3" in white -->
+  <text x="90" y="122" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+        font-size="82" font-weight="800" fill="#FFFFFF" text-anchor="middle">3</text>
+  <!-- Small emerald checkmark echoing the pre-editorial mark -->
+  <path d="M64 138 L80 152 L112 118" stroke="#10B981" stroke-width="6" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
