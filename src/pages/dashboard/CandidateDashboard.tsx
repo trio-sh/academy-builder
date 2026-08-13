@@ -5795,19 +5795,29 @@ const MessagesPage = () => {
  return;
  }
 
- // Add participants
- const { error: participantsError } = await supabase
+ // Add participants — seed self first (RLS: user_id must equal auth.uid()),
+ // then the target (RLS: allowed once caller is a participant of the conv).
+ const { error: selfParticipantErr } = await supabase
  .from("conversation_participants")
- .insert([
- { conversation_id: conv.id, user_id: user.id },
- { conversation_id: conv.id, user_id: targetUserId },
- ]);
-
- if (participantsError) {
- console.error("Error adding conversation participants:", participantsError);
+ .insert({ conversation_id: conv.id, user_id: user.id });
+ if (selfParticipantErr) {
+ console.error("Error adding self as participant:", selfParticipantErr);
  toast({
- title: "Failed to Add Participants",
- description: "Could not add participants to the conversation. Please try again.",
+ title: "Failed to Start Conversation",
+ description: "Could not join the conversation. Please try again.",
+ variant: "destructive",
+ });
+ setIsCreatingConversation(false);
+ return;
+ }
+ const { error: targetParticipantErr } = await supabase
+ .from("conversation_participants")
+ .insert({ conversation_id: conv.id, user_id: targetUserId });
+ if (targetParticipantErr) {
+ console.error("Error adding target participant:", targetParticipantErr);
+ toast({
+ title: "Failed to Add Recipient",
+ description: "Could not add the other user. Please try again.",
  variant: "destructive",
  });
  setIsCreatingConversation(false);
