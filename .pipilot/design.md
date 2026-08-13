@@ -1,7 +1,9 @@
-# Design system — T3A Purple (adopted 2026-08-12)
+# Design system — T3A Purple (adopted 2026-08-12, revised 2026-08-13)
 
-**Direction:** Dr. Tony Mofoke, T3A · 2026-08-12 (in response to the T3A-DEV-RESP-002-review PDF).
-**Scope of this change:** **colors only.** Typography, layout, ledger devices (§ markers, columns, mono labels, marginalia, stamp callouts, `todayStamp()` date, brand seal shape) all stay. We are swapping the paper/ink/vermilion palette out for T3A dark purple + tech-feel signals. WorkRehearsal ships in the same palette.
+**Direction (updated):** Dr. Tony Mofoke, T3A · 2026-08-13. Correction to earlier scope note.
+
+- **This repo (`trio-sh/academy-builder` — the T3A platform)**: **FULL redesign to a techy feel like the previous AcademyHub system.** Not just a color swap. Restore the glassmorphism, animated gradient blobs, grid overlays, gradient text on accent phrases, video-backed hero, floating decorative images, glowing badges. Fonts + component shape decisions are open — pick what best serves the techy read.
+- **WorkRehearsal (separate repo)**: **colors-only swap** to the T3A purple palette. Fonts + layout kept. See `.pipilot/workrehearsal-instruction.md` — that document is the handoff for the sister agent maintaining that repo.
 
 ---
 

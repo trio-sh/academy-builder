@@ -1,153 +1,139 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
-const rise = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number = 0) => ({
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay: 0.05 + i * 0.08, ease: [0.19, 1, 0.22, 1] },
-  }),
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 };
 
 export function CTASection() {
   return (
-    <section className="paper-grain relative py-28 md:py-40 border-t border-foreground overflow-hidden">
-      {/* Faint background numeral — a large "01" watermark bleeding off */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-16 -right-8 md:-right-24 ledger-num text-foreground/[0.06] select-none"
-        style={{ fontSize: "clamp(20rem, 45vw, 44rem)", lineHeight: 0.75 }}
-      >
-        01
-      </div>
+    <motion.section
+      className="py-32 bg-black relative overflow-hidden"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div variants={itemVariants} className="relative max-w-5xl mx-auto">
+          {/* Outer glow */}
+          <div className="absolute -inset-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[40px] opacity-20 blur-3xl" />
 
-      <div className="relative max-w-[1400px] mx-auto px-6 grid md:grid-cols-12 gap-8 md:gap-12">
-        {/* Left — form-like signup */}
-        <div className="md:col-span-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={rise}
-            custom={0}
-          >
-            <div className="mono-label text-foreground/60 mb-6">
-              § V · Register of Behavioral Readiness — Entry Form
+          {/* Main card */}
+          <div className="relative rounded-3xl overflow-hidden">
+            {/* Background image with overlay */}
+            <div className="absolute inset-0">
+              <img
+                src="https://api.a0.dev/assets/image?text=abstract%20futuristic%20network%20connections%20with%20glowing%20indigo%20purple%20nodes%20representing%20career%20pathways%20and%20opportunities%20dark%20space%20background&aspect=21:9&seed=cta_bg"
+                alt=""
+                className="w-full h-full object-cover opacity-30"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/90 via-purple-950/90 to-black/95" />
             </div>
-          </motion.div>
 
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={rise}
-            custom={1}
-            className="display-serif text-5xl md:text-7xl lg:text-[7rem] leading-[0.95] text-foreground"
-          >
-            Ready to go
-            <br />
-            <span className="italic display-serif-italic">beyond</span>{" "}
-            <span className="ink-vermilion">credentials?</span>
-          </motion.h2>
+            {/* Decorative Elements */}
+            <motion.div
+              className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"
+              animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            />
 
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={rise}
-            custom={2}
-            className="mt-10 max-w-xl text-foreground/85 text-lg md:text-xl leading-relaxed border-l-2 border-foreground pl-6"
-          >
-            Join The 3rd Academy. Upload your résumé, connect with a mentor, and begin
-            preparing for the workplace moments where behavior has to show up.
-          </motion.p>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={rise}
-            custom={3}
-            className="mt-14 pt-6 border-t border-foreground"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 items-start">
-              <Button
-                asChild
-                className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-7 text-base font-medium tracking-wide"
+            {/* Content */}
+            <div className="relative z-10 p-12 md:p-20 text-center">
+              {/* Badge */}
+              <motion.div
+                variants={itemVariants}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-sm text-white mb-8"
               >
-                <Link to="/get-started">
-                  Enter your name in the record
-                  <span className="ml-3">→</span>
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-7 text-base font-medium tracking-wide underline underline-offset-8 decoration-1"
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                Begin Your Behavioral Readiness Journey
+              </motion.div>
+
+              {/* Headline */}
+              <motion.h2
+                variants={itemVariants}
+                className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
               >
-                <Link to="/platform">
-                  Read the platform notes
-                </Link>
-              </Button>
-            </div>
-            <p className="mono-label text-foreground/50 mt-8">
-              No credit card required · Mentor-matched within 48 hours · Free to enter
-            </p>
-          </motion.div>
-        </div>
+                <span className="text-white">
+                  Ready to Go
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Beyond Credentials?
+                </span>
+              </motion.h2>
 
-        {/* Right — mock "receipt" card */}
-        <motion.aside
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={rise}
-          custom={4}
-          className="md:col-span-4 md:pt-16"
-        >
-          <div className="relative border-2 border-foreground p-8 bg-background/60 backdrop-blur-[1px] rotate-[0.5deg] shadow-[6px_6px_0_rgba(29,24,21,0.15)]">
-            {/* Stamp corner */}
-            <div className="absolute -top-4 -right-3 stamp">
-              Filed 2026
-            </div>
+              {/* Description */}
+              <motion.p
+                variants={itemVariants}
+                className="text-lg text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
+              >
+                Join The 3rd Academy. Upload your resume, connect with a mentor, and begin
+                preparing for the workplace moments where behavior has to show up.
+              </motion.p>
 
-            <div className="mono-label text-foreground/60 pb-3 mb-4 border-b border-foreground/25">
-              Specimen Receipt · No. 000-001
-            </div>
+              {/* CTAs */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(99, 102, 241, 0.5)" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-6 rounded-2xl font-bold text-lg shadow-2xl shadow-indigo-600/30 transition-all duration-300"
+                    asChild
+                  >
+                    <Link to="/get-started">
+                      Get Started Free
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto border-2 border-white/20 text-white px-10 py-6 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all duration-300 backdrop-blur-xl"
+                    asChild
+                  >
+                    <Link to="/platform">Learn More</Link>
+                  </Button>
+                </motion.div>
+              </motion.div>
 
-            <p className="display-serif text-xl leading-tight mb-6">
-              This is to record that{" "}
-              <span className="italic display-serif-italic">the bearer</span> has
-              entered the Behavioral Readiness Register on this day.
-            </p>
-
-            <dl className="space-y-3 text-sm">
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Register</dt>
-                <dd className="mono-num text-foreground">T3A / BER-01</dd>
-              </div>
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Volume</dt>
-                <dd className="mono-num text-foreground">I</dd>
-              </div>
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Filed by</dt>
-                <dd className="text-foreground italic display-serif-italic">the bearer</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="mono-label text-foreground/60">Status</dt>
-                <dd className="ink-vermilion mono-label">Open</dd>
-              </div>
-            </dl>
-
-            <div className="mt-6 pt-4 border-t border-foreground/25 mono-label text-foreground/50 text-center">
-              The 3rd Academy · Register of Behavioral Readiness
+              {/* Trust Signal */}
+              <motion.p variants={itemVariants} className="mt-10 text-gray-400 text-sm">
+                No credit card required · Mentor-matched within 48 hours
+              </motion.p>
             </div>
           </div>
-        </motion.aside>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
