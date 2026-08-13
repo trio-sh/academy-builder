@@ -1,13 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <!-- Paper base with subtle rounded corners; keeps the icon legible at 16px -->
-  <rect width="32" height="32" rx="4" fill="#EFE9DA"/>
-  <!-- Vermilion seal disc, rotated to echo the site's brand seal -->
-  <g transform="translate(16 16) rotate(-6)">
-    <circle r="12.5" fill="#B84A22"/>
-    <circle r="10.8" fill="none" stroke="#EFE9DA" stroke-opacity="0.9" stroke-width="0.9"/>
-    <!-- Italic serif '3' -->
-    <text x="0" y="5.2" font-family="Georgia, 'Times New Roman', serif"
-          font-size="16" font-weight="700" font-style="italic"
-          fill="#EFE9DA" text-anchor="middle">3</text>
-  </g>
+  <defs>
+    <linearGradient id="fShield" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+    <radialGradient id="fGlow" cx="16" cy="14" r="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Dark rounded canvas -->
+  <rect width="32" height="32" rx="6" fill="#0B0713"/>
+  <!-- Halo -->
+  <circle cx="16" cy="14" r="14" fill="url(#fGlow)"/>
+  <!-- Shield -->
+  <path d="M16 3 L28 8 L28 17 Q28 25 16 29 Q4 25 4 17 L4 8 Z" fill="url(#fShield)"/>
+  <!-- Inner shield well -->
+  <path d="M16 6 L25.5 10 L25.5 16.5 Q25.5 22.5 16 26 Q6.5 22.5 6.5 16.5 L6.5 10 Z" fill="#0B0713" opacity="0.6"/>
+  <!-- "3" in white -->
+  <text x="16" y="21" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+        font-size="15" font-weight="800" fill="#FFFFFF" text-anchor="middle">3</text>
 </svg>

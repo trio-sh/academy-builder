@@ -1,117 +1,97 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
   <defs>
-    <!-- Paper grain: subtle noise-like speckle via repeating dots -->
-    <pattern id="grain" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-      <rect width="6" height="6" fill="#EFE9DA"/>
-      <circle cx="1" cy="1" r="0.35" fill="#1D1815" fill-opacity="0.05"/>
-      <circle cx="4" cy="3.5" r="0.28" fill="#1D1815" fill-opacity="0.04"/>
-    </pattern>
-    <!-- Ledger rule lines: very faint horizontal ruling every 24px -->
-    <pattern id="rule" x="0" y="0" width="1200" height="24" patternUnits="userSpaceOnUse">
-      <rect width="1200" height="24" fill="none"/>
-      <line x1="0" y1="24" x2="1200" y2="24" stroke="#1D1815" stroke-opacity="0.05" stroke-width="0.5"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B0713"/>
+      <stop offset="50%" stop-color="#1A0B33"/>
+      <stop offset="100%" stop-color="#0B0713"/>
+    </linearGradient>
+    <linearGradient id="text-accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#F472B6"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+    <radialGradient id="blob-indigo" cx="200" cy="500" r="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blob-purple" cx="1000" cy="150" r="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blob-pink" cx="900" cy="530" r="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F472B6" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#F472B6" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0 L0 0 0 60" fill="none" stroke="#6366F1" stroke-opacity="0.05" stroke-width="1"/>
     </pattern>
   </defs>
 
-  <!-- Warm paper base -->
-  <rect width="1200" height="630" fill="url(#grain)"/>
-  <rect width="1200" height="630" fill="url(#rule)"/>
+  <!-- Dark canvas + grid overlay -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- Deckle edge — top thin ink rule -->
-  <line x1="60" y1="60" x2="1140" y2="60" stroke="#1D1815" stroke-width="1"/>
+  <!-- Glow blobs -->
+  <rect width="1200" height="630" fill="url(#blob-indigo)"/>
+  <rect width="1200" height="630" fill="url(#blob-purple)"/>
+  <rect width="1200" height="630" fill="url(#blob-pink)"/>
+
+  <!-- Top accent rule -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#text-accent)"/>
+
+  <!-- Badge pill -->
+  <g transform="translate(80, 90)">
+    <rect x="0" y="0" width="380" height="44" rx="22" fill="#6366F1" fill-opacity="0.15" stroke="#6366F1" stroke-opacity="0.45" stroke-width="1"/>
+    <!-- sparkle -->
+    <path d="M22 22 L26 14 L30 22 L38 22 L32 27 L34 35 L26 30 L18 35 L20 27 L14 22 Z" fill="#A5B4FC" fill-opacity="0.9" transform="scale(0.5) translate(20 20)"/>
+    <text x="46" y="29" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+          font-size="16" font-weight="500" fill="#C7D2FE" letter-spacing="0.5">
+      Workplace-Ready Behavioral Documentation
+    </text>
+  </g>
+
+  <!-- Shield seal on the right -->
+  <g transform="translate(970, 155)">
+    <path d="M75 0 L145 30 L145 88 Q145 148 75 178 Q5 148 5 88 L5 30 Z" fill="url(#shield)"/>
+    <path d="M75 14 L134 40 L134 86 Q134 138 75 162 Q16 138 16 86 L16 40 Z" fill="#0B0713" opacity="0.55"/>
+    <text x="75" y="110" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+          font-size="80" font-weight="800" fill="#FFFFFF" text-anchor="middle">3</text>
+    <path d="M50 130 L68 145 L104 108" stroke="#10B981" stroke-width="6" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Headline -->
+  <g transform="translate(80, 220)">
+    <text font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+          font-size="80" font-weight="800" fill="#FFFFFF" letter-spacing="-2">
+      <tspan x="0" y="0">Beyond</tspan>
+      <tspan x="0" y="90">Credentials.</tspan>
+    </text>
+    <text font-family="Poppins, 'Helvetica Neue', Arial, sans-serif"
+          font-size="76" font-weight="800" fill="url(#text-accent)" letter-spacing="-2">
+      <tspan x="0" y="180">Behavioral Workplace</tspan>
+      <tspan x="0" y="266">Readiness.</tspan>
+    </text>
+  </g>
+
   <!-- Bottom rule -->
-  <line x1="60" y1="570" x2="1140" y2="570" stroke="#1D1815" stroke-width="1"/>
+  <rect x="0" y="626" width="1200" height="4" fill="url(#text-accent)"/>
 
-  <!-- ── Masthead row ─────────────────────────────────────────── -->
-  <!-- Left: mono label -->
-  <text x="72" y="98" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-        font-size="14" font-weight="500" fill="#1D1815" fill-opacity="0.65"
-        letter-spacing="2.5" text-transform="uppercase">§ REGISTER · VOLUME I</text>
-  <!-- Right: date stamp -->
-  <text x="1128" y="98" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-        font-size="14" font-weight="500" fill="#1D1815" fill-opacity="0.65"
-        letter-spacing="2.5" text-anchor="end">STAMPED · 12 · VIII · MMXXVI</text>
-
-  <!-- Thick brand rule -->
-  <line x1="60" y1="120" x2="1140" y2="120" stroke="#1D1815" stroke-width="2"/>
-
-  <!-- ── Wordmark ────────────────────────────────────────────── -->
-  <!-- Vermilion seal on the left (rotated disc) -->
-  <g transform="translate(120, 200) rotate(-6)">
-    <circle cx="60" cy="60" r="60" fill="#B84A22"/>
-    <circle cx="60" cy="60" r="52" fill="none" stroke="#EFE9DA" stroke-width="1.5" stroke-opacity="0.9"/>
-    <text x="60" y="79" font-family="Georgia, 'Times New Roman', serif"
-          font-size="60" font-weight="700" font-style="italic" fill="#EFE9DA"
-          text-anchor="middle">3</text>
-  </g>
-
-  <!-- Serif display: The 3rd Academy -->
-  <text x="270" y="215" font-family="Georgia, 'Times New Roman', serif"
-        font-size="72" font-weight="600" fill="#1D1815" letter-spacing="-1.5">The 3rd</text>
-  <text x="270" y="285" font-family="Georgia, 'Times New Roman', serif"
-        font-size="72" font-weight="500" font-style="italic" fill="#B84A22" letter-spacing="-1.5">Academy.</text>
-
-  <!-- Marginalia rule under wordmark -->
-  <line x1="270" y1="310" x2="410" y2="310" stroke="#B84A22" stroke-width="2"/>
-
-  <!-- ── Lede ────────────────────────────────────────────────── -->
-  <text x="270" y="360" font-family="Georgia, 'Times New Roman', serif"
-        font-size="28" font-weight="400" fill="#1D1815" fill-opacity="0.82">
-    Observed conduct — recorded, not inferred.
-  </text>
-  <text x="270" y="398" font-family="Georgia, 'Times New Roman', serif"
-        font-size="22" font-weight="400" fill="#55504A">
-    A public register of behavioral evidence for the workplace.
-  </text>
-
-  <!-- ── Ledger columns ──────────────────────────────────────── -->
-  <!-- Column separator lines -->
-  <line x1="60" y1="450" x2="1140" y2="450" stroke="#1D1815" stroke-opacity="0.3" stroke-width="0.75"/>
-
-  <g transform="translate(72, 490)">
-    <!-- Col 1 -->
-    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
-          letter-spacing="2">§ I · METHOD</text>
-    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
-      Sustained mentor
-    </text>
-    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
-      observation.
+  <!-- Footer meta -->
+  <g transform="translate(80, 585)">
+    <text font-family="'JetBrains Mono', ui-monospace, monospace"
+          font-size="15" font-weight="500" fill="#94A3B8" letter-spacing="2">
+      the3rdacademy.com
     </text>
   </g>
-
-  <g transform="translate(432, 490)">
-    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
-          letter-spacing="2">§ II · INSTRUMENT</text>
-    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
-      Behavioral
-    </text>
-    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19"
-          font-style="italic" fill="#B84A22">
-      Evidence Report.
+  <g transform="translate(1120, 585)">
+    <text font-family="'JetBrains Mono', ui-monospace, monospace"
+          font-size="15" font-weight="500" fill="#A5B4FC" letter-spacing="2" text-anchor="end">
+      ● LIVE · Aug 22 2026
     </text>
   </g>
-
-  <g transform="translate(792, 490)">
-    <text font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-          font-size="11" font-weight="500" fill="#1D1815" fill-opacity="0.65"
-          letter-spacing="2">§ III · REGISTER</text>
-    <text y="26" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
-      Publicly verifiable —
-    </text>
-    <text y="50" font-family="Georgia, 'Times New Roman', serif" font-size="19" fill="#1D1815">
-      status only.
-    </text>
-  </g>
-
-  <!-- Bottom URL rule -->
-  <line x1="60" y1="600" x2="1140" y2="600" stroke="#1D1815" stroke-width="1"/>
-  <text x="72" y="622" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-        font-size="12" font-weight="500" fill="#1D1815" fill-opacity="0.7"
-        letter-spacing="2">the3rdacademy.com</text>
-  <text x="1128" y="622" font-family="'JetBrains Mono', 'Menlo', 'Consolas', monospace"
-        font-size="12" font-weight="500" fill="#B84A22"
-        letter-spacing="2" text-anchor="end">§ VERIFIED AT /verify</text>
 </svg>
