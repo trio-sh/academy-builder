@@ -57,7 +57,7 @@ const AuthCallback = () => {
   }, [navigate]);
 
   return (
-    <div data-theme="paper" className="min-h-screen bg-background text-foreground flex items-center justify-center paper-grain">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center paper-grain">
       <div className="flex flex-col items-center gap-4">
         <div className="w-10 h-10 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
         <p className="mono-label text-foreground/60">Completing sign in…</p>

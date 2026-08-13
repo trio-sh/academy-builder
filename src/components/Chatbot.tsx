@@ -1371,7 +1371,7 @@ export function Chatbot() {
   if (location.pathname.endsWith("/agent") || location.pathname.endsWith("/profile")) return null;
 
   return (
-    <div data-theme="paper" className="text-foreground">
+    <div className="text-foreground">
       {/* Floating trigger — an inked correspondence card with a wax seal */}
       <AnimatePresence>
         {!isOpen && (

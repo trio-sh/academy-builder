@@ -78,10 +78,7 @@ const employerPoints = [
 
 const Platform = () => {
   return (
-    <div
-      data-theme="paper"
-      className="min-h-screen bg-background text-foreground antialiased selection:bg-foreground selection:text-background"
-    >
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
       <Header />
 
       {/* Hero */}
@@ -106,7 +103,7 @@ const Platform = () => {
               <span className="mono-label text-foreground/40 mt-1 block">Field 01 · Overview</span>
             </div>
             <div className="hidden md:block text-center">
-              <div className="stamp">Layer III · Evidence</div>
+              <div className="stamp">Layer III · Behavioral Evidence</div>
             </div>
             <div className="hidden md:block text-right">
               <span className="mono-label text-foreground/60 block">Iss. 04 · {todayStamp()}</span>
@@ -253,7 +250,7 @@ const Platform = () => {
             </div>
             <div className="md:col-span-4">
               <p className="text-foreground/80 text-base leading-relaxed border-l-2 border-foreground pl-5">
-                Four entries into the register. Evidence develops through observation — it is
+                Four steps into the register. Evidence develops through observation — it is
                 not awarded.
               </p>
             </div>
