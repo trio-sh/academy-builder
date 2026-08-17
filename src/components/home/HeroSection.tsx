@@ -19,6 +19,10 @@ export function HeroSection() {
       {/* Corner registration marks — like a printed press sheet */}
       <RegistrationMarks />
 
+      {/* Floating decorative figures — pushed to the edges so they read
+          as ambient plates, not the subject of the hero */}
+      <FloatingFigures />
+
       <div className="relative max-w-[1400px] mx-auto px-6">
         {/* Top masthead metadata */}
         <motion.div
@@ -262,6 +266,45 @@ function BERCardMock() {
         </div>
       </article>
     </div>
+  );
+}
+
+/**
+ * FloatingFigures — two off-set portrait figures (mentor + team)
+ * anchored to the hero's outer margins. Framed as ledger figures with a
+ * mono caption strip so they don't compete with the headline; hidden
+ * below md so they never crowd mobile layouts.
+ */
+function FloatingFigures() {
+  return (
+    <>
+      <figure className="pointer-events-none hidden lg:block absolute top-24 right-4 xl:right-10 w-48 xl:w-56 opacity-70 border border-foreground/25 bg-background/40" style={{ transform: "rotate(2deg)" }}>
+        <div className="aspect-[3/4] overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=800&fit=crop&crop=faces"
+            alt="Fig. A — mentor at the desk"
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25">
+          Fig. A · at the desk
+        </figcaption>
+      </figure>
+      <figure className="pointer-events-none hidden lg:block absolute bottom-32 left-4 xl:left-10 w-40 xl:w-48 opacity-70 border border-foreground/25 bg-background/40" style={{ transform: "rotate(-2.5deg)" }}>
+        <div className="aspect-[4/3] overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=450&fit=crop&crop=faces"
+            alt="Fig. B — the room"
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25">
+          Fig. B · the room
+        </figcaption>
+      </figure>
+    </>
   );
 }
 

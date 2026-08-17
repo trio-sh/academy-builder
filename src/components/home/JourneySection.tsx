@@ -16,6 +16,8 @@ type Entry = {
   meta: string;
   aside?: string;
   highlight?: boolean;
+  image?: string;
+  imageAlt?: string;
 };
 
 const entries: Entry[] = [
@@ -24,6 +26,8 @@ const entries: Entry[] = [
     title: "Basic Profile",
     meta: "Entry · Résumé or participation",
     body: "You file a starting profile — the initial page in your record. Résumé data is imported without adornment. Nothing is graded here.",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 01 — the record opens",
   },
   {
     n: "02",
@@ -31,6 +35,8 @@ const entries: Entry[] = [
     meta: "Ongoing · Continuously evolving",
     body: "Activity, projects, mentorship notes — appended chronologically. The log is yours; it accrues at the pace of your work, not on a schedule.",
     aside: "Kept in your name. Not aggregated into a score.",
+    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 02 — dated entries accrue",
   },
   {
     n: "03",
@@ -38,6 +44,8 @@ const entries: Entry[] = [
     meta: "Key stage · Human-led observation",
     body: "You work with an experienced professional who observes what actually happens under workplace pressure. Guidance is separate from evaluation.",
     highlight: true,
+    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 03 — observation under pressure",
   },
   {
     n: "04",
@@ -45,18 +53,24 @@ const entries: Entry[] = [
     meta: "The record itself",
     body: "A dated account of what you were asked to do, what you did, where the conduct held, and where it did not. Evidence — not a rating.",
     aside: "Every line is legible. Every difference stays visible.",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 04 — the artifact leaves the desk",
   },
   {
     n: "05",
     title: "TalentVisa",
     meta: "Visibility switch",
     body: "You turn your visibility to employers on and off. Employers see that you have a current record — never what is in it, without your consent.",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 05 — visibility, on your terms",
   },
   {
     n: "06",
     title: "T3X Exchange",
     meta: "The reading room",
     body: "Employers discover and review Behavioral Evidence Reports when considering candidates. Nothing is surfaced that you did not release.",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=450&fit=crop&crop=faces",
+    imageAlt: "Fig. 06 — the reading room",
   },
 ];
 
@@ -142,6 +156,25 @@ export function JourneySection() {
                   </p>
                 )}
               </div>
+
+              {/* Figure block — subordinate to the row so it reads as
+                  ledger figure, not marketing photo */}
+              {entry.image && (
+                <figure className="col-span-12 mt-4 md:mt-6 border border-foreground/25 bg-background/40">
+                  <div className="aspect-[16/6] md:aspect-[16/5] overflow-hidden">
+                    <img
+                      src={entry.image}
+                      alt={entry.imageAlt ?? entry.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <figcaption className="mono-label text-foreground/60 px-3 py-2 border-t border-foreground/25 flex items-center justify-between">
+                    <span>Fig. {entry.n}</span>
+                    <span className="text-foreground/50">{entry.imageAlt ?? entry.title}</span>
+                  </figcaption>
+                </figure>
+              )}
             </motion.article>
           ))}
         </div>
