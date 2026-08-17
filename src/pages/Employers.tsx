@@ -1,419 +1,269 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import {
-  CheckCircle2,
-  Users,
-  Award,
-  BarChart3,
-  Shield,
-  Building2,
-  ArrowRight,
-  TrendingUp,
-  Clock,
-  Zap,
-  Target,
-  Star
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Button } from "@/components/ui/button";
+import {
+  LedgerSection,
+  LedgerHeader,
+  LedgerHero,
+  LedgerRow,
+  LedgerLinkCTA,
+  rise,
+} from "@/components/ledger";
 
 const benefits = [
   {
-    icon: Shield,
-    title: "Pre-Validated Talent",
-    description: "Every candidate has been rigorously assessed by experienced industry mentors—no guesswork, no resume inflation.",
+    n: "01",
+    title: "A record, not a rating",
+    body: "You review a Behavioral Evidence Report the candidate has released to you — not a score, not a rank, not a recommendation. Just what was observed.",
   },
   {
-    icon: Award,
-    title: "Evidence-Based Credentials",
-    description: "Access detailed behavioral profiles backed by real observations, project work, and mentor endorsements.",
+    n: "02",
+    title: "Conduct across situations",
+    body: "Examine how the candidate's behaviour showed up across multiple workplace-pressure situations, over time. A single moment is a moment. A pattern is evidence.",
   },
   {
-    icon: TrendingUp,
-    title: "Reduced Turnover",
-    description: "Behavioral screening reduces bad hires by up to 60%, saving your organization time and recruitment costs.",
+    n: "03",
+    title: "Bounded, honest evidence",
+    body: "The report says what the evidence supports — and where it stops. When limits go unstated, absence of evidence looks like evidence.",
   },
   {
-    icon: BarChart3,
-    title: "Continuous Intelligence",
-    description: "Your hiring feedback improves our algorithm, delivering increasingly better-matched candidates over time.",
+    n: "04",
+    title: "Independent verification",
+    body: "Verify the report without an account. Every entry is auditable. Every line is legible.",
   },
-];
-
-const stats = [
-  { value: "60%", label: "Reduction in Bad Hires" },
-  { value: "10K+", label: "Verified Candidates" },
-  { value: "500+", label: "Hiring Partners" },
-  { value: "4.8/5", label: "Employer Satisfaction" },
+  {
+    n: "05",
+    title: "You keep the decision",
+    body: "The evidence is an additional input to your hiring judgment — not a substitute for it. The decision stays inside your organization.",
+  },
 ];
 
 const tiers = [
   {
-    name: "Starter",
-    description: "Perfect for small teams testing the platform",
+    name: "Reader",
     price: "Free",
+    tagline: "For teams beginning to read the register",
     features: [
-      "Browse up to 50 candidate profiles/month",
-      "Basic behavioral score visibility",
-      "Standard search filters",
-      "5 connection requests/month",
+      "Review Behavioral Evidence Reports candidates release to you",
+      "Verify a report without creating an account",
+      "Standard directory filters",
       "Email support",
     ],
-    cta: "Start Free",
+    cta: "Begin reading",
     href: "/get-started",
-    popular: false,
   },
   {
-    name: "Professional",
-    description: "For growing teams hiring regularly",
+    name: "Subscriber",
     price: "$799",
     period: "/month",
+    tagline: "For teams hiring regularly",
     features: [
       "Unlimited candidate browsing",
-      "Advanced behavioral insights & analytics",
-      "TalentVisa premium candidate access",
-      "Unlimited connection requests",
-      "Priority candidate responses",
-      "Dedicated account manager",
-      "API integration access",
+      "TalentVisa access — see who has a current record",
+      "Advanced filters and behavioral cross-references",
+      "Follow-through insights after hiring",
+      "Dedicated account editor",
+      "API access to the register",
     ],
-    cta: "Get Started",
+    cta: "Take out a subscription",
     href: "/contact",
-    popular: true,
+    highlight: true,
   },
   {
-    name: "Enterprise",
-    description: "Custom solutions for large organizations",
-    price: "Custom",
+    name: "Institution",
+    price: "Bespoke",
+    tagline: "For enterprises with volume hiring",
     features: [
-      "Everything in Professional",
-      "White-label platform options",
-      "Custom behavioral assessments",
-      "Bulk hiring workflows",
-      "On-site mentor training",
-      "SLA with 99.9% uptime guarantee",
-      "Dedicated success team",
+      "Everything in Subscriber",
+      "SSO, audit logs, and custom governance",
+      "Named editorial liaison",
+      "Custom data feeds and integrations",
     ],
-    cta: "Contact Sales",
+    cta: "Speak with editorial",
     href: "/contact",
-    popular: false,
-  },
-];
-
-const testimonials = [
-  {
-    quote: "We've slashed our time-to-hire by 40% and virtually eliminated first-year turnover. The behavioral data is a game-changer.",
-    author: "Sarah Mitchell",
-    role: "Chief People Officer",
-    company: "Vertex Technologies",
-    rating: 5,
-  },
-  {
-    quote: "The quality of T3X candidates is unmatched. These aren't just skilled workers—they're workplace-ready professionals who integrate seamlessly.",
-    author: "David Chen",
-    role: "VP of Talent Acquisition",
-    company: "Quantum Dynamics",
-    rating: 5,
   },
 ];
 
 const Employers = () => {
   return (
-    <div className="min-h-screen bg-black">
-      <Header />
-      <main className="pt-16">
-        {/* Hero */}
-        <section className="py-24 md:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-sm text-white mb-6">
-                <Building2 className="w-4 h-4" />
-                T3X Talent Exchange
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                <span className="text-white">
-                  Hire Smarter.
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Scale Faster.
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Access a curated marketplace of pre-validated, workplace-ready candidates.
-                Every profile backed by mentor observations and behavioral evidence—not just resumes.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-gray-100 px-10 py-6 text-base font-semibold" asChild>
-                  <Link to="/get-started">
-                    Start Hiring Today
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-gray-700 text-white hover:bg-gray-900 px-10 py-6 text-base" asChild>
-                  <Link to="/contact">
-                    <Clock className="mr-2 h-5 w-5" />
-                    Schedule Demo
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section className="py-12 border-y border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Benefits */}
-        <section className="py-20 md:py-28 bg-black">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                Why Leading Companies Choose T3X
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                The Future of Talent Acquisition
-              </h2>
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                Traditional hiring relies on resumes and gut feelings. We deliver
-                data-backed insights from real-world behavioral validation.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {benefits.map((benefit) => (
-                <div
-                  key={benefit.title}
-                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5">
-                    <benefit.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-3">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed text-base">
-                    {benefit.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section className="py-20 md:py-28 border-t border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                Simple & Streamlined
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
-                Your Hiring Journey
-              </h2>
-            </div>
-
-            <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-4 gap-8">
-                {[
-                  { step: "1", icon: Target, title: "Search & Filter", desc: "Use advanced filters to find candidates matching your exact requirements" },
-                  { step: "2", icon: Award, title: "Review Evidence", desc: "Explore detailed Behavioral Evidence Reports with mentor endorsements and behavioral data" },
-                  { step: "3", icon: Users, title: "Connect & Interview", desc: "Send connection requests and schedule interviews with pre-qualified talent" },
-                  { step: "4", icon: Zap, title: "Hire & Track", desc: "Confirm hires and provide feedback to improve future recommendations" },
-                ].map((item) => (
-                  <div key={item.step} className="relative text-center">
-                    <div className="relative mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto">
-                        <item.icon className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                        {item.step}
-                      </div>
-                    </div>
-                    <h3 className="font-bold text-white mb-3 text-lg">{item.title}</h3>
-                    <p className="text-sm text-gray-300 leading-relaxed">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing */}
-        <section className="py-20 md:py-28 bg-black border-t border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                Transparent Pricing
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Plans That Scale With You
-              </h2>
-              <p className="text-lg text-gray-300">
-                Start free, upgrade when ready. No hidden fees, cancel anytime.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {tiers.map((tier) => (
-                <div
-                  key={tier.name}
-                  className={cn(
-                    "p-8 rounded-2xl border h-full flex flex-col",
-                    tier.popular
-                      ? "border-indigo-500 bg-gray-950"
-                      : "border-gray-800 bg-gray-950 hover:border-indigo-500"
-                  )}
-                >
-                  {tier.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full">
-                        MOST POPULAR
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      {tier.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      {tier.description}
-                    </p>
-                  </div>
-
-                  <div className="mb-8">
-                    <span className="text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      {tier.price}
-                    </span>
-                    {tier.period && (
-                      <span className="text-gray-400 text-lg">{tier.period}</span>
-                    )}
-                  </div>
-
-                  <ul className="space-y-4 mb-8 flex-grow">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-300 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    className={cn(
-                      "w-full text-base font-semibold py-6",
-                      tier.popular
-                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-                        : "border-gray-700 text-white hover:bg-gray-900"
-                    )}
-                    variant={tier.popular ? "default" : "outline"}
-                    asChild
-                  >
-                    <Link to={tier.href}>
-                      {tier.cta}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section className="py-20 md:py-28 border-t border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Trusted by Industry Leaders
-                </span>
-              </h2>
-              <p className="text-lg text-gray-300">
-                See what hiring professionals are saying about T3X
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial.author}
-                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
-                >
-                  <div className="flex gap-1 mb-6">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <blockquote className="text-lg text-gray-300 mb-6 leading-relaxed">
-                    "{testimonial.quote}"
-                  </blockquote>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                      {testimonial.author.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div>
-                      <p className="font-bold text-white">{testimonial.author}</p>
-                      <p className="text-sm text-gray-400">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-24 md:py-32 border-t border-gray-800">
-          <div className="container px-4 md:px-6 text-center">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              <span className="text-white">
-                Ready to Transform
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Your Hiring Process?
-              </span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
-              Join 500+ companies hiring smarter with evidence-based talent validation.
+    <PublicLayout>
+      <LedgerHero
+        eyebrow="§ For Employers · Sheet"
+        meta="Filed for hiring desks"
+        stamp="No Rankings · No Scores"
+        title={
+          <>
+            <span className="block">Add</span>
+            <span className="block italic display-serif-italic">documented</span>
+            <span className="block">
+              <span className="ink-vermilion">behavioral</span> evidence.
+            </span>
+          </>
+        }
+        lede={
+          <>
+            Add documented behavioral evidence to your hiring decisions — showing how
+            conduct appeared across workplace situations.
+          </>
+        }
+        ledeSide={
+          <>
+            <p className="mb-4">
+              The Behavioral Evidence Report is an additional source of evidence — not a
+              hiring verdict, prediction, or pre-vetting mechanism. Candidate-controlled
+              release. Independent verification. Bounded evidence. Employer decision
+              ownership.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg" asChild>
-                <Link to="/get-started">
-                  Start Free Trial
-                  <ArrowRight className="ml-2 h-5 w-5" />
+            <p className="mono-label text-foreground border-l-2 border-vermilion pl-4">
+              No scores. No rankings. No recommendations.
+            </p>
+          </>
+        }
+      >
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <Button
+            asChild
+            className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6 text-base font-medium"
+          >
+            <Link to="/get-started">
+              Read the register
+              <span className="ml-3">→</span>
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-6 text-base font-medium underline underline-offset-8 decoration-1"
+          >
+            <Link to="/contact">Schedule a briefing</Link>
+          </Button>
+        </div>
+      </LedgerHero>
+
+      {/* Anatomy of the report */}
+      <LedgerSection first>
+        <LedgerHeader
+          eyebrow="§ I · Anatomy of the report"
+          side="What a hiring desk actually receives when a candidate releases their BER."
+        >
+          Five <span className="italic display-serif-italic">rights</span> the reader
+          holds.
+        </LedgerHeader>
+
+        <div className="border-t-2 border-foreground">
+          {benefits.map((b, i) => (
+            <LedgerRow
+              key={b.n}
+              n={b.n}
+              meta="Right"
+              title={b.title}
+              index={i}
+              isLast={i === benefits.length - 1}
+            >
+              {b.body}
+            </LedgerRow>
+          ))}
+        </div>
+      </LedgerSection>
+
+      {/* Pricing */}
+      <LedgerSection>
+        <LedgerHeader
+          eyebrow="§ II · Terms of subscription"
+          side="Access to the reading room. Priced by the depth of the read."
+        >
+          Three <span className="italic display-serif-italic">tiers</span> of
+          readership.
+        </LedgerHeader>
+
+        <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
+          {tiers.map((tier, i) => (
+            <motion.div
+              key={tier.name}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={rise}
+              custom={i}
+              className={
+                "flex flex-col p-8 md:p-10 relative " +
+                (i > 0 ? "border-t md:border-t-0 md:border-l border-foreground/25 " : "") +
+                (tier.highlight ? "bg-foreground/[0.035]" : "")
+              }
+            >
+              {tier.highlight && (
+                <div className="absolute -top-4 left-8 stamp normal-case">
+                  Most read
+                </div>
+              )}
+              <div className="mono-label text-foreground/50 mb-2">Tier {String(i + 1).padStart(2, "0")}</div>
+              <h3 className="display-serif text-3xl md:text-4xl text-foreground mb-2">
+                {tier.name}
+              </h3>
+              <p className="marginalia mb-6">{tier.tagline}</p>
+              <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-foreground/20">
+                <span className="ledger-num text-5xl text-foreground">{tier.price}</span>
+                {tier.period && (
+                  <span className="mono-label text-foreground/60">{tier.period}</span>
+                )}
+              </div>
+              <ul className="mb-10 flex-1 space-y-3">
+                {tier.features.map((f) => (
+                  <li key={f} className="flex items-baseline gap-3 py-1.5">
+                    <span className="ink-vermilion mt-0.5">§</span>
+                    <span className="text-foreground text-[0.9375rem] leading-snug">{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                asChild
+                className={
+                  "rounded-none shadow-none py-6 text-base font-medium " +
+                  (tier.highlight
+                    ? "bg-foreground text-background hover:bg-foreground/90"
+                    : "border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background")
+                }
+              >
+                <Link to={tier.href}>
+                  {tier.cta}
+                  <span className="ml-3">→</span>
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-gray-700 text-white hover:bg-gray-900 px-12 py-7 rounded-xl text-lg" asChild>
-                <Link to="/contact">
-                  <Clock className="mr-2 h-5 w-5" />
-                  Schedule Demo
-                </Link>
-              </Button>
-            </div>
+            </motion.div>
+          ))}
+        </div>
+      </LedgerSection>
+
+      {/* Closing */}
+      <LedgerSection className="pt-28 pb-32 md:pt-36 md:pb-36 overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-16 -right-8 md:-right-24 ledger-num text-foreground/[0.06] select-none"
+          style={{ fontSize: "clamp(20rem, 45vw, 44rem)", lineHeight: 0.75 }}
+        >
+          II
+        </div>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={rise}
+          className="relative max-w-4xl"
+        >
+          <div className="mono-label text-foreground/60 mb-6">§ III · Begin</div>
+          <h2 className="display-serif text-5xl md:text-7xl lg:text-[6.5rem] text-foreground leading-[0.95]">
+            Read the <span className="ink-vermilion">record.</span>{" "}
+            Keep the <span className="italic display-serif-italic">decision.</span>
+          </h2>
+          <div className="mt-14 pt-6 border-t border-foreground">
+            <Link to="/contact">
+              <LedgerLinkCTA>Schedule a briefing with editorial</LedgerLinkCTA>
+            </Link>
           </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+        </motion.div>
+      </LedgerSection>
+    </PublicLayout>
   );
 };
 

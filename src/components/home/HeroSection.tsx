@@ -1,329 +1,289 @@
-import { motion, type Variants } from "framer-motion";
-import { ArrowRight, FileText, Users, Briefcase, Sparkles, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
+// Fade-in-up on load, staggered
+const rise = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i: number = 0) => ({
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-};
-
-const floatingVariants: Variants = {
-  animate: {
-    y: [0, -15, 0],
-    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" as const },
-  },
+    y: 0,
+    transition: { duration: 0.9, delay: 0.15 + i * 0.09, ease: [0.19, 1, 0.22, 1] },
+  }),
 };
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
-      {/* Background Video */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover opacity-30"
+    <section className="relative paper-grain pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+      {/* Corner registration marks — like a printed press sheet */}
+      <RegistrationMarks />
+
+      <div className="relative max-w-[1400px] mx-auto px-6">
+        {/* Top masthead metadata */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={rise}
+          custom={0}
+          className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 md:mb-20 items-end"
         >
-          <source
-            src="https://bloujipdkyjsgzwxnoej.supabase.co/storage/v1/object/public/storage/homelivebg.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
-      </div>
-
-      {/* Animated Background Blobs */}
-      <motion.div
-        className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-indigo-600 rounded-full opacity-15 blur-[120px]"
-        animate={{ scale: [1, 1.3, 1], rotate: [0, 90, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-purple-600 rounded-full opacity-15 blur-[120px]"
-        animate={{ scale: [1.2, 1, 1.2], rotate: [0, -90, 0] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/3 right-1/4 w-[300px] h-[300px] bg-pink-600 rounded-full opacity-10 blur-[100px]"
-        animate={{ scale: [1, 1.4, 1], x: [0, 50, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Floating decorative images */}
-      <motion.div
-        className="absolute top-32 right-[8%] w-48 h-48 rounded-2xl overflow-hidden opacity-20 hidden lg:block"
-        variants={floatingVariants}
-        animate="animate"
-      >
-        <img
-          src="https://api.a0.dev/assets/image?text=professional%20mentor%20guiding%20young%20professional%20in%20modern%20office%20setting%20warm%20lighting&aspect=1:1&seed=hero_float1"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-      </motion.div>
-      <motion.div
-        className="absolute bottom-40 left-[5%] w-36 h-36 rounded-2xl overflow-hidden opacity-15 hidden lg:block"
-        variants={floatingVariants}
-        animate="animate"
-        transition={{ delay: 2 }}
-      >
-        <img
-          src="https://api.a0.dev/assets/image?text=diverse%20team%20collaborating%20on%20project%20modern%20workspace&aspect=1:1&seed=hero_float2"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-      </motion.div>
-
-      {/* Grid Pattern Overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
-
-      {/* Content */}
-      <motion.div
-        className="relative container px-4 md:px-6 pt-32 pb-20"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: Text Content */}
-            <div className="text-left">
-              {/* Badge */}
-              <motion.div
-                variants={itemVariants}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-500/10 backdrop-blur-xl border border-indigo-500/30 text-sm text-indigo-300 mb-8"
-              >
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                Workplace-Ready Behavioral Documentation
-              </motion.div>
-
-              {/* Headline */}
-              <motion.h1
-                className="text-5xl md:text-7xl font-bold leading-[1.1] mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                <span className="text-white">
-                  Beyond
-                </span>
-                <br />
-                <span className="text-white">
-                  Credentials.
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Behavioral Workplace Readiness
-                </span>
-              </motion.h1>
-
-              {/* Subheadline */}
-              <motion.p
-                variants={itemVariants}
-                className="text-lg md:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed"
-              >
-                The 3rd Academy bridges the gap between what your resume says and what
-                employers need — through guided professional experience and structured
-                documentation of Behavioral Readiness.
-              </motion.p>
-
-              {/* CTAs */}
-              <motion.div
-                variants={itemVariants}
-                className="flex flex-col sm:flex-row items-start gap-4"
-              >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-7 rounded-2xl font-bold text-lg shadow-2xl shadow-indigo-600/30"
-                    asChild
-                  >
-                    <Link to="/get-started">
-                      Start Your Journey
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 px-10 py-7 rounded-2xl text-lg backdrop-blur-xl"
-                    asChild
-                  >
-                    <Link to="/employers">
-                      <Play className="mr-2 h-5 w-5" />
-                      For Employers
-                    </Link>
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              {/* Trust indicators */}
-              <motion.div
-                variants={itemVariants}
-                className="flex items-center gap-6 mt-10 text-sm text-gray-400"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Free to start</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Mentor-matched in 48h</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Experience-based</span>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Right: Hero Image + Stats */}
-            <motion.div
-              variants={itemVariants}
-              className="relative hidden lg:block"
-            >
-              {/* Main hero image */}
-              <motion.div
-                className="relative rounded-3xl overflow-hidden shadow-2xl shadow-indigo-600/20 border border-white/10"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img
-                  src="https://api.a0.dev/assets/image?text=futuristic%20digital%20behavioral%20evidence%20report%20holographic%20interface%20with%20glowing%20blue%20purple%20gradients%20showing%20behavioral%20scores%20and%20mentor%20endorsements%20dark%20background&aspect=4:3&seed=hero_main"
-                  alt="Behavioral Evidence Report Interface"
-                  className="w-full h-auto"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              </motion.div>
-
-              {/* Floating stat cards */}
-              <motion.div
-                className="absolute -left-8 top-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="text-2xl font-bold text-indigo-400">95%</div>
-                <div className="text-xs text-gray-400">Satisfaction Rate</div>
-              </motion.div>
-
-              <motion.div
-                className="absolute -right-4 bottom-1/4 bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-xl"
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              >
-                <div className="text-2xl font-bold text-emerald-400">500+</div>
-                <div className="text-xs text-gray-400">Professionals Supported</div>
-              </motion.div>
-            </motion.div>
+          <div className="col-span-2 md:col-span-1">
+            <span className="mono-label text-foreground/60 block">§ Prospectus 01</span>
+            <span className="mono-label text-foreground/40 mt-1 block">
+              Filed for public reading
+            </span>
           </div>
+          <div className="hidden md:block text-center">
+            <div className="stamp">
+              Not a Certification
+            </div>
+          </div>
+          <div className="text-right md:text-right">
+            <span className="mono-label text-foreground/60 block">
+              {todayStamp()}
+            </span>
+            <span className="mono-label text-foreground/40 mt-1 block">
+              Iss. 04 · pp. 001–024
+            </span>
+          </div>
+        </motion.div>
 
-          {/* Entry Points Cards */}
-          <motion.div
-            variants={containerVariants}
-            className="grid md:grid-cols-3 gap-6 mt-20"
+        {/* Hero headline */}
+        <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-end">
+          {/* Left: giant headline */}
+          <motion.h1
+            initial="hidden"
+            animate="visible"
+            variants={rise}
+            custom={1}
+            className="md:col-span-8 display-serif text-[2.75rem] sm:text-[3.75rem] md:text-[5.25rem] lg:text-[6.5rem] text-foreground"
           >
-            <EntryPointCard
-              icon={<FileText className="w-6 h-6" />}
-              title="Resume Upload"
-              description="Start with your resume. We help highlight what matters beyond credentials."
-              entry="Entry A"
-              image="https://api.a0.dev/assets/image?text=professional%20resume%20being%20analyzed%20by%20AI%20with%20highlighted%20sections%20and%20glowing%20data%20points%20dark%20theme&aspect=16:9&seed=entry_resume"
-              delay={0}
-            />
-            <EntryPointCard
-              icon={<Users className="w-6 h-6" />}
-              title="Civic Access Lab"
-              description="For schools — engage students early in career awareness."
-              entry="Entry B"
-              image="https://api.a0.dev/assets/image?text=students%20in%20modern%20classroom%20using%20tablets%20for%20career%20planning%20with%20holographic%20displays%20futuristic&aspect=16:9&seed=entry_civic"
-              delay={0.1}
-            />
-            <EntryPointCard
-              icon={<Briefcase className="w-6 h-6" />}
-              title="LiveWorks Studio"
-              description="Complete real projects with professional guidance."
-              entry="Entry C"
-              image="https://api.a0.dev/assets/image?text=team%20working%20on%20real%20project%20in%20modern%20co-working%20space%20with%20screens%20showing%20project%20milestones&aspect=16:9&seed=entry_liveworks"
-              delay={0.2}
-            />
+            <span className="block">Beyond</span>
+            <span className="block italic display-serif-italic text-foreground/90">
+              Credentials.
+            </span>
+            <span className="block relative">
+              <span className="text-foreground">Behavioral </span>
+              <span className="ink-vermilion">Readiness</span>
+              <span className="ink-vermilion">.</span>
+            </span>
+          </motion.h1>
+
+          {/* Right: lede + dropcap */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={rise}
+            custom={2}
+            className="md:col-span-4 md:pb-4"
+          >
+            <div className="border-l-2 border-foreground pl-5 md:pl-6">
+              <p className="text-foreground text-base md:text-[1.0625rem] leading-[1.7] tracking-tight">
+                <span className="display-serif text-5xl md:text-6xl float-left leading-[0.85] pr-2 pt-1 -mt-1">
+                  T
+                </span>
+                he 3rd Academy issues a dated account of what you were asked to do,
+                what you did, where the conduct held, and where it did not — the kind
+                of evidence a résumé cannot carry.
+              </p>
+              <p className="marginalia mt-4 pl-1">
+                “A badge says what you completed. A score says how you were rated. A Behavioral Evidence Report shows how you conducted yourself when the work stopped going to plan.”
+              </p>
+            </div>
           </motion.div>
         </div>
-      </motion.div>
 
-      {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent" />
+        {/* Rule + actions */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={rise}
+          custom={3}
+          className="mt-16 md:mt-20 pt-6 border-t border-foreground"
+        >
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
+              <Button
+                asChild
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-7 py-6 text-base font-medium tracking-wide"
+              >
+                <Link to="/get-started">
+                  Enter the record
+                  <span className="ml-3">→</span>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-6 text-base font-medium tracking-wide underline underline-offset-8 decoration-1"
+              >
+                <Link to="/employers">
+                  Read the employer sheet
+                </Link>
+              </Button>
+            </div>
+
+            {/* Trust bullets — mono metadata style */}
+            <ul className="flex flex-wrap gap-x-8 gap-y-2 mono-label text-foreground/60">
+              <li>· Free to enter</li>
+              <li>· Mentor-matched 48h</li>
+              <li>· Evidence-based</li>
+            </ul>
+          </div>
+        </motion.div>
+
+        {/* Sample BER card — hand-crafted mock of the artifact this hero is talking about */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={rise}
+          custom={4}
+          className="mt-20 md:mt-28 flex justify-center md:justify-end"
+        >
+          <BERCardMock />
+        </motion.div>
+
+        {/* Manifesto row — three tenets on a running rule */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={rise}
+          custom={5}
+          className="mt-16 md:mt-20 grid md:grid-cols-3 gap-0 border-t border-foreground/40"
+        >
+          {[
+            {
+              n: "01",
+              t: "A different question",
+              b: "We do not ask only whether someone can perform the task. We govern how observed conduct becomes evidence.",
+            },
+            {
+              n: "02",
+              t: "A different method",
+              b: "Practice is kept separate from evidence. Rehearsal is private. What gets recorded is what happens when the work stops going to plan.",
+            },
+            {
+              n: "03",
+              t: "A different receipt",
+              b: "You leave with a record, not a rating. Every line is legible. Every difference stays visible.",
+            },
+          ].map((item, i) => (
+            <div
+              key={item.n}
+              className={
+                "px-1 py-8 md:py-10 md:px-8 " +
+                (i > 0 ? "md:border-l md:border-foreground/20" : "")
+              }
+            >
+              <div className="flex items-baseline gap-4 mb-4">
+                <span className="ledger-num text-3xl text-foreground">{item.n}</span>
+                <span className="mono-label text-foreground/50">§</span>
+              </div>
+              <h3 className="display-serif text-2xl md:text-3xl leading-tight mb-3">
+                {item.t}
+              </h3>
+              <p className="text-foreground/75 text-[0.9375rem] leading-relaxed">
+                {item.b}
+              </p>
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 }
 
-interface EntryPointCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  entry: string;
-  image: string;
-  delay: number;
+/**
+ * BERCardMock — a tilted, paper-card illustration of a Behavioral Evidence
+ * Report. Hand-crafted; not a real record. Sits on the hero to show, at a
+ * glance, the shape of the artifact the copy is describing (§ dimension
+ * rows, "current until" date, mono metadata, /verify pointer).
+ */
+function BERCardMock() {
+  return (
+    <div className="relative w-full max-w-md md:max-w-lg" style={{ transform: "rotate(-1.5deg)" }}>
+      {/* Paper shadow to lift the card off the ground */}
+      <div className="absolute inset-0 translate-x-2 translate-y-2 bg-foreground/20 -z-10" />
+      <article className="border-2 border-foreground bg-background/95 p-6 md:p-7 space-y-4 font-serif">
+        {/* Masthead */}
+        <header className="flex items-baseline justify-between border-b border-foreground/40 pb-3">
+          <div>
+            <div className="mono-label text-foreground/60">§ BER · Vol 01</div>
+            <div className="display-serif text-lg leading-none mt-1 text-foreground">
+              Behavioral Evidence <span className="italic display-serif-italic">Report</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="mono-label text-foreground/60">Iss. 04</div>
+            <div className="mono-label text-foreground/40 mt-1">{todayStamp()}</div>
+          </div>
+        </header>
+
+        {/* Participant handle */}
+        <div className="flex items-baseline justify-between">
+          <span className="mono-label text-foreground/60">§ Participant</span>
+          <span className="font-mono text-xs text-foreground/70">a1c…d3b7</span>
+        </div>
+
+        {/* Dimension statement rows */}
+        <ul className="space-y-2.5">
+          {[
+            { d: "D1", note: "Integrity & Ethics · truthful in the situation named." },
+            { d: "D3", note: "Execution Reliability · delivered to the stated standard." },
+            { d: "D6", note: "Resilience & Recovery · continued engaging after the setback." },
+          ].map((row) => (
+            <li key={row.d} className="flex items-baseline gap-3 text-sm">
+              <span className="mono-label text-foreground/60 tabular-nums w-8">{row.d}</span>
+              <span className="text-foreground/85 leading-snug">{row.note}</span>
+            </li>
+          ))}
+          <li className="flex items-baseline gap-3 text-sm">
+            <span className="mono-label text-foreground/40 tabular-nums w-8">D2</span>
+            <span className="text-foreground/50 italic leading-snug">not observed in this period.</span>
+          </li>
+        </ul>
+
+        {/* Footer meta */}
+        <div className="grid grid-cols-2 gap-4 border-t border-foreground/40 pt-3 text-xs">
+          <div>
+            <div className="mono-label text-foreground/50">Current until</div>
+            <div className="text-foreground mt-1">18 Feb 2028</div>
+          </div>
+          <div className="text-right">
+            <div className="mono-label text-foreground/50">Verify at</div>
+            <div className="text-foreground mt-1 font-mono">/verify</div>
+          </div>
+        </div>
+
+        {/* Corner stamp */}
+        <div className="pt-1">
+          <span className="stamp normal-case">Issued · confirmed by more than one mentor</span>
+        </div>
+      </article>
+    </div>
+  );
 }
 
-function EntryPointCard({ icon, title, description, entry, image, delay }: EntryPointCardProps) {
-  return (
-    <motion.div
-      className="group relative"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.5 + delay }}
-      whileHover={{ y: -10 }}
+function RegistrationMarks() {
+  const mark = (
+    <svg
+      className="w-4 h-4 text-foreground/40"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      aria-hidden
     >
-      {/* Glow effect on hover */}
-      <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500" />
-
-      {/* Glass card */}
-      <div className="relative bg-black backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/30 transition-all duration-500 h-full">
-        {/* Image */}
-        <div className="relative h-36 overflow-hidden">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-          <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-medium text-indigo-300 bg-black/70 backdrop-blur-sm rounded-full border border-indigo-500/30">
-            {entry}
-          </span>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
-              {icon}
-            </div>
-            <h3 className="text-lg font-bold text-white">{title}</h3>
-          </div>
-          <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
-        </div>
-      </div>
-    </motion.div>
+      <circle cx="8" cy="8" r="6" />
+      <line x1="0" y1="8" x2="16" y2="8" />
+      <line x1="8" y1="0" x2="8" y2="16" />
+    </svg>
+  );
+  return (
+    <>
+      <div className="absolute top-24 left-4 hidden md:block">{mark}</div>
+      <div className="absolute top-24 right-4 hidden md:block">{mark}</div>
+    </>
   );
 }

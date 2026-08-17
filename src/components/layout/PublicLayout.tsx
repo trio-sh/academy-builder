@@ -10,20 +10,21 @@ interface PublicLayoutProps {
 }
 
 /**
- * PublicLayout — T3A purple shell for every public/marketing page.
- * The old paper theme was rejected 2026-08-12; palette reverted to
- * dark purple with tech-feel accents. Fonts + layout kept intact
- * (see .pipilot/design.md). No `data-theme="paper"` wrapper.
+ * PublicLayout — the paper-theme shell for every public/marketing page.
+ * Ensures consistent ledger styling: parchment ground, ink type,
+ * header/footer, and a top ink progress rule.
  */
 export function PublicLayout({ children, mainClassName }: PublicLayoutProps) {
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
-      {/* Scroll progress rule — indigo → purple gradient */}
+    <div
+      data-theme="paper"
+      className="min-h-screen bg-background text-foreground antialiased selection:bg-foreground selection:text-background"
+    >
       <motion.div
-        className="fixed top-0 left-0 right-0 h-[2px] gradient-accent z-[60] origin-left"
+        className="fixed top-0 left-0 right-0 h-[2px] bg-foreground z-[60] origin-left"
         style={{ scaleX }}
       />
       <Header />
