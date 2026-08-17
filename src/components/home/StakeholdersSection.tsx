@@ -128,10 +128,11 @@ export function StakeholdersSection() {
                 <div className="mono-label text-foreground/50">{r.role}</div>
               </div>
 
-              {/* Figure block for this reader */}
+              {/* Figure block for this reader — small aspect so the
+                  copy stays the subject */}
               {r.image && (
                 <figure className="mb-6 border border-foreground/25 bg-background/40">
-                  <div className="aspect-[16/9] overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden max-h-48">
                     <img
                       src={r.image}
                       alt={r.figCaption ?? r.title}
@@ -139,7 +140,7 @@ export function StakeholdersSection() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <figcaption className="mono-label text-foreground/60 px-3 py-1.5 border-t border-foreground/25">
+                  <figcaption className="mono-label text-foreground/60 px-3 py-1.5 border-t border-foreground/25 text-[0.65rem]">
                     {r.figCaption ?? r.title}
                   </figcaption>
                 </figure>
