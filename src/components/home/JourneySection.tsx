@@ -173,6 +173,25 @@ export function JourneySection() {
                   </p>
                 )}
               </div>
+
+              {/* Figure block — subordinate to the row so it reads as
+                  ledger figure, not marketing photo */}
+              {entry.image && (
+                <figure className="col-span-12 mt-4 md:mt-6 border border-foreground/25 bg-background/40">
+                  <div className="aspect-[16/6] md:aspect-[16/5] overflow-hidden">
+                    <img
+                      src={entry.image}
+                      alt={entry.imageAlt ?? entry.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <figcaption className="mono-label text-foreground/60 px-3 py-2 border-t border-foreground/25 flex items-center justify-between">
+                    <span>Fig. {entry.n}</span>
+                    <span className="text-foreground/50">{entry.imageAlt ?? entry.title}</span>
+                  </figcaption>
+                </figure>
+              )}
             </motion.article>
           ))}
         </div>
