@@ -161,16 +161,22 @@ export function HeroSection() {
               n: "01",
               t: "A different question",
               b: "We do not ask only whether someone can perform the task. We govern how observed conduct becomes evidence.",
+              image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces",
+              cap: "Fig. i · the question",
             },
             {
               n: "02",
               t: "A different method",
               b: "Practice is kept separate from evidence. Rehearsal is private. What gets recorded is what happens when the work stops going to plan.",
+              image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=400&fit=crop&crop=faces",
+              cap: "Fig. ii · the method",
             },
             {
               n: "03",
               t: "A different receipt",
               b: "You leave with a record, not a rating. Every line is legible. Every difference stays visible.",
+              image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=400&fit=crop&crop=faces",
+              cap: "Fig. iii · the receipt",
             },
           ].map((item, i) => (
             <div
@@ -184,6 +190,19 @@ export function HeroSection() {
                 <span className="ledger-num text-3xl text-foreground">{item.n}</span>
                 <span className="mono-label text-foreground/50">§</span>
               </div>
+              <figure className="mb-4 border border-foreground/25 bg-background/40 w-20 md:w-24">
+                <div className="aspect-square overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.cap}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <figcaption className="mono-label text-foreground/60 px-1.5 py-0.5 border-t border-foreground/25 text-[0.55rem]">
+                  {item.cap}
+                </figcaption>
+              </figure>
               <h3 className="display-serif text-2xl md:text-3xl leading-tight mb-3">
                 {item.t}
               </h3>
