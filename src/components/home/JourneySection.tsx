@@ -148,33 +148,31 @@ export function JourneySection() {
                 </p>
               </div>
 
-              {/* Marginalia */}
-              <div className="col-span-12 md:col-span-2">
+              {/* Marginalia + thumbnail — the picture sits with the
+                  aside in the right column, small enough to be a plate,
+                  not a poster */}
+              <div className="col-span-12 md:col-span-2 flex flex-col gap-3">
+                {entry.image && (
+                  <figure className="border border-foreground/25 bg-background/40 w-24 md:w-full max-w-[9rem]">
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        src={entry.image}
+                        alt={entry.imageAlt ?? entry.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25 text-[0.6rem]">
+                      Fig. {entry.n}
+                    </figcaption>
+                  </figure>
+                )}
                 {entry.aside && (
                   <p className="marginalia">
                     ↳ {entry.aside}
                   </p>
                 )}
               </div>
-
-              {/* Figure block — subordinate to the row so it reads as
-                  ledger figure, not marketing photo */}
-              {entry.image && (
-                <figure className="col-span-12 mt-4 md:mt-6 border border-foreground/25 bg-background/40">
-                  <div className="aspect-[16/6] md:aspect-[16/5] overflow-hidden">
-                    <img
-                      src={entry.image}
-                      alt={entry.imageAlt ?? entry.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <figcaption className="mono-label text-foreground/60 px-3 py-2 border-t border-foreground/25 flex items-center justify-between">
-                    <span>Fig. {entry.n}</span>
-                    <span className="text-foreground/50">{entry.imageAlt ?? entry.title}</span>
-                  </figcaption>
-                </figure>
-              )}
             </motion.article>
           ))}
         </div>
