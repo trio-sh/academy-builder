@@ -163,16 +163,20 @@ const OPENROUTER_MODELS = new Set([
   // Refreshed 2026-08-10
   "inclusionai/ling-3.0-tiny:free",
   "nvidia/nemotron-nano-12b-v2-vl:free",
+  // Refreshed 2026-08-17
+  "nvidia/nemotron-3.5-lightning:free",
+  "dots-studio/dots-3-note-preview:free",
+  "z-ai/glm-5.2:free",
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-10
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-17
+  "nvidia/nemotron-3.5-lightning:free",        // ctx=1000000, max_tok=65536 — NEW
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
+  "dots-studio/dots-3-note-preview:free",      // ctx=512000,  max_tok=512000 — NEW
   "nvidia/nemotron-3-super-120b-a12b:free",    // ctx=262144,  max_tok=262144
   "poolside/laguna-s-2.1:free",               // ctx=262144,  max_tok=32768
-  "inclusionai/ling-3.0-tiny:free",           // ctx=262144,  max_tok=32768 (replaces ling-3.0-flash)
-  "poolside/laguna-xs-2.1:free",              // ctx=262144,  max_tok=32768
   // OpenRouter free models (tool-capable)
   "tencent/hy3:free",
   "moonshotai/kimi-k2.6:free",
@@ -193,6 +197,8 @@ const KILO_FALLBACK_MODELS = [
   // OpenRouter free models added 2026-08-10
   "inclusionai/ling-3.0-tiny:free",
   "nvidia/nemotron-nano-12b-v2-vl:free",       // ctx=128000, max_tok=128000, multimodal
+  // OpenRouter free models added 2026-08-17
+  "z-ai/glm-5.2:free",                         // ctx=128000, coding/agentic (Zhipu AI)
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
