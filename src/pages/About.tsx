@@ -1,258 +1,288 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import {
-  Target,
-  Shield,
-  Users,
-  BarChart3,
-  ArrowRight,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
+import {
+  LedgerSection,
+  LedgerHeader,
+  LedgerHero,
+  LedgerRow,
+  LedgerColumn,
+  LedgerLinkCTA,
+  rise,
+} from "@/components/ledger";
 
-const values = [
+const principles = [
   {
-    icon: Users,
-    title: "Human Judgment Above All",
-    description: "Every credential is earned through rigorous mentor observation. AI assists, but humans make the final call—no automated shortcuts.",
+    n: "01",
+    title: "Human judgment above all",
+    body: "Every entry in the record is written by a mentor. Instruments assist; humans decide. No automated verdicts, no shortcuts around observation.",
+    aside: "Instruments do not judge people.",
   },
   {
-    icon: Shield,
-    title: "Credentials Must Be Earned",
-    description: "Behavioral Evidence Reports emerge from sustained observation and documented evidence. No self-assessments, no gaming the system.",
+    n: "02",
+    title: "Evidence must be earned",
+    body: "Behavioral Evidence Reports emerge from sustained observation and documented conduct. No self-assessments. No manufacturing.",
+    aside: "The record only carries what happened.",
   },
   {
-    icon: Target,
-    title: "Dignity in Every Outcome",
-    description: "Rejection is delivered with respect. Exits are graceful. Re-entry is always an option. No permanent labels, no closed doors.",
+    n: "03",
+    title: "Dignity in every outcome",
+    body: "Rejection is delivered with respect. Exits are graceful. Re-entry is always an option. No permanent labels. No closed doors.",
   },
   {
-    icon: BarChart3,
-    title: "Continuous System Learning",
-    description: "Every outcome strengthens the framework. The system evolves without judging individuals—data informs, never punishes.",
+    n: "04",
+    title: "Continuous system learning",
+    body: "Every outcome strengthens the framework. The system evolves without judging individuals — data informs, never punishes.",
   },
 ];
 
 const stats = [
-  { value: "10K+", label: "Candidates Validated" },
-  { value: "500+", label: "Employer Partners" },
-  { value: "200+", label: "School Partners" },
-  { value: "95%", label: "Satisfaction Rate" },
+  { value: "10,000+", label: "People whose conduct we have documented" },
+  { value: "500+", label: "Employer partners reading the register" },
+  { value: "200+", label: "Schools contributing entries" },
+  { value: "95%", label: "Retention on satisfaction over 90 days" },
 ];
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-black">
-      <Header />
-      <main className="pt-16">
-        {/* Hero */}
-        <section className="py-24 md:py-32">
-
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-600 border border-indigo-500 text-sm text-white mb-6">
-                <Sparkles className="w-4 h-4" />
-                The 3rd Academy
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                <span className="text-white">
-                  Bridging the Gap Between
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Credentials and Readiness
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Education tells employers what you studied. Certifications show what you passed.
-                <span className="font-bold"> We prove what you can actually do.</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section className="py-12 border-y border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Mission */}
-        <section className="py-20 md:py-28 bg-black">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                  Our Mission
-                </span>
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                  Making Behavioral Readiness Measurable
-                </h2>
-              </div>
-
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-                <p>
-                  Traditional credentials tell employers what you studied. Certifications show what tests you passed.
-                  But <strong className="text-white">neither reveals how you'll actually perform in the workplace.</strong>
-                </p>
-                <p>
-                  The 3rd Academy fills this gap with a mentor-gated validation system that observes, documents,
-                  and certifies behavioral readiness over time. Not through AI scores or self-assessments—
-                  <strong className="text-white"> through sustained human observation by experienced professionals.</strong>
-                </p>
-                <p>
-                  The result? <strong className="text-white">Candidates with evidence-backed credentials.</strong> Employers with confidence in their hires.
-                  Schools with tools to prepare students from day one.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Values */}
-        <section className="py-20 md:py-28 border-t border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <span className="inline-block text-sm font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wider mb-4">
-                Our Principles
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Architecture as Philosophy
-              </h2>
-              <p className="text-lg text-gray-300">
-                Every technical decision reflects a human value. Our architecture is our ethics.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {values.map((value) => (
-                <div
-                  key={value.title}
-                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-5">
-                    <value.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-3">
-                    {value.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {value.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Who We Serve */}
-        <section className="py-20 md:py-28 border-t border-gray-800">
-          <div className="container px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Built for Everyone
-                </span>
-              </h2>
-              <p className="text-lg text-gray-300">
-                Three pathways, one ecosystem—designed for candidates, employers, and educators.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {[
-                {
-                  title: "For Candidates",
-                  desc: "Earn validated credentials through mentor observation. Build a Behavioral Evidence Report that proves workplace readiness.",
-                  link: "/get-started",
-                  icon: Users,
-                  gradient: "from-indigo-600 to-indigo-700",
-                },
-                {
-                  title: "For Employers",
-                  desc: "Access pre-validated talent with evidence-backed behavioral profiles. Hire with confidence, reduce turnover.",
-                  link: "/employers",
-                  icon: TrendingUp,
-                  gradient: "from-purple-600 to-purple-700",
-                },
-                {
-                  title: "For Schools",
-                  desc: "Prepare students early with career awareness tools. Build longitudinal profiles that transition seamlessly.",
-                  link: "/schools",
-                  icon: Target,
-                  gradient: "from-pink-600 to-pink-700",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="p-8 rounded-2xl bg-gray-950 border border-gray-800 hover:border-indigo-500 h-full flex flex-col"
-                >
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mx-auto mb-5`}>
-                    <item.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-bold text-white mb-3 text-2xl text-center">{item.title}</h3>
-                  <p className="text-gray-300 leading-relaxed text-center mb-6 flex-grow">{item.desc}</p>
-                  <Button
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold"
-                    asChild
-                  >
-                    <Link to={item.link}>
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-24 md:py-32 border-t border-gray-800">
-          <div className="container px-4 md:px-6 text-center">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              <span className="text-white">
-                Ready to Join
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                The Movement?
-              </span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
-              Whether you're seeking validation, hiring talent, or educating students—
-              there's a place for you in our ecosystem.
+    <PublicLayout>
+      <LedgerHero
+        eyebrow="§ About · Manifesto"
+        meta="Filed for public reading"
+        stamp={todayStamp()}
+        title={
+          <>
+            <span className="block">Not a certifier.</span>
+            <span className="block italic display-serif-italic">A registrar of</span>
+            <span className="block">
+              observed <span className="ink-vermilion">conduct.</span>
+            </span>
+          </>
+        }
+        lede={
+          <>
+            Education says what you studied. Certifications say what you passed. We keep
+            a dated record of what your conduct did when the work stopped going to plan.
+          </>
+        }
+        ledeSide={
+          <>
+            <p className="mb-4">
+              The 3rd Academy Inc. was founded to close the gap between what a résumé can
+              claim and what an employer can trust — not by grading harder, but by
+              refusing to convert observation into a rating.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 px-12 py-7 rounded-xl font-bold text-lg" asChild>
-                <Link to="/get-started">
-                  Get Started Today
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-gray-700 text-white hover:bg-gray-900 px-12 py-7 rounded-xl text-lg" asChild>
-                <Link to="/contact">
-                  Contact Us
-                </Link>
-              </Button>
-            </div>
+            <p className="marginalia">
+              We do not certify readiness. We register conduct — and let those who read
+              the record draw their own conclusions.
+            </p>
+          </>
+        }
+      >
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <Button
+            asChild
+            className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-6 text-base font-medium"
+          >
+            <Link to="/get-started">
+              Enter the record
+              <span className="ml-3">→</span>
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-6 text-base font-medium underline underline-offset-8 decoration-1"
+          >
+            <Link to="/contact">Write to the editor</Link>
+          </Button>
+        </div>
+      </LedgerHero>
+
+      {/* Ledger of standing figures */}
+      <LedgerSection first className="py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-y border-foreground py-8">
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={rise}
+              custom={i}
+            >
+              <div className="ledger-num text-4xl md:text-6xl text-foreground leading-none">
+                {s.value}
+              </div>
+              <div className="mono-label text-foreground/60 mt-3">{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </LedgerSection>
+
+      {/* Mission */}
+      <LedgerSection>
+        <LedgerHeader
+          eyebrow="§ I · Our mission"
+          side={
+            <>
+              Traditional credentials tell employers what you studied. Certifications
+              show what tests you passed. Neither shows <em>how you actually conduct
+              yourself in the work</em>.
+            </>
+          }
+        >
+          Making <span className="italic display-serif-italic">behavioral
+          readiness</span> <span className="ink-vermilion">documentable.</span>
+        </LedgerHeader>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={rise}
+          custom={0}
+          className="max-w-4xl display-serif text-2xl md:text-3xl leading-[1.35] text-foreground space-y-8 border-t border-foreground pt-10"
+        >
+          <p>
+            The 3rd Academy closes the gap between claim and trust with a mentor-led
+            observation system that documents conduct across workplace situations over
+            time — not through scores, not through self-assessment.
+          </p>
+          <p>
+            The result:{" "}
+            <span className="italic display-serif-italic ink-vermilion">
+              a record you can read line by line
+            </span>
+            . An employer with something better than a promise. A school with a way to
+            support the transition it prepared its students for.
+          </p>
+        </motion.div>
+      </LedgerSection>
+
+      {/* Principles */}
+      <LedgerSection>
+        <LedgerHeader
+          eyebrow="§ II · Architecture as philosophy"
+          side="Every technical decision reflects a human value. Our architecture is our ethics."
+        >
+          Four <span className="italic display-serif-italic">principles</span> of the
+          record.
+        </LedgerHeader>
+
+        <div className="border-t-2 border-foreground">
+          {principles.map((p, i) => (
+            <LedgerRow
+              key={p.n}
+              n={p.n}
+              meta="Principle"
+              title={p.title}
+              aside={p.aside}
+              index={i}
+              isLast={i === principles.length - 1}
+            >
+              {p.body}
+            </LedgerRow>
+          ))}
+        </div>
+      </LedgerSection>
+
+      {/* Who We Serve */}
+      <LedgerSection>
+        <LedgerHeader eyebrow="§ III · Who is served">
+          Three <span className="italic display-serif-italic">reading rooms</span>. One{" "}
+          <span className="ink-vermilion">register</span>.
+        </LedgerHeader>
+
+        <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
+          <LedgerColumn
+            n="I"
+            role="The candidate"
+            title="For Candidates"
+            lede="Build an evidence-based behavioral profile through mentor observation and real project experience."
+            index={0}
+            isFirst
+            cta={
+              <Link to="/get-started" className="mt-2">
+                <LedgerLinkCTA>Start your journey</LedgerLinkCTA>
+              </Link>
+            }
+          />
+          <LedgerColumn
+            n="II"
+            role="The hiring desk"
+            title="For Employers"
+            lede="Access pre-observed candidates with proven behavioral readiness. Follow-through insights after hiring."
+            index={1}
+            cta={
+              <Link to="/employers" className="mt-2">
+                <LedgerLinkCTA>Read the employer sheet</LedgerLinkCTA>
+              </Link>
+            }
+          />
+          <LedgerColumn
+            n="III"
+            role="The institution"
+            title="For Schools"
+            lede="Engage students early. Build longitudinal behavioral documentation that supports transition into work."
+            index={2}
+            cta={
+              <Link to="/schools" className="mt-2">
+                <LedgerLinkCTA>Learn about Civic Access</LedgerLinkCTA>
+              </Link>
+            }
+          />
+        </div>
+      </LedgerSection>
+
+      {/* Closing */}
+      <LedgerSection className="pt-28 pb-32 md:pt-40 md:pb-40 overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-16 -right-8 md:-right-24 ledger-num text-foreground/[0.06] select-none"
+          style={{ fontSize: "clamp(20rem, 45vw, 44rem)", lineHeight: 0.75 }}
+        >
+          §
+        </div>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={rise}
+          className="relative max-w-5xl"
+        >
+          <div className="mono-label text-foreground/60 mb-6">§ IV · Ready to enter</div>
+          <h2 className="display-serif text-5xl md:text-7xl lg:text-[6.5rem] text-foreground leading-[0.95]">
+            Ready to join the{" "}
+            <span className="italic display-serif-italic">movement</span>?
+          </h2>
+          <p className="mt-10 max-w-xl text-foreground/85 text-lg md:text-xl leading-relaxed border-l-2 border-foreground pl-6">
+            Whether you are seeking evidence, hiring talent, or preparing students —
+            there is a place for you in the register.
+          </p>
+          <div className="mt-14 pt-6 border-t border-foreground flex flex-col sm:flex-row gap-4 items-start">
+            <Button
+              asChild
+              className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-8 py-7 text-base font-medium"
+            >
+              <Link to="/get-started">
+                Enter the record
+                <span className="ml-3">→</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              className="text-foreground hover:bg-foreground/5 rounded-none px-4 py-7 text-base font-medium underline underline-offset-8 decoration-1"
+            >
+              <Link to="/contact">Contact the editor</Link>
+            </Button>
           </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+        </motion.div>
+      </LedgerSection>
+    </PublicLayout>
   );
 };
 
