@@ -21,7 +21,9 @@ type Reader = {
   href: string;
 };
 
-const readers: Reader[] = [
+type ReaderWithFigure = Reader & { image?: string; figCaption?: string };
+
+const readers: ReaderWithFigure[] = [
   {
     n: "I",
     title: "For Job Seekers",
@@ -35,6 +37,8 @@ const readers: Reader[] = [
     ],
     cta: "Start your journey",
     href: "/get-started",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1000&h=560&fit=crop&crop=faces",
+    figCaption: "Fig. I · at the candidate desk",
   },
   {
     n: "II",
@@ -49,6 +53,8 @@ const readers: Reader[] = [
     ],
     cta: "Explore T3X Exchange",
     href: "/employers",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&h=560&fit=crop&crop=faces",
+    figCaption: "Fig. II · at the hiring desk",
   },
   {
     n: "III",
@@ -63,6 +69,8 @@ const readers: Reader[] = [
     ],
     cta: "Learn about Civic Access",
     href: "/schools",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&h=560&fit=crop&crop=faces",
+    figCaption: "Fig. III · at the school",
   },
 ];
 
@@ -119,6 +127,23 @@ export function StakeholdersSection() {
                 </div>
                 <div className="mono-label text-foreground/50">{r.role}</div>
               </div>
+
+              {/* Figure block for this reader */}
+              {r.image && (
+                <figure className="mb-6 border border-foreground/25 bg-background/40">
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <img
+                      src={r.image}
+                      alt={r.figCaption ?? r.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <figcaption className="mono-label text-foreground/60 px-3 py-1.5 border-t border-foreground/25">
+                    {r.figCaption ?? r.title}
+                  </figcaption>
+                </figure>
+              )}
 
               {/* Title */}
               <h3 className="display-serif text-3xl md:text-[2.25rem] leading-tight mb-5 text-foreground">
