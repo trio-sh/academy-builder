@@ -153,7 +153,7 @@ export function JourneySection() {
                   not a poster */}
               <div className="col-span-12 md:col-span-2 flex flex-col gap-3">
                 {entry.image && (
-                  <figure className="border border-foreground/25 bg-background/40 w-24 md:w-full max-w-[9rem]">
+                  <figure className="hidden md:block border border-foreground/25 bg-background/40 w-24 md:w-full max-w-[9rem]">
                     <div className="aspect-square overflow-hidden">
                       <img
                         src={entry.image}

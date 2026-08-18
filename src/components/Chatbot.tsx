@@ -1376,7 +1376,7 @@ export function Chatbot() {
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            className="fixed bottom-5 right-5 z-50 group"
+            className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-50 group"
             onClick={() => setIsOpen(true)}
             initial={{ scale: 0, opacity: 0, rotate: -6, y: 20 }}
             animate={{ scale: 1, opacity: 1, rotate: -2, y: 0 }}
@@ -1387,21 +1387,21 @@ export function Chatbot() {
             aria-label="Open the Editor's desk"
             style={{ fontFamily: 'Fraunces, Georgia, serif' }}
           >
-            {/* Envelope corner card */}
+            {/* Envelope corner card — compact seal on mobile, full card on sm+ */}
             <div
-              className="relative bg-[#EFE9DA] text-[#1D1815] pl-3.5 pr-5 py-3 shadow-[4px_4px_0_rgba(29,24,21,0.20)] border border-[#1D1815]/60"
+              className="relative bg-[#EFE9DA] text-[#1D1815] p-2 sm:pl-3.5 sm:pr-5 sm:py-3 shadow-[3px_3px_0_rgba(29,24,21,0.20)] sm:shadow-[4px_4px_0_rgba(29,24,21,0.20)] border border-[#1D1815]/60"
               style={{
                 clipPath:
                   "polygon(0 0, 100% 0, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
               }}
             >
-              {/* Faint stamp border */}
-              <div className="absolute inset-1.5 pointer-events-none border border-dashed border-[#1D1815]/25" />
+              {/* Faint stamp border — hidden on mobile so the seal is unobstructed */}
+              <div className="absolute inset-1.5 pointer-events-none border border-dashed border-[#1D1815]/25 hidden sm:block" />
 
-              <div className="relative flex items-center gap-3">
-                <BrandSeal size={44} withDots />
+              <div className="relative flex items-center gap-0 sm:gap-3">
+                <BrandSeal size={32} withDots />
 
-                <div className="text-left leading-tight">
+                <div className="text-left leading-tight hidden sm:block">
                   <div
                     className="text-[0.65rem] uppercase tracking-[0.2em] text-[#1D1815]/60"
                     style={{ fontFamily: '"JetBrains Mono", monospace' }}
@@ -1420,9 +1420,9 @@ export function Chatbot() {
               </div>
             </div>
 
-            {/* Postmark ring — appears on hover */}
+            {/* Postmark ring — appears on hover, sm+ only */}
             <div
-              className="absolute -top-3 -left-3 w-14 h-14 border-2 border-[#B84A22] rounded-full opacity-0 group-hover:opacity-70 transition-opacity flex items-center justify-center pointer-events-none"
+              className="hidden sm:flex absolute -top-3 -left-3 w-14 h-14 border-2 border-[#B84A22] rounded-full opacity-0 group-hover:opacity-70 transition-opacity items-center justify-center pointer-events-none"
               style={{ transform: "rotate(-12deg)" }}
             >
               <span
