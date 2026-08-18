@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { PublicLayout } from "@/components/layout/PublicLayout";
+import { PageFigureRow } from "@/components/ledger/PageFigures";
 import {
   FileText,
   Briefcase,
@@ -491,6 +492,23 @@ const GetStarted = () => {
   return (
     <PublicLayout>
       <main className="pt-16">
+        {step === 1 && (
+          <PageFigureRow
+            figures={[
+              {
+                src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&h=800&fit=crop&crop=faces",
+                alt: "A candidate seated at a desk beginning their record",
+                caption: "Fig. I · at the candidate desk",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=800&fit=crop&crop=faces",
+                alt: "Assigned mentor guiding a job seeker through workplace preparation",
+                caption: "Fig. II · with the assigned mentor",
+                aspect: "aspect-[16/10]",
+              },
+            ]}
+          />
+        )}
         {/* Hero */}
         <section className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 relative overflow-hidden">
           <div className="absolute inset-0 paper-grain" />
