@@ -131,8 +131,8 @@ export function StakeholdersSection() {
               {/* Figure block for this reader — small aspect so the
                   copy stays the subject */}
               {r.image && (
-                <figure className="hidden md:block mb-6 border border-foreground/25 bg-background/40">
-                  <div className="aspect-[4/3] overflow-hidden max-h-48">
+                <figure className="hidden md:block mb-6 border border-foreground/25 bg-background/40 w-full">
+                  <div className="w-full aspect-[16/10] overflow-hidden">
                     <img
                       src={r.image}
                       alt={r.figCaption ?? r.title}
