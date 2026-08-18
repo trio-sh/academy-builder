@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { todayStamp } from "@/lib/dateStamp";
+import { PageFigureRow } from "@/components/ledger/PageFigures";
 
 const rise = {
   hidden: { opacity: 0, y: 28 },
@@ -175,6 +176,22 @@ const Platform = () => {
           </motion.div>
         </div>
       </section>
+
+      <PageFigureRow
+        figures={[
+          {
+            src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=800&fit=crop&crop=faces",
+            alt: "Mentor and mentee working at a desk under warm office light",
+            caption: "Fig. I · at the mentor's desk",
+          },
+          {
+            src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=800&fit=crop&crop=faces",
+            alt: "Team reviewing a document together in a collaborative session",
+            caption: "Fig. II · in the reading room",
+            aspect: "aspect-[16/10]",
+          },
+        ]}
+      />
 
       {/* Platform Features */}
       <section className="paper-grain py-24 md:py-32 border-b border-foreground/40">

@@ -10,6 +10,7 @@ import {
   LedgerLinkCTA,
   rise,
 } from "@/components/ledger";
+import { PageFigureRow } from "@/components/ledger/PageFigures";
 
 const features = [
   {
@@ -95,6 +96,22 @@ const Schools = () => {
           </Button>
         </div>
       </LedgerHero>
+
+      <PageFigureRow
+        figures={[
+          {
+            src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1200&h=800&fit=crop&crop=faces",
+            alt: "A teacher working with a small group of students at a desk",
+            caption: "Fig. I · at the classroom desk",
+          },
+          {
+            src: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=800&fit=crop",
+            alt: "Students collaborating over laptops in a bright common room",
+            caption: "Fig. II · in the common room",
+            aspect: "aspect-[16/10]",
+          },
+        ]}
+      />
 
       <LedgerSection first>
         <LedgerHeader

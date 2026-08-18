@@ -10,6 +10,7 @@ import {
   LedgerLinkCTA,
   rise,
 } from "@/components/ledger";
+import { PageFigureRow } from "@/components/ledger/PageFigures";
 
 const benefits = [
   {
@@ -140,6 +141,22 @@ const Employers = () => {
           </Button>
         </div>
       </LedgerHero>
+
+      <PageFigureRow
+        figures={[
+          {
+            src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=800&fit=crop&crop=faces",
+            alt: "Two people at a hiring desk reviewing a candidate together",
+            caption: "Fig. I · at the hiring desk",
+          },
+          {
+            src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&h=800&fit=crop&crop=faces",
+            alt: "A candidate seated for a first meeting with a hiring manager",
+            caption: "Fig. II · the reading room",
+            aspect: "aspect-[16/10]",
+          },
+        ]}
+      />
 
       {/* Anatomy of the report */}
       <LedgerSection first>
