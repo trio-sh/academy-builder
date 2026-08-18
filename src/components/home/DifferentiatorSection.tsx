@@ -273,8 +273,8 @@ export function DifferentiatorSection() {
           <blockquote className="display-serif text-3xl md:text-5xl leading-[1.15] text-foreground">
             A badge says what you completed. A score says how you were rated.
             <span className="block italic display-serif-italic mt-4 ink-vermilion">
-              A Behavioral Evidence Report shows how you conducted yourself when the
-              work stopped going to plan.
+              A Behavioral Evidence Report reflects how your conduct shows up
+              across workplace situations over time.
             </span>
           </blockquote>
         </motion.div>

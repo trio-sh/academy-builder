@@ -137,15 +137,24 @@ export function HeroSection() {
           </div>
         </motion.div>
 
-        {/* Sample BER card — hand-crafted mock of the artifact this hero is talking about */}
+        {/* Sample BER card + companion illustration.
+            Per Dr. Mofoke feedback #2, the space left of the card was
+            too empty. On md+ we sit the treadmill illustration in that
+            open zone so the eye reads "what work looks like today →
+            what the record replaces it with". */}
         <motion.div
           initial="hidden"
           animate="visible"
           variants={rise}
           custom={4}
-          className="mt-20 md:mt-28 flex justify-center md:justify-end"
+          className="mt-20 md:mt-28 grid md:grid-cols-12 gap-8 md:gap-10 items-center"
         >
-          <BERCardMock />
+          <div className="md:col-span-6 order-2 md:order-1 flex justify-center md:justify-start">
+            <TreadmillIllustration />
+          </div>
+          <div className="md:col-span-6 order-1 md:order-2 flex justify-center md:justify-end">
+            <BERCardMock />
+          </div>
         </motion.div>
 
         {/* Manifesto row — three tenets on a running rule */}
@@ -161,13 +170,13 @@ export function HeroSection() {
               n: "01",
               t: "A different question",
               b: "We do not ask only whether someone can perform the task. We govern how observed conduct becomes evidence.",
-              image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces",
+              image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=400&fit=crop&crop=faces",
               cap: "Fig. i · the question",
             },
             {
               n: "02",
               t: "A different method",
-              b: "Practice is kept separate from evidence. Rehearsal is private. What gets recorded is what happens when the work stops going to plan.",
+              b: "Practice is kept separate from evidence. Rehearsal is private. What gets recorded is how conduct shows up across workplace situations, including moments of pressure and uncertainty.",
               image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=400&fit=crop&crop=faces",
               cap: "Fig. ii · the method",
             },
@@ -289,6 +298,147 @@ function BERCardMock() {
 }
 
 /**
+ * TreadmillIllustration — a small hand-drawn journal sketch showing the
+ * appraisal treadmill on the left (crossed out) and an open dated ledger
+ * on the right (kept). Sits opposite the BER card so the hero reads as
+ * "what the workplace does today → what the record replaces it with"
+ * (per Dr. Mofoke feedback #2). Everything is inline SVG so it stays on
+ * the paper/indigo palette and renders at any DPR.
+ */
+function TreadmillIllustration() {
+  return (
+    <figure className="relative w-full max-w-md md:max-w-lg border-2 border-foreground bg-background/70 p-5 md:p-6" style={{ transform: "rotate(-0.75deg)" }}>
+      <div className="absolute -top-3 -left-3 stamp normal-case">Editor's plate</div>
+      <div className="mono-label text-foreground/60 border-b border-foreground/40 pb-2 mb-4 flex items-baseline justify-between">
+        <span>§ Plate 00 · what a résumé cannot carry</span>
+        <span className="text-foreground/40">Fig. 00</span>
+      </div>
+      <svg
+        viewBox="0 0 480 260"
+        className="w-full h-auto"
+        role="img"
+        aria-labelledby="treadmill-title treadmill-desc"
+      >
+        <title id="treadmill-title">The treadmill of appraisal vs. the record</title>
+        <desc id="treadmill-desc">
+          A hand-drawn sketch: on the left, a figure runs on a treadmill
+          chasing a dangling carrot labelled "Rated"; the whole panel is
+          crossed out. On the right, an open ledger has three dated
+          entries — the Behavioral Evidence Report.
+        </desc>
+        <defs>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" strokeOpacity="0.18" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <g className="text-foreground" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+          {/* Left panel — the treadmill */}
+          <g transform="translate(0,0)">
+            {/* Panel frame */}
+            <rect x="8" y="14" width="220" height="232" rx="2" strokeOpacity="0.35" fill="url(#hatch)" />
+            {/* Label */}
+            <text x="18" y="34" fontFamily="ui-monospace,monospace" fontSize="9" letterSpacing="0.14em" fill="currentColor" opacity="0.6">A · RATED</text>
+            {/* Treadmill base */}
+            <rect x="40" y="180" width="150" height="14" rx="2" />
+            <line x1="40" y1="187" x2="190" y2="187" strokeDasharray="3 4" strokeOpacity="0.5" />
+            <line x1="40" y1="194" x2="46" y2="204" />
+            <line x1="190" y1="194" x2="184" y2="204" />
+            {/* Handlebar column */}
+            <line x1="190" y1="180" x2="190" y2="120" />
+            <line x1="190" y1="120" x2="220" y2="120" />
+            {/* Runner — stick figure */}
+            <circle cx="120" cy="112" r="12" />
+            {/* body */}
+            <line x1="120" y1="124" x2="120" y2="158" />
+            {/* arms reaching forward */}
+            <line x1="120" y1="132" x2="150" y2="118" />
+            <line x1="120" y1="132" x2="102" y2="146" />
+            {/* legs mid-stride */}
+            <line x1="120" y1="158" x2="106" y2="180" />
+            <line x1="120" y1="158" x2="138" y2="180" />
+            {/* sweat drops */}
+            <path d="M108 96 q-2 4 0 6 t2 -6" strokeOpacity="0.6" />
+            <path d="M100 104 q-2 4 0 6 t2 -6" strokeOpacity="0.6" />
+            {/* Fishing pole from the right — carrot dangling */}
+            <line x1="215" y1="70" x2="160" y2="102" />
+            <line x1="160" y1="102" x2="160" y2="116" strokeDasharray="2 3" strokeOpacity="0.55" />
+            <g transform="translate(154,116)">
+              <path d="M0 0 l12 0 l-6 18 z" fill="currentColor" fillOpacity="0.15" />
+              <path d="M0 0 l12 0 l-6 18 z" />
+              <line x1="4" y1="-2" x2="2" y2="-8" />
+              <line x1="8" y1="-2" x2="10" y2="-8" />
+              <text x="16" y="10" fontFamily="Fraunces,serif" fontSize="9" fontStyle="italic" fill="currentColor" opacity="0.7">Rated</text>
+            </g>
+            {/* Management chair silhouette in the corner */}
+            <rect x="180" y="130" width="30" height="34" rx="2" strokeOpacity="0.45" />
+            <circle cx="195" cy="118" r="6" strokeOpacity="0.5" />
+            <text x="180" y="176" fontFamily="ui-monospace,monospace" fontSize="7" opacity="0.55" fill="currentColor">Mgmt.</text>
+            {/* Crossed-out lines through the whole panel */}
+            <g stroke="hsl(var(--vermilion))" strokeOpacity="0.85" strokeWidth="2">
+              <line x1="14" y1="24" x2="222" y2="238" />
+              <line x1="222" y1="24" x2="14" y2="238" />
+            </g>
+          </g>
+
+          {/* Right panel — the ledger / BER */}
+          <g transform="translate(240,0)">
+            <rect x="8" y="14" width="220" height="232" rx="2" strokeOpacity="0.55" />
+            <text x="18" y="34" fontFamily="ui-monospace,monospace" fontSize="9" letterSpacing="0.14em" fill="currentColor" opacity="0.7">B · RECORDED</text>
+            {/* Ledger spine */}
+            <line x1="118" y1="46" x2="118" y2="220" strokeDasharray="2 4" strokeOpacity="0.5" />
+            {/* Page rules — left leaf */}
+            <g stroke="currentColor" strokeOpacity="0.35">
+              <line x1="24" y1="70" x2="112" y2="70" />
+              <line x1="24" y1="86" x2="112" y2="86" />
+              <line x1="24" y1="102" x2="112" y2="102" />
+              <line x1="24" y1="118" x2="112" y2="118" />
+              <line x1="24" y1="134" x2="112" y2="134" />
+              <line x1="24" y1="150" x2="112" y2="150" />
+              <line x1="24" y1="166" x2="112" y2="166" />
+              <line x1="24" y1="182" x2="112" y2="182" />
+            </g>
+            {/* Left leaf: dated entries */}
+            <text x="24" y="66" fontFamily="ui-monospace,monospace" fontSize="7" fill="currentColor" opacity="0.65">§ Growth log</text>
+            <text x="24" y="80" fontFamily="Fraunces,serif" fontSize="8" fill="currentColor">18·02  D1 · stayed with the task</text>
+            <text x="24" y="96" fontFamily="Fraunces,serif" fontSize="8" fill="currentColor">22·02  D3 · delivered on stated standard</text>
+            <text x="24" y="112" fontFamily="Fraunces,serif" fontSize="8" fill="currentColor">02·03  D6 · recovered after the setback</text>
+            <text x="24" y="128" fontFamily="Fraunces,serif" fontSize="8" fontStyle="italic" opacity="0.6" fill="currentColor">D2 · not observed in period</text>
+            {/* Right leaf: signature / stamp / bookmark */}
+            <g stroke="currentColor" strokeOpacity="0.35">
+              <line x1="126" y1="70" x2="212" y2="70" />
+              <line x1="126" y1="118" x2="212" y2="118" />
+              <line x1="126" y1="166" x2="212" y2="166" />
+            </g>
+            <text x="126" y="66" fontFamily="ui-monospace,monospace" fontSize="7" fill="currentColor" opacity="0.65">§ Signed</text>
+            <text x="126" y="86" fontFamily="Fraunces,serif" fontSize="9" fontStyle="italic" fill="currentColor">— mentor</text>
+            <text x="126" y="102" fontFamily="Fraunces,serif" fontSize="9" fontStyle="italic" fill="currentColor">— mentor</text>
+            <text x="126" y="140" fontFamily="ui-monospace,monospace" fontSize="7" opacity="0.65" fill="currentColor">§ Verify</text>
+            <text x="126" y="156" fontFamily="ui-monospace,monospace" fontSize="8" fill="currentColor">/verify · a1c…d3b7</text>
+            {/* Vermilion stamp on the right leaf */}
+            <g transform="translate(158,180) rotate(-8)">
+              <rect x="0" y="0" width="52" height="20" rx="1" fill="hsl(var(--vermilion))" fillOpacity="0.14" stroke="hsl(var(--vermilion))" strokeWidth="1.25" />
+              <text x="26" y="13" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="hsl(var(--vermilion))" letterSpacing="0.18em">FILED</text>
+            </g>
+            {/* Ribbon bookmark */}
+            <path d="M118 14 l0 34 l-6 -8 l-6 8 l0 -34 z" fill="hsl(var(--vermilion))" fillOpacity="0.5" stroke="hsl(var(--vermilion))" strokeWidth="1" />
+          </g>
+
+          {/* Arrow bridging the panels */}
+          <g transform="translate(224,128)">
+            <line x1="0" y1="0" x2="18" y2="0" strokeWidth="1.5" />
+            <path d="M14 -4 l4 4 l-4 4" strokeWidth="1.5" />
+          </g>
+        </g>
+      </svg>
+      <figcaption className="mono-label text-foreground/60 border-t border-foreground/40 pt-2 mt-4 flex items-baseline justify-between">
+        <span>A · <span className="line-through decoration-foreground/40">rated on a treadmill</span></span>
+        <span className="ink-vermilion">B · recorded on a dated register</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
  * FloatingFigures — two off-set portrait figures (mentor + team)
  * anchored to the hero's outer margins. Framed as ledger figures with a
  * mono caption strip so they don't compete with the headline; hidden
@@ -297,7 +447,9 @@ function BERCardMock() {
 function FloatingFigures() {
   return (
     <>
-      <figure className="pointer-events-none hidden lg:block absolute top-24 right-4 xl:right-10 w-48 xl:w-56 opacity-70 border border-foreground/25 bg-background/40" style={{ transform: "rotate(2deg)" }}>
+      {/* Straightened, smaller, tucked into corners so text never overlaps
+          the photo (per Dr. Mofoke feedback #1). */}
+      <figure className="pointer-events-none hidden xl:block absolute top-6 right-6 w-36 opacity-80 border border-foreground/25 bg-background/40">
         <div className="aspect-[3/4] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=800&fit=crop&crop=faces"
@@ -306,11 +458,11 @@ function FloatingFigures() {
             className="w-full h-full object-cover"
           />
         </div>
-        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25">
+        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25 text-[0.55rem]">
           Fig. A · at the desk
         </figcaption>
       </figure>
-      <figure className="pointer-events-none hidden lg:block absolute bottom-32 left-4 xl:left-10 w-40 xl:w-48 opacity-70 border border-foreground/25 bg-background/40" style={{ transform: "rotate(-2.5deg)" }}>
+      <figure className="pointer-events-none hidden xl:block absolute bottom-20 left-6 w-32 opacity-80 border border-foreground/25 bg-background/40">
         <div className="aspect-[4/3] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=450&fit=crop&crop=faces"
@@ -319,7 +471,7 @@ function FloatingFigures() {
             className="w-full h-full object-cover"
           />
         </div>
-        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25">
+        <figcaption className="mono-label text-foreground/60 px-2 py-1 border-t border-foreground/25 text-[0.55rem]">
           Fig. B · the room
         </figcaption>
       </figure>

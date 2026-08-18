@@ -67,7 +67,7 @@ const readers: ReaderWithFigure[] = [
       "Cohort analytics",
       "Graduation transition path",
     ],
-    cta: "Learn about Civic Access",
+    cta: "Learn about Civic Access Lab",
     href: "/schools",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&h=560&fit=crop&crop=faces",
     figCaption: "Fig. III · at the school",

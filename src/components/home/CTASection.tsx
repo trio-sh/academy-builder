@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { todayStamp } from "@/lib/dateStamp";
 
 const rise = {
   hidden: { opacity: 0, y: 30 },
@@ -44,7 +45,7 @@ export function CTASection() {
             viewport={{ once: true, amount: 0.3 }}
             variants={rise}
             custom={1}
-            className="display-serif text-5xl md:text-7xl lg:text-[7rem] leading-[0.95] text-foreground"
+            className="display-serif text-5xl md:text-7xl lg:text-[6.5rem] leading-[1.08] text-foreground"
           >
             Ready to go
             <br />
@@ -98,56 +99,84 @@ export function CTASection() {
           </motion.div>
         </div>
 
-        {/* Right — mock "receipt" card */}
+        {/* Right — the single canonical BER sample (matches the hero card
+            so there aren't two competing BER samples on the same page,
+            per Dr. Mofoke feedback #9b). */}
         <motion.aside
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={rise}
           custom={4}
-          className="md:col-span-4 md:pt-16"
+          className="md:col-span-4 md:pt-16 flex justify-center md:justify-end"
         >
-          <div className="relative border-2 border-foreground p-8 bg-background/60 backdrop-blur-[1px] rotate-[0.5deg] shadow-[6px_6px_0_rgba(29,24,21,0.15)]">
-            {/* Stamp corner */}
-            <div className="absolute -top-4 -right-3 stamp">
-              Filed 2026
-            </div>
-
-            <div className="mono-label text-foreground/60 pb-3 mb-4 border-b border-foreground/25">
-              Specimen Receipt · No. 000-001
-            </div>
-
-            <p className="display-serif text-xl leading-tight mb-6">
-              This is to record that{" "}
-              <span className="italic display-serif-italic">the bearer</span> has
-              entered the Behavioral Readiness Register on this day.
-            </p>
-
-            <dl className="space-y-3 text-sm">
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Register</dt>
-                <dd className="mono-num text-foreground">T3A / BER-01</dd>
-              </div>
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Volume</dt>
-                <dd className="mono-num text-foreground">I</dd>
-              </div>
-              <div className="flex justify-between gap-4 border-b border-dashed border-foreground/25 pb-2">
-                <dt className="mono-label text-foreground/60">Filed by</dt>
-                <dd className="text-foreground italic display-serif-italic">the bearer</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="mono-label text-foreground/60">Status</dt>
-                <dd className="ink-vermilion mono-label">Open</dd>
-              </div>
-            </dl>
-
-            <div className="mt-6 pt-4 border-t border-foreground/25 mono-label text-foreground/50 text-center">
-              The 3rd Academy · Register of Behavioral Readiness
-            </div>
-          </div>
+          <CTABERCard />
         </motion.aside>
       </div>
     </section>
+  );
+}
+
+/**
+ * CTABERCard — same shape as the hero's BER card mock, so the whole
+ * page carries ONE canonical Behavioral Evidence Report specimen. Kept
+ * local to this section to avoid coupling the hero to the CTA.
+ */
+function CTABERCard() {
+  return (
+    <div className="relative w-full max-w-md md:max-w-lg" style={{ transform: "rotate(1deg)" }}>
+      <div className="absolute inset-0 translate-x-2 translate-y-2 bg-foreground/20 -z-10" />
+      <article className="border-2 border-foreground bg-background/95 p-6 md:p-7 space-y-4 font-serif">
+        <header className="flex items-baseline justify-between border-b border-foreground/40 pb-3">
+          <div>
+            <div className="mono-label text-foreground/60">§ BER · Vol 01</div>
+            <div className="display-serif text-lg leading-none mt-1 text-foreground">
+              Behavioral Evidence <span className="italic display-serif-italic">Report</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="mono-label text-foreground/60">Iss. 04</div>
+            <div className="mono-label text-foreground/40 mt-1">{todayStamp()}</div>
+          </div>
+        </header>
+
+        <div className="flex items-baseline justify-between">
+          <span className="mono-label text-foreground/60">§ Participant</span>
+          <span className="font-mono text-xs text-foreground/70">a1c…d3b7</span>
+        </div>
+
+        <ul className="space-y-2.5">
+          {[
+            { d: "D1", note: "Integrity & Ethics · truthful in the situation named." },
+            { d: "D3", note: "Execution Reliability · delivered to the stated standard." },
+            { d: "D6", note: "Resilience & Recovery · continued engaging after the setback." },
+          ].map((row) => (
+            <li key={row.d} className="flex items-baseline gap-3 text-sm">
+              <span className="mono-label text-foreground/60 tabular-nums w-8">{row.d}</span>
+              <span className="text-foreground/85 leading-snug">{row.note}</span>
+            </li>
+          ))}
+          <li className="flex items-baseline gap-3 text-sm">
+            <span className="mono-label text-foreground/40 tabular-nums w-8">D2</span>
+            <span className="text-foreground/50 italic leading-snug">not observed in this period.</span>
+          </li>
+        </ul>
+
+        <div className="grid grid-cols-2 gap-4 border-t border-foreground/40 pt-3 text-xs">
+          <div>
+            <div className="mono-label text-foreground/50">Current until</div>
+            <div className="text-foreground mt-1">18 Feb 2028</div>
+          </div>
+          <div className="text-right">
+            <div className="mono-label text-foreground/50">Verify at</div>
+            <div className="text-foreground mt-1 font-mono">/verify</div>
+          </div>
+        </div>
+
+        <div className="pt-1">
+          <span className="stamp normal-case">Issued · confirmed by more than one mentor</span>
+        </div>
+      </article>
+    </div>
   );
 }

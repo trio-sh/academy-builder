@@ -42,7 +42,7 @@ const entries: Entry[] = [
     n: "03",
     title: "Mentor Guidance",
     meta: "Key stage · Human-led observation",
-    body: "You work with an experienced professional who observes what actually happens under workplace pressure. Guidance is separate from evaluation.",
+    body: "You work with an experienced professional who observes how conduct shows up across workplace pressure moments. Guidance is kept separate from evidence.",
     highlight: true,
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=450&fit=crop&crop=faces",
     imageAlt: "Fig. 03 — observation under pressure",
@@ -208,7 +208,7 @@ export function JourneySection() {
           <div className="mono-label text-foreground/50 mb-4">Our promise</div>
           <p className="display-serif text-2xl md:text-3xl leading-snug text-foreground">
             Professional guidance at every step.
-            <span className="ink-vermilion"> Evidence</span> that reflects real experience.
+            <span className="ink-vermilion"> Evidence grounded in observed behavior across workplace situations.</span>{" "}
             Growth that speaks for itself. Results employers can trust.
           </p>
         </motion.div>
