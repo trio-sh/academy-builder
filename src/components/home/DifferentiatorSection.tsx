@@ -105,7 +105,7 @@ export function DifferentiatorSection() {
           custom={1}
           className="mb-16 md:mb-20 border-2 border-foreground bg-background/70 max-w-3xl mx-auto"
         >
-          <div className="grid grid-cols-2 divide-x-2 divide-foreground">
+          <div className="grid grid-cols-1 sm:grid-cols-2 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-foreground">
             {/* Left · Algorithmic assessment */}
             <div className="relative p-5 md:p-6 overflow-hidden">
               <div className="mono-label text-foreground/50 mb-3">

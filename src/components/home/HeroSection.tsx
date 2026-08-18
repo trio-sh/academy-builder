@@ -149,7 +149,7 @@ export function HeroSection() {
           custom={4}
           className="mt-20 md:mt-28 grid md:grid-cols-12 gap-8 md:gap-10 items-center"
         >
-          <div className="md:col-span-6 order-2 md:order-1 flex justify-center md:justify-start">
+          <div className="md:col-span-6 order-2 md:order-1 hidden md:flex justify-center md:justify-start">
             <TreadmillIllustration />
           </div>
           <div className="md:col-span-6 order-1 md:order-2 flex justify-center md:justify-end">
@@ -199,8 +199,8 @@ export function HeroSection() {
                 <span className="ledger-num text-3xl text-foreground">{item.n}</span>
                 <span className="mono-label text-foreground/50">§</span>
               </div>
-              <figure className="mb-4 border border-foreground/25 bg-background/40 w-20 md:w-24">
-                <div className="aspect-square overflow-hidden">
+              <figure className="hidden md:block mb-4 border border-foreground/25 bg-background/40 w-32 sm:w-28 md:w-24">
+                <div className="aspect-[4/3] md:aspect-square overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.cap}
