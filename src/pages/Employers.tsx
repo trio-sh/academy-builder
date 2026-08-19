@@ -10,7 +10,7 @@ import {
   LedgerLinkCTA,
   rise,
 } from "@/components/ledger";
-import { PageFigureRow } from "@/components/ledger/PageFigures";
+import { PageValueCards } from "@/components/ledger/PageFigures";
 
 const benefits = [
   {
@@ -142,18 +142,25 @@ const Employers = () => {
         </div>
       </LedgerHero>
 
-      <PageFigureRow
-        figures={[
+      <PageValueCards
+        cards={[
           {
-            src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=800&fit=crop&crop=faces",
-            alt: "Two people at a hiring desk reviewing a candidate together",
-            caption: "Fig. I · at the hiring desk",
+            n: "I",
+            eyebrow: "Reader's right",
+            title: "A record, not a rating",
+            body: "You review what was observed — not a score, rank, or hiring recommendation. The evidence supports your decision; it never replaces it.",
           },
           {
-            src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&h=800&fit=crop&crop=faces",
-            alt: "A candidate seated for a first meeting with a hiring manager",
-            caption: "Fig. II · the reading room",
-            aspect: "aspect-[16/10]",
+            n: "II",
+            eyebrow: "Reader's right",
+            title: "Bounded, honest evidence",
+            body: "The report says what the evidence supports — and where it stops. Absence of evidence is stated, not smoothed over.",
+          },
+          {
+            n: "III",
+            eyebrow: "Reader's right",
+            title: "Independent verification",
+            body: "Verify any Behavioral Evidence Report at /verify without creating an account. Every entry is auditable, every line legible.",
           },
         ]}
       />
