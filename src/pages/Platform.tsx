@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { todayStamp } from "@/lib/dateStamp";
-import { PageFigureRow } from "@/components/ledger/PageFigures";
+import { PageValueCards } from "@/components/ledger/PageFigures";
 
 const rise = {
   hidden: { opacity: 0, y: 28 },
@@ -177,18 +177,25 @@ const Platform = () => {
         </div>
       </section>
 
-      <PageFigureRow
-        figures={[
+      <PageValueCards
+        cards={[
           {
-            src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=800&fit=crop&crop=faces",
-            alt: "Mentor and mentee working at a desk under warm office light",
-            caption: "Fig. I · at the mentor's desk",
+            n: "I",
+            eyebrow: "Instrument",
+            title: "Behavioral Evidence Report",
+            body: "A dated account of observed conduct across workplace-pressure situations — kept in your name, released on your terms.",
           },
           {
-            src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=800&fit=crop&crop=faces",
-            alt: "Team reviewing a document together in a collaborative session",
-            caption: "Fig. II · in the reading room",
-            aspect: "aspect-[16/10]",
+            n: "II",
+            eyebrow: "Instrument",
+            title: "TalentVisa",
+            body: "A visibility switch you own. Employers see that you carry a current record — never what is in it without your consent.",
+          },
+          {
+            n: "III",
+            eyebrow: "Instrument",
+            title: "T3X Exchange",
+            body: "The reading room where employers discover and verify Behavioral Evidence Reports candidates have released to them.",
           },
         ]}
       />

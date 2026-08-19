@@ -10,7 +10,7 @@ import {
   LedgerLinkCTA,
   rise,
 } from "@/components/ledger";
-import { PageFigureRow } from "@/components/ledger/PageFigures";
+import { PageValueCards } from "@/components/ledger/PageFigures";
 
 const features = [
   {
@@ -97,18 +97,25 @@ const Schools = () => {
         </div>
       </LedgerHero>
 
-      <PageFigureRow
-        figures={[
+      <PageValueCards
+        cards={[
           {
-            src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1200&h=800&fit=crop&crop=faces",
-            alt: "A teacher working with a small group of students at a desk",
-            caption: "Fig. I · at the classroom desk",
+            n: "I",
+            eyebrow: "Institutional term",
+            title: "Free for schools",
+            body: "No cost to enroll your institution — the Civic Access Lab is funded through the platform's employer subscriptions.",
           },
           {
-            src: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1200&h=800&fit=crop",
-            alt: "Students collaborating over laptops in a bright common room",
-            caption: "Fig. II · in the common room",
-            aspect: "aspect-[16/10]",
+            n: "II",
+            eyebrow: "Institutional term",
+            title: "Curriculum-integrated",
+            body: "Slots into existing career-readiness classes without requiring a new syllabus or a new period on the timetable.",
+          },
+          {
+            n: "III",
+            eyebrow: "Institutional term",
+            title: "Longitudinal profile",
+            body: "Every dated entry a student earns in school follows them into working life — the transcript to the transcript.",
           },
         ]}
       />
