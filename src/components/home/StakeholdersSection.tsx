@@ -44,7 +44,7 @@ const readers: ReaderWithFigure[] = [
     n: "II",
     title: "For Employers",
     role: "The hiring desk",
-    lede: "Access pre-validated candidates with proven behavioral readiness. Real results, not just keywords. Hiring supported by post-placement insights.",
+    lede: "Access candidates with documented behavioral evidence to inform your judgment of workplace readiness. Follow-through insights after hiring.",
     entries: [
       "Mentor-vetted candidates",
       "Behavioral evidence, not just résumés",

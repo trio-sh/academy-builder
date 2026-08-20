@@ -125,7 +125,7 @@ export function LedgerRow({
       variants={rise}
       custom={index}
       className={cn(
-        "row-hover grid grid-cols-12 gap-4 md:gap-8 py-10 md:py-12 px-2 md:px-4 transition-colors group",
+        "row-hover grid grid-cols-12 gap-4 md:gap-8 md:items-center py-10 md:py-12 px-2 md:px-4 transition-colors group",
         !isLast && "border-b border-foreground/25",
         highlight && "bg-foreground/[0.025]"
       )}

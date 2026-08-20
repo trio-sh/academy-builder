@@ -176,6 +176,7 @@ The entire process typically takes 4–6 weeks, and your credential never expire
 
 const categories = [
   "All Posts",
+  "Founder's Desk",
   "Industry Insights",
   "For Employers",
   "Platform Updates",

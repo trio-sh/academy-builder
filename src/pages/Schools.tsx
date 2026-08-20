@@ -21,7 +21,7 @@ const features = [
   {
     n: "02",
     title: "Teacher observation desk",
-    body: "A streamlined observation tool for documenting student behaviours and developmental notes. Structured, but not standardised.",
+    body: "A streamlined observation tool for recording student behaviors and developmental notes. A consistent protocol every time. No scores. No rankings.",
   },
   {
     n: "03",

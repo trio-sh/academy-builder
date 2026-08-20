@@ -45,7 +45,7 @@ const faqs = [
     questions: [
       { q: "What is Civic Access Lab?", a: "A free institutional programme that lets schools begin the record before graduation, using classroom-work moments as the first situations of observation." },
       { q: "How do we implement Civic Access Lab?", a: "Sign a partnership agreement, train facilitators, and launch — usually within one semester. All curriculum and platform access is provided." },
-      { q: "What grade levels are supported?", a: "High school (Grades 9–12) and community college programmes. Modules are adapted for different developmental stages." },
+      { q: "Who can access Civic Access Lab?", a: "Civic Access Lab is open to students at any level of study — secondary, post-secondary, full-time or part-time. What matters is that you are studying, not what stage you have reached." },
     ],
   },
 ];
