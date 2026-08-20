@@ -280,7 +280,7 @@ function BERCardMock() {
 
 
 /**
- * DimensionsCard — the six behavioural dimensions the Behavioral
+ * DimensionsCard — the six behavioral dimensions the Behavioral
  * Evidence Report actually names, presented as a compact information
  * card. Sits opposite the BER card so the hero reads as "what a résumé
  * cannot carry → the six dimensions we record instead," without leaning
@@ -301,7 +301,7 @@ function DimensionsCard() {
       <header className="border-b border-foreground/40 pb-3 mb-4">
         <div className="mono-label text-foreground/60">§ What the record names</div>
         <div className="display-serif text-lg leading-none mt-1 text-foreground">
-          The six behavioural <span className="italic display-serif-italic">dimensions</span>
+          The six behavioral <span className="italic display-serif-italic">dimensions</span>
         </div>
       </header>
       <ul className="space-y-2">
