@@ -7,7 +7,7 @@ const footerLinks = {
     label: "The Platform",
     items: [
       { name: "Platform Overview", href: "/platform" },
-      { name: "For Job Seekers", href: "/get-started" },
+      { name: "For Individuals", href: "/get-started" },
       { name: "For Employers", href: "/employers" },
       { name: "For Schools", href: "/schools" },
     ],

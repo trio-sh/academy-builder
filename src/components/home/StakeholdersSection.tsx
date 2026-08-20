@@ -26,7 +26,7 @@ type ReaderWithFigure = Reader & { image?: string; figCaption?: string };
 const readers: ReaderWithFigure[] = [
   {
     n: "I",
-    title: "For Job Seekers",
+    title: "For Individuals",
     role: "The candidate",
     lede: "Go beyond your résumé. Build an evidence-based behavioral profile through real observation, mentorship, and project experience.",
     entries: [
