@@ -29,7 +29,7 @@ const principles = [
   {
     n: "03",
     title: "Dignity in every outcome",
-    body: "Rejection is delivered with respect. Exits are graceful. Re-entry is always an option. No permanent labels. No closed doors.",
+    body: "Difficult findings are delivered with respect. They do not become permanent labels. Re-entry remains possible.",
   },
   {
     n: "04",
@@ -63,8 +63,9 @@ const About = () => {
         }
         lede={
           <>
-            Education says what you studied. Certifications say what you passed. We keep
-            a dated record of what your conduct did when the work stopped going to plan.
+            Education shows what you studied. Professional credentials show what you are
+            qualified to do. We keep a dated record of how your conduct shows up across
+            workplace situations — and you decide who you release it to.
           </>
         }
         ledeSide={
@@ -155,9 +156,10 @@ const About = () => {
             The result:{" "}
             <span className="italic display-serif-italic ink-vermilion">
               a record you can read line by line
-            </span>
-            . An employer with something better than a promise. A school with a way to
-            support the transition it prepared its students for.
+            </span>{" "}
+            — yours to review and yours to share. Employers gain an additional category
+            of evidence to examine. Schools have a way to support the transition they
+            prepared their students for.
           </p>
         </motion.div>
       </LedgerSection>
@@ -214,7 +216,7 @@ const About = () => {
             n="II"
             role="The hiring desk"
             title="For Employers"
-            lede="Access pre-observed candidates with proven behavioral readiness. Follow-through insights after hiring."
+            lede="Access candidates with documented behavioral evidence to inform your judgment of workplace readiness. Follow-through insights after hiring."
             index={1}
             cta={
               <Link to="/employers" className="mt-2">
@@ -230,7 +232,7 @@ const About = () => {
             index={2}
             cta={
               <Link to="/schools" className="mt-2">
-                <LedgerLinkCTA>Learn about Civic Access</LedgerLinkCTA>
+                <LedgerLinkCTA>Learn about Civic Access Lab</LedgerLinkCTA>
               </Link>
             }
           />

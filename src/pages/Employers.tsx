@@ -221,6 +221,30 @@ const Employers = () => {
                   Most read
                 </div>
               )}
+              {/* Small paper glyph — the crest for this tier */}
+              <div className="mb-5 w-12 h-12 border border-foreground/40 bg-background/60 flex items-center justify-center">
+                {i === 0 && (
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-foreground" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                    <path d="M4 5h16v14H4z" />
+                    <path d="M4 9h16" />
+                    <path d="M8 5v14" />
+                  </svg>
+                )}
+                {i === 1 && (
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-foreground" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                    <path d="M12 2l9 4v6c0 5-3.8 9-9 10-5.2-1-9-5-9-10V6l9-4z" />
+                    <path d="M8 12l3 3 5-6" />
+                  </svg>
+                )}
+                {i === 2 && (
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-foreground" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                    <path d="M3 20h18" />
+                    <path d="M4 20V9l8-5 8 5v11" />
+                    <path d="M9 20v-6h6v6" />
+                    <path d="M4 12h16" />
+                  </svg>
+                )}
+              </div>
               <div className="mono-label text-foreground/50 mb-2">Tier {String(i + 1).padStart(2, "0")}</div>
               <h3 className="display-serif text-3xl md:text-4xl text-foreground mb-2">
                 {tier.name}
