@@ -269,10 +269,12 @@ export function DifferentiatorSection() {
           custom={0}
           className="mt-20 md:mt-28 max-w-4xl mx-auto text-center"
         >
-          <div className="mono-label text-foreground/50 mb-6">Editor's note</div>
-          <blockquote className="display-serif text-3xl md:text-5xl leading-[1.15] text-foreground">
+          <h3 className="display-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-foreground mb-8">
+            Editor's <span className="italic display-serif-italic ink-vermilion">note</span>.
+          </h3>
+          <blockquote className="text-foreground/85 text-lg md:text-xl leading-[1.6] max-w-3xl mx-auto">
             A badge says what you completed. A score says how you were rated.
-            <span className="block italic display-serif-italic mt-4 ink-vermilion">
+            <span className="block italic mt-3 ink-vermilion">
               A Behavioral Evidence Report reflects how your conduct shows up
               across workplace situations over time.
             </span>
