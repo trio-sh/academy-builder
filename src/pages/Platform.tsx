@@ -445,7 +445,7 @@ const Platform = () => {
             className="max-w-5xl"
           >
             <div className="mono-label text-foreground/60 mb-6">§ IV · Closing</div>
-            <h2 className="display-serif text-5xl md:text-7xl lg:text-[6.5rem] leading-[0.95] text-foreground">
+            <h2 className="display-serif text-5xl md:text-6xl lg:text-[5.25rem] leading-[1.15] tracking-tight text-foreground">
               Start building{" "}
               <span className="italic display-serif-italic">documented behavioral evidence</span>{" "}
               of how your conduct shows up{" "}
