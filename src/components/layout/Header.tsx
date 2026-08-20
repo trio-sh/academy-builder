@@ -14,7 +14,7 @@ type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 
 const navigation = [
   { name: "Platform", href: "/platform" },
-  { name: "Job Seekers", href: "/get-started" },
+  { name: "Individuals", href: "/get-started" },
   { name: "Employers", href: "/employers" },
   { name: "Schools", href: "/schools" },
   { name: "About", href: "/about" },

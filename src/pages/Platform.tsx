@@ -337,7 +337,7 @@ const Platform = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 border-t-2 border-foreground border-b border-foreground/40">
-            {/* Job Seekers */}
+            {/* Individuals */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -346,7 +346,7 @@ const Platform = () => {
               custom={0}
               className="p-8 md:p-12"
             >
-              <div className="mono-label text-foreground/50 mb-3">For Job Seekers</div>
+              <div className="mono-label text-foreground/50 mb-3">For Individuals</div>
               <h3 className="display-serif text-3xl md:text-[2.5rem] leading-tight text-foreground mb-6">
                 Go beyond the résumé with{" "}
                 <span className="italic display-serif-italic">documented evidence</span> of how
