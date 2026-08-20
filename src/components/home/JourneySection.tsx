@@ -203,10 +203,12 @@ export function JourneySection() {
           viewport={{ once: true, amount: 0.4 }}
           variants={rise}
           custom={0}
-          className="mt-20 md:mt-28 max-w-5xl mx-auto text-center"
+          className="mt-20 md:mt-28 max-w-4xl mx-auto text-center"
         >
-          <div className="mono-label text-foreground/60 mb-6 text-sm">Our promise</div>
-          <p className="display-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.15] text-foreground">
+          <h3 className="display-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-foreground mb-8">
+            Our <span className="italic display-serif-italic ink-vermilion">promise</span>.
+          </h3>
+          <p className="text-foreground/85 text-lg md:text-xl leading-[1.6] max-w-3xl mx-auto">
             Professional guidance at every step.
             <span className="ink-vermilion"> Evidence grounded in observed behavior across workplace situations.</span>{" "}
             Growth that speaks for itself. Results employers can trust.
