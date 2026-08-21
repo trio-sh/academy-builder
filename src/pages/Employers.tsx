@@ -16,12 +16,12 @@ const benefits = [
   {
     n: "01",
     title: "A record, not a rating",
-    body: "You review a Behavioral Evidence Report the candidate has released to you — not a score, not a rank, not a recommendation. Just what was observed.",
+    body: "You review a Behavioral Evidence Report the individual has released to you — not a score, not a rank, not a recommendation. Just what was observed.",
   },
   {
     n: "02",
-    title: "Conduct across situations",
-    body: "Examine how the candidate's behaviour showed up across multiple workplace-pressure situations, over time. A single moment is a moment. A pattern is evidence.",
+    title: "Conduct across workplace-pressure moments",
+    body: "Examine how conduct showed up across multiple moments and over time. A single moment shows a moment. A pattern needs more than one.",
   },
   {
     n: "03",
@@ -36,7 +36,7 @@ const benefits = [
   {
     n: "05",
     title: "You keep the decision",
-    body: "The evidence is an additional input to your hiring judgment — not a substitute for it. The decision stays inside your organization.",
+    body: "The evidence can inform appropriate hiring, onboarding, development, and internal mobility conversations — it does not make the decision. The decision stays with your organization.",
   },
 ];
 
@@ -91,7 +91,7 @@ const Employers = () => {
     <PublicLayout>
       <LedgerHero
         eyebrow="§ For Employers · Sheet"
-        meta="Filed for hiring desks"
+        meta="Filed for employer review"
         stamp="No Rankings · No Scores"
         title={
           <>
@@ -104,17 +104,17 @@ const Employers = () => {
         }
         lede={
           <>
-            Add documented behavioral evidence to your hiring decisions — showing how
-            conduct appeared across workplace situations.
+            Understand how conduct appeared across workplace-pressure moments — and how
+            that evidence informs hiring, onboarding, development, and internal mobility.
           </>
         }
         ledeSide={
           <>
             <p className="mb-4">
               The Behavioral Evidence Report is an additional source of evidence — not a
-              hiring verdict, prediction, or pre-vetting mechanism. Candidate-controlled
-              release. Independent verification. Bounded evidence. Employer decision
-              ownership.
+              verdict, prediction, appraisal, or monitoring mechanism. Release remains
+              controlled by the individual. Independent verification. Bounded evidence.
+              Employment decisions remain with the employer.
             </p>
             <p className="mono-label text-foreground border-l-2 border-vermilion pl-4">
               No scores. No rankings. No recommendations.
@@ -146,21 +146,21 @@ const Employers = () => {
         cards={[
           {
             n: "I",
-            eyebrow: "Reader's right",
+            eyebrow: "Restraint",
             title: "A record, not a rating",
-            body: "You review what was observed — not a score, rank, or hiring recommendation. The evidence supports your decision; it never replaces it.",
+            body: "You review what was observed — not a score, rank, or recommendation. The evidence supports your decision; it never replaces it.",
           },
           {
             n: "II",
-            eyebrow: "Reader's right",
+            eyebrow: "Candor",
             title: "Bounded, honest evidence",
             body: "The report says what the evidence supports — and where it stops. Absence of evidence is stated, not smoothed over.",
           },
           {
             n: "III",
-            eyebrow: "Reader's right",
+            eyebrow: "Authenticity",
             title: "Independent verification",
-            body: "Verify any Behavioral Evidence Report at /verify without creating an account. Every entry is auditable, every line legible.",
+            body: "Verify any Behavioral Evidence Report without creating an account. Every entry is auditable, every line legible.",
           },
         ]}
       />
@@ -169,7 +169,7 @@ const Employers = () => {
       <LedgerSection first>
         <LedgerHeader
           eyebrow="§ I · Anatomy of the report"
-          side="What a hiring desk actually receives when a candidate releases their BER."
+          side="What an employer receives when an individual chooses to release their Behavioral Evidence Report."
         >
           Five <span className="italic display-serif-italic">rights</span> the reader
           holds.
