@@ -9,7 +9,7 @@ const footerLinks = {
       { name: "Platform Overview", href: "/platform" },
       { name: "For Individuals", href: "/get-started" },
       { name: "For Employers", href: "/employers" },
-      { name: "For Schools", href: "/schools" },
+      { name: "For Schools or Institutions", href: "/schools" },
     ],
   },
   company: {
