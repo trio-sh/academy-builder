@@ -38,35 +38,51 @@ const itemVariants = {
 const roleOptions = [
   {
     id: "candidate" as UserRole,
-    title: "Job Seeker",
-    description: "Build your behavioral credential and find opportunities",
+    title: "Individual",
+    description: "Prepare for the moments that count, and build a record of how you work.",
     icon: Users,
     gradient: "from-indigo-600 to-indigo-700",
-    features: ["Get mentor-observed", "Earn Behavioral Evidence Report", "Access job marketplace"],
+    features: [
+      "Rehearse workplace situations privately",
+      "Take part in mentor-led observation",
+      "Receive a Behavioral Evidence Report — and decide who sees it",
+    ],
   },
   {
     id: "mentor" as UserRole,
     title: "Mentor",
-    description: "Guide candidates and provide behavioral observations",
+    description: "Observe how people work, and record your observations.",
     icon: GraduationCap,
     gradient: "from-purple-600 to-purple-700",
-    features: ["Observe candidates", "Write endorsements", "Shape careers"],
+    features: [
+      "Carry out observations",
+      "Provide developmental feedback",
+      "Support participants through defined workplace situations",
+    ],
   },
   {
     id: "employer" as UserRole,
     title: "Employer",
-    description: "Find pre-vetted, behaviorally-credentialed talent",
+    description: "Examine behavioral evidence alongside everything you already have.",
     icon: Briefcase,
     gradient: "from-emerald-600 to-emerald-700",
-    features: ["Access T3X marketplace", "Post LiveWorks projects", "Hire confidently"],
+    features: [
+      "Review Behavioral Evidence Reports that participants choose to release",
+      "Post LiveWorks Studio projects",
+      "Add a category of evidence — the decision stays yours",
+    ],
   },
   {
     id: "school_admin" as UserRole,
-    title: "School / Institution",
-    description: "Credential your students with behavioral evidence",
+    title: "School or Institution",
+    description: "Give learners structured behavioral readiness experiences.",
     icon: School,
     gradient: "from-amber-600 to-amber-700",
-    features: ["Manage cohorts", "Track student progress", "Issue credentials"],
+    features: [
+      "Manage cohorts",
+      "View cohort participation",
+      "Connect learners to The 3rd Academy experiences",
+    ],
   },
 ];
 

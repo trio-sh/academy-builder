@@ -16,7 +16,7 @@ const navigation = [
   { name: "Platform", href: "/platform" },
   { name: "Individuals", href: "/get-started" },
   { name: "Employers", href: "/employers" },
-  { name: "Schools", href: "/schools" },
+  { name: "Schools or Institutions", href: "/schools" },
   { name: "About", href: "/about" },
 ];
 
