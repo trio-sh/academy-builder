@@ -70,11 +70,12 @@ const jobSeekerPoints = [
 ];
 
 const employerPoints = [
-  "Review a Behavioral Evidence Report a candidate has released to you",
-  "Examine observed conduct across workplace situations",
+  "Review a Behavioral Evidence Report a candidate or employee has released to you",
+  "Examine observed conduct across workplace-pressure moments",
+  "Use the evidence to inform hiring, onboarding, development, and internal mobility conversations",
   "Understand what the evidence supports — and where it stops",
-  "Verify the report without creating an account",
-  "Keep the hiring decision with your organization",
+  "Not for discipline, appraisal, or monitoring your staff",
+  "Keep every employment decision with your organization",
 ];
 
 const Platform = () => {
@@ -181,19 +182,19 @@ const Platform = () => {
         cards={[
           {
             n: "I",
-            eyebrow: "Instrument",
+            eyebrow: "Record",
             title: "Behavioral Evidence Report",
-            body: "A dated account of observed conduct across workplace-pressure situations — kept in your name, released on your terms.",
+            body: "A dated account of observed conduct across workplace-pressure moments — kept in your name, released on your terms.",
           },
           {
             n: "II",
-            eyebrow: "Instrument",
+            eyebrow: "Visibility",
             title: "TalentVisa",
-            body: "A visibility switch you own. Employers see that you carry a current record — never what is in it without your consent.",
+            body: "A visibility switch you own. Employers can see that you carry a current record — never what is in it without your consent.",
           },
           {
             n: "III",
-            eyebrow: "Instrument",
+            eyebrow: "Discovery",
             title: "T3X Exchange",
             body: "The reading room where employers discover and verify Behavioral Evidence Reports candidates have released to them.",
           },
@@ -350,7 +351,7 @@ const Platform = () => {
               <h3 className="display-serif text-3xl md:text-[2.5rem] leading-tight text-foreground mb-6">
                 Go beyond the résumé with{" "}
                 <span className="italic display-serif-italic">documented evidence</span> of how
-                your conduct shows up in workplace situations.
+                your conduct shows up in workplace-pressure moments.
               </h3>
               <ul className="mt-8 space-y-3">
                 {jobSeekerPoints.map((p, j) => (
@@ -390,8 +391,8 @@ const Platform = () => {
               <div className="mono-label text-foreground/50 mb-3">For Employers</div>
               <h3 className="display-serif text-3xl md:text-[2.5rem] leading-tight text-foreground mb-6">
                 Add <span className="italic display-serif-italic">documented behavioral evidence</span> to
-                your hiring decisions — showing how conduct appeared across workplace
-                situations.
+                how you understand behavior at work — showing how conduct appeared
+                across workplace-pressure moments.
               </h3>
               <ul className="mt-8 space-y-3">
                 {employerPoints.map((p, j) => (
@@ -405,7 +406,12 @@ const Platform = () => {
                   </li>
                 ))}
               </ul>
-              <p className="mt-8 mono-label text-foreground border-t border-foreground/25 pt-6">
+              <p className="mt-6 text-foreground/70 text-[0.875rem] italic leading-relaxed border-l-2 border-foreground/30 pl-4">
+                For current employees, release is employee-initiated only. An
+                employer does not request a Behavioral Evidence Report from
+                someone already employed.
+              </p>
+              <p className="mt-6 mono-label text-foreground border-t border-foreground/25 pt-6">
                 No scores. No rankings. No recommendations.
               </p>
               <Button
