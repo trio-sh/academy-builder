@@ -513,20 +513,20 @@ const GetStarted = () => {
             cards={[
               {
                 n: "I",
-                eyebrow: "What you receive",
+                eyebrow: "Mentorship",
                 title: "An assigned mentor",
-                body: "A working professional in your field who observes your conduct across workplace-pressure moments — not a grader, a witness.",
+                body: "A working professional in your field who observes your conduct across workplace-pressure moments — someone who sees the work, not someone who scores it.",
               },
               {
                 n: "II",
-                eyebrow: "What you receive",
+                eyebrow: "Record",
                 title: "A Behavioral Evidence Report",
-                body: "A dated, human-signed record kept in your name — the transcript to the transcript your résumé cannot carry.",
+                body: "A dated, human-signed record kept in your name — the part of your professional history a résumé does not carry.",
               },
               {
                 n: "III",
-                eyebrow: "What you receive",
-                title: "Direct employer access",
+                eyebrow: "Visibility",
+                title: "Seen by employers",
                 body: "TalentVisa lets you release the record on your terms; T3X Exchange puts you in front of employers who read it.",
               },
             ]}
