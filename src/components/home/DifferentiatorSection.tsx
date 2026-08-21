@@ -27,7 +27,7 @@ const rows: Row[] = [
     criteria: "Practice",
     t3a: "Private rehearsal is kept separate from evidence",
     competitors: "Practice and evaluation happen inside the same exercise",
-    note: "If practising is being judged, people perform instead of learning.",
+    note: "If practicing is being judged, people perform instead of learning.",
   },
   {
     criteria: "What you receive",
@@ -37,7 +37,7 @@ const rows: Row[] = [
   },
   {
     criteria: "How evidence builds",
-    t3a: "Evidence accumulates across situations and over time",
+    t3a: "Evidence accumulates across workplace-pressure moments and over time",
     competitors: "The result reflects a defined occasion",
     note: "A single response shows a moment. A pattern needs more than one.",
   },
@@ -120,7 +120,7 @@ export function DifferentiatorSection() {
                 <div>&gt; keyword_hits: 14 / 22</div>
                 <div>&gt; score: 0.71</div>
                 <div className="text-foreground/40">&gt; conduct: <em>not observed</em></div>
-                <div>&gt; verdict: <span className="line-through decoration-foreground/50">match</span></div>
+                <div>&gt; verdict: match</div>
               </div>
               <p className="marginalia mt-4">
                 A single number stands for a person.
@@ -206,7 +206,7 @@ export function DifferentiatorSection() {
                 </p>
               </div>
               <div className="col-span-4">
-                <p className="text-foreground/55 text-[0.95rem] leading-[1.65] line-through decoration-foreground/30 decoration-[0.5px]">
+                <p className="text-foreground/55 text-[0.95rem] leading-[1.65]">
                   {row.competitors}
                 </p>
               </div>
@@ -249,7 +249,7 @@ export function DifferentiatorSection() {
               </div>
               <div className="mb-4">
                 <div className="mono-label text-foreground/50 mb-1">Common approach</div>
-                <p className="text-foreground/55 text-[0.95rem] leading-[1.65] line-through decoration-foreground/30 decoration-[0.5px]">
+                <p className="text-foreground/55 text-[0.95rem] leading-[1.65]">
                   {row.competitors}
                 </p>
               </div>
