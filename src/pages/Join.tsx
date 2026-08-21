@@ -286,9 +286,9 @@ const Join = () => {
 
                           <ul className="space-y-2">
                             {role.features.map((feature) => (
-                              <li key={feature} className="flex items-center gap-2 text-sm">
-                                <CheckCircle2 className={cn("w-4 h-4", selectedRole === role.id ? "text-emerald-400" : "text-foreground/800")} />
-                                <span className="text-foreground/80">{feature}</span>
+                              <li key={feature} className="flex items-start gap-2 text-sm leading-snug">
+                                <CheckCircle2 className={cn("w-4 h-4 shrink-0 mt-0.5", selectedRole === role.id ? "text-emerald-400" : "text-foreground/60")} />
+                                <span className="text-foreground/80 flex-1">{feature}</span>
                               </li>
                             ))}
                           </ul>
