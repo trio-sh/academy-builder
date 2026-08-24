@@ -19,12 +19,12 @@ const features = [
   {
     n: "01",
     title: "Behavioral Evidence Record",
-    body: "Documented evidence of how your conduct showed up across workplace-pressure situations — built through mentor-led observation over time, with you controlling when and with whom the record is shared.",
+    body: "A dated record of how your conduct showed up across workplace-pressure moments — built through mentor-led observation over time, with you controlling when and with whom the record is shared.",
   },
   {
     n: "02",
     title: "Mentor-Led Observation",
-    body: "Work with experienced professionals who observe and document how your conduct shows up across workplace-pressure situations over time.",
+    body: "Work with experienced professionals who observe and document how your conduct shows up across workplace-pressure moments over time.",
   },
   {
     n: "03",
@@ -47,12 +47,12 @@ const howItWorks = [
   {
     step: "02",
     title: "Work with Mentors",
-    body: "Get paired with experienced professionals who observe how your conduct shows up across workplace-pressure situations over time.",
+    body: "Get paired with experienced professionals who observe how your conduct shows up across workplace-pressure moments over time.",
   },
   {
     step: "03",
     title: "Build Evidence",
-    body: "Take part in different workplace situations where your conduct is observed and documented over time, building a record of behavioral evidence.",
+    body: "Take part in different workplace-pressure moments where your conduct is observed and documented over time, building a record of behavioral evidence.",
   },
   {
     step: "04",
@@ -220,8 +220,8 @@ const Platform = () => {
             </div>
             <div className="md:col-span-4">
               <p className="text-foreground/80 text-base leading-relaxed border-l-2 border-foreground pl-5">
-                Not modules. Not badges. The apparatus that keeps observation, evidence, and
-                release cleanly separated.
+                More than a collection of modules — a platform that keeps observation,
+                evidence, and release clearly separated.
               </p>
             </div>
           </motion.div>
@@ -455,7 +455,7 @@ const Platform = () => {
               Start building{" "}
               <span className="italic display-serif-italic">documented behavioral evidence</span>{" "}
               of how your conduct shows up{" "}
-              <span className="ink-vermilion">across workplace situations.</span>
+              <span className="ink-vermilion">across workplace-pressure moments.</span>
             </h2>
             <div className="mt-14 pt-6 border-t border-foreground flex flex-col sm:flex-row gap-4 items-start">
               <Button
