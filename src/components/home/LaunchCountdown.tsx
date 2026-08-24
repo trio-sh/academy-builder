@@ -96,7 +96,14 @@ export function LaunchCountdown() {
           <div className="md:col-span-5">
             <div className="flex items-center gap-3">
               <span className="stamp">{launched ? "Now open" : "Register · Opening soon"}</span>
-              <span className="mono-label ink-vermilion animate-pulse">● LIVE</span>
+              <span
+                className="live-indicator"
+                role="status"
+                aria-label={launched ? "Live: public reading is open now" : "Live: registration is open now"}
+              >
+                <span className="live-indicator-dot" aria-hidden="true" />
+                LIVE
+              </span>
             </div>
             <h2
               id="launch-countdown-title"
