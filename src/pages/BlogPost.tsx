@@ -12,21 +12,38 @@ const BlogPost = () => {
   const navigate = useNavigate();
 
   const allPosts = [featuredPost, ...blogPosts];
-  const post = allPosts.find((p) => p.id === id);
+  const found = allPosts.find((p) => p.id === id);
+  /* Placeholder journal entries have no body yet — treat as
+     "not yet published" so the reader lands on the coming-soon panel
+     rather than a page rendering undefined date / read-time / body.
+     Per Post-Launch Note 8. */
+  const post = found && found.body ? found : undefined;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
   if (!post) {
+    const comingSoon = found && !found.body;
     return (
       <PublicLayout>
         <section className="paper-grain min-h-[80vh] flex items-center justify-center pt-32">
           <div className="text-center max-w-lg mx-auto px-6">
-            <div className="mono-label text-foreground/50 mb-4">§ 404 · Entry not filed</div>
+            <div className="mono-label text-foreground/50 mb-4">
+              {comingSoon ? `§ ${found?.category} · Coming soon` : "§ 404 · Entry not filed"}
+            </div>
             <h1 className="display-serif text-5xl md:text-7xl text-foreground leading-[0.95] mb-8">
-              Post not <span className="italic display-serif-italic ink-vermilion">found.</span>
+              {comingSoon ? (
+                <>{found?.title}</>
+              ) : (
+                <>Post not <span className="italic display-serif-italic ink-vermilion">found.</span></>
+              )}
             </h1>
+            {comingSoon && (
+              <p className="text-foreground/70 mb-8">
+                This entry has not been published yet.
+              </p>
+            )}
             <Button
               onClick={() => navigate("/blog")}
               className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6 py-5"
