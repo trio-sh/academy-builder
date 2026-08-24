@@ -38,11 +38,35 @@ const principles = [
   },
 ];
 
+/**
+ * About page statistics strip.
+ *
+ * Every cell carries three lines: a figure, a fact line, and an
+ * implication line. Nothing in this strip may be replaced with a
+ * traction figure (users on platform, reports issued, etc.) without
+ * written confirmation from the founder — per Post-Launch Note 3.
+ */
 const stats = [
-  { value: "10,000+", label: "People whose conduct we have documented" },
-  { value: "500+", label: "Employer partners reading the register" },
-  { value: "200+", label: "Schools contributing entries" },
-  { value: "95%", label: "Retention on satisfaction over 90 days" },
+  {
+    value: "46%",
+    fact: "of new hires fail within eighteen months",
+    implication: "The employer carries the cost of a decision made on incomplete information.",
+  },
+  {
+    value: "89%",
+    fact: "of those failures are behavioral, not technical",
+    implication: "The person could do the work. What was missing was a record of how conduct showed up at work.",
+  },
+  {
+    value: "FIRST 90 DAYS",
+    fact: "the window most people get to establish themselves",
+    implication: "Long enough to form a pattern. Too short to correct one you cannot see.",
+  },
+  {
+    value: "NO COMMON RECORD",
+    fact: "of workplace behavior follows the worker from one employer to the next",
+    implication: "Every employer starts again. So does every worker.",
+  },
 ];
 
 const About = () => {
@@ -65,7 +89,7 @@ const About = () => {
           <>
             Education shows what you studied. Professional credentials show what you are
             qualified to do. We keep a dated record of how your conduct shows up across
-            workplace situations — and you decide who you release it to.
+            workplace-pressure moments — and you decide who you release it to.
           </>
         }
         ledeSide={
@@ -102,25 +126,41 @@ const About = () => {
         </div>
       </LedgerHero>
 
-      {/* Ledger of standing figures */}
+      {/* Ledger of standing figures — problem framing, not traction.
+          Every cell: figure · fact · implication. Source line beneath. */}
       <LedgerSection first className="py-14 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-y border-foreground py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-10 border-t border-foreground pt-8">
           {stats.map((s, i) => (
             <motion.div
-              key={s.label}
+              key={s.value}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={rise}
               custom={i}
+              className={
+                "flex flex-col " +
+                (i > 0 ? "md:border-l md:border-foreground/25 md:pl-8 " : "")
+              }
             >
-              <div className="ledger-num text-4xl md:text-6xl text-foreground leading-none">
+              <div className="ledger-num text-3xl md:text-4xl lg:text-5xl text-foreground leading-[1.05] mb-4">
                 {s.value}
               </div>
-              <div className="mono-label text-foreground/60 mt-3">{s.label}</div>
+              <div className="mono-label text-foreground/70 mb-3">
+                {s.fact}
+              </div>
+              <p className="text-foreground/85 text-[0.9375rem] leading-relaxed italic">
+                {s.implication}
+              </p>
             </motion.div>
           ))}
         </div>
+        <p className="mt-8 text-foreground/55 text-xs leading-relaxed border-t border-foreground/20 pt-4 max-w-4xl">
+          Sources: Leadership IQ, <em>Why New Hires Fail</em>. "First 90 days"
+          reflects common probation practice rather than a measured statistic.
+          "No common record" describes an institutional absence, not a measured
+          percentage.
+        </p>
       </LedgerSection>
 
       {/* Mission */}
@@ -147,12 +187,12 @@ const About = () => {
           custom={0}
           className="max-w-4xl display-serif text-2xl md:text-3xl leading-[1.35] text-foreground space-y-8 border-t border-foreground pt-10"
         >
-          <p>
+          <p className="editorial-justify">
             The 3rd Academy closes the gap between claim and trust with a mentor-led
-            observation system that documents conduct across workplace situations over
-            time — not through scores, not through self-assessment.
+            observation system that documents conduct across workplace-pressure moments
+            over time — not through scores, not through self-assessment.
           </p>
-          <p>
+          <p className="editorial-justify">
             The result:{" "}
             <span className="italic display-serif-italic ink-vermilion">
               a record you can read line by line
@@ -261,8 +301,9 @@ const About = () => {
             <span className="italic display-serif-italic">movement</span>?
           </h2>
           <p className="mt-10 max-w-xl text-foreground/85 text-lg md:text-xl leading-relaxed border-l-2 border-foreground pl-6">
-            Whether you are seeking evidence, hiring talent, or preparing students —
-            there is a place for you in the register.
+            Whether you are building your own record, using evidence to hire, onboard,
+            develop, or support internal mobility, or preparing students for the
+            workforce — there is a place for you in the register.
           </p>
           <div className="mt-14 pt-6 border-t border-foreground flex flex-col sm:flex-row gap-4 items-start">
             <Button

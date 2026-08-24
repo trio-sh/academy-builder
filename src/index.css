@@ -355,6 +355,36 @@
    ========================================================================= */
 
 @layer utilities {
+  /* Selective editorial justification — Post-Launch Note 4.
+     Full-justify long editorial paragraphs so they form clean rectangles.
+     Hyphenation is the condition on which everything else depends: without
+     it, justification stretches spaces and reads worse than left-aligned.
+     Reverts to left-aligned below ~900px (narrow columns cannot justify
+     cleanly) and whenever a reader has requested reduced motion.
+     The lang="en" attribute must be set on <html> for hyphens: auto to
+     work — that lives in index.html. */
+  .editorial-justify {
+    text-align: justify;
+    text-justify: inter-word;
+    text-align-last: left;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 8 3 3;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+  @media (max-width: 900px) {
+    .editorial-justify {
+      text-align: left;
+      hyphens: manual;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .editorial-justify {
+      text-align: left;
+    }
+  }
+
   .gradient-hero { background: var(--gradient-hero); }
   .gradient-card { background: var(--gradient-card); }
   .gradient-accent { background: var(--gradient-accent); }
