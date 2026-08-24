@@ -47,7 +47,7 @@ const Schools = () => {
     <PublicLayout>
       <LedgerHero
         eyebrow="§ For Schools · Sheet"
-        meta="Institutional programme"
+        meta="Institutional program"
         stamp="Free for Schools"
         title={
           <>
@@ -72,7 +72,7 @@ const Schools = () => {
               into the professional register at graduation.
             </p>
             <p className="marginalia">
-              For teachers, counsellors, and college-readiness programmes.
+              For teachers, counselors, and college-readiness programs.
             </p>
           </>
         }
@@ -101,21 +101,21 @@ const Schools = () => {
         cards={[
           {
             n: "I",
-            eyebrow: "Institutional term",
+            eyebrow: "Access",
             title: "Free for schools",
             body: "No cost to enroll your institution — the Civic Access Lab is funded through the platform's employer subscriptions.",
           },
           {
             n: "II",
-            eyebrow: "Institutional term",
+            eyebrow: "Adoption",
             title: "Curriculum-integrated",
             body: "Slots into existing career-readiness classes without requiring a new syllabus or a new period on the timetable.",
           },
           {
             n: "III",
-            eyebrow: "Institutional term",
+            eyebrow: "Continuity",
             title: "Longitudinal profile",
-            body: "Every dated entry a student earns in school follows them into working life — the transcript to the transcript.",
+            body: "Every dated entry a student earns in school follows them into working life — building a professional record that begins before the first job.",
           },
         ]}
       />
@@ -183,7 +183,7 @@ const Schools = () => {
           variants={rise}
           className="max-w-4xl"
         >
-          <div className="mono-label text-foreground/60 mb-6">§ III · Begin the programme</div>
+          <div className="mono-label text-foreground/60 mb-6">§ III · Begin the program</div>
           <h2 className="display-serif text-5xl md:text-7xl text-foreground leading-[0.95]">
             Start the record{" "}
             <span className="italic display-serif-italic">before</span> the{" "}
@@ -191,7 +191,7 @@ const Schools = () => {
           </h2>
           <div className="mt-14 pt-6 border-t border-foreground">
             <Link to="/contact">
-              <LedgerLinkCTA>Enrol your school</LedgerLinkCTA>
+              <LedgerLinkCTA>Enroll your school</LedgerLinkCTA>
             </Link>
           </div>
         </motion.div>
