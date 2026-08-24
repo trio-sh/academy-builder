@@ -23,11 +23,37 @@ const mediaFeatures = [
   { outlet: "The Wall Street Journal", title: "Startups Tackle the $400B Credential Gap", date: "October 2025" },
 ];
 
+/**
+ * Press page statistics strip.
+ *
+ * Every figure is externally sourced and verified against the primary
+ * document — NACE Job Outlook 2026 for the two point gaps, WEF Future
+ * of Jobs Report 2025 for resilience and leadership. Do not restore
+ * any traction figure (reports issued, mentors active, districts, etc.)
+ * without written confirmation from the founder — per Post-Launch
+ * Note 7.
+ */
 const stats = [
-  { value: "100K+", label: "Reports issued" },
-  { value: "5,000+", label: "Active mentors" },
-  { value: "500+", label: "Employer partners" },
-  { value: "50", label: "School districts" },
+  {
+    value: "43-POINT GAP",
+    label: "The communication gap",
+    body: "98.7% of employers say communication is essential; 55.4% rate recent graduates as very or extremely proficient at it.",
+  },
+  {
+    value: "39-POINT GAP",
+    label: "The professionalism gap",
+    body: "94.1% rate professionalism as very or extremely important; 54.7% rate recent graduates as very or extremely proficient at it.",
+  },
+  {
+    value: "67%",
+    label: "Resilience is core",
+    body: "Two-thirds of employers surveyed globally now name resilience, flexibility and agility as a core skill for the future workforce.",
+  },
+  {
+    value: "+22 POINTS",
+    label: "Leadership is rising",
+    body: "The share of employers identifying leadership and social influence as a core skill has risen by twenty-two percentage points.",
+  },
 ];
 
 const Press = () => {
@@ -55,16 +81,41 @@ const Press = () => {
         }
       />
 
-      {/* Standing figures */}
+      {/* Standing figures — external research, not traction. Each cell
+          holds figure + label + supporting sentence. Source line beneath. */}
       <LedgerSection first className="py-14 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-y border-foreground py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-10 border-t border-foreground pt-8">
           {stats.map((s, i) => (
-            <motion.div key={s.label} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={rise} custom={i}>
-              <div className="ledger-num text-4xl md:text-6xl text-foreground leading-none">{s.value}</div>
-              <div className="mono-label text-foreground/60 mt-3">{s.label}</div>
+            <motion.div
+              key={s.value}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={rise}
+              custom={i}
+              className={
+                "flex flex-col " +
+                (i > 0 ? "md:border-l md:border-foreground/25 md:pl-8 " : "")
+              }
+            >
+              <div className="ledger-num text-2xl md:text-[1.75rem] lg:text-[2rem] text-foreground leading-[1.05] mb-3 tracking-tight">
+                {s.value}
+              </div>
+              <div className="mono-label text-foreground/70 mb-3">
+                {s.label}
+              </div>
+              <p className="text-foreground/85 text-[0.9375rem] leading-relaxed">
+                {s.body}
+              </p>
             </motion.div>
           ))}
         </div>
+        <p className="mt-8 text-foreground/55 text-xs leading-relaxed border-t border-foreground/20 pt-4 max-w-4xl">
+          Sources: National Association of Colleges and Employers,{" "}
+          <em>Job Outlook 2026 Spring Update</em> (United States employers,
+          recent graduates); World Economic Forum, <em>Future of Jobs
+          Report 2025</em> (global employer survey).
+        </p>
       </LedgerSection>
 
       {/* Announcements */}
