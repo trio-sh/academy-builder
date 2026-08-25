@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -718,9 +719,9 @@ const GetStarted = () => {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="password" className="text-foreground/80">Password</Label>
-                        <Input
+                        <PasswordInput
                           id="password"
-                          type="password"
+                          autoComplete="new-password"
                           placeholder="Create a password (min. 6 characters)"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -889,7 +890,7 @@ const GetStarted = () => {
                     <div className="mt-6 p-4 rounded-xl bg-indigo-950 border border-indigo-800">
                       <h3 className="text-sm font-medium text-foreground mb-3">What happens next?</h3>
                       <ul className="space-y-2 text-sm text-foreground/80">
-                        {["Resume Enhancer analyzes your resume", "Observation areas identified for your mentor", "Basic Profile created (non-credentialed)", "Mentor matched within 48 hours"].map((item) => (
+                        {["Your résumé becomes the starting point", "Your profile is prepared", "Your mentor match is set in motion", "Your mentor is confirmed within 48 hours"].map((item) => (
                           <li key={item} className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" />{item}</li>
                         ))}
                       </ul>

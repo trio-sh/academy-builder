@@ -385,6 +385,14 @@
    Utility carry-overs (glass, gradients, animations, scrollbar)
    ========================================================================= */
 
+/* Suppress the Edge / IE native reveal button so the platform's own
+   PasswordInput toggle is the only one on screen. Two controls can
+   otherwise disagree about state — per Post-Launch Edits 02, Note 4c. */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
 @layer utilities {
   /* Selective editorial justification — Post-Launch Note 4.
      Full-justify long editorial paragraphs so they form clean rectangles.
