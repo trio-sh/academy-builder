@@ -162,7 +162,7 @@ const navItems = [
  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
  { name: "Readiness Reflection", href: "/dashboard/candidate/assessment", icon: Sliders, section: "preparation" },
  { name: "Projects", href: "/dashboard/candidate/projects", icon: Briefcase, section: "liveworks" },
- { name: "Find Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap, section: "account" },
+ { name: "Request a Mentor", href: "/dashboard/candidate/mentors", icon: GraduationCap, section: "account" },
  { name: "Connections", href: "/dashboard/candidate/connections", icon: Users, section: "account" },
  { name: "Messages", href: "/dashboard/candidate/messages", icon: MessageSquare, section: "account" },
  { name: "Notifications", href: "/dashboard/candidate/notifications", icon: Bell, section: "account" },
@@ -345,18 +345,38 @@ const Overview = () => {
  <div>
  {/* Page header */}
  <DashboardPageHeader
- eyebrow={`§ Register · ${profile?.first_name || "Candidate"}'s desk`}
+ eyebrow={`§ Register · ${profile?.first_name || "Individual"}'s desk`}
  title={
  <>
  Welcome back,{" "}
  <span className="italic display-serif-italic ink-vermilion">
- {profile?.first_name || "candidate"}
+ {profile?.first_name || "individual"}
  </span>
  .
  </>
  }
  meta={`${completedSteps} of ${nextSteps.length} steps entered · Continue where the observation left off.`}
  />
+
+ {/* Welcome copy — per Post-Launch 02 Note 6a. Do not reword
+     'more to show', 'review what appears in it', or 'whether a
+     completed record is released, when, and to whom' — see the
+     drafting note. */}
+ <DashSection eyebrow="§ Register · welcome">
+   <div className="max-w-3xl space-y-6 text-foreground/85 text-[1.0625rem] leading-[1.7]">
+     <p>Your professional story has more to show now.</p>
+     <p>
+       This is where you can see what has been documented in your name,
+       follow how your record develops over time, review what appears in
+       it, and decide whether a completed record is released, when, and
+       to whom.
+     </p>
+     <p>
+       Your résumé tells people where you have been. Your record
+       preserves how your conduct showed up along the way.
+     </p>
+   </div>
+ </DashSection>
 
  {/* Standing figures */}
  <DashSection eyebrow="§ I · Standing figures" title="At a glance">
@@ -1598,14 +1618,14 @@ const ObservationPathway = () => {
  </div>
  <h1 className="text-3xl font-bold text-foreground mb-3">Observation Pathway</h1>
  <p className="text-foreground/60 max-w-xl mx-auto mb-6">
- The Observation Pathway requires an active mentor assignment. Your mentor will assign behavioral dimensions for observation and guide you through the assessment process.
+ The Observation Pathway begins once a mentor has been assigned and your observation focus has been confirmed.
  </p>
  <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion inline-flex items-start gap-3 max-w-lg text-left">
  <AlertCircle className="w-5 h-5 ink-vermilion shrink-0 mt-0.5" />
  <div>
  <p className="text-sm ink-vermilion font-medium">Mentor Assignment Required</p>
  <p className="text-sm ink-vermilion/70 mt-1">
- No observation activity can begin until a mentor is assigned and has selected your behavioral dimensions for assessment. Find a mentor to get started.
+ Observation begins once a mentor has been assigned and your observation focus has been confirmed. Request a mentor to get started.
  </p>
  </div>
  </div>
@@ -1613,19 +1633,19 @@ const ObservationPathway = () => {
  <Link to="/dashboard/candidate/mentors">
  <Button
  size="lg"
- className="bg-foreground hover:bg-foreground/90"
+ className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
  >
  <GraduationCap className="w-5 h-5 mr-2" />
- Find a Mentor
+ Request a Mentor
  </Button>
  </Link>
  </div>
 
  <div className="mt-12 grid md:grid-cols-3 gap-4 text-left">
  {[
- { step: "1", title: "Get Matched", desc: "Find and connect with a qualified mentor" },
- { step: "2", title: "Dimensions Assigned", desc: "Your mentor selects behavioral dimensions for observation" },
- { step: "3", title: "Begin Observations", desc: "Complete L1–L4 observation sessions on assigned dimensions" },
+ { step: "1", title: "Request a Mentor", desc: "Submit a request for mentor assignment." },
+ { step: "2", title: "Observation Focus Confirmed", desc: "The areas for observation are confirmed before observation begins." },
+ { step: "3", title: "Begin Observations", desc: "Complete S1–S4 observation sessions on assigned dimensions" },
  ].map((item) => (
  <div key={item.step} className="p-4 rounded-xl bg-background border border-foreground/15">
  <div className="w-8 h-8 rounded-full bg-foreground/20 flex items-center justify-center ink-vermilion font-bold text-sm mb-3">
@@ -2154,7 +2174,7 @@ const SelfAssessmentPage = () => {
  <Link to="/dashboard/candidate/mentors">
  <Button className="bg-foreground hover:bg-foreground/90">
  <GraduationCap className="w-4 h-4 mr-2" />
- Find a Mentor
+ Request a Mentor
  <ArrowRight className="w-4 h-4 ml-2" />
  </Button>
  </Link>
@@ -5143,9 +5163,9 @@ const FindMentor = () => {
  className="space-y-8"
  >
  <motion.div variants={itemVariants}>
- <h1 className="text-3xl font-bold text-foreground mb-2">Find a Mentor</h1>
+ <h1 className="text-3xl font-bold text-foreground mb-2">Request a Mentor</h1>
  <p className="text-foreground/60">
- Connect with experienced professionals who can guide your career growth.
+ Submit a request for mentor assignment. The 3rd Academy assigns an authorized mentor to work with you.
  </p>
  </motion.div>
 
@@ -6823,7 +6843,7 @@ const CandidateDashboard = () => {
 
  return (
  <DashboardLayout
- role="Candidate"
+ role="Individual"
  roleTagline="Your record of observed conduct — the register kept in your name."
  nav={navWithBadges}
  sections={CANDIDATE_SECTIONS}
