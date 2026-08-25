@@ -308,14 +308,14 @@ const Overview = () => {
  href: "/dashboard/candidate/mentors"
  },
  {
- title: "Complete L1 + L2 observations",
- description: "Complete AI scenarios (L1) and mentor live observation (L2) across your assigned dimensions",
+ title: "Complete S1–S4 observations",
+ description: "Complete AI Pressure Scenarios (S1), Mentor Live Observation (S2), Work Sample (S3) and Peer-Team Simulation (S4) across your assigned dimensions.",
  completed: candidateProfile?.has_skill_passport || false,
  href: "/dashboard/candidate/observations"
  },
  {
- title: "Earn your Behavioral Evidence Report",
- description: "Mentor endorses you → Behavioral Evidence Report issued → Employers can discover you on T3X",
+ title: "Receive your Behavioral Evidence Report",
+ description: "The Proceed decision is recorded, the Behavioral Evidence Report is issued, and you decide whether, when, and to whom it is released.",
  completed: candidateProfile?.has_skill_passport || false,
  href: "/dashboard/candidate/passport"
  },
@@ -635,15 +635,42 @@ const SkillPassport = () => {
  className="space-y-8"
  >
  <LegacyBanner
-   body="This surface reads the legacy skill_passports + observation_feedback tables. It is superseded by the new pre-issue review surface, which reads t3a_ber_report and lets you challenge any statement or observation."
+   body="This is the earlier version of this surface. A newer Report Review surface is available, where you can raise a challenge to any statement or observation in your record."
    linkHref="/dashboard/candidate/report-review"
    linkLabel="Open the new Report Review surface"
  />
  <motion.div variants={itemVariants}>
  <h1 className="text-3xl font-bold text-foreground mb-2">Behavioral Evidence Report</h1>
  <p className="text-foreground/60">
- Your behavioral readiness documentation for the workplace.
+ A Behavioral Evidence Report reflects how your conduct shows up across workplace situations over time.
  </p>
+ </motion.div>
+
+ {/* Your Record Actions — per Post-Launch 02 Note 8(k). The four
+     actions sit as parallel destinations, not a numbered sequence.
+     Availability is state-aware; here we render the 'no report yet'
+     state where REVIEW/CONTINUE/CHECK become available once
+     observation begins and RELEASE only once the report is issued. */}
+ <motion.div variants={itemVariants}>
+ <h2 className="text-xl font-semibold text-foreground mb-4">Your Record Actions</h2>
+ <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 border-t-2 border-foreground pt-4">
+ {[
+ { label: "REVIEW", body: "See the conduct already documented in your record." },
+ { label: "CONTINUE", body: "Pick up where your record is still being built." },
+ { label: "CHECK", body: "See what the record supports, what remains unobserved, and raise a correction where necessary." },
+ { label: "RELEASE", body: "Choose whether and when a completed record is released, and who receives it." },
+ ].map((a) => (
+ <div
+ key={a.label}
+ aria-disabled="true"
+ className="p-5 border border-foreground/20 bg-foreground/[0.02] opacity-70"
+ >
+ <div className="mono-label text-foreground/60 mb-2">{a.label}</div>
+ <p className="text-sm text-foreground/70 leading-snug mb-3">{a.body}</p>
+ <p className="text-[0.7rem] text-foreground/45 italic">Not yet available — observation has not started.</p>
+ </div>
+ ))}
+ </div>
  </motion.div>
 
  <motion.div
@@ -653,36 +680,50 @@ const SkillPassport = () => {
  <div className="w-20 h-20 rounded-full bg-foreground/20 flex items-center justify-center mx-auto mb-6">
  <Shield className="w-10 h-10 ink-vermilion" />
  </div>
- <h2 className="text-2xl font-bold text-foreground mb-2">Earn Your Behavioral Evidence Report</h2>
- <p className="text-foreground/60 max-w-md mx-auto mb-6">
- Complete L1 + L2 observations and receive a "Proceed" endorsement from your mentor.
- Your Behavioral Evidence Report documents observed behavioral readiness — earned, not generated.
+ <h2 className="text-2xl font-bold text-foreground mb-2">Your Behavioral Evidence Report</h2>
+ <p className="text-foreground/70 max-w-lg mx-auto mb-6 leading-relaxed">
+ Your Behavioral Evidence Report reflects conduct documented across workplace situations over time. It records what was observed. It is not generated from your profile.
  </p>
  {(() => {
- const hasL1 = observationProgress.some(f => f.feedback_level === 1);
- const hasL2 = observationProgress.some(f => f.feedback_level === 2);
+ const hasS1 = observationProgress.some(f => f.feedback_level === 1);
+ const hasS2 = observationProgress.some(f => f.feedback_level === 2);
+ const hasS3 = observationProgress.some(f => f.feedback_level === 3);
+ const hasS4 = observationProgress.some(f => f.feedback_level === 4);
  const dimensionsObserved = new Set(observationProgress.map(f => f.dimension_id)).size;
  const mdcMet = dimensionsObserved >= 3;
  return (
  <>
- <div className="flex flex-col sm:flex-row gap-4 justify-center">
- <div className="flex items-center gap-2 text-foreground/60">
- <CheckCircle className={`w-5 h-5 ${hasL1 ? "text-foreground" : "text-foreground/40"}`} />
- <span>L1 AI Observation</span>
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-left">
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${hasS1 ? "text-foreground" : "text-foreground/40"}`} />
+ <span className="text-sm leading-snug">S1 AI Pressure Scenarios</span>
  </div>
- <div className="flex items-center gap-2 text-foreground/60">
- <CheckCircle className={`w-5 h-5 ${hasL2 ? "text-foreground" : "text-foreground/40"}`} />
- <span>L2 Mentor Observation</span>
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${hasS2 ? "text-foreground" : "text-foreground/40"}`} />
+ <span className="text-sm leading-snug">S2 Mentor Live Observation</span>
  </div>
- <div className="flex items-center gap-2 text-foreground/60">
- <CheckCircle className={`w-5 h-5 ${mdcMet ? "text-foreground" : "text-foreground/40"}`} />
- <span>MDC-3 ({dimensionsObserved}/3 dimensions)</span>
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${hasS3 ? "text-foreground" : "text-foreground/40"}`} />
+ <span className="text-sm leading-snug">S3 Work Sample</span>
+ </div>
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${hasS4 ? "text-foreground" : "text-foreground/40"}`} />
+ <span className="text-sm leading-snug">S4 Peer-Team Simulation</span>
  </div>
  </div>
- <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
- <div className="flex items-center gap-2 text-foreground/60">
- <CheckCircle className={`w-5 h-5 text-foreground/40`} />
- <span>Mentor Endorsement (Proceed)</span>
+ <div className="mt-6 max-w-lg mx-auto text-left space-y-3">
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className={`w-4 h-4 shrink-0 mt-0.5 ${mdcMet ? "text-foreground" : "text-foreground/40"}`} />
+ <div className="text-sm leading-snug">
+ <div className="text-foreground">MDC-3 — Minimum Dimension Count: {dimensionsObserved} of 3.</div>
+ <p className="text-xs text-foreground/60 mt-1">
+ At least three behavioral dimensions must be observed before a Behavioral Evidence Report can be issued. Meeting the minimum does not by itself mean a report is issued.
+ </p>
+ </div>
+ </div>
+ <div className="flex items-start gap-2 text-foreground/70">
+ <CheckCircle className="w-4 h-4 shrink-0 mt-0.5 text-foreground/40" />
+ <span className="text-sm leading-snug">Proceed decision recorded</span>
  </div>
  </div>
  </>
@@ -711,8 +752,8 @@ const SkillPassport = () => {
  {latestScore && (
  <span className="text-xs text-foreground/60">BARS: {latestScore}/4</span>
  )}
- <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL1 ? "bg-foreground/[0.06] text-foreground" : "bg-white/5 text-foreground/50"}`}>L1</span>
- <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL2 ? "bg-foreground/[0.06] text-foreground" : "bg-white/5 text-foreground/50"}`}>L2</span>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL1 ? "bg-foreground/[0.06] text-foreground" : "bg-white/5 text-foreground/50"}`}>S1</span>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded ${hasL2 ? "bg-foreground/[0.06] text-foreground" : "bg-white/5 text-foreground/50"}`}>S2</span>
  </div>
  </div>
  );
@@ -722,39 +763,8 @@ const SkillPassport = () => {
  )}
  </motion.div>
 
- <motion.div variants={itemVariants}>
- <h2 className="text-xl font-semibold text-foreground mb-4">How It Works</h2>
- <div className="grid md:grid-cols-3 gap-4">
- {[
- {
- step: 1,
- title: "Get Matched",
- description: "We pair you with industry mentors based on your career goals."
- },
- {
- step: 2,
- title: "Be Observed",
- description: "Mentors observe your work behaviors across 3 sessions."
- },
- {
- step: 3,
- title: "Receive Endorsement",
- description: "Earn a proceed, redirect, or pause recommendation."
- }
- ].map((item) => (
- <div
- key={item.step}
- className="p-6 rounded-xl bg-background border border-foreground/25"
- >
- <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center text-background font-bold mb-4">
- {item.step}
- </div>
- <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
- <p className="text-sm text-foreground/60">{item.description}</p>
- </div>
- ))}
- </div>
- </motion.div>
+ {/* Old numbered 'How It Works' block removed per Post-Launch 02
+     Note 8(k); replaced by the Your Record Actions block above. */}
  </motion.div>
  );
  }
@@ -1475,7 +1485,7 @@ const ASSESSMENT_DESCRIPTIONS: Record<string, { title: string; description: stri
 
 // Mentor-Gated Observation Pathway
 // Candidates MUST have an active mentor assignment to access observations.
-// Mentor assigns dimensions before any observation activity (L1–L4) can begin.
+// Mentor assigns dimensions before any observation activity (S1–S4) can begin.
 const ObservationPathway = () => {
  const { user } = useAuth();
  const [isLoading, setIsLoading] = useState(true);
@@ -1683,7 +1693,7 @@ const ObservationPathway = () => {
  </div>
  <h2 className="text-xl font-semibold text-foreground mb-2">Awaiting Dimension Assignment</h2>
  <p className="text-foreground/60 max-w-md mx-auto">
- Your mentor has not yet assigned behavioral dimensions for your observation. Once dimensions are assigned, you will be able to begin your L1 observation session.
+ Your mentor has not yet assigned behavioral dimensions for your observation. Once dimensions are assigned, you will be able to begin your S1 observation session.
  </p>
  <p className="text-sm text-foreground/50 mt-4">
  Your mentor will be notified that you are ready to begin.
@@ -1784,7 +1794,7 @@ const ObservationPathway = () => {
  ) : l1Complete ? (
  <p className="text-xs ink-vermilion font-medium">Awaiting mentor scheduling</p>
  ) : (
- <p className="text-xs text-foreground/50">Complete L1 first</p>
+ <p className="text-xs text-foreground/50">Complete S1 first</p>
  )}
  </div>
  );
@@ -1813,19 +1823,19 @@ const ObservationPathway = () => {
  <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-foreground/20 ink-vermilion">Decision</span>
  {endorsementDecision === "proceed" && <Award className="w-4 h-4 text-foreground" />}
  </div>
- <h3 className="font-semibold text-foreground mb-1">Mentor Endorsement</h3>
- <p className="text-xs text-foreground/60 mb-4">Your mentor reviews all observation evidence and makes an endorsement decision.</p>
+ <h3 className="font-semibold text-foreground mb-1">Proceed decision</h3>
+ <p className="text-xs text-foreground/60 mb-4">The decision is recorded once all observation evidence has been reviewed.</p>
  {decision ? (
  <div>
  <p className={`text-sm font-bold ${decision.color}`}>{decision.label}</p>
  <p className="text-xs text-foreground/60 mt-1">{decision.desc}</p>
  </div>
  ) : l1Complete && l2Complete ? (
- <p className="text-xs ink-vermilion font-medium">Awaiting mentor endorsement</p>
+ <p className="text-xs ink-vermilion font-medium">Awaiting the decision</p>
  ) : l1Complete ? (
- <p className="text-xs text-foreground/50">Complete L2 first</p>
+ <p className="text-xs text-foreground/50">Complete S2 first</p>
  ) : (
- <p className="text-xs text-foreground/50">Complete L1 and L2 first</p>
+ <p className="text-xs text-foreground/50">Complete S1 and S2 first</p>
  )}
  </div>
  );
@@ -1871,8 +1881,8 @@ const ObservationPathway = () => {
  </div>
  <div className="flex gap-2">
  {[
- { level: 1, label: "L1 AI Scenarios" },
- { level: 2, label: "L2 Mentor Live" },
+ { level: 1, label: "S1 AI Pressure Scenarios" },
+ { level: 2, label: "S2 Mentor Live" },
  ].map(({ level, label }) => {
  const levelFeedback = dimFeedback.find(f => f.feedback_level === level);
  const isComplete = levelFeedback && (levelFeedback.status === 'ai_delivered' || levelFeedback.status === 'approved');
