@@ -1491,17 +1491,18 @@ export const InteractiveSkillAssessment = () => {
 
  return (
  <div className="fixed inset-0 z-[9999] bg-foreground/[0.05] text-white overflow-hidden">
- <div className="absolute top-0 left-0 right-0 z-50 bg-foreground/80 backdrop-blur-xl border-b border-white/5">
+ <div className="absolute top-0 left-0 right-0 z-50 bg-foreground/80 backdrop-blur-xl border-b border-background/10">
  <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
  <Button
  variant="ghost"
  size="sm"
  onClick={() => navigate('/dashboard/candidate/observations')}
- className="text-gray-400 hover:text-white hover:bg-black"
+ className="text-background hover:text-background hover:bg-background/10 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
+ aria-label="Close observation session"
  >
  <X className="w-5 h-5" />
  </Button>
- <h1 className="font-semibold text-lg text-white">L1 AI Observation Session</h1>
+ <h1 className="font-semibold text-lg text-background">S1 AI Pressure Scenarios</h1>
  </div>
  </div>
  <div className="absolute inset-0 flex items-center justify-center px-4">
@@ -1509,9 +1510,9 @@ export const InteractiveSkillAssessment = () => {
  <div className="w-20 h-20 rounded-full bg-vermilion/10 border border-vermilion flex items-center justify-center mx-auto mb-6">
  <Clock className="w-10 h-10 ink-vermilion" />
  </div>
- <h2 className="text-2xl font-bold text-white mb-3">Session Closed</h2>
- <p className="text-gray-400 mb-2">
- You have recently completed an L1 AI Observation Session.
+ <h2 className="text-2xl font-bold text-foreground mb-3">Session Closed</h2>
+ <p className="text-foreground/70 mb-2">
+ You have recently completed an S1 AI Pressure Scenarios session.
  </p>
  <p className="text-gray-400 mb-6">
  Next session available:{' '}
@@ -1546,8 +1547,11 @@ export const InteractiveSkillAssessment = () => {
  }} />
  </div>
 
- {/* Header */}
- <div className="absolute top-0 left-0 right-0 z-50 bg-foreground/80 backdrop-blur-xl border-b border-white/5">
+ {/* Header — Post-Launch 02 Note 9(a): contrast rebuilt so title,
+     subtitle, close, sound and counter chip all read against the
+     light bar. Title/subtitle set in bg-background (deep indigo) for
+     dark ink on the near-white fill; controls given focus rings. */}
+ <div className="absolute top-0 left-0 right-0 z-50 bg-foreground/80 backdrop-blur-xl border-b border-background/10">
  <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 md:py-4">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3 md:gap-5 min-w-0">
@@ -1555,19 +1559,20 @@ export const InteractiveSkillAssessment = () => {
  variant="ghost"
  size="sm"
  onClick={() => navigate('/dashboard/candidate/observations')}
- className="text-gray-400 hover:text-white hover:bg-black flex-shrink-0"
+ className="text-background hover:text-background hover:bg-background/10 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground flex-shrink-0"
+ aria-label="Close observation session"
  >
  <X className="w-5 h-5" />
  </Button>
- <div className="h-8 w-px bg-black hidden md:block" />
+ <div className="h-8 w-px bg-background/30 hidden md:block" />
  <div className="min-w-0">
  {/* Desktop: Full title */}
- <h1 className="hidden md:block font-semibold text-lg text-white">L1 AI Observation Session</h1>
+ <h1 className="hidden md:block font-semibold text-lg text-background">S1 AI Pressure Scenarios</h1>
  {/* Mobile: Truncated title */}
- <h1 className="md:hidden font-semibold text-base text-white truncate max-w-[140px]" title="L1 AI Observation Session">
- L1 Session
+ <h1 className="md:hidden font-semibold text-base text-background truncate max-w-[140px]" title="S1 AI Pressure Scenarios">
+ S1 Session
  </h1>
- <p className="text-xs md:text-sm text-gray-500 truncate">T3A Observation Protocol</p>
+ <p className="text-xs md:text-sm text-background/70 truncate">The 3rd Academy Observation Protocol</p>
  </div>
  </div>
  <div className="flex items-center gap-2 md:gap-4">
@@ -1575,18 +1580,20 @@ export const InteractiveSkillAssessment = () => {
  variant="ghost"
  size="sm"
  onClick={() => setIsMuted(!isMuted)}
- className={`${isMuted ? 'text-gray-500' : 'text-foreground'} hover:bg-black hidden md:flex`}
+ className={`${isMuted ? 'text-background/60' : 'text-background'} hover:bg-background/10 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground hidden md:flex`}
+ aria-label={isMuted ? "Unmute narration" : "Mute narration"}
  >
  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
  </Button>
- {/* Desktop: Horizontal badge */}
- <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/30 border border-foreground/20">
+ {/* Desktop: Horizontal badge — dark chip on light bar for
+     legible contrast per Note 9(a). */}
+ <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-background text-background-foreground border border-background/40">
  <Target className="w-4 h-4 text-foreground" />
  <span className="text-foreground font-semibold">{challengeResults.length}</span>
- <span className="text-foreground">scenarios observed</span>
+ <span className="text-foreground/90">scenarios observed</span>
  </div>
  {/* Mobile: Compact badge */}
- <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-foreground/30 border border-foreground/20">
+ <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-background border border-background/40">
  <Target className="w-3 h-3 text-foreground" />
  <span className="text-foreground font-semibold text-xs">{challengeResults.length} observed</span>
  </div>
@@ -1669,7 +1676,7 @@ export const InteractiveSkillAssessment = () => {
  variant="outline"
  onClick={goToPreviousScene}
  disabled={currentSceneIndex === 0}
- className="border-white/30 text-gray-300 hover:bg-black disabled:opacity-30 px-5"
+ className="border-background/70 bg-transparent text-background hover:bg-background/10 disabled:opacity-60 disabled:text-background/70 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground px-5"
  >
  <ChevronLeft className="w-4 h-4 mr-2" />
  Previous
@@ -1704,7 +1711,7 @@ export const InteractiveSkillAssessment = () => {
  <Button
  onClick={goToNextScene}
  disabled={currentSceneIndex === filteredScenes.length - 1 || !canProceed()}
- className="bg-foreground/[0.05] hover:opacity-90 disabled:opacity-30 px-6"
+ className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-primary/40 disabled:text-primary-foreground/70 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-foreground px-6"
  >
  Continue
  <ChevronRight className="w-4 h-4 ml-2" />
