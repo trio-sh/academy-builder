@@ -1628,7 +1628,7 @@ const ObservationPathway = () => {
  </div>
  <h1 className="text-3xl font-bold text-foreground mb-3">Observation Pathway</h1>
  <p className="text-foreground/60 max-w-xl mx-auto mb-6">
- The Observation Pathway begins once a mentor has been assigned and your observation focus has been confirmed.
+ The Observation Pathway is where observation takes place and your record is built.
  </p>
  <div className="p-4 rounded-xl bg-vermilion/10 border border-vermilion inline-flex items-start gap-3 max-w-lg text-left">
  <AlertCircle className="w-5 h-5 ink-vermilion shrink-0 mt-0.5" />
