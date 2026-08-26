@@ -5409,39 +5409,127 @@ const MessagesPage = () => {
  }
  };
 
- // Search for users to start new conversation
- const searchUsers = async (query: string) => {
- if (!query.trim() || query.length < 2) {
- setSearchResults([]);
- return;
+ // Post-Launch 03 Note 6: the picker never searches the platform. It
+ // surfaces only the people the individual is already working with —
+ // their assigned mentor, accepted t3x_connections, and teammates on
+ // shared LiveWorks projects. Typing filters that list locally; it does
+ // not go and look. Anyone outside these contexts is unreachable from
+ // this control by design.
+ const contactCacheRef = useRef<any[] | null>(null);
+
+ const loadContactSet = async (): Promise<any[]> => {
+ if (!user?.id) return [];
+ if (contactCacheRef.current) return contactCacheRef.current;
+
+ const allowedProfileIds = new Set<string>();
+
+ // The individual's own candidate_profiles.id, needed for the joins below.
+ const { data: cp } = await supabase
+ .from("candidate_profiles")
+ .select("id")
+ .eq("profile_id", user.id)
+ .maybeSingle();
+ const candidateProfileId = cp?.id as string | undefined;
+
+ if (candidateProfileId) {
+ // Assigned mentor(s) — active or pending assignments only.
+ const { data: assignments } = await supabase
+ .from("mentor_assignments")
+ .select("mentor_id, status")
+ .eq("candidate_id", candidateProfileId)
+ .in("status", ["active", "pending"]);
+ const mentorIds = (assignments ?? []).map((a: any) => a.mentor_id).filter(Boolean);
+ if (mentorIds.length) {
+ const { data: mentorRows } = await supabase
+ .from("mentor_profiles")
+ .select("profile_id")
+ .in("id", mentorIds);
+ for (const m of mentorRows ?? []) {
+ if (m.profile_id) allowedProfileIds.add(m.profile_id);
  }
- setIsSearching(true);
- try {
- const { data, error } = await supabase
+ }
+
+ // Accepted employer connections.
+ const { data: connections } = await supabase
+ .from("t3x_connections")
+ .select("employer_id, status")
+ .eq("candidate_id", candidateProfileId)
+ .eq("status", "accepted");
+ const employerIds = (connections ?? []).map((c: any) => c.employer_id).filter(Boolean);
+ if (employerIds.length) {
+ const { data: employerRows } = await supabase
+ .from("employer_profiles")
+ .select("profile_id")
+ .in("id", employerIds);
+ for (const e of employerRows ?? []) {
+ if (e.profile_id) allowedProfileIds.add(e.profile_id);
+ }
+ }
+
+ // Teammates on shared LiveWorks projects.
+ const { data: myApps } = await supabase
+ .from("liveworks_applications")
+ .select("project_id, status")
+ .eq("candidate_id", candidateProfileId)
+ .eq("status", "accepted");
+ const projectIds = (myApps ?? []).map((a: any) => a.project_id).filter(Boolean);
+ if (projectIds.length) {
+ const { data: teammates } = await supabase
+ .from("liveworks_applications")
+ .select("candidate_id")
+ .in("project_id", projectIds)
+ .eq("status", "accepted");
+ const teammateCandIds = (teammates ?? [])
+ .map((t: any) => t.candidate_id)
+ .filter((id: string | null) => id && id !== candidateProfileId);
+ if (teammateCandIds.length) {
+ const { data: candRows } = await supabase
+ .from("candidate_profiles")
+ .select("profile_id")
+ .in("id", teammateCandIds);
+ for (const c of candRows ?? []) {
+ if (c.profile_id) allowedProfileIds.add(c.profile_id);
+ }
+ }
+ }
+ }
+
+ // Own profile is never a valid target.
+ allowedProfileIds.delete(user.id);
+
+ if (allowedProfileIds.size === 0) {
+ contactCacheRef.current = [];
+ return [];
+ }
+
+ // Fetch profile fields by id — targeted, not a name search.
+ const { data: profileRows } = await supabase
  .from("profiles")
  .select("id, first_name, last_name, avatar_url, role")
- .neq("id", user?.id)
- .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
- .limit(20);
+ .in("id", Array.from(allowedProfileIds));
 
- if (error) {
- console.error("Error searching users:", error);
- toast({
- title: "Search Error",
- description: "Failed to search for users. Please try again.",
- variant: "destructive",
- });
- setSearchResults([]);
- } else {
- setSearchResults(data || []);
- }
+ const list = (profileRows ?? []) as any[];
+ contactCacheRef.current = list;
+ return list;
+ };
+
+ // Type-ahead filters the already-loaded contact set. It never goes and
+ // looks; a name outside your contacts returns nothing rather than
+ // finding that person.
+ const searchUsers = async (query: string) => {
+ setIsSearching(true);
+ try {
+ const contacts = await loadContactSet();
+ const q = query.trim().toLowerCase();
+ const filtered = q
+ ? contacts.filter((r) => {
+ const full = `${r.first_name ?? ""} ${r.last_name ?? ""}`.trim().toLowerCase();
+ return full.includes(q);
+ })
+ : contacts;
+ setSearchResults(filtered);
  } catch (error) {
- console.error("Error searching users:", error);
- toast({
- title: "Search Error",
- description: "An unexpected error occurred while searching.",
- variant: "destructive",
- });
+ console.error("Error building contact set:", error);
  setSearchResults([]);
  } finally {
  setIsSearching(false);
@@ -5449,12 +5537,16 @@ const MessagesPage = () => {
  };
 
  useEffect(() => {
+ // As soon as the picker opens, load the contact set so the person sees
+ // who they can message without having to type. Type-ahead just filters
+ // that set — it never triggers a new server search.
+ if (!showNewChat) return;
  const timer = setTimeout(() => {
- if (userSearchQuery) searchUsers(userSearchQuery);
- else setSearchResults([]);
- }, 300);
+ searchUsers(userSearchQuery);
+ }, 150);
  return () => clearTimeout(timer);
- }, [userSearchQuery]);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [userSearchQuery, showNewChat]);
 
  const startConversation = async (targetUserId: string) => {
  if (!user?.id || isCreatingConversation) return;
@@ -5881,7 +5973,7 @@ const MessagesPage = () => {
  >
  <motion.div variants={itemVariants} className="mb-6">
  <h1 className="text-3xl font-bold text-foreground mb-2">Messages</h1>
- <p className="text-foreground/60">Connect with mentors and employers.</p>
+ <p className="text-foreground/60">Message people and organizations you are connected with or working with through The 3rd Academy.</p>
  </motion.div>
 
  <motion.div
@@ -5914,10 +6006,13 @@ const MessagesPage = () => {
  {/* New Chat User Search */}
  {showNewChat && (
  <div className="bg-background/90 border border-foreground/25 rounded-xl p-3 space-y-3">
- <p className="text-xs ink-vermilion font-medium">Find someone to message</p>
+ <p className="text-xs ink-vermilion font-medium">People you can message</p>
+ <p className="text-[11px] text-foreground/60 leading-snug">
+ Only your assigned mentor, accepted connections and shared-project teammates appear here. This is a contact list, not a directory — there is no route to anyone outside your own contexts.
+ </p>
  <input
  type="text"
- placeholder="Search by name..."
+ placeholder="Filter your contacts..."
  value={userSearchQuery}
  onChange={(e) => setUserSearchQuery(e.target.value)}
  autoFocus
@@ -5929,11 +6024,12 @@ const MessagesPage = () => {
  <Loader2 className="w-4 h-4 animate-spin text-foreground" />
  </div>
  )}
- {!isSearching && searchResults.length === 0 && userSearchQuery.length >= 2 && (
- <p className="text-xs text-foreground/50 text-center py-2">No users found</p>
- )}
- {!isSearching && userSearchQuery.length > 0 && userSearchQuery.length < 2 && (
- <p className="text-xs text-foreground/50 text-center py-2">Type at least 2 characters</p>
+ {!isSearching && searchResults.length === 0 && (
+ <p className="text-xs text-foreground/50 text-center py-2">
+ {userSearchQuery.trim()
+ ? "No one in your contacts matches. There is no search of the wider platform."
+ : "You do not yet have anyone to message here."}
+ </p>
  )}
  {searchResults.map((result) => (
  <button
@@ -5970,7 +6066,7 @@ const MessagesPage = () => {
  <MessageSquare className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
  <p className="text-foreground/60">No conversations yet</p>
  <p className="text-sm text-foreground/50 mt-1">
- Click the <span className="ink-vermilion">+</span> button to find and message anyone on the platform
+ A conversation opens with anyone you are already working with — an assigned mentor, an accepted connection, or people alongside you on a shared project.
  </p>
  </div>
  ) : (
