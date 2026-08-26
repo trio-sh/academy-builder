@@ -4996,665 +4996,402 @@ const SettingsPage = () => {
  );
 };
 
-// Find Mentor component
-interface MentorWithProfile extends MentorProfile {
- profile?: Profile;
-}
+// Request a Mentor — request-intake + assignment-status panel.
+//
+// Post-Launch 03 Note 4: this screen never presents the mentor pool. No
+// list, no filter, no availability language, in any state. The individual
+// submits a request; The 3rd Academy assigns a mentor. See the migration
+// 20260826120000_t3a_mentor_request_and_pool_lockdown.sql for the RLS
+// change that closes the data path — the UI change alone would not be
+// enough.
+type MentorRequestStatus =
+ | "received"
+ | "under_review"
+ | "assigned"
+ | "introduction_sent"
+ | "closed_without_assignment"
+ | "withdrawn";
+
+type MentorRequestRow = {
+ mentor_request_id: string;
+ requester_id: string;
+ area_of_work: string | null;
+ current_work_context: string | null;
+ availability: string | null;
+ time_zone: string | null;
+ additional_context: string | null;
+ status: MentorRequestStatus;
+ assigned_mentor_id: string | null;
+ created_at: string;
+ updated_at: string;
+};
+
+const REQUEST_STAGES: { key: MentorRequestStatus; label: string; note: string }[] = [
+ { key: "received", label: "Request received", note: "Complete once submitted." },
+ { key: "under_review", label: "Under review", note: "Current while the request is being considered." },
+ { key: "assigned", label: "Mentor assigned", note: "Complete when an assignment is made." },
+ { key: "introduction_sent", label: "Introduction sent", note: "Complete when the individual and the mentor have been introduced." },
+];
+
+const REQUEST_STAGE_ORDER: MentorRequestStatus[] = [
+ "received",
+ "under_review",
+ "assigned",
+ "introduction_sent",
+];
 
 const FindMentor = () => {
- const { user, profile } = useAuth();
+ const { user } = useAuth();
  const { toast } = useToast();
  const navigate = useNavigate();
- const [mentors, setMentors] = useState<MentorWithProfile[]>([]);
- const [myAssignments, setMyAssignments] = useState<MentorAssignment[]>([]);
- const [myCandidateProfileId, setMyCandidateProfileId] = useState<string | null>(null);
+ const [request, setRequest] = useState<MentorRequestRow | null>(null);
+ const [assignment, setAssignment] = useState<MentorAssignment | null>(null);
+ const [assignedMentorName, setAssignedMentorName] = useState<string | null>(null);
  const [isLoading, setIsLoading] = useState(true);
- const [selectedMentor, setSelectedMentor] = useState<MentorWithProfile | null>(null);
- const [requestMessage, setRequestMessage] = useState("");
- const [isRequesting, setIsRequesting] = useState(false);
- const [showDisclaimer, setShowDisclaimer] = useState(false);
- const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
- const [requestSent, setRequestSent] = useState<Set<string>>(new Set());
- const [industryFilter, setIndustryFilter] = useState<string>("all");
- const [recommendedMatches, setRecommendedMatches] = useState<MentorMatch[]>([]);
- const [showRecommended, setShowRecommended] = useState(true);
- const [selectedMatch, setSelectedMatch] = useState<MentorMatch | null>(null);
+ const [saving, setSaving] = useState(false);
+ const [form, setForm] = useState({
+ areaOfWork: "",
+ currentWorkContext: "",
+ availability: "",
+ timeZone: typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "",
+ additionalContext: "",
+ });
 
  useEffect(() => {
- const fetchMentors = async () => {
+ let cancelled = false;
+ (async () => {
  if (!user?.id) { setIsLoading(false); return; }
+ setIsLoading(true);
 
- try {
- // Get my candidate_profiles.id (needed for mentor_assignments FK)
+ // Latest request submitted by this individual, if any.
+ const { data: reqRows } = await supabase
+ .from("t3a_mentor_request")
+ .select("*")
+ .eq("requester_id", user.id)
+ .order("created_at", { ascending: false })
+ .limit(1);
+ const latest = (reqRows ?? [])[0] as MentorRequestRow | undefined;
+
+ // Assignment (if any) — used to derive the "assigned" state independently
+ // of the request row, because a mentor can be assigned via other flows.
  const { data: cp } = await supabase
  .from("candidate_profiles")
  .select("id")
  .eq("profile_id", user.id)
  .single();
- const candidateProfileId = cp?.id || null;
- setMyCandidateProfileId(candidateProfileId);
+ const candidateProfileId = cp?.id;
 
- // Fetch intelligent mentor matches
- try {
- const matches = await MentorMatchingService.findMentorMatches(user.id, 5);
- setRecommendedMatches(matches);
- } catch (error) {
- console.log("Mentor matching unavailable:", error);
- }
-
- // Fetch mentors who are accepting
- const { data: mentorsData } = await supabase
- .from("mentor_profiles")
- .select("*")
- .eq("is_accepting", true)
- .order("total_observations", { ascending: false });
-
- if (mentorsData) {
- const enrichedMentors = await Promise.all(
- mentorsData.map(async (mentor) => {
- const { data: profileData } = await supabase
- .from("profiles")
- .select("*")
- .eq("id", mentor.profile_id)
- .single();
-
- return { ...mentor, profile: profileData };
- })
- );
- setMentors(enrichedMentors);
- }
-
- // Fetch my current assignments using candidate_profiles.id
+ let activeAssignment: MentorAssignment | null = null;
  if (candidateProfileId) {
- const { data: assignmentsData } = await supabase
+ const { data: aRows } = await supabase
  .from("mentor_assignments")
  .select("*")
- .eq("candidate_id", candidateProfileId);
-
- setMyAssignments(assignmentsData || []);
+ .eq("candidate_id", candidateProfileId)
+ .in("status", ["pending", "active"])
+ .order("created_at", { ascending: false })
+ .limit(1);
+ activeAssignment = ((aRows ?? [])[0] as MentorAssignment) ?? null;
  }
- } catch (error) {
- console.error("Error fetching mentors:", error);
- } finally {
+
+ // If a mentor is assigned, the individual is now permitted to read that
+ // one mentor_profiles row (see migration RLS). Otherwise we do not
+ // touch mentor_profiles at all.
+ let assignedName: string | null = null;
+ if (activeAssignment?.mentor_id) {
+ const { data: mp } = await supabase
+ .from("mentor_profiles")
+ .select("id, profile_id")
+ .eq("id", activeAssignment.mentor_id)
+ .maybeSingle();
+ if (mp?.profile_id) {
+ const { data: prof } = await supabase
+ .from("profiles")
+ .select("first_name, last_name")
+ .eq("id", mp.profile_id)
+ .maybeSingle();
+ const first = prof?.first_name ?? "";
+ const last = prof?.last_name ?? "";
+ assignedName = `${first} ${last}`.trim() || null;
+ }
+ }
+
+ if (cancelled) return;
+ setRequest(latest ?? null);
+ setAssignment(activeAssignment);
+ setAssignedMentorName(assignedName);
  setIsLoading(false);
- }
- };
-
- fetchMentors();
+ })();
+ return () => { cancelled = true; };
  }, [user?.id]);
 
- const getCompatibilityBadgeColor = (level: string) => {
- switch (level) {
- case "excellent":
- return "bg-foreground/[0.06] text-foreground border-foreground/40";
- case "good":
- return "bg-foreground/[0.06] text-foreground border-foreground/40";
- case "fair":
- return "bg-vermilion/10 ink-vermilion border-vermilion";
- default:
- return "bg-foreground/20 text-foreground/60 border-gray-500/30";
- }
- };
-
- const requestMentor = async () => {
- if (!user?.id || !selectedMentor || !myCandidateProfileId) return;
-
- // Check profile completeness before requesting
- if (!profile?.first_name?.trim() || !profile?.last_name?.trim()) {
+ const submit = async () => {
+ if (!user?.id) return;
+ setSaving(true);
+ const { data, error } = await supabase
+ .from("t3a_mentor_request")
+ .insert({
+ requester_id: user.id,
+ area_of_work: form.areaOfWork.trim() || null,
+ current_work_context: form.currentWorkContext.trim() || null,
+ availability: form.availability.trim() || null,
+ time_zone: form.timeZone.trim() || null,
+ additional_context: form.additionalContext.trim() || null,
+ status: "received",
+ })
+ .select("*")
+ .single();
+ setSaving(false);
+ if (error) {
  toast({
- title: "Complete Your Profile First",
- description: "Please add your first and last name before requesting a mentor.",
+ title: "Request not sent",
+ description: error.message,
  variant: "destructive",
- action: (
- <Button size="sm" variant="outline" className="border-foreground/25 text-foreground" onClick={() => navigate("/dashboard/candidate/profile")}>
- Go to Profile
- </Button>
- ),
  });
  return;
  }
-
- setIsRequesting(true);
-
- // Create mentor assignment request as pending (mentor must approve)
- const { error } = await supabase.from("mentor_assignments").insert({
- mentor_id: selectedMentor.id,
- candidate_id: myCandidateProfileId,
- status: "pending",
- loop_number: 1,
+ setRequest(data as MentorRequestRow);
+ toast({
+ title: "Request received.",
+ description: "You will be notified when a mentor has been assigned.",
  });
-
- if (!error) {
- // Send notification to mentor
- await supabase.from("notifications").insert({
- user_id: selectedMentor.profile_id,
- type: "mentee_request",
- title: "New Mentee Request",
- message: requestMessage || "A candidate has requested you as their mentor.",
- });
-
- // Refresh assignments
- const { data: assignmentsData } = await supabase
- .from("mentor_assignments")
- .select("*")
- .eq("candidate_id", myCandidateProfileId);
- setMyAssignments(assignmentsData || []);
-
- setRequestSent((prev) => new Set(prev).add(selectedMentor.id));
- setSelectedMentor(null);
- setRequestMessage("");
- }
-
- setIsRequesting(false);
  };
 
- const industries = [...new Set(mentors.map((m) => m.industry))];
- const filteredMentors =
- industryFilter === "all"
- ? mentors
- : mentors.filter((m) => m.industry === industryFilter);
+ if (isLoading) return <LedgerLoading />;
 
- const activeMentor = myAssignments.find((a) => a.status === "active");
- const pendingMentor = myAssignments.find((a) => a.status === "pending");
-
- if (isLoading) {
- return (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-foreground" />
- </div>
- );
- }
+ // Derive the effective state.
+ const isAssigned = !!assignment && (assignment.status === "active" || assignment.status === "pending");
+ const isClosedWithoutAssignment =
+ !!request && !isAssigned && (request.status === "closed_without_assignment" || request.status === "withdrawn");
+ const hasOpenRequest = !!request && !isAssigned && !isClosedWithoutAssignment;
 
  return (
- <motion.div
- variants={containerVariants}
- initial="hidden"
- animate="visible"
- className="space-y-8"
- >
- <motion.div variants={itemVariants}>
- <h1 className="text-3xl font-bold text-foreground mb-2">Request a Mentor</h1>
- <p className="text-foreground/60">
- Submit a request for mentor assignment. The 3rd Academy assigns an authorized mentor to work with you.
- </p>
- </motion.div>
-
- {/* Active Mentor Status */}
- {activeMentor && (
- <motion.div
- variants={itemVariants}
- className="p-6 rounded-xl bg-foreground/[0.05] border border-foreground/40"
- >
- <div className="flex items-center gap-3 mb-2">
- <CheckCircle className="w-5 h-5 text-foreground" />
- <h3 className="font-semibold text-foreground">Active Mentorship</h3>
- </div>
- <p className="text-foreground/75">
- You have an active mentor. Complete your L1 and L2 observations across your assigned dimensions to progress toward endorsement.
- </p>
- <p className="text-sm text-foreground/60 mt-2">
- Visit your <Link to="/dashboard/candidate/observations" className="ink-vermilion underline">Observation Pathway</Link> to begin.
- </p>
- </motion.div>
- )}
-
- {/* Pending Mentor Request Status */}
- {pendingMentor && !activeMentor && (
- <motion.div
- variants={itemVariants}
- className="p-6 rounded-xl bg-vermilion/[0.08] border border-vermilion"
- >
- <div className="flex items-center gap-3 mb-2">
- <Clock className="w-5 h-5 ink-vermilion" />
- <h3 className="font-semibold ink-vermilion">Mentor Request Pending</h3>
- </div>
- <p className="text-foreground/75">
- Your mentor request has been sent and is awaiting approval. You will be notified once your mentor accepts.
- </p>
- </motion.div>
- )}
-
- {/* Recommended Matches Section */}
- {recommendedMatches.length > 0 && !activeMentor && !pendingMentor && (
- <motion.div variants={itemVariants} className="space-y-4">
- <div className="flex items-center justify-between">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
- <Sparkles className="w-5 h-5 text-foreground" />
- </div>
  <div>
- <h2 className="text-xl font-semibold text-foreground">Recommended For You</h2>
- <p className="text-sm text-foreground/60">Based on your skills and goals</p>
- </div>
- </div>
- <button
- onClick={() => setShowRecommended(!showRecommended)}
- className="ink-vermilion hover:ink-vermilion text-sm"
- >
- {showRecommended ? "Hide" : "Show"} recommendations
- </button>
- </div>
-
- {showRecommended && (
- <div className="grid gap-4">
- {recommendedMatches.map((match) => {
- const mentor = match.mentor;
- const isAssigned = myAssignments.some((a) => a.mentor_id === mentor.id);
- const hasSentRequest = requestSent.has(mentor.id);
- const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
-
- return (
- <motion.div
- key={mentor.id}
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- className="relative p-6 rounded-2xl bg-foreground/[0.04] border border-foreground/25 hover:border-foreground/25 transition-colors"
- >
- {/* Match Score Badge */}
- <div className="absolute top-4 right-4 flex items-center gap-2">
- <span
- className={`px-3 py-1 rounded-full text-xs font-medium border ${getCompatibilityBadgeColor(
- match.compatibilityLevel
- )}`}
- >
- {match.score.total}% Match
- </span>
- </div>
-
- <div className="flex items-start gap-4">
- {mentor.profile?.avatar_url ? (
- <img
- src={mentor.profile.avatar_url}
- alt="Mentor"
- className="w-16 h-16 rounded-xl object-cover"
+ <DashboardPageHeader
+ eyebrow="Your record · Request a mentor"
+ title={<>Submit a request for <span className="italic display-serif-italic">mentor assignment</span>.</>}
+ meta="The 3rd Academy assigns a mentor to work with you."
  />
- ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
- {mentor.profile?.first_name?.[0]}
- {mentor.profile?.last_name?.[0]}
- </div>
- )}
- <div className="flex-1 min-w-0">
- <h3 className="font-semibold text-foreground text-lg">
- {mentor.profile?.first_name} {mentor.profile?.last_name}
- </h3>
- <p className="text-sm ink-vermilion">
- {mentor.job_title} {mentor.company && `at ${mentor.company}`}
- </p>
- <div className="flex items-center gap-3 mt-2 text-xs text-foreground/60">
- <span>{mentor.years_experience} years exp</span>
- <span className="px-2 py-0.5 rounded bg-background">
- {mentor.industry}
- </span>
- {mentor.avg_rating && (
- <span className="flex items-center gap-1">
- <Star className="w-3 h-3 ink-vermilion" />
- {mentor.avg_rating.toFixed(1)}
- </span>
- )}
- </div>
- </div>
- </div>
 
- {/* Match Reasons */}
- {match.matchReasons.length > 0 && (
- <div className="mt-4 flex flex-wrap gap-2">
- {match.matchReasons.map((reason, i) => (
- <span
- key={i}
- className="px-2 py-1 rounded-full text-xs bg-background text-foreground/75 border border-foreground/25"
- >
- {reason}
- </span>
- ))}
- </div>
- )}
-
- {/* Score Breakdown */}
- <div className="mt-4 grid grid-cols-5 gap-2">
- {[
- { label: "Skills", value: match.score.skillMatch, color: "bg-foreground/10" },
- { label: "Industry", value: match.score.industryMatch, color: "bg-foreground/10" },
- { label: "Available", value: match.score.availabilityScore, color: "bg-vermilion/10" },
- { label: "Experience", value: match.score.experienceScore, color: "bg-vermilion/10" },
- { label: "Rating", value: match.score.ratingScore, color: "bg-vermilion/10" },
- ].map((item) => (
- <div key={item.label} className="text-center">
- <div className="h-1 rounded-full bg-background mb-1">
- <div
- className={`h-full rounded-full ${item.color}`}
- style={{ width: `${item.value}%` }}
- />
- </div>
- <span className="text-xs text-foreground/50">{item.label}</span>
- </div>
- ))}
- </div>
-
- {/* Action Button */}
- <div className="mt-4">
  {isAssigned ? (
- <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
- <CheckCircle className="w-4 h-4 mr-2" />
- Currently Assigned
- </Button>
- ) : hasSentRequest ? (
- <Button disabled className="w-full bg-foreground/50 cursor-not-allowed">
- <CheckCircle className="w-4 h-4 mr-2" />
- Request Sent
- </Button>
- ) : spotsAvailable > 0 ? (
- <Button
- onClick={() =>
- setSelectedMentor({ ...mentor, profile: mentor.profile })
- }
- className="w-full bg-foreground hover:bg-foreground/90"
- >
- <Send className="w-4 h-4 mr-2" />
- Request This Mentor
- </Button>
- ) : (
- <Button disabled className="w-full bg-foreground/50 cursor-not-allowed">
- No Spots Available
- </Button>
- )}
- </div>
- </motion.div>
- );
- })}
- </div>
- )}
- </motion.div>
- )}
-
- {/* Industry Filter */}
- <motion.div variants={itemVariants} className="flex flex-wrap gap-2">
- <button
- onClick={() => setIndustryFilter("all")}
- className={`px-4 py-2 rounded-lg font-medium transition-colors ${
- industryFilter === "all"
- ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-background"
- }`}
- >
- All Industries
- </button>
- {industries.map((industry) => (
- <button
- key={industry}
- onClick={() => setIndustryFilter(industry)}
- className={`px-4 py-2 rounded-lg font-medium transition-colors ${
- industryFilter === industry
- ? "bg-foreground text-background"
- : "bg-background text-foreground/60 hover:text-background"
- }`}
- >
- {industry}
- </button>
- ))}
- </motion.div>
-
- {/* Mentors Grid */}
- <motion.div variants={itemVariants}>
- {filteredMentors.length > 0 ? (
- <div className="grid md:grid-cols-2 gap-4">
- {filteredMentors.map((mentor) => {
- const activeAssignment = myAssignments.find((a) => a.mentor_id === mentor.id && a.status === "active");
- const pendingAssignment = myAssignments.find((a) => a.mentor_id === mentor.id && a.status === "pending");
- const isAssigned = !!activeAssignment;
- const isPending = !!pendingAssignment;
- const hasSentRequest = requestSent.has(mentor.id);
- const spotsAvailable = mentor.max_mentees - mentor.current_mentees;
-
- return (
- <motion.div
- key={mentor.id}
- whileHover={{ scale: 1.01 }}
- className={`p-6 rounded-xl border transition-colors ${
- isAssigned
- ? "bg-foreground/[0.06] border-foreground/40"
- : isPending
- ? "bg-vermilion/10 border-vermilion"
- : "bg-background border-foreground/25 hover:border-foreground/25"
- }`}
- >
- <div className="flex items-start gap-4">
- {mentor.profile?.avatar_url ? (
- <img
- src={mentor.profile.avatar_url}
- alt="Mentor"
- className="w-16 h-16 rounded-xl object-cover"
- />
- ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
- {mentor.profile?.first_name?.[0]}{mentor.profile?.last_name?.[0]}
- </div>
- )}
- <div className="flex-1 min-w-0">
- <h3 className="font-semibold text-foreground text-lg">
- {mentor.profile?.first_name} {mentor.profile?.last_name}
- </h3>
- <p className="text-sm ink-vermilion">
- {mentor.job_title} {mentor.company && `at ${mentor.company}`}
- </p>
- <div className="flex items-center gap-3 mt-2 text-xs text-foreground/60">
- <span>{mentor.years_experience} years exp</span>
- <span className="px-2 py-0.5 rounded bg-background">
- {mentor.industry}
- </span>
- </div>
- </div>
- {isAssigned && (
- <span className="px-2 py-1 rounded-full bg-foreground/[0.06] text-foreground text-xs">
- Your Mentor
- </span>
- )}
- </div>
-
- {/* Specializations */}
- {mentor.specializations && mentor.specializations.length > 0 && (
- <div className="mt-4 flex flex-wrap gap-2">
- {mentor.specializations.slice(0, 3).map((spec, i) => (
- <span
- key={i}
- className="px-2 py-1 rounded text-xs bg-foreground/[0.06] ink-vermilion"
- >
- {spec}
- </span>
- ))}
- {mentor.specializations.length > 3 && (
- <span className="px-2 py-1 rounded text-xs bg-background text-foreground/60">
- +{mentor.specializations.length - 3}
- </span>
- )}
- </div>
- )}
-
- {/* Stats */}
- <div className="mt-4 flex items-center gap-4 text-sm text-foreground/60">
- <span className="flex items-center gap-1">
- <Award className="w-4 h-4" />
- {mentor.total_observations} observations
- </span>
- <span className="flex items-center gap-1">
- <Users className="w-4 h-4" />
- {spotsAvailable} spot{spotsAvailable !== 1 ? "s" : ""} available
- </span>
- </div>
-
- {/* Action Button */}
- <div className="mt-4">
- {isAssigned ? (
- <Button disabled className="w-full bg-foreground/[0.05] cursor-not-allowed">
- <CheckCircle className="w-4 h-4 mr-2" />
- Currently Assigned
- </Button>
- ) : isPending ? (
- <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
- <Clock className="w-4 h-4 mr-2" />
- Pending Approval
- </Button>
- ) : hasSentRequest ? (
- <Button disabled className="w-full bg-vermilion/10 cursor-not-allowed">
- <Clock className="w-4 h-4 mr-2" />
- Pending Approval
- </Button>
- ) : spotsAvailable > 0 ? (
- <Button
- onClick={() => setSelectedMentor(mentor)}
- className="w-full bg-foreground/10 hover:bg-foreground/10"
- disabled={!!activeMentor || !!pendingMentor}
- >
- <Send className="w-4 h-4 mr-2" />
- {activeMentor ? "Complete Current Mentorship" : pendingMentor ? "Awaiting Mentor Response" : "Request Mentorship"}
- </Button>
- ) : (
- <Button disabled className="w-full bg-foreground/50 cursor-not-allowed">
- No Spots Available
- </Button>
- )}
- </div>
- </motion.div>
- );
- })}
- </div>
- ) : (
- <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
- <GraduationCap className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
- <p className="text-foreground/60">No mentors available</p>
- <p className="text-sm text-foreground/50 mt-1">
- Check back later for available mentors
- </p>
- </div>
- )}
- </motion.div>
-
- {/* Request Mentor Modal */}
- {selectedMentor && (
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
- onClick={() => setSelectedMentor(null)}
- >
- <motion.div
- initial={{ opacity: 0, scale: 0.95 }}
- animate={{ opacity: 1, scale: 1 }}
- className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
- onClick={(e) => e.stopPropagation()}
- >
- <div className="flex items-center gap-4 mb-6">
- {selectedMentor.profile?.avatar_url ? (
- <img
- src={selectedMentor.profile.avatar_url}
- alt="Mentor"
- className="w-16 h-16 rounded-xl object-cover"
- />
- ) : (
- <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
- {selectedMentor.profile?.first_name?.[0]}{selectedMentor.profile?.last_name?.[0]}
- </div>
- )}
+ <DashSection eyebrow="§ Mentor assigned" title="Mentor assigned">
+ <div className="border-2 border-foreground p-6 space-y-4">
+ <div className="flex items-start gap-3">
+ <CheckCircle className="w-5 h-5 text-foreground mt-1 shrink-0" />
  <div>
- <h2 className="text-xl font-bold text-foreground">
- Request {selectedMentor.profile?.first_name} as your mentor
- </h2>
- <p className="text-sm text-foreground/60">
- {selectedMentor.job_title} {selectedMentor.company && `at ${selectedMentor.company}`}
+ <p className="display-serif text-lg text-foreground leading-snug">
+ {assignedMentorName
+ ? <>Your assigned mentor is <span className="italic">{assignedMentorName}</span>.</>
+ : <>A mentor has been assigned to your account.</>}
+ </p>
+ <p className="text-foreground/75 text-[0.9375rem] mt-2">
+ You can now continue through the observation process.
  </p>
  </div>
  </div>
-
- <div className="mb-6">
- <label className="text-sm text-foreground/60 block mb-2">
- Introduction Message (Optional)
- </label>
- <textarea
- value={requestMessage}
- onChange={(e) => setRequestMessage(e.target.value)}
- placeholder="Tell the mentor why you'd like them to guide you..."
- rows={4}
- className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-foreground focus:outline-none resize-none"
- />
- </div>
-
- <div className="flex gap-3">
+ <div className="pt-2 border-t border-foreground/20">
  <Button
- variant="outline"
- onClick={() => setSelectedMentor(null)}
- className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
+ onClick={() => navigate("/dashboard/candidate/observations")}
+ className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6 py-2 text-sm font-medium"
  >
- Cancel
+ Go to Observation Pathway <ArrowRight className="w-4 h-4 ml-2" />
  </Button>
- <Button
- onClick={() => {
- if (!disclaimerAccepted) {
- setShowDisclaimer(true);
- } else {
- requestMentor();
- }
- }}
- disabled={isRequesting}
- className="flex-1 bg-foreground/10 hover:bg-foreground/10"
- >
- {isRequesting ? (
- <>
- <Loader2 className="w-4 h-4 mr-2 animate-spin" />
- Sending...
- </>
+ </div>
+ </div>
+ </DashSection>
+ ) : hasOpenRequest ? (
+ <DashSection eyebrow="§ Request status" title="Your request status">
+ <RequestStatusSequence current={request!.status} />
+ <p className="mt-6 text-sm text-foreground/70 border-l-2 border-foreground/25 pl-4">
+ You will be notified once a mentor has been assigned. The sequence above shows where your
+ request stands. It does not show who is reviewing it or how many mentors have been considered.
+ </p>
+ </DashSection>
+ ) : isClosedWithoutAssignment ? (
+ <DashSection eyebrow="§ Request closed" title="This request has been closed">
+ <div className="border-2 border-foreground/25 p-6">
+ <p className="display-serif text-lg text-foreground leading-snug">
+ Your previous request was closed without an assignment.
+ </p>
+ <p className="text-foreground/75 text-[0.9375rem] mt-3">
+ You can submit a new request below. If you would like context on why the previous request
+ was not assigned, contact your program coordinator through Messages.
+ </p>
+ </div>
+ <div className="mt-8">
+ <RequestForm form={form} setForm={setForm} saving={saving} onSubmit={submit} />
+ </div>
+ </DashSection>
  ) : (
- <>
- <Send className="w-4 h-4 mr-2" />
- Send Request
- </>
+ <DashSection eyebrow="§ No request yet" title="No mentor request submitted yet">
+ <p className="text-foreground/75 text-[0.9375rem] mb-6">
+ Complete the form below to request mentor assignment.
+ </p>
+ <RequestForm form={form} setForm={setForm} saving={saving} onSubmit={submit} />
+ </DashSection>
  )}
- </Button>
  </div>
- </motion.div>
- </motion.div>
- )}
-
- {showDisclaimer && (
- <div className="fixed inset-0 z-[60] flex items-center justify-center">
- <div className="absolute inset-0 bg-background/80" onClick={() => setShowDisclaimer(false)} />
- <motion.div
- initial={{ opacity: 0, scale: 0.95 }}
- animate={{ opacity: 1, scale: 1 }}
- className="relative w-full max-w-lg mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/15 max-h-[80vh] overflow-y-auto"
- >
- <h2 className="text-xl font-bold text-foreground mb-4">Candidate Disclaimer & Consent</h2>
- <div className="text-sm text-foreground/75 space-y-3 mb-6">
- <p>By requesting a mentor and entering the T3A Observation Protocol, you acknowledge and agree to the following:</p>
- <p><strong className="text-foreground">1. No Employment Guarantee.</strong> The Behavioral Evidence Report is a behavioral readiness credential — it documents observed evidence of workplace behaviours. It is not a job offer, employment contract, or guarantee of employment outcomes.</p>
- <p><strong className="text-foreground">2. Endorsement Outcomes.</strong> Mentor endorsement decisions (Proceed, Redirect, Pause, or Escalate) are evidence-based protocol outcomes determined by trained evaluators using the T3A Behavioural Assessment Standard. They are not personal judgments.</p>
- <p><strong className="text-foreground">3. Permanent Growth Log.</strong> All observation data, session recordings, feedback, and endorsement decisions are recorded in your Growth Log, which is append-only and permanent. Records cannot be deleted or modified after creation.</p>
- <p><strong className="text-foreground">4. Session Recording Consent.</strong> Observation sessions may be recorded for quality assurance, audit compliance, and evidence documentation purposes.</p>
- <p><strong className="text-foreground">5. Loop & Cooldown Rules.</strong> Re-attempts are subject to cooldown periods and a maximum of 3 loops per dimension per level within a rolling 6-month window. These rules exist to maintain assessment integrity.</p>
- <p><strong className="text-foreground">6. Data Usage.</strong> Your Behavioral Evidence Report data may be shared with employers via the T3X Talent Exchange only with your consent and listing activation.</p>
- </div>
- <label className="flex items-start gap-3 p-3 rounded-lg bg-background border border-foreground/15 cursor-pointer mb-4">
- <input
- type="checkbox"
- checked={disclaimerAccepted}
- onChange={(e) => setDisclaimerAccepted(e.target.checked)}
- className="mt-1 w-4 h-4 rounded border-foreground/25 bg-background text-foreground focus:ring-emerald-500"
- />
- <span className="text-sm text-foreground/75">I have read, understood, and agree to the above terms. I give my informed consent to participate in the T3A Observation Protocol.</span>
- </label>
- <div className="flex gap-3">
- <Button variant="outline" onClick={() => setShowDisclaimer(false)} className="flex-1 border-foreground/25 text-foreground">Cancel</Button>
- <Button
- disabled={!disclaimerAccepted}
- onClick={() => { setShowDisclaimer(false); requestMentor(); }}
- className="flex-1 bg-vermilion/10 hover:bg-vermilion/10 disabled:opacity-30"
- >Accept & Request Mentor</Button>
- </div>
- </motion.div>
- </div>
- )}
- </motion.div>
  );
 };
+
+function RequestStatusSequence({ current }: { current: MentorRequestStatus }) {
+ const currentIdx = Math.max(0, REQUEST_STAGE_ORDER.indexOf(current));
+ return (
+ <div className="border-t-2 border-foreground">
+ {REQUEST_STAGES.map((stage, i) => {
+ const state: "complete" | "current" | "upcoming" =
+ i < currentIdx ? "complete" : i === currentIdx ? "current" : "upcoming";
+ return (
+ <div
+ key={stage.key}
+ className="grid grid-cols-12 gap-4 py-4 px-2 border-b border-foreground/20 items-baseline"
+ >
+ <div className="col-span-1 mono-label text-foreground/60">0{i + 1}</div>
+ <div className="col-span-6">
+ <div className="display-serif text-lg text-foreground leading-tight">{stage.label}</div>
+ <div className="text-foreground/70 text-[0.9375rem] mt-1">{stage.note}</div>
+ </div>
+ <div className="col-span-5 text-right mono-label text-foreground/60">
+ {state === "complete" ? "complete" : state === "current" ? "in progress" : "upcoming"}
+ </div>
+ </div>
+ );
+ })}
+ </div>
+ );
+}
+
+function RequestForm({
+ form,
+ setForm,
+ saving,
+ onSubmit,
+}: {
+ form: {
+ areaOfWork: string;
+ currentWorkContext: string;
+ availability: string;
+ timeZone: string;
+ additionalContext: string;
+ };
+ setForm: React.Dispatch<React.SetStateAction<{
+ areaOfWork: string;
+ currentWorkContext: string;
+ availability: string;
+ timeZone: string;
+ additionalContext: string;
+ }>>;
+ saving: boolean;
+ onSubmit: () => void;
+}) {
+ const canSubmit = form.areaOfWork.trim() && form.availability.trim() && form.timeZone.trim();
+ return (
+ <form
+ onSubmit={(e) => { e.preventDefault(); if (canSubmit && !saving) onSubmit(); }}
+ className="space-y-6"
+ >
+ <RequestField
+ label="Area of work"
+ hint="Captured as context for the assigner."
+ value={form.areaOfWork}
+ onChange={(v) => setForm((f) => ({ ...f, areaOfWork: v }))}
+ required
+ placeholder="e.g. software engineering, hospitality operations, K–12 teaching"
+ />
+ <RequestField
+ label="Current work context"
+ hint="Captured as context for the assigner. Not everyone requesting observation is in a conventional role."
+ value={form.currentWorkContext}
+ onChange={(v) => setForm((f) => ({ ...f, currentWorkContext: v }))}
+ multiline
+ placeholder="What you are doing right now — a role, a project, self-employment, care work, a career change in progress."
+ />
+ <RequestField
+ label="Availability"
+ hint="Days and times you can meet."
+ value={form.availability}
+ onChange={(v) => setForm((f) => ({ ...f, availability: v }))}
+ required
+ placeholder="e.g. weekday evenings after 6pm, Saturday mornings"
+ />
+ <RequestField
+ label="Time zone"
+ hint="Needed to schedule a live session across time zones."
+ value={form.timeZone}
+ onChange={(v) => setForm((f) => ({ ...f, timeZone: v }))}
+ required
+ placeholder="e.g. America/Edmonton"
+ />
+ <RequestField
+ label="Anything we should know before a mentor is assigned"
+ hint="Optional."
+ value={form.additionalContext}
+ onChange={(v) => setForm((f) => ({ ...f, additionalContext: v }))}
+ multiline
+ placeholder="Optional free text."
+ />
+
+ <div className="pt-2 flex items-center justify-end gap-4">
+ <Button
+ type="submit"
+ disabled={!canSubmit || saving}
+ className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6 py-3 text-sm font-medium tracking-wide"
+ >
+ {saving ? (
+ <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting…</>
+ ) : (
+ <>Submit Mentor Request <Send className="w-4 h-4 ml-2" /></>
+ )}
+ </Button>
+ </div>
+ </form>
+ );
+}
+
+function RequestField({
+ label,
+ hint,
+ value,
+ onChange,
+ required,
+ multiline,
+ placeholder,
+}: {
+ label: string;
+ hint?: string;
+ value: string;
+ onChange: (v: string) => void;
+ required?: boolean;
+ multiline?: boolean;
+ placeholder?: string;
+}) {
+ return (
+ <div>
+ <label className="mono-label text-foreground/60 block mb-1">
+ {label}{required ? " *" : ""}
+ </label>
+ {hint && <p className="text-xs text-foreground/60 mb-2">{hint}</p>}
+ {multiline ? (
+ <textarea
+ value={value}
+ onChange={(e) => onChange(e.target.value)}
+ required={required}
+ rows={3}
+ placeholder={placeholder}
+ className="w-full rounded-none border border-foreground/40 focus:border-foreground focus:outline-none bg-background/40 px-3 py-2 text-foreground display-serif text-base resize-y"
+ />
+ ) : (
+ <input
+ type="text"
+ value={value}
+ onChange={(e) => onChange(e.target.value)}
+ required={required}
+ placeholder={placeholder}
+ className="w-full rounded-none border border-foreground/40 focus:border-foreground focus:outline-none bg-background/40 px-3 py-2 text-foreground display-serif text-base"
+ />
+ )}
+ </div>
+ );
+}
 
 // Messages Page component
 const MessagesPage = () => {
