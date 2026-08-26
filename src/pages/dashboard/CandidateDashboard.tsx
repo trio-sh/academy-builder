@@ -3498,7 +3498,6 @@ const Connections = () => {
  .single();
  if (!cp) { setIsLoading(false); return; }
 
- // Fetch connections for this candidate
  const { data: connectionData } = await supabase
  .from("t3x_connections")
  .select("*")
@@ -3506,7 +3505,6 @@ const Connections = () => {
  .order("created_at", { ascending: false });
 
  if (connectionData && connectionData.length > 0) {
- // Get employer profiles for each connection
  const enrichedConnections = await Promise.all(
  connectionData.map(async (conn) => {
  const { data: employerProfile } = await supabase
@@ -3544,10 +3542,8 @@ const Connections = () => {
 
  const respondToConnection = async (connectionId: string, accept: boolean) => {
  setRespondingTo(connectionId);
-
  try {
  const newStatus = accept ? "accepted" : "declined";
-
  const { error } = await supabase
  .from("t3x_connections")
  .update({
@@ -3556,27 +3552,18 @@ const Connections = () => {
  updated_at: new Date().toISOString(),
  })
  .eq("id", connectionId);
-
- if (error) {
- console.error("Error updating connection:", error);
- return;
- }
-
- // Update local state
+ if (error) { console.error("Error updating connection:", error); return; }
  setConnections(prev =>
  prev.map(c => c.id === connectionId ? { ...c, status: newStatus, responded_at: new Date().toISOString() } : c)
  );
-
- // Create growth log entry
  await supabase.from("growth_log_entries").insert({
  candidate_id: user?.id,
  event_type: "tier_change",
- title: accept ? "Accepted Employer Connection" : "Declined Employer Connection",
- description: `Response sent to employer connection request`,
+ title: accept ? "Accepted Connection" : "Declined Connection",
+ description: "Response sent to a connection request. Accepting a connection does not release the Behavioral Evidence Report.",
  source_component: "T3X",
  source_id: connectionId,
  });
-
  } catch (error) {
  console.error("Error:", error);
  } finally {
@@ -3584,154 +3571,139 @@ const Connections = () => {
  }
  };
 
+ if (isLoading) return <LedgerLoading />;
+
+ // Only EMPLOYERS has a real relationship source in the build today.
+ // Other categories (PEERS, PROJECTS, INSTITUTIONS) are intentionally
+ // NOT rendered until each has a source — the spec is explicit that a
+ // category shown with nothing behind it makes future functionality look
+ // current. MENTORS is deliberately excluded (Note 5, founder decision).
  const pendingConnections = connections.filter(c => c.status === "pending");
  const respondedConnections = connections.filter(c => c.status !== "pending");
-
- if (isLoading) {
- return (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-foreground" />
- </div>
- );
- }
+ const hasAny = connections.length > 0;
 
  return (
- <motion.div
- variants={containerVariants}
- initial="hidden"
- animate="visible"
- className="space-y-8"
- >
- <motion.div variants={itemVariants}>
- <h1 className="text-3xl font-bold text-foreground mb-2">Employer Connections</h1>
- <p className="text-foreground/60">
- Manage connection requests from employers interested in your profile.
+ <div>
+ <DashboardPageHeader
+ eyebrow="Your record · Connections"
+ title={<>Your <span className="italic display-serif-italic">connections</span>.</>}
+ meta="The people and organizations you are connected with across The 3rd Academy."
+ />
+
+ <div className="border-2 border-foreground p-5 md:p-6 mb-10 flex items-start gap-3">
+ <Shield className="w-5 h-5 text-foreground mt-0.5 shrink-0" />
+ <p className="text-foreground text-base leading-relaxed">
+ Connecting does not release your Behavioral Evidence Report.{" "}
+ <span className="italic display-serif-italic">Releasing your record is always a separate choice.</span>
  </p>
- </motion.div>
+ </div>
 
- {/* Pending Requests */}
+ <DashSection eyebrow="§ I · Employers" title="Your connections">
+ {!hasAny ? (
+ <EmptyState
+ eyebrow="§ No connections yet"
+ title="No connections yet."
+ body="Connections will appear here as you take part in The 3rd Academy, or when someone requests to connect with you. You choose whether to accept."
+ />
+ ) : (
+ <div className="space-y-8">
  {pendingConnections.length > 0 && (
- <motion.div variants={itemVariants}>
- <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
- <Bell className="w-5 h-5 ink-vermilion" />
- Pending Requests ({pendingConnections.length})
- </h2>
- <div className="space-y-4">
+ <div>
+ <div className="mono-label text-foreground/60 mb-3">
+ § Awaiting your response · {pendingConnections.length}
+ </div>
+ <div className="border-t-2 border-foreground">
  {pendingConnections.map((connection) => (
  <div
  key={connection.id}
- className="p-6 rounded-xl bg-vermilion/[0.08] border border-vermilion"
+ className="grid grid-cols-12 gap-4 py-5 px-2 md:px-4 border-b border-foreground/20 items-start"
  >
- <div className="flex items-start gap-4">
- <div className="w-14 h-14 rounded-xl bg-vermilion/[0.08] flex items-center justify-center text-foreground">
- <Building2 className="w-7 h-7" />
+ <div className="col-span-1">
+ <Building2 className="w-6 h-6 text-foreground mt-1" />
  </div>
- <div className="flex-1 min-w-0">
- <h3 className="font-semibold text-foreground text-lg">
- {connection.employer_profile?.company_name || "Unknown Company"}
- </h3>
- <p className="text-sm text-foreground/60">
+ <div className="col-span-6">
+ <div className="display-serif text-xl text-foreground leading-tight">
+ {connection.employer_profile?.company_name || "Unknown organization"}
+ </div>
+ <div className="text-foreground/70 text-[0.9375rem] mt-1">
  {connection.employer_profile?.industry || "Industry not specified"}
- </p>
- <p className="text-xs text-foreground/50 mt-1">
+ </div>
+ <div className="mono-label text-foreground/50 mt-1">
  Requested {new Date(connection.created_at).toLocaleDateString()}
- </p>
  </div>
- </div>
-
  {connection.message && (
- <div className="mt-4 p-3 rounded-lg bg-background/20">
- <p className="text-sm text-foreground/75">{connection.message}</p>
+ <p className="mt-3 text-sm text-foreground/80 border-l-2 border-foreground/25 pl-3">
+ {connection.message}
+ </p>
+ )}
  </div>
- )}
-
- <div className="mt-4 flex gap-3">
- <Button
- onClick={() => respondToConnection(connection.id, true)}
- disabled={respondingTo === connection.id}
- className="flex-1 bg-vermilion/10 hover:bg-vermilion/10"
- >
- {respondingTo === connection.id ? (
- <Loader2 className="w-4 h-4 animate-spin" />
- ) : (
- <>
- <ThumbsUp className="w-4 h-4 mr-2" />
- Accept
- </>
- )}
- </Button>
+ <div className="col-span-5 flex items-center justify-end gap-3">
  <Button
  variant="outline"
  onClick={() => respondToConnection(connection.id, false)}
  disabled={respondingTo === connection.id}
- className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
+ className="rounded-none border-2 border-foreground bg-background text-foreground hover:bg-foreground/5 shadow-none px-4 py-2 text-sm"
  >
- <ThumbsDown className="w-4 h-4 mr-2" />
- Decline
+ <ThumbsDown className="w-4 h-4 mr-2" /> Decline
+ </Button>
+ <Button
+ onClick={() => respondToConnection(connection.id, true)}
+ disabled={respondingTo === connection.id}
+ className="rounded-none bg-foreground text-background hover:bg-foreground/90 shadow-none px-4 py-2 text-sm"
+ >
+ {respondingTo === connection.id ? (
+ <Loader2 className="w-4 h-4 animate-spin" />
+ ) : (
+ <><ThumbsUp className="w-4 h-4 mr-2" /> Accept</>
+ )}
  </Button>
  </div>
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
  )}
 
- {/* Connection History */}
- <motion.div variants={itemVariants}>
- <h2 className="text-xl font-semibold text-foreground mb-4">Connection History</h2>
- {respondedConnections.length > 0 ? (
- <div className="space-y-3">
+ {respondedConnections.length > 0 && (
+ <div>
+ <div className="mono-label text-foreground/60 mb-3">§ Settled</div>
+ <div className="border-t-2 border-foreground">
  {respondedConnections.map((connection) => (
  <div
  key={connection.id}
- className="p-4 rounded-xl bg-background border border-foreground/25 flex items-center gap-4"
+ className="grid grid-cols-12 gap-4 py-4 px-2 md:px-4 border-b border-foreground/20 items-baseline"
  >
- <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
- connection.status === "accepted"
- ? "bg-foreground/[0.06]"
- : "bg-foreground/20"
- }`}>
- <Building2 className={`w-5 h-5 ${
- connection.status === "accepted"
- ? "text-foreground"
- : "text-foreground/60"
- }`} />
+ <div className="col-span-1">
+ <Building2 className="w-5 h-5 text-foreground/70" />
  </div>
- <div className="flex-1 min-w-0">
- <p className="font-medium text-foreground">
- {connection.employer_profile?.company_name || "Unknown Company"}
- </p>
- <p className="text-sm text-foreground/50">
+ <div className="col-span-8">
+ <div className="display-serif text-lg text-foreground leading-tight">
+ {connection.employer_profile?.company_name || "Unknown organization"}
+ </div>
+ <div className="mono-label text-foreground/50 mt-1">
  {connection.responded_at
  ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
  : `Requested ${new Date(connection.created_at).toLocaleDateString()}`}
- </p>
  </div>
- <span className={`px-3 py-1 rounded-full text-sm ${
- connection.status === "accepted"
- ? "bg-foreground/[0.06] text-foreground"
- : connection.status === "declined"
- ? "bg-foreground/20 text-foreground/60"
- : "bg-vermilion/10 ink-vermilion"
- }`}>
- {connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
- </span>
+ </div>
+ <div className="col-span-3 text-right">
+ <LedgerBadge>{connection.status}</LedgerBadge>
+ </div>
  </div>
  ))}
  </div>
- ) : pendingConnections.length === 0 ? (
- <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
- <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
- <p className="text-foreground/60">No connection requests yet</p>
- <p className="text-sm text-foreground/50 mt-1">
- When employers are interested in your profile, you'll see their requests here
+ </div>
+ )}
+ </div>
+ )}
+ </DashSection>
+
+ <p className="mt-10 marginalia text-[0.75rem] text-foreground/60">
+ Peers, projects and institutions will appear here as each category gains a source. There is no
+ platform-wide search of people on any category, and no route to someone you have no shared context
+ with. Assigned mentors do not appear on this screen — they belong on the Observation Pathway.
  </p>
  </div>
- ) : (
- <p className="text-foreground/50 text-sm">No previous connections</p>
- )}
- </motion.div>
- </motion.div>
  );
 };
 
