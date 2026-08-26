@@ -161,13 +161,13 @@ export default function ReportReview() {
   return (
     <div>
       <DashboardPageHeader
-        eyebrow="§ Register · Pre-issue review"
+        eyebrow="Your record · Review"
         title={
           <>
-            Read the record. <span className="italic display-serif-italic">Challenge</span> what does not stand.
+            Review your record. <span className="italic display-serif-italic">Raise a correction</span> where something does not look right.
           </>
         }
-        meta="You may open a challenge against any statement or observation. Statements are not editable — challenges are the only lever."
+        meta="Review what appears in your record carefully. If something is inaccurate or needs reconsideration, you can raise a correction for review. Raising a correction does not directly edit the record; any resulting change follows review."
       />
 
       {error && (
@@ -178,16 +178,12 @@ export default function ReportReview() {
       )}
 
       {!selected ? (
-        <DashSection eyebrow="§ I · Your open reviews" title="Drafts awaiting your read">
+        <DashSection eyebrow="§ I · Your open reviews" title="Reports ready for your review">
           {reports.length === 0 ? (
             <EmptyState
               eyebrow="§ Nothing to review"
-              title={
-                <>
-                  No reports currently in <span className="italic display-serif-italic">your</span> review lane.
-                </>
-              }
-              body="When a draft of your report is assembled, it will appear here for your read before issuance."
+              title="There is nothing to review right now."
+              body="When your report is ready for review, it will appear here before it can be released."
             />
           ) : (
             <div className="border-t-2 border-foreground">
@@ -317,6 +313,7 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
           <ArrowLeft className="w-4 h-4" /> Back to your reviews
         </button>
         <div className="flex items-center gap-3">
+          <span className="mono-label text-foreground/60">§ Behavioral Evidence Report</span>
           <LedgerBadge>v{report.version}</LedgerBadge>
           <LedgerBadge>{report.status.replace(/_/g, " ")}</LedgerBadge>
         </div>
@@ -327,9 +324,9 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
           <div className="flex items-start gap-3">
             <ShieldAlert className="w-5 h-5 ink-vermilion mt-0.5" />
             <div>
-              <div className="mono-label ink-vermilion mb-1">§ Open challenges on this report</div>
+              <div className="mono-label ink-vermilion mb-1">§ Open corrections on this report</div>
               <p className="text-sm text-foreground">
-                {challenges.length} challenge{challenges.length === 1 ? "" : "s"} on record. A challenge does not
+                {challenges.length} correction{challenges.length === 1 ? "" : "s"} raised. Raising a correction does not
                 withdraw the report — it opens an independent reconsideration by an uninvolved reviewer.
               </p>
             </div>
@@ -366,7 +363,7 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="mono-label text-foreground/60">§ Dimension {s.dimension_id}</span>
-                        {stmtChallenged && <LedgerBadge>challenged</LedgerBadge>}
+                        {stmtChallenged && <LedgerBadge>correction raised</LedgerBadge>}
                       </div>
                       <p className="display-serif text-lg text-foreground leading-snug">
                         {composed?.rendered_body ?? (
@@ -397,7 +394,7 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
                         disabled={stmtChallenged}
                         className="mono-label ink-vermilion hover:underline disabled:opacity-50 disabled:no-underline flex items-center gap-1"
                       >
-                        <Flag className="w-3 h-3" /> {stmtChallenged ? "already challenged" : "challenge statement"}
+                        <Flag className="w-3 h-3" /> {stmtChallenged ? "correction already raised" : "raise a correction"}
                       </button>
                     </div>
                   </div>
@@ -432,7 +429,7 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
                                   disabled={!o || obsChallenged}
                                   className="mono-label text-[0.7rem] ink-vermilion hover:underline disabled:opacity-50 disabled:no-underline"
                                 >
-                                  {obsChallenged ? "challenged" : "challenge"}
+                                  {obsChallenged ? "correction raised" : "raise a correction"}
                                 </button>
                               </div>
                             </div>
@@ -449,7 +446,7 @@ function ReviewDetail({ report, onBack }: { report: BerReport; onBack: () => voi
       </DashSection>
 
       {challenges.length > 0 && (
-        <DashSection eyebrow="§ II · Your open challenges" title="Where each challenge stands">
+        <DashSection eyebrow="§ II · Your open corrections" title="Where each correction stands">
           <div className="border-t-2 border-foreground">
             {challenges.map((c) => (
               <div
@@ -545,14 +542,14 @@ function ChallengeModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mono-label text-foreground/60 mb-2">
-          § Open a challenge · dimension {target.statement.dimension_id}
+          § Raise a correction · dimension {target.statement.dimension_id}
         </div>
         <h2 className="display-serif text-2xl text-foreground leading-tight mb-4">
-          {target.kind === "statement" ? "Challenge this statement" : "Challenge this observation"}
+          {target.kind === "statement" ? "Raise a correction on this statement" : "Raise a correction on this observation"}
         </h2>
         <p className="text-sm text-foreground/70 mb-6">
-          Pick the ground that best names the objection. A reviewer not involved in the original observation will
-          reconsider the specific artifact you challenge — the rest of the report is unaffected while it does.
+          Pick the ground that best names the issue. A reviewer not involved in the original observation will
+          reconsider the specific artifact you raise the correction against — the rest of the report is unaffected while it does.
         </p>
 
         <div className="space-y-2 mb-6">
@@ -586,8 +583,8 @@ function ChallengeModal({
         )}
 
         <p className="marginalia text-[0.75rem] text-foreground/60 mb-4">
-          Opening a challenge notifies the reviewer team and stamps a notification timestamp on the case. Per §8 + AC-16,
-          an open challenge does not withdraw your discoverability if it was already active.
+          Raising a correction notifies the reviewer team and stamps a notification timestamp on the case. Per §8 + AC-16,
+          an open correction does not withdraw your discoverability if it was already active.
         </p>
 
         <div className="flex items-center justify-end gap-3">
@@ -605,7 +602,7 @@ function ChallengeModal({
               </>
             ) : (
               <>
-                <Flag className="w-4 h-4 mr-2" /> Open challenge
+                <Flag className="w-4 h-4 mr-2" /> Raise correction
               </>
             )}
           </Button>
