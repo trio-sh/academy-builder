@@ -787,10 +787,10 @@ const itemVariants = {
 
 const navItems = [
   { name: "Overview", href: "/dashboard/mentor", icon: TrendingUp },
-  { name: "My Mentees", href: "/dashboard/mentor/mentees", icon: Users },
+  { name: "My Assignments", href: "/dashboard/mentor/mentees", icon: Users },
   { name: "Observations", href: "/dashboard/mentor/observations", icon: ClipboardCheck },
   { name: "Determinations", href: "/dashboard/mentor/determinations", icon: FileCheck },
-  { name: "Endorsements", href: "/dashboard/mentor/endorsements", icon: Award },
+  { name: "Confirmations", href: "/dashboard/mentor/endorsements", icon: Award },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -879,7 +879,7 @@ const Overview = () => {
 
   const stats = [
     {
-      label: "Active Mentees",
+      label: "Active Assignments",
       value: activeMentees.toString(),
       icon: Users,
       color: "from-indigo-500 to-purple-500"
@@ -891,13 +891,13 @@ const Overview = () => {
       color: "from-emerald-500 to-teal-500"
     },
     {
-      label: "Endorsements Given",
+      label: "Observations Confirmed",
       value: (mentorProfile?.total_endorsements || 0).toString(),
       icon: CheckCircle,
       color: "from-amber-500 to-orange-500"
     },
     {
-      label: "Max Mentees",
+      label: "Assignment Capacity",
       value: `${activeMentees} / ${mentorProfile?.max_mentees || 5}`,
       icon: Clock,
       color: "from-pink-500 to-rose-500"
@@ -907,9 +907,9 @@ const Overview = () => {
   if (isLoading) return <LedgerLoading />;
 
   const actionRequired = [
-    { count: pendingRequests, label: "Pending mentee request", note: "Candidates waiting for your approval", href: "/dashboard/mentor/mentees" },
-    { count: needsL2, label: "Ready for L2 observation", note: "L1 complete — schedule the live observation", href: "/dashboard/mentor/mentees" },
-    { count: readyForEndorsement, label: "Ready for endorsement", note: "L1 + L2 complete — submit endorsement decision", href: "/dashboard/mentor/endorsements" },
+    { count: pendingRequests, label: "New assignment", note: "Assignment awaiting your acknowledgement", href: "/dashboard/mentor/mentees" },
+    { count: needsL2, label: "Ready for S2 observation", note: "S1 complete — schedule the live observation", href: "/dashboard/mentor/mentees" },
+    { count: readyForEndorsement, label: "Awaiting confirmation", note: "Observation ready for you to confirm", href: "/dashboard/mentor/endorsements" },
   ].filter((x) => x.count > 0);
 
   return (
@@ -925,7 +925,13 @@ const Overview = () => {
             .
           </>
         }
-        meta="Observation is the craft — evidence follows. Continue where the observation left off."
+        meta={
+          <>
+            You have been entrusted with something that matters. Observe with care, fairness, and professional independence.
+            The process is governed, the boundaries are clear, and your judgment is respected.{" "}
+            <span className="italic display-serif-italic text-foreground/60">Observation is the craft — evidence follows.</span>
+          </>
+        }
         actions={
           !mentorProfile?.is_accepting ? (
             <Link to="/dashboard/mentor/profile">
@@ -986,8 +992,8 @@ const Overview = () => {
       <DashSection eyebrow="§ III · At a glance" title="Common entries">
         <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
           {[
-            { title: "View mentees", body: "Manage your assigned candidates.", href: "/dashboard/mentor/mentees" },
-            { title: "Record an observation", body: "Document candidate conduct.", href: "/dashboard/mentor/observations" },
+            { title: "View assignments", body: "See the individuals currently assigned to you.", href: "/dashboard/mentor/mentees" },
+            { title: "Record an observation", body: "Document observed conduct.", href: "/dashboard/mentor/observations" },
             { title: "Manage schedule", body: "Set your availability for sessions.", href: "/dashboard/mentor/schedule" },
           ].map((q, i) => (
             <Link
@@ -1021,7 +1027,7 @@ const Overview = () => {
               You are <span className="italic display-serif-italic">all caught up.</span>
             </>
           }
-          body="No pending actions. New mentee requests will surface here."
+          body="No pending actions. New assignments and observation tasks will appear here."
         />
       )}
     </div>
@@ -1278,9 +1284,9 @@ const Mentees = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants} className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 pt-2 -mt-2 border-b border-foreground/15">
-        <h1 className="text-3xl font-bold text-foreground mb-2">My Mentees</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">My Assignments</h1>
         <p className="text-foreground/60">
-          View and manage your assigned candidates.
+          View the individuals currently assigned to you and continue their observation work.
         </p>
       </motion.div>
 
@@ -1292,7 +1298,7 @@ const Mentees = () => {
               <Bell className="w-4 h-4 ink-vermilion" />
             </div>
             <h2 className="text-lg font-semibold ink-vermilion">
-              Pending Requests ({pendingRequests.length})
+              New assignments awaiting acknowledgement ({pendingRequests.length})
             </h2>
           </div>
 
@@ -1360,7 +1366,7 @@ const Mentees = () => {
                 <Users className="w-4 h-4 text-foreground" />
               </div>
               <h2 className="text-lg font-semibold text-foreground">
-                Active Mentees ({activeMentees.length})
+                Active assignments ({activeMentees.length})
               </h2>
             </div>
           )}
@@ -1465,9 +1471,9 @@ const Mentees = () => {
             className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
           >
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-            <p className="text-foreground/60">No mentees assigned yet</p>
-            <p className="text-sm text-foreground/50 mt-1">
-              Candidates will request you as their mentor
+            <p className="text-foreground">No active assignments yet.</p>
+            <p className="text-sm text-foreground/70 mt-2 max-w-md mx-auto">
+              New assignments will appear here when The 3rd Academy assigns an individual to you.
             </p>
           </motion.div>
         )
@@ -1715,7 +1721,7 @@ const AssignDimensions = () => {
     >
       <motion.div variants={itemVariants}>
         <Link to="/dashboard/mentor/mentees" className="text-sm ink-vermilion hover:ink-vermilion mb-4 inline-block">
-          &larr; Back to Mentees
+          &larr; Back to Assignments
         </Link>
         <h1 className="text-3xl font-bold text-foreground mb-2">Assign Observation Dimensions</h1>
         <p className="text-foreground/60">
@@ -1945,9 +1951,9 @@ const MenteeDetail = () => {
   if (!assignment || !candidateProfile) {
     return (
       <div className="text-center py-20">
-        <p className="text-foreground/60">Mentee not found.</p>
+        <p className="text-foreground/60">Assignment not found.</p>
         <Button variant="ghost" onClick={() => navigate("/dashboard/mentor/mentees")} className="mt-4 ink-vermilion">
-          Back to Mentees
+          Back to Assignments
         </Button>
       </div>
     );
@@ -1967,7 +1973,7 @@ const MenteeDetail = () => {
       {/* Header */}
       <motion.div variants={itemVariants}>
         <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/mentor/mentees")} className="text-foreground/60 hover:text-foreground mb-4">
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Mentees
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back to Assignments
         </Button>
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-xl">
@@ -2766,21 +2772,16 @@ const Endorsements = () => {
       animate="visible"
       className="space-y-8"
     >
-      <LegacyBanner
-        body="The endorsements concept is retired per T3A-DEV-SPEC-002 §5.1.1 + §21.4. Its replacement is the progression decision (proceed / redirect / pause) recorded against a stage_instance in the new Determinations surface."
-        linkHref="/dashboard/mentor/determinations"
-        linkLabel="Open the new Determinations surface"
-      />
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Endorsements</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Confirmations</h1>
         <p className="text-foreground/60">
-          Issue endorsements for candidates who have completed 3 mentor observations.
+          Review and confirm observations that require your confirmation.
         </p>
       </motion.div>
 
-      {/* Ready for Endorsement */}
+      {/* Awaiting confirmation */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Ready for Endorsement</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Awaiting confirmation</h2>
         {readyForEndorsement.length > 0 ? (
           <div className="space-y-4">
             {readyForEndorsement.map((assignment) => {
@@ -2809,7 +2810,7 @@ const Endorsements = () => {
                           {assignment.observation_count} observations completed
                         </p>
                         <span className="inline-block px-2 py-0.5 rounded text-xs bg-foreground/[0.06] text-foreground mt-1">
-                          Ready for endorsement
+                          Confirmation required
                         </span>
                       </div>
                     </div>
@@ -2819,7 +2820,7 @@ const Endorsements = () => {
                         className="bg-purple-600 hover:bg-purple-500"
                       >
                         <Award className="w-4 h-4 mr-2" />
-                        Endorse
+                        Review observation
                       </Button>
                     )}
                   </div>
@@ -2991,9 +2992,9 @@ const Endorsements = () => {
         ) : (
           <div className="p-8 rounded-2xl bg-background border border-foreground/25 text-center">
             <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-            <p className="text-foreground/60">No candidates ready for endorsement</p>
-            <p className="text-sm text-foreground/50 mt-1">
-              Candidates need 3 completed observations before endorsement
+            <p className="text-foreground">No observations are waiting for confirmation.</p>
+            <p className="text-sm text-foreground/70 mt-2 max-w-md mx-auto">
+              Observations assigned to you that require confirmation will appear here.
             </p>
           </div>
         )}
@@ -3001,7 +3002,7 @@ const Endorsements = () => {
 
       {/* Past Endorsements */}
       <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Endorsement History</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Confirmation history</h2>
         {pastEndorsements.length > 0 ? (
           <div className="space-y-3">
             {pastEndorsements.map((endorsement) => (
@@ -3056,7 +3057,7 @@ const Endorsements = () => {
         ) : (
           <div className="p-6 rounded-xl bg-background border border-foreground/25 text-center">
             <Award className="w-10 h-10 text-foreground/40 mx-auto mb-3" />
-            <p className="text-foreground/60 text-sm">No endorsements given yet</p>
+            <p className="text-foreground/60 text-sm">No confirmations recorded yet.</p>
           </div>
         )}
       </motion.div>
