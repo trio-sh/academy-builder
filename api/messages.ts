@@ -171,12 +171,13 @@ const OPENROUTER_MODELS = new Set([
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-17
-  "nvidia/nemotron-3.5-lightning:free",        // ctx=1000000, max_tok=65536 — NEW
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-24
+  "stealth/ox-alpha",                          // ctx=1048576, max_tok=131072 — NEW (preview, coding-capable, largest ctx)
+  "nvidia/nemotron-3.5-lightning:free",        // ctx=1000000, max_tok=65536
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
-  "dots-studio/dots-3-note-preview:free",      // ctx=512000,  max_tok=512000 — NEW
+  "dots-studio/dots-3-note-preview:free",      // ctx=512000,  max_tok=512000
+  "thinkingmachines/inkling:free",             // ctx=262144,  max_tok=262144 — NEW (reasoning flagship)
   "nvidia/nemotron-3-super-120b-a12b:free",    // ctx=262144,  max_tok=262144
-  "poolside/laguna-s-2.1:free",               // ctx=262144,  max_tok=32768
   // OpenRouter free models (tool-capable)
   "tencent/hy3:free",
   "moonshotai/kimi-k2.6:free",
