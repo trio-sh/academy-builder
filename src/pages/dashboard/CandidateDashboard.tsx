@@ -5302,7 +5302,11 @@ function RequestForm({
  placeholder="Optional free text."
  />
 
- <div className="pt-2 flex items-center justify-end gap-4">
+ {/* Post-Launch 04 Note 2: submit sits bottom-left, directly beneath
+     the last field, aligned with the left edge of the form fields — so
+     the fixed Editorial Desk badge in the bottom-right never overlaps
+     or competes with it. */}
+ <div className="pt-2 flex items-center justify-start gap-4">
  <Button
  type="submit"
  disabled={!canSubmit || saving}
