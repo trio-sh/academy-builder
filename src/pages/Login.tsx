@@ -105,13 +105,13 @@ const Login = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
-            className="border-2 border-foreground p-8 md:p-10 bg-background/40 relative"
+            className="border-2 border-foreground p-8 md:p-10 pt-14 md:pt-16 bg-background/40 relative"
           >
-            {/* Post-Launch 03 Note 1(b): stamp straddles the top rule as a
-                design device. Solid background so the border breaks cleanly
-                around it, and inset from the right so it never extends
-                past the panel edge at any breakpoint. */}
-            <div className="absolute -top-4 right-4 sm:right-8 max-w-[calc(100%-2rem)] stamp normal-case bg-background">Members' entrance</div>
+            {/* Post-Launch 04 Note 1: stamp sits with clear breathing room
+                beneath the top border rather than straddling it. Panel top
+                padding is bumped so the eyebrow beneath the stamp is not
+                crowded by the move. */}
+            <div className="absolute top-4 right-4 sm:right-6 max-w-[calc(100%-2rem)] stamp normal-case bg-background">Members' entrance</div>
 
             <div className="mono-label text-foreground/60 pb-3 mb-6 border-b border-foreground/25">
               Form No. 000-003 · Sign in
