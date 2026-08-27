@@ -135,7 +135,7 @@ export default function Determinations() {
             Answer the <span className="italic display-serif-italic">determination questions.</span>
           </>
         }
-        meta="Mentors answer bounded questions; the platform composes the statement. No statement text is authored by hand — §7.3."
+        meta="You answer a set question. The platform composes the statement from your answer — no statement is written by hand."
       />
 
       {error && (
@@ -149,13 +149,9 @@ export default function Determinations() {
         <DashSection eyebrow="§ I · Open assignments" title="Awaiting your determination">
           {assignments.length === 0 ? (
             <EmptyState
-              eyebrow="§ Empty roster"
-              title={
-                <>
-                  No open <span className="italic display-serif-italic">stage instances</span> assigned to you.
-                </>
-              }
-              body="When a participant enters a Stage on a dimension you are authorized for, the instance surfaces here."
+              eyebrow="§ Nothing open"
+              title="No open determinations."
+              body="When an assigned observation reaches determination review, the questions will appear here."
             />
           ) : (
             <div className="border-t-2 border-foreground">

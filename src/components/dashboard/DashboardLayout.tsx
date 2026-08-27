@@ -410,11 +410,16 @@ export function DashboardLayout({
           </div>
         </header>
 
-        {/* Page content */}
+        {/* Page content — the paper background fills the viewport so no
+            dashboard background shows through beneath short pages. This is
+            the Post-Launch 04 Note 11 fix, applied at the shared wrapper
+            rather than page-by-page. */}
         <main
           className={cn(
             "paper-grain",
-            isFullBleedRoute ? "flex-1 overflow-hidden" : "p-4 md:p-10"
+            isFullBleedRoute
+              ? "flex-1 overflow-hidden"
+              : "min-h-[calc(100vh-4.5rem)] p-4 md:p-10"
           )}
         >
           {children}
