@@ -8,6 +8,7 @@ import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotificati
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import Determinations from "@/pages/dashboard/mentor/Determinations";
+import Cockpit from "@/pages/dashboard/mentor/Cockpit";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -4435,6 +4436,7 @@ const MentorDashboardInner = () => {
           <Route path="observations" element={<Observations />} />
           <Route path="determinations" element={<Determinations />} />
           <Route path="endorsements" element={<Endorsements />} />
+          <Route path="cockpit/:stageEntryEventId" element={<Cockpit />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />
