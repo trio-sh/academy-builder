@@ -55,6 +55,9 @@ import ResetPassword from "./pages/ResetPassword";
 import Join from "./pages/Join";
 import WrFreeProductPage from "./pages/wr-free/ProductPage";
 import WrFreeAccountGate from "./pages/wr-free/AccountGate";
+import WrFreeModuleRunner from "./pages/wr-free/ModuleRunner";
+import WrFreeBetweenModules from "./pages/wr-free/BetweenModules";
+import WrFreeEndOfProduct from "./pages/wr-free/EndOfProduct";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
@@ -96,6 +99,9 @@ const App = () => (
             <Route path="/wr-free" element={<WrFreeProductPage />} />
             <Route path="/wr-free/the-moment-you-notice" element={<WrFreeProductPage />} />
             <Route path="/wr-free/start" element={<WrFreeAccountGate />} />
+            <Route path="/wr-free/module/:moduleCode" element={<WrFreeModuleRunner />} />
+            <Route path="/wr-free/between" element={<WrFreeBetweenModules />} />
+            <Route path="/wr-free/end" element={<WrFreeEndOfProduct />} />
 
             {/* Auth callback */}
             <Route path="/auth/callback" element={<AuthCallback />} />
