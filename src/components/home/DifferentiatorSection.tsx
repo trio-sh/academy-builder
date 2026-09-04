@@ -88,7 +88,7 @@ export function DifferentiatorSection() {
           </div>
           <div className="md:col-span-4">
             <p className="text-foreground/80 text-base md:text-lg leading-relaxed border-l-2 border-foreground pl-5">
-              Others test a moment. We document behaviour across workplace pressure
+              Others test a moment. We document behavior across workplace pressure
               moments — with accountable human confirmation.
             </p>
           </div>

@@ -11,7 +11,7 @@ type SkillPassport = Database["public"]["Tables"]["skill_passports"]["Row"];
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
 
-// T3A 14 behavioural dimensions
+// T3A 14 behavioral dimensions
 const T3A_DIMENSIONS: Record<string, { label: string }> = {
   integrity_ethics: { label: "Integrity & Ethics" },
   accountability_ownership: { label: "Accountability & Ownership" },
@@ -177,7 +177,7 @@ const VerifyPassport = () => {
 
           {/* Certificate header */}
           <div className="mono-label text-foreground/60 mb-4">
-            § Certificate of Behavioural Evidence · Ref. {passport.verification_code}
+            § Certificate of Behavioral Evidence · Ref. {passport.verification_code}
           </div>
           <h1 className="display-serif text-[3rem] md:text-[5rem] text-foreground leading-[0.95] mb-8">
             {profile?.first_name} <br />
@@ -213,9 +213,9 @@ const VerifyPassport = () => {
             </div>
           </dl>
 
-          {/* Behavioural readings */}
+          {/* Behavioral readings */}
           <div className="mono-label text-foreground/60 mb-4">
-            § Behavioural readings · BARS 4-point scale
+            § Behavioral readings · BARS 4-point scale
           </div>
           <div className="border-t-2 border-foreground mb-10">
             {scoredDimensions.map(([dimId, score]) => {
@@ -247,7 +247,7 @@ const VerifyPassport = () => {
           {/* Overall summary */}
           <div className="border-2 border-foreground p-6 mb-14 flex items-center justify-between">
             <div>
-              <div className="mono-label text-foreground/60 mb-1">Overall behavioural readiness</div>
+              <div className="mono-label text-foreground/60 mb-1">Overall behavioral readiness</div>
               <div className="display-serif text-3xl text-foreground">{barsLabel(avgScore)}</div>
             </div>
             <div className="ledger-num text-6xl text-foreground">{avgScore.toFixed(1)}</div>

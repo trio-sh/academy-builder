@@ -26,7 +26,7 @@ const footerLinks = {
     items: [
       { name: "Get Started", href: "/get-started" },
       { name: "Journal", href: "/blog" },
-      { name: "Help Centre", href: "/help" },
+      { name: "Help Center", href: "/help" },
     ],
   },
   legal: {
