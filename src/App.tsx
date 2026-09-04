@@ -50,6 +50,7 @@ import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
 import VerifyBER from "./pages/VerifyBER";
+import VerifyReportToken from "./pages/VerifyReportToken";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Join from "./pages/Join";
@@ -113,6 +114,8 @@ const App = () => (
             {/* Behavioral Evidence Report verification (public) */}
             <Route path="/verify" element={<VerifyBER />} />
             <Route path="/verify/ber/:id" element={<VerifyBER />} />
+            <Route path="/verify/token" element={<VerifyReportToken />} />
+            <Route path="/verify/token/:token" element={<VerifyReportToken />} />
             <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}
