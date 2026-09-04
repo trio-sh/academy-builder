@@ -15,7 +15,7 @@
 --     it, and the release is revocable at any time.
 --   * Verification is by a random opaque token, public to holders,
 --     scoped to the exact issued snapshot. A revoked disclosure
---     invalidates its tokens by refusing verification.
+--     breaks its tokens by refusing verification.
 --   * Amendment produces a NEW issuance record that supersedes the
 --     prior one. The prior issuance is retained and remains
 --     verifiable via its own token (with a `superseded` badge).
