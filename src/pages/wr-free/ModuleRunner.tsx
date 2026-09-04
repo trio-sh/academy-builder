@@ -145,6 +145,52 @@ export default function WrFreeModuleRunner() {
  // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [phase]);
 
+ // Prompt C — abandonment telemetry. Section 5 says: if a participant
+ // leaves the tab or navigates away mid-module (phase=running, not
+ // complete), record a single `module_abandoned` event. Fired at most
+ // once per session via a ref guard. No UI prompt is shown — that
+ // would violate Section 3's rule against injecting anything after a
+ // choice — this is telemetry only.
+ const firedAbandonment = useRef(false);
+ useEffect(() => {
+ if (!moduleCode) return;
+ if (phase !== "running") return;
+
+ const fireAbandonment = () => {
+ if (firedAbandonment.current) return;
+ firedAbandonment.current = true;
+ try {
+ // Best-effort fire; the tab may be closing so we don't await.
+ void supabase.rpc("t3a_wr_free_record_event", {
+ p_kind: "module_abandoned",
+ p_module_code: moduleCode,
+ p_campaign_source: campaign,
+ p_release_code: "WR-FREE-001",
+ });
+ } catch { /* ignore */ }
+ };
+
+ const onVisibility = () => {
+ if (document.visibilityState === "hidden") fireAbandonment();
+ };
+ const onBeforeUnload = () => {
+ fireAbandonment();
+ };
+
+ document.addEventListener("visibilitychange", onVisibility);
+ window.addEventListener("beforeunload", onBeforeUnload);
+ return () => {
+ document.removeEventListener("visibilitychange", onVisibility);
+ window.removeEventListener("beforeunload", onBeforeUnload);
+ };
+ }, [phase, moduleCode, campaign]);
+
+ // Once the participant reaches complete, cancel the abandonment guard
+ // so an entry to the next module gets its own tracker instance.
+ useEffect(() => {
+ if (phase === "complete") firedAbandonment.current = true;
+ }, [phase]);
+
  if (authLoading) {
  return (
  <div className="min-h-screen grid place-items-center bg-background">

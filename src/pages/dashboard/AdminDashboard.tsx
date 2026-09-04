@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import EvidenceReview from "@/pages/dashboard/admin/EvidenceReview";
+import D1IssuanceCoordinator from "@/pages/dashboard/admin/D1IssuanceCoordinator";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
@@ -154,6 +155,7 @@ const navItems = [
   { name: "Communications", href: "/dashboard/admin/communications", icon: Mail },
   { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
   { name: "Evidence Review", href: "/dashboard/admin/evidence-review", icon: ShieldCheck },
+  { name: "D1 Issuance", href: "/dashboard/admin/d1-issuance", icon: ShieldCheck },
   { name: "Praxis", href: "/dashboard/admin/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
 ];
@@ -2613,6 +2615,7 @@ const AdminDashboard = () => {
         <Route path="communications" element={<CommunicationsPage />} />
         <Route path="reports" element={<Reports />} />
         <Route path="evidence-review" element={<EvidenceReview />} />
+        <Route path="d1-issuance" element={<D1IssuanceCoordinator />} />
         <Route path="agent" element={<AIAgent />} />
         <Route path="settings" element={<SettingsPage />} />
       </Routes>
