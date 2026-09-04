@@ -102,8 +102,8 @@ CREATE TRIGGER t3a_d1_ai_administration_run_guard_trg
 -- A Stage 1 observation cannot enter the record without exactly one
 -- valid confirmation. The confirmation is bound to the EXACT stage
 -- entry event and the EXACT source version served in that session.
--- Any subsequent change to the source version invalidates the
--- confirmation by definition (INS-012 080).
+-- Any subsequent change to the source version makes the confirmation
+-- stale by definition and it is refused at render time (INS-012 080).
 
 CREATE TABLE IF NOT EXISTS public.t3a_d1_ai_administration_confirmation (
   ai_administration_confirmation_id uuid primary key default gen_random_uuid(),

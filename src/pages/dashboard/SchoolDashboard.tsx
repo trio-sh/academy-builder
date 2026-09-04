@@ -235,7 +235,7 @@ const Overview = () => {
         <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
           {[
             { n: "01", title: "Manage students", body: "View and manage enrolled students.", href: "/dashboard/school/students" },
-            { n: "02", title: "Record an observation", body: "Document student behavioural assessments.", href: "/dashboard/school/observations" },
+            { n: "02", title: "Record an observation", body: "Document student behavioral assessments.", href: "/dashboard/school/observations" },
             { n: "03", title: "View analytics", body: "Track cohort trends over time.", href: "/dashboard/school/analytics" },
           ].map((q, i) => (
             <Link
@@ -307,7 +307,7 @@ const Overview = () => {
                 The classroom register is <span className="italic display-serif-italic">open.</span>
               </>
             }
-            body="Start documenting student behaviours to begin building the record."
+            body="Start documenting student behaviors to begin building the record."
           />
         )}
       </DashSection>

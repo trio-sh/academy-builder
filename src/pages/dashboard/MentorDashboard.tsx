@@ -545,10 +545,10 @@ const ObservationFormModal = () => {
                       <blockquote className="pl-3 border-l-2 border-indigo-500/50 text-foreground/60 italic space-y-2">
                         <p>"Hello <span className="text-foreground">[Candidate Name]</span>, my name is <span className="text-foreground">[Mentor Name]</span>, and I'll be conducting your L2 live observation session today.</p>
                         <p>Before we begin, I want to confirm a few things:</p>
-                        <p>This session will be used to observe and document your behavioural responses in a structured professional context. Your responses will be scored using The 3rd Academy's 4-point Behaviourally Anchored Rating Scale.</p>
+                        <p>This session will be used to observe and document your behavioral responses in a structured professional context. Your responses will be scored using The 3rd Academy's 4-point Behaviorally Anchored Rating Scale.</p>
                         <p>This session may be recorded for quality assurance and audit purposes. Do you consent to proceed with the session under these conditions?</p>
                         <p>[Wait for verbal confirmation]</p>
-                        <p>Thank you. During this session, I'll present you with scenarios related to your assigned behavioural dimensions. Please respond as naturally and honestly as you can — there are no trick questions, and this is not a test you can fail. The purpose is to observe how you approach workplace situations.</p>
+                        <p>Thank you. During this session, I'll present you with scenarios related to your assigned behavioral dimensions. Please respond as naturally and honestly as you can — there are no trick questions, and this is not a test you can fail. The purpose is to observe how you approach workplace situations.</p>
                         <p>Do you have any questions before we begin?"</p>
                       </blockquote>
                       <p className="text-xs text-foreground/50 mt-2">Ref: BOSD Section 5.14, Doctrine Box 47. Minor phrasing adjustments for natural delivery are permitted, but consent confirmation and recording disclosure must be delivered in full.</p>

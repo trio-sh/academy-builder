@@ -53,6 +53,8 @@ import VerifyBER from "./pages/VerifyBER";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Join from "./pages/Join";
+import WrFreeProductPage from "./pages/wr-free/ProductPage";
+import WrFreeAccountGate from "./pages/wr-free/AccountGate";
 
 // Dashboard pages
 import CandidateDashboard from "./pages/dashboard/CandidateDashboard";
@@ -89,6 +91,11 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/security" element={<Security />} />
+
+            {/* T3A-DEV-INS-WR-FREE-001 · The Moment You Notice */}
+            <Route path="/wr-free" element={<WrFreeProductPage />} />
+            <Route path="/wr-free/the-moment-you-notice" element={<WrFreeProductPage />} />
+            <Route path="/wr-free/start" element={<WrFreeAccountGate />} />
 
             {/* Auth callback */}
             <Route path="/auth/callback" element={<AuthCallback />} />
