@@ -17,6 +17,7 @@ import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import ReportReview from "@/pages/dashboard/candidate/ReportReview";
+import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
 import {
   BridgeFastLanding,
   FreePractice,
@@ -6392,7 +6393,15 @@ const CandidateDashboard = () => {
  >
  <Routes>
  <Route index element={<Overview />} />
- <Route path="observations" element={<ObservationPathway />} />
+ <Route path="observations" element={
+   <div className="space-y-12">
+     <D1PathwayPane />
+     <div className="border-t border-foreground/20 pt-8">
+       <div className="mono-label text-foreground/60 mb-3">§ Legacy pathway view</div>
+       <ObservationPathway />
+     </div>
+   </div>
+ } />
  <Route path="observations/session" element={<InteractiveSkillAssessment />} />
  <Route path="passport" element={<SkillPassport />} />
  <Route path="report-review" element={<ReportReview />} />
