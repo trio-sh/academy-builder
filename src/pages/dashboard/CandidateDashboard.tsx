@@ -17,6 +17,14 @@ import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import ReportReview from "@/pages/dashboard/candidate/ReportReview";
+import {
+  BridgeFastLanding,
+  FreePractice,
+  WorkRehearsalShelf,
+  MomentDetail,
+  FocusedProductDetail,
+  YourRehearsals,
+} from "@/pages/dashboard/candidate/BridgeFast";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
@@ -2784,296 +2792,7 @@ type TrainingProgressFromLog = {
  progress_percent?: number;
 };
 
-const Training = () => {
- const { user } = useAuth();
- const navigate = useNavigate();
- const [progress, setProgress] = useState<Record<string, TrainingProgressFromLog>>({});
- const [isLoading, setIsLoading] = useState(true);
-
- useEffect(() => {
- const fetchData = async () => {
- if (!user?.id) return;
-
- // Fetch training completions from growth_log_entries (same source as Growth page)
- const { data: trainingLogs } = await supabase
- .from("growth_log_entries")
- .select("*")
- .eq("candidate_id", user.id)
- .eq("event_type", "training")
- .order("created_at", { ascending: false });
-
- // Build progress map from training logs
- const progressMap: Record<string, TrainingProgressFromLog> = {};
- (trainingLogs || []).forEach((log) => {
- const metadata = log.metadata as { module_id?: string; module_slug?: string; score?: number } | null;
- if (metadata?.module_id && !progressMap[metadata.module_id]) {
- // Only keep the latest (first due to desc order) completion per module
- progressMap[metadata.module_id] = {
- module_id: metadata.module_id,
- module_slug: metadata.module_slug || '',
- score: metadata.score || 0,
- completed_at: log.created_at,
- };
- }
- });
- setProgress(progressMap);
-
- setIsLoading(false);
- };
-
- fetchData();
- }, [user?.id]);
-
- const openModule = (moduleSlug: string) => {
- navigate(`/dashboard/candidate/training/module/${moduleSlug}`);
- };
-
- // Get icon component by name
- const getIconComponent = (iconName: string) => {
- const icons: Record<string, React.ReactNode> = {
- 'Shield': <Shield className="w-6 h-6" />,
- 'Smartphone': <MessageSquare className="w-6 h-6" />,
- 'Award': <Award className="w-6 h-6" />,
- 'Users': <Users className="w-6 h-6" />,
- 'UserX': <User className="w-6 h-6" />,
- 'MessageSquare': <MessageSquare className="w-6 h-6" />,
- 'AlertTriangle': <AlertCircle className="w-6 h-6" />,
- 'Scale': <Sliders className="w-6 h-6" />,
- 'FileCheck': <FileText className="w-6 h-6" />,
- 'Handshake': <Users className="w-6 h-6" />,
- };
- return icons[iconName] || <BookOpen className="w-6 h-6" />;
- };
-
- // Calculate statistics from growth log entries
- const completedCount = Object.keys(progress).length;
- const inProgressCount = 0; // Growth log only tracks completions, not in-progress
-
- // Check if module is locked (requires previous modules to be completed for sequential unlocking)
- const isModuleLocked = (index: number): boolean => {
- if (index === 0) return false; // First module is always unlocked
- // For now, all modules are unlocked - can enable sequential locking by uncommenting:
- // const previousModule = INTERACTIVE_MODULES[index - 1];
- // return progress[previousModule.id]?.status !== 'completed';
- return false;
- };
-
- if (isLoading) {
- return (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-foreground" />
- </div>
- );
- }
-
- return (
- <motion.div
- variants={containerVariants}
- initial="hidden"
- animate="visible"
- className="space-y-8"
- >
- {/* Header */}
- <motion.div variants={itemVariants}>
- <h1 className="text-3xl font-bold text-foreground mb-2">BridgeFast</h1>
- <p className="text-foreground/60">
- Skill development programs to build workplace readiness before or between your observation sessions.
- </p>
- <div className="mt-3 px-4 py-2.5 rounded-lg bg-vermilion/10 border border-vermilion inline-flex items-start gap-2 max-w-2xl">
- <AlertCircle className="w-4 h-4 ink-vermilion shrink-0 mt-0.5" />
- <p className="text-sm ink-vermilion">
- BridgeFast is a development area. These programs are separate from your formal observation sessions and will not be recorded in your Behavioral Evidence Report.
- </p>
- </div>
- </motion.div>
-
- {/* Progress Overview */}
- <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-4">
- <div className="p-6 rounded-xl bg-background border border-foreground/25">
- <BookOpen className="w-8 h-8 ink-vermilion mb-3" />
- <p className="text-3xl font-bold text-foreground">{INTERACTIVE_MODULES.length}</p>
- <p className="text-sm text-foreground/60">Total Programs</p>
- </div>
- <div className="p-6 rounded-xl bg-background border border-foreground/25">
- <Play className="w-8 h-8 ink-vermilion mb-3" />
- <p className="text-3xl font-bold text-foreground">{inProgressCount}</p>
- <p className="text-sm text-foreground/60">In Progress</p>
- </div>
- <div className="p-6 rounded-xl bg-background border border-foreground/25">
- <CheckCircle className="w-8 h-8 text-foreground mb-3" />
- <p className="text-3xl font-bold text-foreground">{completedCount}</p>
- <p className="text-sm text-foreground/60">Completed</p>
- </div>
- </motion.div>
-
- {/* Modules Grid */}
- <motion.div variants={itemVariants}>
- <h2 className="text-xl font-semibold text-foreground mb-4">BridgeFast Programs</h2>
- <div className="grid md:grid-cols-2 gap-4">
- {INTERACTIVE_MODULES.map((module, index) => {
- const moduleProgress = progress[module.id];
- // If we have a log entry for this module, it's completed
- const isCompleted = !!moduleProgress;
- const locked = isModuleLocked(index);
-
- return (
- <motion.div
- key={module.id}
- whileHover={!locked ? { scale: 1.02 } : {}}
- className={`relative p-6 rounded-xl border transition-all cursor-pointer overflow-hidden ${
- locked
- ? 'bg-foreground/[0.06]/50 border-foreground/25 cursor-not-allowed'
- : isCompleted
- ? 'bg-foreground/[0.06] border-foreground/40 hover:border-foreground/40'
- : 'bg-background border-foreground/25 hover:border-foreground/25'
- }`}
- onClick={() => !locked && openModule(module.slug)}
- >
- {/* Gradient overlay */}
- <div className={`absolute inset-0 bg-foreground/[0.05] ${module.color} opacity-5`} />
-
- <div className="relative">
- {/* Header */}
- <div className="flex items-start justify-between mb-4">
- <div className={`p-3 rounded-xl bg-foreground/[0.05] ${module.color}`}>
- {getIconComponent(module.icon)}
- </div>
- <div className="flex items-center gap-2">
- {locked ? (
- <Lock className="w-5 h-5 text-foreground/50" />
- ) : isCompleted ? (
- <div className="flex items-center gap-1 text-foreground">
- <CheckCircle className="w-5 h-5" />
- <span className="text-sm font-medium">
- {moduleProgress.score}pts
- </span>
- </div>
- ) : null}
- </div>
- </div>
-
- {/* Content */}
- <div className="mb-4">
- <span className={`inline-block px-2 py-0.5 rounded text-xs mb-2 bg-foreground/[0.05] ${module.color} bg-opacity-20 text-foreground`}>
- {module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1)}
- </span>
- <h3 className="font-semibold text-foreground text-lg">{module.title}</h3>
- <p className="text-sm text-foreground/50">{module.subtitle}</p>
- </div>
-
- <p className="text-sm text-foreground/60 mb-4 line-clamp-2">
- {module.description}
- </p>
-
- {/* Meta info */}
- <div className="flex items-center gap-4 text-sm text-foreground/50 mb-4">
- <span className="flex items-center gap-1">
- <Clock className="w-4 h-4" />
- {module.duration}
- </span>
- <span className="flex items-center gap-1">
- <Target className="w-4 h-4" />
- {module.scenes.length} scenes
- </span>
- <span className="flex items-center gap-1">
- <Star className="w-4 h-4" />
- {module.totalPoints} pts
- </span>
- </div>
-
- {/* Competencies */}
- <div className="flex flex-wrap gap-1 mb-4">
- {module.competencies.slice(0, 3).map((comp, i) => (
- <span
- key={i}
- className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60"
- >
- {comp}
- </span>
- ))}
- {module.competencies.length > 3 && (
- <span className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
- +{module.competencies.length - 3}
- </span>
- )}
- </div>
-
- {/* Progress bar for in-progress */}
- {status === 'in_progress' && moduleProgress?.progress_percent && (
- <div className="mb-4">
- <div className="flex items-center justify-between text-xs mb-1">
- <span className="text-foreground/60">Progress</span>
- <span className="ink-vermilion">{moduleProgress.progress_percent}%</span>
- </div>
- <div className="h-1.5 bg-background rounded-full overflow-hidden">
- <div
- className={`h-full bg-foreground/[0.05] ${module.color} transition-all`}
- style={{ width: `${moduleProgress.progress_percent}%` }}
- />
- </div>
- </div>
- )}
-
- {/* Action button */}
- {!locked && (
- <Button
- size="sm"
- className={`w-full ${
- status === 'completed'
- ? 'bg-vermilion/10 hover:bg-vermilion/10'
- : status === 'in_progress'
- ? 'bg-vermilion/10 hover:bg-vermilion/10'
- : `bg-foreground/[0.05] ${module.color} hover:opacity-90`
- }`}
- onClick={(e) => {
- e.stopPropagation();
- openModule(module.slug);
- }}
- >
- {status === 'completed' ? (
- <>
- <Play className="w-4 h-4 mr-2" />
- Review Module
- </>
- ) : status === 'in_progress' ? (
- <>
- <Play className="w-4 h-4 mr-2" />
- Continue
- </>
- ) : (
- <>
- <Play className="w-4 h-4 mr-2" />
- Start Module
- </>
- )}
- </Button>
- )}
- </div>
- </motion.div>
- );
- })}
- </div>
- </motion.div>
-
- {/* Info section */}
- <motion.div variants={itemVariants} className="p-6 rounded-xl bg-foreground/30 border border-foreground/25">
- <div className="flex items-start gap-4">
- <div className="p-3 rounded-xl bg-foreground/20">
- <Sparkles className="w-6 h-6 ink-vermilion" />
- </div>
- <div>
- <h3 className="font-semibold text-foreground mb-1">Immersive Learning Experience</h3>
- <p className="text-sm text-foreground/60">
- Each module features realistic workplace scenarios, interactive choices, reflection prompts,
- and knowledge checks. Navigate through multi-scene experiences that test and develop your
- professional judgment across key behavioral competencies.
- </p>
- </div>
- </div>
- </motion.div>
- </motion.div>
- );
-};
+const Training = () => <BridgeFastLanding />;
 
 // [Old Training code removed - see TrainingModuleViewer for new implementation]
 // Projects (LiveWorks) component
@@ -6681,6 +6400,11 @@ const CandidateDashboard = () => {
  <Route path="assessment" element={<SelfAssessmentPage />} />
  <Route path="assessment/interactive" element={<AssessmentViewer />} />
  <Route path="training" element={<Training />} />
+ <Route path="training/free-practice" element={<FreePractice />} />
+ <Route path="training/workrehearsal" element={<WorkRehearsalShelf />} />
+ <Route path="training/workrehearsal/moments/:momentSlug" element={<MomentDetail />} />
+ <Route path="training/workrehearsal/products/:productSlug" element={<FocusedProductDetail />} />
+ <Route path="training/workrehearsal/your-rehearsals" element={<YourRehearsals />} />
  <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
  <Route path="projects" element={<Projects />} />
  <Route path="mentors" element={<FindMentor />} />
