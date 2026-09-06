@@ -1,6 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Loader2, Menu, Pause, Square, ChevronRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import {
+  CheckCircle2,
+  ChevronRight,
+  Circle,
+  Loader2,
+  Menu,
+  Pause,
+  Square,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -66,6 +74,38 @@ export default function Cockpit() {
  const [committing, setCommitting] = useState(false);
  const [paused, setPaused] = useState(false);
  const [committed, setCommitted] = useState(false);
+ const [committedRecordId, setCommittedRecordId] = useState<string | null>(null);
+
+ // Elapsed timer — accumulates real seconds since mount, minus paused windows.
+ // Section Control Strip shows this live; on commit it freezes.
+ const startedAt = useRef<number>(Date.now());
+ const pausedAt = useRef<number | null>(null);
+ const pausedTotalMs = useRef<number>(0);
+ const [elapsedTick, setElapsedTick] = useState(0);
+ useEffect(() => {
+ if (committed) return;
+ const id = window.setInterval(() => setElapsedTick((t) => t + 1), 1000);
+ return () => window.clearInterval(id);
+ }, [committed]);
+ useEffect(() => {
+ if (paused && pausedAt.current == null) {
+ pausedAt.current = Date.now();
+ } else if (!paused && pausedAt.current != null) {
+ pausedTotalMs.current += Date.now() - pausedAt.current;
+ pausedAt.current = null;
+ }
+ }, [paused]);
+ const elapsedLabel = useMemo(() => {
+ // recompute against elapsedTick so this refreshes each second
+ void elapsedTick;
+ const now = Date.now();
+ const runningPaused = pausedAt.current != null ? now - pausedAt.current : 0;
+ const total = now - startedAt.current - pausedTotalMs.current - runningPaused;
+ const s = Math.max(0, Math.floor(total / 1000));
+ const mm = String(Math.floor(s / 60)).padStart(2, "0");
+ const ss = String(s % 60).padStart(2, "0");
+ return `${mm}:${ss}`;
+ }, [elapsedTick, paused]);
 
  // ---------- Load stage entry + source ----------
  useEffect(() => {
@@ -93,12 +133,24 @@ export default function Cockpit() {
 
  let body: SourceVersionBody | null = null;
  if ((entryRow as StageEntryRow).source_version_id) {
+ // Try the D1 content-version table first (INS-001, extensions-qualified);
+ // fall back to the legacy t3a_content_version if present. Missing tables
+ // resolve to null via .maybeSingle().
+ for (const tableName of ["t3a_d1_content_version", "t3a_content_version"]) {
+ try {
  const { data: sv } = await supabase
- .from("t3a_content_version")
+ .from(tableName)
  .select("body")
  .eq("content_version_id", (entryRow as StageEntryRow).source_version_id)
  .maybeSingle();
- body = (sv?.body as SourceVersionBody) ?? null;
+ if (sv?.body) {
+ body = sv.body as SourceVersionBody;
+ break;
+ }
+ } catch {
+ // relation-does-not-exist etc. — try the next one.
+ }
+ }
  }
  // Fallback stub so the cockpit is inspectable when no source is loaded.
  if (!body) {
@@ -213,11 +265,9 @@ export default function Cockpit() {
  .single();
  if (insErr) throw insErr;
  setCommitted(true);
+ setCommittedRecordId(rec?.observation_record_id ?? null);
  setRefusal(null);
  if (draftKey) { try { window.sessionStorage.removeItem(draftKey); } catch { /* ignore */ } }
- // Toast-free for now; the surface will show a committed banner and
- // the mentor navigates via Session Controls.
- void rec;
  } catch (e) {
  setRefusal(e instanceof Error ? e.message : String(e));
  } finally {
@@ -327,7 +377,16 @@ export default function Cockpit() {
  {/* Participant Live View placeholder */}
  <section className="col-span-12 lg:col-span-6 border-2 border-foreground">
  <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
- <div className="mono-label">Participant — Live View</div>
+ <div className="mono-label flex items-center gap-3">
+ Participant — Live View
+ <span
+ title="Sessions are recorded under the retention schedule per acknowledgement clause 5."
+ className="flex items-center gap-1 mono-label text-vermilion"
+ >
+ <Circle className="w-2 h-2 fill-vermilion text-vermilion animate-pulse" />
+ REC
+ </span>
+ </div>
  <div className="mono-label text-background/70">Connection ●</div>
  </div>
  <div className="p-4">
@@ -372,6 +431,62 @@ export default function Cockpit() {
  </section>
  </div>
 
+ {/* After-commit follow-through — Determinations and Confirmations
+ are separate governed actions per INS-002 addendum §3 / INS-006. */}
+ {committed && (
+ <div className="px-4 pb-6">
+ <div className="border-2 border-foreground bg-foreground/[0.04] p-5">
+ <div className="flex items-start gap-4">
+ <CheckCircle2 className="w-6 h-6 text-foreground mt-1" />
+ <div className="flex-1 min-w-0">
+ <div className="mono-label text-foreground/60 mb-1">
+ § Observation committed
+ </div>
+ <h2 className="display-serif text-xl text-foreground leading-tight">
+ The record is on file. Next actions are separate.
+ </h2>
+ <p className="text-sm text-foreground/75 mt-2 max-w-2xl">
+ Determinations and Confirmations are two distinct governed
+ actions on the same observation. Neither happens through
+ this cockpit — open the surface you need.
+ </p>
+ <div className="mt-4 flex flex-wrap gap-3">
+ <Link to="/dashboard/mentor/determinations">
+ <Button
+ variant="outline"
+ className="rounded-none border-2 border-foreground text-foreground hover:bg-foreground/[0.05]"
+ >
+ Open Determinations →
+ </Button>
+ </Link>
+ <Link to="/dashboard/mentor/endorsements">
+ <Button
+ variant="outline"
+ className="rounded-none border-2 border-foreground text-foreground hover:bg-foreground/[0.05]"
+ >
+ Open Confirmations →
+ </Button>
+ </Link>
+ <Link to="/dashboard/mentor/mentees">
+ <Button
+ variant="outline"
+ className="rounded-none border-2 border-foreground text-foreground hover:bg-foreground/[0.05]"
+ >
+ Back to My Assignments
+ </Button>
+ </Link>
+ </div>
+ {committedRecordId && (
+ <div className="mono-label text-xs text-foreground/50 mt-4">
+ § Record id · {committedRecordId.slice(0, 20)}…
+ </div>
+ )}
+ </div>
+ </div>
+ </div>
+ </div>
+ )}
+
  {/* Session Control Strip */}
  <footer className="sticky bottom-0 z-10 grid grid-cols-12 items-center gap-3 px-6 py-3 border-t-2 border-foreground bg-background">
  <div className="col-span-2">
@@ -379,7 +494,7 @@ export default function Cockpit() {
  </div>
  <div className="col-span-2">
  <div className="mono-label text-foreground/60">Elapsed</div>
- <div className="display-serif text-lg">—</div>
+ <div className="display-serif text-lg tabular-nums">{elapsedLabel}</div>
  </div>
  <div className="col-span-2">
  <div className="mono-label text-foreground/60">Source Window</div>
