@@ -1999,7 +1999,7 @@ const MenteeDetail = () => {
               </Button>
             </Link>
             <Button size="sm" className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal(assignment.id, assignment.candidate_id)}>
-              <ClipboardCheck className="w-4 h-4 mr-1" /> Record L2
+              <ClipboardCheck className="w-4 h-4 mr-1" /> Begin Observation
             </Button>
           </div>
         </div>
@@ -2182,7 +2182,7 @@ const MenteeDetail = () => {
         <motion.div variants={itemVariants}>
           <div className="flex gap-3">
             <Button className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal(assignment.id, assignment.candidate_id)}>
-              <ClipboardCheck className="w-4 h-4 mr-2" /> Record L2 Observation
+              <ClipboardCheck className="w-4 h-4 mr-2" /> Begin Observation
             </Button>
             {observations.filter(o => o.is_locked).length >= 1 && l1Feedback.length > 0 && (
               <Link to="/dashboard/mentor/endorsements">
@@ -2237,7 +2237,6 @@ const MenteeDetail = () => {
 // Observations component
 const Observations = () => {
   const { user } = useAuth();
-  const { openModal } = useObservationModal();
   const [observations, setObservations] = useState<(MentorObservation & { candidate_profile?: { profile?: Profile } })[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -2307,19 +2306,23 @@ const Observations = () => {
       className="space-y-8"
     >
       <LegacyBanner
-        body="This surface reads the legacy mentor_observations + observation_feedback tables (BARS-score model). It is superseded by the T3A-DEV-SPEC-002 §7.3 + §11 determination flow — mentors answer bounded determination questions and record a progression decision against a stage_instance, and statements compose server-side from the approved statement library."
+        body="An updated Determinations surface is available."
         linkHref="/dashboard/mentor/determinations"
         linkLabel="Open the new Determinations surface"
       />
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Observations</h1>
-          <p className="text-foreground/60">Record and review behavioral observations.</p>
-        </div>
-        <Button className="bg-purple-600 hover:bg-purple-500" onClick={() => openModal()}>
-          <Plus className="w-4 h-4 mr-2" />
-          New Observation
-        </Button>
+      <motion.div variants={itemVariants}>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Observations</h1>
+        <p className="text-foreground/60">
+          Your observations, open and recorded. An observation begins from
+          the assignment it belongs to — open the assignment from{" "}
+          <Link
+            to="/dashboard/mentor/mentees"
+            className="underline hover:text-foreground"
+          >
+            My Assignments
+          </Link>{" "}
+          and use Begin Observation there.
+        </p>
       </motion.div>
 
       {observations.length > 0 ? (
@@ -3169,6 +3172,24 @@ const Schedule = () => {
 
   const saveAvailability = async () => {
     if (!mentorProfile) return;
+
+    // Note 10 (c): reject zero-length or reversed windows. A window
+    // whose end is not later than its start is not a real window.
+    const invalidDays: string[] = [];
+    for (const [dayStr, val] of Object.entries(availability)) {
+      if (!val.isActive) continue;
+      if (val.startTime >= val.endTime) {
+        const day = DAYS.find((d) => String(d.value) === dayStr);
+        if (day) invalidDays.push(day.label);
+      }
+    }
+    if (invalidDays.length > 0) {
+      alert(
+        `The end time must be later than the start time. Fix: ${invalidDays.join(", ")}`
+      );
+      return;
+    }
+
     setIsSaving(true);
 
     try {
@@ -3258,7 +3279,11 @@ const Schedule = () => {
     >
       <motion.div variants={itemVariants}>
         <h1 className="text-3xl font-bold text-foreground mb-2">Schedule</h1>
-        <p className="text-foreground/60">Manage your availability and upcoming sessions.</p>
+        <p className="text-foreground/60">
+          {activeTab === "availability"
+            ? "Tell The 3rd Academy when you are generally available for observation sessions."
+            : "View and manage observation sessions scheduled with individuals assigned to you."}
+        </p>
       </motion.div>
 
       {/* Tabs */}
@@ -3283,9 +3308,19 @@ const Schedule = () => {
 
       {activeTab === "availability" && (
         <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
+          <div className="mb-4 pb-4 border-b border-foreground/15">
+            <div className="mono-label text-foreground/60 mb-1">§ Time zone</div>
+            <div className="text-foreground font-medium">
+              {Intl.DateTimeFormat().resolvedOptions().timeZone}
+            </div>
+            <p className="text-xs text-foreground/60 mt-1">
+              All availability and sessions are shown in your local time.
+            </p>
+          </div>
           <h2 className="text-lg font-semibold text-foreground mb-6">Weekly Availability</h2>
           <p className="text-sm text-foreground/60 mb-6">
-            Set your available hours for each day. Candidates can book sessions during these times.
+            Set the times you are normally available. Available times may be
+            used to schedule sessions with individuals assigned to you.
           </p>
 
           <div className="space-y-4">
