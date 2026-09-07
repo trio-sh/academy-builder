@@ -63,12 +63,12 @@ const OPENROUTER_MODELS = new Set([
 
 const DEFAULT_MODEL = "kilo-auto/free";
 const FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-31
-  "thinkingmachines/inkling-small:free",             // ctx=1048576, max_tok=262144 — NEW
-  "thinkingmachines/inkling:free",                   // ctx=1048576, max_tok=262144 — NEW
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-09-07
+  "minimax/minimax-m3:free",                         // ctx=1048576, max_tok=943718 — NEW #1
+  "thinkingmachines/inkling-small:free",             // ctx=1048576, max_tok=262144
+  "thinkingmachines/inkling:free",                   // ctx=1048576, max_tok=262144
   "nvidia/nemotron-3.5-lightning:free",              // ctx=1000000, max_tok=65536
   "nvidia/nemotron-3-ultra-550b-a55b:free",          // ctx=1000000, max_tok=65536
-  "dots-studio/dots-3-note-preview:free",            // ctx=512000,  max_tok=460800
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "tencent/hy3:free",
@@ -96,6 +96,8 @@ const FALLBACK_MODELS = [
   "thinkingmachines/inkling:free",                  // ctx=1048576, max_tok=262144, coding/agentic
   "thinkingmachines/inkling-small:free",            // ctx=1048576, max_tok=262144, coding/agentic
   "minimax/minimax-m2.7:free",                      // ctx=196608, coding (MiniMax)
+  // Refreshed 2026-09-07
+  "nvidia/nemotron-3-super-120b-a12b:free",         // ctx=262144, max_tok=235929, 120B (OpenRouter)
 ];
 
 const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
