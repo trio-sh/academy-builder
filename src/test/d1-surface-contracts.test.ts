@@ -21,6 +21,9 @@ const workbench = read(WORKBENCH);
 const REVIEW = "src/pages/dashboard/mentor/EvidenceReview.tsx";
 const review = read(REVIEW);
 
+const RECIPIENT = "src/pages/RecipientReportAccess.tsx";
+const recipient = read(RECIPIENT);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -30,6 +33,7 @@ const code = (src: string) =>
 
 const workbenchCode = code(workbench);
 const reviewCode = code(review);
+const recipientCode = code(recipient);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -208,5 +212,68 @@ describe("§6.3 the traceability sheet is never part of the report face", () => 
     expect(review.replace(/\s+/g, " ")).toMatch(
       /no trace is not defensible and should not issue/i
     );
+  });
+});
+
+
+describe("§8.4 Named recipient — the longest must-not-appear list", () => {
+  it("requires no account and reads none", () => {
+    // "A recipient does not need an approved employer account, and an
+    // approved employer account does not give access to anything."
+    expect(recipientCode).not.toMatch(/useAuth|ProtectedRoute|signIn|signUp|session\?/);
+    expect(recipientCode).not.toMatch(/employer_profiles|t3a_employer_application/);
+  });
+
+  it("reads no full record and no traceability sheet", () => {
+    ["t3a_d1_statement_trace", "t3a_observation_record", "t3a_d1_composed_statement"].forEach(
+      (t) => expect(recipientCode).not.toContain(`from("${t}")`)
+    );
+  });
+
+  it("reads no other report and no other participant", () => {
+    // Only the block schedule and its controlled texts are read; the
+    // report itself comes back through the redemption function.
+    const reads = [...recipientCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect(reads.sort()).toEqual(
+      ["t3a_d1_report_block", "t3a_d1_report_controlled_text"].sort()
+    );
+  });
+
+  it("offers no search", () => {
+    expect(recipientCode).not.toMatch(/search|query|filter|browse|\.ilike\(|\.textSearch\(/i);
+  });
+
+  it("offers no export beyond the report face", () => {
+    // `export default` is the module keyword, not an export feature, so
+    // the assertion names the affordances rather than the word.
+    expect(recipientCode).not.toMatch(
+      /download|toPDF|toPdf|printReport|window\.print|csv|Blob\(|createObjectURL|exportReport|saveAs/i
+    );
+  });
+
+  it("returns a state and no content for every refused path", () => {
+    // Each refusal is copy only; none of them renders the report face.
+    ["REVOKED", "EXPIRED", "SUPERSEDED", "ADDRESS_NOT_VERIFIED", "UNKNOWN_TOKEN"].forEach(
+      (s) => expect(recipient).toContain(s)
+    );
+    // The face renders only where the server said content is permitted.
+    expect(recipientCode).toMatch(/result\?\.content &&/);
+  });
+
+  it("verifies status only, never content", () => {
+    expect(recipientCode).toMatch(/rpc\("t3a_d1_verify_status"/);
+    expect(recipient.replace(/\s+/g, " ")).toMatch(/returns no content/i);
+  });
+
+  it("refuses to render a mandatory block whose controlled text is absent", () => {
+    // Section 6.2: the render refuses rather than omitting the block.
+    expect(recipient.replace(/\s+/g, " ")).toMatch(
+      /cannot render: its controlled text is not loaded/i
+    );
+  });
+
+  it("renders no placeholder for an empty job-family block", () => {
+    // Block 11 remains EMPTY and NO EMPTY LABEL OR PLACEHOLDER RENDERS.
+    expect(recipientCode).toMatch(/if \(!b\.renders_always && !body\) return null;/);
   });
 });

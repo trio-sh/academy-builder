@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Two §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Three §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -483,6 +483,45 @@ surface.
 
 The block verdict is read from `t3a_d1_review_blocks_issuance` rather
 than computed on the client, so the screen cannot disagree with the gate.
+
+## 6h. The named recipient — §7.5 and §8.4
+
+`/report`. A public route: no sign-in, no account read, and nothing on
+the page that an account would unlock. §7.5 asks the file to say once,
+plainly, that a recipient does not need an approved employer account and
+that holding one confers no access. This route joins neither — the test
+asserts it reads no `useAuth`, no session, and neither
+`employer_profiles` nor `t3a_employer_application`.
+
+**The must-not-appear list is the longest on the §8.4 table**, and each
+line is an assertion:
+
+```
+no full record, no traceability sheet  no read of statement_trace,
+                                       observation_record or composed_statement
+no other report, no other participant  the only two tables read are the block
+                                       schedule and its controlled texts
+no search                              no search, query, filter, ilike or textSearch
+no export beyond the report face       no download, toPDF, print, csv, Blob
+                                       or createObjectURL
+no account requirement                 no useAuth, no session, no employer read
+```
+
+The export assertion is worth a note: it first failed on
+`export default`, the module keyword. Naming the affordances instead of
+the word is the fix — the same correction the override test needed on
+the review surface, and for the same reason.
+
+**Every refused path returns a state and no content.** Revoked, expired,
+superseded, address-not-verified and unknown-token each render copy
+explaining the state, and the report face renders only where the server
+said content is permitted.
+
+**Two §6.2 rules hold on the face itself.** A mandatory block whose
+controlled text is not loaded renders a refusal rather than being
+quietly omitted — the face says it is not a valid rendering. And block
+11 renders nothing at all when there is no job-family evidence: no empty
+label, no placeholder, no heading.
 
 ## 7. The one thing that needs the founder, not the developer
 
