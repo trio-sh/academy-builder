@@ -821,13 +821,11 @@ and a review result cannot be flipped from fail to pass in place, because
 the table is append-only, so the passing case uses a second report rather
 than an update.
 
-## 7. The one thing that needs the founder, not the developer
+## 7. The spelling conflict — raised, and settled by the founder
 
-**Five of the forty issued sources contain the British spelling
-`behavioural`** — at lines 1675, 1736, 3794, 5296 and 5309 of the
-generated migration.
-
-Two rules govern and they conflict:
+**Five occurrences of the British spelling `behavioural`** sat inside the
+quoted source bodies, across three of the forty sources. Two rules
+governed and they conflicted:
 
 - T3A-D1-EXEC-001 §5: nothing in the content is *"derived from prose,
   inferred, or authored by the developer"*.
@@ -835,18 +833,34 @@ Two rules govern and they conflict:
   interface strings, enforced by a build-failing check whose own list is
   *"extended, never shortened, without governance approval"*.
 
-Correcting the spelling means editing issued source content. Leaving the
-check un-allowlisted means the build fails. **Silently rewriting the
-founder's sources to get a green build is the one option that must not
-happen**, so the generated file is grandfathered in
-`scripts/check-vocabulary.mjs` with the reason stated at the entry, and
-the question is recorded here.
+The developer did not settle it. The generated file was grandfathered
+with the reason stated at the allowlist entry, and the question was put
+here.
 
-**This is live, not dormant.** These strings reach a mentor-facing surface
-the moment a source is served. The decision — correct the five
-occurrences in the issued sources, or record an exception to the spelling
-rule for issued content — is a content-governance decision and is not
-taken here.
+**The founder settled it: correct the five.** Applied as follows.
+
+| Where | What |
+|---|---|
+| Generated migration | The five corrected in place, one of them uppercase |
+| `scripts/extract-d1-content.mjs` | The correction recorded as `FOUNDER_DECIDED_CORRECTIONS`, applied by name so a regeneration cannot reintroduce them and no other word is touched |
+| Loaded content | `20261005000000` supersedes each affected version with a corrected one |
+| `scripts/check-vocabulary.mjs` | The grandfather entry removed |
+
+**The correction supersedes; it does not overwrite.** A loaded version
+body is immutable — `t3a_d1_content_version_immutable` refused the
+in-place edit, which is the same doctrine that makes a composed
+statement superseded rather than rewritten. So each affected version is
+marked superseded by a new version carrying the corrected body, and each
+carries a load event saying why. The originals stand exactly as loaded.
+
+Verified against the live database: **0** standing versions carry the
+British spelling, **3** standing versions carry the U.S. spelling, and
+**3** superseded versions still hold the original wording in history.
+
+**Two files still name the wrong spelling, and must.** The correction
+migration and the extractor each have to name it in order to find it; a
+check that forbade that would forbid ever correcting it. Both are
+allowlisted with that reason and nothing else.
 
 ## 8. What is still outstanding against the Execution Edition
 

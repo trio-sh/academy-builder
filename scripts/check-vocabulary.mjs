@@ -62,6 +62,15 @@ const FORBIDDEN = [
 // Each entry is a migration ticket in disguise — remove the entry when
 // the file's rename PR lands. NEW files MUST NOT be added here.
 const ALLOWLIST = new Set([
+  // The two files whose job is to REMOVE this spelling. Each must name
+  // the wrong spelling in order to find it, and a check that forbade
+  // that would forbid ever correcting it. The founder settled the §5 /
+  // AC-61 conflict by deciding the occurrences be corrected; these
+  // carry that decision out and are allowlisted for naming the word
+  // they delete, nothing else.
+  "supabase/migrations/20261005000000_t3a_d1_spelling_correction.sql",
+  "scripts/extract-d1-content.mjs",
+
   // Supabase-generated types — regenerate after the schema rename PR.
   "src/types/database.types.ts",
   "src/integrations/supabase/types.ts",
@@ -80,28 +89,6 @@ const ALLOWLIST = new Set([
   // (skill_passports, etc.) in COMMENT bodies so the deprecation is
   // discoverable from a live \d+. Not a new writer of the forbidden term.
   "supabase/migrations/20260811200000_t3a_spec_002_legacy_deprecation.sql",
-
-  // Verbatim issued content, quoted not authored.
-  //
-  // T3A-D1-EXEC-001 section 5.18 carries the forty production D1 sources
-  // and states that nothing in section 5 is "derived from prose,
-  // inferred, or authored by the developer". This migration is generated
-  // from that document by scripts/extract-d1-content.mjs and quotes each
-  // source body verbatim.
-  //
-  // Five occurrences of the British spelling `behavioural` sit inside
-  // that quoted content (lines 1675, 1736, 3794, 5296, 5309). They are
-  // not identifiers and no code reads them as one. Correcting them would
-  // mean editing issued source content, which is not a developer
-  // decision — and leaving the lock un-allowlisted would mean the
-  // developer silently rewriting the founder's sources to get a green
-  // build. Neither is acceptable, so the file is grandfathered and the
-  // conflict is recorded in
-  // docs/d1-execution/EXEC-001-content-load.md for the founder to settle.
-  //
-  // NOTE: these strings reach a mentor-facing surface once a source is
-  // served. This entry is therefore a live item, not a dormant one.
-  "supabase/migrations/20260926000000_t3a_d1_content_load.sql",
 
   // Legacy tests referencing the old shape — migrate alongside the
   // schema rename PR.

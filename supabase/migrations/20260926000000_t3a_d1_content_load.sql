@@ -1781,7 +1781,7 @@ at the client meeting
   support a CE-05 determination only. EVERY ROUTE ITEM CARRIES FIVE FIELDS: route_id;
   performable_in_session; observable_act; proof_event_or_artifact; q_d1_06_eligible.
 - `stated_standard` — CORRECTED. This field records ANY EXPLICIT RULE, REQUIREMENT, CONTROL, POLICY,
-  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioural
+  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioral
   answer. The earlier position read it as no source tells the participant what integrity conduct is
   expected, which is a different thing and left the field empty on sources that plainly contain
   standards \u2014 a twelve-point inspection required before shipment, a policy requiring a
@@ -1842,7 +1842,7 @@ at the client meeting
   administration variance changes the response channel or the B2 window, the local observation may
   retain what was said, but Q-D1-02 IS MARKED timing_not_comparable AND EXCLUDED from cross-context
   and recurrence calculations. THE SYSTEM MUST NOT CONVERT A MODIFIED RESPONSE WINDOW INTO A
-  BEHAVIOURAL FINDING OF RAISED LATER. Drafting-test-2 record fields per question:
+  BEHAVIORAL FINDING OF RAISED LATER. Drafting-test-2 record fields per question:
   source_version_id, question_id, communication_style, accent, disability, cultural_norm,
   language_background, accommodation_or_channel, result PASS or FAIL, defect_if_any, correction,
   independent_reviewer, review_date. TIMING RECORDEvery Stage 2 session records the timestamp of B1
@@ -3900,7 +3900,7 @@ subject to prior-exposure exclusion.
   raise it is not. A route is USED where the participant acts through it; saying they would use it
   is CE-05, not CE-06. Stated per source.
 - `stated_standard` — CORRECTED. This field records ANY EXPLICIT RULE, REQUIREMENT, CONTROL, POLICY,
-  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioural
+  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioral
   answer. The earlier position read it as no source tells the participant what integrity conduct is
   expected, which is a different thing and left the field empty on sources that plainly contain
   standards \u2014 a twelve-point inspection required before shipment, a policy requiring a
@@ -5402,7 +5402,7 @@ established — material items
   withdraw. A route is USED where the participant acts through it; saying they would use it is
   CE-05, not CE-06. Stated per source.
 - `stated_standard` — CORRECTED. This field records ANY EXPLICIT RULE, REQUIREMENT, CONTROL, POLICY,
-  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioural
+  DEADLINE OR OPERATING STANDARD ESTABLISHED BY THE SOURCE. It NEVER records a preferred behavioral
   answer. The earlier position read it as no source tells the participant what integrity conduct is
   expected, which is a different thing and left the field empty on sources that plainly contain
   standards \u2014 a twelve-point inspection required before shipment, a policy requiring a
@@ -5415,7 +5415,7 @@ established — material items
   may be used for CROSS-CONTEXT TIMING only where the standard response channel and the round
   opportunity window were PRESERVED. Where an accommodation or logged variance changes either,
   Q-D1-02 IS MARKED timing_not_comparable AND EXCLUDED from cross-context and recurrence
-  calculations. A modified response window must never become a behavioural finding of raised later.
+  calculations. A modified response window must never become a behavioral finding of raised later.
   Group composition ruleMust differ from any prior attempt by the same participant. Enforced by the
   allocation planner, not by the facilitator.
 - `min_seconds` — ,

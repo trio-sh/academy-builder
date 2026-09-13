@@ -31,7 +31,31 @@ const parseTable = (block) => {
   return rows;
 };
 
-const sql = (s) => (s === null || s === undefined ? "NULL" : `$lit$${s}$lit$`);
+/**
+ * The one correction applied to issued content, and the only one.
+ *
+ * Five occurrences of the British spelling `behavioural` sit inside the
+ * quoted source bodies. T3A-D1-EXEC-001 §5 forbids the developer
+ * deriving, inferring or authoring content; T3A-DEV-SPEC-002 §1.4 and
+ * AC-61 require U.S. spelling and fail the build otherwise. The two
+ * rules conflict, and the conflict was recorded rather than settled by
+ * the developer.
+ *
+ * The founder settled it: correct the five. That decision is applied
+ * here, by name and by name only, so a regeneration cannot reintroduce
+ * them and no other word in an issued source is touched.
+ */
+const FOUNDER_DECIDED_CORRECTIONS = [
+  [/\bBEHAVIOURAL\b/g, "BEHAVIORAL"],
+  [/\bBehavioural\b/g, "Behavioral"],
+  [/\bbehavioural\b/g, "behavioral"],
+];
+
+const correct = (s) =>
+  FOUNDER_DECIDED_CORRECTIONS.reduce((acc, [re, to]) => acc.replace(re, to), s);
+
+const sql = (s) =>
+  s === null || s === undefined ? "NULL" : `$lit$${correct(s)}$lit$`;
 
 const out = [];
 out.push(`-- =====================================================================
