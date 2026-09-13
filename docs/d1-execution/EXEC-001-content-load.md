@@ -1,8 +1,8 @@
-# T3A-D1-EXEC-001 — Sections 5 and 6: build report
+# T3A-D1-EXEC-001 — Sections 5, 6 and 7: build report
 
-**Reference** T3A-D1-EXEC-001 v1.0, Sections 5 and 6
+**Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6 and 7
 **Produced** 13 September 2026
-**Status** Section 5 complete. Section 6 built and proved. Conflict register below.
+**Status** Sections 5, 6 and 7 built and proved. Conflict register below.
 
 ---
 
@@ -300,6 +300,64 @@ constraint rejected. The constraint was right and the signature was
 incomplete — a render belongs to a participant's report — so the
 parameter was added rather than the column relaxed.
 
+## 6d. Section 7 — consent architecture
+
+Built in full. Real consent capture stays disabled until activation; the
+model, the states and the refusals exist now.
+
+**RECORDING is in the register and marked unavailable, not omitted.** A
+type absent from the register reads as an oversight; a type recorded as
+unavailable reads as a decision. A trigger refuses any attempt to create
+one, so "no route may request it" is enforced rather than documented.
+
+```
+consent_types           = 6        matrix_rows = 9
+recording_consent       = CONSENT_TYPE_UNAVAILABLE_IN_D1
+```
+
+Stage entry, §7.6, against the real matrix:
+
+```
+S1, nothing granted     -> refused, naming AI_ADMINISTRATION and OBSERVATION
+S1, observation only    -> refused, naming AI_ADMINISTRATION
+S1, both granted        -> permitted
+S1, a different notice  -> refused; a later notice never applies retroactively
+S2, same consents       -> permitted, 1 consent checked, not 2
+S4 co-participant       -> GROUP_SESSION only, never observation consent
+```
+
+The §7.3 state machine, and the one transition that matters most:
+
+```
+granted -> withdrawn    permitted
+withdrawn -> granted    CONSENT_WITHDRAWN_CANNOT_BE_REGRANTED_IN_PLACE
+granted -> declined     CONSENT_TRANSITION_NOT_PERMITTED
+issuance after withdraw CONTRIBUTING_CONSENT_WITHDRAWN
+```
+
+Withdrawal is not deletion: the consent row and the observation both
+survive, and what changes is what may be composed, issued or released.
+
+§7.5, the named recipient. Every path returns a state and no content
+except the one that should:
+
+```
+wrong address           ADDRESS_NOT_VERIFIED     content false
+the named address       report_face              content true
+after amendment         SUPERSEDED               content false
+after revocation        REVOKED                  content false
+after expiry            EXPIRED                  content false
+a guessed token         UNKNOWN_TOKEN            content false
+```
+
+**"An approved employer account confers no access" is structural.**
+Neither `t3a_d1_release_token` nor `t3a_d1_consent` carries an employer
+column — asserted as zero in the proof — so the two things cannot be
+joined by a later change without someone adding the column deliberately.
+A recipient needs no account, and redemption reads only the function's
+return: no full record, no traceability sheet, no other report, no other
+participant, no search.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -336,7 +394,6 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 | 5.3 | The mentor reference card that renders the capture sets at the beat |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
 | 6 | The report face renderer that assembles the eleven blocks on screen |
-| 7 | Consent architecture and the named-recipient model |
 | 8 | Stage operating contracts for S1, S3 and S4 |
 | 11 | The acceptance-test suite |
 
