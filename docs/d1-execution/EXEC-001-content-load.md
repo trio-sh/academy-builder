@@ -1012,6 +1012,42 @@ rather than a developer's. Recorded so the decision is taken knowingly:
 if a participant reaching that route believes they are being observed,
 they are being scored by a model and told so by nobody.
 
+## 6u. §11 — executing the rest, and what executing them found
+
+Five of the seven not-executed tests were executed. **Not one of them
+could have passed**, because the thing each tests did not exist. The
+value of §11 turned out to be less in the passes than in what running it
+exposed.
+
+| Test | What executing it found | Now |
+|---|---|---|
+| AC-10 | Nothing refused a determination carrying neither an answer nor a missing state | Refused by constraint, per row |
+| AC-11 | The `t3a_missing_state` enum held the eight codes and **no column anywhere used it**. `selection` was `NOT NULL`, so a mentor with nothing to record had to invent an answer or write the missing state into it | Own column, typed by the enum; the two §5.5 forbids refused; a code smuggled into the answer refused |
+| AC-15 | No pause event existed. The cockpit held a flag in component state, so a pause left no record, cleared on refresh and blocked nothing | Append-only event; blocks advancement pending a recorded clearance |
+| AC-16 | No end event existed. Ending a session was indistinguishable from closing the tab | Controlled event; reports what is still held; commits nothing |
+| AC-29 | Nothing prevented advancing past an unresolved determination | Refused, and the unresolved questions are named |
+
+**A pause is not a progression outcome, and that is structural.** The
+event table carries no progression, outcome, verdict or participant
+column; an event trigger refuses to let one be added; and the verdict
+says `is_a_progression_outcome: false` in its own return so no caller
+infers it from an absence.
+
+**A real bug the first proof run caught.** A pause and its clearance
+recorded in one transaction share a `recorded_at`, because `now()` is the
+transaction timestamp rather than the statement one. The tiebreak was the
+primary key — a random uuid — so *"the latest pause event"* was decided
+by a coin toss and a cleared pause could still read as standing. Ordering
+is a monotonic sequence now, exact whatever the clock does.
+
+**The gate stands at 14 of 30.** Fourteen blocked on the two missing
+governing inputs, and AC-18 and AC-19 not executed — both need a commit
+performed as an authenticated authorized mentor, which this SQL channel
+cannot do because `auth.uid()` is null and the commit function refuses at
+its first check. That is a limit of the harness rather than a missing
+governing input, and it is recorded as such rather than dressed up as a
+conflict.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
@@ -1061,7 +1097,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | Cockpit live-media wiring: both live views are placeholders until the meeting workspace lands, so §3.3 is proved as a state machine rather than against a real track |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Twenty-one of thirty tests without a pass: fourteen blocked on a missing governing input, seven not executed |
+| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 needing a commit performed as an authenticated authorized mentor |
 
 ---
 
