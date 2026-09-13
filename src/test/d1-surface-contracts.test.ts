@@ -36,6 +36,9 @@ const workSample = read(WORKSAMPLE);
 const GROUPSESSION = "src/pages/dashboard/mentor/GroupSession.tsx";
 const groupSession = read(GROUPSESSION);
 
+const REFCARD = "src/pages/dashboard/mentor/ReferenceCard.tsx";
+const refCard = read(REFCARD);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -50,6 +53,7 @@ const disclosuresCode = code(disclosures);
 const reconsiderationCode = code(reconsideration);
 const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
+const refCardCode = code(refCard);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -593,5 +597,70 @@ describe("§8.3/§8.4 Stage 4 shared session — one lane, and it is the observe
     expect(groupSession.replace(/\s+/g, " ")).toMatch(
       /Accommodation needs are settled before a session is composed, never during it/
     );
+  });
+});
+
+describe("§5.3/§1.5 The mentor reference card — it holds no better line", () => {
+  it("holds no expected response, strong answer or red flag", () => {
+    // The card's own §VI says it holds none of these, so a word-match
+    // would fail on the sentence that says so. What must not exist is a
+    // field or a rendering that marks one line above another, and those
+    // are what the assertion names.
+    expect(refCardCode).not.toMatch(
+      /expected_response|expectedResponse|strongAnswer|strong_answer|red_?[Ff]lag|preferredLine|preferred_line|isPreferred|correctLine|modelAnswer|lineWeight|lineScore/
+    );
+  });
+
+  it("renders every line identically, with no emphasis carried by position", () => {
+    // One className expression covers all lines, and it contains no
+    // conditional. A line cannot be highlighted without changing this.
+    const lineBlock = refCardCode.slice(
+      refCardCode.indexOf("(s.lines ?? []).map"),
+      refCardCode.indexOf("</ul>")
+    );
+    expect(lineBlock).toMatch(/l\.line_text/);
+    expect(lineBlock).not.toMatch(/line_order\s*===|line_order\s*==|\?\s*"[^"]*"\s*:/);
+  });
+
+  it("never sorts, filters or reorders the lines it is given", () => {
+    expect(refCardCode).not.toMatch(/\.sort\(|\.reverse\(|lines\.filter\(/);
+  });
+
+  it("assembles nothing — the card is the server's, whole", () => {
+    expect(refCardCode).toMatch(/rpc\("t3a_d1_reference_card"/);
+    const rpcs = [...refCardCode.matchAll(/rpc\("([a-z0-9_]+)"/g)].map((m) => m[1]);
+    expect([...new Set(rpcs)]).toEqual(["t3a_d1_reference_card"]);
+  });
+
+  it("reads only the source index, and never a determination or a record", () => {
+    const reads = [...refCardCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)]).toEqual(["t3a_content_object"]);
+  });
+
+  it("shows a malformed source list as refused rather than as a list", () => {
+    // §1.5: sections 2 and 3 are the lists a claim is checked against. A
+    // wrong list is worse than an absent one.
+    expect(refCardCode).toMatch(/list\.well_formed \?/);
+    expect(refCardCode).toMatch(/list\.refusal_code/);
+  });
+
+  it("states that the source is not registered for serving", () => {
+    expect(refCardCode).toMatch(/operational_state !== "serving"/);
+  });
+
+  it("supplies no question the script does not state", () => {
+    expect(refCard.replace(/\s+/g, " ")).toMatch(
+      /The card shows only what the script states and supplies nothing/
+    );
+  });
+
+  it("carries the four sentences §1.5 gives as the reason", () => {
+    const flat = refCard.replace(/\s+/g, " ");
+    expect(flat).toMatch(
+      /no expected response, no strong answer, no red flag and nothing indicating which capture line is the better one/
+    );
+    expect(flat).toMatch(/agreeing with each other about the participant rather than about what happened/);
+    expect(flat).toMatch(/a defensible choice, not a right one/);
+    expect(flat).toMatch(/the record stops describing conduct and starts scoring judgment/);
   });
 });

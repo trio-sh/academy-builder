@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Seven §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card served. Conflict register below.
 
 ---
 
@@ -722,6 +722,59 @@ Where a session records none as settled, the workspace says so before the
 facilitator can start, rather than offering a mid-session control that
 should not exist.
 
+## 6n. §5.3 — the mentor reference card
+
+`/dashboard/mentor/reference-card`, assembled server-side by
+`t3a_d1_reference_card(source_identifier)` from two places and no third:
+the capture register loaded verbatim from §5.3, and the source's own
+sheet and script held verbatim in `t3a_d1_content_version.body`.
+
+**The card holds no better line, and it holds none structurally.** The
+register has no column a preference could be written into, and an event
+trigger now refuses to let one be added — `is_preferred`,
+`expected_response` and `red_flag_line` are each refused by name pattern
+on `t3a_d1_capture_line` and `t3a_d1_capture_set`, while a neutral column
+is accepted. Proved in an aborting block; the register's four columns are
+unchanged afterward.
+
+**The four questions come out of the script verbatim or not at all.**
+Across the forty loaded sources the extraction is clean along stage
+lines, which is the correct shape rather than a parsing gap:
+
+| Stage | Sources | Four questions extracted |
+|---|---|---|
+| S1 | 10 | 0 — administered, carries no live script |
+| S2 | 10 | 10 |
+| S3 | 10 | 0 — work sample, carries no live script |
+| S4 | 10 | 8 complete, 2 partial |
+
+The two partial S4 scripts return what the script states and are marked
+`FOUR_QUESTIONS_NOT_FULLY_EXTRACTABLE_READ_THE_SCRIPT`. **Nothing is
+supplied to round them up to four.**
+
+**Applicability is read off the source sheet, never inferred.** Each
+conditional set names its governing field and returns that field's value
+verbatim. `TRUE…` and `False…` resolve; anything else resolves to
+`NOT_DETERMINABLE_FROM_SOURCE_SHEET`, which sends the mentor to the
+source instead of guessing on their behalf.
+
+**A defect in the loaded content, found by building this and recorded
+rather than patched around.** Two of the forty source sheets —
+`SRC-D1-S1-001` and `SRC-D1-S3-010` — carry question-applicability table
+text in `material_items` and `assertion_reference_set` instead of the
+list, because the extractor's field regex matched the wrong region in
+those two documents. §1.5 makes these the two lists a claim is checked
+against, so a wrong list is worse than an absent one: the card refuses
+them with `LIST_NOT_IN_SOURCE_FORMAT_READ_THE_SOURCE` and shows the raw
+value. Both are S1/S3 sources, which carry no live script and so no
+in-session card, but **the sheets themselves are wrong and re-extracting
+those two fields is outstanding work, not a closed item.**
+
+**The card states that its source is not registered for serving.** None
+of the forty holds a source approval or a source-version hash (§5.18), so
+a card that looked production-ready would misrepresent the state. It is
+named on the card instead.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -755,10 +808,10 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 
 | § | Outstanding |
 |---|---|
-| 5.3 | The mentor reference card that renders the capture sets at the beat |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
 | 6 | The report face renderer that assembles the eleven blocks on screen |
 | 11 | The acceptance-test suite |
+| 5.18 | Re-extract `material_items` and `assertion_reference_set` for SRC-D1-S1-001 and SRC-D1-S3-010 |
 
 ---
 
