@@ -27,6 +27,9 @@ const recipient = read(RECIPIENT);
 const DISCLOSURES = "src/pages/dashboard/candidate/Disclosures.tsx";
 const disclosures = read(DISCLOSURES);
 
+const RECONSIDERATION = "src/pages/dashboard/mentor/Reconsideration.tsx";
+const reconsideration = read(RECONSIDERATION);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -38,6 +41,7 @@ const workbenchCode = code(workbench);
 const reviewCode = code(review);
 const recipientCode = code(recipient);
 const disclosuresCode = code(disclosures);
+const reconsiderationCode = code(reconsideration);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -353,6 +357,52 @@ describe("§8.4 Request a mentor — no pool before assignment", () => {
     // An unbounded select over mentor_profiles would be a pool.
     expect(dashboard).not.toMatch(
       /from\("mentor_profiles"\)\s*\.select\([^)]*\)\s*(;|\.order|\.limit)/
+    );
+  });
+});
+
+
+describe("§8.4 Correction and reconsideration — the two prohibitions", () => {
+  it("never decides eligibility on the client", () => {
+    // Assignment to an involved actor is refused at the data layer, and
+    // this screen reads that verdict rather than reimplementing it.
+    expect(reconsiderationCode).toMatch(/rpc\("t3a_d1_reconsiderer_eligible"/);
+    expect(reconsiderationCode).not.toMatch(/t3a_d1_involvement|involving_action\s*===/);
+  });
+
+  it("shows the outcome control only where the server said so", () => {
+    // An involved actor never sees an action they would be refused.
+    expect(reconsiderationCode).toMatch(/mineToDecide && eligibility\?\.eligible &&/);
+  });
+
+  it("offers no in-place edit of a composed statement", () => {
+    ["t3a_d1_composed_statement", "t3a_composed_statement", "statement_body"].forEach((t) =>
+      expect(reconsiderationCode).not.toContain(t)
+    );
+    expect(reconsiderationCode).not.toMatch(/\.update\(|\.upsert\(|\.delete\(/);
+  });
+
+  it("records only the three outcomes, each requiring reasoning", () => {
+    expect(reconsiderationCode).toMatch(/"upheld"[\s\S]{0,200}"amended"[\s\S]{0,200}"withdrawn"/);
+    expect(reconsiderationCode).toMatch(/reasoning\.trim\(\)\.length < 8/);
+  });
+
+  it("states that an amendment supersedes rather than rewrites", () => {
+    expect(reconsideration.replace(/\s+/g, " ")).toMatch(
+      /supersedes the statement and the earlier version stays in the audit history/i
+    );
+  });
+
+  it("states that reconsidering makes the actor involved", () => {
+    expect(reconsideration.replace(/\s+/g, " ")).toMatch(
+      /makes you involved in it from now on/i
+    );
+  });
+
+  it("reads only the case and its assignment", () => {
+    const reads = [...reconsiderationCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)].sort()).toEqual(
+      ["t3a_correction_case", "t3a_reconsideration_assignment"].sort()
     );
   });
 });

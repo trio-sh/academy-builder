@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Four §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Five §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -605,6 +605,37 @@ was made, because involvement can be acquired between the two.
 `statement_body` refuses; marking a row superseded is the governed route
 and is permitted; deletion refuses outright, because no attempt is
 discarded or overwritten.
+
+## 6k. The reconsideration surface
+
+`/dashboard/mentor/reconsideration`. Intake, the case, and the outcome.
+
+**Eligibility is asked before the control is offered, not after.** The
+screen calls `t3a_d1_reconsiderer_eligible` and shows the outcome control
+only where the answer is yes, so an involved actor never sees an action
+they would be refused. It reimplements nothing: the test asserts the
+screen never reads `t3a_d1_involvement` or compares an involving action
+itself.
+
+**There is no in-place edit, and nothing to build one from.** The surface
+touches neither composed-statement table, carries no `statement_body`,
+and has no `.update(`, `.upsert(` or `.delete(` anywhere — asserted. An
+amendment supersedes; the earlier version stays in the audit history, and
+the screen says so.
+
+Three outcomes, each requiring reasoning, with the refusals behind them
+already proved at §6j:
+
+```
+uphold   the record stands as it is
+amend    supersede the statement
+withdraw it does not contribute
+```
+
+The screen also tells a reconsiderer that deciding this case **makes them
+involved in it from now on** — the same sentence the workbench carries
+about capture, for the same reason: involvement is acquired by acting,
+and the person acting should know it at the moment they act.
 
 ## 7. The one thing that needs the founder, not the developer
 

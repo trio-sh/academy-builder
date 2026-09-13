@@ -11,6 +11,7 @@ import Determinations from "@/pages/dashboard/mentor/Determinations";
 import Cockpit from "@/pages/dashboard/mentor/Cockpit";
 import S1Workbench from "@/pages/dashboard/mentor/S1Workbench";
 import EvidenceReview from "@/pages/dashboard/mentor/EvidenceReview";
+import Reconsideration from "@/pages/dashboard/mentor/Reconsideration";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -795,6 +796,7 @@ const navItems = [
   { name: "Determinations", href: "/dashboard/mentor/determinations", icon: FileCheck },
   { name: "Confirmations", href: "/dashboard/mentor/endorsements", icon: Award },
   { name: "Evidence Review", href: "/dashboard/mentor/evidence-review", icon: FileCheck },
+  { name: "Reconsideration", href: "/dashboard/mentor/reconsideration", icon: Flag },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4492,6 +4494,9 @@ const MentorDashboardInner = () => {
               action by a different actor; §6.1 item 19 means the
               reviewer can never issue the report they reviewed. */}
           <Route path="evidence-review" element={<EvidenceReview />} />
+          {/* §8.4 — correction and reconsideration. Eligibility is the
+              server's answer; an involved actor never sees the control. */}
+          <Route path="reconsideration" element={<Reconsideration />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />
