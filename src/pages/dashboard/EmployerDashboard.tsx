@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,27 @@ import { extractDocumentText } from "@/lib/documentExtractor";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import T3XDiscovery from "@/pages/dashboard/employer/T3XDiscovery";
+import AvailableReports from "@/pages/dashboard/employer/AvailableReports";
+import EmployerFeedbackPage from "@/pages/dashboard/employer/EmployerFeedback";
+import {
+  controlledText,
+  reportMissingControlledText,
+  VERIFICATION_FIELD_LABEL,
+  VERIFICATION_VALUE_TEXT,
+  VERIFICATION_MARK_TEXT,
+  APPROVER_NOT_RECORDED,
+} from "@/lib/employerDeskText";
+import {
+  readOrganizationVerification,
+  readPoolCount,
+  readOpenConversationCount,
+  readHiresRecorded,
+  readLiveWorksTileState,
+  logDeskEvent,
+  type OrganizationVerification,
+  type Figure,
+  type LiveWorksTileState,
+} from "@/lib/employerDesk";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import {
   DashboardLayout,
@@ -85,8 +106,6 @@ type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"
 type LiveWorksProject = Database["public"]["Tables"]["liveworks_projects"]["Row"];
 type LiveWorksMilestone = Database["public"]["Tables"]["liveworks_milestones"]["Row"];
 type LiveWorksApplication = Database["public"]["Tables"]["liveworks_applications"]["Row"];
-type T3XConnection = Database["public"]["Tables"]["t3x_connections"]["Row"];
-type EmployerFeedback = Database["public"]["Tables"]["employer_feedback"]["Row"];
 type EscrowTransaction = Database["public"]["Tables"]["escrow_transactions"]["Row"];
 
 interface ProjectWithApplications extends LiveWorksProject {
@@ -110,167 +129,200 @@ const itemVariants = {
 
 const navItems = [
   { name: "Overview", href: "/dashboard/employer", icon: TrendingUp },
-  { name: "Find Talent", href: "/dashboard/employer/search", icon: Search },
+  // Item 8 — Available Reports is the canonical employer-facing name for
+  // the pool environment. Find Talent and T3X Talent Exchange are retired.
+  { name: "Available Reports", href: "/dashboard/employer/reports", icon: FileText },
+  // Item 9A — a different environment, kept under its own name. Its query
+  // capability is retired; the route renders a coverage disclosure.
   { name: "T3X Discovery", href: "/dashboard/employer/t3x", icon: Eye },
-  { name: "Connections", href: "/dashboard/employer/connections", icon: Users },
+  // Item 10 — Connections is retired as a standalone employer environment
+  // and consolidated into Messages. No navigation entry remains.
   { name: "Projects", href: "/dashboard/employer/projects", icon: Briefcase },
-  { name: "Feedback", href: "/dashboard/employer/feedback", icon: MessageSquare },
+  // Item 7 — controlled labels.
+  { name: "Feedback to The 3rd Academy", href: "/dashboard/employer/feedback", icon: MessageSquare },
   { name: "Messages", href: "/dashboard/employer/messages", icon: Send },
-  { name: "Company", href: "/dashboard/employer/company", icon: Building2 },
+  { name: "Your organization", href: "/dashboard/employer/company", icon: Building2 },
   { name: "Praxis", href: "/dashboard/employer/agent", icon: Bot },
   { name: "Settings", href: "/dashboard/employer/settings", icon: Settings },
 ];
 
-// Overview component with real data
+// Overview — T3A-DEV-CN-EMP-001 Items 1, 2, 3, 4, 5 and 6.
 const Overview = () => {
-  const { profile, user } = useAuth();
-  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [connectionCount, setConnectionCount] = useState(0);
-  const [projectCount, setProjectCount] = useState(0);
+  const { user } = useAuth();
+  const [employerProfileId, setEmployerProfileId] = useState<string | null>(null);
+  const [verification, setVerification] = useState<OrganizationVerification | null>(null);
+  const [reportsAvailable, setReportsAvailable] = useState<Figure>({ available: true, value: 0 });
+  const [openConversations, setOpenConversations] = useState<Figure>({ available: true, value: 0 });
+  const [hiresRecorded, setHiresRecorded] = useState<Figure>({ available: true, value: 0 });
+  const [liveWorks, setLiveWorks] = useState<LiveWorksTileState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const welcome = controlledText("L-EMP-WELCOME-001");
+  const sectionHeading = controlledText("L-EMP-SECTION-HEADING");
+  const tile01 = controlledText("L-EMP-TILE01-001");
+  const tile02 = controlledText("L-EMP-TILE02-001");
+
   useEffect(() => {
-    const fetchData = async () => {
+    const load = async () => {
       if (!user?.id) return;
+      const { data: ep } = await supabase
+        .from("employer_profiles")
+        .select("id")
+        .eq("profile_id", user.id)
+        .maybeSingle();
 
-      try {
-        // Fetch employer profile
-        const { data: ep } = await supabase
-          .from("employer_profiles")
-          .select("*")
-          .eq("profile_id", user.id)
-          .single();
-        setEmployerProfile(ep);
+      const orgId = (ep?.id as string | undefined) ?? null;
+      setEmployerProfileId(orgId);
 
-        if (ep) {
-          // Count connections
-          const { count: connCount } = await supabase
-            .from("t3x_connections")
-            .select("*", { count: "exact", head: true })
-            .eq("employer_id", ep.id);
-          setConnectionCount(connCount || 0);
+      const v = await readOrganizationVerification(orgId);
+      setVerification(v);
+      setLiveWorks(await readLiveWorksTileState());
 
-          // Count projects
-          const { count: projCount } = await supabase
-            .from("liveworks_projects")
-            .select("*", { count: "exact", head: true })
-            .eq("employer_id", ep.id)
-            .in("status", ["draft", "open", "in_progress"]);
-          setProjectCount(projCount || 0);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+      // Item 5 step 5.6 — a Pending or Not verified organization gets no
+      // pool metadata at all, so the cell renders zero rather than a
+      // count it is not entitled to.
+      if (v.state === "verified") {
+        setReportsAvailable(await readPoolCount());
+      } else {
+        setReportsAvailable({ available: true, value: 0 });
       }
+      setOpenConversations(await readOpenConversationCount());
+      setHiresRecorded(await readHiresRecorded(orgId));
+      setIsLoading(false);
     };
-
-    fetchData();
+    void load();
   }, [user?.id]);
 
-  const stats = [
+  if (isLoading || !verification) return <LedgerLoading />;
+
+  // Item 1 step 5.3 — where the template is not loaded the block refuses
+  // to render and the failure is logged. It never falls back to the
+  // previous wording and never renders an empty region.
+  if (!welcome || !sectionHeading || !tile01 || !tile02) {
+    reportMissingControlledText("L-EMP-WELCOME-001");
+    void logDeskEvent("controlled_text_unavailable", { surface: "employer overview" });
+    return null;
+  }
+
+  const renderFigure = (f: Figure) => (f.available ? String(f.value ?? 0) : "Not available");
+
+  // Item 3 — four cells, each naming what it counts and where it comes
+  // from. Nothing here is seeded, and no label connects a number to a
+  // record.
+  const band = [
+    { label: "Reports available to you", value: renderFigure(reportsAvailable), source: "Platform-held" },
+    { label: "Open conversations", value: renderFigure(openConversations), source: "Platform-held" },
+    { label: "Hires recorded", value: renderFigure(hiresRecorded), source: "Employer-entered" },
     {
-      label: "Active Connections",
-      value: connectionCount.toString(),
-      icon: Users,
-      color: "from-indigo-500 to-purple-500"
-    },
-    {
-      label: "Total Hires",
-      value: (employerProfile?.total_hires || 0).toString(),
-      icon: UserCheck,
-      color: "from-emerald-500 to-teal-500"
-    },
-    {
-      label: "Open Projects",
-      value: projectCount.toString(),
-      icon: Briefcase,
-      color: "from-amber-500 to-orange-500"
-    },
-    {
-      label: "Company Status",
-      value: employerProfile?.is_verified ? "Verified" : "Pending",
-      icon: Building2,
-      color: "from-pink-500 to-rose-500"
+      label: VERIFICATION_FIELD_LABEL,
+      value: VERIFICATION_VALUE_TEXT[verification.state],
+      source: "Platform-held",
+      detail:
+        verification.state === "verified"
+          ? `${verification.approvedAt ? new Date(verification.approvedAt).toLocaleDateString() : "Date not recorded"} · ${verification.approver ?? APPROVER_NOT_RECORDED}`
+          : undefined,
     },
   ];
 
-  if (isLoading) return <LedgerLoading />;
-
   return (
     <div>
+      {/* Item 1 — the controlled welcome text, verbatim, three lines, no
+          salutation and no account name. Item 2 — the header mark renders
+          the short form of the same verification value; it has no data
+          source of its own. */}
       <DashboardPageHeader
-        eyebrow={`§ Reading Room · ${profile?.first_name || "Employer"}'s desk`}
-        title={
-          <>
-            Welcome back,{" "}
-            <span className="italic display-serif-italic ink-vermilion">
-              {profile?.first_name || "hiring desk"}
-            </span>
-            .
-          </>
-        }
-        meta="You read what candidates have released to you — nothing more, nothing hidden."
+        eyebrow="§ Reading Room"
+        title={welcome[0]}
+        meta={welcome[1]}
         actions={
-          employerProfile && !employerProfile.is_verified ? (
-            <Link to="/dashboard/employer/company">
-              <LedgerBadge variant="stamp">Verification pending</LedgerBadge>
-            </Link>
-          ) : (
-            <LedgerBadge variant="outline">Verified</LedgerBadge>
-          )
+          <LedgerBadge variant={verification.state === "verified" ? "outline" : "stamp"}>
+            {VERIFICATION_MARK_TEXT[verification.state]}
+          </LedgerBadge>
         }
       />
 
+      <p className="text-foreground/80 text-lg leading-relaxed max-w-3xl -mt-4 mb-12">
+        {welcome[2]}
+      </p>
+
       <DashSection eyebrow="§ I · Standing figures" title="At the desk">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {stats.map((s) => (
-            <LedgerStat key={s.label} label={s.label} value={s.value} />
+          {band.map((cell) => (
+            <div key={cell.label}>
+              <LedgerStat label={cell.label} value={cell.value} />
+              {/* Item 3 step 5.3 — the source note sits on the face of
+                  the band, not in a help page. */}
+              <p className="mono-label text-foreground/50 mt-2">{cell.source}</p>
+              {cell.detail && (
+                <p className="text-foreground/65 text-[0.8125rem] mt-1 leading-snug">
+                  {cell.detail}
+                </p>
+              )}
+            </div>
           ))}
         </div>
       </DashSection>
 
-      <DashSection eyebrow="§ II · Common entries" title="Where you likely wanted to go">
+      {/* Item 4 — a literal heading that makes no claim about what the
+          employer wanted, intended or commonly does. */}
+      <DashSection eyebrow="§ II · Common entries" title={sectionHeading[0]}>
         <div className="grid md:grid-cols-2 border-t-2 border-foreground border-b border-foreground/40">
-          {[
-            {
-              n: "01",
-              title: "Search T3X Exchange",
-              body: "Browse candidates who have released their Behavioral Evidence Report to your organization.",
-              href: "/dashboard/employer/search",
-            },
-            {
-              n: "02",
-              title: "Post a LiveWorks project",
-              body: "Offer a supervised project that generates evidence for the register.",
-              href: "/dashboard/employer/projects",
-            },
-          ].map((q, i) => (
-            <Link
-              key={q.n}
-              to={q.href}
-              className={cn(
-                "p-8 hover:bg-foreground/[0.025] transition-colors group",
-                i > 0 && "border-t md:border-t-0 md:border-l border-foreground/25"
-              )}
-            >
-              <div className="ledger-num text-4xl text-foreground mb-3">{q.n}</div>
-              <h3 className="display-serif text-2xl md:text-3xl text-foreground mb-3 group-hover:italic transition-all">
-                {q.title}
-              </h3>
-              <p className="text-foreground/75 text-[0.9375rem] mb-5 leading-relaxed">{q.body}</p>
-              <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+          {/* Tile 01 — Item 5. */}
+          <Link
+            to="/dashboard/employer/reports"
+            className="p-8 hover:bg-foreground/[0.025] transition-colors group"
+          >
+            <div className="ledger-num text-4xl text-foreground mb-3">01</div>
+            <h3 className="display-serif text-2xl md:text-3xl text-foreground mb-3 group-hover:italic transition-all">
+              Available Reports
+            </h3>
+            {tile01.map((line) => (
+              <p key={line} className="text-foreground/75 text-[0.9375rem] mb-3 leading-relaxed">
+                {line}
+              </p>
+            ))}
+            <span className="mono-label text-foreground group-hover:ink-vermilion transition-colors">
+              Enter →
+            </span>
+          </Link>
+
+          {/* Tile 02 — Item 6. Three controlled states, and no other
+              combination renders. The control is visibly disabled where
+              the state is not available, and the route refuses
+              server-side regardless of what this tile shows. */}
+          <div className="p-8 border-t md:border-t-0 md:border-l border-foreground/25">
+            <div className="ledger-num text-4xl text-foreground mb-3">02</div>
+            <h3 className="display-serif text-2xl md:text-3xl text-foreground mb-3">
+              {tile02[0]}
+            </h3>
+            {tile02.slice(1).map((line) => (
+              <p key={line} className="text-foreground/75 text-[0.9375rem] mb-3 leading-relaxed">
+                {line}
+              </p>
+            ))}
+            {liveWorks?.stateLine && (
+              <p className="mono-label text-foreground/60 mb-4">{liveWorks.stateLine}</p>
+            )}
+            {liveWorks?.controlEnabled ? (
+              <Link
+                to="/dashboard/employer/projects"
+                className="mono-label text-foreground hover:ink-vermilion transition-colors"
+              >
+                Enter →
+              </Link>
+            ) : (
+              <span className="mono-label text-foreground/35 cursor-not-allowed" aria-disabled="true">
                 Enter →
               </span>
-            </Link>
-          ))}
+            )}
+          </div>
         </div>
       </DashSection>
 
       <DashSection eyebrow="§ III · Editorial note" title="What the report is">
         <div className="border-l-2 border-foreground pl-8 max-w-3xl">
           <p className="display-serif text-2xl md:text-3xl leading-[1.35] text-foreground mb-6">
-            The Behavioral Evidence Report is <span className="italic display-serif-italic">an additional source of evidence</span> — not a hiring verdict, prediction, or pre-vetting mechanism.
+            The Behavioral Evidence Report&trade; is <span className="italic display-serif-italic">an additional source of evidence</span> — not a hiring verdict, prediction, or pre-vetting mechanism.
           </p>
           <p className="mono-label text-foreground border-t border-foreground/25 pt-4">
             No scores. No rankings. No recommendations.
@@ -281,816 +333,7 @@ const Overview = () => {
   );
 };
 
-// T3X Search component
-interface CandidateWithProfile extends CandidateProfile {
-  profile?: Profile;
-  connectionStatus?: string | null;
-  behavioralScores?: Record<string, number>;
-  verificationCode?: string;
-}
-
-const SearchTalent = () => {
-  const { user } = useAuth();
-  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [candidates, setCandidates] = useState<CandidateWithProfile[]>([]);
-  const [existingConnections, setExistingConnections] = useState<Map<string, string>>(new Map());
-  const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    tier: "",
-    dimensions: [] as string[],
-  });
-  const [viewMode, setViewMode] = useState<"list" | "card">("list");
-  const [expandedCandidate, setExpandedCandidate] = useState<string | null>(null);
-
-  const MVP_DIMENSIONS = [
-    { id: "integrity_ethics", label: "Integrity & Ethics" },
-    { id: "accountability_ownership", label: "Accountability & Ownership" },
-    { id: "execution_reliability", label: "Execution Reliability" },
-    { id: "communication_pressure", label: "Communication Under Pressure" },
-    { id: "collaboration_conflict", label: "Collaboration & Conflict Resolution" },
-    { id: "resilience_recovery", label: "Resilience & Recovery" },
-    { id: "learning_agility", label: "Learning Agility" },
-  ];
-
-  const getBarsLabel = (score: number) => {
-    if (score >= 3.5) return "Strong";
-    if (score >= 2.5) return "Competent";
-    if (score >= 1.5) return "Emerging";
-    return "Not Yet Demonstrated";
-  };
-
-  const getBarsColor = (score: number) => {
-    if (score >= 3.5) return "text-foreground";
-    if (score >= 2.5) return "text-foreground";
-    if (score >= 1.5) return "ink-vermilion";
-    return "ink-vermilion";
-  };
-
-  // Connection modal state
-  const [showConnectModal, setShowConnectModal] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState<CandidateWithProfile | null>(null);
-  const [connectionMessage, setConnectionMessage] = useState("");
-  const [isSendingConnection, setIsSendingConnection] = useState(false);
-  const [connectionSuccess, setConnectionSuccess] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.id) return;
-
-      // Get employer profile first
-      const { data: ep } = await supabase
-        .from("employer_profiles")
-        .select("*")
-        .eq("profile_id", user.id)
-        .single();
-      setEmployerProfile(ep);
-
-      // Get existing connections for this employer
-      if (ep) {
-        const { data: connections } = await supabase
-          .from("t3x_connections")
-          .select("candidate_id, status")
-          .eq("employer_id", ep.id);
-
-        if (connections) {
-          const connectionMap = new Map<string, string>();
-          connections.forEach(c => connectionMap.set(c.candidate_id, c.status));
-          setExistingConnections(connectionMap);
-        }
-      }
-
-      // Get candidates with Behavioral Evidence Report listed on T3X
-      let query = supabase
-        .from("candidate_profiles")
-        .select("*")
-        .eq("is_listed_on_t3x", true)
-        .eq("has_skill_passport", true);
-
-      // MVP: All candidates are Silver tier. Selecting "silver" shows all; no other tiers exist yet.
-      // If a tier other than silver were selected we'd filter, but only silver is offered in the UI.
-
-      const { data: candidateData } = await query.limit(20);
-
-      if (candidateData && candidateData.length > 0) {
-        // Get profile info and skill passport behavioral scores for each candidate
-        const enhancedCandidates = await Promise.all(
-          candidateData.map(async (cp) => {
-            const { data: profileData } = await supabase
-              .from("profiles")
-              .select("*")
-              .eq("id", cp.profile_id)
-              .single();
-            // Get behavioral scores from skill passport
-            const { data: passport } = await supabase
-              .from("skill_passports")
-              .select("behavioral_scores, verification_code")
-              .eq("candidate_id", cp.id)
-              .eq("is_active", true)
-              .order("created_at", { ascending: false })
-              .limit(1)
-              .maybeSingle();
-            return {
-              ...cp,
-              profile: profileData || undefined,
-              behavioralScores: (passport?.behavioral_scores as Record<string, number>) || undefined,
-              verificationCode: passport?.verification_code || undefined,
-            };
-          })
-        );
-        setCandidates(enhancedCandidates);
-      } else {
-        setCandidates([]);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [user?.id, filters]);
-
-  const openConnectModal = (candidate: CandidateWithProfile) => {
-    setSelectedCandidate(candidate);
-    setConnectionMessage("");
-    setConnectionSuccess(false);
-    setShowConnectModal(true);
-  };
-
-  const sendConnectionRequest = async () => {
-    if (!employerProfile || !selectedCandidate) return;
-
-    setIsSendingConnection(true);
-
-    try {
-      // Create connection request
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 30); // 30 day expiry
-
-      const { error } = await supabase.from("t3x_connections").insert({
-        employer_id: employerProfile.id,
-        candidate_id: selectedCandidate.id,
-        message: connectionMessage || null,
-        status: "pending",
-        expires_at: expiresAt.toISOString(),
-      });
-
-      if (error) {
-        console.error("Error sending connection:", error);
-        return;
-      }
-
-      // Update employer stats
-      await supabase
-        .from("employer_profiles")
-        .update({
-          total_connections: (employerProfile.total_connections || 0) + 1,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", employerProfile.id);
-
-      // Create notification for candidate
-      await supabase.from("notifications").insert({
-        user_id: selectedCandidate.profile_id,
-        title: "New Connection Request",
-        message: `${employerProfile.company_name || "An employer"} wants to connect with you`,
-        type: "connection_request",
-      });
-
-      // Update local state
-      setExistingConnections(prev => {
-        const newMap = new Map(prev);
-        newMap.set(selectedCandidate.id, "pending");
-        return newMap;
-      });
-
-      setConnectionSuccess(true);
-      setTimeout(() => {
-        setShowConnectModal(false);
-        setSelectedCandidate(null);
-        setConnectionSuccess(false);
-      }, 1500);
-
-    } catch (error) {
-      console.error("Error sending connection:", error);
-    } finally {
-      setIsSendingConnection(false);
-    }
-  };
-
-  const getConnectionStatus = (candidateProfileId: string) => {
-    return existingConnections.get(candidateProfileId) || null;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
-      </div>
-    );
-  }
-
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">T3X Talent Exchange</h1>
-        <p className="text-foreground/60">
-          Search for verified Behavioral Evidence Report holders.
-        </p>
-      </motion.div>
-
-      {/* Filters */}
-      <motion.div variants={itemVariants} className="p-4 rounded-xl bg-background border border-foreground/15">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-foreground/60" />
-            <span className="text-sm text-foreground/60">Filters:</span>
-          </div>
-          <select
-            value={filters.tier}
-            onChange={(e) => setFilters((prev) => ({ ...prev, tier: e.target.value }))}
-            className="px-3 py-1.5 rounded-lg bg-background border border-foreground/25 text-foreground text-sm focus:border-emerald-500 focus:outline-none"
-          >
-            <option value="">All Tiers</option>
-            <option value="silver">Silver</option>
-          </select>
-          {/* Dimension multi-select */}
-          <div className="flex flex-wrap gap-1.5">
-            {MVP_DIMENSIONS.map(dim => (
-              <button
-                key={dim.id}
-                type="button"
-                onClick={() => setFilters(prev => ({
-                  ...prev,
-                  dimensions: prev.dimensions.includes(dim.id)
-                    ? prev.dimensions.filter(d => d !== dim.id)
-                    : [...prev.dimensions, dim.id],
-                }))}
-                className={`px-2 py-1 rounded-full text-[11px] font-medium transition-colors ${
-                  filters.dimensions.includes(dim.id)
-                    ? "bg-foreground/[0.06] text-foreground border border-foreground/40"
-                    : "bg-white/5 text-foreground/50 border border-foreground/15 hover:text-foreground/75"
-                }`}
-              >
-                {dim.label}
-              </button>
-            ))}
-          </div>
-          {filters.dimensions.length > 0 && (
-            <button
-              onClick={() => setFilters(prev => ({ ...prev, dimensions: [] }))}
-              className="text-xs text-foreground/50 hover:text-foreground"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-      </motion.div>
-
-      {/* Results — List view by default */}
-      {(() => {
-        // Filter candidates by selected dimensions
-        const filtered = filters.dimensions.length > 0
-          ? candidates.filter(c => {
-              if (!c.behavioralScores) return false;
-              return filters.dimensions.every(d => c.behavioralScores?.[d] !== undefined && c.behavioralScores[d] > 0);
-            })
-          : candidates;
-
-        return filtered.length > 0 ? (
-          <motion.div variants={itemVariants} className="space-y-2">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-foreground/60">{filtered.length} candidate{filtered.length !== 1 ? "s" : ""} found</p>
-            </div>
-
-            {/* List rows */}
-            {filtered.map((candidate) => {
-              const isExpanded = expandedCandidate === candidate.id;
-              const connectionStatus = getConnectionStatus(candidate.id);
-
-              return (
-                <div key={candidate.id} className="rounded-xl bg-background border border-foreground/15 overflow-hidden">
-                  {/* List row — always visible */}
-                  <div
-                    className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-foreground/5 transition-colors"
-                    onClick={() => setExpandedCandidate(isExpanded ? null : candidate.id)}
-                  >
-                    {candidate.profile?.avatar_url ? (
-                      <img src={candidate.profile.avatar_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-foreground flex items-center justify-center text-background font-bold text-sm flex-shrink-0">
-                        {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-foreground">{candidate.profile?.first_name} {candidate.profile?.last_name}</span>
-                        <Award className="w-3.5 h-3.5 text-foreground" />
-                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                          candidate.current_tier === "platinum" ? "bg-foreground/[0.06] text-foreground" :
-                          candidate.current_tier === "gold" ? "bg-vermilion/10 ink-vermilion" :
-                          "bg-gray-500/20 text-foreground/60"
-                        }`}>
-                          Silver
-                        </span>
-                      </div>
-                      <p className="text-xs text-foreground/50 truncate">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
-                    </div>
-                    <div className="hidden md:flex items-center gap-2">
-                      <span className="text-xs text-foreground flex items-center gap-1">
-                        <Shield className="w-3 h-3" /> Verified
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      {connectionStatus === "accepted" ? (
-                        <span className="text-xs text-foreground">Connected</span>
-                      ) : connectionStatus === "pending" ? (
-                        <span className="text-xs ink-vermilion">Awaiting Response</span>
-                      ) : (
-                        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-xs h-7" onClick={(e) => { e.stopPropagation(); openConnectModal(candidate); }}>
-                          Connect
-                        </Button>
-                      )}
-                      <ChevronRight className={`w-4 h-4 text-foreground/50 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-                    </div>
-                  </div>
-
-                  {/* Expanded card — Behavioral Evidence Report view */}
-                  {isExpanded && (
-                    <div className="border-t border-foreground/10 p-5 bg-white/[0.02]">
-                      <div className="flex items-start gap-4 mb-4">
-                        {candidate.profile?.avatar_url ? (
-                          <img src={candidate.profile.avatar_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
-                        ) : (
-                          <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-lg">
-                            {candidate.profile?.first_name?.[0]}{candidate.profile?.last_name?.[0]}
-                          </div>
-                        )}
-                        <div>
-                          <h3 className="text-lg font-semibold text-foreground">{candidate.profile?.first_name} {candidate.profile?.last_name}</h3>
-                          <p className="text-sm text-foreground/60">{candidate.profile?.headline || "Behavioral Evidence Report Holder"}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="px-2 py-0.5 rounded text-xs bg-gray-500/20 text-foreground/60 font-medium">Silver</span>
-                            <span className="text-xs text-foreground flex items-center gap-1"><Shield className="w-3 h-3" /> Verified Behavioral Evidence Report</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* BehaviourMatch™ — 7 MVP dimensions, BARS labels only */}
-                      {candidate.behavioralScores && Object.keys(candidate.behavioralScores).length > 0 && (
-                        <div className="mb-4">
-                          <p className="text-xs text-foreground font-medium mb-3 flex items-center gap-1">
-                            <Target className="w-3 h-3" /> BehaviourMatch™ — Behavioral Readiness Profile
-                          </p>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                            {MVP_DIMENSIONS.map(dim => {
-                              const score = candidate.behavioralScores?.[dim.id];
-                              if (!score || score <= 0) return null;
-                              const label = getBarsLabel(score);
-                              const color = getBarsColor(score);
-                              return (
-                                <div key={dim.id} className="p-2.5 rounded-lg bg-background border border-foreground/15">
-                                  <p className="text-[10px] text-foreground/50 mb-1">{dim.label}</p>
-                                  <p className={`text-sm font-semibold ${color}`}>{label}</p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="flex gap-2">
-                        {candidate.verificationCode ? (
-                          <a href={`/verify/${candidate.verificationCode}`} target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" variant="outline" className="border-foreground/25 text-foreground hover:bg-foreground/5">
-                              <Shield className="w-4 h-4 mr-1" />
-                              View Behavioral Evidence Report
-                            </Button>
-                          </a>
-                        ) : (
-                          <Button size="sm" variant="outline" className="border-foreground/25 text-foreground/40" disabled>
-                            <Shield className="w-4 h-4 mr-1" />
-                            View Behavioral Evidence Report
-                          </Button>
-                        )}
-                        {connectionStatus !== "accepted" && connectionStatus !== "pending" && (
-                          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500" onClick={() => openConnectModal(candidate)}>
-                            <Send className="w-4 h-4 mr-1" />
-                            Connect
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </motion.div>
-        ) : (
-          <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-background border border-foreground/15 text-center">
-            <Search className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-            <p className="text-foreground/60">No candidates found</p>
-            <p className="text-sm text-foreground/50 mt-1">Try adjusting your filters or check back later</p>
-          </motion.div>
-        );
-      })()}
-
-      {/* Connection Request Modal */}
-      {showConnectModal && selectedCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-background/80"
-            onClick={() => !isSendingConnection && setShowConnectModal(false)}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-4 p-6 rounded-2xl bg-background/50 border border-foreground/25"
-          >
-            {connectionSuccess ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-foreground/[0.06] flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-foreground" />
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">Request Sent!</h3>
-                <p className="text-foreground/60">
-                  Your connection request has been sent to {selectedCandidate.profile?.first_name}.
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-foreground">Send Connection Request</h2>
-                  <button
-                    onClick={() => setShowConnectModal(false)}
-                    disabled={isSendingConnection}
-                    className="text-foreground/60 hover:text-foreground"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Candidate Preview */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-background mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center text-background font-bold">
-                    {selectedCandidate.profile?.first_name?.[0]}
-                    {selectedCandidate.profile?.last_name?.[0]}
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">
-                      {selectedCandidate.profile?.first_name} {selectedCandidate.profile?.last_name}
-                    </p>
-                    <p className="text-sm text-foreground/60">
-                      {selectedCandidate.profile?.headline || "Behavioral Evidence Report Holder"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Message Input */}
-                <div className="mb-6">
-                  <label className="text-sm text-foreground/60 block mb-2">
-                    Add a message (optional)
-                  </label>
-                  <textarea
-                    value={connectionMessage}
-                    onChange={(e) => setConnectionMessage(e.target.value)}
-                    placeholder="Introduce yourself and explain why you'd like to connect..."
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none resize-none"
-                  />
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowConnectModal(false)}
-                    disabled={isSendingConnection}
-                    className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={sendConnectionRequest}
-                    disabled={isSendingConnection}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-                  >
-                    {isSendingConnection ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Request
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </>
-            )}
-          </motion.div>
-        </div>
-      )}
-    </motion.div>
-  );
-};
-
-// Connections component with candidate details
-interface ConnectionWithCandidate extends T3XConnection {
-  candidate_profile?: CandidateProfile & { profile?: Profile };
-}
-
-const Connections = () => {
-  const { user } = useAuth();
-  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [connections, setConnections] = useState<ConnectionWithCandidate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"all" | "accepted" | "pending">("all");
-
-  useEffect(() => {
-    const fetchConnections = async () => {
-      if (!user?.id) return;
-
-      // Get employer profile
-      const { data: ep } = await supabase
-        .from("employer_profiles")
-        .select("*")
-        .eq("profile_id", user.id)
-        .single();
-
-      setEmployerProfile(ep);
-
-      if (ep) {
-        const { data: connectionData } = await supabase
-          .from("t3x_connections")
-          .select("*")
-          .eq("employer_id", ep.id)
-          .order("created_at", { ascending: false });
-
-        if (connectionData && connectionData.length > 0) {
-          // Get candidate details for each connection
-          const enrichedConnections = await Promise.all(
-            connectionData.map(async (conn) => {
-              const { data: candidateProfile } = await supabase
-                .from("candidate_profiles")
-                .select("*")
-                .eq("profile_id", conn.candidate_id)
-                .single();
-
-              let profile = null;
-              if (candidateProfile) {
-                const { data: p } = await supabase
-                  .from("profiles")
-                  .select("*")
-                  .eq("id", candidateProfile.profile_id)
-                  .single();
-                profile = p;
-              }
-
-              return {
-                ...conn,
-                candidate_profile: candidateProfile ? { ...candidateProfile, profile } : undefined,
-              };
-            })
-          );
-          setConnections(enrichedConnections);
-        } else {
-          setConnections([]);
-        }
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchConnections();
-  }, [user?.id]);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "accepted": return "bg-foreground/[0.06] text-foreground";
-      case "pending": return "bg-vermilion/10 ink-vermilion";
-      case "declined": return "bg-vermilion/15 ink-vermilion";
-      default: return "bg-gray-500/20 text-foreground/60";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "accepted": return CheckCircle;
-      case "pending": return Clock;
-      case "declined": return XCircle;
-      default: return Clock;
-    }
-  };
-
-  const filteredConnections = connections.filter(c => {
-    if (activeTab === "all") return true;
-    if (activeTab === "accepted") return c.status === "accepted";
-    if (activeTab === "pending") return c.status === "pending";
-    return true;
-  });
-
-  const acceptedCount = connections.filter(c => c.status === "accepted").length;
-  const pendingCount = connections.filter(c => c.status === "pending").length;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
-      </div>
-    );
-  }
-
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Connections</h1>
-        <p className="text-foreground/60">Manage your candidate connections.</p>
-      </motion.div>
-
-      {/* Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-2">
-        <button
-          onClick={() => setActiveTab("all")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            activeTab === "all"
-              ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-background"
-          }`}
-        >
-          All ({connections.length})
-        </button>
-        <button
-          onClick={() => setActiveTab("accepted")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-            activeTab === "accepted"
-              ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-background"
-          }`}
-        >
-          Accepted
-          {acceptedCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
-              {acceptedCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab("pending")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-            activeTab === "pending"
-              ? "bg-foreground text-background"
-              : "bg-background text-foreground/60 hover:text-background"
-          }`}
-        >
-          Awaiting Response
-          {pendingCount > 0 && (
-            <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
-              {pendingCount}
-            </span>
-          )}
-        </button>
-      </motion.div>
-
-      {filteredConnections.length > 0 ? (
-        <motion.div variants={itemVariants} className="space-y-4">
-          {filteredConnections.map((connection) => {
-            const StatusIcon = getStatusIcon(connection.status);
-            const candidateProfile = connection.candidate_profile;
-            const profile = candidateProfile?.profile;
-
-            return (
-              <div
-                key={connection.id}
-                className={`p-6 rounded-xl border transition-colors ${
-                  connection.status === "accepted"
-                    ? "bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border-foreground/40"
-                    : "bg-background border-foreground/25 hover:border-foreground/25"
-                }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-4">
-                    {profile?.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt="Profile"
-                        className="w-14 h-14 rounded-xl object-cover"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-xl bg-foreground flex items-center justify-center text-background font-bold text-lg">
-                        {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-semibold text-foreground text-lg">
-                        {profile?.first_name || "Candidate"} {profile?.last_name || ""}
-                      </p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-sm text-foreground/60">
-                          {profile?.headline || "Behavioral Evidence Report Holder"}
-                        </p>
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-500/20 text-foreground/60 flex items-center gap-1">
-                          <Award className="w-2.5 h-2.5" />Silver
-                        </span>
-                      </div>
-                      {candidateProfile?.skills && candidateProfile.skills.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {candidateProfile.skills.slice(0, 4).map((skill, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
-                              {skill}
-                            </span>
-                          ))}
-                          {candidateProfile.skills.length > 4 && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-background text-foreground/60">
-                              +{candidateProfile.skills.length - 4}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${getStatusColor(connection.status)}`}>
-                      <StatusIcon className="w-4 h-4" />
-                      {connection.status === "pending" ? "Awaiting Response" : connection.status.charAt(0).toUpperCase() + connection.status.slice(1)}
-                    </span>
-                    <p className="text-xs text-foreground/50 mt-2">
-                      {connection.responded_at
-                        ? `Responded ${new Date(connection.responded_at).toLocaleDateString()}`
-                        : `Sent ${new Date(connection.created_at).toLocaleDateString()}`}
-                    </p>
-                  </div>
-                </div>
-
-                {connection.message && (
-                  <p className="mt-4 text-sm text-foreground/60 bg-background/20 p-3 rounded-lg">
-                    <span className="text-foreground/50">Your message: </span>
-                    {connection.message}
-                  </p>
-                )}
-
-                {/* Actions for accepted connections */}
-                {connection.status === "accepted" && profile?.email && (
-                  <div className="mt-4 pt-4 border-t border-foreground/25 flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-foreground/25 text-foreground hover:bg-foreground/5"
-                    >
-                      <Eye className="w-4 h-4 mr-1" />
-                      View Full Profile
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-500"
-                    >
-                      <Send className="w-4 h-4 mr-1" />
-                      Send Message
-                    </Button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={itemVariants}
-          className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
-        >
-          <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-          <p className="text-foreground/60">No connections yet</p>
-          <p className="text-sm text-foreground/50 mt-1">
-            Search for candidates and send connection requests
-          </p>
-          <Link to="/dashboard/employer/search">
-            <Button className="mt-4 bg-emerald-600 hover:bg-emerald-500">
-              <Search className="w-4 h-4 mr-2" />
-              Find Talent
-            </Button>
-          </Link>
-        </motion.div>
-      )}
-    </motion.div>
-  );
-};
-
 // Projects component
-interface ProjectWithApplications extends LiveWorksProject {
-  applications?: (LiveWorksApplication & { candidate?: CandidateProfile & { profile?: Profile } })[];
-  milestones?: LiveWorksMilestone[];
-}
-
 const Projects = () => {
   const { user } = useAuth();
   const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
@@ -2464,525 +1707,6 @@ const Projects = () => {
   );
 };
 
-// Feedback component for 30/60/90 day reviews
-interface HireWithCandidate {
-  connection: T3XConnection;
-  candidate?: CandidateProfile & { profile?: Profile };
-  feedbacks?: EmployerFeedback[];
-}
-
-const Feedback = () => {
-  const { user } = useAuth();
-  const [employerProfile, setEmployerProfile] = useState<EmployerProfile | null>(null);
-  const [hires, setHires] = useState<HireWithCandidate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [selectedHire, setSelectedHire] = useState<HireWithCandidate | null>(null);
-  const [feedbackType, setFeedbackType] = useState<"30_day" | "60_day" | "90_day">("30_day");
-  const [feedbackForm, setFeedbackForm] = useState({
-    performanceRating: 0,
-    readinessAccuracy: 0,
-    comments: "",
-    wouldHireAgain: true,
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.id) return;
-
-      const { data: ep } = await supabase
-        .from("employer_profiles")
-        .select("*")
-        .eq("profile_id", user.id)
-        .single();
-
-      setEmployerProfile(ep);
-
-      if (ep) {
-        // Get accepted connections (hired candidates)
-        const { data: connections } = await supabase
-          .from("t3x_connections")
-          .select("*")
-          .eq("employer_id", ep.id)
-          .eq("status", "accepted")
-          .order("responded_at", { ascending: false });
-
-        if (connections) {
-          const enrichedHires = await Promise.all(
-            connections.map(async (conn) => {
-              const { data: candidate } = await supabase
-                .from("candidate_profiles")
-                .select("*")
-                .eq("profile_id", conn.candidate_id)
-                .single();
-
-              let profile = null;
-              if (candidate) {
-                const { data: p } = await supabase
-                  .from("profiles")
-                  .select("*")
-                  .eq("id", candidate.profile_id)
-                  .single();
-                profile = p;
-              }
-
-              // Get existing feedback
-              const { data: feedbacks } = await supabase
-                .from("employer_feedback")
-                .select("*")
-                .eq("employer_id", ep.id)
-                .eq("candidate_id", conn.candidate_id);
-
-              return {
-                connection: conn,
-                candidate: candidate ? { ...candidate, profile } : undefined,
-                feedbacks: feedbacks || [],
-              };
-            })
-          );
-          setHires(enrichedHires);
-        }
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [user?.id]);
-
-  const submitFeedback = async () => {
-    if (!employerProfile || !selectedHire) return;
-
-    setIsSubmitting(true);
-
-    const { error } = await supabase.from("employer_feedback").insert({
-      employer_id: employerProfile.id,
-      candidate_id: selectedHire.connection.candidate_id,
-      hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
-      feedback_type: feedbackType,
-      performance_rating: feedbackForm.performanceRating,
-      readiness_accuracy: feedbackForm.readinessAccuracy,
-      comments: feedbackForm.comments,
-      would_hire_again: feedbackForm.wouldHireAgain,
-    });
-
-    if (!error) {
-      // Lock 1: Post-Hire Feedback Loop — log to candidate's growth log
-      const feedbackLabel = feedbackType === "30_day" ? "30-Day" : feedbackType === "60_day" ? "60-Day" : "90-Day";
-      await supabase.from("growth_log_entries").insert({
-        candidate_id: selectedHire.connection.candidate_id,
-        event_type: "assessment",
-        title: `Post-Hire Feedback — ${feedbackLabel} Review (Lock 1)`,
-        description: `Employer feedback received: Performance ${feedbackForm.performanceRating}/5, Readiness Accuracy ${feedbackForm.readinessAccuracy}/5. ${feedbackForm.wouldHireAgain ? "Would hire again." : "Would not hire again."}`,
-        source_component: "PostHireFeedback",
-      });
-
-      // Update local state
-      setHires((prev) =>
-        prev.map((h) =>
-          h.connection.id === selectedHire.connection.id
-            ? {
-                ...h,
-                feedbacks: [
-                  ...(h.feedbacks || []),
-                  {
-                    id: "",
-                    employer_id: employerProfile.id,
-                    candidate_id: selectedHire.connection.candidate_id,
-                    hire_date: selectedHire.connection.responded_at || selectedHire.connection.created_at,
-                    created_at: new Date().toISOString(),
-                    feedback_type: feedbackType,
-                    performance_rating: feedbackForm.performanceRating,
-                    readiness_accuracy: feedbackForm.readinessAccuracy,
-                    behavioral_alignment: null,
-                    comments: feedbackForm.comments,
-                    would_hire_again: feedbackForm.wouldHireAgain,
-                  },
-                ],
-              }
-            : h
-        )
-      );
-
-      setShowFeedbackModal(false);
-      setSelectedHire(null);
-      setFeedbackForm({
-        performanceRating: 0,
-        readinessAccuracy: 0,
-        comments: "",
-        wouldHireAgain: true,
-      });
-    }
-
-    setIsSubmitting(false);
-  };
-
-  const getDaysSinceHire = (hireDate: string) => {
-    const days = Math.floor((Date.now() - new Date(hireDate).getTime()) / (1000 * 60 * 60 * 24));
-    return days;
-  };
-
-  const getAvailableFeedbackTypes = (hire: HireWithCandidate): ("30_day" | "60_day" | "90_day")[] => {
-    const existingTypes = hire.feedbacks?.map((f) => f.feedback_type) || [];
-    const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
-    const available: ("30_day" | "60_day" | "90_day")[] = [];
-
-    if (days >= 30 && !existingTypes.includes("30_day")) available.push("30_day");
-    if (days >= 60 && !existingTypes.includes("60_day")) available.push("60_day");
-    if (days >= 90 && !existingTypes.includes("90_day")) available.push("90_day");
-
-    return available;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
-      </div>
-    );
-  }
-
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8"
-    >
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Hire Feedback</h1>
-        <p className="text-foreground/60">
-          Provide 30/60/90 day performance feedback for your hires.
-        </p>
-      </motion.div>
-
-      {/* Info Banner */}
-      <motion.div
-        variants={itemVariants}
-        className="p-4 rounded-xl bg-foreground/[0.06] border border-foreground/40 flex items-start gap-4"
-      >
-        <AlertCircle className="w-5 h-5 text-foreground flex-shrink-0 mt-0.5" />
-        <div>
-          <p className="text-foreground font-medium">Why feedback matters</p>
-          <p className="text-sm text-foreground/60 mt-1">
-            Your feedback helps improve the accuracy of Behavioral Evidence Reports and the overall
-            quality of the talent pool. Share honest assessments at 30, 60, and 90 days.
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Hires List */}
-      <motion.div variants={itemVariants}>
-        {hires.length > 0 ? (
-          <div className="space-y-4">
-            {hires.map((hire) => {
-              const availableTypes = getAvailableFeedbackTypes(hire);
-              const days = getDaysSinceHire(hire.connection.responded_at || hire.connection.created_at);
-
-              return (
-                <div
-                  key={hire.connection.id}
-                  className="p-6 rounded-xl bg-background border border-foreground/25"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      {hire.candidate?.profile?.avatar_url ? (
-                        <img
-                          src={hire.candidate.profile.avatar_url}
-                          alt=""
-                          className="w-14 h-14 rounded-xl object-cover"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-xl bg-foreground/[0.06] flex items-center justify-center text-foreground font-bold text-lg">
-                          {hire.candidate?.profile?.first_name?.[0]}
-                          {hire.candidate?.profile?.last_name?.[0]}
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-semibold text-foreground text-lg">
-                          {hire.candidate?.profile?.first_name} {hire.candidate?.profile?.last_name}
-                        </p>
-                        <p className="text-sm text-foreground/60">
-                          Hired {days} days ago
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          {hire.candidate?.current_tier && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/20 ink-vermilion">
-                              {hire.candidate.current_tier.replace("_", " ")}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Feedback Status */}
-                    <div className="flex gap-2">
-                      {["30_day", "60_day", "90_day"].map((type) => {
-                        const feedback = hire.feedbacks?.find((f) => f.feedback_type === type);
-                        const typeLabel = type.replace("_", " ");
-
-                        return (
-                          <div
-                            key={type}
-                            className={`px-3 py-2 rounded-lg text-center ${
-                              feedback
-                                ? "bg-foreground/[0.06] border border-foreground/40"
-                                : "bg-background border border-foreground/25"
-                            }`}
-                          >
-                            <p className="text-xs text-foreground/50">{typeLabel}</p>
-                            {feedback ? (
-                              <div className="flex items-center justify-center gap-1 mt-1">
-                                <Star className="w-3 h-3 ink-vermilion" />
-                                <span className="text-sm text-foreground">
-                                  {feedback.performance_rating}/5
-                                </span>
-                              </div>
-                            ) : (
-                              <p className="text-xs text-foreground/40 mt-1">Pending</p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  {availableTypes.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-foreground/25 flex gap-2">
-                      {availableTypes.map((type) => (
-                        <Button
-                          key={type}
-                          onClick={() => {
-                            setSelectedHire(hire);
-                            setFeedbackType(type);
-                            setShowFeedbackModal(true);
-                          }}
-                          className="bg-emerald-600 hover:bg-emerald-500"
-                        >
-                          <Calendar className="w-4 h-4 mr-2" />
-                          Submit {type.replace("_", " ")} Feedback
-                        </Button>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Show completed feedback summary */}
-                  {hire.feedbacks && hire.feedbacks.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-foreground/25">
-                      <p className="text-sm text-foreground/50 mb-2">Previous Feedback</p>
-                      <div className="space-y-2">
-                        {hire.feedbacks.map((fb) => (
-                          <div
-                            key={fb.id || fb.feedback_type}
-                            className="flex items-center justify-between p-3 rounded-lg bg-background/20"
-                          >
-                            <div className="flex items-center gap-3">
-                              <span className="text-sm text-foreground/60">{fb.feedback_type.replace("_", " ")}</span>
-                              <div className="flex items-center gap-1">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-3 h-3 ${
-                                      i < fb.performance_rating
-                                        ? "ink-vermilion fill-amber-400"
-                                        : "text-foreground/40"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                            <span
-                              className={`text-sm ${
-                                fb.would_hire_again ? "text-foreground" : "ink-vermilion"
-                              }`}
-                            >
-                              {fb.would_hire_again ? "Would hire again" : "Would not hire again"}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="p-12 rounded-2xl bg-background border border-foreground/25 text-center">
-            <Users className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
-            <p className="text-foreground/60">No hires yet</p>
-            <p className="text-sm text-foreground/50 mt-1">
-              When candidates accept your connection requests, they'll appear here for feedback.
-            </p>
-          </div>
-        )}
-      </motion.div>
-
-      {/* Feedback Modal */}
-      {showFeedbackModal && selectedHire && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-background backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setShowFeedbackModal(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-background/50 rounded-2xl border border-foreground/25 w-full max-w-lg p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-xl font-bold text-foreground mb-2">
-              {feedbackType.replace("_", " ")} Feedback
-            </h2>
-            <p className="text-foreground/60 mb-6">
-              Share your experience with {selectedHire.candidate?.profile?.first_name}
-            </p>
-
-            {/* Performance Rating */}
-            <div className="mb-6">
-              <label className="text-sm text-foreground/60 block mb-2">
-                Overall Performance Rating
-              </label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <button
-                    key={rating}
-                    onClick={() =>
-                      setFeedbackForm((prev) => ({ ...prev, performanceRating: rating }))
-                    }
-                    className={`p-3 rounded-lg transition-colors ${
-                      feedbackForm.performanceRating >= rating
-                        ? "bg-vermilion/10 ink-vermilion"
-                        : "bg-background text-foreground/50 hover:bg-foreground/5"
-                    }`}
-                  >
-                    <Star
-                      className={`w-6 h-6 ${
-                        feedbackForm.performanceRating >= rating ? "fill-amber-400" : ""
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Readiness Accuracy */}
-            <div className="mb-6">
-              <label className="text-sm text-foreground/60 block mb-2">
-                How accurate was their Behavioral Evidence Report tier?
-              </label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <button
-                    key={rating}
-                    onClick={() =>
-                      setFeedbackForm((prev) => ({ ...prev, readinessAccuracy: rating }))
-                    }
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      feedbackForm.readinessAccuracy === rating
-                        ? "bg-foreground text-background"
-                        : "bg-background text-foreground/60 hover:bg-foreground/5"
-                    }`}
-                  >
-                    {rating}
-                  </button>
-                ))}
-              </div>
-              <div className="flex justify-between text-xs text-foreground/50 mt-1">
-                <span>Not accurate</span>
-                <span>Very accurate</span>
-              </div>
-            </div>
-
-            {/* Would Hire Again */}
-            <div className="mb-6">
-              <label className="text-sm text-foreground/60 block mb-2">
-                Would you hire this person again?
-              </label>
-              <div className="flex gap-3">
-                <button
-                  onClick={() =>
-                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: true }))
-                  }
-                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
-                    feedbackForm.wouldHireAgain
-                      ? "bg-foreground text-background"
-                      : "bg-background text-foreground/60 hover:bg-foreground/5"
-                  }`}
-                >
-                  <ThumbsUp className="w-5 h-5" />
-                  Yes
-                </button>
-                <button
-                  onClick={() =>
-                    setFeedbackForm((prev) => ({ ...prev, wouldHireAgain: false }))
-                  }
-                  className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${
-                    !feedbackForm.wouldHireAgain
-                      ? "bg-red-600 text-foreground"
-                      : "bg-background text-foreground/60 hover:bg-foreground/5"
-                  }`}
-                >
-                  <ThumbsDown className="w-5 h-5" />
-                  No
-                </button>
-              </div>
-            </div>
-
-            {/* Comments */}
-            <div className="mb-6">
-              <label className="text-sm text-foreground/60 block mb-2">
-                Additional Comments (Optional)
-              </label>
-              <textarea
-                value={feedbackForm.comments}
-                onChange={(e) =>
-                  setFeedbackForm((prev) => ({ ...prev, comments: e.target.value }))
-                }
-                placeholder="Share specific observations about their work..."
-                rows={3}
-                className="w-full px-4 py-3 rounded-lg bg-background border border-foreground/25 text-foreground placeholder:text-foreground/40 focus:border-emerald-500 focus:outline-none resize-none"
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setShowFeedbackModal(false)}
-                className="flex-1 border-foreground/25 text-foreground hover:bg-foreground/5"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={submitFeedback}
-                disabled={
-                  isSubmitting ||
-                  feedbackForm.performanceRating === 0 ||
-                  feedbackForm.readinessAccuracy === 0
-                }
-                className="flex-1 bg-emerald-600 hover:bg-emerald-500"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  "Submit Feedback"
-                )}
-              </Button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </motion.div>
-  );
-};
-
 // Company Profile component
 // Messages Page for Employer Dashboard
 const EmployerMessagesPage = () => {
@@ -3801,7 +2525,7 @@ const EmployerDashboard = () => {
   return (
     <DashboardLayout
       role="Employer"
-      roleTagline="You read what candidates have released to you — nothing more, nothing hidden."
+      roleTagline="Read the Behavioral Evidence Reports\u2122 participants have made available to approved employers."
       nav={navWithBadges}
       sections={EMPLOYER_SECTIONS}
       notifications={notifications}
@@ -3811,11 +2535,22 @@ const EmployerDashboard = () => {
     >
       <Routes>
         <Route index element={<Overview />} />
-        <Route path="search" element={<SearchTalent />} />
+        <Route path="reports" element={<AvailableReports />} />
+        {/* Item 8 step 5.2 — the retired pool names redirect through the
+            transition and are then removed. Never two working names. */}
+        <Route path="search" element={<Navigate to="/dashboard/employer/reports" replace />} />
+        {/* Item 9A step 5.1 — the route remains and renders the coverage
+            disclosure. It must not redirect to Available Reports: a
+            redirect would present a rejected operating model as a
+            rename. */}
         <Route path="t3x" element={<T3XDiscovery />} />
-        <Route path="connections" element={<Connections />} />
+        {/* Item 10 step 5.3 — Connections is retired as a standalone
+            employer environment. The legitimate function is genuinely
+            consolidated into Messages, so a redirect does not
+            misrepresent a retirement as a rename. */}
+        <Route path="connections" element={<Navigate to="/dashboard/employer/messages" replace />} />
         <Route path="projects" element={<Projects />} />
-        <Route path="feedback" element={<Feedback />} />
+        <Route path="feedback" element={<EmployerFeedbackPage />} />
         <Route path="messages" element={<EmployerMessagesPage />} />
         <Route path="company" element={<Company />} />
         <Route path="agent" element={<AIAgent />} />

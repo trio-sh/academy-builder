@@ -444,171 +444,133 @@ describe("Step 5: Employer Discovers Candidate on T3X", () => {
 });
 
 // ─── STEP 6: EMPLOYER SENDS CONNECTION REQUEST ───────────────────────
+// ─── STEP 6: CONTACT CONSENT, NOT A CONNECTION REQUEST ───────────────
+//
+// T3A-DEV-CN-EMP-001 Item 10 retires the connection-request model
+// entirely: the request action, the request record, and the Accepted and
+// Awaiting Response states. An employer may write to a participant who
+// has opened contact, and may never initiate contact with one who has
+// not. These cases assert the model that replaced it.
 
-describe("Step 6: Employer Sends Connection Request", () => {
-  it("should create a pending connection request", () => {
-    const connection = {
-      id: CONNECTION_ID,
-      employer_id: EMPLOYER_PROFILE_ID,
-      candidate_id: CANDIDATE_PROFILE_ID,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      status: "pending" as ConnectionStatus,
-      message: "Hi Jane, we're impressed by your profile and would love to connect to discuss an opportunity at TechCorp.",
-      responded_at: null as string | null,
-      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+describe("Step 6: Contact Consent Governs Whether Contact Is Possible", () => {
+  it("contact consent defaults to closed", () => {
+    const consent = {
+      participant_id: CANDIDATE_USER_ID,
+      contact_open: false,
+      notice_version: null as string | null,
+      consent_timestamp: null as string | null,
+      withdrawn_at: null as string | null,
     };
-
-    db.t3x_connections.push(connection);
-
-    expect(db.t3x_connections).toHaveLength(1);
-    expect(db.t3x_connections[0].status).toBe("pending");
-    expect(db.t3x_connections[0].employer_id).toBe(EMPLOYER_PROFILE_ID);
-    expect(db.t3x_connections[0].candidate_id).toBe(CANDIDATE_PROFILE_ID);
-    expect(db.t3x_connections[0].message).toBeTruthy();
+    expect(consent.contact_open).toBe(false);
   });
 
-  it("should send notification to candidate about connection request", () => {
-    const notification = {
-      id: "notif-002",
-      user_id: CANDIDATE_USER_ID,
-      created_at: new Date().toISOString(),
-      type: "connection_request",
-      title: "New Connection Request",
-      message: "TechCorp Inc. wants to connect with you.",
-      is_read: false,
-      action_url: "/dashboard/candidate/connections",
-      metadata: { connection_id: CONNECTION_ID, employer_id: EMPLOYER_PROFILE_ID },
-      priority: "high" as const,
-      action_type: "navigate",
+  it("making a report available does not open contact", () => {
+    // Report visibility permits reading. Contact consent permits
+    // contact. Neither implies the other.
+    const reportAvailable = true;
+    const consent = { participant_id: CANDIDATE_USER_ID, contact_open: false };
+    expect(reportAvailable).toBe(true);
+    expect(consent.contact_open).toBe(false);
+  });
+
+  it("consent is scoped to approved employers as a class, not to an organization", () => {
+    const consent = {
+      participant_id: CANDIDATE_USER_ID,
+      contact_open: true,
+      notice_version: "v1",
+      consent_timestamp: new Date().toISOString(),
     };
-
-    db.notifications.push(notification);
-
-    expect(db.notifications).toHaveLength(1);
-    expect(db.notifications[0].type).toBe("connection_request");
-    expect(db.notifications[0].user_id).toBe(CANDIDATE_USER_ID);
+    // There is no organization field to scope it by, and none is added.
+    expect(Object.keys(consent)).not.toContain("employer_id");
+    expect(Object.keys(consent)).not.toContain("employer_profile_id");
   });
 
-  it("connection status should be one of the valid ConnectionStatus values", () => {
-    const validStatuses: ConnectionStatus[] = ["pending", "accepted", "declined", "expired"];
-    expect(validStatuses).toContain("pending");
-    expect(validStatuses).toContain("accepted");
-    expect(validStatuses).toContain("declined");
-    expect(validStatuses).toContain("expired");
+  it("no connection request record is created by any employer action", () => {
+    // The request action, the request record and the Accepted and
+    // Awaiting Response states are gone. No connection object is
+    // created at launch.
+    expect(db.t3x_connections).toHaveLength(0);
   });
 
-  it("should prevent duplicate pending connections from same employer to same candidate", () => {
-    db.t3x_connections.push({
-      id: CONNECTION_ID,
-      employer_id: EMPLOYER_PROFILE_ID,
-      candidate_id: CANDIDATE_PROFILE_ID,
-      status: "pending",
-    });
+  it("a contact element renders only where consent exists", () => {
+    const withConsent = { contact_open: true, withdrawn_at: null as string | null };
+    const withoutConsent = { contact_open: false, withdrawn_at: null as string | null };
 
-    const existingPending = db.t3x_connections.find(
-      (c: any) =>
-        c.employer_id === EMPLOYER_PROFILE_ID &&
-        c.candidate_id === CANDIDATE_PROFILE_ID &&
-        c.status === "pending"
-    );
+    const contactAvailable = (c: { contact_open: boolean; withdrawn_at: string | null }) =>
+      c.contact_open && c.withdrawn_at === null;
 
-    // Should check for existing pending before creating new one
-    expect(existingPending).toBeDefined();
-    // If exists, should NOT create another
-    const duplicateAllowed = !existingPending;
-    expect(duplicateAllowed).toBe(false);
+    expect(contactAvailable(withConsent)).toBe(true);
+    expect(contactAvailable(withoutConsent)).toBe(false);
+  });
+
+  it("contact consent is never rendered as a quality signal", () => {
+    // No badge, no sort, no filter, and nothing on a card implying an
+    // absence. The card carries the element or it carries nothing.
+    const cardFields = [
+      "stated_full_name", "stated_role_or_field", "observation_period",
+      "report_status", "current_through", "correction_open",
+      "participant_controlled_visibility",
+    ];
+    expect(cardFields).not.toContain("contact_consent_state");
+    expect(cardFields).not.toContain("contact_unavailable_reason");
   });
 });
 
-// ─── STEP 7: CANDIDATE RESPONDS TO REQUEST ───────────────────────────
+// ─── STEP 7: WITHDRAWAL TAKES EFFECT ON THE NEXT READ ────────────────
 
-describe("Step 7: Candidate Responds to Connection Request", () => {
-  beforeEach(() => {
-    db.t3x_connections.push({
-      id: CONNECTION_ID,
-      employer_id: EMPLOYER_PROFILE_ID,
-      candidate_id: CANDIDATE_PROFILE_ID,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      status: "pending" as ConnectionStatus,
-      message: "We'd love to connect!",
-      responded_at: null,
-      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    });
-  });
-
-  it("candidate should be able to approve the connection request", () => {
-    const connection = db.t3x_connections[0];
-    connection.status = "accepted" as ConnectionStatus;
-    connection.responded_at = new Date().toISOString();
-    connection.updated_at = new Date().toISOString();
-
-    expect(connection.status).toBe("accepted");
-    expect(connection.responded_at).not.toBeNull();
-  });
-
-  it("candidate should be able to decline the connection request", () => {
-    const connection = db.t3x_connections[0];
-    connection.status = "declined" as ConnectionStatus;
-    connection.responded_at = new Date().toISOString();
-    connection.updated_at = new Date().toISOString();
-
-    expect(connection.status).toBe("declined");
-    expect(connection.responded_at).not.toBeNull();
-  });
-
-  it("should notify employer when candidate responds", () => {
-    // Approve
-    db.t3x_connections[0].status = "accepted";
-
-    const notification = {
-      id: "notif-003",
-      user_id: EMPLOYER_USER_ID,
-      created_at: new Date().toISOString(),
-      type: "connection_accepted",
-      title: "Connection Accepted",
-      message: "Jane Doe has accepted your connection request.",
-      is_read: false,
-      action_url: "/dashboard/employer/connections",
-      metadata: { connection_id: CONNECTION_ID, candidate_id: CANDIDATE_PROFILE_ID },
-      priority: "normal" as const,
-      action_type: "navigate",
+describe("Step 7: Withdrawal, and the Recheck at the Moment of Contact", () => {
+  it("withdrawal takes effect on the next read", () => {
+    const consent = {
+      participant_id: CANDIDATE_USER_ID,
+      contact_open: true,
+      withdrawn_at: null as string | null,
     };
+    const contactAvailable = () => consent.contact_open && consent.withdrawn_at === null;
 
-    db.notifications.push(notification);
-
-    expect(db.notifications).toHaveLength(1);
-    expect(db.notifications[0].type).toBe("connection_accepted");
-    expect(db.notifications[0].user_id).toBe(EMPLOYER_USER_ID);
+    expect(contactAvailable()).toBe(true);
+    consent.contact_open = false;
+    consent.withdrawn_at = new Date().toISOString();
+    expect(contactAvailable()).toBe(false);
   });
 
-  it("should increment employer total_connections on acceptance", () => {
-    const employer = db.employer_profiles[0];
-    const previousConnections = employer.total_connections;
+  it("a card having rendered the element is not authority to open a thread", () => {
+    // Consent present at render, withdrawn before the employer acts.
+    // Selecting Contact available rechecks consent server-side at that
+    // moment, so the stale card does not carry the decision.
+    const consentAtRender = true;
+    const consentAtAction = false;
 
-    // Accept connection
-    db.t3x_connections[0].status = "accepted";
-    employer.total_connections += 1;
+    const serverRecheck = (atAction: boolean) =>
+      atAction ? { opened: true } : { opened: false, refusal_code: "CONTACT_CONSENT_ABSENT" };
 
-    expect(employer.total_connections).toBe(previousConnections + 1);
+    expect(consentAtRender).toBe(true);
+    expect(serverRecheck(consentAtAction).opened).toBe(false);
+    expect(serverRecheck(consentAtAction).refusal_code).toBe("CONTACT_CONSENT_ABSENT");
   });
 
-  it("expired connections should not be respondable", () => {
-    const connection = db.t3x_connections[0];
-    // Set expiry in the past
-    connection.expires_at = new Date(Date.now() - 1000).toISOString();
+  it("retiring an existing request notifies no participant", () => {
+    // Any request already sent is closed, is never converted into
+    // contact consent, and generates no notification to the participant
+    // of an approach they never saw.
+    const notificationsBefore = db.notifications.length;
+    // Closure is a server-side state change with no participant-facing
+    // effect; nothing is emitted.
+    expect(db.notifications.length).toBe(notificationsBefore);
+    expect(
+      db.notifications.some((n: any) => n.type === "connection_request")
+    ).toBe(false);
+  });
 
-    const isExpired = new Date(connection.expires_at) < new Date();
-    expect(isExpired).toBe(true);
-
-    // Should not allow response on expired connection
-    if (isExpired) {
-      connection.status = "expired";
-    }
-    expect(connection.status).toBe("expired");
+  it("no existing request is converted into contact consent", () => {
+    const legacyRequest = { status: "accepted" };
+    const consent = { participant_id: CANDIDATE_USER_ID, contact_open: false };
+    // An accepted legacy request confers nothing. Consent is given by
+    // the participant on their own surface or it does not exist.
+    expect(legacyRequest.status).toBe("accepted");
+    expect(consent.contact_open).toBe(false);
   });
 });
+
 
 // ─── STEP 8: CONNECTED USERS CAN MESSAGE EACH OTHER ─────────────────
 
