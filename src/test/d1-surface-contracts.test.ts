@@ -45,6 +45,9 @@ const reportFace = read(REPORTFACE);
 const ACCEPTANCE = "src/pages/dashboard/mentor/AcceptanceTests.tsx";
 const acceptance = read(ACCEPTANCE);
 
+const COCKPIT = "src/pages/dashboard/mentor/Cockpit.tsx";
+const cockpit = read(COCKPIT);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -62,6 +65,7 @@ const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
 const reportFaceCode = code(reportFace);
 const acceptanceCode = code(acceptance);
+const cockpitCode = code(cockpit);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -789,6 +793,69 @@ describe("§11 Acceptance tests — a specification is not a passed test", () =>
   it("states that evidence is append-only", () => {
     expect(acceptance.replace(/\s+/g, " ")).toMatch(
       /a test that once failed does not become a test that always passed/
+    );
+  });
+});
+
+describe("§3 Mentor Cockpit — six regions, and no smaller version of them", () => {
+  it("refuses below the supported minimum rather than reflowing", () => {
+    // Build 065: live capture must refuse, not degrade. The refusal is a
+    // return before the layout, so no reduced view can render under it.
+    expect(cockpitCode).toMatch(/rpc\("t3a_d1_s2_capture_permitted"/);
+    expect(cockpitCode).toMatch(/if \(viewportGate && !viewportGate\.permitted\)/);
+  });
+
+  it("decides neither the viewport nor the live-view state locally", () => {
+    // No local threshold arithmetic standing in for the server's answer.
+    expect(cockpitCode).not.toMatch(/innerWidth\s*[<>]=?\s*\d|innerHeight\s*[<>]=?\s*\d/);
+    expect(cockpitCode).not.toMatch(/1280|800(?![0-9])/);
+  });
+
+  it("holds the six regions in the arrangement build 057 fixes", () => {
+    const body = cockpitCode.slice(
+      cockpitCode.indexOf('grid grid-cols-2'),
+      cockpitCode.indexOf("After-commit follow-through")
+    );
+    const order = [
+      "Participant — Live View",
+      "Mentor — Live View",
+      "Pane 1 — Source and Script",
+      "Pane 2 — Determination Capture",
+    ].map((label) => body.indexOf(label));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    // Participant above mentor; source above capture.
+    expect(order[0]).toBeLessThan(order[1]);
+    expect(order[2]).toBeLessThan(order[3]);
+  });
+
+  it("has no responsive breakpoint that would reduce a live view", () => {
+    const body = cockpitCode.slice(
+      cockpitCode.indexOf('grid grid-cols-2'),
+      cockpitCode.indexOf("After-commit follow-through")
+    );
+    expect(body).not.toMatch(/\b(sm|md|lg|xl|2xl):/);
+    expect(body).not.toMatch(/hidden|collapse|overlay/);
+  });
+
+  it("shows no recording indicator, because D1 grants no recording consent", () => {
+    // t3a_d1_consent_type records RECORDING as unavailable in D1.
+    expect(cockpitCode).not.toMatch(/\bREC\b|isRecording|recordingActive|MediaRecorder/);
+  });
+
+  it("records an administration variance at the beat, not only at session end", () => {
+    expect(cockpitCode).toMatch(/t3a_d1_s2_administration_variance/);
+    expect(cockpitCode).toMatch(/beat_code: varianceBeat/);
+    // The control lives in the script pane, beside the beat it concerns.
+    const pane1 = cockpitCode.slice(
+      cockpitCode.indexOf("Pane 1 — Source and Script"),
+      cockpitCode.indexOf("Pane 2 — Determination Capture")
+    );
+    expect(pane1).toMatch(/onRecordVariance/);
+  });
+
+  it("holds none of the §3.4 prohibitions", () => {
+    expect(cockpitCode).not.toMatch(
+      /readiness|percentile|traitLabel|trait_label|prediction|employability|coverageMeter|coverage_meter|trafficLight|progressPercent|suitability/i
     );
   });
 });

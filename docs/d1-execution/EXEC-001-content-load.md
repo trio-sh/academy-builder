@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card, §6 report face and §11 acceptance register served. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card, §6 report face and §11 acceptance register and §3 cockpit served. Conflict register below.
 
 ---
 
@@ -898,6 +898,62 @@ the sheet entry, and between the rest the sheet entry is the fullest.
 mentor to the source, which is the correct behavior for a list a claim
 would otherwise be checked against.
 
+## 6r. §3 — the Stage 2 cockpit
+
+Three of §3's rules lived only in the interface. A refusal that lives in
+a screen is not a refusal, so they are the server's now.
+
+**§3.1 / builds 058 and 065 — the viewport refusal.** Below 1280 by 800,
+Stage 2 live capture refuses. It does not reflow, collapse a pane or
+reduce either live view, and a phone is blocked outright regardless of
+the viewport it reports. The screen returns the refusal *before* the
+layout, so no reduced version of the six regions can render beneath it,
+and the grid carries no responsive breakpoint at all — a test asserts
+there is none.
+
+**§3.3 — the live-view availability rule, with its four thresholds.**
+Proved against the live database:
+
+| Condition | State |
+|---|---|
+| No frames for 2s | AVAILABLE |
+| 3s | DEGRADED — surfaced, session continues |
+| 9s | DEGRADED |
+| 10s | UNAVAILABLE — pause route, advancement blocked |
+| Track ended | UNAVAILABLE immediately |
+| Track muted | DEGRADED |
+| Restoring, 4s of frames | UNAVAILABLE |
+| Restoring, 5s of frames | AVAILABLE, variance on resumption |
+
+**Build 060 — variance at the beat.** The control sits inside the script
+pane beside the beat it concerns, not behind a session-end step, because
+*"an inconvenient self-report will not be made."* Variances are
+append-only server-side.
+
+**Build 063 — the mentor-load instrument.** Five process measures, and
+structurally incapable of being anything else: the table has no
+participant column and no score column, and an event trigger refuses to
+let one be added. Proved — `participant_id` refused, `performance_score`
+refused, a neutral `note` column accepted.
+
+**Build 057 — the arrangement.** Participant live view above mentor live
+view in the left column; source and script above determination capture in
+the right. The mentor live view did not exist before; it is a
+live-presence surface only, and nothing is captured from it.
+
+**A conflict found on the live surface and fixed.** The cockpit carried a
+pulsing **REC** badge captioned *"Sessions are recorded under the
+retention schedule per acknowledgement clause 5."* `t3a_d1_consent_type`
+records RECORDING as **unavailable in D1** — no Stage carries it, and
+Stage 4 has no recording. The badge told a mentor, on a live observation
+surface, something the consent architecture says is not true. It is
+removed, and a test asserts no recording indicator returns.
+
+**If that acknowledgement clause governs some other dimension, the two
+documents disagree and the disagreement is real.** Recorded here rather
+than settled: the badge is gone from D1's surface either way, but whether
+a recording clause exists for another dimension is not a developer's call.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
@@ -945,7 +1001,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 
 | § | Outstanding |
 |---|---|
-| 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
+| 3 | Cockpit live-media wiring: both live views are placeholders until the meeting workspace lands, so §3.3 is proved as a state machine rather than against a real track |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
 | 11 | Executing the thirty tests and recording their evidence. The register, the evidence table and the gate are built; a specification is not a passed test |
 

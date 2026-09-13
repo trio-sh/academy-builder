@@ -3,7 +3,6 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
   ChevronRight,
-  Circle,
   Loader2,
   Menu,
   Pause,
@@ -25,7 +24,45 @@ import { Button } from "@/components/ui/button";
  *   CONTENT_INACTIVE_OR_UNAPPROVED, FD_D1_09_INTERIM.
  * The cockpit surfaces these plainly and refuses to commit while any
  * of them holds.
+ *
+ * T3A-D1-EXEC-001 §3 — the six regions, and three rules that are the
+ * server's rather than this screen's:
+ *
+ *   §3.1 / builds 057, 058, 065. Six regions, simultaneously visible:
+ *   participant live view above mentor live view in the left column,
+ *   source and script above determination capture in the right column,
+ *   a persistent header, and the session control strip beneath. Below
+ *   1280 by 800 Stage 2 live capture REFUSES — it does not reflow,
+ *   collapse a pane, or reduce either live view, and there is no
+ *   responsive breakpoint here that would.
+ *
+ *   §3.3. A live view is DEGRADED after three seconds without decoded
+ *   frames and UNAVAILABLE after ten, or immediately on a failed or
+ *   ended track. Degraded is surfaced and the session continues;
+ *   unavailable takes the pause route and blocks source advancement.
+ *   Restoration needs five consecutive seconds, and any resumption
+ *   after an unavailable period is an administration variance. This
+ *   screen asks t3a_d1_s2_live_view_state and holds no second opinion.
+ *
+ *   Build 060. Administration variance is recordable AT THE BEAT,
+ *   without leaving the cockpit. "An inconvenient self-report will not
+ *   be made."
+ *
+ * §3.4 forbids, and none is present: score, rating, level, rank, tier,
+ * percentile, readiness indicator, trait label, prediction,
+ * recommendation, coverage meter, traffic light, progress percentage,
+ * another mentor's selection, a participant profile, prior report
+ * content, an AI-suggested choice, or a free-text fallback where an
+ * approved question or option is missing.
  */
+
+type LiveViewState = {
+ state: "AVAILABLE" | "DEGRADED" | "UNAVAILABLE";
+ reason?: string | null;
+ pause_route_taken?: boolean;
+ source_advancement_blocked?: boolean;
+ variance_on_resumption?: boolean;
+};
 
 type StageEntryRow = {
  stage_entry_event_id: string;
@@ -275,6 +312,68 @@ export default function Cockpit() {
  }
  };
 
+ // ---------- §3.1 the viewport gate, and §3.3 the live views ----------
+ // Both answers are the server's. The screen reports what it has and
+ // renders the verdict; it never decides that a smaller window is close
+ // enough or that a stalled view is fine.
+ const [viewportGate, setViewportGate] = useState<{
+ permitted: boolean;
+ refusal_code?: string;
+ remedy?: string;
+ reported_width?: number;
+ reported_height?: number;
+ } | null>(null);
+
+ useEffect(() => {
+ const ask = async () => {
+ const { data } = await supabase.rpc("t3a_d1_s2_capture_permitted", {
+ p_viewport_width: window.innerWidth,
+ p_viewport_height: window.innerHeight,
+ // A coarse pointer with no hover is how a phone or tablet
+ // reports itself. Nothing here trusts a user agent string.
+ p_device_class: window.matchMedia("(pointer: coarse)").matches
+ ? "phone"
+ : "desktop",
+ });
+ setViewportGate(data as typeof viewportGate);
+ };
+ void ask();
+ window.addEventListener("resize", ask);
+ return () => window.removeEventListener("resize", ask);
+ }, []);
+
+ // Build 060 — recorded at the beat, from here, append-only server-side.
+ const [varianceBeat, setVarianceBeat] = useState("");
+ const [varianceNarrative, setVarianceNarrative] = useState("");
+ const [varianceNote, setVarianceNote] = useState<string | null>(null);
+
+ const onRecordVariance = async () => {
+ if (!entry || !profile?.id) return;
+ const { error } = await supabase
+ .from("t3a_d1_s2_administration_variance")
+ .insert({
+ stage_instance_id: entry.stage_entry_event_id,
+ beat_code: varianceBeat,
+ variance_kind: "beat_variance",
+ narrative: varianceNarrative,
+ recorded_by: profile.id,
+ });
+ if (error) {
+ setVarianceNote("That variance could not be recorded.");
+ return;
+ }
+ setVarianceBeat("");
+ setVarianceNarrative("");
+ setVarianceNote("Recorded. A variance is not revised afterwards.");
+ };
+
+ const [participantView, setParticipantView] = useState<LiveViewState>({
+ state: "AVAILABLE",
+ });
+ const [mentorView, setMentorView] = useState<LiveViewState>({
+ state: "AVAILABLE",
+ });
+
  if (loading) {
  return (
  <div className="flex items-center justify-center py-24">
@@ -289,6 +388,34 @@ export default function Cockpit() {
  <div className="border-2 border-vermilion bg-vermilion/[0.06] p-4">
  <div className="mono-label ink-vermilion mb-1">§ Refused</div>
  <p className="text-sm text-foreground">{refusal ?? "Stage entry event not found."}</p>
+ </div>
+ </div>
+ );
+ }
+
+ // §3.1 / build 065: below the supported minimum, live capture refuses.
+ // It is a refusal rather than a smaller layout, so it returns here
+ // instead of rendering the six regions at a size that cannot hold
+ // them. There is no breakpoint below this that shows a reduced view.
+ if (viewportGate && !viewportGate.permitted) {
+ return (
+ <div className="p-8">
+ <div className="border-2 border-vermilion bg-vermilion/[0.06] p-6 max-w-2xl">
+ <div className="mono-label ink-vermilion mb-2">
+ {viewportGate.refusal_code}
+ </div>
+ <h2 className="display-serif text-2xl text-foreground leading-tight">
+ Stage 2 live capture does not run here
+ </h2>
+ <p className="text-sm text-foreground/80 mt-3 leading-relaxed">
+ {viewportGate.remedy}
+ </p>
+ <p className="text-sm text-foreground/65 mt-4 leading-relaxed">
+ Six regions have to be visible at once — both live views, the
+ script, the capture questions, the header and the controls. Below
+ the supported minimum the surface refuses rather than collapsing a
+ pane or shrinking a view of the participant.
+ </p>
  </div>
  </div>
  );
@@ -334,10 +461,87 @@ export default function Cockpit() {
  </div>
  )}
 
- {/* Two-pane body */}
- <div className="grid grid-cols-12 gap-4 p-4">
+ {/* The six regions, all visible at once. Build 057 fixes the
+ arrangement: participant live view ABOVE mentor live view in the
+ left column, source and script ABOVE determination capture in the
+ right column. The grid is fixed at two columns with no responsive
+ breakpoint, because there is no smaller layout to fall back to —
+ below the supported minimum the surface refuses instead. */}
+ <div className="grid grid-cols-2 gap-4 p-4 items-start">
+ <div className="space-y-4">
+ {/* Participant Live View placeholder */}
+ <section className="border-2 border-foreground">
+ <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
+ {/* No recording indicator, because there is no recording.
+ t3a_d1_consent_type records RECORDING as unavailable in D1:
+ no Stage carries it. A badge saying the session is being
+ recorded would tell the mentor something untrue. */}
+ <div className="mono-label">Participant — Live View</div>
+ <div className="mono-label text-background/70">
+ {participantView.state}
+ </div>
+ </div>
+ <div className="p-4">
+ {/* §3.3 — degraded is surfaced and the session continues;
+ unavailable takes the pause route and blocks source
+ advancement until restored. The verdict is the server's. */}
+ {participantView.state !== "AVAILABLE" && (
+ <div className="border-2 border-vermilion bg-vermilion/[0.06] p-3 mb-4">
+ <div className="mono-label ink-vermilion">
+ PARTICIPANT VIEW {participantView.state}
+ </div>
+ <p className="text-sm text-foreground/80 mt-1 leading-relaxed">
+ {participantView.state === "DEGRADED"
+ ? "The view is degraded. The session continues — this is here so you know, not so you stop."
+ : "The session is paused and the script cannot advance until the view is restored for five consecutive seconds. Resuming afterwards is recorded as an administration variance."}
+ </p>
+ {participantView.reason && (
+ <p className="mono-label text-foreground/50 mt-2">
+ {participantView.reason}
+ </p>
+ )}
+ </div>
+ )}
+ <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 grid place-items-center text-foreground/60">
+ <div className="text-center">
+ <div className="mono-label mb-2">§ Placeholder</div>
+ <p className="text-sm">
+ Live video pane. Wired to the T3A meeting workspace after Post-Launch 04 Note 10 lands.
+ </p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ {/* Mentor — Live View. §3.1: the mentor's own stream, so they
+ remain aware of their presence to the participant. It is a
+ live-presence surface only and never evidence content, so
+ nothing is captured from it and nothing is read out of it. */}
+ <section className="border-2 border-foreground">
+ <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
+ <div className="mono-label">Mentor — Live View</div>
+ <div className="mono-label text-background/70">{mentorView.state}</div>
+ </div>
+ <div className="p-4">
+ <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 grid place-items-center text-foreground/60">
+ <div className="text-center">
+ <div className="mono-label mb-2">§ Live presence only</div>
+ <p className="text-sm max-w-sm">
+ Your own stream, so you can see what the participant sees of
+ you. Nothing here is recorded and nothing here is evidence.
+ </p>
+ </div>
+ </div>
+ {mentorView.state !== "AVAILABLE" && (
+ <p className="mono-label ink-vermilion mt-3">{mentorView.reason}</p>
+ )}
+ </div>
+ </section>
+
+ </div>
+ <div className="space-y-4">
  {/* Pane 1 — Source and Script */}
- <section className="col-span-12 lg:col-span-6 border-2 border-foreground">
+ <section className="border-2 border-foreground">
  <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
  <div className="mono-label">Pane 1 — Source and Script</div>
  <button
@@ -370,39 +574,55 @@ export default function Cockpit() {
  <p className="mt-3 text-xs text-foreground/60">
  Do not add, reword, or deviate from the approved script.
  </p>
- </div>
- </div>
- </section>
 
- {/* Participant Live View placeholder */}
- <section className="col-span-12 lg:col-span-6 border-2 border-foreground">
- <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
- <div className="mono-label flex items-center gap-3">
- Participant — Live View
- <span
- title="Sessions are recorded under the retention schedule per acknowledgement clause 5."
- className="flex items-center gap-1 mono-label text-vermilion"
+ {/* Build 060 — a variance is recorded AT THE BEAT, without
+ leaving the cockpit. "An inconvenient self-report will not
+ be made", so it sits next to the beat it concerns rather
+ than behind a session-end step. */}
+ <div className="mt-6 border-t-2 border-foreground pt-4">
+ <div className="mono-label text-foreground/60 mb-2">
+ Record an administration variance at this beat
+ </div>
+ <div className="flex flex-wrap gap-3 items-start">
+ <select
+ value={varianceBeat}
+ onChange={(e) => setVarianceBeat(e.target.value)}
+ className="border border-foreground/30 bg-transparent px-2 py-1 text-sm text-foreground"
  >
- <Circle className="w-2 h-2 fill-vermilion text-vermilion animate-pulse" />
- REC
- </span>
+ <option value="">Beat —</option>
+ {(sourceBody?.mentor_action_sequence ?? []).map((step) => (
+ <option key={step.code} value={step.code}>
+ {step.code}
+ </option>
+ ))}
+ </select>
+ <input
+ value={varianceNarrative}
+ onChange={(e) => setVarianceNarrative(e.target.value)}
+ placeholder="What departed from the script"
+ className="flex-1 min-w-[14rem] border border-foreground/30 bg-transparent px-2 py-1 text-sm text-foreground"
+ />
+ <Button
+ variant="outline"
+ className="rounded-none border-2 border-foreground"
+ disabled={
+ varianceBeat === "" || varianceNarrative.trim().length === 0
+ }
+ onClick={() => void onRecordVariance()}
+ >
+ Record
+ </Button>
  </div>
- <div className="mono-label text-background/70">Connection ●</div>
- </div>
- <div className="p-4">
- <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 grid place-items-center text-foreground/60">
- <div className="text-center">
- <div className="mono-label mb-2">§ Placeholder</div>
- <p className="text-sm">
- Live video pane. Wired to the T3A meeting workspace after Post-Launch 04 Note 10 lands.
- </p>
+ {varianceNote && (
+ <p className="mono-label text-foreground/55 mt-2">{varianceNote}</p>
+ )}
  </div>
  </div>
  </div>
  </section>
 
  {/* Pane 2 — Determination Capture */}
- <section className="col-span-12 border-2 border-foreground">
+ <section className="border-2 border-foreground">
  <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
  <div className="mono-label">Pane 2 — Determination Capture</div>
  <button
@@ -429,6 +649,8 @@ export default function Cockpit() {
  )}
  </div>
  </section>
+
+ </div>
  </div>
 
  {/* After-commit follow-through — Determinations and Confirmations
