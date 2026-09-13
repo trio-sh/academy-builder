@@ -1,8 +1,8 @@
-# T3A-D1-EXEC-001 — Section 5 content load: build report
+# T3A-D1-EXEC-001 — Sections 5 and 6: build report
 
-**Reference** T3A-D1-EXEC-001 v1.0, Section 5
+**Reference** T3A-D1-EXEC-001 v1.0, Sections 5 and 6
 **Produced** 13 September 2026
-**Status** §5.7, §5.17 and §5.18 loaded and proved. Conflict register below.
+**Status** Section 5 complete. Section 6 built and proved. Conflict register below.
 
 ---
 
@@ -243,6 +243,63 @@ clause.
 `state_code` equals the approved statement identifier exactly, per §5.12.
 No separate state code is invented, derived or abbreviated.
 
+## 6c. Section 6 — the report contract
+
+| § | Built |
+|---|---|
+| 6.1 | The 21-item evidence review checklist, and the gate that runs it |
+| 6.2 | The 11-block face, 8 controlled texts, the one-page contract |
+| 6.3 | The 15-field traceability sheet and its completeness test |
+
+**There is no override, and there is nowhere to put one.** §6.1 says a
+checklist with an override is a checklist that will be overridden, so
+`t3a_d1_review_result` has no override column, no waiver table and no
+force flag — asserted in the proof as zero columns matching *override,
+waiver, force, bypass* or *exempt*. The gate returns
+`override_available: false` in its own payload so no caller can believe
+one exists. Review results are append-only: a failed item cannot be
+edited to a pass or deleted.
+
+```
+checklist_items      = 21        face_blocks         = 11
+controlled_texts     = 8         traceability_fields = 15
+override_columns     = 0
+
+no review recorded        -> blocked, 21 items not recorded
+twenty pass, item 19 fails-> blocked, rule reference FD-D1-07
+edit the failed item      -> REVIEW_RESULT_APPEND_ONLY
+delete the failed item    -> REVIEW_RESULT_APPEND_ONLY
+not_established           -> blocks exactly as a failure does
+```
+
+§6.3's test is *pick any sentence and walk back to the source
+observation; if any link is missing the sentence is not defensible and
+should not have issued.* Implemented literally:
+
+```
+no trace at all   -> NO_TRACE_FOR_RENDERED_SENTENCE
+partial trace     -> TRACE_LINK_MISSING, 14 of 15 fields absent
+complete trace    -> defensible
+```
+
+§6.2's one-page contract fails rather than compressing:
+
+```
+340mm render -> LAYOUT_OVERFLOW, logged
+260mm render -> rendered
+```
+
+**One schema change.** §6.2 names `layout_overflow` as the reason the
+render must log, and `t3a_d1_report_refusal_reason` did not carry it.
+The value was added. That is an addition to a controlled vocabulary,
+never a rename of one, so Standing Rule 4 is untouched.
+
+**One correction during the build.** The layout function first wrote its
+refusal with a null participant, which the refusal log's NOT NULL
+constraint rejected. The constraint was right and the signature was
+incomplete — a render belongs to a participant's report — so the
+parameter was added rather than the column relaxed.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -278,7 +335,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 5.3 | The mentor reference card that renders the capture sets at the beat |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
-| 6 | Report contract — block schedule and traceability |
+| 6 | The report face renderer that assembles the eleven blocks on screen |
 | 7 | Consent architecture and the named-recipient model |
 | 8 | Stage operating contracts for S1, S3 and S4 |
 | 11 | The acceptance-test suite |
