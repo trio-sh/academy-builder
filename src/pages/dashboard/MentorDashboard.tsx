@@ -12,6 +12,7 @@ import Cockpit from "@/pages/dashboard/mentor/Cockpit";
 import S1Workbench from "@/pages/dashboard/mentor/S1Workbench";
 import EvidenceReview from "@/pages/dashboard/mentor/EvidenceReview";
 import Reconsideration from "@/pages/dashboard/mentor/Reconsideration";
+import GroupSessionWorkspace from "@/pages/dashboard/mentor/GroupSession";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -797,6 +798,7 @@ const navItems = [
   { name: "Confirmations", href: "/dashboard/mentor/endorsements", icon: Award },
   { name: "Evidence Review", href: "/dashboard/mentor/evidence-review", icon: FileCheck },
   { name: "Reconsideration", href: "/dashboard/mentor/reconsideration", icon: Flag },
+  { name: "Shared Sessions", href: "/dashboard/mentor/group-session", icon: Users },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4497,6 +4499,11 @@ const MentorDashboardInner = () => {
           {/* §8.4 — correction and reconsideration. Eligibility is the
               server's answer; an involved actor never sees the control. */}
           <Route path="reconsideration" element={<Reconsideration />} />
+          {/* §8.3/§8.4 — the Stage 4 shared session. One interaction, one
+              observed participant, one capture lane. A co-participant has
+              no lane, no determination and no progression, and this
+              surface offers no control that would create one. */}
+          <Route path="group-session" element={<GroupSessionWorkspace />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />

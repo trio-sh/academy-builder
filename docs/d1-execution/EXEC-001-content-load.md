@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Six §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Seven §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -671,6 +671,56 @@ forbidden word appears in the sentence that denies the forbidden thing.
 The assertions now name fields and controls rather than vocabulary, which
 is what they should have done from the start: a word-match tests spelling,
 not structure.
+
+## 6m. Stage 4 — the shared session facilitator workspace
+
+`/dashboard/mentor/group-session`. Sessions you facilitate, the room and
+what each person's presence means, per-person pre-briefs, and the
+statement of what nobody in the room sees.
+
+**One shared interaction, one observed participant, one capture lane.**
+The co-participants generate the pressure the observed participant meets,
+and they generate no observation record, no determination and no
+statement. The rule is already structural — a partial unique index makes
+a second observed participant in a session unrepresentable — so the
+surface has a real refusal behind it rather than a hidden control.
+
+**Whether a lane exists is the server's answer, asked per member.** The
+workspace calls `t3a_d1_group_capture_permitted` for every member and
+renders a lane only where the verdict permits one. It never computes
+permission locally, and it never assigns `permitted`.
+
+**A co-participant is offered exactly one action: recording that they
+dropped out.** The test walks every `onClick` in the co-participant block
+and asserts each one is that single member event, then asserts the block
+contains no `rpc(`, `insert`, `update` or outcome setter at all. A
+determination or progression control cannot be added there without
+failing.
+
+**No media control of any kind.** RECORDING consent is not granted at any
+Stage in D1, so there is no capture device, no upload input and no media
+element. The assertion names `MediaRecorder`, `getUserMedia`,
+`getDisplayMedia`, `<video>`, `<audio>` and `type="file"` — deliberately
+not the word *record*, because *"Record a disconnection"* is a ledger
+entry, not a recording. That is the fourth time the affordance-not-
+vocabulary lesson has applied, and this time the test was written that way
+first.
+
+**Three things the screen says, because saying them is part of the
+contract:**
+
+- *"No participant sees any determination, record, capture lane or
+  progression, at any point, by any route — including the person being
+  observed."*
+- *"Nothing is recorded about this person from this session."*
+- A co-participant leaving is recorded *"as an administration variance on
+  the observed participant's record — never as a judgment about the person
+  who left"*.
+
+**Accommodation is settled before composition, never during the session.**
+Where a session records none as settled, the workspace says so before the
+facilitator can start, rather than offering a mid-session control that
+should not exist.
 
 ## 7. The one thing that needs the founder, not the developer
 

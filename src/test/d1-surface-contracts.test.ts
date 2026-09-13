@@ -33,6 +33,9 @@ const reconsideration = read(RECONSIDERATION);
 const WORKSAMPLE = "src/pages/dashboard/candidate/WorkSample.tsx";
 const workSample = read(WORKSAMPLE);
 
+const GROUPSESSION = "src/pages/dashboard/mentor/GroupSession.tsx";
+const groupSession = read(GROUPSESSION);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -46,6 +49,7 @@ const recipientCode = code(recipient);
 const disclosuresCode = code(disclosures);
 const reconsiderationCode = code(reconsideration);
 const workSampleCode = code(workSample);
+const groupSessionCode = code(groupSession);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -490,5 +494,104 @@ describe("§8.4 Stage 3 — no grade and no artifact on a report face", () => {
   it("reads only its own submissions table", () => {
     const reads = [...workSampleCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
     expect([...new Set(reads)]).toEqual(["t3a_d1_work_sample_submission"]);
+  });
+});
+
+describe("§8.3/§8.4 Stage 4 shared session — one lane, and it is the observed participant's", () => {
+  // The co-participant block, taken as a region of the file rather than
+  // searched for words: the page's own copy says a co-participant gets
+  // no determination and no progression, so word-matching would fail on
+  // the sentence that denies the thing. What must not exist is a
+  // control, so the assertions name controls.
+  const coParticipantBlock = groupSessionCode.slice(
+    groupSessionCode.indexOf("coParticipants.map"),
+    groupSessionCode.indexOf("§ III · Pre-briefs")
+  );
+
+  it("isolates a co-participant block to assert against", () => {
+    expect(coParticipantBlock.length).toBeGreaterThan(200);
+  });
+
+  it("renders a capture lane for the observed participant and for nobody else", () => {
+    // capture_lanes is the count the server returns. It is read once, in
+    // the observed participant's row.
+    // Once in the verdict type, and once in the render — the observed
+    // participant's row.
+    const lanes = [...groupSessionCode.matchAll(/capture_lanes/g)];
+    expect(lanes).toHaveLength(2);
+    expect(groupSessionCode).toMatch(/capture_lanes\?: number;/);
+    const rendered = [
+      ...groupSessionCode.matchAll(/verdicts\[([a-zA-Z.?_]+)\]\?\.capture_lanes/g),
+    ].map((m) => m[1]);
+    expect(rendered).toEqual(["observed.participant_id"]);
+    expect(coParticipantBlock).not.toMatch(/capture_lanes/);
+  });
+
+  it("offers a co-participant no action but recording that they dropped out", () => {
+    const handlers = [...coParticipantBlock.matchAll(/onClick=\{[^}]*\}/g)].map((m) => m[0]);
+    expect(handlers.length).toBeGreaterThan(0);
+    for (const h of handlers) {
+      expect(h).toMatch(/onMemberEvent\(m\.participant_id, "disconnect"\)/);
+    }
+    // No determination, progression or composition route of any kind.
+    expect(coParticipantBlock).not.toMatch(
+      /rpc\(|\.insert\(|\.update\(|\.upsert\(|setOutcome|setDetermination|progress/i
+    );
+  });
+
+  it("asks the server whether a lane exists rather than deciding locally", () => {
+    expect(groupSessionCode).toMatch(/rpc\("t3a_d1_group_capture_permitted"/);
+    // permitted is read from the server's verdict, never assigned here.
+    expect(groupSessionCode).not.toMatch(/permitted:\s*true/);
+  });
+
+  it("calls only the two governed session routines", () => {
+    const rpcs = [...groupSessionCode.matchAll(/rpc\("([a-z0-9_]+)"/g)].map((m) => m[1]);
+    expect([...new Set(rpcs)].sort()).toEqual([
+      "t3a_d1_group_capture_permitted",
+      "t3a_d1_group_member_event",
+    ]);
+  });
+
+  it("reads only the two shared-session tables", () => {
+    const reads = [...groupSessionCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)].sort()).toEqual([
+      "t3a_d1_group_session",
+      "t3a_d1_group_session_member",
+    ]);
+  });
+
+  it("has no recording or media control of any kind", () => {
+    // RECORDING consent is not granted at any Stage in D1, so there is
+    // no capture device, no upload and no media element here. "Record a
+    // disconnection" is a ledger entry, not a recording, so the check
+    // names devices and elements rather than the word.
+    expect(groupSession).not.toMatch(
+      /MediaRecorder|getUserMedia|getDisplayMedia|<video|<audio|startRecording|type="file"/i
+    );
+  });
+
+  it("states that no participant sees a lane, the observed one included", () => {
+    expect(groupSession.replace(/\s+/g, " ")).toMatch(
+      /No participant sees any determination, record, capture lane or progression, at any point, by any route — including the person being observed/
+    );
+  });
+
+  it("states that nothing is recorded about a co-participant", () => {
+    expect(groupSession.replace(/\s+/g, " ")).toMatch(
+      /Nothing is recorded about this person from this session/
+    );
+  });
+
+  it("treats a co-participant leaving as an administration variance, not a judgment", () => {
+    expect(groupSession.replace(/\s+/g, " ")).toMatch(
+      /administration variance on the observed participant's record — never as a judgment about the person who left/
+    );
+  });
+
+  it("settles accommodation before composition rather than during the session", () => {
+    expect(groupSession.replace(/\s+/g, " ")).toMatch(
+      /Accommodation needs are settled before a session is composed, never during it/
+    );
   });
 });
