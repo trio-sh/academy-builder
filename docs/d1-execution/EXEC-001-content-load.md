@@ -140,7 +140,7 @@ because choosing changes the source."*
 
 | # | Conflict | Disposition |
 |---|---|---|
-| 1 | Five occurrences of the British spelling `behavioural` sit inside verbatim issued source content. The platform's vocabulary lock (T3A-DEV-SPEC-002 §1.4, AC-61) fails the build on it | **Not resolved by the developer.** See §7 |
+| 1 | Five occurrences of the British spelling `behavioural` sit inside verbatim issued source content. The platform's vocabulary lock (T3A-DEV-SPEC-002 §1.4, AC-61) fails the build on it | **Raised by the developer, settled by the founder: correct the five.** Applied and verified. See §7 |
 | 2 | `t3a_source_version` requires fields three of which the document never states | Sources loaded as content only; not registered for serving. §4 |
 | 3 | No source sheet carries an entity-role table, so the §5.18 naming algorithm cannot be applied | Names left unchanged, all forty at PENDING. §5 |
 | 4 | §5.6 binds only five templates to an evidence state | The other nine load with no binding. None invented |
