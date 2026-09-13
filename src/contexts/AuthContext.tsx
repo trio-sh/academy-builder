@@ -97,12 +97,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Profile doesn't exist — bootstrap from user metadata.
         if (userObj) {
           const metadata = userObj.user_metadata || {};
+          // PLC-005 Note 1 (e) — role is never taken from client-held
+          // metadata. user_metadata.role originates in the sign-up request
+          // and is therefore attacker-controlled; trusting it here was the
+          // client half of the self-assertion defect closed in migration
+          // 20260918000000_t3a_close_role_self_assertion.sql.
+          //
+          // Individual (candidate) is the only role a person may take for
+          // themselves. Mentor is granted by invitation and employer by
+          // approved application, both derived server-side. The database
+          // refuses anything else from a client session regardless; this
+          // keeps the client from sending a request that can only fail.
           const { error: createErr } = await createProfile(
             userId,
             userObj.email || '',
             metadata.first_name || '',
             metadata.last_name || '',
-            metadata.role || 'candidate'
+            'candidate'
           );
           if (createErr) {
             surfaceAuthError('Could not create your profile', createErr);
