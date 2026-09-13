@@ -17,6 +17,7 @@ import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import ReportReview from "@/pages/dashboard/candidate/ReportReview";
+import Disclosures from "@/pages/dashboard/candidate/Disclosures";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
 import {
   BridgeFastLanding,
@@ -166,6 +167,7 @@ const navItems = [
  { name: "Observation Pathway", href: "/dashboard/candidate/observations", icon: ClipboardCheck, section: "observation" },
  { name: "Behavioral Evidence Report", href: "/dashboard/candidate/passport", icon: Award, section: "observation" },
  { name: "Report Review", href: "/dashboard/candidate/report-review", icon: Flag, section: "observation" },
+ { name: "Your Disclosures", href: "/dashboard/candidate/disclosures", icon: Send, section: "observation" },
  { name: "Growth Log", href: "/dashboard/candidate/growth", icon: TrendingUp, section: "observation" },
  { name: "Praxis", href: "/dashboard/candidate/agent", icon: Bot, section: "observation" },
  { name: "BridgeFast", href: "/dashboard/candidate/training", icon: BookOpen, section: "preparation" },
@@ -6417,6 +6419,8 @@ const CandidateDashboard = () => {
  <Route path="training/module/:moduleId" element={<TrainingModuleViewer />} />
  <Route path="projects" element={<Projects />} />
  <Route path="mentors" element={<FindMentor />} />
+ {/* §8.4 participant pathway — disclosures you have released, with release and revoke. */}
+ <Route path="disclosures" element={<Disclosures />} />
  <Route path="connections" element={<Connections />} />
  <Route path="messages" element={<MessagesPage />} />
  <Route path="notifications" element={<NotificationsPage />} />

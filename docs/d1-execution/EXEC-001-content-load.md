@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Three §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Four §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -522,6 +522,39 @@ controlled text is not loaded renders a refusal rather than being
 quietly omitted — the face says it is not a valid rendering. And block
 11 renders nothing at all when there is no job-family evidence: no empty
 label, no placeholder, no heading.
+
+## 6i. The participant pathway — disclosures, and the mentor-pool rule
+
+`/dashboard/candidate/disclosures`. §7.5's release model had no
+participant surface: the data layer could issue, revoke, expire and
+supersede a release, and nobody could see or revoke one. This is that
+screen — releases made, their state, and revoke.
+
+It reads exactly two tables, the participant's own issued reports and
+their own release tokens, and the test asserts that set is closed. No
+score, rank, readiness indicator or progress percentage appears, and no
+mentor is read at all.
+
+**The mentor-pool prohibition turned out to need a better test than I
+first wrote.** §8.4 forbids *"any mentor pool, list, name, count or
+availability before assignment"*. My first assertion found the first of
+three `mentor_profiles` reads in the participant dashboard and checked it
+sat inside one particular guard. It does not — there are three reads and
+three different guard shapes:
+
+| Line | Guard |
+|---|---|
+| 1537 | `if (assignments && assignments.length > 0)` |
+| 4796 | `if (activeAssignment?.mentor_id)` |
+| 5170 | `if (mentorIds.length)`, from active or pending assignments |
+
+All three are constrained, and none lists a pool — the surface was
+already correct. But a test that checks the first occurrence against one
+guard shape would pass a codebase where the second and third were
+unguarded. It now walks every read and asserts the invariant that
+actually rules out a pool: each is filtered on an identifier the
+participant's own assignment supplied, and no unbounded select over
+`mentor_profiles` exists anywhere on the surface.
 
 ## 7. The one thing that needs the founder, not the developer
 

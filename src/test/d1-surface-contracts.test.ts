@@ -24,6 +24,9 @@ const review = read(REVIEW);
 const RECIPIENT = "src/pages/RecipientReportAccess.tsx";
 const recipient = read(RECIPIENT);
 
+const DISCLOSURES = "src/pages/dashboard/candidate/Disclosures.tsx";
+const disclosures = read(DISCLOSURES);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -34,6 +37,7 @@ const code = (src: string) =>
 const workbenchCode = code(workbench);
 const reviewCode = code(review);
 const recipientCode = code(recipient);
+const disclosuresCode = code(disclosures);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -275,5 +279,80 @@ describe("§8.4 Named recipient — the longest must-not-appear list", () => {
   it("renders no placeholder for an empty job-family block", () => {
     // Block 11 remains EMPTY and NO EMPTY LABEL OR PLACEHOLDER RENDERS.
     expect(recipientCode).toMatch(/if \(!b\.renders_always && !body\) return null;/);
+  });
+});
+
+
+describe("§8.4 Participant pathway — the two standing prohibitions", () => {
+  it("shows no score, rank, readiness indicator or progress percentage", () => {
+    expect(disclosuresCode).not.toMatch(
+      /score|rank|readiness|percentComplete|progressPercent|current_tier|readiness_tier/i
+    );
+  });
+
+  it("shows no mentor pool, list, name, count or availability", () => {
+    // "Any mentor pool, list, name, count or availability before
+    // assignment" is prohibited, and this surface has no business
+    // reading a mentor at all.
+    expect(disclosuresCode).not.toMatch(/mentor_profiles|mentor_assignments|availability/i);
+  });
+
+  it("reads only the participant's own reports and releases", () => {
+    const reads = [...disclosuresCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)].sort()).toEqual(
+      ["t3a_d1_ber_report", "t3a_d1_release_token"].sort()
+    );
+  });
+
+  it("offers revoke on a live release and nothing on a dead one", () => {
+    expect(disclosuresCode).toMatch(/state\.live \?/);
+    expect(disclosuresCode).toMatch(/onRevoke/);
+  });
+
+  it("states that a release covers one version only", () => {
+    expect(disclosures.replace(/\s+/g, " ")).toMatch(
+      /A release covers one report at one version/i
+    );
+  });
+
+  it("states that the recipient needs no account", () => {
+    expect(disclosures.replace(/\s+/g, " ")).toMatch(
+      /do not need an account, and having one gives them nothing extra/i
+    );
+  });
+});
+
+describe("§8.4 Request a mentor — no pool before assignment", () => {
+  const dashboard = read("src/pages/dashboard/CandidateDashboard.tsx");
+
+  it("constrains every mentor read to identifiers drawn from an assignment", () => {
+    // The prohibition is a *pool*: a list, a count, an availability view.
+    // The invariant that rules it out is that no read of mentor_profiles
+    // is unbounded — each one filters on an id the participant's own
+    // assignment supplied. There are three such reads; all three must
+    // hold, so the assertion walks them rather than checking the first.
+    const reads = [...dashboard.matchAll(/\.from\("mentor_profiles"\)/g)].map((m) => m.index ?? 0);
+    expect(reads.length).toBeGreaterThan(0);
+
+    reads.forEach((idx) => {
+      // The id constraint follows the .from() within the same call chain.
+      const after = dashboard.slice(idx, idx + 260);
+      expect(after).toMatch(/\.(eq|in)\("id",/);
+    });
+  });
+
+  it("derives those identifiers from the participant's own assignment", () => {
+    const reads = [...dashboard.matchAll(/\.from\("mentor_profiles"\)/g)].map((m) => m.index ?? 0);
+    reads.forEach((idx) => {
+      const before = dashboard.slice(Math.max(0, idx - 1400), idx);
+      expect(before).toMatch(/mentor_assignments|activeAssignment/);
+    });
+  });
+
+  it("never selects mentors without an identifier filter", () => {
+    // An unbounded select over mentor_profiles would be a pool.
+    expect(dashboard).not.toMatch(
+      /from\("mentor_profiles"\)\s*\.select\([^)]*\)\s*(;|\.order|\.limit)/
+    );
   });
 });
