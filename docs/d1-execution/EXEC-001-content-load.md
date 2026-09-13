@@ -19,9 +19,15 @@ The content was not missing. It was **unloaded**. It is loaded now.
 
 | Section | Content | Loaded |
 |---|---|---|
+| 5.2 | Question object register | **15 question objects** |
+| 5.3 | Response capture catalogue | **13 sets, 44 capture lines** |
+| 5.4 | Branch rules | **10 rules**, and the serving logic that applies them |
 | 5.7 | Layer 1 statement library | **44 statements** |
 | 5.17 | Controlled language template register | **14 templates** |
 | 5.18 | The D1 source library | **40 sources**, with source sheets parsed |
+
+The 44 capture lines and the 44 statements match one for one, which is
+the check that the two registers describe the same thirteen sets.
 
 Loaded by `scripts/extract-d1-content.mjs`, which parses the issued
 document and emits the migration. **Nothing is authored, inferred or
@@ -137,6 +143,52 @@ because choosing changes the source."*
 | 3 | No source sheet carries an entity-role table, so the §5.18 naming algorithm cannot be applied | Names left unchanged, all forty at PENDING. §5 |
 | 4 | §5.6 binds only five templates to an evidence state | The other nine load with no binding. None invented |
 
+## 6a. Serving — the branch rules applied to the source sheet
+
+`t3a_d1_served_questions(source_sheet, answers)` returns one row per
+question object with its serving decision and the rule that produced it.
+**It takes the source sheet and never the Stage**, which is what BR-08
+says in bold: source applicability governs, and service is never inferred
+from the Stage.
+
+Proved against the real loaded sheet for SRC-D1-S1-001:
+
+```
+BR-01   03a corresponded        -> 03b1, 03b2 not served
+BR-02a  03a both                -> 03b1 SERVED
+BR-02b  03a both                -> 03b2 SERVED
+BR-04   no time reference       -> 05c not served
+BR-05   no corrective action    -> 05b1, 05b2, 05c not served
+BR-09   not within the period   -> 08b not served
+parent missing state            -> children PARENT_MISSING_STATE
+```
+
+Missing-state applicability, per §5.5:
+
+```
+not applicable    / served      = refused at commit
+not yet observed  / served      = refused at commit
+declined          / not served  = refused, a missing state may not sit on an unserved question
+declined          / served      = permitted
+an invented code  / served      = refused, the eight codes are the complete vocabulary
+```
+
+**A bug worth recording.** The first run of this proof reported BR-02a and
+BR-02b as *not served* when the parent answered *both* — the reason code
+was right and the serving flag was wrong. The cause: with no `missing`
+object in the answers, `(answers -> 'missing') ? 'Q-D1-03a'` evaluates to
+NULL rather than false in PostgreSQL, and the NULL propagated through the
+conjunction so every conditional child read as unserved. Under the branch
+rules that is a silent wrong behaviour of exactly the kind §1 warns about:
+the mentor would simply never be asked which items were omitted, and
+nothing would report an error. Fixed with `coalesce`, and the reason it is
+load-bearing is written at the declaration.
+
+**The capture register carries no preference signal.** Verified
+structurally: zero columns on `t3a_d1_capture_line` match
+*expected, preferred, strong, flag, weight, correct, score* or *rank*.
+There is nowhere to put an indication of which line is the better one.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -170,8 +222,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 
 | § | Outstanding |
 |---|---|
-| 5.3 | The thirteen capture sets as served interface objects |
-| 5.4 | Branch rules BR-01 to BR-09 as serving logic |
+| 5.3 | The mentor reference card that renders the capture sets at the beat |
 | 5.13, 5.14 | Resolution rule table and condition precedence |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
 | 6 | Report contract — block schedule and traceability |

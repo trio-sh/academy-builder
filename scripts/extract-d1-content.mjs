@@ -128,6 +128,99 @@ const tplValues = tplRows.map((r, i) => {
 });
 out.push(tplValues.join(",\n") + "\nON CONFLICT (language_template_id) DO NOTHING;\n");
 
+// ── 5.2 Question object register ────────────────────────────────────
+const qBlock = sectionRange(/^### 5\.2 Question object register/, /^### 5\.3 /);
+const qRows = parseTable(qBlock).filter((r) => /^Q-D1-/.test(r[0]));
+out.push(`-- ── 5.2 Question object register — ${qRows.length} question objects ──`);
+out.push(`INSERT INTO public.t3a_d1_question_object
+  (question_code, conduct_element, answer_type, applicability, missing_state_eligible, display_order)
+VALUES`);
+out.push(
+  qRows
+    .map((r, i) => {
+      const [code, element, answerType, applicability, missingRaw] = r;
+      const missing = /^Yes/i.test(missingRaw);
+      return `  (${sql(code)}, ${sql(element)}, ${sql(answerType)}, ${sql(applicability)}, ${missing}, ${i + 1})`;
+    })
+    .join(",\n") + "\nON CONFLICT (question_code) DO NOTHING;\n"
+);
+
+// ── 5.3 Response capture catalogue — the thirteen sets ──────────────
+const cBlock = sectionRange(/^### 5\.3 Response capture catalogue/, /^### 5\.4 /);
+const sets = [];
+let current = null;
+for (const raw of cBlock) {
+  const head = raw.match(/^\*\*(C[0-9a-z]+)\s+—\s+(.+?)\*\*(.*)$/);
+  if (head) {
+    current = {
+      code: head[1],
+      title: head[2].trim(),
+      note: head[3].replace(/\*/g, "").replace(/^\s*\(?/, "").replace(/\)?\s*$/, "").trim(),
+      lines: [],
+    };
+    sets.push(current);
+    continue;
+  }
+  if (!current) continue;
+  if (/^### /.test(raw)) { current = null; continue; }
+  const item = raw.match(/^- (.+)$/);
+  if (item) {
+    current.lines.push(item[1].trim());
+    continue;
+  }
+  // A wrapped continuation: of the heading's applicability note while no
+  // line has been read yet, otherwise of the previous capture line.
+  if (/^\s{2,}\S/.test(raw) || (raw.trim() !== "" && !/^\*\*/.test(raw) && current.lines.length === 0 && current.note)) {
+    if (current.lines.length) {
+      current.lines[current.lines.length - 1] += " " + raw.trim();
+    } else {
+      current.note = (current.note + " " + raw.trim()).trim();
+    }
+  }
+}
+const cleanLine = (t) =>
+  t.replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+const cleanNote = (t) =>
+  cleanLine(t).replace(/\*/g, "").replace(/^\(+/, "").replace(/[)\s]+$/, "").trim();
+
+out.push(`-- ── 5.3 Response capture catalogue — ${sets.length} sets ──`);
+out.push(`-- Each line states exactly which combination it covers. No line is a
+-- superset of another and no two can be true at once. The set carries no
+-- expected response, no strong answer and nothing indicating which line
+-- is the better one.
+INSERT INTO public.t3a_d1_capture_set (capture_set_code, title, applicability_note, display_order)
+VALUES`);
+out.push(
+  sets
+    .map((st, i) => `  (${sql(st.code)}, ${sql(cleanLine(st.title))}, ${sql(st.note ? cleanNote(st.note) : null)}, ${i + 1})`)
+    .join(",\n") + "\nON CONFLICT (capture_set_code) DO NOTHING;\n"
+);
+
+const captureLines = [];
+sets.forEach((st) => {
+  st.lines.forEach((ln, j) => {
+    captureLines.push(`  (${sql(st.code)}, ${sql(cleanLine(ln))}, ${j + 1})`);
+  });
+});
+out.push(`INSERT INTO public.t3a_d1_capture_line (capture_set_code, line_text, line_order)
+VALUES`);
+out.push(captureLines.join(",\n") + "\nON CONFLICT (capture_set_code, line_order) DO NOTHING;\n");
+
+// ── 5.4 Branch rules ────────────────────────────────────────────────
+const bBlock = sectionRange(/^### 5\.4 Branch rules/, /^### 5\.5 /);
+const bRows = parseTable(bBlock).filter((r) => /^BR-\d/.test(r[0]));
+out.push(`-- ── 5.4 Branch rules — ${bRows.length} rules ──`);
+out.push(`-- A question not served under any of these rules produces no answer and
+-- no missing state. It is absent because it never applied, and the
+-- composed statement must not reference it.
+INSERT INTO public.t3a_d1_branch_rule (rule_code, rule_condition, rule_effect, rule_order)
+VALUES`);
+out.push(
+  bRows
+    .map((r, i) => `  (${sql(r[0])}, ${sql(cleanLine(r[1]))}, ${sql(cleanLine(r[2]))}, ${i + 1})`)
+    .join(",\n") + "\nON CONFLICT (rule_code) DO NOTHING;\n"
+);
+
 // ── 5.18 The forty production sources ───────────────────────────────
 const libStart = lines.findIndex((l) => /^### 5\.18 The D1 source library/.test(l));
 const libEnd = lines.findIndex((l, i) => i > libStart && /^## 6\. REPORT CONTRACT/.test(l));
