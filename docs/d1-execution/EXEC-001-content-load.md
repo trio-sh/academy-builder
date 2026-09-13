@@ -22,6 +22,8 @@ The content was not missing. It was **unloaded**. It is loaded now.
 | 5.2 | Question object register | **15 question objects** |
 | 5.3 | Response capture catalogue | **13 sets, 44 capture lines** |
 | 5.4 | Branch rules | **10 rules**, and the serving logic that applies them |
+| 5.12–5.14 | Clause instance, resolution rule table, condition precedence | **44 resolutions, 6 conditions** |
+| 5.15 | Coverage matrix | **generated**, 7 properties, all passing |
 | 5.7 | Layer 1 statement library | **44 statements** |
 | 5.17 | Controlled language template register | **14 templates** |
 | 5.18 | The D1 source library | **40 sources**, with source sheets parsed |
@@ -189,6 +191,58 @@ structurally: zero columns on `t3a_d1_capture_line` match
 *expected, preferred, strong, flag, weight, correct, score* or *rank*.
 There is nowhere to put an indication of which line is the better one.
 
+## 6b. Composition — §5.12, §5.13, §5.14 and §5.15
+
+**The capture-to-statement map is not positional, and assuming it was
+would have been a quiet defect.** Within C4b the statement register runs
+044, 045, **047, 046** while the capture lines run no-attribution,
+all-aligned, none-aligned, both. Aligning by position would compose
+*"both aligned and non-aligned attributions"* for a mentor who selected
+*"none were aligned"* — a different sentence about a person, produced
+silently. The map is therefore explicit, carries both sides, and is
+verified rather than assumed.
+
+`t3a_d1_coverage_matrix()` is generated from the registers and re-runs
+whenever either changes. All seven properties pass:
+
+```
+Completeness              every capture line resolves
+Uniqueness                one capture line, exactly one statement
+No shared output          one statement, exactly one capture line
+No impossible paths       every mapped statement exists in the library
+No unreachable statement  every library statement is reachable
+No limitation leakage     every condition renders through a template, in a fixed order
+No absence language       L-D1-NO-001 is withdrawn and absent
+```
+
+Composition proved against the real SRC-D1-S1-001 sheet:
+
+```
+CE-01 ST-D1-011 · CE-02 ST-D1-022 · CE-03 ST-D1-032 · CE-04 ST-D1-041
+CE-04 ST-D1-044 · CE-05 ST-D1-053 · CE-06 ST-D1-063 · CE-07 ST-D1-071
+CE-08 ST-D1-084
+```
+
+Fixed order holds inside an element as well as across them:
+`Q-D1-05a > 05b1 > 05b2 > 05c` and `Q-D1-08a > 08b`, never the order the
+mentor happened to capture them.
+
+§5.13 refusals, each proved:
+
+```
+omission asserted, child identifies none  = OMISSION_ASSERTED_WITH_NO_ITEM_IDENTIFIED
+served question, no answer, no missing    = SERVED_QUESTION_UNANSWERED_AND_NO_MISSING_STATE
+declined on a served question             = composes, and no clause references it
+```
+
+Bound variables fill from the record and no brace survives rendering.
+Support-set items are **retained and not rendered** — naming the item
+would name the person — and the proof asserts the item text appears in no
+clause.
+
+`state_code` equals the approved statement identifier exactly, per §5.12.
+No separate state code is invented, derived or abbreviated.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -223,7 +277,6 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 | § | Outstanding |
 |---|---|
 | 5.3 | The mentor reference card that renders the capture sets at the beat |
-| 5.13, 5.14 | Resolution rule table and condition precedence |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
 | 6 | Report contract — block schedule and traceability |
 | 7 | Consent architecture and the named-recipient model |
