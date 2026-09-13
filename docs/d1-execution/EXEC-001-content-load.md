@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card served. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card and §6 report face served. Conflict register below.
 
 ---
 
@@ -775,6 +775,52 @@ of the forty holds a source approval or a source-version hash (§5.18), so
 a card that looked production-ready would misrepresent the state. It is
 named on the card instead.
 
+## 6o. §6 — assembling the report face
+
+`/dashboard/mentor/report-face`, assembled server-side by
+`t3a_d1_report_face(ber_report_id)`. The eleven blocks were loaded and
+proved in §6h; what did not exist was the assembly that puts them on a
+page.
+
+**Three rules, each enforced by what the function cannot do:**
+
+- §6.3 — the traceability sheet is never part of the face. The function
+  does not read `t3a_d1_traceability_field` or `t3a_d1_statement_trace`
+  at all, so no path through it can emit one. It names the sheet as
+  `NEVER_PART_OF_THE_REPORT_FACE` so a caller does not read the absence
+  as an oversight.
+- Block 5 — mentor names never render. `observer_id`, `confirmer_id` and
+  `composed_by` are never selected into the payload. A column that is
+  never read cannot leak, which is a different guarantee from stripping
+  one afterwards.
+- §6.2 — the controlled texts render verbatim. They are returned from the
+  register as stored; there is no substitution, interpolation or template
+  step for them anywhere in the function or the screen.
+
+**A conditional block that did not fire renders as a named block with its
+reason**, not as an absence. A block missing from a page and a block that
+had nothing to say are different facts.
+
+**Proved against the live database in an aborting block:**
+
+| Attempt | Result |
+|---|---|
+| Unknown report | `BER_REPORT_NOT_FOUND` |
+| No review recorded | `REVIEW_BLOCKS_ISSUANCE`, 21 unrecorded, `override_available: false` |
+| One item failing, twenty passing | `REVIEW_BLOCKS_ISSUANCE`, one blocking item |
+| All twenty-one passing | renders, 11 blocks, 9 always-render, 2 conditional off with named reasons |
+| Controlled texts | 6 verbatim; block 2's text byte-identical to the register |
+| Mentor-identifying keys on the face | 0 |
+
+Post-test counts are zero: no report and no review result survived.
+
+**Two existing controls fired during the proof and were worked with
+rather than around.** A report against an account whose email is
+unconfirmed is refused outright, so the proof uses confirmed accounts;
+and a review result cannot be flipped from fail to pass in place, because
+the table is append-only, so the passing case uses a second report rather
+than an update.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -809,7 +855,6 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 | § | Outstanding |
 |---|---|
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
-| 6 | The report face renderer that assembles the eleven blocks on screen |
 | 11 | The acceptance-test suite |
 | 5.18 | Re-extract `material_items` and `assertion_reference_set` for SRC-D1-S1-001 and SRC-D1-S3-010 |
 

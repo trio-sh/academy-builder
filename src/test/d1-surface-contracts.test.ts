@@ -39,6 +39,9 @@ const groupSession = read(GROUPSESSION);
 const REFCARD = "src/pages/dashboard/mentor/ReferenceCard.tsx";
 const refCard = read(REFCARD);
 
+const REPORTFACE = "src/pages/dashboard/mentor/ReportFace.tsx";
+const reportFace = read(REPORTFACE);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -54,6 +57,7 @@ const reconsiderationCode = code(reconsideration);
 const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
+const reportFaceCode = code(reportFace);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -662,5 +666,62 @@ describe("§5.3/§1.5 The mentor reference card — it holds no better line", ()
     expect(flat).toMatch(/agreeing with each other about the participant rather than about what happened/);
     expect(flat).toMatch(/a defensible choice, not a right one/);
     expect(flat).toMatch(/the record stops describing conduct and starts scoring judgment/);
+  });
+});
+
+describe("§6 The report face — eleven blocks, and nothing behind them", () => {
+  it("never reads or renders the traceability sheet", () => {
+    // §6.3. The face carries the string NEVER_PART_OF_THE_REPORT_FACE, so
+    // the assertion names the registers rather than the word.
+    expect(reportFaceCode).not.toMatch(
+      /t3a_d1_traceability_field|t3a_d1_statement_trace|trace_body|sentence_ref|field_no/
+    );
+  });
+
+  it("carries no mentor, observer, confirmer or composer identity", () => {
+    // Block 5: mentor names never render. The assembly never selects one,
+    // so there is nothing here to strip.
+    expect(reportFaceCode).not.toMatch(
+      /observer_id|confirmer_id|composed_by|reviewed_by|mentor_name|mentorName/
+    );
+  });
+
+  it("renders a controlled text with no substitution step", () => {
+    // §6.2 — verbatim. Printed as it arrives.
+    expect(reportFaceCode).toMatch(/\{b\.controlled_text\}/);
+    expect(reportFaceCode).not.toMatch(
+      /controlled_text\.replace|controlled_text\s*\+|interpolat|template\(/i
+    );
+  });
+
+  it("shows a conditional block that did not fire, with its reason", () => {
+    expect(reportFaceCode).toMatch(/not_rendering_reason/);
+    // The block is rendered, not filtered out of the list.
+    expect(reportFaceCode).not.toMatch(/blocks\s*\?\?\s*\[\]\)\.filter\(/);
+  });
+
+  it("offers no override on a blocked report", () => {
+    expect(reportFaceCode).not.toMatch(
+      /setOverride|onOverride|applyOverride|forceIssue|issueAnyway|bypass|waive/i
+    );
+  });
+
+  it("holds no score, rank or readiness indicator", () => {
+    expect(reportFaceCode).not.toMatch(
+      /score|rank|readiness|percentile|rating|grade|band/i
+    );
+  });
+
+  it("assembles nothing locally — one routine, and the report index", () => {
+    const rpcs = [...reportFaceCode.matchAll(/rpc\("([a-z0-9_]+)"/g)].map((m) => m[1]);
+    expect([...new Set(rpcs)]).toEqual(["t3a_d1_report_face"]);
+    const reads = [...reportFaceCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)]).toEqual(["t3a_d1_ber_report"]);
+  });
+
+  it("states that an unreached review item is not a pass", () => {
+    expect(reportFace.replace(/\s+/g, " ")).toMatch(
+      /An item that has not been reached is not a pass/
+    );
   });
 });

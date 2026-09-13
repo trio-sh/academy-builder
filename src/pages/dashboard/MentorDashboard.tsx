@@ -14,6 +14,7 @@ import EvidenceReview from "@/pages/dashboard/mentor/EvidenceReview";
 import Reconsideration from "@/pages/dashboard/mentor/Reconsideration";
 import GroupSessionWorkspace from "@/pages/dashboard/mentor/GroupSession";
 import ReferenceCard from "@/pages/dashboard/mentor/ReferenceCard";
+import ReportFace from "@/pages/dashboard/mentor/ReportFace";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -801,6 +802,7 @@ const navItems = [
   { name: "Reconsideration", href: "/dashboard/mentor/reconsideration", icon: Flag },
   { name: "Shared Sessions", href: "/dashboard/mentor/group-session", icon: Users },
   { name: "Reference Card", href: "/dashboard/mentor/reference-card", icon: ClipboardCheck },
+  { name: "Report Face", href: "/dashboard/mentor/report-face", icon: FileCheck },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4510,6 +4512,9 @@ const MentorDashboardInner = () => {
               capture lines and the source's own lists, and nothing
               that says which line is the better one. */}
           <Route path="reference-card" element={<ReferenceCard />} />
+          {/* §6 — the report face. Assembled server-side; the
+              traceability sheet is never part of it. */}
+          <Route path="report-face" element={<ReportFace />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />
