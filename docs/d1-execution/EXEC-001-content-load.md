@@ -556,6 +556,56 @@ actually rules out a pool: each is filtered on an identifier the
 participant's own assignment supplied, and no unbounded select over
 `mentor_profiles` exists anywhere on the surface.
 
+## 6j. Correction and reconsideration — the independence rule
+
+§8.4 forbids *"assignment to anyone who observed, confirmed, progressed
+or reviewed the record"* and *"any in-place edit of a composed
+statement"*. Neither was enforced at the data layer: nothing refused an
+involved reconsiderer, and nothing stopped a composed statement being
+rewritten in place.
+
+**The involvement register could not represent half the rule.**
+`t3a_d1_involving_action` carried three values —
+`s1_determination_capture`, `s1_confirmation`, `evidence_review`. So
+**observing at S2, S3 or S4 and recording a progression decision were not
+representable at all**, and a guard reading that register would have
+passed both without noticing. Two of the four acts §8.4 names simply had
+nowhere to be written.
+
+`observed`, `progression_recorded` and `reconsidered` were added — an
+addition to a controlled vocabulary, never a rename, the same disposition
+as `LAYOUT_OVERFLOW` at §6.2.
+
+Proved against the running system:
+
+```
+--- who may reconsider ---
+the observer          RECONSIDERER_IS_INVOLVED (observed)
+the participant       RECONSIDERER_IS_A_PARTY_TO_THE_CASE
+who raised it         RECONSIDERER_IS_A_PARTY_TO_THE_CASE
+an uninvolved mentor  eligible
+
+--- the assignment refuses at the data layer ---
+assign the observer   RECONSIDERER_NOT_INDEPENDENT
+assign the uninvolved assigned
+the same person again RECONSIDERER_IS_INVOLVED (reconsidered)
+
+--- the outcome ---
+no reasoning          REASONING_REQUIRED
+outcome not in set    OUTCOME_NOT_IN_CONTROLLED_SET
+amended, with reason  recorded
+```
+
+**Reconsidering makes the actor involved**, recorded at assignment, so a
+second case cannot route back to the same person. Independence is
+rechecked when the outcome is recorded and not only when the assignment
+was made, because involvement can be acquired between the two.
+
+**A composed statement supersedes and never rewrites.** A change to
+`statement_body` refuses; marking a row superseded is the governed route
+and is permitted; deletion refuses outright, because no attempt is
+discarded or overwritten.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
