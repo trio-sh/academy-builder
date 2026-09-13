@@ -10,6 +10,7 @@ import AIAgent from "@/pages/dashboard/AIAgent";
 import Determinations from "@/pages/dashboard/mentor/Determinations";
 import Cockpit from "@/pages/dashboard/mentor/Cockpit";
 import S1Workbench from "@/pages/dashboard/mentor/S1Workbench";
+import EvidenceReview from "@/pages/dashboard/mentor/EvidenceReview";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -793,6 +794,7 @@ const navItems = [
   { name: "Observations", href: "/dashboard/mentor/observations", icon: ClipboardCheck },
   { name: "Determinations", href: "/dashboard/mentor/determinations", icon: FileCheck },
   { name: "Confirmations", href: "/dashboard/mentor/endorsements", icon: Award },
+  { name: "Evidence Review", href: "/dashboard/mentor/evidence-review", icon: FileCheck },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4486,6 +4488,10 @@ const MentorDashboardInner = () => {
           {/* §8.1.1 — the S1 Confirmation Workbench. Reached from a
               Stage 1 administration run, never from a participant. */}
           <Route path="s1-workbench/:runId" element={<S1Workbench />} />
+          {/* §8.4 — evidence review and issue. Issuing is a separate
+              action by a different actor; §6.1 item 19 means the
+              reviewer can never issue the report they reviewed. */}
+          <Route path="evidence-review" element={<EvidenceReview />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />

@@ -18,6 +18,9 @@ const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
 const WORKBENCH = "src/pages/dashboard/mentor/S1Workbench.tsx";
 const workbench = read(WORKBENCH);
 
+const REVIEW = "src/pages/dashboard/mentor/EvidenceReview.tsx";
+const review = read(REVIEW);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -26,6 +29,7 @@ const code = (src: string) =>
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, "");
 
 const workbenchCode = code(workbench);
+const reviewCode = code(review);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -143,5 +147,66 @@ describe("§5.4 a question not served carries no answer and no missing state", (
     // Only servedQuestions drives the control list.
     expect(workbenchCode).toMatch(/servedQuestions\.map/);
     expect(workbenchCode).not.toMatch(/notServed\.map\([\s\S]{0,400}type="radio"/);
+  });
+});
+
+
+describe("§8.4 Evidence review and issue — the two prohibitions", () => {
+  it("offers no manual override on any checklist item", () => {
+    // §6.1: "a checklist with an override is a checklist that will be
+    // overridden." The word itself is permitted — the screen says No
+    // override exists for any item, and the server payload carries
+    // override_available: false. What must not exist is a control that
+    // applies one.
+    expect(reviewCode).not.toMatch(
+      /setOverride|onOverride|applyOverride|handleOverride|overrideItem|waive|forceIssue|bypass|exempt/i
+    );
+  });
+
+  it("never writes to the override signal, only reads it", () => {
+    // override_available is the server stating there is none. Nothing
+    // here assigns it.
+    expect(reviewCode).not.toMatch(/override_available\s*[:=]\s*true/);
+  });
+
+  it("offers no combined review-and-issue control", () => {
+    // §6.1 item 19: reviewing makes an actor involved, so the reviewer
+    // can never issue the report they reviewed. One control doing both
+    // would make that impossible to honour.
+    expect(reviewCode).not.toMatch(/reviewAndIssue|completeAndIssue|issueReport|issueNow/i);
+  });
+
+  it("records only the three checklist outcomes, with no fourth", () => {
+    expect(reviewCode).toMatch(/\["pass", "fail", "not_established"\] as const/);
+  });
+
+  it("treats not_established as blocking rather than as a pass", () => {
+    expect(review.replace(/\s+/g, " ")).toMatch(/not established is not a pass/i);
+  });
+
+  it("reads the block verdict from the server rather than computing it", () => {
+    expect(reviewCode).toMatch(/rpc\("t3a_d1_review_blocks_issuance"/);
+  });
+
+  it("offers no edit or delete of a recorded result", () => {
+    // Review results are append-only server-side, so no control is
+    // offered that would fail.
+    expect(reviewCode).not.toMatch(/\.update\(|\.delete\(|\.upsert\(/);
+  });
+
+  it("states plainly that no override exists", () => {
+    expect(review.replace(/\s+/g, " ")).toMatch(/No override exists for any item/i);
+  });
+});
+
+describe("§6.3 the traceability sheet is never part of the report face", () => {
+  it("renders on the evidence-review surface, one of its permitted targets", () => {
+    expect(reviewCode).toMatch(/t3a_d1_statement_trace/);
+  });
+
+  it("says a sentence with no trace should not issue", () => {
+    expect(review.replace(/\s+/g, " ")).toMatch(
+      /no trace is not defensible and should not issue/i
+    );
   });
 });

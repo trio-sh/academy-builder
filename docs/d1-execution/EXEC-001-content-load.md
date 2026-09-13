@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. The first §8.4 surface is built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Two §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -452,6 +452,37 @@ on the field and never a value inside the enumeration.
 
 **An unserved question renders the rule that excluded it**, not an empty
 control — so an absence reads as a rule rather than as an omission.
+
+## 6g. Evidence review and issue — §8.4 against the §6 contract
+
+`/dashboard/mentor/evidence-review`. The queue, the report under review
+with all twenty-one items, the traceability sheet, and the review
+outcome.
+
+**The two prohibitions are absences, not disabled controls.**
+
+*No manual override on any checklist item.* There is no handler, no
+state and no affordance that applies one. The word does appear — the
+screen says **"No override exists for any item."** and the server
+payload carries `override_available: false` — and the test was narrowed
+accordingly: it forbids a control that applies an override, not the
+sentence that denies one. Forbidding the word would have deleted the
+clearest statement on the screen.
+
+*No combined review-and-issue control.* §6.1 item 19 is why: reviewing
+makes an actor involved, so the reviewer can never issue the report they
+reviewed. One control doing both would make that impossible to honour,
+so completing the review says in as many words that issuing is a
+separate act by someone not involved.
+
+**A recorded result offers no edit.** Review results are append-only
+server-side, so the screen shows *"Recorded. A review result cannot be
+edited or removed"* rather than an edit control that would fail. The
+test asserts no `.update(`, `.delete(` or `.upsert(` anywhere on the
+surface.
+
+The block verdict is read from `t3a_d1_review_blocks_issuance` rather
+than computed on the client, so the screen cannot disagree with the gate.
 
 ## 7. The one thing that needs the founder, not the developer
 
