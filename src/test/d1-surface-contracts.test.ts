@@ -30,6 +30,9 @@ const disclosures = read(DISCLOSURES);
 const RECONSIDERATION = "src/pages/dashboard/mentor/Reconsideration.tsx";
 const reconsideration = read(RECONSIDERATION);
 
+const WORKSAMPLE = "src/pages/dashboard/candidate/WorkSample.tsx";
+const workSample = read(WORKSAMPLE);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -42,6 +45,7 @@ const reviewCode = code(review);
 const recipientCode = code(recipient);
 const disclosuresCode = code(disclosures);
 const reconsiderationCode = code(reconsideration);
+const workSampleCode = code(workSample);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -404,5 +408,87 @@ describe("§8.4 Correction and reconsideration — the two prohibitions", () => 
     expect([...new Set(reads)].sort()).toEqual(
       ["t3a_correction_case", "t3a_reconsideration_assignment"].sort()
     );
+  });
+});
+
+
+describe("§8.2 Stage 3 — the three declarations, verbatim and closed", () => {
+  it("renders the controlled wording exactly", () => {
+    expect(workSample).toContain("The work I am submitting is my own.");
+    expect(workSample).toContain("I received help from another person on this work.");
+    expect(workSample).toContain(
+      "I used a software tool, including any artificial-intelligence tool, on this work."
+    );
+  });
+
+  it("offers the controlled assistance list and nothing else", () => {
+    ["a colleague", "a manager", "a friend or family member", "a tutor or coach", "someone else"]
+      .forEach((o) => expect(workSample).toContain(`"${o}"`));
+  });
+
+  it("offers the controlled tooling list and nothing else", () => {
+    ["drafting or writing", "calculation or analysis", "formatting or layout",
+     "checking or review", "something else"]
+      .forEach((o) => expect(workSample).toContain(`"${o}"`));
+  });
+
+  it("has no free-text route in any declaration", () => {
+    // The only text input is the artifact reference. Each declaration is
+    // a boolean plus, where it applies, one controlled selection.
+    const textInputs = [...workSampleCode.matchAll(/<(input|textarea)\b[^>]*/g)].map((m) => m[0]);
+    const freeText = textInputs.filter(
+      (t) => t.startsWith("<textarea") || (!/type="(checkbox|radio)"/.test(t))
+    );
+    expect(freeText).toHaveLength(1);
+    expect(freeText[0]).toMatch(/artifactRef/);
+  });
+
+  it("requires the attestation to be affirmed before submit", () => {
+    expect(workSampleCode).toMatch(/authorship &&/);
+  });
+
+  it("requires both other declarations to be answered", () => {
+    expect(workSampleCode).toMatch(/assistance !== null/);
+    expect(workSampleCode).toMatch(/tooling !== null/);
+  });
+});
+
+describe("§8.4 Stage 3 — no grade and no artifact on a report face", () => {
+  it("records no grade or quality judgment", () => {
+    // The words appear in the copy that *denies* a grade — "It is not
+    // graded", "no judgment about its quality is recorded". What must
+    // not exist is a field or control that holds one, so the assertion
+    // names those rather than the vocabulary.
+    expect(workSampleCode).not.toMatch(
+      /setGrade|gradeValue|quality_score|qualityScore|rubric|ratingValue|setRating|\bmarks?\s*[:=]|assessment_score/i
+    );
+    // And no such column is ever written.
+    expect(workSampleCode).not.toMatch(
+      /(grade|quality|rating|score)\s*:\s*(?!.*not)/i
+    );
+  });
+
+  it("states that the work is not graded", () => {
+    expect(workSample.replace(/\s+/g, " ")).toMatch(/It is not graded/i);
+  });
+
+  it("states that a decline is not an outcome and collects no reason", () => {
+    expect(workSample.replace(/\s+/g, " ")).toMatch(/decline without giving a reason/i);
+    expect(workSample.replace(/\s+/g, " ")).toMatch(/it is not an outcome/i);
+  });
+
+  it("states that a missed deadline is not adverse and uses no attempt", () => {
+    expect(workSample.replace(/\s+/g, " ")).toMatch(
+      /composes no statement, is not adverse, and does not use up an attempt/i
+    );
+  });
+
+  it("runs the provenance check server-side rather than locally", () => {
+    expect(workSampleCode).toMatch(/rpc\("t3a_d1_work_sample_provenance_check"/);
+  });
+
+  it("reads only its own submissions table", () => {
+    const reads = [...workSampleCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)]).toEqual(["t3a_d1_work_sample_submission"]);
   });
 });

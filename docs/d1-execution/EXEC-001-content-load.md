@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Five §8.4 surfaces built. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Six §8.4 surfaces built. Conflict register below.
 
 ---
 
@@ -636,6 +636,41 @@ The screen also tells a reconsiderer that deciding this case **makes them
 involved in it from now on** — the same sentence the workbench carries
 about capture, for the same reason: involvement is acquired by acting,
 and the person acting should know it at the moment they act.
+
+## 6l. Stage 3 — the work sample surface
+
+`/dashboard/candidate/work-sample`. Brief and deadline, upload with the
+three declarations, submission history, and accept / decline / submit.
+
+**The three declarations render verbatim and carry no free-text route.**
+Each is a required boolean plus, where it applies, one controlled
+selection. The test counts every text-accepting input on the page and
+asserts there is exactly **one** — the artifact reference — so a
+free-text box cannot be added to a declaration without failing.
+
+**No grade exists, and no field could hold one.** The provenance check
+runs server-side rather than locally, and the surface reads exactly one
+table.
+
+**Three things the screen says, because saying them is part of the
+contract:**
+
+- *"You may decline without giving a reason. Declining records that the
+  situation did not run — it is not an outcome, and nothing adverse
+  follows from it."*
+- A passed deadline *"composes no statement, is not adverse, and does not
+  use up an attempt."*
+- *"A resubmission supersedes the one before it. Nothing is overwritten
+  and no submission is discarded."*
+
+**A note on the tests, third time running.** The grade assertion first
+failed on the page's own copy — *"It is not graded"*, *"no judgment about
+its quality is recorded"*. The same thing happened with `override` on the
+review surface and `export` on the recipient surface. In each case the
+forbidden word appears in the sentence that denies the forbidden thing.
+The assertions now name fields and controls rather than vocabulary, which
+is what they should have done from the start: a word-match tests spelling,
+not structure.
 
 ## 7. The one thing that needs the founder, not the developer
 
