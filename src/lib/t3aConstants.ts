@@ -137,7 +137,7 @@ export const T3A_DIMENSIONS: T3ADimension[] = [
   },
 ];
 
-/** MVP dimensions only — for use in all L1/L2 observation scoring during initial launch */
+/** MVP dimensions only — for use in all S1/S2 observation scoring during initial launch */
 export const MVP_DIMENSIONS = T3A_DIMENSIONS.filter((d) => d.isMVP);
 
 /** Default empty score object seeded with all MVP dimension IDs */
@@ -162,10 +162,10 @@ export const DEFAULT_COOLDOWN_DAYS = 14;
 // ─────────────────────────────────────────────────────────────────
 
 export const OBSERVATION_LEVELS = [
-  { level: 1, label: "Level 1 — AI Observation", method: "AI-Driven Pressure Scenarios", format: "Solo, Async, Timed", observer: "AI Engine", isMVP: true },
-  { level: 2, label: "Level 2 — Mentor Live Observation", method: "Mentor Live Observation", format: "Solo, Sync, Video", observer: "Human Mentor", isMVP: true },
-  { level: 3, label: "Level 3 — Work Sample Evaluation", method: "Work Sample Evaluation", format: "Solo, Async, Timed", observer: "AI + Mentor", isMVP: false },
-  { level: 4, label: "Level 4 — Peer/Team Simulation", method: "Peer/Team Simulation", format: "Group, Sync, Video", observer: "Human Mentor", isMVP: false },
+  { level: 1, label: "Stage 1 — AI Observation", method: "AI-Driven Pressure Scenarios", format: "Solo, Async, Timed", observer: "AI Engine", isMVP: true },
+  { level: 2, label: "Stage 2 — Mentor Live Observation", method: "Mentor Live Observation", format: "Solo, Sync, Video", observer: "Human Mentor", isMVP: true },
+  { level: 3, label: "Stage 3 — Work Sample Evaluation", method: "Work Sample Evaluation", format: "Solo, Async, Timed", observer: "AI + Mentor", isMVP: false },
+  { level: 4, label: "Stage 4 — Peer/Team Simulation", method: "Peer/Team Simulation", format: "Group, Sync, Video", observer: "Human Mentor", isMVP: false },
 ];
 
 // ─────────────────────────────────────────────────────────────────

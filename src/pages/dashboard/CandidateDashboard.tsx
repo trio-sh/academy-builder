@@ -1748,11 +1748,11 @@ const ObservationPathway = () => {
  </div>
  </motion.div>
 
- {/* MVP Observation Pipeline: L1 → L2 → Endorsement */}
+ {/* MVP Observation Pipeline: S1 → S2 → Endorsement */}
  <motion.div variants={itemVariants}>
  <h2 className="text-xl font-semibold text-foreground mb-4">Observation Pipeline</h2>
  <div className="grid md:grid-cols-3 gap-4">
- {/* L1 — AI Scenarios */}
+ {/* S1 — AI Scenarios */}
  {(() => {
  const l1Feedback = observationFeedback.filter(f => f.feedback_level === 1);
  const l1ScoredDims = new Set(l1Feedback.map(f => f.dimension_id));
@@ -1761,13 +1761,13 @@ const ObservationPathway = () => {
  return (
  <div className={`p-5 rounded-xl border ${l1AllComplete ? "bg-foreground/[0.06] border-foreground/40" : l1Partial ? "bg-vermilion/10 border-vermilion" : "bg-background border-foreground/15"}`}>
  <div className="flex items-center justify-between mb-3">
- <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-foreground/[0.06] text-foreground">L1</span>
+ <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-foreground/[0.06] text-foreground">S1</span>
  {l1AllComplete && <CheckCircle className="w-4 h-4 text-foreground" />}
  </div>
  <h3 className="font-semibold text-foreground mb-1">AI-Driven Scenarios</h3>
  <p className="text-xs text-foreground/60 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
  {l1AllComplete ? (
- <p className="text-xs text-foreground font-medium">L1 Complete — {l1ScoredDims.size}/{assignedDimensions.length} dimensions scored</p>
+ <p className="text-xs text-foreground font-medium">S1 Complete — {l1ScoredDims.size}/{assignedDimensions.length} dimensions scored</p>
  ) : (
  <>
  {l1Partial && (
@@ -1775,7 +1775,7 @@ const ObservationPathway = () => {
  )}
  <Link to="/dashboard/candidate/observations/session">
  <Button size="sm" className="w-full bg-foreground/[0.05] hover:hover:">
- {l1Partial ? "Continue L1 Session" : "Begin L1 Session"}
+ {l1Partial ? "Continue S1 Session" : "Begin S1 Session"}
  <ArrowRight className="w-4 h-4 ml-1" />
  </Button>
  </Link>
@@ -1785,7 +1785,7 @@ const ObservationPathway = () => {
  );
  })()}
 
- {/* L2 — Mentor Live Observation */}
+ {/* S2 — Mentor Live Observation */}
  {(() => {
  const l2Feedback = observationFeedback.filter(f => f.feedback_level === 2);
  const l2Complete = l2Feedback.length > 0;
@@ -1793,13 +1793,13 @@ const ObservationPathway = () => {
  return (
  <div className={`p-5 rounded-xl border ${l2Complete ? "bg-foreground/[0.06] border-foreground/40" : l1Complete ? "bg-background border-foreground/15" : "bg-background/50 border-foreground/10 opacity-60"}`}>
  <div className="flex items-center justify-between mb-3">
- <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-foreground/[0.06] text-foreground">L2</span>
+ <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-foreground/[0.06] text-foreground">S2</span>
  {l2Complete && <CheckCircle className="w-4 h-4 text-foreground" />}
  </div>
  <h3 className="font-semibold text-foreground mb-1">Mentor Live Observation</h3>
  <p className="text-xs text-foreground/60 mb-4">Solo, synchronous. Your mentor observes your behavior in a live session using structured prompts.</p>
  {l2Complete ? (
- <p className="text-xs text-foreground font-medium">L2 Complete — Mentor reviewed</p>
+ <p className="text-xs text-foreground font-medium">S2 Complete — Mentor reviewed</p>
  ) : l1Complete ? (
  <p className="text-xs ink-vermilion font-medium">Awaiting mentor scheduling</p>
  ) : (
@@ -1851,10 +1851,10 @@ const ObservationPathway = () => {
  })()}
  </div>
 
- {/* L3/L4 Post-Launch notice */}
+ {/* S3/S4 Post-Launch notice */}
  <div className="mt-4 p-3 rounded-xl bg-background/50 border border-foreground/10">
  <p className="text-xs text-foreground/50">
- <span className="font-medium text-foreground/60">Coming post-launch:</span> L3 Work Sample Evaluation and L4 Peer/Team Simulation will be added to strengthen your behavioral evidence profile.
+ <span className="font-medium text-foreground/60">Coming post-launch:</span> S3 Work Sample Evaluation and S4 Peer/Team Simulation will be added to strengthen your behavioral evidence profile.
  </p>
  </div>
  </motion.div>

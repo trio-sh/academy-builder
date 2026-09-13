@@ -1309,7 +1309,7 @@ export const InteractiveSkillAssessment = () => {
  return (
  <div className="space-y-6">
  <div className="p-4 rounded-xl bg-foreground/30 border border-foreground/20">
- <p className="text-foreground font-medium text-sm mb-1">L1 Session AI Observation Notes</p>
+ <p className="text-foreground font-medium text-sm mb-1">S1 Session AI Observation Notes</p>
  <p className="text-gray-400 text-sm">
  These are auto-generated AI observation notes from your session. Your mentor will review, add their own notes, and share feedback with you directly.
  </p>
@@ -1389,7 +1389,7 @@ export const InteractiveSkillAssessment = () => {
  if (sessionId) {
  await completeObservationSession(sessionId);
 
- // Write L1 observation feedback for each assigned dimension
+ // Write S1 observation feedback for each assigned dimension
  if (assignmentId && candidateProfileId && assignedDimensions.length > 0) {
  const profile = calculateSkillProfile(challengeResults);
 
@@ -1399,8 +1399,8 @@ export const InteractiveSkillAssessment = () => {
  const barsScore = dimScore >= 4 ? 4 : dimScore >= 3 ? 3 : dimScore >= 2 ? 2 : 1;
  const evidence = profile[dimId]?.evidence || [];
  const feedback = evidence.length > 0
- ? `L1 AI Observation Summary:\n${evidence.join('\n')}`
- : 'Behavioral evidence recorded during L1 AI observation session.';
+ ? `S1 AI Observation Summary:\n${evidence.join('\n')}`
+ : 'Behavioral evidence recorded during S1 AI observation session.';
 
  await recordObservationFeedback(
  sessionId,
@@ -1412,7 +1412,7 @@ export const InteractiveSkillAssessment = () => {
  feedback
  );
 
- // Record loop for this dimension (L1)
+ // Record loop for this dimension (S1)
  const loop = await startLoop(candidateProfileId, assignmentId, dimId, 1);
  if (loop) {
  await completeLoop(loop.id, barsScore, 'proceed');

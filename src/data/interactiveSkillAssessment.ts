@@ -165,7 +165,7 @@ export interface InteractiveAssessmentScene {
   timeLimit?: number; // seconds
 }
 
-// T3A Behavioral Dimensions observed in the L1 Observation Session
+// T3A Behavioral Dimensions observed in the S1 Observation Session
 // IDs are locked — match the T3A 14-dimension framework exactly.
 // MVP top-5 are active for initial launch; others post-launch.
 export const SKILL_DIMENSIONS = [
@@ -241,9 +241,9 @@ export const INTERACTIVE_ASSESSMENT_SCENES: InteractiveAssessmentScene[] = [
   {
     id: 'welcome',
     type: 'welcome',
-    title: 'L1 Observation Session',
+    title: 'S1 Observation Session',
     dimension: 'all',
-    content: `Welcome to your L1 Observation Session.
+    content: `Welcome to your S1 Observation Session.
 
 You will complete a series of AI-driven pressure scenarios across the T3A Behavioral Dimensions:
 
