@@ -202,7 +202,7 @@ const ObservationFormModal = () => {
 
     fetchData();
 
-    // Pre-populate if assignment/candidate was provided — also fetch assigned dims + L1 feedback
+    // Pre-populate if assignment/candidate was provided — also fetch assigned dims + S1 feedback
     if (selectedAssignmentId && selectedCandidateId) {
       setFormData(prev => ({ ...prev, assignmentId: selectedAssignmentId, candidateId: selectedCandidateId }));
 
@@ -216,7 +216,7 @@ const ObservationFormModal = () => {
           if (dims) setAssignedDimIds(dims.map((d: { dimension_id: string }) => d.dimension_id));
         });
 
-      // Fetch L1 AI feedback for this candidate
+      // Fetch S1 AI feedback for this candidate
       supabase
         .from("observation_feedback")
         .select("dimension_id, bars_score, ai_draft_feedback")
@@ -295,7 +295,7 @@ const ObservationFormModal = () => {
       .eq("is_active", true);
     if (dims) setAssignedDimIds(dims.map((d: { dimension_id: string }) => d.dimension_id));
 
-    // Fetch L1 AI feedback for this candidate
+    // Fetch S1 AI feedback for this candidate
     const { data: l1 } = await supabase
       .from("observation_feedback")
       .select("dimension_id, bars_score, ai_draft_feedback")
@@ -335,7 +335,7 @@ const ObservationFormModal = () => {
       }
 
       if (!asDraft) {
-        // Write L2 observation feedback for each scored dimension
+        // Write S2 observation feedback for each scored dimension
         for (const dimId of Object.keys(formData.scores)) {
           await supabase.from("observation_feedback").insert({
             assignment_id: formData.assignmentId,
@@ -350,7 +350,7 @@ const ObservationFormModal = () => {
             mentor_approved_at: new Date().toISOString(),
           });
 
-          // Record loop tracking for L2 observation
+          // Record loop tracking for S2 observation
           const loop = await startLoop(formData.candidateId, formData.assignmentId, dimId, 2, mentorProfile.id);
           if (loop) await completeLoop(loop.id, formData.scores[dimId], 'proceed');
         }
@@ -538,12 +538,12 @@ const ObservationFormModal = () => {
                 <div>
                   <details className="mb-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
                     <summary className="text-sm font-medium ink-vermilion cursor-pointer hover:ink-vermilion">
-                      L2 Session Script (Read before starting)
+                      S2 Session Script (Read before starting)
                     </summary>
                     <div className="mt-3 text-sm text-foreground/75 space-y-3">
                       <p className="ink-vermilion font-medium">Opening Script — Read verbatim to candidate:</p>
                       <blockquote className="pl-3 border-l-2 border-indigo-500/50 text-foreground/60 italic space-y-2">
-                        <p>"Hello <span className="text-foreground">[Candidate Name]</span>, my name is <span className="text-foreground">[Mentor Name]</span>, and I'll be conducting your L2 live observation session today.</p>
+                        <p>"Hello <span className="text-foreground">[Candidate Name]</span>, my name is <span className="text-foreground">[Mentor Name]</span>, and I'll be conducting your S2 live observation session today.</p>
                         <p>Before we begin, I want to confirm a few things:</p>
                         <p>This session will be used to observe and document your behavioral responses in a structured professional context. Your responses will be scored using The 3rd Academy's 4-point Behaviorally Anchored Rating Scale.</p>
                         <p>This session may be recorded for quality assurance and audit purposes. Do you consent to proceed with the session under these conditions?</p>
@@ -573,7 +573,7 @@ const ObservationFormModal = () => {
                             </div>
                             {l1 && l1.bars_score && (
                               <div className="text-right flex-shrink-0 ml-3">
-                                <p className="text-[10px] text-foreground/50 uppercase">L1 AI Score</p>
+                                <p className="text-[10px] text-foreground/50 uppercase">S1 AI Score</p>
                                 <span className={`text-sm font-bold ${
                                   l1.bars_score >= 4 ? "text-foreground" : l1.bars_score >= 3 ? "text-foreground" : l1.bars_score >= 2 ? "ink-vermilion" : "ink-vermilion"
                                 }`}>{l1.bars_score}/4</span>
@@ -583,7 +583,7 @@ const ObservationFormModal = () => {
                           {l1 && l1.ai_draft_feedback && (
                             <details className="mb-2">
                               <summary className="text-xs ink-vermilion/80 p-2 rounded bg-indigo-500/10 border border-indigo-500/20 cursor-pointer hover:bg-indigo-500/20 transition-colors">
-                                L1 AI: {l1.ai_draft_feedback.length > 100 ? l1.ai_draft_feedback.substring(0, 100) + "..." : l1.ai_draft_feedback}
+                                S1 AI: {l1.ai_draft_feedback.length > 100 ? l1.ai_draft_feedback.substring(0, 100) + "..." : l1.ai_draft_feedback}
                               </summary>
                               <p className="text-xs ink-vermilion/70 p-2 mt-1 rounded bg-indigo-500/5 border border-indigo-500/10 whitespace-pre-wrap">
                                 {l1.ai_draft_feedback}
@@ -840,7 +840,7 @@ const Overview = () => {
             .eq("status", "pending");
           setPendingRequests(pendingCount || 0);
 
-          // Candidates needing L2 (have L1 but no L2)
+          // Candidates needing S2 (have S1 but no S2)
           const { data: activeAssignments } = await supabase
             .from("mentor_assignments")
             .select("id, candidate_id")
@@ -1104,14 +1104,14 @@ const Mentees = () => {
                 .eq("assignment_id", assignment.id)
                 .eq("is_active", true);
 
-              // Count L2 observations (locked mentor_observations)
+              // Count S2 observations (locked mentor_observations)
               const { count: obsCount } = await supabase
                 .from("mentor_observations")
                 .select("*", { count: "exact", head: true })
                 .eq("assignment_id", assignment.id)
                 .eq("is_locked", true);
 
-              // Count L1 AI feedback dimensions scored
+              // Count S1 AI feedback dimensions scored
               const { count: l1Count } = await supabase
                 .from("observation_feedback")
                 .select("*", { count: "exact", head: true })
@@ -1399,16 +1399,23 @@ const Mentees = () => {
                       {assignment.l1_completed ? (
                         <span className="flex items-center gap-1 text-foreground">
                           <CheckCircle className="w-3.5 h-3.5" />
-                          L1 Complete ({assignment.l1_dimensions_scored} dims)
+                          S1 Complete ({assignment.l1_dimensions_scored} dims)
                         </span>
                       ) : (
-                        <span className="ink-vermilion">L1 Not started</span>
+                        <span className="ink-vermilion">S1 Not started</span>
                       )}
                       <span className="text-foreground/50">
-                        {assignment.observation_count || 0} L2 observations
+                        {assignment.observation_count || 0} S2 observations
                       </span>
                       <span className="text-foreground/50">
-                        Tier: {assignment.candidate_profile?.current_tier?.replace("_", " ") || "Not assessed"}
+                        {/* PLC-005 Note 6 (c). Tier-based standing was closed out
+                            under OD-10 and "assess" is a banned claim verb, so this
+                            line no longer reads current_tier. It reports the
+                            assignment-bounded operational value only. The column is
+                            not renamed — it is simply no longer displayed. */}
+                        Observation record: {(assignment.observation_count || 0) > 0
+                          ? "Observation committed"
+                          : "No observation committed"}
                       </span>
                     </div>
                     {assignment.assigned_dimensions && assignment.assigned_dimensions.length > 0 && (
@@ -1878,7 +1885,7 @@ const MenteeDetail = () => {
           .eq("is_active", true);
         if (dims) setAssignedDims(dims.map((d: { dimension_id: string }) => d.dimension_id));
 
-        // Fetch observation feedback (L1 + L2)
+        // Fetch observation feedback (S1 + S2)
         const { data: fb } = await supabase
           .from("observation_feedback")
           .select("dimension_id, feedback_level, bars_score, status, ai_draft_feedback, mentor_feedback, created_at")
@@ -1988,7 +1995,10 @@ const MenteeDetail = () => {
                 {assignment.status}
               </span>
               <span className="text-sm text-foreground/50">
-                Tier: {candidateProfile.current_tier?.replace("_", " ") || "Not assessed"}
+                {/* PLC-005 Note 6 (c) — assignment-bounded operational value only. */}
+                Observation record: {observations.some(o => o.is_locked)
+                  ? "Observation committed"
+                  : "No observation committed"}
               </span>
             </div>
           </div>
@@ -2011,14 +2021,14 @@ const MenteeDetail = () => {
         <div className="grid grid-cols-3 gap-4">
           <div className={`p-4 rounded-xl border ${l1Feedback.length > 0 ? "bg-foreground/[0.06] border-foreground/40" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-foreground">L1 AI Scenarios</span>
+              <span className="text-xs font-semibold text-foreground">S1 AI Scenarios</span>
               {l1Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-foreground" />}
             </div>
             <p className="text-foreground font-bold">{l1Feedback.length > 0 ? `${l1Feedback.length} dimensions scored` : "Not started"}</p>
           </div>
           <div className={`p-4 rounded-xl border ${l2Feedback.length > 0 ? "bg-foreground/[0.06] border-foreground/40" : "bg-background border-foreground/15"}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-foreground">L2 Mentor Live</span>
+              <span className="text-xs font-semibold text-foreground">S2 Mentor Live</span>
               {l2Feedback.length > 0 && <CheckCircle className="w-4 h-4 text-foreground" />}
             </div>
             <p className="text-foreground font-bold">{l2Feedback.length > 0 ? `${l2Feedback.length} dimensions scored` : observations.length > 0 ? `${observations.length} observations recorded` : "Not started"}</p>
@@ -2041,7 +2051,7 @@ const MenteeDetail = () => {
         </div>
       </motion.div>
 
-      {/* Assigned Dimensions with L1/L2 Scores */}
+      {/* Assigned Dimensions with S1/S2 Scores */}
       <motion.div variants={itemVariants}>
         <h2 className="text-lg font-semibold text-foreground mb-3">Dimensions ({assignedDims.length} assigned)</h2>
         {assignedDims.length === 0 ? (
@@ -2116,7 +2126,7 @@ const MenteeDetail = () => {
                   )}
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <div className={`p-3 rounded-lg ${l1 ? "bg-foreground/[0.06] border border-foreground/40" : "bg-white/5 border border-foreground/10"}`}>
-                      <p className="text-[10px] text-foreground/50 uppercase mb-1">L1 AI Score</p>
+                      <p className="text-[10px] text-foreground/50 uppercase mb-1">S1 AI Score</p>
                       {l1 && l1.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l1.bars_score)}`}>{l1.bars_score}/4</span>
@@ -2135,7 +2145,7 @@ const MenteeDetail = () => {
                       )}
                     </div>
                     <div className={`p-3 rounded-lg ${l2 ? "bg-foreground/[0.06] border border-foreground/40" : "bg-white/5 border border-foreground/10"}`}>
-                      <p className="text-[10px] text-foreground/50 uppercase mb-1">L2 Mentor Score</p>
+                      <p className="text-[10px] text-foreground/50 uppercase mb-1">S2 Mentor Score</p>
                       {l2 && l2.bars_score ? (
                         <div>
                           <span className={`text-lg font-bold ${getBarsColor(l2.bars_score)}`}>{l2.bars_score}/4</span>
@@ -2442,10 +2452,10 @@ const Endorsements = () => {
             .eq("status", "active");
 
           if (assignments) {
-            // For each assignment, check L1+L2 completion and existing endorsements
+            // For each assignment, check S1+S2 completion and existing endorsements
             const enrichedAssignments = await Promise.all(
               assignments.map(async (assignment) => {
-                // Check L1 feedback exists
+                // Check S1 feedback exists
                 const { count: l1Count } = await supabase
                   .from("observation_feedback")
                   .select("*", { count: "exact", head: true })
@@ -2453,7 +2463,7 @@ const Endorsements = () => {
                   .eq("candidate_id", assignment.candidate_id)
                   .eq("feedback_level", 1);
 
-                // Check L2 feedback exists
+                // Check S2 feedback exists
                 const { count: l2Count } = await supabase
                   .from("observation_feedback")
                   .select("*", { count: "exact", head: true })
@@ -2495,7 +2505,7 @@ const Endorsements = () => {
               })
             );
 
-            // Ready for endorsement: has L1 + L2 and not already endorsed
+            // Ready for endorsement: has S1 + S2 and not already endorsed
             setReadyForEndorsement(enrichedAssignments.filter(a => a.l1_complete && a.l2_complete && !a.already_endorsed));
           }
 
@@ -2664,7 +2674,7 @@ const Endorsements = () => {
 
       // If decision is "proceed", generate Behavioral Evidence Report
       if (endorsementForm.decision === "proceed") {
-        // Calculate aggregate behavioral scores from observation_feedback (L1 + L2)
+        // Calculate aggregate behavioral scores from observation_feedback (S1 + S2)
         const { data: allFeedback } = await supabase
           .from("observation_feedback")
           .select("dimension_id, bars_score, feedback_level")
@@ -2674,7 +2684,7 @@ const Endorsements = () => {
 
         let aggregatedScores: Record<string, number> = {};
         if (allFeedback && allFeedback.length > 0) {
-          // Group scores by dimension, average L1+L2
+          // Group scores by dimension, average S1+S2
           const dimScores: Record<string, number[]> = {};
           allFeedback.forEach(f => {
             if (!dimScores[f.dimension_id]) dimScores[f.dimension_id] = [];
