@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card and §6 report face served. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Eight §8.4 surfaces built. §5.3 reference card, §6 report face and §11 acceptance register served. Conflict register below.
 
 ---
 
@@ -821,6 +821,83 @@ and a review result cannot be flipped from fail to pass in place, because
 the table is append-only, so the passing case uses a second report rather
 than an update.
 
+## 6p. §11 — the acceptance tests
+
+`/dashboard/mentor/acceptance-tests`. Thirty tests loaded verbatim, and
+the evidence recorded against them, as two tables that are never merged.
+
+**"A test specification is not a passed test."** That sentence decides
+the shape of all of it. The register carries no outcome column, the
+evidence table is append-only, and the completeness function counts only
+tests with a recorded pass. There is no default outcome: a test with no
+evidence is not a pass, is not a fail, and is not quietly dropped from
+the count — it is named.
+
+**AC-25 is absent from the issued table.** It is therefore absent here.
+The gap is recorded rather than filled.
+
+**Proved against the live database in an aborting block:**
+
+| Attempt | Result |
+|---|---|
+| Append evidence | accepted |
+| Edit a recorded result | `ACCEPTANCE_EVIDENCE_APPEND_ONLY` |
+| Delete a recorded result | `ACCEPTANCE_EVIDENCE_APPEND_ONLY` |
+| `blocked_by_conflict` with no conflict stated | refused |
+| Evidence with an empty actual result | refused |
+| Evidence against an unknown test id | refused |
+| Add an `outcome` column to the register | **accepted on the first run** — see below |
+| Gate with one of thirty passed | `complete: false`, `tests_passed: 1` |
+
+**A claim of mine that the proof disproved, and what was done about it.**
+The migration comment said an outcome could not be recorded by editing
+the specification, "because the register has no column for one". The
+first proof run added an `outcome` column to the register and was
+accepted. True-until-someone-runs-one-ALTER is not a control, so an
+event trigger now refuses any outcome-, result-, status- or
+verdict-shaped column on `t3a_d1_acceptance_test`, and the re-run
+records `outcome_on_register=REFUSED`.
+
+**The gate is written to be read by T3A-D1-REL-001**, which makes "the
+acceptance evidence for Section 11 returned complete" one of its seven
+activation conditions. It names the tests without a pass rather than only
+counting them, and states `override_available: false` in its own return.
+
+## 6q. §5 — the source sheets, re-extracted
+
+The load at 20260926000000 read each source sheet with a regex that took
+the **last** match for a field. Some sources state a field more than
+once: as the sheet entry, inside a later question-applicability table, and
+sometimes as a fragment of a sentence that merely mentions the field name.
+
+**The earlier report understated this.** It named two sources and two
+fields. Measured properly, against the item shapes the sources
+themselves use:
+
+| Selection rule | material_items | assertions | attribution set | routes |
+|---|---|---|---|---|
+| Last match (the original load) | 38/40 | 38/40 | 39/40 | 38/40 |
+| First match (my first correction) | 15/40 | 15/40 | 21/40 | 11/40 |
+| **Longest non-question-coded** | **40/40** | **40/40** | **39/40** | **39/40** |
+
+**My first correction made it worse, and it reached the database.** It
+ran under the first-match rule and superseded thirty-two sources with
+values worse than the ones they replaced. The rule was then measured,
+corrected, and the standing versions brought to the right end state.
+`20261007000000` carries the re-extraction as a fresh database needs it;
+`20261008000000` records the corrective run and is a no-op on a fresh
+database. The mistake is recorded rather than tidied away.
+
+**Position does not decide it; the value does** — on two mechanical rules
+and no knowledge of what any source says. A question-coded value is never
+the sheet entry, and between the rest the sheet entry is the fullest.
+
+**Two the rule cannot recover, left alone rather than guessed:**
+`SRC-D1-S1-010` `attribution_support_set` and `SRC-D1-S3-010`
+`available_routes`. The reference card refuses both lists and sends the
+mentor to the source, which is the correct behavior for a list a claim
+would otherwise be checked against.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
@@ -869,8 +946,8 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 | § | Outstanding |
 |---|---|
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
-| 11 | The acceptance-test suite |
-| 5.18 | Re-extract `material_items` and `assertion_reference_set` for SRC-D1-S1-001 and SRC-D1-S3-010 |
+| 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
+| 11 | Executing the thirty tests and recording their evidence. The register, the evidence table and the gate are built; a specification is not a passed test |
 
 ---
 

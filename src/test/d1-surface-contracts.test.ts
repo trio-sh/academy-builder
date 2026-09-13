@@ -42,6 +42,9 @@ const refCard = read(REFCARD);
 const REPORTFACE = "src/pages/dashboard/mentor/ReportFace.tsx";
 const reportFace = read(REPORTFACE);
 
+const ACCEPTANCE = "src/pages/dashboard/mentor/AcceptanceTests.tsx";
+const acceptance = read(ACCEPTANCE);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -58,6 +61,7 @@ const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
 const reportFaceCode = code(reportFace);
+const acceptanceCode = code(acceptance);
 
 describe("§8.4 Stage 1 — no determination control, no AI-suggested answer", () => {
   it("offers no free-text input for a determination", () => {
@@ -722,6 +726,69 @@ describe("§6 The report face — eleven blocks, and nothing behind them", () =>
   it("states that an unreached review item is not a pass", () => {
     expect(reportFace.replace(/\s+/g, " ")).toMatch(
       /An item that has not been reached is not a pass/
+    );
+  });
+});
+
+describe("§11 Acceptance tests — a specification is not a passed test", () => {
+  it("keeps the register and the evidence as two separate reads", () => {
+    const reads = [...acceptanceCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect([...new Set(reads)].sort()).toEqual([
+      "t3a_d1_acceptance_evidence",
+      "t3a_d1_acceptance_test",
+    ]);
+  });
+
+  it("offers no control that records or changes an outcome", () => {
+    // The page reads. Nothing on it writes, because a result that could
+    // be set from a screen would not be evidence of anything.
+    expect(acceptanceCode).not.toMatch(
+      /\.insert\(|\.update\(|\.upsert\(|\.delete\(|setOutcome|markPass|recordPass|onPass/i
+    );
+  });
+
+  it("reads the completeness gate rather than computing it", () => {
+    expect(acceptanceCode).toMatch(/rpc\("t3a_d1_acceptance_evidence_complete"/);
+    // No local pass-count arithmetic standing in for the gate.
+    expect(acceptanceCode).not.toMatch(/filter\([^)]*outcome === "pass"[^)]*\)\.length/);
+  });
+
+  it("treats a test with no evidence as having none, not as a pass", () => {
+    expect(acceptanceCode).toMatch(/e \? OUTCOME_LABEL\[e\.outcome\] : "No evidence recorded"/);
+    // No default outcome anywhere.
+    expect(acceptanceCode).not.toMatch(/outcome\s*(\?\?|\|\|)\s*"pass"|outcome = "pass"/);
+  });
+
+  it("offers exactly the four outcomes the register allows", () => {
+    const labels = acceptanceCode.slice(
+      acceptanceCode.indexOf("OUTCOME_LABEL"),
+      acceptanceCode.indexOf("};", acceptanceCode.indexOf("OUTCOME_LABEL"))
+    );
+    expect(labels).toMatch(/pass:/);
+    expect(labels).toMatch(/fail:/);
+    expect(labels).toMatch(/not_executed:/);
+    expect(labels).toMatch(/blocked_by_conflict:/);
+  });
+
+  it("offers no override on the gate", () => {
+    expect(acceptanceCode).not.toMatch(
+      /setOverride|onOverride|applyOverride|forceComplete|waive|bypass/i
+    );
+  });
+
+  it("names the tests without a pass rather than only counting them", () => {
+    expect(acceptanceCode).toMatch(/without_a_pass/);
+  });
+
+  it("states the five things §11 forbids as a resolution", () => {
+    expect(acceptance.replace(/\s+/g, " ")).toMatch(
+      /not resolved by hiding a field, adding free text, introducing a default, combining controls, or reducing either live view/
+    );
+  });
+
+  it("states that evidence is append-only", () => {
+    expect(acceptance.replace(/\s+/g, " ")).toMatch(
+      /a test that once failed does not become a test that always passed/
     );
   });
 });

@@ -278,9 +278,38 @@ heads.forEach((h, n) => {
   // and never from the Stage.
   const sheet = {};
   const sheetRe = /^- `([a-z0-9_]+)`\s*—\s*([\s\S]*?)(?=\n- `|\n\*\*|\n#### |$)/gm;
+  const occurrences = {};
   for (const m of body.matchAll(sheetRe)) {
-    sheet[m[1]] = m[2].trim().replace(/\s+/g, " ");
+    (occurrences[m[1]] ??= []).push(m[2].trim().replace(/\s+/g, " "));
   }
+
+  // A source states some of these fields more than once: as its own
+  // sheet entry, inside a later question-applicability table whose rows
+  // read "Q-D1-03aDirect...", and sometimes as a fragment of a sentence
+  // that merely mentions the field name.
+  //
+  // Position does not decide which is real. Taking the last match — the
+  // original load — corrupted two sources; taking the first corrupted
+  // twenty-five, because the regions are not in a consistent order
+  // across the forty. Measured against the item shapes the sources
+  // themselves use (M1, A1, AS1, R-a), last-match recovered 38/38/39/38
+  // of forty and first-match 15/15/21/11.
+  //
+  // So the VALUE decides, on two mechanical rules and no knowledge of
+  // what any source says: a question-coded value is never the sheet
+  // entry, and between the rest the sheet entry is the fullest. That
+  // recovers 40/40/39/39.
+  //
+  // §1.5 makes material_items and assertion_reference_set the two lists
+  // a participant's claim is checked against, so a wrong one is worse
+  // than a missing one. The two this rule cannot recover are left as the
+  // source states them and refused by the reference card, not guessed.
+  for (const [key, values] of Object.entries(occurrences)) {
+    const candidates = values.filter((v) => !/^Q-D1-[0-9]/.test(v));
+    const pool = candidates.length > 0 ? candidates : values;
+    sheet[key] = pool.reduce((a, b) => (b.length > a.length ? b : a));
+  }
+
 
   out.push(`
   -- ${h.id} — ${h.title.replace(/'/g, "")}
