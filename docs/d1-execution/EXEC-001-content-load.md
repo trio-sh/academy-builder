@@ -1,8 +1,8 @@
-# T3A-D1-EXEC-001 — Sections 5, 6 and 7: build report
+# T3A-D1-EXEC-001 — Sections 5 to 8: build report
 
-**Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6 and 7
+**Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5, 6 and 7 built and proved. Conflict register below.
+**Status** Sections 5 to 8 built and proved. Every remaining item is a surface. Conflict register below.
 
 ---
 
@@ -358,6 +358,61 @@ A recipient needs no account, and redemption reads only the function's
 return: no full record, no traceability sheet, no other report, no other
 participant, no search.
 
+## 6e. Section 8 — Stage operating contracts
+
+**8.1 — the S1 Confirmation Workbench.** The order is fixed and each step
+is a separate persisted action: AI administration → human determination
+capture → `confirmS1Observation` → commit → progression. The workbench
+refuses to open where `model_ref`, `prompt_ref`, `configuration_ref` or
+the responses are absent, and `confirmS1Observation` refuses where any
+served question is unresolved. `captured_at` is held separately from
+`administration_ended_at` so late capture is identified rather than
+presented as contemporaneous. Q-D1-06 is excluded at S1 in the confirm
+gate rather than left to the source sheet, because §1 places route use at
+Stage 1 in the prohibited category for launch.
+
+**8.2 — Stage 3.** The eleven-field provenance check, with
+`prior_version_ref` as a twelfth **only** on a resubmission:
+
+```
+nothing supplied        AI_USE_DECLARATION_REQUIRED
+tooling absent          AI_USE_DECLARATION_REQUIRED
+first submission        passed, 11 fields
+prior_ref on a first    PRIOR_VERSION_REF_ON_FIRST_SUBMISSION
+a resubmission          passed, 12 fields
+authorship not affirmed AUTHORSHIP_ATTESTATION_NOT_AFFIRMED
+free text in an
+assistance declaration  refused; controlled list only
+```
+
+**A defect found while proving this one.** `v_resubmission` was first
+derived as *state is RESUBMITTED **or** prior_version_ref is present*.
+That made §8.2's "must be absent on a first submission" check
+unreachable: the field's own presence declared the submission a
+resubmission, so a first submission carrying a stale reference passed
+silently. The proof showed it as a refusal that never fired. It is now
+derived from the state alone, and the reason is written at the line.
+
+**8.3 — Stage 4.** One shared interaction, one observed participant. The
+column is singular and a partial unique index enforces exactly one
+observed member per session:
+
+```
+capture for the observed        permitted, 1 lane
+capture for a co-participant    CO_PARTICIPANT_GENERATES_NO_OBSERVATION_RECORD
+a second observed member        refused
+a co-participant withdraws      administration variance on the observed
+                                record; 0 co-participant records removed
+the observed disconnects        STAGE_INSTANCE_PAUSED
+the observed withdraws          excluded from current composition,
+                                retained in history
+media columns on the S4 tables  0
+```
+
+`RECORDING` is unavailable in D1 and no Stage carries it, so the Stage 4
+tables hold no recording, media, video, audio or transcript column at
+all — asserted as zero rather than left to a policy.
+
 ## 7. The one thing that needs the founder, not the developer
 
 **Five of the forty issued sources contain the British spelling
@@ -394,7 +449,6 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 | 5.3 | The mentor reference card that renders the capture sets at the beat |
 | 3 | Mentor Cockpit — partially built; the Stage 2 live surface is not complete |
 | 6 | The report face renderer that assembles the eleven blocks on screen |
-| 8 | Stage operating contracts for S1, S3 and S4 |
 | 11 | The acceptance-test suite |
 
 ---
