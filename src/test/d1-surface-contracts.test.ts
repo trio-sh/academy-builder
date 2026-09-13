@@ -139,16 +139,14 @@ describe("§5.5 missing states — the two that may never be applied at commit",
     expect(workbenchCode).not.toMatch(/"not yet observed"/);
   });
 
-  it("offers exactly the six codes that may be applied", () => {
-    const offered = [
-      "not captured",
-      "never asked",
-      "declined",
-      "no response",
-      "technical failure",
-      "withdrawn",
-    ];
-    offered.forEach((c) => expect(workbench).toContain(`"${c}"`));
+  it("offers the codes the server says are applicable, not a copy of the list", () => {
+    // The list used to be hardcoded here. A copy drifts from the
+    // register, so the screen now reads t3a_d1_missing_states() and
+    // offers only the codes it marks applicable at commit.
+    expect(workbenchCode).toMatch(/rpc\("t3a_d1_missing_states"\)/);
+    expect(workbenchCode).toMatch(/filter\(\(c\) => c\.applicable_at_commit\)/);
+    // And no literal list of codes remains to drift.
+    expect(workbenchCode).not.toMatch(/"not captured"|"never asked"|"technical failure"/);
   });
 
   it("keeps the missing state outside the answer enumeration", () => {
@@ -158,7 +156,7 @@ describe("§5.5 missing states — the two that may never be applied at commit",
       workbenchCode.indexOf('type="radio"'),
       workbenchCode.indexOf("Or record why no answer was captured")
     );
-    expect(radioBlock).not.toMatch(/MISSING_STATE_CODES/);
+    expect(radioBlock).not.toMatch(/missingStateCodes|missing_state/);
   });
 });
 

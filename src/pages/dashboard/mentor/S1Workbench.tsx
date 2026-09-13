@@ -61,20 +61,25 @@ type Resolution = {
 };
 
 /**
- * §5.5 register 2 — the eight global missing-state reason codes. Two of
- * them may never be applied at commit and are therefore not offered:
- * `not applicable` (inapplicability is expressed by non-service under the
- * branch rules) and `not yet observed` (it describes a dimension before
- * observation, not a field within one). The server refuses both anyway.
+ * §5.5 register 2 — the eight global missing-state reason codes, read
+ * from the server rather than listed here.
+ *
+ * Two of the eight may never be applied at commit — `not_applicable`
+ * (inapplicability is expressed by non-service under the branch rules)
+ * and `not_yet_observed` (it describes a dimension before observation,
+ * not a field within one). The server refuses both, and
+ * t3a_d1_missing_states() marks which are applicable, so this screen
+ * offers what it is told rather than a copy of the list that could drift
+ * from it.
  */
-const MISSING_STATE_CODES = [
-  "not captured",
-  "never asked",
-  "declined",
-  "no response",
-  "technical failure",
-  "withdrawn",
-] as const;
+type MissingStateCode = {
+  code: string;
+  applicable_at_commit: boolean;
+  reason: string | null;
+};
+
+/** Enum labels carry underscores; a mentor reads words. */
+const missingStateLabel = (code: string) => code.replace(/_/g, " ");
 
 const S1Workbench = () => {
   const { runId } = useParams<{ runId: string }>();
@@ -83,6 +88,18 @@ const S1Workbench = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  // The applicable codes are the server's list, fetched once.
+  const [missingStateCodes, setMissingStateCodes] = useState<MissingStateCode[]>([]);
+
+  useEffect(() => {
+    const loadCodes = async () => {
+      const { data } = await supabase.rpc("t3a_d1_missing_states");
+      setMissingStateCodes(
+        ((data ?? []) as MissingStateCode[]).filter((c) => c.applicable_at_commit)
+      );
+    };
+    void loadCodes();
+  }, []);
   const [openRefusal, setOpenRefusal] = useState<{ code: string; missing?: string } | null>(null);
   const [run, setRun] = useState<Record<string, unknown> | null>(null);
   const [sourceSheet, setSourceSheet] = useState<Record<string, unknown>>({});
@@ -358,9 +375,9 @@ const S1Workbench = () => {
                       className="border border-foreground/30 bg-transparent px-3 py-1.5 text-foreground"
                     >
                       <option value="">—</option>
-                      {MISSING_STATE_CODES.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
+                      {missingStateCodes.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {missingStateLabel(c.code)}
                         </option>
                       ))}
                     </select>
