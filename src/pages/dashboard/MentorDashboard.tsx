@@ -9,6 +9,7 @@ import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/file
 import AIAgent from "@/pages/dashboard/AIAgent";
 import Determinations from "@/pages/dashboard/mentor/Determinations";
 import Cockpit from "@/pages/dashboard/mentor/Cockpit";
+import S1Workbench from "@/pages/dashboard/mentor/S1Workbench";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -4482,6 +4483,9 @@ const MentorDashboardInner = () => {
           <Route path="determinations" element={<Determinations />} />
           <Route path="endorsements" element={<Endorsements />} />
           <Route path="cockpit/:stageEntryEventId" element={<Cockpit />} />
+          {/* §8.1.1 — the S1 Confirmation Workbench. Reached from a
+              Stage 1 administration run, never from a participant. */}
+          <Route path="s1-workbench/:runId" element={<S1Workbench />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />

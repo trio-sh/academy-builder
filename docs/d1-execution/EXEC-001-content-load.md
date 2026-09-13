@@ -2,7 +2,7 @@
 
 **Reference** T3A-D1-EXEC-001 v1.0, Sections 5, 6, 7 and 8
 **Produced** 13 September 2026
-**Status** Sections 5 to 8 built and proved. Every remaining item is a surface. Conflict register below.
+**Status** Sections 5 to 8 built and proved. The first §8.4 surface is built. Conflict register below.
 
 ---
 
@@ -412,6 +412,46 @@ media columns on the S4 tables  0
 `RECORDING` is unavailable in D1 and no Stage carries it, so the Stage 4
 tables hold no recording, media, video, audio or transcript column at
 all — asserted as zero rather than left to a policy.
+
+## 6f. The first §8.4 surface — the S1 Confirmation Workbench
+
+*"Layout is yours; the screens, the actions and the refusals are not."*
+
+`/dashboard/mentor/s1-workbench/:runId`. It reads the server for every
+decision it makes: whether it may open, which questions are served, and
+whether it may confirm. It decides none of them itself.
+
+**What the confirmer sees, and nothing else.** §8.1.1 lists what must
+not reach this screen — no other observation, no prior record, no
+rehearsal history, no profile. That is enforced by a test that
+enumerates every table the component reads and fails on anything outside
+the permitted five: the administration run, the served source version,
+and the three capture registers.
+
+**The *must not appear* column is where a later edit does the damage**,
+so it is covered by assertions rather than by intent:
+
+```
+no free-text input for a determination      no <textarea>, no text input
+preselects nothing                          no defaultChecked, no defaultValue,
+                                            selection state starts empty
+no suggestion or highlight                  no suggest/recommend/preferred/
+                                            likely/bestAnswer/autoSelect
+never re-sorted                             no .sort(); the register's own
+                                            line_order governs
+no combined capture-and-confirm control     capture and confirm stay separate
+```
+
+**The two missing-state codes that may never be applied at commit are
+absent from the control, not disabled in it.** `not applicable` and
+`not yet observed` are not offered, because inapplicability is expressed
+by non-service under the branch rules and *not yet observed* describes a
+dimension rather than a field. The remaining six are offered, and the
+control sits outside the answer list because a missing state is metadata
+on the field and never a value inside the enumeration.
+
+**An unserved question renders the rule that excluded it**, not an empty
+control — so an absence reads as a rule rather than as an omission.
 
 ## 7. The one thing that needs the founder, not the developer
 
