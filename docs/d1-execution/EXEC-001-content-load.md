@@ -954,6 +954,64 @@ documents disagree and the disagreement is real.** Recorded here rather
 than settled: the badge is gone from D1's surface either way, but whether
 a recording clause exists for another dimension is not a developer's call.
 
+## 6s. §11 — the acceptance tests, executed
+
+Thirty evidence records for build `7e597da`. **Nine passed, fourteen are
+blocked by a governing input that does not exist, and seven were not
+executed in this run and say so.**
+
+| Outcome | Tests |
+|---|---|
+| Pass | AC-02, AC-03, AC-07, AC-09, AC-14, AC-20, AC-21, AC-22, AC-30 |
+| Blocked by a conflict | AC-01, AC-04, AC-05, AC-06, AC-08, AC-12, AC-13, AC-17, AC-23, AC-24, AC-26, AC-27, AC-28, AC-31 |
+| Not executed | AC-10, AC-11, AC-15, AC-16, AC-18, AC-19, AC-29 |
+
+**The gate still returns false, and that is the correct state.** It names
+all twenty-one tests without a pass. Nothing here was made to look
+finished: T3A-D1-REL-001 reads this gate, and a gate that says yes when
+nine of thirty passed is worse than no gate.
+
+**Two governing inputs are missing, and they account for all fourteen
+blocked tests.** No source is registered for serving — none of the forty
+holds a REC-07 approval or a source-version hash (§5.18) — and both live
+views are placeholders until the meeting workspace lands. §11 says record
+that as a conflict rather than resolving it by weakening the test, so
+each blocked record names the input it lacks.
+
+**The seven not-executed records are the ones it would have been easiest
+to reason into passes.** AC-11 in particular: the missing-state register
+holds eight codes, §5.5 permits six at commit, and the workbench offers
+exactly those six as field metadata. That reasoning is sound and it is
+still not a test run, so it is recorded as not executed.
+
+## 6t. A live route that generates AI scores from microphone speech
+
+Found while executing AC-20 and AC-24, and **it is not a D1 surface**,
+which is why it survived every D1 control built so far.
+
+`/dashboard/candidate/observations/session` mounts
+`InteractiveSkillAssessment`. It captures microphone speech through the
+Web Speech API, builds a transcript, and runs an AI analysis that returns
+**per-dimension scores** and written feedback.
+
+What it does **not** do: it writes to no `t3a_d1_*` table. D1 evidence is
+untouched by it, and every D1 control holds.
+
+What is true anyway:
+
+- it is live and participant-facing, on a route named **observations**;
+- it uses the microphone, while `t3a_d1_consent_type` records RECORDING
+  as unavailable in D1 because no Stage carries it;
+- it produces scores about a person's conduct, which is the thing §3.4
+  and AC-21 exist to prevent on an observation surface.
+
+**Not resolved here.** It reads the legacy tables (`observation_loops`,
+`mentor_assigned_dimensions`), so it belongs to the pathway that predates
+D1, and removing a live participant-facing feature is a product decision
+rather than a developer's. Recorded so the decision is taken knowingly:
+if a participant reaching that route believes they are being observed,
+they are being scored by a model and told so by nobody.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
@@ -1003,7 +1061,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | Cockpit live-media wiring: both live views are placeholders until the meeting workspace lands, so §3.3 is proved as a state machine rather than against a real track |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Executing the thirty tests and recording their evidence. The register, the evidence table and the gate are built; a specification is not a passed test |
+| 11 | Twenty-one of thirty tests without a pass: fourteen blocked on a missing governing input, seven not executed |
 
 ---
 
