@@ -857,3 +857,29 @@ describe("§3 Mentor Cockpit — six regions, and no smaller version of them", (
     );
   });
 });
+
+describe("§3.4/§8.4 The participant pathway holds no scoring route", () => {
+  const CANDIDATE = "src/pages/dashboard/CandidateDashboard.tsx";
+  const candidate = read(CANDIDATE);
+  const candidateCode = code(candidate);
+
+  it("mounts no route to the speech-and-AI-scoring assessment", () => {
+    // The component captured microphone speech and produced per-dimension
+    // AI scores, mounted as the participant's "S1 Session". D1 grants no
+    // RECORDING consent at any Stage, S1 is administered and then
+    // confirmed by an authorized human, and §3.4 forbids a score about
+    // conduct. The route is withdrawn; the component is left in the tree.
+    expect(candidateCode).not.toMatch(/<Route[^>]*InteractiveSkillAssessment/);
+    expect(candidateCode).not.toMatch(/to="\/dashboard\/candidate\/observations\/session"/);
+  });
+
+  it("offers the participant no control that starts a Stage 1 session", () => {
+    // S1 is arranged for the participant. A button implying otherwise is
+    // the thing that made the scoring route reachable in the first place.
+    expect(candidateCode).not.toMatch(/Begin S1 Session|Continue S1 Session/);
+  });
+
+  it("renders no score count or progress indicator for a Stage", () => {
+    expect(candidateCode).not.toMatch(/dimensions scored|ScoredDims\.size/);
+  });
+});

@@ -1759,6 +1759,9 @@ const ObservationPathway = () => {
  {/* S1 — AI Scenarios */}
  {(() => {
  const l1Feedback = observationFeedback.filter(f => f.feedback_level === 1);
+ // §8.4 — the participant pathway carries no score and no progress
+ // indicator, so this set is used only to know whether a Stage is
+ // done, never rendered as a count.
  const l1ScoredDims = new Set(l1Feedback.map(f => f.dimension_id));
  const l1AllComplete = assignedDimensions.length > 0 && assignedDimensions.every(d => l1ScoredDims.has(d));
  const l1Partial = l1Feedback.length > 0 && !l1AllComplete;
@@ -1771,18 +1774,21 @@ const ObservationPathway = () => {
  <h3 className="font-semibold text-foreground mb-1">AI-Driven Scenarios</h3>
  <p className="text-xs text-foreground/60 mb-4">Solo, asynchronous. AI observes your behavioral responses to workplace pressure scenarios.</p>
  {l1AllComplete ? (
- <p className="text-xs text-foreground font-medium">S1 Complete — {l1ScoredDims.size}/{assignedDimensions.length} dimensions scored</p>
+ <p className="text-xs text-foreground font-medium">Stage 1 is complete.</p>
  ) : (
  <>
  {l1Partial && (
- <p className="text-xs ink-vermilion mb-3">{l1ScoredDims.size}/{assignedDimensions.length} dimensions scored — continue to complete remaining</p>
+ <p className="text-xs text-foreground/70 mb-3">Stage 1 is under way.</p>
  )}
- <Link to="/dashboard/candidate/observations/session">
- <Button size="sm" className="w-full bg-foreground/[0.05] hover:hover:">
- {l1Partial ? "Continue S1 Session" : "Begin S1 Session"}
- <ArrowRight className="w-4 h-4 ml-1" />
- </Button>
- </Link>
+ {/* S1 is not self-serve. It is administered, and an
+                        authorized human then converts the captured
+                        responses into determinations before anything is
+                        recorded. There is no button here because there
+                        is no action here. */}
+ <p className="text-xs text-foreground/70 leading-relaxed">
+ Your Stage 1 situation is arranged for you. Nothing about it
+ starts from this page.
+ </p>
  </>
  )}
  </div>
@@ -6406,7 +6412,24 @@ const CandidateDashboard = () => {
      </div>
    </div>
  } />
- <Route path="observations/session" element={<InteractiveSkillAssessment />} />
+ {/* WITHDRAWN — T3A-D1-EXEC-001 §3.4, §8.4 and §7.1.
+                InteractiveSkillAssessment captured microphone speech and
+                produced per-dimension AI scores, mounted here as the
+                participant's "S1 Session". Three things were wrong with
+                that, and none is a matter of taste:
+
+                  - D1 grants no RECORDING consent at any Stage
+                    (t3a_d1_consent_type), and this took the microphone;
+                  - it produced scores about a person's conduct, which is
+                    what §3.4 and AC-21 exist to prevent;
+                  - S1 is AI-administered and then confirmed by an
+                    authorized human in the S1 Confirmation Workbench.
+                    A self-serve scoring session is not that pathway, and
+                    a participant reaching this believed it was.
+
+                The component is left in the tree rather than deleted, so
+                nothing is lost if it is wanted for another dimension
+                under its own doctrine. It is not reachable from here. */}
  <Route path="passport" element={<SkillPassport />} />
  <Route path="report-review" element={<ReportReview />} />
  <Route path="growth" element={<GrowthLog />} />
