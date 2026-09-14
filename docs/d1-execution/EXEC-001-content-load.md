@@ -1048,6 +1048,71 @@ its first check. That is a limit of the harness rather than a missing
 governing input, and it is recorded as such rather than dressed up as a
 conflict.
 
+## 6v. Two founder decisions, taken
+
+### The participant scoring route — withdrawn
+
+`InteractiveSkillAssessment`, mounted at
+`/dashboard/candidate/observations/session` and presented to
+participants as **"Begin S1 Session"**, captured microphone speech, built
+a transcript, and ran an AI analysis returning per-dimension scores. The
+card beside it read *"N/M dimensions scored"*.
+
+Three things were wrong, and none is a matter of taste:
+
+- D1 grants no RECORDING consent at any Stage — `t3a_d1_consent_type`
+  records it unavailable because no Stage carries it — and this took the
+  microphone;
+- it produced scores about a person's conduct, which is what §3.4 and
+  AC-21 exist to prevent;
+- S1 is AI-administered and then confirmed by an authorized human in the
+  S1 Confirmation Workbench. A self-serve scoring session is not that
+  pathway, and a participant reaching it believed it was.
+
+The route is withdrawn, the card now says Stage 1 is arranged for the
+participant, and the score and progress counts are gone from the
+participant pathway per §8.4. **The component is left in the tree rather
+than deleted** — nothing is lost if it is wanted for another dimension
+under its own doctrine. Three tests hold that it stays unreachable.
+
+### REC-07 approval — the door is built, and not walked through
+
+Fourteen acceptance tests are blocked on one input: no source is
+registered for serving. The tempting move was to write an approval and
+unblock them.
+
+**It was not taken.** An approval a developer can write to get a test
+green is not an approval. Everything else here — the append-only logs,
+the hash chains, the refusals that survive a `SECURITY DEFINER` route —
+exists so a governance record means what it says. Fabricating one to move
+a number from 14 to 24 is the most expensive shortcut available.
+
+What was actually wrong is that **the governance act had somewhere to
+land and no door to come through**: RLS on, one read policy, no insert
+policy, no trigger, nothing checking who may approve, and a status column
+any writer could set to `approved`.
+
+Now: approving is a function rather than an INSERT; the approver's
+standing is checked server-side; an approval names a person, a moment and
+an exact version; it is append-only, so withdrawing is a new row and the
+history shows the source was once approved; a superseded version cannot
+be approved; and a version with no source-version hash cannot be
+approved, because an approval names an exact text.
+
+**A defect found by proving the route rather than reading it.**
+`t3a_d1_source_approval.source_id` pointed at `t3a_source`, which holds
+**zero rows** — the forty loaded sources live in `t3a_content_object`,
+and the version column beside it already pointed at the content register.
+REC-07 approval was therefore *impossible by construction*: the one table
+that records an approval could not name a single source that exists, and
+it would have read as "nothing approved yet" forever. The foreign key is
+re-pointed at the register the sources are actually in; the table was
+empty, so nothing was migrated and nothing lost.
+
+`t3a_d1_serving_readiness()` now states the position plainly: **40
+loaded, 0 approved, 0 carrying a hash, nothing servable** — blocked on a
+governance act by a person with standing, which no build may perform.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
