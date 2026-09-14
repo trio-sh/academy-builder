@@ -16,6 +16,7 @@ import GroupSessionWorkspace from "@/pages/dashboard/mentor/GroupSession";
 import ReferenceCard from "@/pages/dashboard/mentor/ReferenceCard";
 import ReportFace from "@/pages/dashboard/mentor/ReportFace";
 import AcceptanceTests from "@/pages/dashboard/mentor/AcceptanceTests";
+import SourceApproval from "@/pages/dashboard/mentor/SourceApproval";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -805,6 +806,7 @@ const navItems = [
   { name: "Reference Card", href: "/dashboard/mentor/reference-card", icon: ClipboardCheck },
   { name: "Report Face", href: "/dashboard/mentor/report-face", icon: FileCheck },
   { name: "Acceptance Tests", href: "/dashboard/mentor/acceptance-tests", icon: ClipboardCheck },
+  { name: "Source Approval", href: "/dashboard/mentor/source-approval", icon: FileCheck },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4521,6 +4523,10 @@ const MentorDashboardInner = () => {
               against it. A specification is not a passed test, so the
               two are never merged. */}
           <Route path="acceptance-tests" element={<AcceptanceTests />} />
+          {/* REC-07 — approving a source for serving. The act is a
+              signature by a person with standing, checked again
+              server-side; this route only makes it reachable. */}
+          <Route path="source-approval" element={<SourceApproval />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />

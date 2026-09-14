@@ -921,3 +921,41 @@ describe("Report face — entitlement, not identifier possession", () => {
     );
   });
 });
+
+describe("REC-07 Source approval — a signature, not a calculation", () => {
+  const APPROVAL = "src/pages/dashboard/mentor/SourceApproval.tsx";
+  const approval = read(APPROVAL);
+  const approvalCode = code(approval);
+
+  it("records an approval only through the governed route", () => {
+    expect(approvalCode).toMatch(/rpc\("t3a_d1_record_source_approval"/);
+    // Never a direct write to the approval table.
+    expect(approvalCode).not.toMatch(
+      /from\("t3a_d1_source_approval"\)\s*\.\s*(insert|update|upsert|delete)/
+    );
+  });
+
+  it("offers no approve-all control", () => {
+    // A control that approves forty at once approves forty unread.
+    expect(approvalCode).not.toMatch(
+      /approveAll|bulkApprove|selectAll|approveEvery|\.map\([^)]*onRecord\([^)]*"approved"/
+    );
+  });
+
+  it("offers no edit to a source", () => {
+    // Approving is not editing. A screen offering both invites a
+    // correction recorded as an approval.
+    expect(approvalCode).not.toMatch(/<textarea|contentEditable|updateSource|editSource/i);
+  });
+
+  it("cannot offer approval for a version carrying no hash", () => {
+    expect(approvalCode).toMatch(/disabled=\{working === s\.content_object_id \|\| !hash\}/);
+  });
+
+  it("withdraws by recording a withdrawal rather than erasing", () => {
+    expect(approvalCode).toMatch(/"withdrawn"/);
+    expect(approval.replace(/\s+/g, " ")).toMatch(
+      /Withdrawing does not erase an approval/
+    );
+  });
+});
