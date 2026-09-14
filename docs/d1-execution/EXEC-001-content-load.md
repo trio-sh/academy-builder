@@ -1113,6 +1113,67 @@ empty, so nothing was migrated and nothing lost.
 loaded, 0 approved, 0 carrying a hash, nothing servable** — blocked on a
 governance act by a person with standing, which no build may perform.
 
+## 6w. Three findings from review, and one of them was mine
+
+An automated review on PR #282 raised three P1 findings. All three were
+correct and all three are fixed.
+
+### The one that mattered — a hole I opened
+
+`20261004000000` created `t3a_d1_report_face(ber_report_id)` as
+`SECURITY DEFINER` and granted EXECUTE to **anon and authenticated with
+no caller check of any kind**. Any caller holding a report identifier
+could read that participant's composed conduct rows.
+
+It was not theoretical. `t3a_employer_pool_query` returns each pool
+entry's `ber_report_id` to an approved employer, so the identifier is
+handed out by design — and a direct RPC call with it bypassed the
+participant-controlled release entirely and **kept working after the
+participant revoked**.
+
+This is the same shape as the three `USING (true)` tables the Employer
+Desk work closed, rebuilt by me in a function a few sections later. Worth
+stating plainly: a refusal is not a habit. It has to be written every
+time, and I did not write it.
+
+Now the assembly and the entitlement are separate.
+`t3a_d1_report_face_assemble` has **no grant to any role**, and two gates
+reach it: the participant or an actor with administrative standing, and a
+token holder through the release route. Proved — the exact attack returns
+`NO_CALLER_IDENTIFIED`, the assembler has zero grants, `anon` has none on
+the face.
+
+### The recipient saw boilerplate instead of their report
+
+After redeeming, the page loaded the *global* block schedule and the
+controlled-text register and never the redeemed report. Every valid
+recipient saw the explanatory text and a render-behaviour string where
+the observed conduct belonged.
+
+It now calls `t3a_d1_report_face_for_release(token, address)`, which
+re-checks the token on **every** call — so a revocation takes effect
+immediately rather than at a login the recipient does not have — and
+returns the face of that report. The page reads no table at all.
+
+### The release button that released nothing
+
+The participant's release form prevented the browser submit and showed a
+success toast. It created no consent and no token, so there was no link
+for the named recipient to redeem. The screen advertised an action the
+system could not perform — and there was no route to perform it, because
+`t3a_d1_issue_release_token` did not exist.
+
+It does now: one DISCLOSURE consent per release (§7.1, never standing),
+one token naming one recipient and one report at one version, only the
+participant may issue one for their own issued report, and the link is
+returned once and stored only as a hash.
+
+**A gap found while fixing the second one.** Where a mandatory block's
+controlled text is not loaded, the assembler refuses the whole face — but
+the page would have rendered that as zero blocks, which reads as a short
+report rather than a refused one. The refusal is now carried through and
+stated.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the

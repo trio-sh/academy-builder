@@ -260,13 +260,14 @@ describe("§8.4 Named recipient — the longest must-not-appear list", () => {
     );
   });
 
-  it("reads no other report and no other participant", () => {
-    // Only the block schedule and its controlled texts are read; the
-    // report itself comes back through the redemption function.
+  it("reads no table at all", () => {
+    // It used to read the global block schedule and controlled-text
+    // register, which is how a valid recipient ended up seeing
+    // boilerplate instead of their report. Everything now arrives
+    // through the token-scoped route, so there is no table read left to
+    // reach past one report into another.
     const reads = [...recipientCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
-    expect(reads.sort()).toEqual(
-      ["t3a_d1_report_block", "t3a_d1_report_controlled_text"].sort()
-    );
+    expect(reads).toEqual([]);
   });
 
   it("offers no search", () => {
@@ -295,16 +296,21 @@ describe("§8.4 Named recipient — the longest must-not-appear list", () => {
     expect(recipient.replace(/\s+/g, " ")).toMatch(/returns no content/i);
   });
 
-  it("refuses to render a mandatory block whose controlled text is absent", () => {
-    // Section 6.2: the render refuses rather than omitting the block.
+  it("refuses the whole face where a mandatory block's text is absent", () => {
+    // §6.2. The assembler refuses the face rather than dropping a block,
+    // and the page carries that refusal through rather than rendering a
+    // short report that looks complete.
+    expect(recipientCode).toMatch(/faceRefusal/);
     expect(recipient.replace(/\s+/g, " ")).toMatch(
-      /cannot render: its controlled text is not loaded/i
+      /this report face is incomplete and is not a valid rendering. Nothing partial is shown/i
     );
   });
 
-  it("renders no placeholder for an empty job-family block", () => {
+  it("renders no placeholder for a block that did not fire", () => {
     // Block 11 remains EMPTY and NO EMPTY LABEL OR PLACEHOLDER RENDERS.
-    expect(recipientCode).toMatch(/if \(!b\.renders_always && !body\) return null;/);
+    // Which blocks fired is the server's answer, read here.
+    expect(recipientCode).toMatch(/if \(!b\.renders\) return null;/);
+    expect(recipientCode).not.toMatch(/renders_always/);
   });
 });
 
@@ -881,5 +887,37 @@ describe("§3.4/§8.4 The participant pathway holds no scoring route", () => {
 
   it("renders no score count or progress indicator for a Stage", () => {
     expect(candidateCode).not.toMatch(/dimensions scored|ScoredDims\.size/);
+  });
+});
+
+describe("Report face — entitlement, not identifier possession", () => {
+  it("the recipient page reads the released report, not the global schedule", () => {
+    // It used to load t3a_d1_report_block and the controlled-text
+    // register after redeeming, so every valid recipient saw boilerplate
+    // and a render-behaviour string instead of their report.
+    expect(recipientCode).toMatch(/rpc\("t3a_d1_report_face_for_release"/);
+    const reads = [...recipientCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
+    expect(reads).toEqual([]);
+  });
+
+  it("the recipient page renders only blocks the server says render", () => {
+    expect(recipientCode).toMatch(/if \(!b\.renders\) return null;/);
+    // And it decides nothing about which blocks those are.
+    expect(recipientCode).not.toMatch(/renders_always/);
+  });
+
+  it("the release form issues a release rather than announcing one", () => {
+    // It previously prevented the submit and showed a success toast,
+    // creating no consent and no token, so there was nothing to redeem.
+    expect(disclosuresCode).toMatch(/rpc\("t3a_d1_issue_release_token"/);
+    expect(disclosuresCode).toMatch(/if \(!result\?\.issued\)/);
+  });
+
+  it("the release link is held only until it is shown", () => {
+    // Stored as a hash server-side; the page keeps it in state and says
+    // it cannot be recovered.
+    expect(disclosures.replace(/\s+/g, " ")).toMatch(
+      /stored only as a hash, so it cannot be recovered afterwards/
+    );
   });
 });

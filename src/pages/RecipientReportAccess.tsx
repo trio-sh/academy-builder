@@ -31,15 +31,22 @@ type Redemption = {
   report_version?: string;
 };
 
-type ReportBlock = {
+/**
+ * A block of THIS report, exactly as t3a_d1_report_face_for_release
+ * assembled it. The screen no longer reads the global block schedule or
+ * the controlled-text register: a recipient sees the report they were
+ * released, and nothing that describes reports in general.
+ */
+type FaceBlock = {
   block_no: number;
   block_name: string;
   render_behaviour: string;
+  renders: boolean;
+  not_rendering_reason: string | null;
   controlled_text_ref: string | null;
-  renders_always: boolean;
+  controlled_text: string | null;
+  rows: { dimension_id: string; stage_code: string; statement: string }[] | null;
 };
-
-type ControlledText = { text_ref: string; body: string };
 
 /** §7.5 — each state, and what the recipient is told. None returns content. */
 const STATE_COPY: Record<string, { heading: string; body: string }> = {
@@ -79,33 +86,42 @@ const RecipientReportAccess = () => {
 
   // Status-only verification, §6.2.4 and §7.5. Returns current, amended
   // or withdrawn, and never content.
+  // The blocks of THIS report, as the server assembled them.
+  const [face, setFace] = useState<FaceBlock[]>([]);
+  const [faceRefusal, setFaceRefusal] = useState<string | null>(null);
+
   const [verifyId, setVerifyId] = useState("");
   const [verifyState, setVerifyState] = useState<string | null>(null);
 
   const onRedeem = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsWorking(true);
-    const { data } = await supabase.rpc("t3a_d1_redeem_release_token", {
+    // One call. It redeems the token and returns the face of the report
+    // that token authorizes — not the global block schedule, which is
+    // what this screen used to render and which would have shown every
+    // valid recipient the boilerplate instead of the report.
+    //
+    // The token is re-checked inside it on every call, so a revocation
+    // takes effect here immediately rather than at a login the recipient
+    // does not have.
+    const { data } = await supabase.rpc("t3a_d1_report_face_for_release", {
       p_token: token,
       p_verified_address: address,
     });
-    const redemption = (data ?? { content: false, state: "UNKNOWN_TOKEN" }) as Redemption;
-    setResult(redemption);
-
-    if (redemption.content) {
-      // The report FACE only. The block schedule and its controlled
-      // texts are the whole of what renders.
-      const [{ data: blockRows }, { data: textRows }] = await Promise.all([
-        supabase.from("t3a_d1_report_block").select("*").order("block_no"),
-        supabase.from("t3a_d1_report_controlled_text").select("text_ref, body"),
-      ]);
-      setBlocks((blockRows ?? []) as ReportBlock[]);
-      const map: Record<string, string> = {};
-      ((textRows ?? []) as ControlledText[]).forEach((t) => {
-        map[t.text_ref] = t.body;
-      });
-      setTexts(map);
-    }
+    const payload = (data ?? { content: false, state: "UNKNOWN_TOKEN" }) as
+      Redemption & {
+        face?: { rendered?: boolean; refusal_code?: string; blocks?: FaceBlock[] };
+      };
+    setResult(payload);
+    // §6.2 — where a mandatory block's controlled text is not loaded the
+    // assembler refuses the whole face. An incomplete face must never
+    // render as a short one, so the refusal is carried through.
+    setFaceRefusal(
+      payload.content && payload.face && payload.face.rendered === false
+        ? (payload.face.refusal_code ?? "REPORT_FACE_DID_NOT_RENDER")
+        : null
+    );
+    setFace(payload.content ? (payload.face?.blocks ?? []) : []);
     setIsWorking(false);
   };
 
@@ -202,39 +218,68 @@ const RecipientReportAccess = () => {
               </p>
             </header>
 
-            {blocks.map((b) => {
-              const body = b.controlled_text_ref ? texts[b.controlled_text_ref] : undefined;
+            {faceRefusal && (
+              <p className="mono-label ink-vermilion mb-8">
+                {faceRefusal} — this report face is incomplete and is not a
+                valid rendering. Nothing partial is shown.
+              </p>
+            )}
 
-              // Block 11 remains empty unless separately documented
-              // job-family evidence exists, and NO empty label or
-              // placeholder renders.
-              if (!b.renders_always && !body) return null;
-
-              // Where the text for a mandatory block is not loaded, the
-              // render refuses rather than omitting the block.
-              if (b.renders_always && b.controlled_text_ref?.startsWith("6.2.") && !body) {
-                return (
-                  <section key={b.block_no} className="mb-10">
-                    <p className="mono-label ink-vermilion">
-                      Block {b.block_no} cannot render: its controlled text is not
-                      loaded. This report face is incomplete and is not a valid
-                      rendering.
-                    </p>
-                  </section>
-                );
-              }
+            {!faceRefusal && face.map((b) => {
+              // A conditional block that did not fire renders nothing at
+              // all here. The recipient reads a report, not an account of
+              // which parts of a report template were inapplicable.
+              if (!b.renders) return null;
 
               return (
                 <section key={b.block_no} className="mb-10">
                   <h2 className="mono-label text-foreground/55 mb-3">
                     {b.block_no}. {b.block_name}
                   </h2>
-                  {body ? (
-                    <p className="text-foreground/85 leading-relaxed max-w-2xl">{body}</p>
-                  ) : (
-                    <p className="text-foreground/60 text-[0.9375rem] leading-relaxed max-w-2xl">
-                      {b.render_behaviour}
+
+                  {b.controlled_text && (
+                    <p className="text-foreground/85 leading-relaxed max-w-2xl whitespace-pre-line">
+                      {b.controlled_text}
                     </p>
+                  )}
+
+                  {/* Block 4 — the observed conduct, as composed. */}
+                  {b.rows !== null && b.rows.length > 0 && (
+                    <div className="overflow-x-auto mt-4">
+                      <table className="w-full border-t-2 border-foreground text-left">
+                        <thead>
+                          <tr className="border-b border-foreground/30">
+                            <th className="mono-label text-foreground/55 py-3 pr-6 font-normal">
+                              Dimension
+                            </th>
+                            <th className="mono-label text-foreground/55 py-3 pr-6 font-normal">
+                              Stage
+                            </th>
+                            <th className="mono-label text-foreground/55 py-3 font-normal">
+                              Observed conduct
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {b.rows.map((row, i) => (
+                            <tr
+                              key={`${b.block_no}-${i}`}
+                              className="border-b border-foreground/20 align-top"
+                            >
+                              <td className="py-4 pr-6 text-foreground/80">
+                                {row.dimension_id}
+                              </td>
+                              <td className="py-4 pr-6 text-foreground/80">
+                                {row.stage_code}
+                              </td>
+                              <td className="py-4 text-foreground/85 leading-relaxed">
+                                {row.statement}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                 </section>
               );

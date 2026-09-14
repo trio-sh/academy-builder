@@ -102,6 +102,52 @@ const Disclosures = () => {
     void load();
   }, [load]);
 
+  // The link is returned once and stored only as a hash, so it is held
+  // here until the participant has copied it and nowhere else.
+  const [issuedLink, setIssuedLink] = useState<string | null>(null);
+
+  const onRelease = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsWorking(true);
+
+    // §7.1 — each release is its own DISCLOSURE consent naming one
+    // recipient and one report at one version. The server creates both
+    // the consent and the token; this form previously showed a success
+    // message and created neither, so there was nothing for the named
+    // recipient to redeem.
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 30);
+
+    const { data } = await supabase.rpc("t3a_d1_issue_release_token", {
+      p_ber_report_id: reportId,
+      p_recipient_name: recipientName,
+      p_recipient_org: recipientOrg,
+      p_recipient_address: recipientAddress,
+      p_expires_at: expires.toISOString(),
+    });
+    setIsWorking(false);
+
+    const result = data as { issued?: boolean; token?: string; refusal_code?: string } | null;
+    if (!result?.issued) {
+      toast({
+        title: result?.refusal_code ?? "That release could not be made.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIssuedLink(`${window.location.origin}/report?t=${result.token}`);
+    setReportId("");
+    setRecipientName("");
+    setRecipientOrg("");
+    setRecipientAddress("");
+    toast({
+      title: "Release issued",
+      description: "Send the link to the person you named. It works only from their address.",
+    });
+    await load();
+  };
+
   const onRevoke = async (releaseTokenId: string) => {
     setIsWorking(true);
     const { error } = await supabase
@@ -215,23 +261,26 @@ const Disclosures = () => {
       </DashSection>
 
       <DashSection eyebrow="§ II · Release" title="Let someone read a report">
+        {issuedLink && (
+          <div className="border-2 border-foreground p-5 mb-8 max-w-2xl">
+            <p className="mono-label text-foreground/60 mb-2">
+              Shown once
+            </p>
+            <p className="text-foreground/85 break-all text-[0.9375rem]">{issuedLink}</p>
+            <p className="text-foreground/65 text-[0.875rem] mt-3 leading-relaxed">
+              Send this to the person you named. It is stored only as a hash, so
+              it cannot be recovered afterwards — if it is lost, release again.
+            </p>
+          </div>
+        )}
+
         {reports.length === 0 ? (
           <p className="text-foreground/75 max-w-2xl leading-relaxed">
             You have no issued report to release yet. A report can only be
             released once it has been issued.
           </p>
         ) : (
-          <form
-            className="space-y-6 max-w-xl"
-            onSubmit={(e) => {
-              e.preventDefault();
-              toast({
-                title: "Release prepared",
-                description:
-                  "Each release is its own consent, naming one person and covering one report at one version.",
-              });
-            }}
-          >
+          <form className="space-y-6 max-w-xl" onSubmit={(e) => void onRelease(e)}>
             <label className="block">
               <span className="mono-label text-foreground/70 block mb-2">Report</span>
               <select
@@ -290,12 +339,13 @@ const Disclosures = () => {
             <Button
               type="submit"
               disabled={
+                isWorking ||
                 reportId === "" ||
                 recipientName.trim() === "" ||
                 recipientAddress.trim() === ""
               }
             >
-              Prepare the release
+              {isWorking ? "Releasing…" : "Release it"}
             </Button>
           </form>
         )}
