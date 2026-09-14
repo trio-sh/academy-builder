@@ -11,6 +11,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { useLiveViewMonitor, attachStream } from "@/lib/liveView";
 
 /**
  * T3A-D1-DEV-INS-002 · Mentor Cockpit (Stage 2 live-observation surface).
@@ -55,14 +56,6 @@ import { Button } from "@/components/ui/button";
  * content, an AI-suggested choice, or a free-text fallback where an
  * approved question or option is missing.
  */
-
-type LiveViewState = {
- state: "AVAILABLE" | "DEGRADED" | "UNAVAILABLE";
- reason?: string | null;
- pause_route_taken?: boolean;
- source_advancement_blocked?: boolean;
- variance_on_resumption?: boolean;
-};
 
 type StageEntryRow = {
  stage_entry_event_id: string;
@@ -367,12 +360,36 @@ export default function Cockpit() {
  setVarianceNote("Recorded. A variance is not revised afterwards.");
  };
 
- const [participantView, setParticipantView] = useState<LiveViewState>({
- state: "AVAILABLE",
+ // Both views are measured and judged by §3.3, through the server.
+ // The streams come from whatever the meeting workspace supplies; until
+ // one does there is no track, and the rule says so rather than this
+ // screen assuming a view it cannot see.
+ // setParticipantStream and setMentorStream are the seam the meeting
+ // workspace attaches to. Everything downstream of them — the §3.3
+ // measurement, the verdict, the pause route, the variance on
+ // resumption — is built and proved, so attaching a provider is a
+ // one-line change here rather than a feature.
+ const [participantStream, setParticipantStream] = useState<MediaStream | null>(null);
+ const [mentorStream, setMentorStream] = useState<MediaStream | null>(null);
+ void setParticipantStream;
+ void setMentorStream;
+ const [participantPc] = useState<RTCPeerConnection | null>(null);
+
+ const participantVideoRef = useRef<HTMLVideoElement | null>(null);
+ const mentorVideoRef = useRef<HTMLVideoElement | null>(null);
+
+ const participantView = useLiveViewMonitor({
+ stream: participantStream,
+ peerConnection: participantPc,
  });
- const [mentorView, setMentorView] = useState<LiveViewState>({
- state: "AVAILABLE",
- });
+ const mentorView = useLiveViewMonitor({ stream: mentorStream });
+
+ useEffect(() => {
+ attachStream(participantVideoRef.current, participantStream);
+ }, [participantStream]);
+ useEffect(() => {
+ attachStream(mentorVideoRef.current, mentorStream);
+ }, [mentorStream]);
 
  if (loading) {
  return (
@@ -502,13 +519,28 @@ export default function Cockpit() {
  )}
  </div>
  )}
- <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 grid place-items-center text-foreground/60">
- <div className="text-center">
- <div className="mono-label mb-2">§ Placeholder</div>
- <p className="text-sm">
- Live video pane. Wired to the T3A meeting workspace after Post-Launch 04 Note 10 lands.
+ {/* Displayed, measured, and nothing else. No MediaRecorder,
+ no upload, no retained frame: D1 grants no RECORDING
+ consent at any Stage. */}
+ <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 relative">
+ <video
+ ref={participantVideoRef}
+ autoPlay
+ playsInline
+ className="w-full h-full object-cover"
+ />
+ {!participantStream && (
+ <div className="absolute inset-0 grid place-items-center text-foreground/60">
+ <div className="text-center px-6">
+ <div className="mono-label mb-2">No track presented</div>
+ <p className="text-sm max-w-sm">
+ The meeting workspace has not supplied a stream. The
+ session is held here rather than run without a view of
+ the participant.
  </p>
  </div>
+ </div>
+ )}
  </div>
  </div>
  </section>
@@ -523,14 +555,28 @@ export default function Cockpit() {
  <div className="mono-label text-background/70">{mentorView.state}</div>
  </div>
  <div className="p-4">
- <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 grid place-items-center text-foreground/60">
- <div className="text-center">
+ <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 relative">
+ {/* Muted: it is the mentor's own stream, and unmuting it
+ would feed back into the room. */}
+ <video
+ ref={mentorVideoRef}
+ autoPlay
+ playsInline
+ muted
+ className="w-full h-full object-cover"
+ />
+ {!mentorStream && (
+ <div className="absolute inset-0 grid place-items-center text-foreground/60">
+ <div className="text-center px-6">
  <div className="mono-label mb-2">§ Live presence only</div>
  <p className="text-sm max-w-sm">
- Your own stream, so you can see what the participant sees of
- you. Nothing here is recorded and nothing here is evidence.
+ Your own stream, so you can see what the participant sees
+ of you. Nothing here is recorded and nothing here is
+ evidence.
  </p>
  </div>
+ </div>
+ )}
  </div>
  {mentorView.state !== "AVAILABLE" && (
  <p className="mono-label ink-vermilion mt-3">{mentorView.reason}</p>

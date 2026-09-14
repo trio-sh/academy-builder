@@ -1174,6 +1174,65 @@ the page would have rendered that as zero blocks, which reads as a short
 report rather than a refused one. The refusal is now carried through and
 stated.
 
+## 6x. The two blockers, taken as far as they honestly go
+
+### Source-version hashes — done
+
+All forty standing versions now carry sha256 over their own verbatim
+body. `t3a_d1_source_hash_integrity()` reports **40 of 40 matching, none
+mismatched**. Assigned by superseding rather than editing, because a
+loaded body is immutable — the same route the spelling correction and the
+sheet re-extraction took.
+
+A hash is arithmetic over text already loaded. It says which text a
+version is; it says nothing about whether that text is fit to put in
+front of a participant.
+
+### REC-07 approval — a surface, not a row
+
+That second thing is a signature, and a signature has to be made by
+whoever it names. So `/dashboard/mentor/source-approval` lists the forty
+with their hash and status and records an approval **in the approver's
+own name**, through the governed route, which re-checks standing, the
+version, the hash and the supersession state server-side.
+
+- **no approve-all control** — an approval is per source and per version,
+  and a control that approves forty at once approves forty unread;
+- **no edit to a source** — a screen offering both would invite a
+  correction recorded as an approval;
+- approval is disabled outright for a version carrying no hash;
+- withdrawing records a withdrawal rather than erasing.
+
+Readiness now reads **40 loaded, 40 hashed, 0 approved**. The remaining
+step is one person, one click, and their name on it.
+
+### The live views — wired, and waiting on a provider rather than on code
+
+`src/lib/liveView.ts` is the layer between a media track and §3.3. It
+takes a `MediaStream` from whatever the meeting workspace turns out to be
+— LiveKit, Daily, Twilio, a raw peer connection — so **no vendor, no
+credential and no account is needed to finish and prove the wiring**.
+
+It measures and asks; it never decides. §3.3's four thresholds live in
+`t3a_d1_s2_live_view_state` and the client holds none of them, because a
+second opinion in the browser is exactly how a session continues as if
+conditions were intact. Decoded frames are read from the peer connection
+where one is available, because a connection can be healthy while the
+participant's picture is frozen — and where no peer connection is
+exposed, the track's own state is reported honestly rather than guessed.
+
+**A view with no track reads UNAVAILABLE, not AVAILABLE.** Saying a view
+is fine before a track has arrived is a claim rather than an observation,
+and the cockpit holds the session rather than running it blind.
+
+Both regions now display a real stream and record nothing: no
+`MediaRecorder`, no upload, no retained frame, and the mentor's own view
+is muted so it cannot feed back into the room.
+
+`setParticipantStream` and `setMentorStream` are the seam. Everything
+downstream of them is built and proved, so attaching a provider is a
+one-line change rather than a feature.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
@@ -1221,7 +1280,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 
 | § | Outstanding |
 |---|---|
-| 3 | Cockpit live-media wiring: both live views are placeholders until the meeting workspace lands, so §3.3 is proved as a state machine rather than against a real track |
+| 3 | A media provider for the two live views. The measurement layer, the §3.3 verdict and the display are built and proved; what is missing is a stream to attach |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
 | 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 needing a commit performed as an authenticated authorized mentor |
 

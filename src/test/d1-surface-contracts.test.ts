@@ -959,3 +959,47 @@ describe("REC-07 Source approval — a signature, not a calculation", () => {
     );
   });
 });
+
+describe("§3.3 The live views — measured here, judged by the server", () => {
+  const LIVEVIEW = "src/lib/liveView.ts";
+  const liveView = read(LIVEVIEW);
+  const liveViewCode = code(liveView);
+
+  it("holds no threshold of its own", () => {
+    // §3.3 sets three, ten and five seconds, and
+    // t3a_d1_s2_live_view_state holds them. A second opinion in the
+    // client is how a session continues as if conditions were intact.
+    expect(liveViewCode).toMatch(/rpc\("t3a_d1_s2_live_view_state"/);
+    expect(liveViewCode).not.toMatch(/>=\s*3\b|>=\s*10\b|>=\s*5\b/);
+  });
+
+  it("treats a view with no track as unavailable, not as available", () => {
+    // Saying AVAILABLE before a track arrives is a claim, not an
+    // observation.
+    expect(liveViewCode).toMatch(/NO_TRACK_PRESENTED/);
+    expect(liveViewCode).toMatch(/state: "UNAVAILABLE"/);
+  });
+
+  it("restarts the restoration count on any gap", () => {
+    // Restoration must be five CONSECUTIVE seconds; one good second
+    // after a gap starts them again.
+    expect(liveViewCode).toMatch(/secondsOfDecodedFrames\.current = 0;/);
+  });
+
+  it("records and retains nothing", () => {
+    expect(liveViewCode).not.toMatch(
+      /MediaRecorder|getUserMedia|getDisplayMedia|createObjectURL|new Blob|upload/i
+    );
+  });
+
+  it("binds to no media vendor", () => {
+    // It takes a MediaStream, so the provider decision stays open.
+    expect(liveViewCode).not.toMatch(/livekit|daily-co|twilio|agora|opentok|zoom/i);
+  });
+
+  it("the cockpit displays a stream without recording one", () => {
+    expect(cockpitCode).toMatch(/useLiveViewMonitor/);
+    expect(cockpitCode).toMatch(/<video/);
+    expect(cockpitCode).not.toMatch(/MediaRecorder|getDisplayMedia|captureStream/);
+  });
+});
