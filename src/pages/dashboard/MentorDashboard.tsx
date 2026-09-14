@@ -72,6 +72,7 @@ import {
   Copy,
   Reply,
   Paperclip,
+  Flag,
 } from "lucide-react";
 
 type MentorProfile = Database["public"]["Tables"]["mentor_profiles"]["Row"];

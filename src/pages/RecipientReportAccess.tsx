@@ -80,8 +80,6 @@ const RecipientReportAccess = () => {
   const [token, setToken] = useState("");
   const [address, setAddress] = useState("");
   const [result, setResult] = useState<Redemption | null>(null);
-  const [blocks, setBlocks] = useState<ReportBlock[]>([]);
-  const [texts, setTexts] = useState<Record<string, string>>({});
   const [isWorking, setIsWorking] = useState(false);
 
   // Status-only verification, §6.2.4 and §7.5. Returns current, amended
