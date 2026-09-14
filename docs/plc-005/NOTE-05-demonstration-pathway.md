@@ -132,11 +132,26 @@ releasable: false` alongside the watermark.
 
 ## 6. Synthetic fixtures
 
-The D1 source, question and statement fixtures this demonstration requires are
-**absent from the repository**. Per the note's own default, no production D1
-content was reconstructed or invented. `t3a_demo.source` carries
-`synthetic_test_only boolean default true`, and the fixture used in testing is
-named `SYNTHETIC_TEST_ONLY-D1-01`.
+**Correction, 13 September 2026.** This section previously recorded that the
+D1 source, question and statement fixtures were *absent* and that none could
+be loaded without inventing them. That was true of the repository and false
+of the programme: the Execution Edition v1.0 carries all of it — the forty
+production sources SRC-D1-S1-001 to SRC-D1-S4-010 at §5.18, the fifteen
+question objects at §5.2, the thirteen capture sets, the Layer 1 statement
+library at §5.7 and the fourteen controlled language templates at §5.17.
+
+**They are now loaded.** `scripts/extract-d1-content.mjs` parses them from the
+issued document rather than transcribing them, and
+`supabase/migrations/20260926000000_t3a_d1_content_load.sql` loads all forty
+sources as content. They load *as content only*: none carries a REC-07
+approval or a source-version hash, so every one of them refuses to serve into
+a real run. The refusal is the control, and the build report records it at
+`docs/d1-execution/EXEC-001-content-load.md`.
+
+What this section records about the demonstration run is unchanged: no
+production D1 content was reconstructed or invented here. `t3a_demo.source`
+carries `synthetic_test_only boolean default true`, and the fixture used in
+testing is named `SYNTHETIC_TEST_ONLY-D1-01`.
 
 Structurally barred from production loading: the table lives in `t3a_demo`,
 and `t3a_serve_source` refuses any source from it into a real run.

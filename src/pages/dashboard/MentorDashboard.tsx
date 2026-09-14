@@ -9,6 +9,13 @@ import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/file
 import AIAgent from "@/pages/dashboard/AIAgent";
 import Determinations from "@/pages/dashboard/mentor/Determinations";
 import Cockpit from "@/pages/dashboard/mentor/Cockpit";
+import S1Workbench from "@/pages/dashboard/mentor/S1Workbench";
+import EvidenceReview from "@/pages/dashboard/mentor/EvidenceReview";
+import Reconsideration from "@/pages/dashboard/mentor/Reconsideration";
+import GroupSessionWorkspace from "@/pages/dashboard/mentor/GroupSession";
+import ReferenceCard from "@/pages/dashboard/mentor/ReferenceCard";
+import ReportFace from "@/pages/dashboard/mentor/ReportFace";
+import AcceptanceTests from "@/pages/dashboard/mentor/AcceptanceTests";
 import { GoogleAuthLink } from "@/components/GoogleAuthLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -792,6 +799,12 @@ const navItems = [
   { name: "Observations", href: "/dashboard/mentor/observations", icon: ClipboardCheck },
   { name: "Determinations", href: "/dashboard/mentor/determinations", icon: FileCheck },
   { name: "Confirmations", href: "/dashboard/mentor/endorsements", icon: Award },
+  { name: "Evidence Review", href: "/dashboard/mentor/evidence-review", icon: FileCheck },
+  { name: "Reconsideration", href: "/dashboard/mentor/reconsideration", icon: Flag },
+  { name: "Shared Sessions", href: "/dashboard/mentor/group-session", icon: Users },
+  { name: "Reference Card", href: "/dashboard/mentor/reference-card", icon: ClipboardCheck },
+  { name: "Report Face", href: "/dashboard/mentor/report-face", icon: FileCheck },
+  { name: "Acceptance Tests", href: "/dashboard/mentor/acceptance-tests", icon: ClipboardCheck },
   { name: "Schedule", href: "/dashboard/mentor/schedule", icon: Calendar },
   { name: "Messages", href: "/dashboard/mentor/messages", icon: MessageSquare },
   { name: "Profile", href: "/dashboard/mentor/profile", icon: User },
@@ -4482,6 +4495,32 @@ const MentorDashboardInner = () => {
           <Route path="determinations" element={<Determinations />} />
           <Route path="endorsements" element={<Endorsements />} />
           <Route path="cockpit/:stageEntryEventId" element={<Cockpit />} />
+          {/* §8.1.1 — the S1 Confirmation Workbench. Reached from a
+              Stage 1 administration run, never from a participant. */}
+          <Route path="s1-workbench/:runId" element={<S1Workbench />} />
+          {/* §8.4 — evidence review and issue. Issuing is a separate
+              action by a different actor; §6.1 item 19 means the
+              reviewer can never issue the report they reviewed. */}
+          <Route path="evidence-review" element={<EvidenceReview />} />
+          {/* §8.4 — correction and reconsideration. Eligibility is the
+              server's answer; an involved actor never sees the control. */}
+          <Route path="reconsideration" element={<Reconsideration />} />
+          {/* §8.3/§8.4 — the Stage 4 shared session. One interaction, one
+              observed participant, one capture lane. A co-participant has
+              no lane, no determination and no progression, and this
+              surface offers no control that would create one. */}
+          <Route path="group-session" element={<GroupSessionWorkspace />} />
+          {/* §5.3 and §1.5 — the mentor reference card. It holds the
+              capture lines and the source's own lists, and nothing
+              that says which line is the better one. */}
+          <Route path="reference-card" element={<ReferenceCard />} />
+          {/* §6 — the report face. Assembled server-side; the
+              traceability sheet is never part of it. */}
+          <Route path="report-face" element={<ReportFace />} />
+          {/* §11 — the acceptance register and the evidence recorded
+              against it. A specification is not a passed test, so the
+              two are never merged. */}
+          <Route path="acceptance-tests" element={<AcceptanceTests />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="messages" element={<MentorMessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />

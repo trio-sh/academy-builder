@@ -50,6 +50,7 @@ import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
 import VerifyBER from "./pages/VerifyBER";
+import RecipientReportAccess from "@/pages/RecipientReportAccess";
 import VerifyReportToken from "./pages/VerifyReportToken";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -99,6 +100,9 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Behavioral Evidence Report verification (public) */}
+            {/* §7.5 and §8.4 — the named recipient. No account is
+                required, and holding one confers no access. */}
+            <Route path="/report" element={<RecipientReportAccess />} />
             <Route path="/verify" element={<VerifyBER />} />
             <Route path="/verify/ber/:id" element={<VerifyBER />} />
             <Route path="/verify/token" element={<VerifyReportToken />} />

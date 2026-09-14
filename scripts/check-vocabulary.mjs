@@ -62,6 +62,15 @@ const FORBIDDEN = [
 // Each entry is a migration ticket in disguise — remove the entry when
 // the file's rename PR lands. NEW files MUST NOT be added here.
 const ALLOWLIST = new Set([
+  // The two files whose job is to REMOVE this spelling. Each must name
+  // the wrong spelling in order to find it, and a check that forbade
+  // that would forbid ever correcting it. The founder settled the §5 /
+  // AC-61 conflict by deciding the occurrences be corrected; these
+  // carry that decision out and are allowlisted for naming the word
+  // they delete, nothing else.
+  "supabase/migrations/20261005000000_t3a_d1_spelling_correction.sql",
+  "scripts/extract-d1-content.mjs",
+
   // Supabase-generated types — regenerate after the schema rename PR.
   "src/types/database.types.ts",
   "src/integrations/supabase/types.ts",
