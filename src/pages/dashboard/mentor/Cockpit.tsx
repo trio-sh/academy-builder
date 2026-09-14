@@ -384,6 +384,32 @@ export default function Cockpit() {
  });
  const mentorView = useLiveViewMonitor({ stream: mentorStream });
 
+ // A verdict that only paints a banner is not a rule. Each change is
+ // reported, and an unavailable required view writes a pause event that
+ // outlives this component, a refresh, and the tab being closed. The
+ // commit is refused server-side while that pause stands.
+ useEffect(() => {
+ if (!entry || !profile?.id) return;
+ void supabase.rpc("t3a_d1_s2_report_live_view", {
+ p_stage_instance_id: entry.stage_entry_event_id,
+ p_view: "participant",
+ p_state: participantView.state,
+ p_reason: participantView.reason ?? "",
+ p_recorded_by: profile.id,
+ });
+ }, [participantView.state, participantView.reason, entry, profile?.id]);
+
+ useEffect(() => {
+ if (!entry || !profile?.id) return;
+ void supabase.rpc("t3a_d1_s2_report_live_view", {
+ p_stage_instance_id: entry.stage_entry_event_id,
+ p_view: "mentor",
+ p_state: mentorView.state,
+ p_reason: mentorView.reason ?? "",
+ p_recorded_by: profile.id,
+ });
+ }, [mentorView.state, mentorView.reason, entry, profile?.id]);
+
  useEffect(() => {
  attachStream(participantVideoRef.current, participantStream);
  }, [participantStream]);
@@ -791,7 +817,15 @@ export default function Cockpit() {
  <div className="col-span-3">
  <Button
  onClick={commit}
- disabled={committing || committed || requiredUnanswered.length > 0}
+ disabled={
+ committing ||
+ committed ||
+ requiredUnanswered.length > 0 ||
+ // §3.3 — advancement is blocked while a required live view is
+ // unavailable. The server refuses the commit regardless; this
+ // stops the mentor being invited to try.
+ participantView.source_advancement_blocked === true
+ }
  className="w-full rounded-none bg-foreground text-background hover:bg-foreground/90"
  >
  {committing ? (

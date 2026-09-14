@@ -1003,3 +1003,32 @@ describe("§3.3 The live views — measured here, judged by the server", () => {
     expect(cockpitCode).not.toMatch(/MediaRecorder|getDisplayMedia|captureStream/);
   });
 });
+
+describe("Two review findings on #284, and what they were", () => {
+  const APPROVAL = "src/pages/dashboard/mentor/SourceApproval.tsx";
+  const approvalCode = code(read(APPROVAL));
+
+  it("derives approval standing from the latest event at this version", () => {
+    // The table is append-only, so a withdrawal leaves the approved row
+    // in place. Finding any approved row reported a withdrawn source as
+    // approved, and ignored which version it belonged to.
+    expect(approvalCode).toMatch(/const standing = \(sourceId: string, versionId: string \| undefined\)/);
+    expect(approvalCode).toMatch(/a\.source_version_id === versionId/);
+    expect(approvalCode).toMatch(/latest\.status === "approved"/);
+    // And no predicate that would match a historical row.
+    expect(approvalCode).not.toMatch(/approvals\.find\(\([^)]*\) =>[^;]*status === "approved"\)/);
+  });
+
+  it("the cockpit reports each live-view verdict rather than only painting it", () => {
+    // A verdict that drives a banner and nothing else is not a rule.
+    expect(cockpitCode).toMatch(/rpc\("t3a_d1_s2_report_live_view"/);
+    expect(cockpitCode).toMatch(/p_view: "participant"/);
+    expect(cockpitCode).toMatch(/p_view: "mentor"/);
+  });
+
+  it("the commit control is blocked while advancement is", () => {
+    expect(cockpitCode).toMatch(
+      /participantView\.source_advancement_blocked === true/
+    );
+  });
+});

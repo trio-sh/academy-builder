@@ -138,8 +138,32 @@ const SourceApproval = () => {
 
   if (isLoading) return <LedgerLoading />;
 
-  const standing = (sourceId: string) =>
-    approvals.find((a) => a.source_id === sourceId && a.status === "approved") ?? null;
+  /**
+   * Standing is the LATEST event for this source at THIS version, not any
+   * historical approval.
+   *
+   * Raised in review and correct: the table is append-only, so a
+   * withdrawal leaves the original `approved` row in place. Looking for
+   * any approved row therefore kept reporting a withdrawn source as
+   * approved and offering to withdraw it again — and it ignored whether
+   * the approval belonged to the version now standing, so a corrected
+   * source would have inherited its predecessor's approval on screen.
+   *
+   * Ordering is by approved_at and then by the row identifier, which is
+   * stable rather than meaningful; the server is the authority on whether
+   * an approval may be recorded, and this only decides what to show.
+   */
+  const standing = (sourceId: string, versionId: string | undefined) => {
+    if (!versionId) return null;
+    const history = approvals
+      .filter((a) => a.source_id === sourceId && a.source_version_id === versionId)
+      .sort((a, b) => {
+        const at = (a.approved_at ?? "").localeCompare(b.approved_at ?? "");
+        return at !== 0 ? at : a.source_approval_id.localeCompare(b.source_approval_id);
+      });
+    const latest = history[history.length - 1];
+    return latest && latest.status === "approved" ? latest : null;
+  };
 
   return (
     <div>
@@ -189,7 +213,7 @@ const SourceApproval = () => {
           <div className="border-t-2 border-foreground">
             {sources.map((s) => {
               const v = versions.find((x) => x.content_object_id === s.content_object_id);
-              const a = standing(s.content_object_id);
+              const a = standing(s.content_object_id, v?.content_version_id);
               const hash = v?.body?.source_version_hash ?? null;
 
               return (

@@ -1233,6 +1233,57 @@ is muted so it cannot feed back into the room.
 downstream of them is built and proved, so attaching a provider is a
 one-line change rather than a feature.
 
+## 6y. Two more from review, and the same lesson twice
+
+### A rule that was displayed but not enforced
+
+The §3.3 verdict was measured, judged and **shown**. It drove a banner
+and nothing else: the commit control still wrote an observation record
+while the screen said the session was paused and advancement blocked.
+
+That is the report-face mistake in a different place. A rule a screen
+states and a rule a route enforces are not the same thing, and only the
+second one is a rule. Twice in one day, in code I wrote, and both times a
+reviewer found it rather than me.
+
+Fixed in two halves:
+
+- **the verdict is recorded, not just shown.** An unavailable required
+  view writes a pause event, so the block outlives the component, a
+  refresh, and the tab being closed. `t3a_d1_s2_advancement_permitted`
+  already refused while an uncleared pause stood; now it has something to
+  refuse on. Restoration writes the clearance *and* the administration
+  variance §3.3 requires, because a variance a mentor has to remember is
+  a variance that goes unrecorded.
+- **commit is gated server-side**, on the observation record itself
+  rather than in a function the client could route around.
+
+Proved: degraded writes nothing and the session continues; unavailable
+pauses; a repeat report does not write a second pause; advancement is
+refused; **the commit is refused while paused**; restoration resumes with
+a variance; the commit is then accepted; and a non-Stage-2 record is
+untouched.
+
+**The same NULL trap as BR-02a, for the third time.** With no session
+event yet, `v_last` is NULL and `(NULL = 'paused')` is NULL rather than
+false, so `NOT v_paused` is NULL and the pause branch never fired. The
+first proof run caught it reporting `NO_CHANGE` for an unavailable view —
+which would have left the commit gate open in exactly the case it exists
+for. `coalesce` is load-bearing.
+
+### Approval standing read from a historical row
+
+The approval table is append-only, so a withdrawal leaves the original
+`approved` row in place. The surface looked for *any* approved row, so it
+kept reporting a withdrawn source as approved and offering to withdraw it
+again — and it ignored which version the approval belonged to, so a
+corrected source would have inherited its predecessor's approval on
+screen.
+
+Standing is now the latest event for that source **at the version now
+standing**, and a test holds that no predicate matching a historical row
+returns.
+
 ## 7. The spelling conflict — raised, and settled by the founder
 
 **Five occurrences of the British spelling `behavioural`** sat inside the
