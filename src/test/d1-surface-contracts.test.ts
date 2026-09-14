@@ -921,3 +921,114 @@ describe("Report face — entitlement, not identifier possession", () => {
     );
   });
 });
+
+describe("REC-07 Source approval — a signature, not a calculation", () => {
+  const APPROVAL = "src/pages/dashboard/mentor/SourceApproval.tsx";
+  const approval = read(APPROVAL);
+  const approvalCode = code(approval);
+
+  it("records an approval only through the governed route", () => {
+    expect(approvalCode).toMatch(/rpc\("t3a_d1_record_source_approval"/);
+    // Never a direct write to the approval table.
+    expect(approvalCode).not.toMatch(
+      /from\("t3a_d1_source_approval"\)\s*\.\s*(insert|update|upsert|delete)/
+    );
+  });
+
+  it("offers no approve-all control", () => {
+    // A control that approves forty at once approves forty unread.
+    expect(approvalCode).not.toMatch(
+      /approveAll|bulkApprove|selectAll|approveEvery|\.map\([^)]*onRecord\([^)]*"approved"/
+    );
+  });
+
+  it("offers no edit to a source", () => {
+    // Approving is not editing. A screen offering both invites a
+    // correction recorded as an approval.
+    expect(approvalCode).not.toMatch(/<textarea|contentEditable|updateSource|editSource/i);
+  });
+
+  it("cannot offer approval for a version carrying no hash", () => {
+    expect(approvalCode).toMatch(/disabled=\{working === s\.content_object_id \|\| !hash\}/);
+  });
+
+  it("withdraws by recording a withdrawal rather than erasing", () => {
+    expect(approvalCode).toMatch(/"withdrawn"/);
+    expect(approval.replace(/\s+/g, " ")).toMatch(
+      /Withdrawing does not erase an approval/
+    );
+  });
+});
+
+describe("§3.3 The live views — measured here, judged by the server", () => {
+  const LIVEVIEW = "src/lib/liveView.ts";
+  const liveView = read(LIVEVIEW);
+  const liveViewCode = code(liveView);
+
+  it("holds no threshold of its own", () => {
+    // §3.3 sets three, ten and five seconds, and
+    // t3a_d1_s2_live_view_state holds them. A second opinion in the
+    // client is how a session continues as if conditions were intact.
+    expect(liveViewCode).toMatch(/rpc\("t3a_d1_s2_live_view_state"/);
+    expect(liveViewCode).not.toMatch(/>=\s*3\b|>=\s*10\b|>=\s*5\b/);
+  });
+
+  it("treats a view with no track as unavailable, not as available", () => {
+    // Saying AVAILABLE before a track arrives is a claim, not an
+    // observation.
+    expect(liveViewCode).toMatch(/NO_TRACK_PRESENTED/);
+    expect(liveViewCode).toMatch(/state: "UNAVAILABLE"/);
+  });
+
+  it("restarts the restoration count on any gap", () => {
+    // Restoration must be five CONSECUTIVE seconds; one good second
+    // after a gap starts them again.
+    expect(liveViewCode).toMatch(/secondsOfDecodedFrames\.current = 0;/);
+  });
+
+  it("records and retains nothing", () => {
+    expect(liveViewCode).not.toMatch(
+      /MediaRecorder|getUserMedia|getDisplayMedia|createObjectURL|new Blob|upload/i
+    );
+  });
+
+  it("binds to no media vendor", () => {
+    // It takes a MediaStream, so the provider decision stays open.
+    expect(liveViewCode).not.toMatch(/livekit|daily-co|twilio|agora|opentok|zoom/i);
+  });
+
+  it("the cockpit displays a stream without recording one", () => {
+    expect(cockpitCode).toMatch(/useLiveViewMonitor/);
+    expect(cockpitCode).toMatch(/<video/);
+    expect(cockpitCode).not.toMatch(/MediaRecorder|getDisplayMedia|captureStream/);
+  });
+});
+
+describe("Two review findings on #284, and what they were", () => {
+  const APPROVAL = "src/pages/dashboard/mentor/SourceApproval.tsx";
+  const approvalCode = code(read(APPROVAL));
+
+  it("derives approval standing from the latest event at this version", () => {
+    // The table is append-only, so a withdrawal leaves the approved row
+    // in place. Finding any approved row reported a withdrawn source as
+    // approved, and ignored which version it belonged to.
+    expect(approvalCode).toMatch(/const standing = \(sourceId: string, versionId: string \| undefined\)/);
+    expect(approvalCode).toMatch(/a\.source_version_id === versionId/);
+    expect(approvalCode).toMatch(/latest\.status === "approved"/);
+    // And no predicate that would match a historical row.
+    expect(approvalCode).not.toMatch(/approvals\.find\(\([^)]*\) =>[^;]*status === "approved"\)/);
+  });
+
+  it("the cockpit reports each live-view verdict rather than only painting it", () => {
+    // A verdict that drives a banner and nothing else is not a rule.
+    expect(cockpitCode).toMatch(/rpc\("t3a_d1_s2_report_live_view"/);
+    expect(cockpitCode).toMatch(/p_view: "participant"/);
+    expect(cockpitCode).toMatch(/p_view: "mentor"/);
+  });
+
+  it("the commit control is blocked while advancement is", () => {
+    expect(cockpitCode).toMatch(
+      /participantView\.source_advancement_blocked === true/
+    );
+  });
+});
