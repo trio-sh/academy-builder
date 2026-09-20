@@ -44,6 +44,40 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
 }
 
+/**
+ * A person's name out of whatever the identity provider happened to send.
+ *
+ * This application's own sign-up writes first_name and last_name. An
+ * OAuth provider does not: Google sends given_name and family_name when
+ * it has them, and otherwise only a single `name` (or `full_name`).
+ *
+ * Splitting a single name on the first space is a guess, and it is wrong
+ * for plenty of real names. It is still better than recording nobody at
+ * all, and the person can correct it in their profile. What this must not
+ * do is return two empty strings when the provider plainly told us who
+ * the account belongs to.
+ */
+export function deriveNames(
+  metadata: Record<string, unknown>,
+): { firstName: string; lastName: string } {
+  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+
+  const first = str(metadata.first_name) || str(metadata.given_name);
+  const last = str(metadata.last_name) || str(metadata.family_name);
+  if (first || last) return { firstName: first, lastName: last };
+
+  const whole = str(metadata.full_name) || str(metadata.name);
+  if (!whole) return { firstName: '', lastName: '' };
+
+  const parts = whole.split(/\s+/);
+  if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(' '),
+  };
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const PROFILE_FETCH_TIMEOUT = 5000;
@@ -108,11 +142,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // approved application, both derived server-side. The database
           // refuses anything else from a client session regardless; this
           // keeps the client from sending a request that can only fail.
+          // first_name/last_name are what this application's own sign-up
+          // writes. An OAuth provider does not use those keys: Google
+          // sends given_name/family_name, or only a single `name`. Reading
+          // just the first pair left every Google account with a blank
+          // name, which is worse than cosmetic — the oversight-standing
+          // guard verifies that an email belongs to an account but does
+          // not verify the name, so a profile with no name on record will
+          // accept whatever name is typed against it.
+          const { firstName, lastName } = deriveNames(metadata);
+
           const { error: createErr } = await createProfile(
             userId,
             userObj.email || '',
-            metadata.first_name || '',
-            metadata.last_name || '',
+            firstName,
+            lastName,
             'candidate'
           );
           if (createErr) {
