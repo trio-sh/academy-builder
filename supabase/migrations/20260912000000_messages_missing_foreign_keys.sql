@@ -20,6 +20,16 @@
 
 set search_path = public;
 
+-- Dropped first because messages_conversation_id_fkey already existed
+-- under that name, which aborted the whole migration and left the other
+-- two unadded. What this migration asserts is that these three
+-- relationships exist under exactly these names, which is what PostgREST
+-- looks up; re-stating one that is already correct costs nothing, and
+-- failing on it cost the other two.
+ALTER TABLE public.messages DROP CONSTRAINT IF EXISTS messages_sender_id_fkey;
+ALTER TABLE public.messages DROP CONSTRAINT IF EXISTS messages_conversation_id_fkey;
+ALTER TABLE public.messages DROP CONSTRAINT IF EXISTS messages_reply_to_id_fkey;
+
 ALTER TABLE public.messages
   ADD CONSTRAINT messages_sender_id_fkey
   FOREIGN KEY (sender_id) REFERENCES public.profiles(id) ON DELETE SET NULL;

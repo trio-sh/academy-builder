@@ -25,15 +25,31 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const SB_URL = process.env.SB_URL || "https://ijxnsmponlrdhomaurkg.supabase.co";
+// Read from .env alongside the anon key rather than hardcoding a project.
+// The previous hardcoded fallback outlived the project it named, so this
+// check would have gone on interrogating a host that no longer answers.
+const SB_URL = process.env.SB_URL || readUrlFromEnvFile();
 const ANON = process.env.ANON || readAnonFromEnvFile();
 
-function readAnonFromEnvFile() {
+function readFromEnvFile(key) {
   const envFile = resolve(ROOT, ".env");
   if (!existsSync(envFile)) return "";
   const txt = readFileSync(envFile, "utf8");
-  const m = txt.match(/^VITE_SUPABASE_PUBLISHABLE_KEY\s*=\s*['"]?([^'"\n]+)/m);
+  const m = txt.match(new RegExp(`^${key}\\s*=\\s*['"]?([^'"\\n]+)`, "m"));
   return m ? m[1].trim() : "";
+}
+
+function readAnonFromEnvFile() {
+  return readFromEnvFile("VITE_SUPABASE_PUBLISHABLE_KEY");
+}
+
+function readUrlFromEnvFile() {
+  return readFromEnvFile("VITE_SUPABASE_URL");
+}
+
+if (!SB_URL) {
+  console.warn("⚠ check-firewall: no Supabase URL set — skipping (not a pass).");
+  process.exit(0);
 }
 
 if (!ANON) {

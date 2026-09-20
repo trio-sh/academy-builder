@@ -203,3 +203,78 @@ pressure to cross these lines is highest when a deadline is close.
 
 A governance record that does not mean what it says is worse than a
 missing one, because nobody goes looking for it.
+
+---
+
+## Appendix D — Rebuilding the database from the migrations
+
+Done for real on 2026-09-20, when the hosting provider took the original
+project down and it became unreachable. Written from that, not from
+theory.
+
+**What survives a lost project and what does not.**
+
+| Survives | Does not |
+|---|---|
+| Every table, function, policy and trigger | Every `auth.users` account |
+| The forty sources, their versions and hashes | Every profile row keyed to one |
+| The registers, the acceptance register and its evidence | Oversight standing grants |
+
+The migrations are the schema *and* the content — the load is itself a
+migration. So a rebuild restores the content without anyone re-extracting
+it. What it cannot restore is anyone's ability to sign in.
+
+**Check what was in there before assuming the worst.** For D1 the
+evidence tables were empty — no observation records, no determinations,
+no reports, no approvals — so nothing a participant did was lost. Find
+that out before telling anyone what was lost.
+
+**The replay.** Apply every migration in filename order, each one as a
+single transaction, and stop on the first failure rather than pressing on.
+A migration that fails leaves a cascade behind it, and a list of thirty-six
+failures is one problem wearing thirty-six masks.
+
+**Four things that will stop a replay, all of them met on the first run.**
+
+1. **pgcrypto is not installed by any migration.** The original had it
+   out-of-band. `digest()` is called unqualified from files that set
+   `search_path = public`, so `create extension pgcrypto with schema
+   extensions` is not enough on its own — check where it landed and what
+   the calling code can see.
+2. **`ALTER TYPE … ADD VALUE` then using that value in the same
+   transaction.** PostgreSQL refuses. Commit the `ALTER TYPE` statements
+   first, then the rest of the file.
+3. **Superseded drafts that never ran anywhere.** Two files in this repo
+   are competing versions of a migration that a later file replaced
+   (`002_complete_schema.sql`, `20260130_platform_updates.sql`). They fail
+   because they never applied originally either. Skip them, and write down
+   which and why — a silent skip is indistinguishable from a bug.
+4. **Files ordered by name, not by dependency.** The content load sorted
+   before the migration creating the tables it loads into. Because a
+   migration is one transaction, that took the forty sources down with it.
+   Split the dependent sections into a file that sorts later rather than
+   renaming anything.
+
+**Then verify against numbers you decided in advance**, not against
+whatever came out:
+
+```sql
+select public.t3a_d1_serving_readiness();
+select * from public.t3a_d1_source_hash_integrity();
+```
+
+For D1: 40 sources loaded, 40 carrying a hash, 0 approved,
+`hash_matches_verbatim = 40`, `mismatched = ''`, and zero British
+spellings among standing versions. `sources_approved = 0` is the correct
+answer, not a shortfall — see Stage 3.
+
+**Afterwards, and this is the part that looks finished but is not:**
+
+- Repoint the application (`.env`, `supabase/config.toml`) and search the
+  repo for the old project reference. A script here had it hardcoded as a
+  fallback and would have gone on querying a host that no longer answers.
+- Re-create the accounts. They are gone, including the founder's.
+- **Re-grant oversight standing.** Until that is done every approval
+  screen returns `APPROVER_LACKS_STANDING`, and Appendix A applies in
+  full — including granting it to the account the person actually signs
+  in with.

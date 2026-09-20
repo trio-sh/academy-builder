@@ -210,42 +210,29 @@ GRANT SELECT ON public.t3a_observation_record TO authenticated;
 GRANT INSERT, UPDATE ON public.t3a_observation_record TO authenticated;
 
 -- ========================================================================
--- §5 · t3a_conflict_declaration
+-- §5 · t3a_conflict_declaration — SUPERSEDED, deliberately does nothing
 -- ========================================================================
-
-CREATE TABLE IF NOT EXISTS public.t3a_conflict_declaration (
-  conflict_declaration_id uuid primary key default gen_random_uuid(),
-  actor_id uuid not null references public.profiles(id) on delete restrict,
-  target_kind text not null check (target_kind IN ('participant','source_family','organization')),
-  target_ref text not null,
-  declared_at timestamptz not null default now(),
-  rationale text,
-  revoked_at timestamptz
-);
-
-CREATE INDEX IF NOT EXISTS t3a_conflict_declaration_actor_idx
-  ON public.t3a_conflict_declaration (actor_id, target_kind, target_ref)
-  WHERE revoked_at IS NULL;
-
-ALTER TABLE public.t3a_conflict_declaration ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "t3a_conflict_declaration_read" ON public.t3a_conflict_declaration;
-CREATE POLICY "t3a_conflict_declaration_read"
-  ON public.t3a_conflict_declaration FOR SELECT TO authenticated
-  USING (actor_id = auth.uid() OR public.is_admin());
-
-DROP POLICY IF EXISTS "t3a_conflict_declaration_insert_self" ON public.t3a_conflict_declaration;
-CREATE POLICY "t3a_conflict_declaration_insert_self"
-  ON public.t3a_conflict_declaration FOR INSERT TO authenticated
-  WITH CHECK (actor_id = auth.uid());
-
-DROP POLICY IF EXISTS "t3a_conflict_declaration_update_own" ON public.t3a_conflict_declaration;
-CREATE POLICY "t3a_conflict_declaration_update_own"
-  ON public.t3a_conflict_declaration FOR UPDATE TO authenticated
-  USING (actor_id = auth.uid() OR public.is_admin())
-  WITH CHECK (actor_id = auth.uid() OR public.is_admin());
-
-GRANT SELECT, INSERT, UPDATE ON public.t3a_conflict_declaration TO authenticated;
+--
+-- This section named a table that 20260811160000 had already created
+-- with a different design: mentor_id / participant_id / employer_org_id /
+-- reason_class / declared_at / cleared_at, against the actor_id /
+-- target_kind / target_ref / revoked_at shape defined here.
+--
+-- CREATE TABLE IF NOT EXISTS does not reconcile two designs, it picks the
+-- one that got there first and says nothing. The index below then failed
+-- on revoked_at, which is the column the legacy shape does not carry.
+-- Every policy and grant in this section was describing a table that does
+-- not look like this.
+--
+-- 20260905000000_t3a_d1_repair_and_namespace.sql settled it: the D1
+-- design moves under the t3a_d1_* prefix and the spec-002 table stands as
+-- it is. The conflict declaration this section wanted now exists as
+-- public.t3a_d1_conflict_declaration, created there with exactly these
+-- columns, this index and these policies.
+--
+-- So this section is left as a record rather than deleted. Restoring it
+-- would recreate the collision, and silently dropping it would hide that
+-- the collision happened.
 
 -- ========================================================================
 -- §6 · The involvement test
