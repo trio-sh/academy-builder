@@ -81,6 +81,34 @@ DROP POLICY IF EXISTS "mentor_profiles_insert" ON public.mentor_profiles;
 DROP POLICY IF EXISTS "mentor_profiles_update" ON public.mentor_profiles;
 DROP POLICY IF EXISTS "mentor_profiles_delete" ON public.mentor_profiles;
 
+-- The five names above are the ones this table carried before
+-- 20260810190240 replaced them. That migration's dynamic block renamed
+-- the whole family — `<table>_read`, `<table>_insert_own`,
+-- `<table>_update_own`, `<table>_delete_own` — so by the time this
+-- lockdown ran, every DROP above matched nothing.
+--
+-- Two consequences, both found by replaying these migrations into an
+-- empty database rather than by reading them:
+--
+--   1. `mentor_profiles_read` is `FOR SELECT USING (true)`. It is the
+--      open read on the mentor pool that this migration exists to close,
+--      and it survived the close.
+--   2. The CREATE POLICY below then collided with the surviving
+--      `mentor_profiles_insert_own` and aborted the migration, so none
+--      of the scoped policies it installs landed either.
+--
+-- Dropping by the names that are actually present. The two "Allow all"
+-- policies come from 002_actual_schema.sql and are equally permissive.
+DROP POLICY IF EXISTS "mentor_profiles_read" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "mentor_profiles_rw" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "mentor_profiles_insert_own" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "mentor_profiles_update_own" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "mentor_profiles_delete_own" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "Allow all select" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "Allow all insert" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "Allow all update" ON public.mentor_profiles;
+DROP POLICY IF EXISTS "Allow all delete" ON public.mentor_profiles;
+
 CREATE POLICY "mentor_profiles_select_scoped"
   ON public.mentor_profiles
   FOR SELECT
