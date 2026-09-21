@@ -1379,6 +1379,70 @@ is running the session.
 
 ---
 
+## 7b. §11 — AC-18 and AC-19 were blocked on the wrong reason
+
+Both were recorded `not_executed` with this reason: *"auth.uid() is null,
+so the function refuses at its first check. This is a limit of the test
+harness."*
+
+**Withdrawn.** `auth.uid()` reads `request.jwt.claims`, which a proof can
+set — every gate proved since has been exercised as a named authenticated
+actor that way. The harness was never what stood in the way, and it was
+also the wrong route: that note describes `t3a_commit_observation`, which
+writes `t3a_observation`. AC-18 and AC-19 are §11.1 **Cockpit** tests,
+and the cockpit writes `t3a_observation_record`. Looking at the other
+path made a design gap look like an access problem.
+
+**What is actually in the way.**
+
+**AC-18 would fail as built.** `t3a_observation_record` carries
+`authority_snapshot_id`, `t3a_authority_snapshot` exists to hold the
+authorization in force, and `t3a_role_authorization` is the register it
+would come from. The cockpit's commit writes none of them — it leaves
+`authority_snapshot_id` null. A committed action traces to no
+authorization, which is the exact property AC-18 tests.
+
+**AC-19 half-fails.** `version_set` pins the stage entry, the source
+version and the answers, but not the question-object, answer-catalogue or
+applicability versions AC-19 names. And no trigger stops a committed
+record being updated afterwards, so "later updates rewrite no history" is
+stated by the test and unenforced by the table. Content versions
+themselves *are* immutable, so that half holds.
+
+**And the cockpit cannot commit at all.** Its `StageEntryRow` declares
+eleven columns of `t3a_stage_entry_event`. Eight do not exist:
+
+```
+participant_id  dimension_id  source_version_id  randomization_seed
+presentation_variant_seed  administration_conditions_snapshot
+env_state_at_entry  entered_at
+```
+
+The load uses `select("*")`, so it does not error — it reads `undefined`
+for all eight, which is why this stayed invisible. No source body loads,
+so there are no questions to determine, and then `commit()` selects
+`source_version_id` explicitly and PostgREST refuses with `42703`.
+
+**Not fixed here, and not a founder decision either.** It is a
+reconciliation: the cockpit was built against a richer stage-entry
+register than `20260811160000` created. Which register owns a Stage 2
+entry determines what an observation record is anchored to, so it is
+recorded rather than guessed. The two candidate paths:
+
+1. **Add the eight columns** to `t3a_stage_entry_event`. Additive,
+   renames nothing, and matches what both the cockpit and the D1 design
+   already assume.
+2. **Point the cockpit at the registers that hold the facts today** —
+   participant through the gateway, dimension and attempt through
+   `t3a_stage_instance`, source version from wherever the Stage 2 entry
+   records it.
+
+(1) is the smaller change and the one I would take. It is left for the
+founder because it is the anchor of every observation record, not because
+the work is unclear.
+
+---
+
 ## 8. What is still outstanding against the Execution Edition
 
 Loading §5 is one part of a fourteen-section instruction. Still to build:
@@ -1387,7 +1451,8 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | A TURN service, for networks STUN cannot traverse. The transport, the consent gate, the §3.3 verdict and both surfaces are built and proved |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 needing a commit performed as an authenticated authorized mentor |
+| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 blocked on a register reconciliation — see §7b |
+| — | Which register owns a Stage 2 entry. The cockpit reads eight columns of `t3a_stage_entry_event` that do not exist |
 
 Also noted while proving §3, not fixed here because neither is mine to
 settle: `t3a_mentor_assignment.stage_instance_id` references
