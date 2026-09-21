@@ -19,6 +19,7 @@ import AIAgent from "@/pages/dashboard/AIAgent";
 import ReportReview from "@/pages/dashboard/candidate/ReportReview";
 import Disclosures from "@/pages/dashboard/candidate/Disclosures";
 import WorkSample from "@/pages/dashboard/candidate/WorkSample";
+import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
 import {
   BridgeFastLanding,
@@ -114,6 +115,7 @@ import {
  PanelLeftClose,
  PanelLeft,
  Reply,
+ Video,
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];

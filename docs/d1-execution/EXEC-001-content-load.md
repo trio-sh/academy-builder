@@ -1325,15 +1325,141 @@ migration and the extractor each have to name it in order to find it; a
 check that forbade that would forbid ever correcting it. Both are
 allowlisted with that reason and nothing else.
 
+## 7a. §3 — the live views have a transport, and a gate they did not have
+
+The outstanding item read "what is missing is a stream to attach". The
+stream is attached, and building it turned up something that mattered
+more than the stream.
+
+**No vendor was chosen.** A direct peer connection between the two
+browsers, signalled through a relay table on Supabase Realtime, needs no
+account, no credential and no procurement decision. `liveView.ts` takes a
+`MediaStream` and does not care where it came from, so swapping in
+LiveKit or Daily later replaces one file. What is not solved is a
+restrictive network: STUN alone cannot traverse a symmetric NAT, and TURN
+is a service rather than a code change. On such a network the connection
+does not establish, the view reports UNAVAILABLE, §3.3 pauses and the
+commit gate refuses — the right behavior, failing closed, but the remedy
+is a TURN service.
+
+**Nothing opened a camera on a check.** §7 records OBSERVATION consent
+and `t3a_d1_consent_type_available` already refuses to grant RECORDING,
+but no route asked either question before showing a live view;
+`t3a_d1_s2_capture_permitted` gates on device class and viewport only. So
+`t3a_d1_s2_live_view_permitted` now decides, resolving the participant
+from the Stage instance itself rather than taking a caller's word for who
+the session is about.
+
+**The gate is structural, not advisory.** The signalling relay's RLS
+requires the same standing consent, so a client that skips the check and
+opens its own camera still cannot exchange an offer. Proved: a withdrawn
+consent refuses the relay with `42501`, not merely the display.
+
+**Two faults found by proving it rather than reading it.**
+
+1. The party rule admitted a mentor only through
+   `t3a_has_administrative_standing()`. No ordinary assigned mentor could
+   have run a Stage 2 session at all — only an oversight administrator.
+   It reads the assignment register now.
+2. Worse, and the same clause: it would have let **every oversight holder
+   join any participant's live video**, unassigned and unrecorded.
+   Oversight standing exists to approve sources and read what was
+   recorded afterwards; watching a person through their camera is not an
+   administrative act. The clause is gone, and the test that caught it
+   only caught it because the one mentor account on the system holds
+   oversight standing and was admitted by the wrong branch.
+
+**The participant had nowhere to appear from.** The cockpit had a live
+view and there was no participant-side surface, so the connection had no
+second end. There is one now, and it tells the participant what the
+server decided and states that nothing is recorded. The mentor offers and
+the participant answers, because a mentor knows which participant the
+Stage instance is about and a participant has no way to know which mentor
+is running the session.
+
+---
+
+## 7b. §11 — AC-18 and AC-19 were blocked on the wrong reason
+
+Both were recorded `not_executed` with this reason: *"auth.uid() is null,
+so the function refuses at its first check. This is a limit of the test
+harness."*
+
+**Withdrawn.** `auth.uid()` reads `request.jwt.claims`, which a proof can
+set — every gate proved since has been exercised as a named authenticated
+actor that way. The harness was never what stood in the way, and it was
+also the wrong route: that note describes `t3a_commit_observation`, which
+writes `t3a_observation`. AC-18 and AC-19 are §11.1 **Cockpit** tests,
+and the cockpit writes `t3a_observation_record`. Looking at the other
+path made a design gap look like an access problem.
+
+**What is actually in the way.**
+
+**AC-18 would fail as built.** `t3a_observation_record` carries
+`authority_snapshot_id`, `t3a_authority_snapshot` exists to hold the
+authorization in force, and `t3a_role_authorization` is the register it
+would come from. The cockpit's commit writes none of them — it leaves
+`authority_snapshot_id` null. A committed action traces to no
+authorization, which is the exact property AC-18 tests.
+
+**AC-19 half-fails.** `version_set` pins the stage entry, the source
+version and the answers, but not the question-object, answer-catalogue or
+applicability versions AC-19 names. And no trigger stops a committed
+record being updated afterwards, so "later updates rewrite no history" is
+stated by the test and unenforced by the table. Content versions
+themselves *are* immutable, so that half holds.
+
+**And the cockpit cannot commit at all.** Its `StageEntryRow` declares
+eleven columns of `t3a_stage_entry_event`. Eight do not exist:
+
+```
+participant_id  dimension_id  source_version_id  randomization_seed
+presentation_variant_seed  administration_conditions_snapshot
+env_state_at_entry  entered_at
+```
+
+The load uses `select("*")`, so it does not error — it reads `undefined`
+for all eight, which is why this stayed invisible. No source body loads,
+so there are no questions to determine, and then `commit()` selects
+`source_version_id` explicitly and PostgREST refuses with `42703`.
+
+**Not fixed here, and not a founder decision either.** It is a
+reconciliation: the cockpit was built against a richer stage-entry
+register than `20260811160000` created. Which register owns a Stage 2
+entry determines what an observation record is anchored to, so it is
+recorded rather than guessed. The two candidate paths:
+
+1. **Add the eight columns** to `t3a_stage_entry_event`. Additive,
+   renames nothing, and matches what both the cockpit and the D1 design
+   already assume.
+2. **Point the cockpit at the registers that hold the facts today** —
+   participant through the gateway, dimension and attempt through
+   `t3a_stage_instance`, source version from wherever the Stage 2 entry
+   records it.
+
+(1) is the smaller change and the one I would take. It is left for the
+founder because it is the anchor of every observation record, not because
+the work is unclear.
+
+---
+
 ## 8. What is still outstanding against the Execution Edition
 
 Loading §5 is one part of a fourteen-section instruction. Still to build:
 
 | § | Outstanding |
 |---|---|
-| 3 | A media provider for the two live views. The measurement layer, the §3.3 verdict and the display are built and proved; what is missing is a stream to attach |
+| 3 | A TURN service, for networks STUN cannot traverse. The transport, the consent gate, the §3.3 verdict and both surfaces are built and proved |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 needing a commit performed as an authenticated authorized mentor |
+| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 blocked on a register reconciliation — see §7b |
+| — | Which register owns a Stage 2 entry. The cockpit reads eight columns of `t3a_stage_entry_event` that do not exist |
+
+Also noted while proving §3, not fixed here because neither is mine to
+settle: `t3a_mentor_assignment.stage_instance_id` references
+`t3a_stage_instance` while `t3a_stage_entry_event.stage_instance_id`
+references nothing — two registers sharing a column name — and
+`t3a_d1_s2_my_open_session` treats a Stage entry older than twelve hours
+as closed, which is a guard I chose rather than a rule anyone issued.
 
 ---
 
