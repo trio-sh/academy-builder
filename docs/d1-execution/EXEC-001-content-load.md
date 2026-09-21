@@ -1510,6 +1510,56 @@ intact afterwards.
 
 ---
 
+## 7d. Columns named in code that the database does not have
+
+Reported from the participant's pathway page: *"corrections: column
+`t3a_correction_case.created_at` does not exist · disclosures: column
+`t3a_d1_report_disclosure.released_by` does not exist"*.
+
+Unlike §7c, **the design never defined these.** No migration puts
+`created_at` on the correction register — it records `raised_at`, named
+after the act rather than after the row's existence — and `released_by`
+exists only on `t3a_d1_production_release`, a different register whose
+column name the query had borrowed. So the queries were wrong, not the
+schema, and the fix was three lines rather than a reconciliation.
+
+**A third one was failing silently.** The same page read
+`t3a_d1_ber_report.created_at`; that table records `assembled_at`.
+Because the query used `select("*")`, nothing errored — the field was
+simply `undefined` and the date never rendered. Nobody would have
+reported it.
+
+**And a fourth, which was a control failing open.**
+`observationIntegrity.ts` enforced the cooldown between full observation
+cycles with:
+
+```ts
+.select('updated_at').eq('status', 'completed').order('updated_at', …)
+```
+
+`observation_sessions` has neither column — it records `is_complete` and
+`session_completed_at`. PostgREST refused the query, `lastSession` came
+back undefined, and the next line was `return { allowed: true }`. **The
+cooldown was not enforced at all**, and it failed in the one direction a
+rule like this must never fail. Both halves are fixed: the columns the
+table actually has, and a refusal rather than a pass when the check
+cannot read its own data.
+
+**`scripts/check-db-columns.mjs`** exists because of the silent two.
+TypeScript cannot catch them — rows come back as `any` and are cast with
+`as SomeRow`, so only the database knows. It pairs every `.from("table")`
+with the columns named in the adjacent `.select`, `.eq` and `.order`, and
+reports the table's real columns beside each miss.
+
+It is a net with known holes, not a proof: embedded selects, aliases and
+dynamically built queries are skipped. Its own first run demonstrated
+one, reporting two columns against `t3a_stage_entry_event` that belonged
+to a `.from(tableName)` two lines later — fixed by stopping each chunk at
+the next `.from(` of any kind. It needs a service-role key, so it is run
+deliberately rather than wired into `npm run build`.
+
+---
+
 ## 8. What is still outstanding against the Execution Edition
 
 Loading §5 is one part of a fourteen-section instruction. Still to build:
