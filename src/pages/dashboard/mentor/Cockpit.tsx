@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useLiveViewMonitor, attachStream } from "@/lib/liveView";
+import { useLiveSession } from "@/lib/liveSession";
 
 /**
  * T3A-D1-DEV-INS-002 · Mentor Cockpit (Stage 2 live-observation surface).
@@ -361,26 +362,35 @@ export default function Cockpit() {
  };
 
  // Both views are measured and judged by §3.3, through the server.
- // The streams come from whatever the meeting workspace supplies; until
- // one does there is no track, and the rule says so rather than this
- // screen assuming a view it cannot see.
- // setParticipantStream and setMentorStream are the seam the meeting
- // workspace attaches to. Everything downstream of them — the §3.3
- // measurement, the verdict, the pause route, the variance on
- // resumption — is built and proved, so attaching a provider is a
- // one-line change here rather than a feature.
- const [participantStream, setParticipantStream] = useState<MediaStream | null>(null);
- const [mentorStream, setMentorStream] = useState<MediaStream | null>(null);
- void setParticipantStream;
- void setMentorStream;
- const [participantPc] = useState<RTCPeerConnection | null>(null);
+ //
+ // The streams now come from a direct peer connection between this
+ // browser and the participant's, signalled through a relay whose RLS
+ // requires a standing OBSERVATION consent. So a live view cannot open
+ // on someone who has not agreed to be observed, and the refusal holds
+ // at the data layer rather than depending on this screen asking.
+ //
+ // Nothing is recorded. There is no MediaRecorder and no media store;
+ // RECORDING consent is unavailable at every D1 Stage.
+ const liveSession = useLiveSession({
+ stageInstanceId: entry?.stage_entry_event_id ?? null,
+ selfId: profile?.id ?? null,
+ counterpartId: entry?.participant_id ?? null,
+ role: "mentor",
+ enabled: Boolean(entry && profile?.id),
+ });
+
+ // The participant's view is what arrives over the connection; the
+ // mentor's own view is the local camera. Naming them from the one
+ // source keeps the §3.3 verdicts about the right tracks.
+ const participantStream = liveSession.remoteStream;
+ const mentorStream = liveSession.localStream;
 
  const participantVideoRef = useRef<HTMLVideoElement | null>(null);
  const mentorVideoRef = useRef<HTMLVideoElement | null>(null);
 
  const participantView = useLiveViewMonitor({
  stream: participantStream,
- peerConnection: participantPc,
+ peerConnection: liveSession.peerConnection,
  });
  const mentorView = useLiveViewMonitor({ stream: mentorStream });
 
@@ -558,12 +568,52 @@ export default function Cockpit() {
  {!participantStream && (
  <div className="absolute inset-0 grid place-items-center text-foreground/60">
  <div className="text-center px-6">
- <div className="mono-label mb-2">No track presented</div>
+ {/* Why there is no track, rather than only that there
+ is none. A refusal carries the server's own code:
+ a live view withheld for want of consent is a
+ different situation from one still connecting, and
+ a mentor who cannot tell them apart will wait for
+ the wrong thing. */}
+ {liveSession.status === "REFUSED" ? (
+ <>
+ <div className="mono-label ink-vermilion mb-2">
+ {liveSession.refusalCode ?? "LIVE VIEW REFUSED"}
+ </div>
  <p className="text-sm max-w-sm">
- The meeting workspace has not supplied a stream. The
- session is held here rather than run without a view of
- the participant.
+ {liveSession.refusalCode ===
+ "OBSERVATION_CONSENT_NOT_ON_RECORD"
+ ? "No observation consent is on record for this participant, so no view may be opened on them. This is the control, not a fault."
+ : liveSession.refusalCode ===
+ "OBSERVATION_CONSENT_WITHDRAWN"
+ ? "The participant has withdrawn observation consent. The view stays closed and the session cannot proceed on it."
+ : liveSession.refusalCode ===
+ "DEVICE_ACCESS_NOT_GRANTED"
+ ? "This browser did not grant camera and microphone access. The session is held rather than run without a view."
+ : "The live view was refused. The session is held rather than run without a view of the participant."}
  </p>
+ {liveSession.refusalRemedy && (
+ <p className="mono-label text-foreground/50 mt-2">
+ {liveSession.refusalRemedy}
+ </p>
+ )}
+ </>
+ ) : (
+ <>
+ <div className="mono-label mb-2">
+ {liveSession.status === "CHECKING_CONSENT"
+ ? "Checking consent"
+ : liveSession.status === "REQUESTING_DEVICES"
+ ? "Requesting camera and microphone"
+ : liveSession.status === "CONNECTING"
+ ? "Connecting to the participant"
+ : "No track presented"}
+ </div>
+ <p className="text-sm max-w-sm">
+ The session is held here rather than run without a
+ view of the participant.
+ </p>
+ </>
+ )}
  </div>
  </div>
  )}
