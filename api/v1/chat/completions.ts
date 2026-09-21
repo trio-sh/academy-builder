@@ -59,16 +59,20 @@ const OPENROUTER_MODELS = new Set([
   "thinkingmachines/inkling-small:free",
   "nvidia/nemotron-3-ultra-550b-a55b:free",
   "minimax/minimax-m2.7:free",
+  // Refreshed 2026-09-21
+  "nex-agi/nex-n2.5-pro:free",
+  "nex-agi/nex-n2.5-mini:free",
+  "qwen/qwen3.8-27b:free",
 ]);
 
 const DEFAULT_MODEL = "kilo-auto/free";
 const FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-08-31
-  "thinkingmachines/inkling-small:free",             // ctx=1048576, max_tok=262144 — NEW
-  "thinkingmachines/inkling:free",                   // ctx=1048576, max_tok=262144 — NEW
-  "nvidia/nemotron-3.5-lightning:free",              // ctx=1000000, max_tok=65536
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-09-21
+  "thinkingmachines/inkling-small:free",             // ctx=1048576, max_tok=262144
   "nvidia/nemotron-3-ultra-550b-a55b:free",          // ctx=1000000, max_tok=65536
-  "dots-studio/dots-3-note-preview:free",            // ctx=512000,  max_tok=460800
+  "nvidia/nemotron-3.5-lightning:free",              // ctx=1000000, max_tok=65536
+  "nex-agi/nex-n2.5-pro:free",                      // ctx=262144,  max_tok=235929 — NEW
+  "nex-agi/nex-n2.5-mini:free",                     // ctx=262144,  max_tok=235929 — NEW
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "tencent/hy3:free",
@@ -96,6 +100,10 @@ const FALLBACK_MODELS = [
   "thinkingmachines/inkling:free",                  // ctx=1048576, max_tok=262144, coding/agentic
   "thinkingmachines/inkling-small:free",            // ctx=1048576, max_tok=262144, coding/agentic
   "minimax/minimax-m2.7:free",                      // ctx=196608, coding (MiniMax)
+  // OpenRouter free models added 2026-09-21
+  "nex-agi/nex-n2.5-pro:free",                     // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
+  "nex-agi/nex-n2.5-mini:free",                    // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
+  "qwen/qwen3.8-27b:free",                         // ctx=262144, max_tok=235929, coding (Qwen/Alibaba)
 ];
 
 const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
