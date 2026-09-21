@@ -46,7 +46,10 @@ type BerRow = {
   id?: string;
   status: string | null;
   dimension_id?: string | null;
-  created_at?: string | null;
+  // The register records when the report was ASSEMBLED. There is no
+  // created_at on t3a_d1_ber_report, and reading one returned undefined
+  // rather than an error, so the date below silently rendered nothing.
+  assembled_at?: string | null;
   amended_at?: string | null;
   withdrawn_at?: string | null;
   version_set?: unknown;
@@ -77,7 +80,10 @@ type CorrectionRow = {
   ber_report_id: string;
   challenge_status?: string | null;
   terminal_outcome?: string | null;
-  created_at?: string | null;
+  // raised_at, not created_at. A correction case is RAISED by someone,
+  // and the register names the column after the act rather than after
+  // the row's existence.
+  raised_at?: string | null;
 };
 
 type AuthorityRow = {
@@ -215,9 +221,9 @@ function ReportRow({ report }: { report: BerRow }) {
         <div className={`display-serif text-lg ${toneInk(tone)}`}>
           {status.replace(/_/g, " ")}
         </div>
-        {report.created_at && (
+        {report.assembled_at && (
           <div className="text-xs text-foreground/60 mt-1">
-            Opened {new Date(report.created_at).toLocaleDateString()}
+            Assembled {new Date(report.assembled_at).toLocaleDateString()}
           </div>
         )}
       </div>
@@ -341,7 +347,7 @@ export default function D1PathwayPane() {
       const { data, error } = await supabase
         .from("t3a_correction_case")
         .select(
-          "correction_case_id, ber_report_id, challenge_status, terminal_outcome, created_at"
+          "correction_case_id, ber_report_id, challenge_status, terminal_outcome, raised_at"
         )
         .eq("participant_id", user.id);
       if (error) errs.push(`corrections: ${error.message}`);
@@ -350,12 +356,19 @@ export default function D1PathwayPane() {
       errs.push(`corrections: ${e instanceof Error ? e.message : String(e)}`);
     }
 
-    // Disclosures — the participant controls these directly
+    // Disclosures — the participant controls these directly.
+    //
+    // Filtered on participant_id. There is no released_by column on this
+    // table: the name was borrowed from t3a_d1_production_release, which
+    // is a different register, so this query failed outright and the page
+    // reported "some rows could not be read". §7.5 makes the participant
+    // the one who releases, per release and never standing, so
+    // participant_id is both the column that exists and the right one.
     try {
       const { data, error } = await supabase
         .from("t3a_d1_report_disclosure")
         .select("*")
-        .eq("released_by", user.id);
+        .eq("participant_id", user.id);
       if (error) errs.push(`disclosures: ${error.message}`);
       setDisclosures((data ?? []) as DisclosureRow[]);
     } catch (e) {

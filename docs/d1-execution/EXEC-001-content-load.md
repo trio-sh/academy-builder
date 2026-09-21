@@ -1423,11 +1423,9 @@ for all eight, which is why this stayed invisible. No source body loads,
 so there are no questions to determine, and then `commit()` selects
 `source_version_id` explicitly and PostgREST refuses with `42703`.
 
-**Not fixed here, and not a founder decision either.** It is a
-reconciliation: the cockpit was built against a richer stage-entry
-register than `20260811160000` created. Which register owns a Stage 2
-entry determines what an observation record is anchored to, so it is
-recorded rather than guessed. The two candidate paths:
+**Settled on the founder's instruction: path 1.** See §7c. It is a
+reconciliation rather than a design decision, and the two candidate
+paths were:
 
 1. **Add the eight columns** to `t3a_stage_entry_event`. Additive,
    renames nothing, and matches what both the cockpit and the D1 design
@@ -1437,9 +1435,128 @@ recorded rather than guessed. The two candidate paths:
    `t3a_stage_instance`, source version from wherever the Stage 2 entry
    records it.
 
-(1) is the smaller change and the one I would take. It is left for the
-founder because it is the anchor of every observation record, not because
-the work is unclear.
+(1) was taken.
+
+---
+
+## 7c. §11 — the reconciliation, the commit route, and AC-18 and AC-19
+
+**The eight columns were never invented.**
+`20260903000000_t3a_d1_gateway_and_source.sql` defines every one of them,
+by name and by type. It is one of the four migrations `20260905`'s
+post-mortem covers: applied statement by statement with the errors
+swallowed, and its `CREATE TABLE IF NOT EXISTS` for the stage entry lost
+silently to the spec-002 table `20260811160000` had already created. The
+richer definition never landed; the insert function that fills it did.
+So the cockpit was built against the design, and the design lost a race
+in August.
+
+They are added as that migration wrote them, with two departures the
+repair migration forced: `source_version_id` references
+`t3a_d1_content_version` rather than the legacy register the forty
+sources are not in, and the gateway link stays the existing
+`observation_path_gateway_id` rather than a second gateway column.
+Nothing is renamed — `administration_conditions` and `created_at` stay
+beside the new `administration_conditions_snapshot` and `entered_at`, and
+that overlap is recorded rather than resolved by dropping a column other
+code may read.
+
+**The facts are derived, not demanded.** Two insert paths already write
+this table and the older one supplies none of the new columns, so
+requiring them outright would have broken a working route. `participant_id`
+comes from the gateway, `dimension_id` from `dimensions_in_play` when
+exactly one is in play, the seeds from the clock, the environment from
+`t3a_current_env_state()`. A participant that cannot be derived is a
+refusal, not a null, and a second trigger refuses an entry whose
+participant contradicts its gateway.
+
+**The commit became a route.** A client insert could never satisfy AC-18,
+and not because the client forgot: the authorization in force is a fact
+about the server at the moment of the write, and a caller asked to supply
+it could supply any authorization it liked. `t3a_d1_s2_commit_observation`
+takes the snapshot itself, reads the participant, dimension and source
+from the Stage entry rather than from the caller, and refuses a mentor
+holding no current `observe` authority or not assigned to that
+participant.
+
+**Both tests were executed.** As an authenticated mentor, against the
+real functions and triggers, on synthetic fixtures in a transaction that
+ends in `RAISE` — so nothing the run wrote survives, and the database was
+checked afterwards rather than assumed.
+
+| | AC-18 | AC-19 |
+|---|---|---|
+| Commit without the authority | `42501 ACTOR_NOT_AUTHORIZED` | — |
+| Record carries the snapshot | yes | — |
+| Snapshot names actor and authorization | yes | — |
+| Status captured as at the commit | `granted` | — |
+| Source and source hash pinned | — | yes |
+| Question, catalogue, applicability pinned | — | three 64-hex digests |
+| Rewriting a committed record | — | `23514 COMMITTED_OBSERVATION_IS_SEALED` |
+| Deleting one | — | `23514` |
+| Confirmation still possible after | — | yes |
+
+`confirmer_id` is deliberately not sealed. Confirmation is a separate act
+by a second person; sealing it would have made confirmation impossible,
+and leaving the rest open would have made AC-19 a slogan.
+
+**One refusal worth keeping.** The first run was refused by
+`t3a_oversight_refuse_mutation`: an account holding administrative
+standing may not create evidence. The only mentor account on this system
+is also the oversight holder, so the standing was set aside inside the
+aborted transaction to obtain a plain mentor. That control is correct and
+it caught a real conflation — the live grant was untouched and verified
+intact afterwards.
+
+---
+
+## 7d. Columns named in code that the database does not have
+
+Reported from the participant's pathway page: *"corrections: column
+`t3a_correction_case.created_at` does not exist · disclosures: column
+`t3a_d1_report_disclosure.released_by` does not exist"*.
+
+Unlike §7c, **the design never defined these.** No migration puts
+`created_at` on the correction register — it records `raised_at`, named
+after the act rather than after the row's existence — and `released_by`
+exists only on `t3a_d1_production_release`, a different register whose
+column name the query had borrowed. So the queries were wrong, not the
+schema, and the fix was three lines rather than a reconciliation.
+
+**A third one was failing silently.** The same page read
+`t3a_d1_ber_report.created_at`; that table records `assembled_at`.
+Because the query used `select("*")`, nothing errored — the field was
+simply `undefined` and the date never rendered. Nobody would have
+reported it.
+
+**And a fourth, which was a control failing open.**
+`observationIntegrity.ts` enforced the cooldown between full observation
+cycles with:
+
+```ts
+.select('updated_at').eq('status', 'completed').order('updated_at', …)
+```
+
+`observation_sessions` has neither column — it records `is_complete` and
+`session_completed_at`. PostgREST refused the query, `lastSession` came
+back undefined, and the next line was `return { allowed: true }`. **The
+cooldown was not enforced at all**, and it failed in the one direction a
+rule like this must never fail. Both halves are fixed: the columns the
+table actually has, and a refusal rather than a pass when the check
+cannot read its own data.
+
+**`scripts/check-db-columns.mjs`** exists because of the silent two.
+TypeScript cannot catch them — rows come back as `any` and are cast with
+`as SomeRow`, so only the database knows. It pairs every `.from("table")`
+with the columns named in the adjacent `.select`, `.eq` and `.order`, and
+reports the table's real columns beside each miss.
+
+It is a net with known holes, not a proof: embedded selects, aliases and
+dynamically built queries are skipped. Its own first run demonstrated
+one, reporting two columns against `t3a_stage_entry_event` that belonged
+to a `.from(tableName)` two lines later — fixed by stopping each chunk at
+the next `.from(` of any kind. It needs a service-role key, so it is run
+deliberately rather than wired into `npm run build`.
 
 ---
 
@@ -1451,8 +1568,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | A TURN service, for networks STUN cannot traverse. The transport, the consent gate, the §3.3 verdict and both surfaces are built and proved |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Sixteen of thirty without a pass: fourteen blocked on a missing governing input, and AC-18 and AC-19 blocked on a register reconciliation — see §7b |
-| — | Which register owns a Stage 2 entry. The cockpit reads eight columns of `t3a_stage_entry_event` that do not exist |
+| 11 | Fourteen of thirty without a pass, all fourteen blocked on the same missing governing input: no source holds a REC-07 approval. AC-18 and AC-19 now pass — see §7c |
 
 Also noted while proving §3, not fixed here because neither is mine to
 settle: `t3a_mentor_assignment.stage_instance_id` references

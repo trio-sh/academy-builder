@@ -274,29 +274,43 @@ export default function Cockpit() {
  return;
  }
 
- // Insert an observation record. The action-sequence guard prevents
- // a combined determination+confirmation write; confirmer_id is left
- // NULL here — Confirmations is a separate action.
- const { data: rec, error: insErr } = await supabase
- .from("t3a_observation_record")
- .insert({
- participant_id: entry.participant_id,
- dimension_id: entry.dimension_id,
- stage_code: entry.stage_code,
- observer_id: profile.id,
- is_committed: true,
- committed_at: new Date().toISOString(),
- version_set: {
- stage_entry_event_id: entry.stage_entry_event_id,
- source_version_id: entry.source_version_id,
- answers,
- },
- })
- .select("observation_record_id")
- .single();
- if (insErr) throw insErr;
+ // Committed through the route, not inserted from here.
+ //
+ // This screen used to insert t3a_observation_record directly, and
+ // left authority_snapshot_id null — so a committed action traced to
+ // no authorization at all, which is the exact property AC-18 tests
+ // for. It could not have been fixed by sending one more field: the
+ // authorization in force is a fact about the server at the moment of
+ // the write, and a client asked to supply it could supply any
+ // authorization it liked.
+ //
+ // The route takes the snapshot itself, pins the source, question,
+ // answer-catalogue and applicability versions AC-19 names, and
+ // refuses a mentor who holds no current observe authority. It also
+ // reads the participant, dimension and source from the Stage entry
+ // rather than from here, so this screen can no longer name the wrong
+ // one.
+ const { data: res, error: commitErr } = await supabase.rpc(
+ "t3a_d1_s2_commit_observation",
+ {
+ p_stage_entry_event_id: entry.stage_entry_event_id,
+ p_answers: answers,
+ }
+ );
+ if (commitErr) throw commitErr;
+
+ const verdict = (res ?? {}) as Record<string, unknown>;
+ if (verdict.committed !== true) {
+ // The server's own code, not a sentence invented here.
+ setRefusal(
+ [verdict.refusal_code, verdict.remedy].filter(Boolean).join(" — ") ||
+ "COMMIT_REFUSED"
+ );
+ return;
+ }
+
  setCommitted(true);
- setCommittedRecordId(rec?.observation_record_id ?? null);
+ setCommittedRecordId((verdict.observation_record_id as string) ?? null);
  setRefusal(null);
  if (draftKey) { try { window.sessionStorage.removeItem(draftKey); } catch { /* ignore */ } }
  } catch (e) {

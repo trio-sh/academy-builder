@@ -27,6 +27,13 @@ export interface CooldownStatus {
   cooldownEndsAt?: Date;
   daysRemaining?: number;
   hoursRemaining?: number;
+  /**
+   * Why a refusal was returned, where the reason is not simply "the
+   * cooldown has not elapsed". Set when the check could not read the
+   * data it judges on, so a caller can tell an unverifiable state from a
+   * genuine cooldown rather than reporting a day count it does not have.
+   */
+  reason?: 'COOLDOWN_UNVERIFIABLE';
 }
 
 export interface ObservationSession {
@@ -129,20 +136,37 @@ export async function checkObservationCooldown(
   // All dimensions scored — check cooldown for next full cycle
   const cooldownDays = await getCooldownDays();
 
-  const { data: lastSession } = await supabase
+  // This query asked for observation_sessions.status and .updated_at.
+  // Neither column exists — the table records is_complete and
+  // session_completed_at — so PostgREST refused it with 42703, lastSession
+  // came back undefined, and the branch below returned { allowed: true }.
+  //
+  // The cooldown between full observation cycles was therefore not
+  // enforced at all, and it failed OPEN: the one outcome a rule like this
+  // must never have when it cannot read its own data.
+  //
+  // Both halves are fixed. The columns are the ones the table has, and an
+  // error is no longer indistinguishable from "no previous session".
+  const { data: lastSession, error: lastSessionError } = await supabase
     .from('observation_sessions')
-    .select('updated_at')
+    .select('session_completed_at')
     .eq('candidate_id', candidateId)
-    .eq('status', 'completed')
-    .order('updated_at', { ascending: false })
+    .eq('is_complete', true)
+    .order('session_completed_at', { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  if (!lastSession?.updated_at) {
+  if (lastSessionError) {
+    // Refused rather than allowed. A cooldown that cannot see the last
+    // session does not know that there was not one.
+    return { allowed: false, reason: 'COOLDOWN_UNVERIFIABLE' };
+  }
+
+  if (!lastSession?.session_completed_at) {
     return { allowed: true };
   }
 
-  const lastCompleted = new Date(lastSession.updated_at);
+  const lastCompleted = new Date(lastSession.session_completed_at);
   const cooldownEndsAt = new Date(
     lastCompleted.getTime() + cooldownDays * 24 * 60 * 60 * 1000
   );
