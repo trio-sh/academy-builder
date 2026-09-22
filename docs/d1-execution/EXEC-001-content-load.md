@@ -1619,6 +1619,64 @@ test harness, not a missing governing input.
 
 ---
 
+## 7f. The browser harness, and the one input it found missing
+
+`e2e/mentor-cockpit.spec.ts` drives the real cockpit as a signed-in
+mentor against SRC-D1-S2-001, an approved source. Getting it to run at
+all found three faults, each of which had made the cockpit unusable for
+the person it exists for.
+
+**The cockpit could not open for a mentor.** `t3a_stage_entry_event`
+carried one policy — `FOR ALL USING is_admin()` — and no SELECT policy at
+all. The read policy `20260903000000` defines never landed, lost by the
+same partial application as the eight columns, and it would not have been
+enough anyway: it admits the participant and an admin, and no mentor.
+
+**Pane 1 rendered an empty script.** The cockpit read `canonical_body`;
+the register stores the approved text under `verbatim`. Against a source
+ten thousand characters long, the pane that must render "the exact active
+approved version" rendered nothing, silently.
+
+**No end-to-end test in this repository has been passing.**
+`e2e/auth.setup.ts` hardcodes `bloujipdkyjsgzwxnoej` — unreachable, and
+not on this account — and injects a session under a localStorage key the
+client does not read. Two independent reasons. The cockpit suite signs in
+through the real form instead.
+
+**Six now pass in Chromium**: AC-01, AC-04, AC-17, AC-24, AC-26, AC-28.
+They are written to fail where a weaker test would pass — AC-04 compares
+the pane against the text in the register rather than checking it is
+non-empty, and AC-24 matches media-recording wording specifically,
+because the cockpit carries a "Record an administration variance at this
+beat" control that §11 requires and a test banning the word would have
+failed on it.
+
+**AC-27 ran and did not pass**, and is recorded as a failure. No
+determination question surfaces. The cockpit expects served questions,
+their options and their branch conditions pre-baked inside the source
+body; they are not there and never were. They live in registers —
+`t3a_d1_question_object` (15), `t3a_d1_capture_set` (13),
+`t3a_d1_capture_line` (44), `t3a_d1_branch_rule` (10) — and
+`t3a_d1_served_questions(source_sheet, answers)` already decides what a
+source serves.
+
+**One fact is missing: which capture set answers which question.** It is
+nearly positional and not reliably so — `Q-D1-03a` pairs with `C3`, not
+`C3a` — and no register records it. The capture sets' `applicability_note`
+carries conditions, not question codes.
+
+That mapping is a governing input from the issued Execution Edition.
+Inferring it from the numbering would be a developer assumption about
+which approved answers a participant is offered for a given question,
+which is the class of decision this build does not make. AC-05, AC-06,
+AC-08, AC-12 and AC-13 depend on the same mapping and are restated
+against it.
+
+**Twenty-four of thirty pass.** The six that remain wait on one sentence
+from the issued document.
+
+---
+
 ## 8. What is still outstanding against the Execution Edition
 
 Loading §5 is one part of a fourteen-section instruction. Still to build:
@@ -1627,7 +1685,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | A TURN service, for networks STUN cannot traverse. The transport, the consent gate, the §3.3 verdict and both surfaces are built and proved |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Eleven of thirty without a pass. No longer blocked on REC-07 — see §7e — but on a browser test harness this repository does not have |
+| 11 | Six of thirty without a pass, all six on one governing input: which capture set answers which question — see §7f |
 
 Also noted while proving §3, not fixed here because neither is mine to
 settle: `t3a_mentor_assignment.stage_instance_id` references
