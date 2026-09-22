@@ -74,6 +74,14 @@ type StageEntryRow = {
 
 type SourceVersionBody = {
  title?: string;
+ // The register stores the approved text under `verbatim`. Nothing loads
+ // a `canonical_body`: scripts/extract-d1-content.mjs writes verbatim and
+ // source_sheet, and the forty approved versions carry exactly
+ // source_identifier, title, stage_code, source_sheet, verbatim,
+ // source_version_hash, rec07_approval_ref and name_clearance_status.
+ // Reading canonical_body returned undefined, so Pane 1 rendered an empty
+ // script while the source it names is ten thousand characters long.
+ verbatim?: string;
  canonical_body?: string;
  mentor_action_sequence?: { code: string; label: string; body: string }[];
  questions?: {
@@ -691,7 +699,7 @@ export default function Cockpit() {
  <div>
  <div className="mono-label text-foreground/60 mb-2">Read to participant</div>
  <div className="border-l-2 border-foreground pl-4 text-foreground">
- {(sourceBody?.canonical_body ?? "").split("\n").map((line, i) => (
+ {(sourceBody?.verbatim ?? sourceBody?.canonical_body ?? "").split("\n").map((line, i) => (
  <p key={i} className="mb-2 last:mb-0">{line}</p>
  ))}
  </div>

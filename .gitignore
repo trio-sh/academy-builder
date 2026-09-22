@@ -31,3 +31,4 @@ playwright-report/
 .playwright/
 screenshot-*.png
 login-snapshot.yml
+e2e/.fixture.json
