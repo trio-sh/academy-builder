@@ -1560,6 +1560,65 @@ deliberately rather than wired into `npm run build`.
 
 ---
 
+## 7e. The forty sources were approved, and what that unblocked
+
+On 21 September 2026, between 17:59 and 18:01 UTC, Ekosse Mofoke approved
+all forty sources through `t3a_d1_record_source_approval`, each against an
+exact version hash. The register carries forty rows, every one `approved`,
+every one naming him.
+
+**Serving readiness had to be fixed before it could say so.**
+`20261015000000` wrote the function with `any_source_servable` as the
+literal `false` and a `blocked_on` string naming the missing approval.
+Both were true when written and both were statements about the world
+rather than readings of it, so the function went on reporting that nothing
+was servable and that everything waited on an approval that had happened.
+A readiness check that cannot become ready is not a check. It reads the
+registers now: **40 loaded, 40 hashed, 40 approved, 40 servable,
+`blocked_on: null`.**
+
+It also reports `approved_but_superseded`, because an approval belongs to
+a text: a correction that supersedes a version takes its approval with it,
+and that count is where it shows rather than silently.
+
+**Three of the fourteen were executed.** AC-23, AC-31 and AC-24 are
+properties of the mechanism rather than of a rendered screen. Run against
+SRC-D1-S2-001 — a genuinely approved source — with a mentor holding no
+oversight standing, assigned, and holding a current `observe` authority:
+
+| | |
+|---|---|
+| Baseline advancement | permitted |
+| Participant view UNAVAILABLE | `PAUSED` |
+| Advancement then | `SOURCE_ADVANCEMENT_BLOCKED_PENDING_PAUSE_CLEARANCE` |
+| Commit while paused | `42501 COMMIT_REFUSED_WHILE_SESSION_PAUSED` |
+| Restored | `RESUMED_WITH_VARIANCE`, one variance recorded |
+| Mentor view UNAVAILABLE | `PAUSED`, advancement false |
+| DEGRADED | `NO_CHANGE` |
+
+That last row is the half a test for "unavailable" alone would miss. §3.3
+surfaces a degraded view and continues; only unavailability pauses. A
+build that paused on degradation would be as wrong as one that continued
+through unavailability.
+
+Both are recorded for the rule being **enforced server-side**. The banner
+the mentor sees is built and was not exercised by this run, and the
+evidence says so rather than letting the pass be read wider than it is.
+AC-24 likewise rests on the absence of any recording path — unavailable
+consent type, no media bucket, no `MediaRecorder` — not on watching a
+session and confirming no file appeared.
+
+**The remaining eleven have a different blocker now**, and the register
+was rewritten to say which. AC-01, AC-04, AC-05, AC-06, AC-08, AC-12,
+AC-13, AC-17, AC-26, AC-27 and AC-28 are about what a mentor sees and
+does: layout, beat synchronisation, refresh recovery, working without a
+second tab. They need a driven browser session signed in as an authorized
+mentor against a served source. Playwright is configured in this
+repository and no suite drives the Stage 2 cockpit yet. That is a missing
+test harness, not a missing governing input.
+
+---
+
 ## 8. What is still outstanding against the Execution Edition
 
 Loading §5 is one part of a fourteen-section instruction. Still to build:
@@ -1568,7 +1627,7 @@ Loading §5 is one part of a fourteen-section instruction. Still to build:
 |---|---|
 | 3 | A TURN service, for networks STUN cannot traverse. The transport, the consent gate, the §3.3 verdict and both surfaces are built and proved |
 | 5.18 | Two source-sheet fields no mechanical rule recovers: SRC-D1-S1-010 `attribution_support_set`, SRC-D1-S3-010 `available_routes` |
-| 11 | Fourteen of thirty without a pass, all fourteen blocked on the same missing governing input: no source holds a REC-07 approval. AC-18 and AC-19 now pass — see §7c |
+| 11 | Eleven of thirty without a pass. No longer blocked on REC-07 — see §7e — but on a browser test harness this repository does not have |
 
 Also noted while proving §3, not fixed here because neither is mine to
 settle: `t3a_mentor_assignment.stage_instance_id` references
