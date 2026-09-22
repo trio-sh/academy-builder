@@ -53,19 +53,48 @@ Fifteen questions, thirteen sets, two questions taking none: the counts
 reconcile. That is corroboration, not proof — it would also reconcile if
 two different questions were the source-bound pair.
 
+## Two things found while building the register
+
+Building `t3a_d1_question_capture_map` (migration `20261030000000`)
+turned up two facts that change what this draft originally asked for.
+
+**There is a sixteenth served code.** `t3a_d1_served_questions` emits
+`Q-D1-04b-child`, which is not one of the fifteen rows in
+`t3a_d1_question_object`. BR-06 serves it where `Q-D1-04b` returned
+`aligned` or `both`.
+
+That answers most of what was open item 2 below — *which option opens the
+bound child* — and it was already decided, in the branch rules, before
+this draft asked for a ruling on it. What remains open is narrower and is
+restated below. It also means the register keys on **served codes**, not
+on question objects: sixteen rows to rule on, not fifteen.
+
+**`bound_family` cannot be used to decide this, though it looks as
+though it can.** The serving function already tags `Q-D1-03b1` to
+`material_items`, `Q-D1-03b2` to `assertion_reference_set`,
+`Q-D1-04b-child` to `attribution_support_set`, and both `Q-D1-05b2` and
+`Q-D1-06` to `available_routes`.
+
+But the column means two different things. For `Q-D1-03b1` it names
+where the **answer options** come from. For `Q-D1-05b2` — whose
+`answer_type` is "Single select, fixed" — it names the field that
+**gates service**, and its answers still come from a catalogue. So a
+reading that took every `bound_family` as "no capture set" would wrongly
+strip the set from `Q-D1-05b2` and `Q-D1-06`. `answer_type` is the
+signal that separates them.
+
 ## Open items — please rule on these specifically
 
 **1. Do `Q-D1-03b1` and `Q-D1-03b2` genuinely take no capture set?**
-This is the load-bearing assumption. It is what makes fifteen questions
-and thirteen sets reconcile. If either of them does take a set, the
-reading above is wrong somewhere else too, because the count no longer
-works.
+This is the load-bearing assumption. It is what makes the counts
+reconcile. If either of them does take a set, the reading above is wrong
+somewhere else too, because the count no longer works.
 
-**2. `Q-D1-04b` has "a bound child selection on one option" — which
-option, and bound to what?** It is gated on `attribution_support_set`,
-which is one of the two source-sheet fields still outstanding
-(`SRC-D1-S1-010`). C4b's four lines do not say which of them opens the
-child.
+**2. Does `Q-D1-04b-child` take a capture set of its own, or does it draw
+entirely from `attribution_support_set`?** Which option opens it is
+settled — `aligned`, and `both` also reaches it — so only this part is
+still open. `attribution_support_set` is one of the two outstanding
+source-sheet fields (`SRC-D1-S1-010`).
 
 **3. `Q-D1-06` is "bound to `available_routes` plus two fixed options",
 but `C6` holds three lines.** Either C6's three lines are not the two
@@ -75,14 +104,36 @@ into. `available_routes` is the other outstanding source-sheet field
 
 ## What to send back
 
-The middle column, confirmed or corrected — fifteen rows, question code
-to capture set code, with `none` where a question's answers come from the
-source rather than a catalogue. Plus a ruling on the three items above.
+The middle column, confirmed or corrected — sixteen rows including
+`Q-D1-04b-child`, question code to capture set code, with `none` where a
+question's answers come from the source rather than a catalogue. Plus a
+ruling on the three items above.
 
-Once that arrives, the mapping is loaded as a register in its own right
-(not inferred at read time), the cockpit serves questions, and AC-05,
-AC-06, AC-08, AC-12, AC-13 and AC-27 can be executed against it. The
-register goes from 24 of 30 to 30 of 30.
+## Where it will be loaded
+
+`t3a_d1_question_capture_map` exists already, and **ships empty** —
+migration `20261030000000`. Not one row is inferred. The table is built so
+the ruling is loaded rather than written:
+
+- Every row must name a `ruling_reference` and a `ruled_by`, both
+  non-blank by constraint, so nothing enters the register without an
+  authority behind it.
+- A row may only name a question code the serving logic actually emits,
+  checked against `t3a_d1_served_questions` rather than a hardcoded list,
+  so the register and the branch rules cannot drift apart.
+- A `SOURCE_BOUND` row must name the field that serving logic actually
+  binds that question to.
+- `t3a_d1_capture_for_question` **fails closed**: with no ruled mapping it
+  returns `CAPTURE_MAPPING_NOT_RULED` rather than falling back to a
+  positional guess. A cockpit offering plausible-looking answers for an
+  unruled question would put unapproved options in front of a
+  participant, which is worse than offering none.
+- `t3a_d1_question_capture_gap` lists what is still unruled, as data.
+  It currently returns **16 rows**. Empty means the register is complete.
+
+Once the ruling arrives the cockpit serves questions, and AC-05, AC-06,
+AC-08, AC-12, AC-13 and AC-27 can be executed against it. The register
+goes from 24 of 30 to 30 of 30.
 
 If any row above is wrong, say so plainly rather than adjusting around
 it. A wrong pairing here would offer a participant the wrong approved
