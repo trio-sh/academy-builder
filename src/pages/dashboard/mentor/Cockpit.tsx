@@ -84,6 +84,10 @@ type SourceVersionBody = {
  verbatim?: string;
  canonical_body?: string;
  mentor_action_sequence?: { code: string; label: string; body: string }[];
+ // The source sheet the branch rules read. Service is decided from this
+ // and from the answers so far, by t3a_d1_serve_capture — never from a
+ // question list baked into the body, which no loaded source carries.
+ source_sheet?: Record<string, unknown>;
  questions?: {
  question_id: string;
  stem: string;
@@ -100,6 +104,27 @@ type SourceVersionBody = {
 
 type Answer = string | string[] | null;
 
+/**
+ * What t3a_d1_serve_capture returns for one served question.
+ *
+ * CS-I-01: the question-to-capture mapping is read from the register at
+ * serve time and is never compiled in here. This type describes what
+ * arrives; it does not decide anything.
+ */
+type ServedCapture = {
+ question_code: string;
+ refused: boolean;
+ refusal?: string;
+ capture_set_code?: string;
+ conduct_element?: string;
+ answer_type?: string;
+ control_ordinal?: number | null;
+ reason_code?: string;
+ source_bound_family?: string | null;
+ lines?: { line_order: number; line_text: string }[];
+ bound_options?: { key: string; label: string }[];
+};
+
 export default function Cockpit() {
  const { stageEntryEventId } = useParams<{ stageEntryEventId: string }>();
  const { profile } = useAuth();
@@ -110,6 +135,17 @@ export default function Cockpit() {
  const [loading, setLoading] = useState(true);
  const [refusal, setRefusal] = useState<string | null>(null);
  const [answers, setAnswers] = useState<Record<string, Answer>>({});
+ // What the register serves, and what the mentor has selected from it.
+ // lineChoice keys a question to a capture LINE, never to a branch code:
+ // two lines may drive the same branch while remaining different
+ // findings, and a record that stored the branch would say they were the
+ // same. boundChoice holds the items picked from a source-bound family.
+ const [served, setServed] = useState<ServedCapture[]>([]);
+ // The Stage entry id, read by the serving effect without making the
+ // effect depend on the whole entry row.
+ const entryIdRef = useRef<string | undefined>(stageEntryEventId);
+ const [lineChoice, setLineChoice] = useState<Record<string, number>>({});
+ const [boundChoice, setBoundChoice] = useState<Record<string, string[]>>({});
  const [committing, setCommitting] = useState(false);
  const [paused, setPaused] = useState(false);
  const [committed, setCommitted] = useState(false);
@@ -230,35 +266,134 @@ export default function Cockpit() {
  }, [draftKey, answers]);
 
  // ---------- Determine which questions are served ----------
- // FD-D1-09 interim: Q-D1-06 is not served at Stage 1.
- const servedQuestions = useMemo(() => {
- if (!sourceBody?.questions || !entry) return [];
- return sourceBody.questions.filter((q) => {
- if (q.question_id === "Q-D1-06" && entry.stage_code === "S1") return false;
- // Conditional child rendering.
- if (q.parent_question_id) {
- const parentAnswer = answers[q.parent_question_id];
- if (!parentAnswer) return false;
- if (q.parent_condition) {
- if (Array.isArray(parentAnswer)) {
- if (!parentAnswer.some((a) => q.parent_condition!.includes(a))) return false;
- } else {
- if (!q.parent_condition.includes(String(parentAnswer))) return false;
- }
- }
- }
- return true;
- });
- }, [sourceBody, entry, answers]);
+ //
+ // CS-I-13: service comes from the source's own applicability table, by
+ // way of t3a_d1_serve_for_selection. It is never inferred from the
+ // Stage and never read off the capture register, which says which set a
+ // question uses and never whether it is served.
+ //
+ // This re-runs whenever a line is selected, because the branch rules
+ // read the answers so far: choosing C3 line 4 serves two children that
+ // did not exist a moment earlier. CS-I-14 means an unserved child has
+ // no row at all here — not a disabled control, not a null.
+ useEffect(() => {
+ let cancelled = false;
+ const sheet = sourceBody?.source_sheet;
+ if (!sheet) { setServed([]); return; }
 
- const requiredUnanswered = useMemo(
- () => servedQuestions.filter((q) => {
- if (!q.required) return false;
- const a = answers[q.question_id];
- return a == null || (Array.isArray(a) && a.length === 0) || a === "";
- }),
- [servedQuestions, answers]
+ (async () => {
+ const { data, error } = await supabase.rpc("t3a_d1_serve_for_selection", {
+ p_source_sheet: sheet,
+ p_selected: lineChoice,
+ });
+ if (cancelled) return;
+ if (error) {
+ // Fail closed: a serving error offers nothing rather than
+ // offering a stale or partial set.
+ setServed([]);
+ setRefusal(`CAPTURE_SERVING_UNAVAILABLE: ${error.message}`);
+ return;
+ }
+ const rows = ((data as { served?: ServedCapture[] })?.served ?? []);
+
+ // AC-13. A timing determination is relative to a beat. Where that
+ // beat carries no timestamp there is nothing to be relative to, so
+ // the control is refused rather than offered with an answer set the
+ // mentor would be guessing against. The server decides, not this
+ // screen: it is the same refusal the commit route would return.
+ const gated = await Promise.all(
+ rows.map(async (r) => {
+ if (r.refused || !/timing relative to/i.test(r.answer_type ?? "")) {
+ return r;
+ }
+ const { data: verdict } = await supabase.rpc(
+ "t3a_d1_timing_determination_permitted",
+ {
+ p_stage_entry_event_id: entryIdRef.current,
+ p_question_code: r.question_code,
+ }
  );
+ const v = (verdict ?? {}) as { permitted?: boolean; refusal?: string };
+ if (v.permitted === true) return r;
+ return { ...r, refused: true, refusal: v.refusal ?? "TIMING_UNAVAILABLE" };
+ })
+ );
+ if (cancelled) return;
+ setServed(gated);
+ })();
+
+ return () => { cancelled = true; };
+ }, [sourceBody, lineChoice]);
+
+ // A question is answered when a capture line is selected, and — where
+ // the control is source-bound and its line calls for a selection — when
+ // the bound items are chosen too.
+ // A secondary control in a group answers with its bound selection, not
+ // with a line of its own — the line it would have selected is the one
+ // its parent already selected.
+ const requiredUnanswered = useMemo(
+ () =>
+ served.filter((s) => {
+ if (s.refused) return false;
+ if ((s.control_ordinal ?? 1) > 1) {
+ return (boundChoice[s.question_code] ?? []).length === 0;
+ }
+ return lineChoice[s.question_code] == null;
+ }),
+ [served, lineChoice, boundChoice]
+ );
+
+ // What is committed. Each determination carries the capture line the
+ // mentor selected — set and order, with the text for the record — and
+ // not the branch code, because two lines can drive the same branch
+ // while being different findings.
+ //
+ // CS-I-11: where Q-D1-04b returns both aligned and non-aligned, the
+ // record carries BOTH the aligned identifiers and the flag that
+ // non-aligned attribution was present. One without the other is an
+ // incomplete record, so the flag is derived here from the selected
+ // line rather than left to the mentor to remember.
+ const determinations = useMemo(() => {
+ const out: Record<string, unknown> = {};
+ for (const s of served) {
+ if (s.refused) continue;
+ const secondary = (s.control_ordinal ?? 1) > 1;
+ const items = boundChoice[s.question_code] ?? [];
+ const order = lineChoice[s.question_code];
+
+ // A secondary control persists as its own determination (CS-I-03:
+ // three records, never one) carrying the items it selected.
+ if (secondary) {
+ if (items.length === 0) continue;
+ out[s.question_code] = {
+ capture_set_code: s.capture_set_code,
+ control_ordinal: s.control_ordinal,
+ source_bound_family: s.source_bound_family,
+ bound_items: items,
+ };
+ continue;
+ }
+
+ if (order == null) continue;
+ const chosen = (s.lines ?? []).find((l) => l.line_order === order);
+ const row: Record<string, unknown> = {
+ capture_set_code: s.capture_set_code,
+ line_order: order,
+ line_text: chosen?.line_text ?? null,
+ };
+ if (s.source_bound_family) {
+ row.source_bound_family = s.source_bound_family;
+ row.bound_items = items;
+ }
+ if (s.question_code === "Q-D1-04b") {
+ row.non_aligned_present = chosen
+ ? /both aligned and non-aligned/i.test(chosen.line_text)
+ : false;
+ }
+ out[s.question_code] = row;
+ }
+ return out;
+ }, [served, lineChoice, boundChoice]);
 
  const commit = async () => {
  if (!entry || !profile?.id) return;
@@ -302,7 +437,7 @@ export default function Cockpit() {
  "t3a_d1_s2_commit_observation",
  {
  p_stage_entry_event_id: entry.stage_entry_event_id,
- p_answers: answers,
+ p_answers: determinations,
  }
  );
  if (commitErr) throw commitErr;
@@ -777,16 +912,22 @@ export default function Cockpit() {
  </button>
  </div>
  <div className="p-4 space-y-6">
- {servedQuestions.map((q) => (
- <QuestionRow
- key={q.question_id}
- q={q}
- value={answers[q.question_id] ?? null}
- onChange={(v) => setAnswers((prev) => ({ ...prev, [q.question_id]: v }))}
+ {served.map((s) => (
+ <CaptureRow
+ key={s.question_code}
+ s={s}
+ line={lineChoice[s.question_code] ?? null}
+ bound={boundChoice[s.question_code] ?? []}
+ onLine={(order) =>
+ setLineChoice((prev) => ({ ...prev, [s.question_code]: order }))
+ }
+ onBound={(keys) =>
+ setBoundChoice((prev) => ({ ...prev, [s.question_code]: keys }))
+ }
  disabled={committed}
  />
  ))}
- {servedQuestions.length === 0 && (
+ {served.length === 0 && (
  <p className="text-sm text-foreground/60">
  No determination questions to serve for this source at this Stage.
  </p>
@@ -933,58 +1074,193 @@ function HeaderCell({ label, value }: { label: string; value: React.ReactNode })
  );
 }
 
-function QuestionRow({
- q,
- value,
- onChange,
+function CaptureRow({
+ s,
+ line,
+ bound,
+ onLine,
+ onBound,
  disabled,
 }: {
- q: NonNullable<SourceVersionBody["questions"]>[number];
- value: Answer;
- onChange: (v: Answer) => void;
+ s: ServedCapture;
+ line: number | null;
+ bound: string[];
+ onLine: (order: number) => void;
+ onBound: (keys: string[]) => void;
  disabled: boolean;
 }) {
- const isMulti = q.kind === "structured_selection_multi";
+ // CS-I-04 and CS-I-07. A control that cannot be served correctly says
+ // so and offers nothing. It does not render a partial set, borrow a
+ // neighbouring one, or degrade a bound slot into a fixed-option list.
+ if (s.refused) {
  return (
- <div className="border-t-2 border-foreground pt-4">
- <div className="mono-label text-foreground/60 mb-1">Current question · {q.question_id}</div>
- <div className="display-serif text-lg text-foreground mb-3">{q.stem}</div>
+ <div className="border-t-2 border-foreground pt-4" data-question={s.question_code} data-refused="true">
+ <div className="mono-label text-foreground/60 mb-1">
+ Current question · {s.question_code}
+ </div>
+ <div className="border border-foreground/40 p-3 text-sm text-foreground/80">
+ <span className="mono-label">Refused · {s.refusal}</span>
+ <p className="mt-1">
+ This control is not served. No answer is offered and none is recorded.
+ </p>
+ </div>
+ </div>
+ );
+ }
+
+ const lines = s.lines ?? [];
+
+ // CS-I-03: C3 is ONE visual group holding three separately persisted
+ // controls. The set's five lines belong to the first control — they are
+ // what Q-D1-03a asks — and lines 2, 3 and 4 say "select which" in their
+ // own words. Those selections ARE Q-D1-03b1 and Q-D1-03b2.
+ //
+ // So a control that is not first in its group renders its bound
+ // selection and NOT another copy of the lines. Rendering the lines three
+ // times would put the same five choices on screen three times and ask
+ // the mentor to answer one question as if it were three.
+ const isSecondaryInGroup = (s.control_ordinal ?? 1) > 1;
+
+ if (isSecondaryInGroup) {
+ return (
+ <div
+ className="border-l-2 border-foreground/40 pl-3 pt-2"
+ data-question={s.question_code}
+ data-refused="false"
+ >
+ <div className="mono-label text-foreground/60 mb-1">
+ Current question · {s.question_code}
+ {s.capture_set_code ? ` · ${s.capture_set_code}` : ""}
+ {s.control_ordinal ? ` · control ${s.control_ordinal}` : ""}
+ </div>
+ <div className="mono-label text-foreground/60 mb-2">
+ From this source · {s.source_bound_family}
+ </div>
  <div className="space-y-2">
- {q.options.map((opt) => {
- const checked = isMulti
- ? Array.isArray(value) && value.includes(opt.key)
- : value === opt.key;
+ {(s.bound_options ?? []).map((opt) => {
+ const on = bound.includes(opt.key);
  return (
  <label
  key={opt.key}
+ className={`flex items-start gap-3 border p-2 cursor-pointer ${
+ on ? "border-foreground bg-foreground/[0.05]" : "border-foreground/25"
+ } ${disabled ? "opacity-60 pointer-events-none" : ""}`}
+ >
+ <input
+ type="checkbox"
+ className="mt-1"
+ checked={on}
+ onChange={() => {
+ const next = bound.slice();
+ const i = next.indexOf(opt.key);
+ if (i === -1) next.push(opt.key); else next.splice(i, 1);
+ onBound(next);
+ }}
+ disabled={disabled}
+ />
+ <span className="text-sm text-foreground">
+ <span className="mono-label mr-2">{opt.key}</span>
+ {s.source_bound_family === "attribution_support_set" ? (
+ <span className="text-foreground/60">
+ (item withheld — select against the source)
+ </span>
+ ) : (
+ opt.label
+ )}
+ </span>
+ </label>
+ );
+ })}
+ </div>
+ </div>
+ );
+ }
+ // The line the mentor picked, if it calls for a bound selection. The
+ // capture line says so in its own words — "select which" — which is
+ // why the instruction is not duplicated anywhere else.
+ const chosen = lines.find((l) => l.line_order === line);
+ const callsForItems =
+ !!chosen && !!s.bound_options && /select (which|the|both)/i.test(chosen.line_text);
+
+ return (
+ <div className="border-t-2 border-foreground pt-4" data-question={s.question_code} data-refused="false">
+ <div className="mono-label text-foreground/60 mb-1">
+ Current question · {s.question_code}
+ {s.capture_set_code ? ` · ${s.capture_set_code}` : ""}
+ {s.control_ordinal ? ` · control ${s.control_ordinal}` : ""}
+ </div>
+ <div className="space-y-2">
+ {lines.map((l) => {
+ const checked = line === l.line_order;
+ return (
+ <label
+ key={l.line_order}
  className={`flex items-start gap-3 border p-3 cursor-pointer transition-colors ${
  checked ? "border-foreground bg-foreground/[0.05]" : "border-foreground/25 hover:border-foreground/60"
  } ${disabled ? "opacity-60 pointer-events-none" : ""}`}
  >
  <input
- type={isMulti ? "checkbox" : "radio"}
- name={q.question_id}
+ type="radio"
+ name={s.question_code}
  className="mt-1"
  checked={checked}
- onChange={() => {
- if (isMulti) {
- const cur = Array.isArray(value) ? value.slice() : [];
- const idx = cur.indexOf(opt.key);
- if (idx === -1) cur.push(opt.key); else cur.splice(idx, 1);
- onChange(cur);
- } else {
- onChange(opt.key);
- }
- }}
+ onChange={() => onLine(l.line_order)}
  disabled={disabled}
  />
- <span className="text-sm text-foreground">{opt.label}</span>
+ <span className="text-sm text-foreground">{l.line_text}</span>
  </label>
  );
  })}
  </div>
- {q.required && (
- <div className="mono-label text-foreground/50 mt-2">Required</div>
+
+ {/* CS-I-05: the options come from the served source version. */}
+ {callsForItems && (
+ <div className="mt-3 border-l-2 border-foreground/40 pl-3 space-y-2">
+ <div className="mono-label text-foreground/60">
+ From this source · {s.source_bound_family}
+ </div>
+ {(s.bound_options ?? []).map((opt) => {
+ const on = bound.includes(opt.key);
+ return (
+ <label
+ key={opt.key}
+ className={`flex items-start gap-3 border p-2 cursor-pointer ${
+ on ? "border-foreground bg-foreground/[0.05]" : "border-foreground/25"
+ } ${disabled ? "opacity-60 pointer-events-none" : ""}`}
+ >
+ <input
+ type="checkbox"
+ className="mt-1"
+ checked={on}
+ onChange={() => {
+ const next = bound.slice();
+ const i = next.indexOf(opt.key);
+ if (i === -1) next.push(opt.key); else next.splice(i, 1);
+ onBound(next);
+ }}
+ disabled={disabled}
+ />
+ {/*
+ CS-I-12: the support-set item identifier is retained and
+ NOT rendered, because naming the item names the person.
+ The mentor selects by identifier against the approved
+ source, which Pane 1 shows in full. Every other bound
+ family names material, not people, so it renders.
+ */}
+ <span className="text-sm text-foreground">
+ <span className="mono-label mr-2">{opt.key}</span>
+ {s.source_bound_family === "attribution_support_set" ? (
+ <span className="text-foreground/60">
+ (item withheld — select against the source)
+ </span>
+ ) : (
+ opt.label
+ )}
+ </span>
+ </label>
+ );
+ })}
+ </div>
  )}
  </div>
  );
