@@ -175,9 +175,16 @@ begin
     raise exception 'NO_APPROVED_SOURCE: SRC-D1-S2-001 holds no standing REC-07 approval, so there is nothing the cockpit may serve';
   end if;
 
+  -- Reuse an entry only where it pins the version that is live NOW. A
+  -- Stage entry pins the version it served and must keep doing so, so a
+  -- corrected source does not rewrite an existing entry — it needs a new
+  -- one. Reusing an entry that pins a superseded version would have the
+  -- suite testing the sheet the correction replaced, and every assertion
+  -- would still pass while proving nothing about the fix.
   select e.stage_entry_event_id into v_entry
     from public.t3a_stage_entry_event e
    where e.session_identity = 'e2e_fixture' and e.stage_code = 'S2'
+     and e.source_version_id = v_ver
    order by e.created_at desc limit 1;
 
   if v_entry is null then

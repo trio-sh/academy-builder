@@ -266,6 +266,207 @@ out.push(CAPTURE_END);
 // ── 5.18 The forty production sources ───────────────────────────────
 const libStart = lines.findIndex((l) => /^### 5\.18 The D1 source library/.test(l));
 const libEnd = lines.findIndex((l, i) => i > libStart && /^## 6\. REPORT CONTRACT/.test(l));
+
+/**
+ * CS-I-17 — read the source-sheet bullets as logical units.
+ *
+ * A bullet begins at "- `field_name` — " and continues through every
+ * following line indented by two or more spaces. Continuations join with
+ * a single space and the leading indent collapses.
+ */
+function parseLogicalBullets(bodyLines, blockBreak = false) {
+  const out = [];
+  let cur = null;
+  let seenAny = false;
+  const flush = () => {
+    if (cur) out.push({ field: cur.field, value: cur.parts.join(" ").replace(/\s+/g, " ").trim() });
+    cur = null;
+  };
+  for (const line of bodyLines) {
+    const m = /^- `([a-z0-9_]+)`\s*—\s*(.*)$/.exec(line);
+    if (m) {
+      flush();
+      cur = { field: m[1], parts: [m[2]] };
+      seenAny = true;
+      continue;
+    }
+    if (cur && /^\s{2,}\S/.test(line)) {
+      cur.parts.push(line.trim());
+      continue;
+    }
+    if (cur && line.trim() === "") continue;
+    flush();
+    // A SOURCE SHEET is the first contiguous run of bullets under its
+    // heading. The library carries unheaded prose BETWEEN sources — a
+    // definitional bullet at line 3025 reads "`attribution_support_set` —
+    // Stated per source. Where empty, any attribution ... maps to no item"
+    // and sits inside SRC-D1-S1-010's line range because no heading
+    // separates them. It is longer than that source's real AS1/AS2 entry,
+    // so a "fullest value wins" rule picks the definition over the data.
+    //
+    // Stopping at the end of the first block is what makes the sheet the
+    // sheet. Without it the assertion below fires on a value that was
+    // never the source's to begin with.
+    if (blockBreak && seenAny && line.trim() !== "") {
+      out.push(BLOCK_BREAK);
+      seenAny = false;
+    }
+  }
+  flush();
+  return out;
+}
+
+
+/** Marks the end of a contiguous bullet run. */
+const BLOCK_BREAK = { field: null, value: null };
+
+/**
+ * The source sheet is ONE contiguous run of bullets, and a source's line
+ * range holds several runs: narrative lists before it, and — because the
+ * library carries unheaded prose between sources — a definitional run
+ * after it whose entries describe what each field MEANS rather than what
+ * this source states.
+ *
+ * Neither position nor length identifies the right one. The definitional
+ * run at line 3025 is longer than SRC-D1-S1-010's real AS1/AS2 entry, and
+ * SRC-D1-S2-001 carries an unrelated run before its sheet.
+ *
+ * What identifies it is that the sheet is the run carrying the most
+ * distinct source-sheet field names. That is mechanical, needs no
+ * knowledge of what any source says, and is what the sheet IS.
+ */
+function sourceSheetBullets(bodyLines) {
+  const blocks = [];
+  let cur = [];
+  for (const rec of parseLogicalBullets(bodyLines, true)) {
+    if (rec === BLOCK_BREAK) {
+      if (cur.length) blocks.push(cur);
+      cur = [];
+      continue;
+    }
+    cur.push(rec);
+  }
+  if (cur.length) blocks.push(cur);
+  if (!blocks.length) return [];
+
+  const score = (b) =>
+    new Set(b.map((r) => r.field).filter((f) => SHEET_FIELDS.has(f))).size;
+  return blocks.reduce((a, b) => (score(b) > score(a) ? b : a));
+}
+
+const SHEET_FIELDS = new Set([
+  "relevant_conduct", "workplace_demand", "stated_standard",
+  "stated_standard_source_quote_or_location", "enquiry_point",
+  "information_made_available", "material_items", "information_withheld",
+  "assertion_reference_set", "attribution_support_set", "account_test_point",
+  "post_test_account_opportunity", "available_routes",
+  "other_route_classification", "accountable_actor_available",
+  "time_reference_called_for", "bearing_interest", "cross_context_map",
+  "route_observation_basis",
+]);
+
+/**
+ * CS-I-21 and CS-I-22 — recover a field boundary the source-to-markdown
+ * conversion dropped.
+ *
+ * Several values run straight into the NEXT field with no separator, as
+ * in "...raise it with the meeting chair.other_route_classificationPermitted
+ * where the participant states the means aloud." The text after the token
+ * is that named field's value, not part of the item before it, so it is
+ * captured rather than discarded.
+ */
+const FIELD_TOKENS = [
+  "other_route_classification",
+  "accountable_actor_available",
+  "time_reference_called_for",
+  "enquiry_point",
+  "account_test_point",
+  "bearing_interest",
+  "information_withheld",
+  "assertion_reference_set",
+  "attribution_support_set",
+  "material_items",
+  "available_routes",
+];
+
+const RECOVERED_BOUNDARIES = [];
+
+function recoverRunTogetherFields(field, value, sourceId) {
+  const pairs = [];
+  let curField = field;
+  let rest = value;
+
+  for (;;) {
+    let hitAt = -1;
+    let hitToken = null;
+    for (const token of FIELD_TOKENS) {
+      if (token === curField) continue;
+      const at = rest.indexOf(token);
+      // Only a token with no separator before it is a dropped boundary.
+      // A token preceded by a backtick or a space is the field being
+      // named in prose, which is not a boundary.
+      if (at > 0 && !/[\s`(\[]/.test(rest[at - 1]) && (hitAt === -1 || at < hitAt)) {
+        hitAt = at;
+        hitToken = token;
+      }
+    }
+    if (hitAt === -1) break;
+
+    pairs.push([curField, rest.slice(0, hitAt).trim()]);
+    // CS-I-23: reported, not suppressed.
+    RECOVERED_BOUNDARIES.push(`${sourceId}: ${curField} ran into ${hitToken}`);
+    curField = hitToken;
+    rest = rest.slice(hitAt + hitToken.length).trim();
+  }
+
+  pairs.push([curField, rest.trim()]);
+  return pairs;
+}
+
+/**
+ * CS-I-19 and CS-I-20 — load-time assertions on the bound families.
+ *
+ * A truncated item must never reach a participant as an approved answer,
+ * so a value that ends mid-sentence fails the load rather than loading
+ * short. The count rule reads the highest item label the value itself
+ * carries, so it asserts against the source rather than against a number
+ * written here.
+ */
+const BOUND_FAMILIES = [
+  "material_items",
+  "assertion_reference_set",
+  "attribution_support_set",
+  "available_routes",
+];
+
+function assertBoundFamily(sourceId, field, value) {
+  const problems = [];
+  if (!BOUND_FAMILIES.includes(field)) return problems;
+  if (!value) return problems;
+  // CS-I-24: "Empty." at the START is an empty family, whatever follows.
+  if (/^empty\.?\b/i.test(value.trim())) return problems;
+
+  // CS-I-19.
+  if (!/[.!?\]]$/.test(value.trim())) {
+    problems.push(`${sourceId} ${field}: ends without terminal punctuation — "${value.slice(-48)}"`);
+  }
+
+  // CS-I-20. M1..Mn, A1..An, AS1..ASn and R-a..R-z.
+  const numeric = [...value.matchAll(/\b(?:AS|M|A)(\d+)\b/g)].map((m) => Number(m[1]));
+  const alpha = [...value.matchAll(/\bR-([a-z])\b/g)].map((m) => m[1].charCodeAt(0) - 96);
+  const labels = numeric.length ? numeric : alpha;
+  if (labels.length) {
+    const highest = Math.max(...labels);
+    const distinct = new Set(labels).size;
+    if (distinct < highest) {
+      problems.push(`${sourceId} ${field}: highest label is ${highest} but only ${distinct} items parsed`);
+    }
+  }
+  return problems;
+}
+
+const LOAD_PROBLEMS = [];
+
 const lib = lines.slice(libStart, libEnd === -1 ? lines.length : libEnd);
 
 const heads = [];
@@ -295,10 +496,22 @@ heads.forEach((h, n) => {
   // data. Read applicability from the source sheet, never from the prose
   // and never from the Stage.
   const sheet = {};
-  const sheetRe = /^- `([a-z0-9_]+)`\s*—\s*([\s\S]*?)(?=\n- `|\n\*\*|\n#### |$)/gm;
   const occurrences = {};
-  for (const m of body.matchAll(sheetRe)) {
-    (occurrences[m[1]] ??= []).push(m[2].trim().replace(/\s+/g, " "));
+  // CS-I-17. A field is a LOGICAL BULLET, not a physical line. The source
+  // library is soft-wrapped at about 95 characters, and a value continues
+  // on every following line indented by two or more spaces until the next
+  // bullet, heading or rule.
+  //
+  // The regex this replaces looked as though it already did that — it used
+  // [\s\S]*? with a lookahead for the next bullet — but it carried the /m
+  // flag, under which the `$` alternative in that lookahead matches the end
+  // of every LINE. So it stopped at the first wrap, and
+  // "M3 the error is the" was the end of a physical line rather than the
+  // end of a list. The issued file was never truncated.
+  for (const rec of sourceSheetBullets(body.split("\n"))) {
+    for (const [field, value] of recoverRunTogetherFields(rec.field, rec.value, h.id)) {
+      (occurrences[field] ??= []).push(value);
+    }
   }
 
   // A source states some of these fields more than once: as its own
@@ -326,6 +539,10 @@ heads.forEach((h, n) => {
     const candidates = values.filter((v) => !/^Q-D1-[0-9]/.test(v));
     const pool = candidates.length > 0 ? candidates : values;
     sheet[key] = pool.reduce((a, b) => (b.length > a.length ? b : a));
+  }
+
+  for (const [key, value] of Object.entries(sheet)) {
+    LOAD_PROBLEMS.push(...assertBoundFamily(h.id, key, value));
   }
 
 
@@ -399,3 +616,21 @@ writeFileSync(CAPTURE_OUT,
 console.log(
   `statements=${stmtRows.length} templates=${tplRows.length} sources=${heads.length}`
 );
+
+// CS-I-23: the recovered field boundaries are a quality signal on the
+// issued file. They are reported, never suppressed.
+if (RECOVERED_BOUNDARIES.length) {
+  console.log(`\nfield boundaries recovered (CS-I-21): ${RECOVERED_BOUNDARIES.length}`);
+  for (const r of RECOVERED_BOUNDARIES) console.log(`  ${r}`);
+}
+
+// CS-I-19 and CS-I-20: a truncated bound family fails the load. It does
+// not load short, because a short list is indistinguishable at serve time
+// from a complete one and would be offered to a participant as the
+// approved answer set.
+if (LOAD_PROBLEMS.length) {
+  console.error(`\nBOUND_FAMILY_PARSE_FAILURE — ${LOAD_PROBLEMS.length} problem(s):`);
+  for (const p of LOAD_PROBLEMS) console.error(`  ${p}`);
+  process.exit(1);
+}
+console.log("bound families: parse assertions clean");
