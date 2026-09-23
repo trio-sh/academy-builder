@@ -59,6 +59,30 @@ async function openCockpit(page: Page) {
 }
 
 test.describe("§11.1 Stage 2 cockpit", () => {
+  /**
+   * CS-I-48 — standing acceptance, not test scaffolding.
+   *
+   * The first run after the CORR-003 correction passed thirteen tests
+   * against a Stage entry still pinned to the superseded version: green,
+   * and proving nothing about the fix. A suite that goes green against
+   * stale content is worse than a red one, because nobody investigates a
+   * pass.
+   *
+   * So this is a test, and it runs first. A fixture pinned to superseded
+   * content is a FAILED test, not a passed one.
+   */
+  test("CS-37 · the fixture is pinned to live content, not a superseded version", async () => {
+    expect(
+      fixture.sourceVersionId,
+      "the fixture must name the source version it pinned"
+    ).toBeTruthy();
+    expect(
+      fixture.supersededBy ?? null,
+      `fixture pins a SUPERSEDED source version (${fixture.sourceVersionId}); ` +
+        "every assertion after this would pass against content the register has replaced"
+    ).toBeNull();
+  });
+
   test("AC-01 · all six regions visible simultaneously, nothing overlays a live view", async ({
     page,
   }) => {
@@ -287,28 +311,31 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     await expect(pane2.getByText("From this source · material_items")).toHaveCount(0);
   });
 
-  test("AC-13 · a missing beat timestamp prevents the timing determination", async ({
+  test("AC-13 · a missing beat timestamp prevents the dependent timing determination", async ({
     page,
   }) => {
     await openCockpit(page);
     const pane2 = paneTwo(page);
 
-    // Q-D1-08a asks when a disclosure was made RELATIVE TO the decision
-    // point. No source loaded today carries a mentor action sequence, so
-    // no beat marks that point and no timestamp exists.
-    //
-    // The determination must be PREVENTED. A test that accepted "the
-    // control is absent" would also pass if the question were simply not
-    // served, so this asserts the refusal is stated and named.
-    const q8a = control(page, "Q-D1-08a");
-    await expect(q8a).toBeVisible();
-    await expect(q8a).toContainText("Refused");
-    await expect(q8a).toContainText(
-      /BEAT_SCRIPT_NOT_LOADED|DECISION_POINT_BEAT_NOT_NAMED|BEAT_TIMESTAMP_MISSING/
+    // CS-I-32 changed which question this rides on. Q-D1-08a is NOT the
+    // one to assert against here: SRC-D1-S2-001 carries no bearing
+    // interest, so under CS-I-34 Q-D1-08a is not served at all — and its
+    // absence is not a missing state, so no control appears.
+    await expect(control(page, "Q-D1-08a")).toHaveCount(0);
+
+    // Q-D1-02 is the timing determination that IS served on this source:
+    // its reference resolves from enquiry_point, which reads "B3". No beat
+    // timestamp exists and this source carries no loaded sequence, so the
+    // determination must be PREVENTED and named.
+    const q2 = control(page, "Q-D1-02");
+    await expect(q2).toBeVisible();
+    await expect(q2).toContainText("Refused");
+    await expect(q2).toContainText(
+      /BEAT_SCRIPT_NOT_LOADED|REFERENCE_BEAT_NOT_IN_SEQUENCE|BEAT_TIMESTAMP_MISSING/
     );
 
-    // Refused means offering nothing, not offering something disabled.
-    await expect(q8a.locator('input[type="radio"]')).toHaveCount(0);
+    // Prevented means offering nothing, not offering something disabled.
+    await expect(q2.locator('input[type="radio"]')).toHaveCount(0);
   });
 
   test("CS-I-12 · the support-set item is retained but never rendered", async ({

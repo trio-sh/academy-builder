@@ -301,11 +301,14 @@ export default function Cockpit() {
  // the control is refused rather than offered with an answer set the
  // mentor would be guessing against. The server decides, not this
  // screen: it is the same refusal the commit route would return.
+ // CS-I-32 widened this: Q-D1-02, Q-D1-07 and Q-D1-08a each resolve
+ // their reference from their own governing field, so the screen no
+ // longer decides which questions are timing-dependent by reading an
+ // answer_type. It asks the server about every served question and the
+ // server answers timing_dependent false for the rest.
  const gated = await Promise.all(
  rows.map(async (r) => {
- if (r.refused || !/timing relative to/i.test(r.answer_type ?? "")) {
- return r;
- }
+ if (r.refused) return r;
  const { data: verdict } = await supabase.rpc(
  "t3a_d1_timing_determination_permitted",
  {
@@ -313,13 +316,24 @@ export default function Cockpit() {
  p_question_code: r.question_code,
  }
  );
- const v = (verdict ?? {}) as { permitted?: boolean; refusal?: string };
+ const v = (verdict ?? {}) as {
+ permitted?: boolean;
+ served?: boolean;
+ timing_dependent?: boolean;
+ refusal?: string;
+ };
+ if (v.timing_dependent !== true) return r;
  if (v.permitted === true) return r;
+ // CS-I-34: an absent governing field means the question is NOT
+ // SERVED under BR-07 — not served and then refused. Its absence
+ // is not a missing state, so the control is dropped rather than
+ // shown as refused. A refusal would say something went wrong.
+ if (v.served === false) return null;
  return { ...r, refused: true, refusal: v.refusal ?? "TIMING_UNAVAILABLE" };
  })
  );
  if (cancelled) return;
- setServed(gated);
+ setServed(gated.filter((r): r is ServedCapture => r !== null));
  })();
 
  return () => { cancelled = true; };
