@@ -40,6 +40,13 @@ const REGIONS = [
   "Pane 2 — Determination Capture",
 ];
 
+const paneTwo = (page: Page) =>
+  page.locator("section").filter({ hasText: "Pane 2 — Determination Capture" });
+
+/** One served control, by question code. */
+const control = (page: Page, code: string) =>
+  paneTwo(page).locator(`[data-question="${code}"]`);
+
 async function openCockpit(page: Page) {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(COCKPIT);
@@ -52,6 +59,30 @@ async function openCockpit(page: Page) {
 }
 
 test.describe("§11.1 Stage 2 cockpit", () => {
+  /**
+   * CS-I-48 — standing acceptance, not test scaffolding.
+   *
+   * The first run after the CORR-003 correction passed thirteen tests
+   * against a Stage entry still pinned to the superseded version: green,
+   * and proving nothing about the fix. A suite that goes green against
+   * stale content is worse than a red one, because nobody investigates a
+   * pass.
+   *
+   * So this is a test, and it runs first. A fixture pinned to superseded
+   * content is a FAILED test, not a passed one.
+   */
+  test("CS-37 · the fixture is pinned to live content, not a superseded version", async () => {
+    expect(
+      fixture.sourceVersionId,
+      "the fixture must name the source version it pinned"
+    ).toBeTruthy();
+    expect(
+      fixture.supersededBy ?? null,
+      `fixture pins a SUPERSEDED source version (${fixture.sourceVersionId}); ` +
+        "every assertion after this would pass against content the register has replaced"
+    ).toBeNull();
+  });
+
   test("AC-01 · all six regions visible simultaneously, nothing overlays a live view", async ({
     page,
   }) => {
@@ -198,5 +229,129 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     await expect(
       page.getByText("Record an administration variance at this beat")
     ).toBeVisible();
+  });
+
+  /**
+   * The five that were blocked on the capture mapping until
+   * T3A-D1-EXEC-CORR-002 ruled it. They are written against the ruling,
+   * not against the reading this build had been working from — which was
+   * wrong: being source-bound does not remove a question from a capture
+   * set, and C3 holds three controls rather than one.
+   */
+
+  test("AC-06 · a question renders with ONLY its approved answer set", async ({
+    page,
+  }) => {
+    await openCockpit(page);
+    const pane2 = paneTwo(page);
+
+    // Q-D1-01 takes C1, whose three lines are the whole of what may be
+    // offered. The assertion is not "C1's lines appear" — that would pass
+    // with extra options beside them. It is that the control offers three
+    // choices and no fourth.
+    const q1 = control(page, "Q-D1-01");
+    await expect(q1).toBeVisible();
+    await expect(q1.locator('input[type="radio"]')).toHaveCount(3);
+
+    // And the lines are the register's, verbatim.
+    await expect(q1).toContainText("Named the specific issue and what it was.");
+    await expect(q1).toContainText("Made no reference to an issue.");
+
+    // No free-text escape beside an approved set.
+    await expect(q1.locator("textarea")).toHaveCount(0);
+  });
+
+  test("AC-08 · answering the parent serves the exact approved children, and not before", async ({
+    page,
+  }) => {
+    await openCockpit(page);
+    const pane2 = paneTwo(page);
+
+    // Before the parent is answered, neither child exists. CS-I-14: not a
+    // disabled control, not a null — no row at all.
+    await expect(control(page, "Q-D1-03b1")).toHaveCount(0);
+    await expect(control(page, "Q-D1-03b2")).toHaveCount(0);
+
+    // C3 line 4 is "both omitted ... and included one or more unsupported
+    // claims", which BR-02a and BR-02b both trigger.
+    await pane2
+      .getByText(/The account both omitted one or more material items/)
+      .click();
+
+    await expect(control(page, "Q-D1-03b1")).toBeVisible({ timeout: 15000 });
+    await expect(control(page, "Q-D1-03b2")).toBeVisible();
+
+    // The children are bound to the SERVED SOURCE VERSION's lists.
+    await expect(pane2.getByText("From this source · material_items")).toBeVisible();
+    await expect(
+      pane2.getByText("From this source · assertion_reference_set")
+    ).toBeVisible();
+  });
+
+  test("AC-05 · changing the answer withdraws the options the old answer served", async ({
+    page,
+  }) => {
+    await openCockpit(page);
+    const pane2 = paneTwo(page);
+
+    await pane2
+      .getByText(/The account both omitted one or more material items/)
+      .click();
+    await expect(control(page, "Q-D1-03b1")).toBeVisible({ timeout: 15000 });
+
+    // "Wrong-prompt options cannot remain visible." Selecting the line
+    // that serves neither child must remove both, not grey them out and
+    // not leave their bound lists on screen.
+    await pane2
+      .getByText("The account included every material item and included no unsupported claim.")
+      .click();
+
+    await expect(control(page, "Q-D1-03b1")).toHaveCount(0, { timeout: 15000 });
+    await expect(control(page, "Q-D1-03b2")).toHaveCount(0);
+    await expect(pane2.getByText("From this source · material_items")).toHaveCount(0);
+  });
+
+  test("AC-13 · a missing beat timestamp prevents the dependent timing determination", async ({
+    page,
+  }) => {
+    await openCockpit(page);
+    const pane2 = paneTwo(page);
+
+    // CS-I-32 changed which question this rides on. Q-D1-08a is NOT the
+    // one to assert against here: SRC-D1-S2-001 carries no bearing
+    // interest, so under CS-I-34 Q-D1-08a is not served at all — and its
+    // absence is not a missing state, so no control appears.
+    await expect(control(page, "Q-D1-08a")).toHaveCount(0);
+
+    // Q-D1-02 is the timing determination that IS served on this source:
+    // its reference resolves from enquiry_point, which reads "B3". No beat
+    // timestamp exists and this source carries no loaded sequence, so the
+    // determination must be PREVENTED and named.
+    const q2 = control(page, "Q-D1-02");
+    await expect(q2).toBeVisible();
+    await expect(q2).toContainText("Refused");
+    await expect(q2).toContainText(
+      /BEAT_SCRIPT_NOT_LOADED|REFERENCE_BEAT_NOT_IN_SEQUENCE|BEAT_TIMESTAMP_MISSING/
+    );
+
+    // Prevented means offering nothing, not offering something disabled.
+    await expect(q2.locator('input[type="radio"]')).toHaveCount(0);
+  });
+
+  test("CS-I-12 · the support-set item is retained but never rendered", async ({
+    page,
+  }) => {
+    await openCockpit(page);
+    const pane2 = paneTwo(page);
+
+    // Naming an attribution support item names the person it is about.
+    // Where the bound family is attribution_support_set the identifier is
+    // offered and the text is withheld. On this source the family reads
+    // "Empty.", so the control refuses outright — which is the stronger
+    // outcome and is what CS-I-07 requires.
+    const q4b = control(page, "Q-D1-04b");
+    await expect(q4b).toBeVisible();
+    await expect(q4b).toContainText(/Refused/);
+    await expect(q4b).toContainText("BOUND_FAMILY_ABSENT_OR_EMPTY");
   });
 });

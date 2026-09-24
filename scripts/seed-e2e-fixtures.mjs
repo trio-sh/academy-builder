@@ -164,20 +164,31 @@ begin
 
   -- A source that actually holds a REC-07 approval. Without one the
   -- cockpit has nothing it may serve, which is the whole point.
+  -- Standing approval, not merely the existence of an approved row.
+  -- CS-I-45 voids a carry-forward by recording a WITHDRAWAL, and a
+  -- withdrawal cannot delete the approval it withdraws — so three sources
+  -- currently hold an 'approved' row and are not servable.
   select cv.content_version_id into v_ver
     from public.t3a_content_object co
     join public.t3a_d1_content_version cv on cv.content_object_id = co.content_object_id
-    join public.t3a_d1_source_approval a on a.source_version_id = cv.content_version_id
    where co.identifier = 'SRC-D1-S2-001'
-     and cv.superseded_by is null and a.status = 'approved';
+     and cv.superseded_by is null
+     and public.t3a_d1_source_version_approved(cv.content_version_id);
 
   if v_ver is null then
     raise exception 'NO_APPROVED_SOURCE: SRC-D1-S2-001 holds no standing REC-07 approval, so there is nothing the cockpit may serve';
   end if;
 
+  -- Reuse an entry only where it pins the version that is live NOW. A
+  -- Stage entry pins the version it served and must keep doing so, so a
+  -- corrected source does not rewrite an existing entry — it needs a new
+  -- one. Reusing an entry that pins a superseded version would have the
+  -- suite testing the sheet the correction replaced, and every assertion
+  -- would still pass while proving nothing about the fix.
   select e.stage_entry_event_id into v_entry
     from public.t3a_stage_entry_event e
    where e.session_identity = 'e2e_fixture' and e.stage_code = 'S2'
+     and e.source_version_id = v_ver
    order by e.created_at desc limit 1;
 
   if v_entry is null then
@@ -240,6 +251,7 @@ $seed$;
 
 select e.stage_entry_event_id,
        e.source_version_id,
+       cv.superseded_by,
        cv.body ->> 'verbatim' as canonical_body
   from public.t3a_stage_entry_event e
   left join public.t3a_d1_content_version cv
@@ -259,6 +271,10 @@ const fixture = {
   candidateId,
   stageEntryEventId: entry.stage_entry_event_id,
   sourceVersionId: entry.source_version_id,
+  // CS-I-48. The suite asserts on this before anything else: a fixture
+  // pinned to superseded content makes every later assertion meaningless
+  // while still reporting green.
+  supersededBy: entry.superseded_by ?? null,
   // AC-04 compares what Pane 1 renders against the approved text itself,
   // not against "the pane is non-empty". The register holds that text
   // under `verbatim`; there is no canonical_body on any loaded source.
