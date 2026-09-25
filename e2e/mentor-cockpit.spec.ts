@@ -323,16 +323,36 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     // absence is not a missing state, so no control appears.
     await expect(control(page, "Q-D1-08a")).toHaveCount(0);
 
-    // Q-D1-02 is the timing determination that IS served on this source:
-    // its reference resolves from enquiry_point, which reads "B3". No beat
-    // timestamp exists and this source carries no loaded sequence, so the
-    // determination must be PREVENTED and named.
+    // CS-I-55 re-fixtured this test, and the old fixture is the reason.
+    // AC-13's governing text is "a missing required beat TIMESTAMP
+    // prevents the dependent timing determination" — a missing RUNTIME
+    // record. The old fixture accepted BEAT_SCRIPT_NOT_LOADED, which is a
+    // missing DEFINITION: a different condition that happened to produce a
+    // refusal because no Stage 2 sequence was loaded. It would have gone
+    // green on a source with no script at all, and red the moment one
+    // loaded — so it was never testing AC-13.
+    //
+    // The new fixture requires the sequence to be LOADED first. Seven
+    // beats B1 to B7 in pane 1 is that precondition, asserted rather than
+    // assumed: if the parse regresses, this test fails here instead of
+    // passing for the wrong reason.
+    const pane1 = page.locator("section", { hasText: "Pane 1 — Source and Script" }).first();
+    for (const beat of ["B1", "B2", "B3", "B4", "B5", "B6", "B7"]) {
+      await expect(pane1.locator(`[data-beat="${beat}"]`)).toHaveCount(1, { timeout: 15000 });
+    }
+
+    // Q-D1-02 is the timing determination served on this source: its
+    // reference resolves from enquiry_point, which reads "B3". The
+    // sequence is loaded and B3 is in it, so neither
+    // BEAT_SCRIPT_NOT_LOADED nor REFERENCE_BEAT_NOT_IN_SEQUENCE can fire.
+    // The session recorded no B3 timestamp, so the determination must be
+    // prevented and named for THAT reason and no other.
     const q2 = control(page, "Q-D1-02");
     await expect(q2).toBeVisible();
     await expect(q2).toContainText("Refused");
-    await expect(q2).toContainText(
-      /BEAT_SCRIPT_NOT_LOADED|REFERENCE_BEAT_NOT_IN_SEQUENCE|BEAT_TIMESTAMP_MISSING/
-    );
+    await expect(q2).toContainText("BEAT_TIMESTAMP_MISSING");
+    await expect(q2).not.toContainText("BEAT_SCRIPT_NOT_LOADED");
+    await expect(q2).not.toContainText("REFERENCE_BEAT_NOT_IN_SEQUENCE");
 
     // Prevented means offering nothing, not offering something disabled.
     await expect(q2.locator('input[type="radio"]')).toHaveCount(0);

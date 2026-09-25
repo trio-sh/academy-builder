@@ -231,6 +231,32 @@ export default function Cockpit() {
  if (!body) {
  body = fallbackStubBody();
  setRefusal((prev) => prev ?? "CONTENT_UNLOADED: no approved source version is available. Rendering the addendum stub for design-only review.");
+ } else if (body.source_identifier) {
+ // CS-I-54a. The script pane read body.mentor_action_sequence, which NO
+ // source version carries — so it rendered empty for every source while
+ // 140 beats sat in t3a_d1_mentor_action_sequence unread. The beat
+ // dropdown on the variance control is driven by the same array, so
+ // recording a variance AT a beat was not possible either.
+ //
+ // The sequence is not part of the version body and must not be: the
+ // body is immutable once approved, and writing beats into it would mean
+ // superseding a version to load a script, which would void its
+ // approval. It is read from the table, keyed by source identifier.
+ const { data: beats } = await supabase
+ .from("t3a_d1_mentor_action_sequence")
+ .select("beat_ordinal, beat_code, action_type, content_verbatim")
+ .eq("source_identifier", body.source_identifier)
+ .order("beat_ordinal", { ascending: true });
+ if (beats?.length) {
+ body = {
+ ...body,
+ mentor_action_sequence: beats.map((b) => ({
+ code: String(b.beat_code ?? b.beat_ordinal),
+ label: String(b.action_type),
+ body: String(b.content_verbatim),
+ })),
+ };
+ }
  }
 
  if (cancelled) return;
@@ -857,10 +883,14 @@ export default function Cockpit() {
  <div className="mono-label text-foreground/60 mb-2">Mentor action sequence</div>
  <ol className="border-t border-foreground/25">
  {(sourceBody?.mentor_action_sequence ?? []).map((step, idx) => (
- <li key={step.code} className="grid grid-cols-12 gap-3 py-2 border-b border-foreground/20 items-baseline">
+ <li key={step.code} data-beat={step.code} className="grid grid-cols-12 gap-3 py-2 border-b border-foreground/20 items-baseline">
  <div className="col-span-1 mono-label text-foreground/60">{String(idx + 1).padStart(2, "0")}</div>
- <div className="col-span-3 mono-label">{step.code}</div>
- <div className="col-span-8 text-sm text-foreground">{step.body}</div>
+ <div className="col-span-2 mono-label">{step.code}</div>
+ {/* The action type is what the mentor DOES at the beat. A script that
+ shows the words without saying whether to say, ask or pause is not
+ a script. */}
+ <div className="col-span-2 mono-label text-foreground/60">{step.label}</div>
+ <div className="col-span-7 text-sm text-foreground">{step.body}</div>
  </li>
  ))}
  </ol>
