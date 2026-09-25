@@ -362,8 +362,60 @@ const SHEET_FIELDS = new Set([
   "post_test_account_opportunity", "available_routes",
   "other_route_classification", "accountable_actor_available",
   "time_reference_called_for", "bearing_interest", "cross_context_map",
-  "route_observation_basis",
+  "route_observation_basis", "irrelevant_conduct",
 ]);
+
+
+/**
+ * RA-06 — repair a FIELD NAME the conversion split in two.
+ *
+ * SRC-D1-S3-010 reads, in the issued file:
+ *
+ *   - `relevant_conduct` — ...the account given at the enquiry changes at
+ *     the account test.ir
+ *   - `relevant_conduct` — The quality of the evaluation, whether the
+ *     recommendation is sound, formatting, structure, length...
+ *
+ * The trailing "ir" is not prose. It is the first two characters of
+ * `irrelevant_conduct`, and the "second" relevant_conduct bullet is that
+ * field with its name beheaded. A field holds one value, so a reader
+ * seeing the same name twice is seeing a conversion fault, not a
+ * duplicate.
+ *
+ * THE GUARD THAT MAKES THIS SAFE. Three conditions must hold together:
+ * the next bullet repeats the CURRENT field's name, the current value
+ * ends in a short lowercase fragment, and fragment + next name is a
+ * field this register knows. Requiring the repeat is what stops this
+ * firing on ordinary prose that happens to end in a short word — and
+ * the repeat is itself the symptom, since a sheet never states one field
+ * twice.
+ *
+ * Measured across all forty live source sheets, exactly ONE field
+ * matches: SRC-D1-S3-010 relevant_conduct. The other six occurrences
+ * CORR-004 Issue 2 counts sit outside source sheets, in prose this
+ * parser never reads.
+ */
+function repairSplitFieldNames(bullets, sourceId) {
+  for (let i = 0; i < bullets.length - 1; i++) {
+    const cur = bullets[i];
+    const next = bullets[i + 1];
+    if (cur.field !== next.field) continue;
+
+    const m = /([a-z]{1,6})$/.exec(cur.value);
+    if (!m) continue;
+    const fragment = m[1];
+    const repaired = fragment + next.field;
+    if (!SHEET_FIELDS.has(repaired)) continue;
+
+    cur.value = cur.value.slice(0, cur.value.length - fragment.length).trimEnd();
+    next.field = repaired;
+    // RA-06: log each recovery. It is a quality signal on the issued
+    // file, not noise to swallow.
+    RECOVERED_BOUNDARIES.push(
+      `${sourceId}: field name split — "${fragment}" + "${next.field.slice(fragment.length)}" recovered as ${repaired}`);
+  }
+  return bullets;
+}
 
 /**
  * CS-I-21 and CS-I-22 — recover a field boundary the source-to-markdown
@@ -508,7 +560,8 @@ heads.forEach((h, n) => {
   // of every LINE. So it stopped at the first wrap, and
   // "M3 the error is the" was the end of a physical line rather than the
   // end of a list. The issued file was never truncated.
-  for (const rec of sourceSheetBullets(body.split("\n"))) {
+  const sheetBullets = repairSplitFieldNames(sourceSheetBullets(body.split("\n")), h.id);
+  for (const rec of sheetBullets) {
     for (const [field, value] of recoverRunTogetherFields(rec.field, rec.value, h.id)) {
       (occurrences[field] ??= []).push(value);
     }
