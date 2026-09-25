@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * RA-03 — assert the loaded field values match T3A-D1-REC07-REAPP-001
- * Section 2 before any re-approval is written.
+ * RA-03 / RA-03a — assert the loaded field values match
+ * T3A-D1-REC07-REAPP-001 ISSUE 2 Section 2 before any re-approval is
+ * written.
  *
  * "Where any field differs, do not write the approval. Leave that source
  * unservable, name the differing field, and log."
@@ -11,19 +12,18 @@
  * precondition on a founder signature, and a precondition that only runs
  * as a side effect of the thing it guards is not a precondition.
  *
- * TWO CLASSES OF DIFFERENCE THIS DISTINGUISHES, because treating them
- * alike would either block a correct approval or wave through a wrong one.
+ * NO VALUE IN ISSUE 2 IS ELIDED, so RA-03 states plainly that a prefix
+ * match is neither sufficient nor expected. Issue 1 capped six values at
+ * exactly 430 characters — a rendering limit in the pack, not a statement
+ * about content — and this verifier reported them as elided rather than
+ * passing them as exact. Issue 2 removed the cap, so the prefix path is
+ * GONE rather than merely unused: a value ending in an ellipsis is now a
+ * difference like any other, because under Issue 2 it can only mean the
+ * pack was truncated again.
  *
- * 1. ELIDED. Six Section 2 values are cut at exactly 430 characters and
- *    end in an ellipsis — cross_context_map on two sources,
- *    information_made_available on two, and one each of available_routes
- *    and administration_timing_protocol. 430 on the nose across six
- *    unrelated fields is a rendering limit, not a statement about
- *    content. These are checked as prefixes and reported as elided, never
- *    silently passed as exact.
- *
- * 2. GENUINELY DIFFERENT. Reported in full, with both values, and the
- *    exit code is non-zero.
+ * Every mismatch is reported in full, with both values, and the exit code
+ * is non-zero. Nothing is normalised away except typographic quote and
+ * apostrophe forms.
  *
  * Usage: SBP=... node scripts/verify-reapp-001.mjs
  */
@@ -75,17 +75,18 @@ for (const r of rows) {
     const got = r.sheet?.[field];
     if (got === undefined || got === null) { missing.push(`${r.src}.${field}`); continue; }
     const w = norm(want), g = norm(got);
+    // RA-03 under Issue 2: an ellipsis is no longer a rendering artefact
+    // to tolerate. It means the pack was capped again, so it is named as
+    // its own failure rather than quietly prefix-matched.
     if (w.endsWith('...')) {
-      const stem = w.slice(0, -3);
-      if (g.startsWith(stem)) elided.push(`${r.src}.${field} (pack ${w.length}, live ${g.length})`);
-      else differs.push({ f: `${r.src}.${field}`, want: w, got: g, note: 'elided prefix does not match' });
+      elided.push(`${r.src}.${field} — Issue 2 must not elide; pack value ends in an ellipsis`);
     } else if (w === g) exact += 1;
     else differs.push({ f: `${r.src}.${field}`, want: w, got: g, note: 'value differs' });
   }
 }
 
 console.log(`RA-03 · sources ${rows.length} · exact ${exact} · elided ${elided.length} · missing ${missing.length} · differing ${differs.length}`);
-for (const e of elided) console.log(`  elided (prefix verified): ${e}`);
+for (const e of elided) console.error(`  ELIDED IN PACK: ${e}`);
 for (const m of missing) console.log(`  MISSING FROM LIVE: ${m}`);
 for (const d of differs) {
   console.log(`\n  DIFFERS — ${d.f} (${d.note})`);
@@ -93,8 +94,8 @@ for (const d of differs) {
   console.log(`    live: ${d.got}`);
 }
 
-if (missing.length || differs.length) {
+if (missing.length || differs.length || elided.length) {
   console.error('\nRA-03 FAILED — no re-approval may be written for an affected source.');
   process.exit(1);
 }
-console.log('\nRA-03 clean — every Section 2 field matches the loaded value.');
+console.log('\nRA-03 clean — every Section 2 field matches the loaded value exactly.');
