@@ -132,6 +132,9 @@ export default function Cockpit() {
 
  const [entry, setEntry] = useState<StageEntryRow | null>(null);
  const [sourceBody, setSourceBody] = useState<SourceVersionBody | null>(null);
+ // CL-11. True where no approved source version loaded. Live capture is
+ // refused and nothing is rendered in its place.
+ const [sourceUnavailable, setSourceUnavailable] = useState(false);
  const [loading, setLoading] = useState(true);
  const [refusal, setRefusal] = useState<string | null>(null);
  const [answers, setAnswers] = useState<Record<string, Answer>>({});
@@ -227,10 +230,13 @@ export default function Cockpit() {
  }
  }
  }
- // Fallback stub so the cockpit is inspectable when no source is loaded.
+ // CL-11. No approved source, no capture. The Cockpit refuses and states
+ // why; it renders no script, no question and no options. It does NOT
+ // substitute invented content to stay inspectable — see CL-10 where the
+ // stub that did was removed.
  if (!body) {
- body = fallbackStubBody();
- setRefusal((prev) => prev ?? "CONTENT_UNLOADED: no approved source version is available. Rendering the addendum stub for design-only review.");
+ setSourceUnavailable(true);
+ setRefusal((prev) => prev ?? "NO_APPROVED_SOURCE: no approved source version is available for this session. Live capture is refused. No script, question or option is rendered, because content nobody approved must never reach a mentor.");
  } else if (body.source_identifier) {
  // CS-I-54a. The script pane read body.mentor_action_sequence, which NO
  // source version carries — so it rendered empty for every source while
@@ -438,6 +444,12 @@ export default function Cockpit() {
  const commit = async () => {
  if (!entry || !profile?.id) return;
  if (committed) return;
+ // CL-11. Refused at the client as well as the server, so the control is
+ // not merely hidden: there is nothing approved to commit against.
+ if (sourceUnavailable) {
+ setRefusal("NO_APPROVED_SOURCE: live capture is refused because no approved source version loaded for this session.");
+ return;
+ }
  if (requiredUnanswered.length > 0) {
  setRefusal(`DETERMINATION_INCOMPLETE: ${requiredUnanswered.length} required question${requiredUnanswered.length === 1 ? "" : "s"} unanswered.`);
  return;
@@ -1315,34 +1327,15 @@ function extractDimNumber(dim: string): string {
  return m ? m[1] : "1";
 }
 
-function fallbackStubBody(): SourceVersionBody {
- return {
- title: "SRC-D1-S2-STUB — The Site Walk",
- canonical_body:
- "You receive an urgent message from your manager:\n\"The client presentation is in 30 minutes and the data is wrong.\"\nWhat do you do?",
- mentor_action_sequence: [
- { code: "READ", label: "Read", body: "Read the scenario to the participant." },
- { code: "ASK", label: "Ask", body: "Ask the primary question above." },
- { code: "PAUSE", label: "Pause", body: "Pause and allow time for response." },
- { code: "SAY", label: "Say", body: "Use only permitted follow-up if required." },
- ],
- questions: [
- {
- question_id: "Q-D1-01",
- stem: "What was the participant's immediate action? Select the option that best matches what was observed or stated.",
- kind: "single_select_fixed",
- required: true,
- options: [
- { key: "clarify", label: "Clearly asks for clarification about what is wrong." },
- { key: "seek_data", label: "Seeks the specific data or details needed." },
- { key: "state_next", label: "States what they will do next to address the issue." },
- { key: "plan", label: "Makes a suggestion or plan to resolve the problem." },
- { key: "other", label: "Does something else." },
- { key: "no_ref", label: "Makes no reference to the issue." },
- { key: "not_served", label: "Not Served — this question was not addressed." },
- { key: "missing", label: "Missing — unable to determine." },
- ],
- },
- ],
- };
-}
+// CL-10. The fallback that stood here rendered an INVENTED four-step
+// script, an invented question and invented options whenever no approved
+// source loaded. It was guarded by a CONTENT_UNLOADED banner, which does
+// not change what it did: a mentor could be shown content nobody
+// approved, in a surface whose whole purpose is that only approved text
+// reaches a participant. A warning next to fabricated content is not a
+// control.
+//
+// There is no replacement stub, deliberately. Where no approved source
+// loads the Cockpit refuses live capture and says so (CL-11), rendering
+// no script, no question and no options. An empty pane that states why is
+// honest; a populated one that is invented is not.
