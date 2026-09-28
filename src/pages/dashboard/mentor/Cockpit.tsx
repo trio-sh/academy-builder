@@ -11,7 +11,6 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { useLiveViewMonitor, attachStream } from "@/lib/liveView";
 import { useLiveSession } from "@/lib/liveSession";
 
 /**
@@ -111,6 +110,27 @@ type Answer = string | string[] | null;
  * serve time and is never compiled in here. This type describes what
  * arrives; it does not decide anything.
  */
+/** CL-37. What the Live Session panel reads from t3a_d1_live_session. */
+type MeetSessionRow = {
+  host_account_email: string | null;
+  meet_link: string | null;
+  link_status: string;
+  visual_confirmation_recorded_at: string | null;
+  e3_rests_on_attestation_alone: boolean;
+};
+
+/**
+ * CL-41. The session-start attestations, in the instrument's own words.
+ * A4 is Stage 4 only; the server decides which are required and refuses
+ * live capture until each is recorded, so this list only displays them.
+ */
+const LIVE_ATTESTATIONS: { code: string; text: string }[] = [
+  { code: "A1", text: "The Meet is hosted on an @the3rdacademy.com account in the CL-40 organizational unit." },
+  { code: "A2", text: "Recording, transcripts and note-taking are off." },
+  { code: "A3", text: "The Meet window and the Cockpit are both visible." },
+  { code: "A4", text: "Stage 4 only: only the window holding the shared material will be shared — never the Cockpit, never the entire screen." },
+];
+
 type ServedCapture = {
  question_code: string;
  refused: boolean;
@@ -588,53 +608,63 @@ export default function Cockpit() {
  enabled: Boolean(entry && profile?.id),
  });
 
- // The participant's view is what arrives over the connection; the
- // mentor's own view is the local camera. Naming them from the one
- // source keeps the §3.3 verdicts about the right tracks.
- const participantStream = liveSession.remoteStream;
- const mentorStream = liveSession.localStream;
+ // CL-36. The two live views are gone, so the streams, the video refs and
+ // the §3.3 track monitors that fed them go with them. Nothing here reads
+ // a video track any more: the video is in Google Meet, in another window,
+ // and the Meet Media API that could read it is in Developer Preview and
+ // requires every participant to be enrolled in that programme.
+ //
+ // The WebRTC session hook above is retained for the signalling it already
+ // does; what is removed is the pretence that this surface can see the
+ // picture. A verdict derived from a track that does not exist would read
+ // as a measurement.
 
- const participantVideoRef = useRef<HTMLVideoElement | null>(null);
- const mentorVideoRef = useRef<HTMLVideoElement | null>(null);
+ // CL-37 / CL-44. The Live Session panel's state, read from the server
+ // rather than inferred here.
+ const [meetSession, setMeetSession] = useState<MeetSessionRow | null>(null);
+ const [meetAttestations, setMeetAttestations] = useState<string[]>([]);
 
- const participantView = useLiveViewMonitor({
- stream: participantStream,
- peerConnection: liveSession.peerConnection,
- });
- const mentorView = useLiveViewMonitor({ stream: mentorStream });
-
- // A verdict that only paints a banner is not a rule. Each change is
- // reported, and an unavailable required view writes a pause event that
- // outlives this component, a refresh, and the tab being closed. The
- // commit is refused server-side while that pause stands.
  useEffect(() => {
+ if (!entry) return;
+ let cancelled = false;
+ (async () => {
+ const [{ data: ls }, { data: at }] = await Promise.all([
+ supabase
+ .from("t3a_d1_live_session")
+ .select("host_account_email, meet_link, link_status, visual_confirmation_recorded_at, e3_rests_on_attestation_alone")
+ .eq("stage_entry_event_id", entry.stage_entry_event_id)
+ .maybeSingle(),
+ supabase
+ .from("t3a_d1_session_attestation")
+ .select("attestation_code")
+ .eq("stage_entry_event_id", entry.stage_entry_event_id),
+ ]);
+ if (cancelled) return;
+ setMeetSession((ls as MeetSessionRow) ?? null);
+ setMeetAttestations(((at ?? []) as { attestation_code: string }[]).map((r) => r.attestation_code));
+ })();
+ return () => { cancelled = true; };
+ }, [entry]);
+
+ // CL-44. The mentor reports it; the platform records who and when, takes
+ // the pause route and blocks advancement until restoration is recorded.
+ // This replaces the automatic detection in EXEC-001 Section 3.3, which
+ // read the video track.
+ const [liveVideoInterrupted, setLiveVideoInterrupted] = useState(false);
+ const reportLiveVideoInterrupted = async () => {
  if (!entry || !profile?.id) return;
- void supabase.rpc("t3a_d1_s2_report_live_view", {
- p_stage_instance_id: entry.stage_entry_event_id,
- p_view: "participant",
- p_state: participantView.state,
- p_reason: participantView.reason ?? "",
- p_recorded_by: profile.id,
+ const { error } = await supabase.from("t3a_d1_live_session_event").insert({
+ stage_entry_event_id: entry.stage_entry_event_id,
+ event_kind: "video_interrupted",
+ beat_code: varianceBeat || null,
+ reported_by: profile.id,
+ // REC-10: a platform failure never consumes a participant's attempt.
+ rec10_classification: "technical_or_platform_failure",
  });
- }, [participantView.state, participantView.reason, entry, profile?.id]);
-
- useEffect(() => {
- if (!entry || !profile?.id) return;
- void supabase.rpc("t3a_d1_s2_report_live_view", {
- p_stage_instance_id: entry.stage_entry_event_id,
- p_view: "mentor",
- p_state: mentorView.state,
- p_reason: mentorView.reason ?? "",
- p_recorded_by: profile.id,
- });
- }, [mentorView.state, mentorView.reason, entry, profile?.id]);
-
- useEffect(() => {
- attachStream(participantVideoRef.current, participantStream);
- }, [participantStream]);
- useEffect(() => {
- attachStream(mentorVideoRef.current, mentorStream);
- }, [mentorStream]);
+ if (error) { setRefusal(error.message); return; }
+ setLiveVideoInterrupted(true);
+ setRefusal("LIVE_VIDEO_INTERRUPTED: the session is paused and the script cannot advance until you record restoration. Resuming is recorded as an administration variance. Where a beat's conduct could not be observed, each affected determination carries the technical-failure missing state and its conditions-compromised limitation — never a guessed answer.");
+ };
 
  if (loading) {
  return (
@@ -687,7 +717,7 @@ export default function Cockpit() {
  return (
  <div className="min-h-screen bg-background text-foreground">
  {/* Persistent header */}
- <header className="grid grid-cols-12 items-center gap-4 px-6 py-3 border-b-2 border-foreground bg-background">
+ <header data-region="persistent-header" className="grid grid-cols-12 items-center gap-4 px-6 py-3 border-b-2 border-foreground bg-background">
  <div className="col-span-3 flex items-center gap-3">
  <div className="w-8 h-8 border border-foreground grid place-items-center display-serif italic">K</div>
  <div>
@@ -731,148 +761,102 @@ export default function Cockpit() {
  below the supported minimum the surface refuses instead. */}
  <div className="grid grid-cols-2 gap-4 p-4 items-start">
  <div className="space-y-4">
- {/* Participant Live View placeholder */}
- <section className="border-2 border-foreground">
- <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
- {/* No recording indicator, because there is no recording.
- t3a_d1_consent_type records RECORDING as unavailable in D1:
- no Stage carries it. A badge saying the session is being
- recorded would tell the mentor something untrue. */}
- <div className="mono-label">Participant — Live View</div>
- <div className="mono-label text-background/70">
- {participantView.state}
- </div>
- </div>
- <div className="p-4">
- {/* §3.3 — degraded is surfaced and the session continues;
- unavailable takes the pause route and blocks source
- advancement until restored. The verdict is the server's. */}
- {participantView.state !== "AVAILABLE" && (
- <div className="border-2 border-vermilion bg-vermilion/[0.06] p-3 mb-4">
- <div className="mono-label ink-vermilion">
- PARTICIPANT VIEW {participantView.state}
- </div>
- <p className="text-sm text-foreground/80 mt-1 leading-relaxed">
- {participantView.state === "DEGRADED"
- ? "The view is degraded. The session continues — this is here so you know, not so you stop."
- : "The session is paused and the script cannot advance until the view is restored for five consecutive seconds. Resuming afterwards is recorded as an administration variance."}
- </p>
- {participantView.reason && (
- <p className="mono-label text-foreground/50 mt-2">
- {participantView.reason}
- </p>
- )}
- </div>
- )}
- {/* Displayed, measured, and nothing else. No MediaRecorder,
- no upload, no retained frame: D1 grants no RECORDING
- consent at any Stage. */}
- <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 relative">
- <video
- ref={participantVideoRef}
- autoPlay
- playsInline
- className="w-full h-full object-cover"
- />
- {!participantStream && (
- <div className="absolute inset-0 grid place-items-center text-foreground/60">
- <div className="text-center px-6">
- {/* Why there is no track, rather than only that there
- is none. A refusal carries the server's own code:
- a live view withheld for want of consent is a
- different situation from one still connecting, and
- a mentor who cannot tell them apart will wait for
- the wrong thing. */}
- {liveSession.status === "REFUSED" ? (
- <>
- <div className="mono-label ink-vermilion mb-2">
- {liveSession.refusalCode ?? "LIVE VIEW REFUSED"}
- </div>
- <p className="text-sm max-w-sm">
- {liveSession.refusalCode ===
- "OBSERVATION_CONSENT_NOT_ON_RECORD"
- ? "No observation consent is on record for this participant, so no view may be opened on them. This is the control, not a fault."
- : liveSession.refusalCode ===
- "OBSERVATION_CONSENT_WITHDRAWN"
- ? "The participant has withdrawn observation consent. The view stays closed and the session cannot proceed on it."
- : liveSession.refusalCode ===
- "DEVICE_ACCESS_NOT_GRANTED"
- ? "This browser did not grant camera and microphone access. The session is held rather than run without a view."
- : "The live view was refused. The session is held rather than run without a view of the participant."}
- </p>
- {liveSession.refusalRemedy && (
- <p className="mono-label text-foreground/50 mt-2">
- {liveSession.refusalRemedy}
- </p>
- )}
- </>
- ) : (
- <>
- <div className="mono-label mb-2">
- {liveSession.status === "CHECKING_CONSENT"
- ? "Checking consent"
- : liveSession.status === "REQUESTING_DEVICES"
- ? "Requesting camera and microphone"
- : liveSession.status === "CONNECTING"
- ? "Connecting to the participant"
- : "No track presented"}
- </div>
- <p className="text-sm max-w-sm">
- The session is held here rather than run without a
- view of the participant.
- </p>
- </>
- )}
- </div>
- </div>
- )}
- </div>
- </div>
- </section>
 
- {/* Mentor — Live View. §3.1: the mentor's own stream, so they
- remain aware of their presence to the participant. It is a
- live-presence surface only and never evidence content, so
- nothing is captured from it and nothing is read out of it. */}
- <section className="border-2 border-foreground">
- <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
- <div className="mono-label">Mentor — Live View</div>
- <div className="mono-label text-background/70">{mentorView.state}</div>
- </div>
- <div className="p-4">
- <div className="aspect-video bg-foreground/[0.06] border border-foreground/25 relative">
- {/* Muted: it is the mentor's own stream, and unmuting it
- would feed back into the room. */}
- <video
- ref={mentorVideoRef}
- autoPlay
- playsInline
- muted
- className="w-full h-full object-cover"
- />
- {!mentorStream && (
- <div className="absolute inset-0 grid place-items-center text-foreground/60">
- <div className="text-center px-6">
- <div className="mono-label mb-2">§ Live presence only</div>
- <p className="text-sm max-w-sm">
- Your own stream, so you can see what the participant sees
- of you. Nothing here is recorded and nothing here is
- evidence.
- </p>
- </div>
- </div>
- )}
- </div>
- {mentorView.state !== "AVAILABLE" && (
- <p className="mono-label ink-vermilion mt-3">{mentorView.reason}</p>
- )}
- </div>
- </section>
+         {/* CL-36 / CL-37 — the Live Session panel.
+             The Participant Live View and Mentor Live View regions stood
+             here. Both are removed, and NO PLACEHOLDER STREAM replaces
+             them: a frame that looks like video while the real video is in
+             another window misleads the mentor, which is the same fault as
+             the fabricated fallback removed under CL-10.
+
+             Video runs in Google Meet, in its own window, beside this one.
+             The Cockpit keeps everything that is not video — script, beat
+             time-stamps, the pause timer, capture, variance and controls —
+             because CE-02 and CE-08 both depend on a time-stamped beat and
+             a video call cannot supply one.
+
+             The Cockpit cannot read Meet's video track (the Meet Media API
+             is in Developer Preview and needs every participant enrolled),
+             so what stood on automatic detection now stands on the
+             mentor's attestation and the mentor-reported control at CL-44.
+             That is weaker than machine enforcement and it is stated
+             rather than disguised. */}
+         <section className="border-2 border-foreground" data-region="live-session">
+           <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
+             <div className="mono-label">Live Session</div>
+             <div className="mono-label text-background/70">Google Meet</div>
+           </div>
+           <div className="p-4 space-y-3">
+             <p className="text-sm text-foreground/80 leading-relaxed">
+               Video runs in Google Meet in a separate window. Keep that
+               window and this one both visible for the whole session.
+             </p>
+             <dl className="grid grid-cols-2 gap-2 text-sm">
+               <dt className="mono-label text-foreground/60">Channel</dt>
+               <dd className="text-foreground">Google Meet</dd>
+               <dt className="mono-label text-foreground/60">Meet link</dt>
+               <dd className="text-foreground" data-live="link-status">
+                 {meetSession?.link_status ?? "not issued"}
+               </dd>
+               <dt className="mono-label text-foreground/60">Host account</dt>
+               <dd className="text-foreground" data-live="host">
+                 {meetSession?.host_account_email ?? "—"}
+               </dd>
+               <dt className="mono-label text-foreground/60">Visual confirmation</dt>
+               <dd className="text-foreground" data-live="rec11">
+                 {meetSession?.visual_confirmation_recorded_at ? "recorded" : "not recorded"}
+               </dd>
+             </dl>
+
+             {/* CL-41. Live capture refuses until every attestation is
+                 recorded. The server decides; this only shows it. */}
+             <div className="border-t border-foreground/25 pt-3">
+               <div className="mono-label text-foreground/60 mb-2">Session-start attestations</div>
+               <ul className="space-y-1 text-sm" data-live="attestations">
+                 {LIVE_ATTESTATIONS.map((a) => (
+                   <li key={a.code} className="flex gap-2" data-attestation={a.code}>
+                     <span className="mono-label text-foreground/60">{a.code}</span>
+                     <span className="text-foreground/80">{a.text}</span>
+                     <span className="mono-label ml-auto">
+                       {meetAttestations.includes(a.code) ? "attested" : "—"}
+                     </span>
+                   </li>
+                 ))}
+               </ul>
+             </div>
+
+             {/* CL-40. The honest default is the weaker claim. */}
+             {meetSession?.e3_rests_on_attestation_alone !== false && (
+               <p className="mono-label text-foreground/50">
+                 E3 rests on attestation alone — the Workspace configuration
+                 at CL-40 is not confirmed as applied for this session.
+               </p>
+             )}
+
+             {/* CL-44. Replaces the automatic detection the Cockpit can no
+                 longer perform. */}
+             <div className="border-t-2 border-foreground pt-3">
+               <Button
+                 variant="outline"
+                 className="rounded-none border-2 border-foreground"
+                 data-control="live-video-interrupted"
+                 onClick={reportLiveVideoInterrupted}
+               >
+                 Live video interrupted
+               </Button>
+               <p className="mono-label text-foreground/50 mt-2">
+                 Takes the pause route, writes the event and blocks source
+                 advancement until you record restoration. Resuming is
+                 recorded as an administration variance.
+               </p>
+             </div>
+           </div>
+         </section>
 
  </div>
  <div className="space-y-4">
  {/* Pane 1 — Source and Script */}
- <section className="border-2 border-foreground">
+ <section data-region="pane-1" className="border-2 border-foreground">
  <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
  <div className="mono-label">Pane 1 — Source and Script</div>
  <button
@@ -957,7 +941,7 @@ export default function Cockpit() {
  </section>
 
  {/* Pane 2 — Determination Capture */}
- <section className="border-2 border-foreground">
+ <section data-region="pane-2" className="border-2 border-foreground">
  <div className="flex items-center justify-between px-4 py-2 border-b-2 border-foreground bg-foreground text-background">
  <div className="mono-label">Pane 2 — Determination Capture</div>
  <button
@@ -1051,7 +1035,7 @@ export default function Cockpit() {
  )}
 
  {/* Session Control Strip */}
- <footer className="sticky bottom-0 z-10 grid grid-cols-12 items-center gap-3 px-6 py-3 border-t-2 border-foreground bg-background">
+ <footer data-region="session-control-strip" className="sticky bottom-0 z-10 grid grid-cols-12 items-center gap-3 px-6 py-3 border-t-2 border-foreground bg-background">
  <div className="col-span-2">
  <div className="mono-label text-foreground/60">Session Controls</div>
  </div>
@@ -1090,10 +1074,10 @@ export default function Cockpit() {
  committing ||
  committed ||
  requiredUnanswered.length > 0 ||
- // §3.3 — advancement is blocked while a required live view is
- // unavailable. The server refuses the commit regardless; this
- // stops the mentor being invited to try.
- participantView.source_advancement_blocked === true
+ // CL-44 — advancement is blocked while a mentor-reported
+ // interruption stands. The server refuses regardless; this stops
+ // the mentor being invited to try.
+ liveVideoInterrupted
  }
  className="w-full rounded-none bg-foreground text-background hover:bg-foreground/90"
  >
