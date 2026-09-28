@@ -815,21 +815,40 @@ describe("§3 Mentor Cockpit — six regions, and no smaller version of them", (
     expect(cockpitCode).not.toMatch(/1280|800(?![0-9])/);
   });
 
-  it("holds the six regions in the arrangement build 057 fixes", () => {
+  it("holds the five regions CLOSE-001 CL-38 leaves, and neither live view", () => {
+    // Restated with CL-49. As issued this asserted six regions with the
+    // participant live view above the mentor's. Section 2A moved live video
+    // to Google Meet, in its own window, so there are five regions and no
+    // live view at all. The test is not deleted: it now asserts the new
+    // arrangement AND the absence, because a region removed is only proved
+    // removed by asserting it.
+    for (const region of [
+      "persistent-header",
+      "pane-1",
+      "pane-2",
+      "live-session",
+      "session-control-strip",
+    ]) {
+      expect(cockpitCode, `${region} region hook missing`).toContain(
+        `data-region="${region}"`
+      );
+    }
+
     const body = cockpitCode.slice(
       cockpitCode.indexOf('grid grid-cols-2'),
       cockpitCode.indexOf("After-commit follow-through")
     );
-    const order = [
-      "Participant — Live View",
-      "Mentor — Live View",
-      "Pane 1 — Source and Script",
-      "Pane 2 — Determination Capture",
-    ].map((label) => body.indexOf(label));
-    expect(order.every((i) => i >= 0)).toBe(true);
-    // Participant above mentor; source above capture.
-    expect(order[0]).toBeLessThan(order[1]);
-    expect(order[2]).toBeLessThan(order[3]);
+    // Source above capture still holds.
+    expect(body.indexOf("Pane 1 — Source and Script")).toBeGreaterThanOrEqual(0);
+    expect(body.indexOf("Pane 2 — Determination Capture")).toBeGreaterThanOrEqual(0);
+    expect(body.indexOf("Pane 1 — Source and Script")).toBeLessThan(
+      body.indexOf("Pane 2 — Determination Capture")
+    );
+
+    // CL-36: no live view, and no placeholder stream standing in for one.
+    expect(cockpitCode).not.toContain("Participant — Live View");
+    expect(cockpitCode).not.toContain("Mentor — Live View");
+    expect(cockpitCode).not.toMatch(/<video/);
   });
 
   it("has no responsive breakpoint that would reduce a live view", () => {
@@ -997,11 +1016,24 @@ describe("§3.3 The live views — measured here, judged by the server", () => {
     expect(liveViewCode).not.toMatch(/livekit|daily-co|twilio|agora|opentok|zoom/i);
   });
 
-  it("the cockpit displays a stream without recording one", () => {
-    expect(cockpitCode).toMatch(/useLiveViewMonitor/);
-    expect(cockpitCode).toMatch(/<video/);
+  it("the cockpit no longer displays a stream at all, and still records nothing", () => {
+    // Restated with CL-49. The Cockpit used to render the streams and
+    // measure their tracks. It cannot: the video is in Google Meet and the
+    // Meet Media API that could read it is in Developer Preview, requiring
+    // every participant to be enrolled. So the assertion inverts — no
+    // monitor, no video element — while the half that still matters holds.
+    expect(cockpitCode).not.toMatch(/useLiveViewMonitor/);
+    expect(cockpitCode).not.toMatch(/<video/);
     expect(cockpitCode).not.toMatch(/MediaRecorder|getDisplayMedia|captureStream/);
   });
+
+  it("src/lib/liveView.ts is retained and unchanged by the move to Meet", () => {
+    // The module is no longer wired into the Cockpit, and it is not
+    // deleted: its thresholds and refusals are the record of how a live
+    // view was judged, and a provider that can be read may return.
+    expect(liveViewCode).toMatch(/rpc\("t3a_d1_s2_live_view_state"/);
+  });
+
 });
 
 describe("Two review findings on #284, and what they were", () => {
@@ -1019,16 +1051,22 @@ describe("Two review findings on #284, and what they were", () => {
     expect(approvalCode).not.toMatch(/approvals\.find\(\([^)]*\) =>[^;]*status === "approved"\)/);
   });
 
-  it("the cockpit reports each live-view verdict rather than only painting it", () => {
-    // A verdict that drives a banner and nothing else is not a rule.
-    expect(cockpitCode).toMatch(/rpc\("t3a_d1_s2_report_live_view"/);
-    expect(cockpitCode).toMatch(/p_view: "participant"/);
-    expect(cockpitCode).toMatch(/p_view: "mentor"/);
+  it("the cockpit reports a mentor-reported interruption rather than only painting it", () => {
+    // Restated with CL-49. The finding behind this test was that a verdict
+    // driving a banner and nothing else is not a rule. That still holds —
+    // what changed is who supplies the verdict. The Cockpit cannot read
+    // Meet's track, so the mentor reports the interruption (CL-44) and the
+    // report is written, attributed and timed.
+    expect(cockpitCode).toMatch(/t3a_d1_live_session_event/);
+    expect(cockpitCode).toMatch(/event_kind: "video_interrupted"/);
+    expect(cockpitCode).toMatch(/reported_by: profile\.id/);
+    // REC-10: a platform failure never consumes a participant's attempt.
+    expect(cockpitCode).toMatch(/technical_or_platform_failure/);
   });
 
   it("the commit control is blocked while advancement is", () => {
-    expect(cockpitCode).toMatch(
-      /participantView\.source_advancement_blocked === true/
-    );
+    // Restated with CL-49: the blocker is now the mentor-reported
+    // interruption, because there is no track to derive it from.
+    expect(cockpitCode).toMatch(/liveVideoInterrupted/);
   });
 });
