@@ -128,13 +128,66 @@ if (env[0].env === 'production_active') {
 }
 console.log(`environment: ${env[0].env}`);
 
+const q = (s) => `'${String(s).replace(/'/g, "''")}'`;
+
 const key = await serviceKey();
 const mentorId = await ensureAccount(key, MENTOR);
 const candidateId = await ensureAccount(key, CANDIDATE);
 console.log(`mentor    ${MENTOR} ${mentorId}`);
 console.log(`candidate ${CANDIDATE} ${candidateId}`);
 
-const q = (s) => `'${String(s).replace(/'/g, "''")}'`;
+// -------------------------------------------------------------------
+// The five role accounts the rest of the browser suite signs in as.
+//
+// They did not exist, and the reason was not what it looked like.
+// e2e/auth.setup.ts hardcodes the Supabase project bloujipdkyjsgzwxnoej,
+// which is gone — the app runs on tnjyywtulpdyackmwnca — and it also wrote
+// its session under the localStorage key "the3rdacademy-auth" while the
+// client uses supabase-js's default. Two independent reasons nothing it
+// wrote could ever have been read, which cockpit.setup.ts had already
+// diagnosed in its own docstring.
+//
+// The visible effect was five failing setup projects and ONE HUNDRED AND
+// EIGHTY-SEVEN tests reported as "did not run" — a number easy to read
+// past, and repeatedly misattributed to the outstanding email-confirmation
+// work. Creating the accounts here and signing in through the real form
+// is what makes those suites able to run at all.
+const ROLE_ACCOUNTS = [
+  { role: 'candidate',    email: 'testcandidate@t3a.test',  first: 'Test', last: 'Candidate' },
+  { role: 'mentor',       email: 'testmentor@t3a.test',     first: 'Test', last: 'Mentor' },
+  { role: 'employer',     email: 'testemployer@t3a.test',   first: 'Test', last: 'Employer' },
+  { role: 'school_admin', email: 'testschool@t3a.test',     first: 'Test', last: 'School' },
+  { role: 'admin',        email: 'testadmin@t3a.test',      first: 'Test', last: 'Admin' },
+];
+
+const roleIds = {};
+for (const a of ROLE_ACCOUNTS) {
+  roleIds[a.role] = await ensureAccount(key, a.email);
+}
+
+// Profiles, with onboarding_completed true: without it every route
+// diverts to "finish setting up your account" and the suites would be
+// testing the onboarding page.
+//
+// The role is set directly here rather than through t3a_grant_role. That
+// route records a basis and is the right path for a real grant; these are
+// fixture accounts on a non-production environment, and the seed already
+// refuses to run at all when the environment is production_active.
+await sql(`
+do $roles$
+begin
+${ROLE_ACCOUNTS.map((a) => `
+  insert into public.profiles (id, email, first_name, last_name, role, is_active, onboarding_completed)
+  values (${q(roleIds[a.role])}::uuid, ${q(a.email)}, ${q(a.first)}, ${q(a.last)}, '${a.role}'::public.user_role, true, true)
+  on conflict (id) do update set role = '${a.role}'::public.user_role,
+                                 is_active = true,
+                                 onboarding_completed = true;`).join('\n')}
+end
+$roles$;`);
+
+for (const a of ROLE_ACCOUNTS) {
+  console.log(`${a.role.padEnd(13)} ${a.email} ${roleIds[a.role]}`);
+}
 
 const rows = await sql(`
 do $seed$
@@ -244,6 +297,98 @@ begin
     values (v_part, 'OBSERVATION', 'e2e-fixture', 'e2e-fixture', 'S2', v_entry,
             'GRANTED', now());
   end if;
+
+  -- =================================================================
+  -- E8 — the Stage 1 DEMONSTRATION pathway, so D1 can run end to end.
+  --
+  -- Stage 1 is AI-administered and its four provenance references were
+  -- never issued, so no run could exist and the confirmation workbench
+  -- could never open. Production provenance is not invented; the
+  -- demonstration objects loaded by 20261061000000 are cited instead, and
+  -- t3a_d1_ai_run_synthetic_bar refuses them outside design_only.
+  --
+  -- The SOURCE is the real approved Stage 1 source. Only the machine
+  -- provenance is a stand-in.
+  -- =================================================================
+  declare
+    v_prov jsonb := public.t3a_d1_demonstration_provenance();
+    v_s1ver uuid;
+    v_s1si uuid;
+    v_s1entry uuid;
+    v_run uuid;
+  begin
+    select cv.content_version_id into v_s1ver
+      from public.t3a_content_object co
+      join public.t3a_d1_content_version cv
+        on cv.content_object_id = co.content_object_id and cv.superseded_by is null
+     where co.identifier = 'SRC-D1-S1-001';
+
+    -- v_gw is only assigned when a NEW S2 entry is created; where the S2
+    -- entry was reused it is null, so the gateway is read back rather than
+    -- assumed. A silent null here inserted a row with no gateway and the
+    -- NOT NULL constraint caught it.
+    if v_gw is null then
+      select e.observation_path_gateway_id into v_gw
+        from public.t3a_stage_entry_event e
+       where e.stage_entry_event_id = v_entry;
+    end if;
+
+    if v_prov is null or v_s1ver is null or v_gw is null then
+      raise notice 'S1 demonstration skipped: provenance, source or gateway missing';
+    else
+      select e.stage_entry_event_id, e.stage_instance_id into v_s1entry, v_s1si
+        from public.t3a_stage_entry_event e
+       where e.session_identity = 'e2e_fixture_s1' and e.stage_code = 'S1'
+         and e.source_version_id = v_s1ver
+       order by e.created_at desc limit 1;
+
+      if v_s1entry is null then
+        insert into public.t3a_stage_instance
+          (participant_id, stage_code, dimension_id, attempt_no, completed_at)
+        values (v_part, 'S1', 'D1', 1, now())
+        returning stage_instance_id into v_s1si;
+
+        insert into public.t3a_stage_entry_event
+          (observation_path_gateway_id, stage_instance_id, stage_code, dimensions_in_play,
+           session_identity, assistance_rules_version, administration_conditions,
+           participant_id, dimension_id, source_version_id,
+           randomization_seed, presentation_variant_seed,
+           administration_conditions_snapshot, env_state_at_entry)
+        values (v_gw, v_s1si, 'S1', ARRAY['D1']::public.t3a_dimension_code[],
+                'e2e_fixture_s1', 'e2e', '{}'::jsonb, v_part, 'D1', v_s1ver,
+                1, 1, '{}'::jsonb, 'design_only')
+        returning stage_entry_event_id into v_s1entry;
+      end if;
+
+      if not exists (select 1 from public.t3a_d1_ai_administration_run
+                      where stage_entry_event_id = v_s1entry) then
+        insert into public.t3a_d1_ai_administration_run
+          (stage_entry_event_id, participant_id, dimension_id, source_version_id,
+           model_ref_version_id, prompt_ref_version_id,
+           admin_config_version_id, safety_config_version_id,
+           rendered_body, env_state_at_run, status, run_completed_at)
+        values (v_s1entry, v_part, 'D1', v_s1ver,
+                (v_prov->>'SYNTHETIC_TEST_ONLY-D1-MODEL-REF')::uuid,
+                (v_prov->>'SYNTHETIC_TEST_ONLY-D1-PROMPT-REF')::uuid,
+                (v_prov->>'SYNTHETIC_TEST_ONLY-D1-ADMIN-CONFIG')::uuid,
+                (v_prov->>'SYNTHETIC_TEST_ONLY-D1-SAFETY-CONFIG')::uuid,
+                'DEMONSTRATION RESPONSES — SYNTHETIC_TEST_ONLY. No real person produced these and '
+                || 'no determination taken from them is evidence about anyone.',
+                'design_only', 'completed', now());
+      end if;
+
+      -- CORR-02: the routing record is what puts the pending action on the
+      -- Mentor Desk. Without it the gate is enforced and invisible.
+      if not exists (select 1 from public.t3a_d1_s1_routing
+                      where stage_instance_id = v_s1si) then
+        insert into public.t3a_d1_s1_routing
+          (stage_instance_id, participant_id, dimension_id, assigned_mentor_id)
+        values (v_s1si, v_part, 'D1', v_mentor);
+      end if;
+
+      raise notice 's1_demonstration stage_instance=% entry=%', v_s1si, v_s1entry;
+    end if;
+  end;
 
   raise notice 'stage_entry_event_id=%', v_entry;
 end
