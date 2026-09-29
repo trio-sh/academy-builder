@@ -1016,7 +1016,45 @@ describe("REC-07 Source approval — a signature, not a calculation", () => {
   });
 
   it("cannot offer approval for a version carrying no hash", () => {
-    expect(approvalCode).toMatch(/disabled=\{working === s\.content_object_id \|\| !hash\}/);
+    // RESTATED under CORR-006 CX-18. This asserted the whole disabled
+    // expression character for character, so adding the basis gate beside
+    // the hash gate failed it — while the thing it exists to protect, that
+    // a hashless version cannot be approved, was never weakened. It now
+    // asserts that !hash is one of the conditions, which is the claim.
+    expect(approvalCode).toMatch(/disabled=\{[^}]*!hash[^}]*\}/);
+  });
+
+  describe("CX-18 — an approval records what it rested on", () => {
+    it("gates the approve control on a chosen basis", () => {
+      expect(approvalCode).toMatch(/basisIsComplete\(s\.content_object_id\)/);
+      expect(approvalCode).toMatch(/disabled=\{[^}]*!basisIsComplete\([^}]*\}/);
+    });
+
+    it("sends the basis to the governed route with the approval", () => {
+      expect(approvalCode).toMatch(/p_basis_kind:/);
+      expect(approvalCode).toMatch(/p_referenced_identifier:/);
+    });
+
+    it("takes the closed list from the server rather than restating it", () => {
+      // A fourth option written into the screen is a fourth option the
+      // route refuses, met after the person has already chosen it.
+      expect(approvalCode).toMatch(/rpc\("t3a_d1_approval_basis_closed_list"\)/);
+      expect(approvalCode).not.toMatch(
+        /(bases|BASIS_KINDS)\s*(:|=)\s*\[\s*\{[^}]*requires_referenced_identifier/
+      );
+    });
+
+    it("asks for no basis when withdrawing", () => {
+      // A withdrawal rests on nothing being read. Sending a basis with one
+      // would record a reading that did not happen.
+      expect(approvalCode).toMatch(/status === "approved" \? \(picked\?\.kind \?\? null\) : null/);
+    });
+
+    it("never writes the basis onto the approval row", () => {
+      expect(approvalCode).not.toMatch(
+        /from\("t3a_d1_approval_basis"\)\s*\.\s*(insert|update|upsert|delete)/
+      );
+    });
   });
 
   it("withdraws by recording a withdrawal rather than erasing", () => {
