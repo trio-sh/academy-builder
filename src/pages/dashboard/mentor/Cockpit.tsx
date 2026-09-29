@@ -909,20 +909,33 @@ export default function Cockpit() {
                    Open meet.new →
                  </a>
                  <p className="mono-label text-foreground/50">
-                   Then paste the link it gives you, and name the account it
-                   was hosted under.
+                   It creates and starts the meeting. Add the participant
+                   with Meet's own Add control — their address is below.
                  </p>
+                 {/* Optional, and it was wrong to require it.
+                     t3a_d1_live_capture_permitted never reads meet_link:
+                     with the host recorded and the attestations made,
+                     capture opens with no link at all (proved). Requiring
+                     one was a condition I invented and then enforced. Where
+                     the participant is added inside Meet the link never
+                     needs to reach the platform, so this stays here only
+                     for a mentor who wants it in the record. */}
                  <input
                    className="w-full border-2 border-foreground bg-background px-2 py-1 text-sm rounded-none"
-                   placeholder="https://meet.google.com/..."
-                   aria-label="Meet link"
+                   placeholder="Meet link (optional — only if you want it in the record)"
+                   aria-label="Meet link, optional"
                    data-meet="link-input"
                    value={meetLinkDraft}
                    onChange={(e) => setMeetLinkDraft(e.target.value)}
                  />
+                 {/* Required, and the only thing here that is. The
+                     Workspace controls enforcing E3 apply only to accounts
+                     in the CL-40 organizational unit, so which account
+                     started the meeting is the fact the whole chain hangs
+                     from. A link is just a URL. */}
                  <input
                    className="w-full border-2 border-foreground bg-background px-2 py-1 text-sm rounded-none"
-                   placeholder="you@the3rdacademy.com"
+                   placeholder="Account you started it under — you@the3rdacademy.com"
                    aria-label="Host account"
                    data-meet="host-input"
                    value={meetHostDraft}
@@ -936,13 +949,24 @@ export default function Cockpit() {
                  >
                    Record the meeting
                  </Button>
+                 {/* CL-42 and CL-43 put the link behind Stage entry. When
+                     the participant is added from inside Meet, Google sends
+                     the invitation and the platform is not in that path —
+                     the release gate still answers correctly and nothing
+                     asks it. So this is said to the person who can act on
+                     it, because nothing here can. */}
+                 <p className="mono-label text-foreground/50" data-meet="admission-warning">
+                   Do not add them until Stage entry has passed. Google
+                   sends that invitation, not this platform, so nothing here
+                   can hold it back.
+                 </p>
                </div>
              )}
 
              {/* Who to admit. Stage 2 only — see the state comment above. */}
              {entry?.stage_code === "S2" && (
                <div className="border border-foreground/40 p-3 space-y-1" data-region="meet-admit">
-                 <div className="mono-label text-foreground/60">Admit this participant</div>
+                 <div className="mono-label text-foreground/60">Add this participant in Meet</div>
                  <div className="flex items-center gap-2">
                    <code className="text-sm text-foreground" data-meet="participant-email">
                      {participantEmail ?? "no address on file"}
