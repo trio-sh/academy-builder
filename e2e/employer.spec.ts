@@ -19,20 +19,42 @@ test.describe("Employer Dashboard - Full E2E", () => {
     await expect(page.locator("text=Overview").first()).toBeVisible({ timeout: 15000 });
   });
 
-  test("navigates to Find Talent", async ({ page }) => {
+  // RESTATED, AND THIS ONE IS NOT A WORDING CHANGE. "Find Talent" named a
+  // talent-search surface an employer drove. That surface is gone: /search
+  // now REDIRECTS to /reports, where an employer reads the Behavioral
+  // Evidence Reports participants chose to make available. Asserting
+  // toHaveURL(/\/search/) could not have passed, because the app no longer
+  // stays there — and it should not.
+  test("navigates to Available Reports", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Find Talent");
-    await expect(page).toHaveURL(/\/search/);
-    await expect(page.locator("text=Talent").first()).toBeVisible();
+    await navigateTo(page, "Available Reports");
+    await expect(page).toHaveURL(/\/reports/);
+    await expect(page.getByRole("banner")).toContainText("§ Available Reports");
+    await expect(page.getByRole("heading", { name: "Available Reports" }).first()).toBeVisible();
   });
 
-  test("navigates to Connections", async ({ page }) => {
+  // The two retired paths, kept as a test of their own rather than deleted:
+  // an old bookmark must land somewhere correct, not on a blank route.
+  test("the retired search and connections paths redirect", async ({ page }) => {
+    await page.goto(`${BASE}/search`);
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/dashboard\/employer\/reports$/);
+
+    await page.goto(`${BASE}/connections`);
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/dashboard\/employer\/messages$/);
+  });
+
+  // RESTATED. An employer holds no connection list. What exists is
+  // Messages, and /connections redirects to it.
+  test("navigates to Messages", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Connections");
-    await expect(page).toHaveURL(/\/connections/);
-    await expect(page.locator("text=Connection").first()).toBeVisible();
+    await navigateTo(page, "Messages");
+    await expect(page).toHaveURL(/\/messages/);
+    await expect(page.getByRole("banner")).toContainText("§ Messages");
+    await expect(page.getByRole("heading", { name: "Messages" }).first()).toBeVisible();
   });
 
   test("navigates to Projects", async ({ page }) => {
@@ -43,20 +65,26 @@ test.describe("Employer Dashboard - Full E2E", () => {
     await expect(page.locator("text=Project").first()).toBeVisible();
   });
 
-  test("navigates to Feedback", async ({ page }) => {
+  // RESTATED. The label names who the feedback goes to, which is the point
+  // of the surface: it is feedback about the product, not about a person.
+  test("navigates to Feedback to The 3rd Academy", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Feedback");
+    await navigateTo(page, "Feedback to The 3rd Academy");
     await expect(page).toHaveURL(/\/feedback/);
-    await expect(page.locator("text=Feedback").first()).toBeVisible();
+    await expect(page.getByRole("banner")).toContainText("§ Feedback to The 3rd Academy");
+    await expect(page.getByRole("heading", { name: "Employer Feedback" }).first()).toBeVisible();
   });
 
-  test("navigates to Company", async ({ page }) => {
+  // RESTATED. The nav label is "Your organization"; the page it opens is
+  // still headed "Company Profile" and the route is still /company.
+  test("navigates to Your organization", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Company");
+    await navigateTo(page, "Your organization");
     await expect(page).toHaveURL(/\/company/);
-    await expect(page.locator("text=Company").first()).toBeVisible();
+    await expect(page.getByRole("banner")).toContainText("§ Your organization");
+    await expect(page.getByRole("heading", { name: "Company Profile" }).first()).toBeVisible();
   });
 
   test("navigates to Settings", async ({ page }) => {
@@ -97,7 +125,21 @@ test.describe("Employer Dashboard - Full E2E", () => {
   });
 
   test("all sidebar links are functional", async ({ page }) => {
-    const paths = ["", "/search", "/connections", "/projects", "/feedback", "/company", "/settings"];
+    // Every path the sidebar actually offers, plus the two retired ones,
+    // which must still resolve rather than dead-end.
+    const paths = [
+      "",
+      "/reports",
+      "/t3x",
+      "/projects",
+      "/feedback",
+      "/messages",
+      "/company",
+      "/agent",
+      "/settings",
+      "/search",
+      "/connections",
+    ];
 
     for (const path of paths) {
       await page.goto(`${BASE}${path}`);

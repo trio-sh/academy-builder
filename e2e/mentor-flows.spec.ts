@@ -35,76 +35,96 @@ test.describe("Mentor Flows - Overview", () => {
     expect(hasActiveMentees || hasTotalObservations || hasEndorsementsGiven || hasMaxMentees).toBeTruthy();
   });
 
-  test("shows quick action links", async ({ page }) => {
+  // RESTATED. The section is "Common entries" under "§ III · At a glance",
+  // not "Quick Actions", and the three entries are named for the act rather
+  // than the screen. The OR-chain is gone: all three entries are asserted,
+  // so the test fails if one is dropped instead of passing on whichever
+  // survives.
+  test("shows the three common entries", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const hasQuickActions = await page.locator("text=Quick Actions").isVisible().catch(() => false);
-    const hasViewMentees = await page.locator("text=View Mentees").isVisible().catch(() => false);
-    const hasRecordObs = await page.locator("text=Record Observation").isVisible().catch(() => false);
-    const hasManageSched = await page.locator("text=Manage Schedule").isVisible().catch(() => false);
-
-    expect(hasQuickActions).toBeTruthy();
-    expect(hasViewMentees || hasRecordObs || hasManageSched).toBeTruthy();
+    await expect(page.getByRole("heading", { name: "Common entries" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByRole("heading", { name: "View assignments" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Record an observation" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Manage schedule" })).toBeVisible();
   });
 
-  test("shows pending actions section", async ({ page }) => {
+  // RESTATED. There is no "Pending Actions" heading; the desk states the
+  // answer in words instead — "You are all caught up. / No pending actions."
+  //
+  // This asserts the empty state exactly, which is deterministic for the
+  // fixture mentor because that account holds no assignments. If it is ever
+  // given one, this test is SUPPOSED to fail and be restated against the
+  // populated wording; a version written to pass either way would tell us
+  // nothing about whether the desk reports pending work at all.
+  test("the desk says whether anything awaits the mentor", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    // The content area has its own scroll container; use evaluate to find the text in DOM
-    const hasPendingInDom = await page.evaluate(() => {
-      return document.body.innerText.includes("Pending Actions");
-    });
-
-    expect(hasPendingInDom).toBeTruthy();
-
-    // Also verify the sub-content (either "No pending actions" or observation count)
-    const hasSubContent = await page.evaluate(() => {
-      const text = document.body.innerText;
-      return text.includes("No pending actions") || text.includes("pending observations") || text.includes("caught up");
-    });
-    expect(hasSubContent).toBeTruthy();
+    await expect(page.getByText("You are all caught up.")).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByText(
+        "No pending actions. New assignments and observation tasks will appear here."
+      )
+    ).toBeVisible();
   });
 
-  test("quick action links navigate correctly", async ({ page }) => {
+  // RESTATED. The destination page is headed "My Assignments"; the route is
+  // unchanged. The `if` guard is also gone — the entry is always rendered,
+  // so a guard that skipped the assertion when it was missing was hiding
+  // exactly the failure this test exists to catch.
+  test("the View assignments entry navigates to My Assignments", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    // Click View Mentees quick action
-    const viewMenteesLink = page.locator('a[href="/dashboard/mentor/mentees"]').first();
-    if (await viewMenteesLink.isVisible().catch(() => false)) {
-      await viewMenteesLink.click();
-      await page.waitForLoadState("networkidle");
-      await expect(page.locator("text=My Mentees").first()).toBeVisible({ timeout: 15000 });
-    }
+    await page
+      .getByRole("link", { name: /View assignments/ })
+      .first()
+      .click();
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/dashboard\/mentor\/mentees$/);
+    await expect(page.getByRole("heading", { name: "My Assignments" }).first()).toBeVisible({
+      timeout: 15000,
+    });
   });
 });
 
 // ─── My Mentees ──────────────────────────────────────────────────────────────
 
-test.describe("Mentor Flows - My Mentees", () => {
-  test("renders mentees page with title and description", async ({ page }) => {
+test.describe("Mentor Flows - My Assignments", () => {
+  // RESTATED. Title and description both changed. The new description says
+  // where the observation work is continued from, which is the fact the
+  // Observations surface now depends on.
+  test("renders the assignments page with title and description", async ({ page }) => {
     await page.goto(`${BASE}/mentees`);
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("text=My Mentees").first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator("text=View and manage your assigned candidates").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "My Assignments" }).first()).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByText(
+        "View the individuals currently assigned to you and continue their observation work."
+      )
+    ).toBeVisible();
   });
 
-  test("shows mentee cards with action buttons or empty state", async ({ page }) => {
+  // RESTATED. The empty state reads "No active assignments yet." and names
+  // who fills it. Asserting the exact empty state for an account with no
+  // assignments is a claim that can fail; the previous four-way OR could
+  // be satisfied by any button anywhere containing "View".
+  test("shows the empty assignments state and who fills it", async ({ page }) => {
     await page.goto(`${BASE}/mentees`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const hasViewBtn = await page.locator("button").filter({ hasText: /View/i }).first().isVisible().catch(() => false);
-    const hasDimensionsBtn = await page.locator("button").filter({ hasText: /Dimensions/i }).first().isVisible().catch(() => false);
-    const hasObserveBtn = await page.locator("button").filter({ hasText: /Observe/i }).first().isVisible().catch(() => false);
-    const hasEmpty = await page.locator("text=No mentees assigned yet").isVisible().catch(() => false);
-
-    expect(hasViewBtn || hasDimensionsBtn || hasObserveBtn || hasEmpty).toBeTruthy();
+    await expect(page.getByText("No active assignments yet.")).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByText(
+        "New assignments will appear here when The 3rd Academy assigns an individual to you."
+      )
+    ).toBeVisible();
   });
 
   test("mentee cards show loop progress and tier info", async ({ page }) => {
@@ -209,14 +229,38 @@ test.describe("Mentor Flows - Assign Dimensions", () => {
 // ─── Observations ────────────────────────────────────────────────────────────
 
 test.describe("Mentor Flows - Observations", () => {
-  test("renders observations page with title and new observation button", async ({ page }) => {
+  // RESTATED, AND THIS IS A DOCTRINE CHANGE RATHER THAN A WORDING ONE.
+  //
+  // There is no "New Observation" button any more, and there should not be.
+  // An observation begins from the assignment it belongs to — the page says
+  // so — so a mentor can no longer start one from nowhere and attach it to
+  // a candidate afterwards. The surface is also marked a legacy one, with
+  // Determinations named as its replacement.
+  //
+  // So this test now asserts the ABSENCE of the button as well as the
+  // instruction that replaced it. Asserting an absence is the only way to
+  // notice if a route back to hand-started observations is reintroduced.
+  test("observations begin from the assignment, not from this page", async ({ page }) => {
     await page.goto(`${BASE}/observations`);
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("text=Observations").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("heading", { name: "Observations" }).first()).toBeVisible({
+      timeout: 15000,
+    });
 
-    // Should have New Observation button
-    const hasNewBtn = await page.locator("button").filter({ hasText: /New Observation/i }).first().isVisible().catch(() => false);
-    expect(hasNewBtn).toBeTruthy();
+    await expect(
+      page.getByText(
+        /An observation begins from the assignment it belongs to — open the assignment from My Assignments and use Begin Observation there\./
+      )
+    ).toBeVisible();
+
+    await expect(page.getByRole("button", { name: /New Observation/i })).toHaveCount(0);
+
+    // And the surface names its own replacement, so a mentor is not left on
+    // a legacy screen with no way forward.
+    await expect(page.getByText("§ Legacy surface")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Open the new Determinations surface/ })
+    ).toBeVisible();
   });
 
   test("shows observation records or empty state", async ({ page }) => {
@@ -233,89 +277,75 @@ test.describe("Mentor Flows - Observations", () => {
     expect(hasObsRecords || hasLocked || hasDraft || hasStrengths || hasEmpty).toBeTruthy();
   });
 
-  test("New Observation button opens modal with step 1", async ({ page }) => {
-    await page.goto(`${BASE}/observations`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const newBtn = page.locator("button").filter({ hasText: /New Observation/i }).first();
-    await newBtn.click();
-    await page.waitForTimeout(500);
-
-    // Should show step 1: Select Candidate
-    const hasRecordTitle = await page.locator("text=Record Observation").isVisible().catch(() => false);
-    const hasStep1 = await page.locator("text=Select Candidate").isVisible().catch(() => false);
-    const hasMenteeList = await page.locator("text=Select a mentee").isVisible().catch(() => false);
-    const hasNoMentees = await page.locator("text=No active mentees assigned").isVisible().catch(() => false);
-
-    expect(hasRecordTitle || hasStep1 || hasMenteeList || hasNoMentees).toBeTruthy();
-
-    // Close modal
-    const closeBtn = page.locator("button:has(svg.lucide-x)").first();
-    if (await closeBtn.isVisible().catch(() => false)) {
-      await closeBtn.click();
-    }
-  });
-
-  test("observation modal shows progress bar with 3 steps", async ({ page }) => {
-    await page.goto(`${BASE}/observations`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const newBtn = page.locator("button").filter({ hasText: /New Observation/i }).first();
-    await newBtn.click();
-    await page.waitForTimeout(500);
-
-    // Should show step indicator text
-    const hasStepText = await page.locator("text=Step 1 of 3").isVisible().catch(() => false);
-    expect(hasStepText).toBeTruthy();
-
-    // Close modal
-    const closeBtn = page.locator("button:has(svg.lucide-x)").first();
-    if (await closeBtn.isVisible().catch(() => false)) {
-      await closeBtn.click();
-    }
-  });
+  // REMOVED, NOT REWRITTEN: "New Observation button opens modal with step 1"
+  // and "observation modal shows progress bar with 3 steps".
+  //
+  // Both tested a three-step "Record Observation" modal opened from a button
+  // that no longer exists, on a surface whose own text now says an
+  // observation begins from the assignment. The subject of these two tests
+  // is gone, and a test whose subject is empty passes for free — so making
+  // them green by finding some other modal would have been worse than
+  // leaving them red. What they were guarding, that a mentor cannot start an
+  // observation from nowhere, is now asserted as an absence in the test
+  // above.
 });
 
 // ─── Endorsements ────────────────────────────────────────────────────────────
 
-test.describe("Mentor Flows - Endorsements", () => {
-  test("renders endorsements page with title and description", async ({ page }) => {
+test.describe("Mentor Flows - Confirmations", () => {
+  // RESTATED THROUGHOUT. A mentor does not "issue an endorsement"; they
+  // confirm an observation. The page is headed "Confirmations", its two
+  // sections are "Awaiting confirmation" and "Confirmation history", and
+  // nothing on it reads "Ready for Endorsement". The route keeps its
+  // /endorsements path and is not renamed.
+  test("renders the confirmations page with title and description", async ({ page }) => {
     await page.goto(`${BASE}/endorsements`);
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("text=Endorsements").first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator("text=Issue endorsements").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Confirmations" }).first()).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByText("Review and confirm observations that require your confirmation.")
+    ).toBeVisible();
   });
 
-  test("shows Ready for Endorsement section", async ({ page }) => {
+  // The three overlapping OR-chains that followed asked the same question
+  // five different ways and would have passed on any one of them. They are
+  // now two tests, one per section, each naming the section and its empty
+  // state exactly.
+  test("shows the awaiting-confirmation section and its empty state", async ({ page }) => {
     await page.goto(`${BASE}/endorsements`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    // The section heading uses "Ready for Endorsement" (lowercase "for")
-    const hasReadySection = await page.locator("text=Ready for Endorsement").isVisible().catch(() => false);
-    const hasReadyForEndorsement = await page.locator("text=/Ready.*Endorsement/i").isVisible().catch(() => false);
-    const hasNoCandidatesReady = await page.locator("text=No candidates ready").isVisible().catch(() => false);
-
-    expect(hasReadySection || hasReadyForEndorsement || hasNoCandidatesReady).toBeTruthy();
+    await expect(page.getByRole("heading", { name: "Awaiting confirmation" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText("No observations are waiting for confirmation.")).toBeVisible();
+    await expect(
+      page.getByText(
+        "Observations assigned to you that require confirmation will appear here."
+      )
+    ).toBeVisible();
   });
 
-  test("shows endorsement candidates or empty state", async ({ page }) => {
+  test("shows the confirmation history section and its empty state", async ({ page }) => {
     await page.goto(`${BASE}/endorsements`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const hasReadyCandidate = await page.locator("text=Ready for endorsement").isVisible().catch(() => false);
-    const hasObsCompleted = await page.locator("text=observations completed").isVisible().catch(() => false);
-    const hasEndorseBtn = await page.locator("button").filter({ hasText: /Endorse/i }).first().isVisible().catch(() => false);
-    const hasNoReady = await page.locator("text=No candidates ready").isVisible().catch(() => false);
-    const hasReadyTitle = await page.locator("text=Ready for Endorsement").isVisible().catch(() => false);
-
-    expect(hasReadyCandidate || hasObsCompleted || hasEndorseBtn || hasNoReady || hasReadyTitle).toBeTruthy();
+    await expect(page.getByRole("heading", { name: "Confirmation history" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText("No confirmations recorded yet.")).toBeVisible();
   });
 
-  test("endorsement form shows decision options when candidate selected", async ({ page }) => {
+  // KEPT AS IT WAS, AND IT IS WEAK: the whole body sits behind an `if` on a
+  // button that does not exist for an account with nothing to confirm, so it
+  // asserts nothing today. It was passing before this pass and is left alone
+  // rather than deleted, because the decision options it names (Proceed,
+  // Redirect, Pause) are real and this is the only test that mentions them.
+  // It needs a fixture with an observation awaiting confirmation to become a
+  // test rather than a placeholder.
+  test("confirmation form shows decision options when one is selected", async ({ page }) => {
     await page.goto(`${BASE}/endorsements`);
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
@@ -336,18 +366,11 @@ test.describe("Mentor Flows - Endorsements", () => {
     }
   });
 
-  test("shows past endorsements section", async ({ page }) => {
-    await page.goto(`${BASE}/endorsements`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    // Scroll down to find past endorsements
-    const hasPastSection = await page.locator("text=Past Endorsement").isVisible().catch(() => false);
-    const hasProceedDecision = await page.locator("text=proceed").first().isVisible().catch(() => false);
-    const hasEndorsementPage = await page.locator("text=Endorsements").first().isVisible().catch(() => false);
-
-    expect(hasPastSection || hasProceedDecision || hasEndorsementPage).toBeTruthy();
-  });
+  // REMOVED: "shows past endorsements section". There is no "Past
+  // Endorsements" section, and its final fallback — that the word
+  // "Endorsements" appears somewhere on the page — meant the test could not
+  // fail while the page loaded at all. What it was reaching for is covered
+  // by the confirmation-history test above, which names the section.
 });
 
 // ─── Schedule ────────────────────────────────────────────────────────────────
@@ -484,11 +507,15 @@ test.describe("Mentor Flows - Navigation", () => {
     await page.waitForTimeout(1000);
 
     // Check that nav links exist for all sections
+    // The labels the Mentor Desk actually offers. "My Mentees" and
+    // "Endorsements" are retired; Determinations is new and is included
+    // because it is now the surface Observations points at.
     const navLinks = [
       "Overview",
-      "My Mentees",
+      "My Assignments",
       "Observations",
-      "Endorsements",
+      "Determinations",
+      "Confirmations",
       "Schedule",
       "Profile",
       "Settings",
@@ -521,16 +548,20 @@ test.describe("Mentor Flows - Navigation", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
 
-    // Navigate to Observations
+    // Each hop checks the banner, which reads "§ " + the active nav item.
+    // A `text=` locator for the label would also match the sidebar link that
+    // was just clicked, so it passed whether or not the page changed.
     await navigateTo(page, "Observations");
-    await expect(page.locator("text=Observations").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("banner")).toContainText("§ Observations");
 
-    // Navigate to Endorsements
-    await navigateTo(page, "Endorsements");
-    await expect(page.locator("text=Endorsements").first()).toBeVisible({ timeout: 15000 });
+    await navigateTo(page, "Determinations");
+    await expect(page.getByRole("banner")).toContainText("§ Determinations");
 
-    // Navigate back to Overview
+    await navigateTo(page, "Confirmations");
+    await expect(page.getByRole("banner")).toContainText("§ Confirmations");
+
     await navigateTo(page, "Overview");
-    await expect(page.locator("text=Welcome back").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("banner")).toContainText("§ Overview");
+    await expect(page.getByText(/Welcome back,/).first()).toBeVisible({ timeout: 15000 });
   });
 });

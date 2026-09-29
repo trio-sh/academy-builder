@@ -815,6 +815,18 @@ const navItems = [
   { name: "Settings", href: "/dashboard/mentor/settings", icon: Settings },
 ];
 
+/** CORR-02. One Stage 1 outcome awaiting this mentor's confirmation. */
+type S1PendingItem = {
+  stage_instance_id: string;
+  participant_id: string;
+  dimension_id: string;
+  routed_at: string;
+  ai_administration_run_id: string | null;
+  determinations_captured: boolean;
+  confirmed: boolean;
+  s1_closed_at: string | null;
+};
+
 // Overview component with real data
 const Overview = () => {
   const { profile, user } = useAuth();
@@ -822,6 +834,13 @@ const Overview = () => {
   const [activeMentees, setActiveMentees] = useState(0);
   const [pendingRequests, setPendingRequests] = useState(0);
   const [pendingObservations, setPendingObservations] = useState(0);
+  // CORR-02. The Stage 1 outcomes routed to this mentor and not yet
+  // confirmed. Held as rows rather than a count: each one opens a SPECIFIC
+  // AI administration run, and a count cannot route anyone to the right
+  // one. Before this, the gate that stops Stage 2 until a mentor confirms
+  // was enforced with no surface telling the mentor anything was waiting —
+  // they would have had to know the run id and type the URL.
+  const [s1Pending, setS1Pending] = useState<S1PendingItem[]>([]);
   const [needsL2, setNeedsL2] = useState(0);
   const [readyForEndorsement, setReadyForEndorsement] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -847,6 +866,15 @@ const Overview = () => {
             .eq("mentor_id", mp.id)
             .eq("status", "active");
           setActiveMentees(menteeCount || 0);
+
+          // CORR-02. Stage 1 outcomes routed to this mentor. One route
+          // rather than four client-side reads: routing, stage instance,
+          // stage entry and the AI run each carry their own row-level
+          // policy, and a partial answer here would read as "nothing is
+          // waiting for you" — the worst failure this surface can have.
+          const { data: s1p } = await supabase.rpc("t3a_d1_s1_pending_for_mentor");
+          const s1Payload = (s1p ?? {}) as { ok?: boolean; pending?: S1PendingItem[] };
+          setS1Pending(s1Payload.ok ? (s1Payload.pending ?? []) : []);
 
           // Count pending requests
           const { count: pendingCount } = await supabase
@@ -1036,7 +1064,75 @@ const Overview = () => {
         </div>
       </DashSection>
 
-      {pendingObservations === 0 && actionRequired.length === 0 && (
+      {/* CORR-02 — the pending action on the Mentor Desk.
+          Its own section rather than a row in actionRequired, because each
+          item opens one specific AI administration run and a count cannot
+          route a mentor to the right one. Stage 2 cannot begin until each
+          of these is confirmed, so this is the surface that makes that
+          gate visible instead of merely enforced. */}
+      {s1Pending.length > 0 && (
+        <DashSection
+          eyebrow="§ Stage 1 awaiting your confirmation"
+          title={
+            <>
+              Stage 2 cannot begin{" "}
+              <span className="italic display-serif-italic">until you confirm these.</span>
+            </>
+          }
+        >
+          <div data-section="s1-pending">
+            {s1Pending.map((item) => {
+              const openable = Boolean(item.ai_administration_run_id);
+              const stage = item.determinations_captured
+                ? "determinations captured — confirmation outstanding"
+                : "determinations not yet captured";
+              const row = (
+                <div className="grid grid-cols-12 gap-4 py-6 px-2 md:px-4 border-b border-foreground/20 items-baseline">
+                  <div className="col-span-8 md:col-span-9">
+                    <h4 className="display-serif text-xl md:text-2xl text-foreground leading-tight">
+                      {item.dimension_id} Stage 1 outcome
+                    </h4>
+                    <p className="text-foreground/70 text-[0.9375rem] mt-1">{stage}</p>
+                    <p className="mono-label text-foreground/50 mt-1">
+                      routed {new Date(item.routed_at).toLocaleString()}
+                      {item.s1_closed_at ? " · Stage 1 closed" : " · Stage 1 not closed"}
+                    </p>
+                  </div>
+                  <div className="col-span-4 md:col-span-3 text-right mono-label text-foreground">
+                    {openable ? "Confirm →" : "Cannot open"}
+                  </div>
+                </div>
+              );
+              // Where there is no AI administration run there are no
+              // participant responses to confirm, and nothing may be
+              // entered by hand in their place. The row says so rather
+              // than linking to a screen that would refuse.
+              return openable ? (
+                <Link
+                  key={item.stage_instance_id}
+                  to={`/dashboard/mentor/s1-workbench/${item.ai_administration_run_id}`}
+                  className="row-hover group block"
+                  data-s1-pending={item.stage_instance_id}
+                >
+                  {row}
+                </Link>
+              ) : (
+                <div
+                  key={item.stage_instance_id}
+                  data-s1-pending={item.stage_instance_id}
+                  data-s1-unopenable="true"
+                  className="block opacity-70"
+                  title="AI_ADMINISTRATION_RUN_NOT_FOUND — Stage 1 is administered by the AI service, and without its run there are no participant responses to confirm."
+                >
+                  {row}
+                </div>
+              );
+            })}
+          </div>
+        </DashSection>
+      )}
+
+      {pendingObservations === 0 && actionRequired.length === 0 && s1Pending.length === 0 && (
         <EmptyState
           eyebrow="§ Nothing awaits"
           title={

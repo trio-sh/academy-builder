@@ -194,21 +194,53 @@ writeFileSync(OUT, out.join("\n") + "\n");
 
 const demo = [...bySrc.keys()].filter((s) => s.startsWith("DEMO")).sort();
 const s1 = [...bySrc.keys()].filter((s) => /^SRC-D1-S1-/.test(s)).sort();
-const other = [...bySrc.keys()].filter((s) => !s.startsWith("DEMO") && !/^SRC-D1-S1-/.test(s)).sort();
+const s2 = [...bySrc.keys()].filter((s) => /^SRC-D1-S2-/.test(s)).sort();
+const other = [...bySrc.keys()]
+  .filter((s) => !s.startsWith("DEMO") && !/^SRC-D1-S[12]-/.test(s))
+  .sort();
 console.log(`sequences=${bySrc.size} beats=${rows.length}`);
 console.log(`demonstration (${demo.length}): ${demo.join(", ")}`);
 console.log(`stage 1 production (${s1.length}): ${s1.join(", ")}`);
+console.log(`stage 2 production (${s2.length}): ${s2.join(", ")}`);
 if (other.length) console.log(`OTHER (${other.length}): ${other.join(", ")}`);
 
-// CS-32: thirteen sequences, three demonstration and ten Stage 1.
+// CS-32 as restated by CS-I-56a, and CS-I-41 amended with it:
+// TWENTY-THREE sequences — three demonstration, ten Stage 1, ten Stage 2.
+//
+// The count is itemized by group rather than asserted as a total, because
+// a total alone would go green on the wrong mix. Thirteen is no longer a
+// passing figure: after the Stage 2 parse a count of thirteen is a FAILED
+// PARSE, not a passing test.
 const problems = [];
 if (demo.length !== 3) problems.push(`expected 3 demonstration sequences, got ${demo.length}`);
 if (s1.length !== 10) problems.push(`expected 10 Stage 1 sequences, got ${s1.length}`);
-if (bySrc.size !== 13) problems.push(`expected 13 sequences, got ${bySrc.size}`);
+if (s2.length !== 10) problems.push(`expected 10 Stage 2 sequences, got ${s2.length}`);
+if (bySrc.size !== 23) problems.push(`expected 23 sequences, got ${bySrc.size}`);
 if (other.length) problems.push(`unexpected sequence sources: ${other.join(", ")}`);
+// CS-I-57: no Stage 4 production source may be parsed here. Its second
+// beat is B2 ROUND, which this parser does not recognize, so it would
+// yield six beats and CS-I-50 would refuse it. DEMO-D1-S4-001 is a
+// demonstration source loaded through its Facilitator card and is counted
+// in `demo`, not here (CS-I-57a).
+const stage4Production = [...bySrc.keys()].filter((s) => /^SRC-D1-S4-/.test(s)).sort();
+if (stage4Production.length) {
+  problems.push(
+    `Stage 4 production sources must not be parsed — loading is deferred to REC-12: ${stage4Production.join(", ")}`
+  );
+}
+// CS-I-58: SRC-D1-S3-010's heading block contains the phrase "The script"
+// but that text belongs to the Stage 4 bank's common section, which runs
+// on into it because it is the last source in the Stage 3 bank. Stage 3
+// has no live sequence.
+const stage3 = [...bySrc.keys()].filter((s) => /^SRC-D1-S3-/.test(s)).sort();
+if (stage3.length) {
+  problems.push(`Stage 3 has no live sequence; these must not be parsed: ${stage3.join(", ")}`);
+}
 if (problems.length) {
   console.error("\nSEQUENCE_INVENTORY_MISMATCH:");
   for (const p of problems) console.error(`  ${p}`);
   process.exit(1);
 }
-console.log("inventory: thirteen sequences, three demonstration and ten Stage 1 — as CS-I-41 states");
+console.log(
+  "inventory: twenty-three sequences — three demonstration, ten Stage 1, ten Stage 2 — as CS-I-41 reads after CS-I-56a"
+);

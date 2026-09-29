@@ -33,11 +33,17 @@ const fixture = JSON.parse(
 const COCKPIT = `/dashboard/mentor/cockpit/${fixture.stageEntryEventId}`;
 
 /** The six regions §3.1 requires to be visible at once. */
+// CL-38. The Cockpit's simultaneously visible regions became FIVE when
+// Section 2A moved live video to Google Meet. Keyed on data-region rather
+// than on label text, because the header and the control strip carry no
+// visible heading and a test that cannot see a region is not evidence that
+// the region is absent.
 const REGIONS = [
-  "Participant — Live View",
-  "Mentor — Live View",
-  "Pane 1 — Source and Script",
-  "Pane 2 — Determination Capture",
+  "persistent-header",
+  "pane-1",
+  "pane-2",
+  "live-session",
+  "session-control-strip",
 ];
 
 const paneTwo = (page: Page) =>
@@ -83,25 +89,31 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     ).toBeNull();
   });
 
-  test("AC-01 · all six regions visible simultaneously, nothing overlays a live view", async ({
+  test("AC-01 · all five Cockpit regions visible simultaneously, nothing overlaying them", async ({
     page,
   }) => {
     await openCockpit(page);
 
+    // Restated by CL-49. As issued this asserted six regions and that no
+    // step overlaid either live view. There is no live view any more —
+    // video is in Google Meet, in another window — so the requirement is
+    // the five regions of CL-38, each with a real unobscured box.
     for (const region of REGIONS) {
-      await expect(page.getByText(region, { exact: true })).toBeVisible();
-    }
-
-    // "No step replaces or overlays either live view." A modal or
-    // fullscreen video would satisfy "visible" while breaking the rule,
-    // so the live views are checked for a real, unobscured box.
-    for (const view of ["Participant — Live View", "Mentor — Live View"]) {
-      const header = page.getByText(view, { exact: true });
-      const box = await header.boundingBox();
-      expect(box, `${view} has no layout box`).not.toBeNull();
+      const el = page.locator(`[data-region="${region}"]`);
+      await expect(el, `${region} is missing`).toHaveCount(1);
+      const box = await el.boundingBox();
+      expect(box, `${region} has no layout box`).not.toBeNull();
       expect(box!.width).toBeGreaterThan(0);
       expect(box!.height).toBeGreaterThan(0);
     }
+
+    // CL-36. No live view, and NO PLACEHOLDER STREAM in its place: a frame
+    // that looks like video while the real video is elsewhere misleads the
+    // mentor. This is the half of the restatement that would otherwise go
+    // untested — a region removed is only proved removed by asserting it.
+    await expect(page.getByText("Participant — Live View", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("Mentor — Live View", { exact: true })).toHaveCount(0);
+    await expect(page.locator("video")).toHaveCount(0);
 
     // Nothing is presented as a dialog over the top of the session.
     await expect(page.locator('[role="dialog"]')).toHaveCount(0);
@@ -132,48 +144,65 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     await expect(pane.locator('[contenteditable="true"]')).toHaveCount(0);
   });
 
-  test("AC-24 · no recording control, indicator or capture surface", async ({
+  test("AC-24 · attestations recorded, a recording indicator ends the session, no media persisted", async ({
     page,
   }) => {
     await openCockpit(page);
 
-    const body = await page.locator("body").innerText();
-    // A badge saying a session is being recorded would tell the mentor
-    // something untrue: RECORDING consent is unavailable at every Stage.
-    expect(body).not.toMatch(/\brecording\b/i);
-    expect(body).not.toMatch(/\bREC\b/);
+    // Restated by CL-49. As issued this asserted the word "recording"
+    // appeared nowhere. That can no longer hold and SHOULD not: attestation
+    // A2 is "Recording, transcripts and note-taking are off", and a mentor
+    // who cannot see that stated cannot attest to it. The requirement is
+    // now about what the Cockpit does, not which words it avoids.
+    const panel = page.locator('[data-region="live-session"]');
+    await expect(panel).toHaveCount(1);
+    for (const code of ["A1", "A2", "A3"]) {
+      await expect(panel.locator(`[data-attestation="${code}"]`)).toHaveCount(1);
+    }
 
-    // And no control that would START one. Matched on media-recording
-    // wording specifically: the cockpit has a "Record an administration
-    // variance at this beat" control, which is a governed note taken at
-    // the beat and is required to be there. A test that banned the word
-    // "record" would fail on the thing §11 asks for.
+    // The platform persists no media: there is no video element and no
+    // control that would start a recording.
+    await expect(page.locator("video")).toHaveCount(0);
     await expect(
       page.getByRole("button", {
         name: /start recording|stop recording|record (this )?(session|video|audio|call)/i,
       })
     ).toHaveCount(0);
+
+    // And no badge claiming the session IS being recorded, which would tell
+    // the mentor something untrue: RECORDING consent is unavailable at
+    // every Stage in D1.
+    const body = await page.locator("body").innerText();
+    expect(body).not.toMatch(/\b(is being|now) recording\b/i);
   });
 
-  test("AC-26 · both live views stay visible while the mentor works", async ({
+  test("AC-26 · the mentor works from the Cockpit and the Meet window alone", async ({
     page,
   }) => {
     await openCockpit(page);
 
-    // Interacting with the determination pane must not cost either view.
+    // Restated by CL-49: "both live views stay visible" became "only the
+    // Cockpit and the Meet window". The Meet window is not this page, so
+    // what is testable here is that the Cockpit alone carries everything
+    // else the mentor needs — script, capture, timing, variance — and that
+    // interacting with capture costs none of it.
     const firstOption = page
-      .locator("section")
-      .filter({ hasText: "Pane 2 — Determination Capture" })
+      .locator('[data-region="pane-2"]')
       .locator('input[type="radio"], button')
       .first();
-
     if (await firstOption.count()) {
       await firstOption.click({ trial: true }).catch(() => undefined);
     }
 
-    for (const view of ["Participant — Live View", "Mentor — Live View"]) {
-      await expect(page.getByText(view, { exact: true })).toBeVisible();
+    for (const region of REGIONS) {
+      await expect(page.locator(`[data-region="${region}"]`)).toHaveCount(1);
     }
+
+    // No other document, notes tool, timing tool or question form: the
+    // variance note and the determination controls are in the Cockpit, and
+    // nothing sends the mentor elsewhere.
+    await expect(page.getByText("Record an administration variance at this beat")).toBeVisible();
+    await expect(page.locator('[data-control="live-video-interrupted"]')).toHaveCount(1);
   });
 
   test("AC-27 · the beat, the question set and the source-bound choices surface without being assembled by hand", async ({
@@ -323,16 +352,36 @@ test.describe("§11.1 Stage 2 cockpit", () => {
     // absence is not a missing state, so no control appears.
     await expect(control(page, "Q-D1-08a")).toHaveCount(0);
 
-    // Q-D1-02 is the timing determination that IS served on this source:
-    // its reference resolves from enquiry_point, which reads "B3". No beat
-    // timestamp exists and this source carries no loaded sequence, so the
-    // determination must be PREVENTED and named.
+    // CS-I-55 re-fixtured this test, and the old fixture is the reason.
+    // AC-13's governing text is "a missing required beat TIMESTAMP
+    // prevents the dependent timing determination" — a missing RUNTIME
+    // record. The old fixture accepted BEAT_SCRIPT_NOT_LOADED, which is a
+    // missing DEFINITION: a different condition that happened to produce a
+    // refusal because no Stage 2 sequence was loaded. It would have gone
+    // green on a source with no script at all, and red the moment one
+    // loaded — so it was never testing AC-13.
+    //
+    // The new fixture requires the sequence to be LOADED first. Seven
+    // beats B1 to B7 in pane 1 is that precondition, asserted rather than
+    // assumed: if the parse regresses, this test fails here instead of
+    // passing for the wrong reason.
+    const pane1 = page.locator("section", { hasText: "Pane 1 — Source and Script" }).first();
+    for (const beat of ["B1", "B2", "B3", "B4", "B5", "B6", "B7"]) {
+      await expect(pane1.locator(`[data-beat="${beat}"]`)).toHaveCount(1, { timeout: 15000 });
+    }
+
+    // Q-D1-02 is the timing determination served on this source: its
+    // reference resolves from enquiry_point, which reads "B3". The
+    // sequence is loaded and B3 is in it, so neither
+    // BEAT_SCRIPT_NOT_LOADED nor REFERENCE_BEAT_NOT_IN_SEQUENCE can fire.
+    // The session recorded no B3 timestamp, so the determination must be
+    // prevented and named for THAT reason and no other.
     const q2 = control(page, "Q-D1-02");
     await expect(q2).toBeVisible();
     await expect(q2).toContainText("Refused");
-    await expect(q2).toContainText(
-      /BEAT_SCRIPT_NOT_LOADED|REFERENCE_BEAT_NOT_IN_SEQUENCE|BEAT_TIMESTAMP_MISSING/
-    );
+    await expect(q2).toContainText("BEAT_TIMESTAMP_MISSING");
+    await expect(q2).not.toContainText("BEAT_SCRIPT_NOT_LOADED");
+    await expect(q2).not.toContainText("REFERENCE_BEAT_NOT_IN_SEQUENCE");
 
     // Prevented means offering nothing, not offering something disabled.
     await expect(q2.locator('input[type="radio"]')).toHaveCount(0);

@@ -66,9 +66,15 @@ export default defineConfig({
       name: "setup",
       testMatch: /auth\.setup\.ts/,
     },
-    // The Stage 2 cockpit suite has its own sign-in, because
-    // auth.setup.ts targets a Supabase project that no longer exists and
-    // writes a localStorage key the client does not read.
+    // The Stage 2 cockpit suite has its own sign-in because its subject is
+    // what a mentor sees, and the sign-in path is part of that. It also
+    // needs the specific mentor assigned to the fixture Stage entry, which
+    // the generic role account in auth.setup.ts is not.
+    //
+    // (This comment used to say auth.setup.ts pointed at a Supabase project
+    // that no longer exists and wrote a localStorage key the client does not
+    // read. It did, and both are fixed — the note is kept only so a reader
+    // of the history does not go looking for a bug that has been repaired.)
     {
       name: "cockpit-setup",
       testMatch: /cockpit\.setup\.ts/,
@@ -94,7 +100,15 @@ export default defineConfig({
     },
     {
       name: "mentor-tests",
-      testMatch: /mentor.*\.spec\.ts/,
+      // mentor-cockpit.spec.ts is EXCLUDED. /mentor.*\.spec\.ts/ matched it
+      // too, so it ran twice: once under cockpit-tests with the fixture
+      // mentor's session, where it passes, and again here with the generic
+      // mentor account, where every test fails because that account is not
+      // the mentor assigned to the fixture Stage entry. Thirteen failures
+      // that said nothing about the cockpit and everything about this
+      // pattern. The cockpit suite has its own project and its own sign-in
+      // by design; this one must not claim it.
+      testMatch: /mentor(?!-cockpit).*\.spec\.ts/,
       use: {
         ...sharedUse,
         storageState: "e2e/.auth/mentor.json",
