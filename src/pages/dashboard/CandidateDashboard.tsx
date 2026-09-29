@@ -21,6 +21,7 @@ import Disclosures from "@/pages/dashboard/candidate/Disclosures";
 import WorkSample from "@/pages/dashboard/candidate/WorkSample";
 import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
+import S1Delivery from "@/pages/dashboard/candidate/S1Delivery";
 import {
   BridgeFastLanding,
   FreePractice,
@@ -6432,6 +6433,17 @@ const CandidateDashboard = () => {
                 The component is left in the tree rather than deleted, so
                 nothing is lost if it is wanted for another dimension
                 under its own doctrine. It is not reachable from here. */}
+ {/* CORR-006 CX-08 and CX-13 — Stage 1, administered by the
+                deterministic delivery engine. Every word on it comes from
+                the server: the situation and reveals byte-identical from
+                the approved source version, the framing and the Stop and
+                support wording from Annexes A, B and C.
+
+                Reached by run, not by source: a Stage 1 run is a governed
+                record that exists before anything is shown, and a route
+                that took a source identifier would invite a screen opened
+                without one. */}
+ <Route path="observations/stage1/:runId" element={<S1Delivery />} />
  <Route path="passport" element={<SkillPassport />} />
  <Route path="report-review" element={<ReportReview />} />
  <Route path="growth" element={<GrowthLog />} />

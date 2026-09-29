@@ -48,6 +48,9 @@ const acceptance = read(ACCEPTANCE);
 const COCKPIT = "src/pages/dashboard/mentor/Cockpit.tsx";
 const cockpit = read(COCKPIT);
 
+const S1DELIVERY = "src/pages/dashboard/candidate/S1Delivery.tsx";
+const s1Delivery = read(S1DELIVERY);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -63,6 +66,7 @@ const reconsiderationCode = code(reconsideration);
 const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
+const s1DeliveryCode = code(s1Delivery);
 const reportFaceCode = code(reportFace);
 const acceptanceCode = code(acceptance);
 const cockpitCode = code(cockpit);
@@ -986,6 +990,92 @@ describe("Report face — entitlement, not identifier possession", () => {
     expect(disclosures.replace(/\s+/g, " ")).toMatch(
       /stored only as a hash, so it cannot be recovered afterwards/
     );
+  });
+});
+
+describe("Stage 1 delivery — CORR-006 CX-08 and CX-13", () => {
+  /**
+   * The strongest thing these assert is an ABSENCE: that no word a
+   * participant reads is written in this file. Everything else on the screen
+   * is a consequence of that.
+   */
+  it("hardcodes no crisis or support wording", () => {
+    // The single most important literal that must not be here. Annex C says
+    // the support information is held as configuration "so it can be
+    // changed or localized without a code change", and a participant
+    // outside Canada needs their own emergency number. A 9-8-8 baked into a
+    // component is a wrong number nobody can correct without a deploy.
+    expect(s1Delivery).not.toMatch(/9-8-8|988|9-1-1|911/);
+    expect(s1Delivery).not.toMatch(/crisis|harming yourself|emergency/i);
+  });
+
+  it("renders no situation, reveal or framing text of its own", () => {
+    // No sentence-shaped string literal. Control labels are short; anything
+    // with sentence punctuation inside quotes is participant wording.
+    const literals = [...s1DeliveryCode.matchAll(/"([^"\n]{25,})"/g)].map((m) => m[1]);
+    const prose = literals.filter((l) => /[.?!] |[.?!]$/.test(l) && !/^[A-Z_]+$/.test(l));
+    expect(prose).toEqual([]);
+  });
+
+  it("takes every word from the two server routes", () => {
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_render"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_participant_notices"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_reveal_shown"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_reveal_submit"/);
+    // Never a direct write to the capture table.
+    expect(s1DeliveryCode).not.toMatch(
+      /from\("t3a_d1_s1_reveal_response"\)\s*\.\s*(insert|update|upsert|delete)/
+    );
+  });
+
+  it("shows no progress except the part number (DS-4)", () => {
+    expect(s1DeliveryCode).not.toMatch(/Progress|progressbar|percent|%\s*</i);
+    // The part number, and nothing that counts what is left.
+    expect(s1DeliveryCode).toMatch(/Part \{/);
+    // RESTATED while writing it. The first form forbade the bare word
+    // "remaining", which matched the server field
+    // seconds_remaining_at_which_to_show — a field name, not something a
+    // participant reads. What DS-4 forbids is a TOTAL or a COUNT LEFT, so
+    // that is what this asks for now.
+    expect(s1DeliveryCode).not.toMatch(/parts? remaining|remaining parts?|\bof \d+\b/i);
+    expect(s1DeliveryCode).not.toMatch(/\{reveals\.length\}|of \{reveals/);
+  });
+
+  it("gives no feedback on a response (DS-3)", () => {
+    expect(s1DeliveryCode).not.toMatch(
+      /correct|incorrect|well done|good answer|score|rating|feedback|graded/i
+    );
+  });
+
+  it("never shows the source title, sheet or applicability (DS-5)", () => {
+    expect(s1DeliveryCode).not.toMatch(/source_sheet|\bapplicability\b/);
+    // render returns no title; asserting the screen does not reach for one.
+    expect(s1DeliveryCode).not.toMatch(/render\.title|\.body\s*\?\?\.\s*title/);
+  });
+
+  it("shows nothing a confirmer does (DS-6)", () => {
+    expect(s1DeliveryCode).not.toMatch(
+      /determination|statement|t3a_d1_s1_determination|t3a_d1_s1_confirmation/i
+    );
+  });
+
+  it("offers no way back to a submitted response (DS-2)", () => {
+    expect(s1DeliveryCode).not.toMatch(/\bBack\b|\bEdit\b|goBack|previous|undo|recall/i);
+  });
+
+  it("imposes no content limit on the participant (AC-B8)", () => {
+    // A maxLength here would truncate silently, which is what AC-B8 forbids.
+    expect(s1DeliveryCode).not.toMatch(/maxLength|maxlength/);
+  });
+
+  it("shows no running clock, and the timing notice only once (AC-B4)", () => {
+    expect(s1DeliveryCode).not.toMatch(/setInterval|countdown|timeLeft|clock/i);
+    // A ref, so a re-render cannot show it twice.
+    expect(s1DeliveryCode).toMatch(/timingNoticeShown\.current/);
+  });
+
+  it("offers no pause (AC-B6)", () => {
+    expect(s1DeliveryCode).not.toMatch(/\bpause\b/i);
   });
 });
 
