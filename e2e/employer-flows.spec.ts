@@ -14,278 +14,235 @@ async function navigateTo(page: any, name: string) {
 
 // ─── Overview ────────────────────────────────────────────────────────────────
 
+// THIS FILE WAS WRITTEN AGAINST A DIFFERENT EMPLOYER DESK.
+//
+// It tested a T3X Talent Exchange an employer searched by tier, a
+// connections list with Accepted/Pending tabs, and a "Why Use The 3rd
+// Academy" benefits panel. None of that exists. The desk an employer now
+// opens is a reading room: they read the Behavioral Evidence Reports
+// participants chose to release to them, and every employment judgment
+// stays inside their own organization. /search redirects to /reports and
+// /connections redirects to /messages.
+//
+// Each test below is restated against what the surface says, and the
+// four- and five-way OR-chains are gone. Several of them ended in a
+// fallback like "or the word Project appears somewhere", which meant the
+// test could not fail while the page rendered at all — the same failure
+// mode as a green suite against stale content.
+
 test.describe("Employer Flows - Overview", () => {
-  test("displays welcome message and stat cards", async ({ page }) => {
+  // RESTATED. There is no "Welcome back": an employer is not being welcomed
+  // back to their own data, they are being handed someone else's evidence,
+  // and the heading says so.
+  test("displays the reading-room heading and what the desk is for", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("text=Welcome back").first()).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByRole("heading", {
+        name: "Welcome to the evidence people chose to place in your hands.",
+      })
+    ).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByText(
+        /keep every employment judgment inside your organization/
+      )
+    ).toBeVisible();
   });
 
-  test("shows four stat cards", async ({ page }) => {
+  // RESTATED, and the OR is gone. All four figures are asserted, each with
+  // the provenance line beneath it, because which figures the platform holds
+  // and which the employer entered is the substantive claim on this panel.
+  test("shows four standing figures, each attributed", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const hasConnections = await page.locator("text=Active Connections").isVisible().catch(() => false);
-    const hasTotalHires = await page.locator("text=Total Hires").isVisible().catch(() => false);
-    const hasOpenProjects = await page.locator("text=Open Projects").isVisible().catch(() => false);
-    const hasCompanyStatus = await page.locator("text=Company Status").isVisible().catch(() => false);
-
-    expect(hasConnections || hasTotalHires || hasOpenProjects || hasCompanyStatus).toBeTruthy();
-  });
-
-  test("shows quick actions section with links", async ({ page }) => {
-    await page.goto(BASE);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const hasQuickActions = await page.locator("text=Quick Actions").isVisible().catch(() => false);
-    const hasSearchT3X = await page.locator("text=Search T3X Exchange").isVisible().catch(() => false);
-    const hasPostProject = await page.locator("text=Post a Project").isVisible().catch(() => false);
-
-    expect(hasQuickActions).toBeTruthy();
-    expect(hasSearchT3X || hasPostProject).toBeTruthy();
-  });
-
-  test("shows platform benefits section", async ({ page }) => {
-    await page.goto(BASE);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const hasBenefits = await page.locator("text=Platform Benefits").isVisible().catch(() => false);
-    const hasWhyUse = await page.locator("text=Why Use The 3rd Academy").isVisible().catch(() => false);
-    const hasSkillPassports = await page.locator("text=Skill Passports").isVisible().catch(() => false);
-
-    expect(hasBenefits || hasWhyUse || hasSkillPassports).toBeTruthy();
-  });
-
-  test("quick action links navigate correctly", async ({ page }) => {
-    await page.goto(BASE);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const searchLink = page.locator('a[href="/dashboard/employer/search"]').first();
-    if (await searchLink.isVisible().catch(() => false)) {
-      await searchLink.click();
-      await page.waitForLoadState("networkidle");
-      await expect(page.locator("text=Talent").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("heading", { name: "At the desk" })).toBeVisible({
+      timeout: 15000,
+    });
+    for (const label of [
+      "Reports available to you",
+      "Open conversations",
+      "Hires recorded",
+      "Organization verification",
+    ]) {
+      await expect(page.getByText(label, { exact: true })).toBeVisible();
     }
+    // Three are platform-held; the hire count is the employer's own entry.
+    await expect(page.getByText("Platform-held", { exact: true })).toHaveCount(3);
+    await expect(page.getByText("Employer-entered", { exact: true })).toHaveCount(1);
   });
 
-  test("shows verification alert if company not verified", async ({ page }) => {
+  // RESTATED. The section is "Employer actions", not "Quick Actions", and
+  // the two entries are reading reports and offering a LiveWorks project.
+  // The LiveWorks entry carries its own not-open-yet notice, which is
+  // asserted rather than assumed: it is the only thing stopping an employer
+  // expecting to place work today.
+  test("shows the two employer actions", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    // Either shows verification warning or is already verified
-    const hasVerificationWarning = await page.locator("text=pending verification").isVisible().catch(() => false);
-    const hasVerifiedStatus = await page.locator("text=Verified").isVisible().catch(() => false);
-    const hasOverview = await page.locator("text=Welcome back").isVisible().catch(() => false);
+    await expect(page.getByRole("heading", { name: "Employer actions" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByRole("heading", { name: "Available Reports", exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Offer a LiveWorks project" })
+    ).toBeVisible();
+    await expect(page.getByText("LiveWorks is not open to employers yet.")).toBeVisible();
+    await expect(
+      page.getByText(
+        /Conduct during the project is observed and documented by The 3rd Academy, not by your organization\./
+      )
+    ).toBeVisible();
+  });
 
-    expect(hasVerificationWarning || hasVerifiedStatus || hasOverview).toBeTruthy();
+  // RESTATED. There is no benefits panel, and there should not be — the
+  // editorial note that replaced it says the opposite of a sales pitch.
+  // Its three refusals are the most load-bearing sentence on the desk.
+  test("shows the editorial note and its three refusals", async ({ page }) => {
+    await page.goto(BASE);
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.getByRole("heading", { name: "What the report is" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByText(
+        /an additional source of evidence — not a hiring verdict, prediction, or pre-vetting mechanism/
+      )
+    ).toBeVisible();
+    await expect(page.getByText("No scores. No rankings. No recommendations.")).toBeVisible();
+  });
+
+  // RESTATED. The old quick action pointed at /search, which no longer
+  // renders anything of its own. The `if` guard is dropped too: the action
+  // card is always present, so skipping the assertion when it was missing
+  // hid the only failure worth catching.
+  test("the Available Reports action opens the reports surface", async ({ page }) => {
+    await page.goto(BASE);
+    await page.waitForLoadState("networkidle");
+
+    await page.locator('a[href="/dashboard/employer/reports"]').last().click();
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/dashboard\/employer\/reports$/);
+    await expect(page.getByRole("heading", { name: "Available Reports" }).first()).toBeVisible({
+      timeout: 15000,
+    });
+  });
+
+  // RESTATED. The old version's third branch was "or the overview loaded",
+  // so it could not fail. This asserts the actual state for an
+  // organization The 3rd Academy has not approved: the badge beside the
+  // heading and the figure both say so.
+  test("an unverified organization is told so on the desk", async ({ page }) => {
+    await page.goto(BASE);
+    await page.waitForLoadState("networkidle");
+
+    // The badge beside the heading, in its own wording…
+    await expect(page.getByText("NOT VERIFIED", { exact: true })).toBeVisible({ timeout: 15000 });
+    // …and the standing figure, which must agree with it.
+    await expect(page.getByText("Organization verification", { exact: true })).toBeVisible();
+    await expect(page.getByText("Not verified", { exact: true })).toBeVisible();
   });
 });
 
-// ─── Find Talent / T3X Exchange ──────────────────────────────────────────────
+// ─── Available Reports (what /search became) ─────────────────────────────────
+//
+// SEVEN TESTS BECOME THREE, AND THAT IS THE POINT. The tier dropdown, the
+// skill search input, the candidate cards and the Connect modal all belonged
+// to a talent-search surface that an employer drove. There is no such
+// surface: an employer reads what a participant released to them, and cannot
+// search a pool at all. Rewriting those four tests would have meant
+// inventing a subject for them. What is tested instead is the thing that
+// actually governs this surface — an organization The 3rd Academy has not
+// approved is refused, and nothing about any participant is returned before
+// then.
 
-test.describe("Employer Flows - Find Talent", () => {
-  test("renders T3X Talent Exchange page with title", async ({ page }) => {
+test.describe("Employer Flows - Available Reports", () => {
+  test("the retired search path redirects to the reports surface", async ({ page }) => {
     await page.goto(`${BASE}/search`);
     await page.waitForLoadState("networkidle");
 
-    const hasTalentExchange = await page.locator("text=T3X Talent Exchange").isVisible({ timeout: 15000 }).catch(() => false);
-    const hasTalent = await page.locator("text=Talent").first().isVisible({ timeout: 15000 }).catch(() => false);
-
-    expect(hasTalentExchange || hasTalent).toBeTruthy();
+    await expect(page).toHaveURL(/\/dashboard\/employer\/reports$/);
+    await expect(page.getByRole("heading", { name: "Available Reports" }).first()).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByText(
+        /Participants control visibility and can withdraw it at any time\./
+      ).first()
+    ).toBeVisible();
   });
 
-  test("shows tier filter dropdown with all tier options", async ({ page }) => {
-    await page.goto(`${BASE}/search`);
+  // The refusal, stated on the face of the surface. Read as a pair with the
+  // server-side test: the interface hiding a control is never the proof, so
+  // this asserts the notice AND that no participant row is rendered behind
+  // it.
+  test("an unapproved organization is refused the pool", async ({ page }) => {
+    await page.goto(`${BASE}/reports`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    // Check for filter section - the text "Filters:" is inside a span
-    const hasFilters = await page.evaluate(() => document.body.innerText.includes("Filters"));
-    expect(hasFilters).toBeTruthy();
+    await expect(
+      page.getByRole("heading", { name: "This organization cannot enter the pool" })
+    ).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByText(
+        /Reports become readable once The 3rd Academy has recorded an approval for your organization\. Nothing about any participant is returned before then\./
+      )
+    ).toBeVisible();
 
-    // Check for tier select dropdown
-    const tierSelect = page.locator("select").first();
-    const hasTierSelect = await tierSelect.isVisible().catch(() => false);
-    expect(hasTierSelect).toBeTruthy();
-
-    // Verify options exist via DOM query (options not visible until dropdown opened)
-    const optionCount = await page.locator("select option").count();
-    expect(optionCount).toBeGreaterThanOrEqual(2); // At least "All Tiers" + 1 tier option
+    // No filter panel and no search box: there is nothing to filter.
+    await expect(page.locator("select")).toHaveCount(0);
+    await expect(page.locator('input[placeholder*="skill" i]')).toHaveCount(0);
   });
 
-  test("shows skill search input", async ({ page }) => {
-    await page.goto(`${BASE}/search`);
+  test("T3X Discovery withholds coverage from an unapproved organization", async ({ page }) => {
+    await page.goto(`${BASE}/t3x`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const skillInput = page.locator('input[placeholder*="skill" i]').first();
-    const hasSkillSearch = await skillInput.isVisible().catch(() => false);
-    expect(hasSkillSearch).toBeTruthy();
-  });
-
-  test("can filter by tier selection", async ({ page }) => {
-    await page.goto(`${BASE}/search`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const tierSelect = page.locator("select").first();
-    if (await tierSelect.isVisible().catch(() => false)) {
-      await tierSelect.selectOption("platinum");
-      await page.waitForLoadState("networkidle");
-      await page.waitForTimeout(1000);
-
-      // Should show filtered results or no candidates
-      const hasCandidates = await page.locator("text=TIER").first().isVisible().catch(() => false);
-      const hasNoCandidates = await page.locator("text=No candidates found").isVisible().catch(() => false);
-      const hasTalent = await page.locator("text=Talent").first().isVisible().catch(() => false);
-
-      expect(hasCandidates || hasNoCandidates || hasTalent).toBeTruthy();
-    }
-  });
-
-  test("candidate cards show profile info and skills", async ({ page }) => {
-    await page.goto(`${BASE}/search`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    // Either shows candidate cards or empty state
-    const hasViewProfile = await page.locator("button").filter({ hasText: /View Profile/i }).first().isVisible().catch(() => false);
-    const hasConnectBtn = await page.locator("button").filter({ hasText: /Connect/i }).first().isVisible().catch(() => false);
-    const hasPendingBtn = await page.locator("button").filter({ hasText: /Pending/i }).first().isVisible().catch(() => false);
-    const hasConnectedBtn = await page.locator("button").filter({ hasText: /Connected/i }).first().isVisible().catch(() => false);
-    const hasNoCandidates = await page.locator("text=No candidates found").isVisible().catch(() => false);
-
-    expect(hasViewProfile || hasConnectBtn || hasPendingBtn || hasConnectedBtn || hasNoCandidates).toBeTruthy();
-  });
-
-  test("clicking Connect opens modal with message textarea", async ({ page }) => {
-    await page.goto(`${BASE}/search`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const connectBtn = page.locator("button").filter({ hasText: /^Connect$/ }).first();
-    if (await connectBtn.isVisible().catch(() => false)) {
-      await connectBtn.click();
-      await page.waitForTimeout(500);
-
-      // Modal should show
-      const hasModalTitle = await page.locator("text=Send Connection Request").isVisible().catch(() => false);
-      const hasMessageLabel = await page.locator("text=Add a message").isVisible().catch(() => false);
-      const hasTextarea = await page.locator("textarea").first().isVisible().catch(() => false);
-      const hasSendBtn = await page.locator("button").filter({ hasText: /Send Request/i }).first().isVisible().catch(() => false);
-      const hasCancelBtn = await page.locator("button").filter({ hasText: /Cancel/i }).first().isVisible().catch(() => false);
-
-      expect(hasModalTitle || hasMessageLabel).toBeTruthy();
-      expect(hasTextarea).toBeTruthy();
-      expect(hasSendBtn || hasCancelBtn).toBeTruthy();
-
-      // Fill message and cancel
-      if (hasTextarea) {
-        await page.locator("textarea").first().fill("We are interested in connecting with you.");
-      }
-
-      const cancelBtn = page.locator("button").filter({ hasText: /Cancel/i }).first();
-      if (await cancelBtn.isVisible().catch(() => false)) {
-        await cancelBtn.click();
-      }
-    }
+    await expect(page.getByRole("heading", { name: "T3X Discovery" })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(
+      page.getByRole("heading", { name: "Coverage is shown to approved employers" })
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        /Coverage figures become readable once The 3rd Academy has recorded an approval for your organization\./
+      )
+    ).toBeVisible();
   });
 });
 
-// ─── Connections ─────────────────────────────────────────────────────────────
+// ─── Messages (what /connections became) ─────────────────────────────────────
+//
+// SIX TESTS BECOME TWO. An employer holds no connection list with
+// Accepted/Pending/Declined states, so the tab filters, the status badges,
+// the "View Full Profile" action and the "Your message" preview have no
+// subject. Three of those six tests also ended in "or the word Connections
+// appears on the page", which no page change could have failed.
 
-test.describe("Employer Flows - Connections", () => {
-  test("renders connections page with title", async ({ page }) => {
+test.describe("Employer Flows - Messages", () => {
+  test("the retired connections path redirects to messages", async ({ page }) => {
     await page.goto(`${BASE}/connections`);
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("text=Connections").first()).toBeVisible({ timeout: 15000 });
+
+    await expect(page).toHaveURL(/\/dashboard\/employer\/messages$/);
+    await expect(page.getByRole("heading", { name: "Messages" }).first()).toBeVisible({
+      timeout: 15000,
+    });
   });
 
-  test("shows tab filters: All, Accepted, Pending", async ({ page }) => {
-    await page.goto(`${BASE}/connections`);
+  test("shows the empty conversation state and a way to start one", async ({ page }) => {
+    await page.goto(`${BASE}/messages`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
 
-    const hasAllTab = await page.locator("button").filter({ hasText: /^All/i }).first().isVisible().catch(() => false);
-    const hasAcceptedTab = await page.locator("button").filter({ hasText: /Accepted/i }).first().isVisible().catch(() => false);
-    const hasPendingTab = await page.locator("button").filter({ hasText: /Pending/i }).first().isVisible().catch(() => false);
-
-    expect(hasAllTab || hasAcceptedTab || hasPendingTab).toBeTruthy();
-  });
-
-  test("can switch between connection tabs", async ({ page }) => {
-    await page.goto(`${BASE}/connections`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const acceptedTab = page.locator("button").filter({ hasText: /Accepted/i }).first();
-    if (await acceptedTab.isVisible().catch(() => false)) {
-      await acceptedTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const pendingTab = page.locator("button").filter({ hasText: /Pending/i }).first();
-    if (await pendingTab.isVisible().catch(() => false)) {
-      await pendingTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const allTab = page.locator("button").filter({ hasText: /^All/i }).first();
-    if (await allTab.isVisible().catch(() => false)) {
-      await allTab.click();
-      await page.waitForTimeout(500);
-    }
-  });
-
-  test("shows connection cards with status badges or empty state", async ({ page }) => {
-    await page.goto(`${BASE}/connections`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const hasAcceptedBadge = await page.locator("text=Accepted").nth(1).isVisible().catch(() => false);
-    const hasPendingBadge = await page.locator("text=Pending").nth(1).isVisible().catch(() => false);
-    const hasDeclinedBadge = await page.locator("text=Declined").isVisible().catch(() => false);
-    const hasNoConnections = await page.locator("text=No connections yet").isVisible().catch(() => false);
-    const hasFindTalent = await page.locator("button").filter({ hasText: /Find Talent/i }).first().isVisible().catch(() => false);
-
-    expect(hasAcceptedBadge || hasPendingBadge || hasDeclinedBadge || hasNoConnections || hasFindTalent).toBeTruthy();
-  });
-
-  test("accepted connections show action buttons", async ({ page }) => {
-    await page.goto(`${BASE}/connections`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    // Click Accepted tab
-    const acceptedTab = page.locator("button").filter({ hasText: /Accepted/i }).first();
-    if (await acceptedTab.isVisible().catch(() => false)) {
-      await acceptedTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    const hasViewProfile = await page.locator("button").filter({ hasText: /View Full Profile/i }).first().isVisible().catch(() => false);
-    const hasSendMessage = await page.locator("button").filter({ hasText: /Send Message/i }).first().isVisible().catch(() => false);
-    const hasConnectionPage = await page.locator("text=Connections").first().isVisible().catch(() => false);
-
-    expect(hasViewProfile || hasSendMessage || hasConnectionPage).toBeTruthy();
-  });
-
-  test("connection cards show message if provided", async ({ page }) => {
-    await page.goto(`${BASE}/connections`);
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(1000);
-
-    const hasYourMessage = await page.locator("text=Your message").isVisible().catch(() => false);
-    const hasConnectionPage = await page.locator("text=Connections").first().isVisible().catch(() => false);
-
-    // Either has message preview or just the connections page
-    expect(hasYourMessage || hasConnectionPage).toBeTruthy();
+    await expect(page.getByText("No conversations yet")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText("Select a Conversation")).toBeVisible();
+    await expect(page.getByText("Choose a conversation or start a new one.")).toBeVisible();
   });
 });
 
@@ -533,13 +490,15 @@ test.describe("Employer Flows - Navigation", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
 
+    // The labels the Employer Desk actually offers.
     const navLinks = [
       "Overview",
-      "Find Talent",
-      "Connections",
+      "Available Reports",
+      "T3X Discovery",
       "Projects",
-      "Feedback",
-      "Company",
+      "Feedback to The 3rd Academy",
+      "Messages",
+      "Your organization",
       "Settings",
     ];
 
@@ -569,22 +528,26 @@ test.describe("Employer Flows - Navigation", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
 
-    // Navigate to Find Talent
-    await navigateTo(page, "Find Talent");
-    const hasTalent = await page.locator("text=Talent").first().isVisible({ timeout: 15000 }).catch(() => false);
-    expect(hasTalent).toBeTruthy();
+    // Each hop checks the banner, which reads "§ " + the active nav item. A
+    // `text=` locator for the label also matched the sidebar link that was
+    // just clicked, so those assertions passed whether or not the page
+    // changed.
+    await navigateTo(page, "Available Reports");
+    await expect(page.getByRole("banner")).toContainText("§ Available Reports");
 
-    // Navigate to Connections
-    await navigateTo(page, "Connections");
-    await expect(page.locator("text=Connections").first()).toBeVisible({ timeout: 15000 });
+    await navigateTo(page, "Messages");
+    await expect(page.getByRole("banner")).toContainText("§ Messages");
 
-    // Navigate to Projects
     await navigateTo(page, "Projects");
-    await expect(page.locator("text=Project").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("banner")).toContainText("§ Projects");
 
-    // Navigate back to Overview
     await navigateTo(page, "Overview");
-    await expect(page.locator("text=Welcome back").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("banner")).toContainText("§ Overview");
+    await expect(
+      page.getByRole("heading", {
+        name: "Welcome to the evidence people chose to place in your hands.",
+      })
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test("navigating to company and back preserves state", async ({ page }) => {
@@ -592,16 +555,19 @@ test.describe("Employer Flows - Navigation", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
 
-    // Go to Company
-    await navigateTo(page, "Company");
-    await expect(page.locator("text=Company").first()).toBeVisible({ timeout: 15000 });
+    // The nav label is "Your organization"; the page it opens is still
+    // headed "Company Profile".
+    await navigateTo(page, "Your organization");
+    await expect(page.getByRole("heading", { name: "Company Profile" }).first()).toBeVisible({
+      timeout: 15000,
+    });
 
-    // Go to Settings
     await navigateTo(page, "Settings");
-    await expect(page.locator("text=Settings").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("banner")).toContainText("§ Settings");
 
-    // Back to Company
-    await navigateTo(page, "Company");
-    await expect(page.locator("text=Company").first()).toBeVisible({ timeout: 15000 });
+    await navigateTo(page, "Your organization");
+    await expect(page.getByRole("heading", { name: "Company Profile" }).first()).toBeVisible({
+      timeout: 15000,
+    });
   });
 });

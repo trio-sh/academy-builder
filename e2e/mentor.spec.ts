@@ -19,12 +19,17 @@ test.describe("Mentor Dashboard - Full E2E", () => {
     await expect(page.locator("text=Overview").first()).toBeVisible({ timeout: 15000 });
   });
 
-  test("navigates to My Mentees", async ({ page }) => {
+  // RESTATED. The nav label is "My Assignments"; the route is still
+  // /mentees and is not renamed. "Mentee" survives in the path only.
+  test("navigates to My Assignments", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "My Mentees");
+    await navigateTo(page, "My Assignments");
     await expect(page).toHaveURL(/\/mentees/);
-    await expect(page.locator("text=Mentee").first()).toBeVisible();
+    // The banner reads "§ " + the active nav item, so this proves which
+    // section was reached rather than that a word appears somewhere.
+    await expect(page.getByRole("banner")).toContainText("§ My Assignments");
+    await expect(page.getByRole("heading", { name: "My Assignments" }).first()).toBeVisible();
   });
 
   test("navigates to Observations", async ({ page }) => {
@@ -35,12 +40,16 @@ test.describe("Mentor Dashboard - Full E2E", () => {
     await expect(page.locator("text=Observation").first()).toBeVisible();
   });
 
-  test("navigates to Endorsements", async ({ page }) => {
+  // RESTATED. A mentor does not issue an endorsement; they confirm an
+  // observation. The label and the page heading are both "Confirmations".
+  // The /endorsements route is unchanged and not renamed.
+  test("navigates to Confirmations", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Endorsements");
+    await navigateTo(page, "Confirmations");
     await expect(page).toHaveURL(/\/endorsements/);
-    await expect(page.locator("text=Endorsement").first()).toBeVisible();
+    await expect(page.getByRole("banner")).toContainText("§ Confirmations");
+    await expect(page.getByRole("heading", { name: "Confirmations" }).first()).toBeVisible();
   });
 
   test("navigates to Schedule", async ({ page }) => {

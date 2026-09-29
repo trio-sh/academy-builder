@@ -35,14 +35,25 @@ test.describe("Candidate Dashboard - Full E2E", () => {
     await expect(page.locator("text=Observation").first()).toBeVisible();
   });
 
-  test("navigates to Skill Passport", async ({ page }) => {
+  // RESTATED. The nav item read "Skill Passport" and the route still reads
+  // /passport, but the credential is the Behavioral Evidence Report and
+  // "Skill Passport" is retired vocabulary — scripts/check-vocabulary.mjs
+  // refuses it in source. The route name is not renamed (nothing is renamed
+  // under a note), so the URL stays; what changes is the label this test
+  // clicks and the heading it expects.
+  test("navigates to the Behavioral Evidence Report", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Skill Passport");
+    await navigateTo(page, "Behavioral Evidence Report");
 
     await expect(page).toHaveURL(/\/passport/);
-    // Should render passport page with share/download actions
-    await expect(page.locator("text=Passport").first()).toBeVisible();
+    // The banner reads "§ " + the active nav item, so this proves the nav
+    // landed on that section rather than merely that the word appears
+    // somewhere on the page.
+    await expect(page.getByRole("banner")).toContainText("§ Behavioral Evidence Report");
+    await expect(
+      page.getByRole("heading", { name: "Behavioral Evidence Report", exact: true }).first()
+    ).toBeVisible();
   });
 
   test("navigates to Growth Log", async ({ page }) => {
@@ -81,13 +92,22 @@ test.describe("Candidate Dashboard - Full E2E", () => {
     await expect(page.locator("text=Project").first()).toBeVisible();
   });
 
-  test("navigates to Find Mentor", async ({ page }) => {
+  // RESTATED. "Find Mentor" implied the participant browses and picks. They
+  // do not: they submit a request and The 3rd Academy assigns. The label is
+  // now "Request a Mentor" and the page says so in as many words, which is
+  // what this now asserts — a stronger claim than that the word "Mentor"
+  // appears.
+  test("navigates to Request a Mentor", async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState("networkidle");
-    await navigateTo(page, "Find Mentor");
+    await navigateTo(page, "Request a Mentor");
 
     await expect(page).toHaveURL(/\/mentors/);
-    await expect(page.locator("text=Mentor").first()).toBeVisible();
+    await expect(page.getByRole("banner")).toContainText("§ Request a Mentor");
+    await expect(page.getByText("Submit a request for mentor assignment.")).toBeVisible();
+    await expect(
+      page.getByText("The 3rd Academy assigns a mentor to work with you.")
+    ).toBeVisible();
   });
 
   test("navigates to Connections", async ({ page }) => {

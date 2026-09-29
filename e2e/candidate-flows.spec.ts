@@ -84,19 +84,33 @@ test.describe("Candidate Flows - Profile", () => {
   });
 });
 
-test.describe("Candidate Flows - Skill Passport", () => {
-  test("renders passport page with content", async ({ page }) => {
+test.describe("Candidate Flows - Behavioral Evidence Report", () => {
+  // RESTATED. "Skill Passport" is retired vocabulary and nothing on the page
+  // says it any more; the credential is the Behavioral Evidence Report. The
+  // route keeps its /passport path and is not renamed.
+  //
+  // The three-way OR is replaced by the two claims the surface actually
+  // makes, both of which matter more than any of the originals: that the
+  // report records what was observed rather than being generated from the
+  // profile, and that the minimum dimension count gates issuance without
+  // guaranteeing it.
+  test("renders the report page with content", async ({ page }) => {
     await page.goto(`${BASE}/passport`);
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("text=Skill Passport").first()).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByRole("heading", { name: "Behavioral Evidence Report", exact: true }).first()
+    ).toBeVisible({ timeout: 15000 });
 
-    // Should show either earned passport with actions OR "Earn Your Skill Passport" prompt
-    const hasEarnPrompt = await page.locator("text=Earn Your Skill Passport").isVisible().catch(() => false);
-    const hasShareBtn = await page.getByRole("button", { name: /share/i }).first().isVisible().catch(() => false);
-    const hasHowItWorks = await page.locator("text=How It Works").isVisible().catch(() => false);
-
-    expect(hasEarnPrompt || hasShareBtn || hasHowItWorks).toBeTruthy();
+    await expect(
+      page.getByText("It records what was observed. It is not generated from your profile.")
+    ).toBeVisible();
+    await expect(page.getByText(/MDC-3 — Minimum Dimension Count: \d+ of 3\./)).toBeVisible();
+    await expect(
+      page.getByText(
+        /At least three behavioral dimensions must be observed before a Behavioral Evidence Report can be issued\. Meeting the minimum does not by itself mean a report is issued\./
+      )
+    ).toBeVisible();
   });
 
   test("can click copy verification code", async ({ page }) => {
