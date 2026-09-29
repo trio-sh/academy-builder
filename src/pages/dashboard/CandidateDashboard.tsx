@@ -11,7 +11,6 @@ import { analyzeResume } from "@/services/resumeEnhancer";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import { Button } from "@/components/ui/button";
 import { TrainingModuleViewer } from "@/components/training/TrainingModuleViewer";
-import { AssessmentViewer } from "@/components/assessment/AssessmentViewer";
 import { InteractiveSkillAssessment } from "@/components/assessment/InteractiveSkillAssessment";
 import { INTERACTIVE_MODULES } from "@/data/interactiveTrainingModules";
 import type { Database } from "@/types/database.types";
@@ -2280,15 +2279,10 @@ const SelfAssessmentPage = () => {
  A guided, immersive journey through all 14 behavioral dimensions with narrative introductions,
  thoughtful prompts, and voice narration. Rate yourself through self-reflection.
  </p>
- <Link to="/dashboard/candidate/assessment/interactive">
- <Button
- variant="outline"
- className="border-vermilion text-foreground/75 hover:bg-vermilion/10"
- >
- Start Guided Reflection
- <ArrowRight className="w-4 h-4 ml-2" />
- </Button>
- </Link>
+ {/* WITHDRAWN with the route above — CORR-006 Section 6, CX-20:
+                          "no navigation links to it". The card's text is left
+                          so the removal is legible rather than a silent gap,
+                          and there is nothing to press. */}
  </div>
  </div>
  </div>
@@ -6448,7 +6442,30 @@ const CandidateDashboard = () => {
  <Route path="report-review" element={<ReportReview />} />
  <Route path="growth" element={<GrowthLog />} />
  <Route path="assessment" element={<SelfAssessmentPage />} />
- <Route path="assessment/interactive" element={<AssessmentViewer />} />
+ {/* WITHDRAWN — T3A-D1-EXEC-CORR-006 Section 6, CX-19 and CX-20.
+
+                AssessmentViewer rendered the legacy scenario library, which
+                is a scoring instrument: it carries evaluationCriteria, timed
+                challenges, correct answers and grading bands from excellent
+                to poor.
+
+                This route was LIVE and reachable by any signed-in
+                participant, and the library's own strings were found
+                verbatim in dist/assets/index-*.js of a production build — so
+                it was not merely reachable, it was being shipped.
+
+                CX-20 asks for every reach to be made unreachable
+                server-side, and proved by requesting the route rather than
+                by observing that a screen hides it. THE LIBRARY HAS NO
+                SERVER SIDE: its content is constants in a bundled module, so
+                there is no route to refuse. Removing this route removes the
+                last routed import of the library, which takes its bytes out
+                of the bundle — a stronger claim than a hidden screen, and
+                one a test can check against the built output.
+
+                The component is left in the tree rather than deleted:
+                CX-21 deletes nothing. It is simply not reachable, and
+                nothing routed imports it. */}
  <Route path="training" element={<Training />} />
  <Route path="training/free-practice" element={<FreePractice />} />
  <Route path="training/workrehearsal" element={<WorkRehearsalShelf />} />
