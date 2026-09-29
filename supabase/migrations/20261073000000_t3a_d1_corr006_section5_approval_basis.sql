@@ -312,7 +312,7 @@ $verify$;
 --       empty table and would refuse everything.
 --
 -- It applies to INSERTS, so the approvals already on record are not
--- retrospectively invalidated: CX-18 governs "every future approval", and
+-- retrospectively put in breach: CX-18 governs "every future approval", and
 -- CX-16 is what accounts for the twenty-seven already there.
 -- ---------------------------------------------------------------------
 
