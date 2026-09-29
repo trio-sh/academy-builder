@@ -51,6 +51,9 @@ const cockpit = read(COCKPIT);
 const S1DELIVERY = "src/pages/dashboard/candidate/S1Delivery.tsx";
 const s1Delivery = read(S1DELIVERY);
 
+const SAFETYNOTICE = "src/components/dashboard/ParticipantSafetyNotice.tsx";
+const safetyNotice = read(SAFETYNOTICE);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -67,6 +70,7 @@ const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
 const s1DeliveryCode = code(s1Delivery);
+const safetyNoticeCode = code(safetyNotice);
 const reportFaceCode = code(reportFace);
 const acceptanceCode = code(acceptance);
 const cockpitCode = code(cockpit);
@@ -1005,8 +1009,16 @@ describe("Stage 1 delivery — CORR-006 CX-08 and CX-13", () => {
     // changed or localized without a code change", and a participant
     // outside Canada needs their own emergency number. A 9-8-8 baked into a
     // component is a wrong number nobody can correct without a deploy.
+    // The DIGITS are checked against the RAW source, comments included. A
+    // number in a comment is one careless edit away from being a number in
+    // the markup, and a wrong one is a number a distressed person dials.
     expect(s1Delivery).not.toMatch(/9-8-8|988|9-1-1|911/);
-    expect(s1Delivery).not.toMatch(/crisis|harming yourself|emergency/i);
+    // The WORDING is checked against the comment-stripped source. NARROWED
+    // from the raw source while writing CX-31: forbidding the word "crisis"
+    // anywhere stopped a comment from explaining why the digits may not
+    // appear, which is the opposite of useful. What must not exist is crisis
+    // phrasing in the markup.
+    expect(s1DeliveryCode).not.toMatch(/crisis|harming yourself|emergency/i);
   });
 
   it("renders no situation, reveal or framing text of its own", () => {
@@ -1076,6 +1088,59 @@ describe("Stage 1 delivery — CORR-006 CX-08 and CX-13", () => {
 
   it("offers no pause (AC-B6)", () => {
     expect(s1DeliveryCode).not.toMatch(/\bpause\b/i);
+  });
+});
+
+
+describe("CX-31 — where the Annex C safety wording is shown", () => {
+  /**
+   * The participant-facing files, for the ordering rule. A file added here
+   * later gets the rule for free, which is the point: the screen CX-31 is
+   * really about — the pre-session screen — does not exist yet.
+   */
+  const PARTICIPANT_FACING: Array<[string, string]> = [
+    [S1DELIVERY, s1Delivery],
+    ["src/pages/dashboard/candidate/WorkSample.tsx", read("src/pages/dashboard/candidate/WorkSample.tsx")],
+    ["src/pages/dashboard/candidate/D1Pathway.tsx", read("src/pages/dashboard/candidate/D1Pathway.tsx")],
+    ["src/pages/dashboard/candidate/Disclosures.tsx", disclosures],
+  ];
+
+  it("holds no support wording in the component that renders it", () => {
+    // Annex C.3 holds the support information as CONFIGURATION so it can be
+    // localized. A number written here is a wrong number for a participant
+    // outside Canada that nobody can correct without a deploy.
+    expect(safetyNotice).not.toMatch(/9-8-8|988|9-1-1|911/);
+    expect(safetyNoticeCode).toMatch(/rpc\("t3a_participant_safety_notice"/);
+    // Where the server gives nothing, it renders nothing rather than a
+    // sentence of its own.
+    expect(safetyNoticeCode).toMatch(/return null/);
+  });
+
+  it("shows the support information on the Stage 1 and Stage 3 screens", () => {
+    expect(code(s1Delivery)).toMatch(/<ParticipantSafetyNotice[\s\S]*?stageCode="S1"/);
+    expect(code(read("src/pages/dashboard/candidate/WorkSample.tsx")))
+      .toMatch(/<ParticipantSafetyNotice[\s\S]*?stageCode="S3"/);
+  });
+
+  it("puts the support information before any Google Meet link, on every participant screen", () => {
+    // THE RULE THAT MATTERS FOR A SCREEN NOBODY HAS BUILT YET. No
+    // participant-facing screen shows a Meet link today, so this passes
+    // vacuously — and it is the assertion that will fail the moment one does
+    // without the support information above it.
+    for (const [name, src] of PARTICIPANT_FACING) {
+      const body = code(src);
+      const meet = body.search(/meet\.new|meet\.google\.com|meet_link/);
+      if (meet < 0) continue;
+      const notice = body.search(/<ParticipantSafetyNotice/);
+      expect(notice, `${name} shows a Meet link and no support information`).toBeGreaterThanOrEqual(0);
+      expect(notice, `${name} shows a Meet link before the support information`).toBeLessThan(meet);
+    }
+  });
+
+  it("never writes a crisis number into a participant-facing screen", () => {
+    for (const [name, src] of PARTICIPANT_FACING) {
+      expect(src, `${name} hardcodes a crisis number`).not.toMatch(/9-8-8|9-1-1/);
+    }
   });
 });
 

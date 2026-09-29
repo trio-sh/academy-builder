@@ -46,6 +46,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { LedgerLoading, EmptyState } from "@/components/dashboard/primitives";
+import ParticipantSafetyNotice from "@/components/dashboard/ParticipantSafetyNotice";
 
 type Reveal = {
   ordinal: number;
@@ -323,6 +324,19 @@ const S1Delivery = () => {
 
       {phase.kind === "opening" && (
         <section>
+          {/* CX-31: Annex C.3's support information, shown before the session
+              begins. Annex A's opening carries a crisis line too; both are
+              issued wording and showing Annex C.3 here is what CX-31 asks
+              for on every Stage. Neither is written in this file — and the
+              surface contract reads this file's RAW source, comments
+              included, so not even an explanatory comment may repeat a
+              crisis number. That is not pedantry: a number in a comment is
+              one careless edit away from being a number in the markup. */}
+          <ParticipantSafetyNotice
+            stageCode="S1"
+            sourceIdentifier={render.source_identifier ?? null}
+          />
+
           {/* Annex A's opening, with {max_minutes} already filled server-side. */}
           <div className="space-y-4 text-foreground/85 leading-relaxed whitespace-pre-line">
             {framing.opening}
