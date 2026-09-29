@@ -100,6 +100,8 @@ const S1Delivery = () => {
   const [draft, setDraft] = useState("");
   const [working, setWorking] = useState(false);
   const [refusal, setRefusal] = useState<string | null>(null);
+  const [stageEntryEventId, setStageEntryEventId] = useState<string | null>(null);
+  const [stopped, setStopped] = useState(false);
 
   /** AC-B4: shown once. A ref, so a re-render cannot show it twice. */
   const timingNoticeShown = useRef(false);
@@ -111,15 +113,19 @@ const S1Delivery = () => {
 
     const { data: run } = await supabase
       .from("t3a_d1_ai_administration_run")
-      .select("source_version_id")
+      .select("source_version_id, stage_entry_event_id")
       .eq("ai_administration_run_id", runId)
       .maybeSingle();
 
     if (!run) {
+      setStageEntryEventId(null);
       setRender({ renderable: false, refusal_code: "RUN_NOT_FOUND" });
       setIsLoading(false);
       return;
     }
+    setStageEntryEventId(
+      (run as { stage_entry_event_id?: string }).stage_entry_event_id ?? null
+    );
 
     const [{ data: r }, { data: n }, { data: rows }] = await Promise.all([
       supabase.rpc("t3a_d1_s1_render", {
@@ -192,6 +198,29 @@ const S1Delivery = () => {
     await load();
   };
 
+  /**
+   * CX-30(a) and C4b. The participant stopping their own session. The server
+   * decides whether it may be recorded; this reports what it says.
+   */
+  const stopForWelfare = async () => {
+    if (!stageEntryEventId) return;
+    setWorking(true);
+    setRefusal(null);
+    const { data } = await supabase.rpc("t3a_d1_stop_for_welfare", {
+      p_stage_entry_event_id: stageEntryEventId,
+      p_beat_code: phase.kind === "reveal" ? `R${phase.ordinal}` : null,
+      p_concerns_person: null,
+    });
+    setWorking(false);
+    const res = data as { recorded?: boolean; refusal_code?: string } | null;
+    if (!res?.recorded) {
+      setRefusal(res?.refusal_code ?? "COULD_NOT_RECORD");
+      return;
+    }
+    setStopped(true);
+    setPhase({ kind: "closing" });
+  };
+
   const submit = async (ordinal: number) => {
     setWorking(true);
     setRefusal(null);
@@ -247,10 +276,17 @@ const S1Delivery = () => {
    * CX-13. On EVERY screen: the Stop control and, beside it, the support
    * line. Rendered from the server's text, never from a literal here.
    *
-   * Stop ends the run and is recorded under CX-28, which is not built. So
-   * this reports that plainly rather than pretending to stop the run — a
-   * control that looks like it stopped an observation and did not is worse
-   * than one that says it cannot yet.
+   * Stop ends the run and is recorded under CX-28 by
+   * t3a_d1_stop_for_welfare: the session ends without commit, no attempt is
+   * consumed, the observation is withheld under CX-29 and a safety event is
+   * opened, all in one transaction.
+   *
+   * NO CONFIRMATION STEP, deliberately. C4b says Stop is always available,
+   * and Annex A's opening tells the participant in advance that "Stopping
+   * does not use up one of your attempts" — so the cost of an accidental
+   * press is bounded and already explained to them. A confirmation dialog
+   * would also need wording, and no annex supplies any, which would mean
+   * this file writing participant-facing text.
    */
   const stopAndSupport = (
     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-foreground/20 pb-4 mb-8">
@@ -258,7 +294,8 @@ const S1Delivery = () => {
         {stopLabel && (
           <Button
             variant="outline"
-            onClick={() => setRefusal("STOP_NOT_RECORDABLE_UNTIL_CX28_IS_BUILT")}
+            disabled={working || stopped || !stageEntryEventId}
+            onClick={() => void stopForWelfare()}
           >
             {stopLabel}
           </Button>
