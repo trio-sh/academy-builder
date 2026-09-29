@@ -862,18 +862,66 @@ describe("§3 Mentor Cockpit — six regions, and no smaller version of them", (
 
   it("shows no recording indicator, because D1 grants no recording consent", () => {
     // t3a_d1_consent_type records RECORDING as unavailable in D1.
-    expect(cockpitCode).not.toMatch(/\bREC\b|isRecording|recordingActive|MediaRecorder/);
+    //
+    // RESTATED, narrowed rather than weakened. The bare token was /\bREC\b/,
+    // which is aimed at a "REC" badge — the red dot a recording surface
+    // paints. It also matched the GOVERNANCE IDENTIFIERS REC-10 and REC-11,
+    // which are rule names and the opposite of a recording affordance:
+    // REC-10 classifies a failure so it does not consume an attempt, and
+    // REC-11 is the visual identity confirmation. Those belong on the
+    // screen. The negative lookahead keeps the badge forbidden and lets the
+    // rule names through.
+    expect(cockpitCode).not.toMatch(/\bREC\b(?!-\d)/);
+    expect(cockpitCode).not.toMatch(/isRecording|recordingActive|MediaRecorder/);
   });
 
   it("records an administration variance at the beat, not only at session end", () => {
-    expect(cockpitCode).toMatch(/t3a_d1_s2_administration_variance/);
-    expect(cockpitCode).toMatch(/beat_code: varianceBeat/);
+    // RESTATED, AND THE OLD VERSION WAS ASSERTING A WRITE THAT COULD NOT
+    // HAPPEN. It required the table name and `beat_code: varianceBeat` — the
+    // shape of a direct insert into t3a_d1_s2_administration_variance. That
+    // insert was REFUSED by row-level security every single time (the table
+    // has RLS on with a SELECT-only policy), so no variance had ever been
+    // recordable, and this test passed throughout. A test that pins the
+    // mechanism cannot notice the mechanism does not work.
+    //
+    // It now asserts the outcome and the route.
+    expect(cockpitCode).toMatch(/rpc\("t3a_d1_s2_record_variance"/);
+    expect(cockpitCode).toMatch(/p_beat_code: varianceBeat/);
+    // recorded_by comes from the session server-side. Sending it from here
+    // is what let a client name someone else as the recorder.
+    expect(cockpitCode).not.toMatch(/recorded_by:/);
     // The control lives in the script pane, beside the beat it concerns.
     const pane1 = cockpitCode.slice(
       cockpitCode.indexOf("Pane 1 — Source and Script"),
       cockpitCode.indexOf("Pane 2 — Determination Capture")
     );
     expect(pane1).toMatch(/onRecordVariance/);
+  });
+
+  it("writes nothing on the live-session surface directly to a table", () => {
+    // THE TEST THAT WOULD HAVE CAUGHT THE ORIGINAL DEFECT, and the reason
+    // it is phrased as a prohibition rather than a preference.
+    //
+    // Four controls shipped as direct `.from(...).insert(...)` calls against
+    // tables whose only policy is SELECT: the live session row, the CL-41
+    // attestations, the CL-44 interruption report and the Build 060
+    // variance. Every one was refused. The worst was CL-44, which is the
+    // control that REPLACED the automatic video-track detection removed
+    // under CL-36 — so §3.3 was met by neither the original mechanism nor
+    // its replacement.
+    //
+    // Any future write on this surface must go through a route, where the
+    // actor is taken from auth.uid() and cannot be supplied by the caller.
+    for (const table of [
+      "t3a_d1_live_session",
+      "t3a_d1_session_attestation",
+      "t3a_d1_live_session_event",
+      "t3a_d1_s2_administration_variance",
+    ]) {
+      expect(cockpitCode).not.toMatch(
+        new RegExp(`from\\("${table}"\\)[\\s\\S]{0,120}?\\.insert\\(`)
+      );
+    }
   });
 
   it("holds none of the §3.4 prohibitions", () => {
@@ -1057,11 +1105,25 @@ describe("Two review findings on #284, and what they were", () => {
     // what changed is who supplies the verdict. The Cockpit cannot read
     // Meet's track, so the mentor reports the interruption (CL-44) and the
     // report is written, attributed and timed.
-    expect(cockpitCode).toMatch(/t3a_d1_live_session_event/);
-    expect(cockpitCode).toMatch(/event_kind: "video_interrupted"/);
-    expect(cockpitCode).toMatch(/reported_by: profile\.id/);
-    // REC-10: a platform failure never consumes a participant's attempt.
-    expect(cockpitCode).toMatch(/technical_or_platform_failure/);
+    // RESTATED AGAIN, and for a harder reason than CL-49's. The previous
+    // version required `reported_by: profile.id` and the
+    // technical_or_platform_failure string — the shape of a direct insert
+    // into t3a_d1_live_session_event. That insert was refused by row-level
+    // security on every call, so the mentor-reported interruption could
+    // never be recorded, and this test passed the whole time it could not.
+    //
+    // Two things changed and both are stronger:
+    //   the report goes through a route, so it is actually written; and
+    //   the REC-10 classification is DERIVED BY THE PLATFORM rather than
+    //   sent, because it decides whether a participant's attempt is
+    //   consumed and a mentor must not pick the consequence of their own
+    //   report.
+    expect(cockpitCode).toMatch(/rpc\("t3a_d1_live_session_report"/);
+    expect(cockpitCode).toMatch(/p_event_kind: "video_interrupted"/);
+    // The actor is the session's, not the client's.
+    expect(cockpitCode).not.toMatch(/reported_by:/);
+    // And the classification is no longer the client's to state.
+    expect(cockpitCode).not.toMatch(/rec10_classification:/);
   });
 
   it("the commit control is blocked while advancement is", () => {

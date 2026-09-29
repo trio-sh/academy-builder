@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
@@ -572,17 +572,24 @@ export default function Cockpit() {
 
  const onRecordVariance = async () => {
  if (!entry || !profile?.id) return;
- const { error } = await supabase
- .from("t3a_d1_s2_administration_variance")
- .insert({
- stage_instance_id: entry.stage_entry_event_id,
- beat_code: varianceBeat,
- variance_kind: "beat_variance",
- narrative: varianceNarrative,
- recorded_by: profile.id,
+ // Through the route, for the same reason as the interruption report:
+ // the direct insert was refused by row-level security, so no variance
+ // had ever been recordable. recorded_by now comes from the session
+ // server-side rather than being sent from here.
+ const { data, error } = await supabase.rpc("t3a_d1_s2_record_variance", {
+ p_stage_entry_event_id: entry.stage_entry_event_id,
+ p_beat_code: varianceBeat,
+ p_narrative: varianceNarrative,
  });
  if (error) {
- setVarianceNote("That variance could not be recorded.");
+ setVarianceNote(error.message);
+ return;
+ }
+ const vres = (data ?? {}) as Record<string, unknown>;
+ if (vres.ok !== true) {
+ setVarianceNote(
+ [vres.refusal, vres.remedy].filter(Boolean).join(" — ") || "That variance could not be recorded."
+ );
  return;
  }
  setVarianceBeat("");
@@ -623,28 +630,100 @@ export default function Cockpit() {
  // rather than inferred here.
  const [meetSession, setMeetSession] = useState<MeetSessionRow | null>(null);
  const [meetAttestations, setMeetAttestations] = useState<string[]>([]);
+ // The meet.new flow's two inputs. The link is minted by Google at the
+ // moment the mentor opens meet.new, so it cannot be known here in
+ // advance — it comes back by paste. The host address is asked for
+ // separately because the platform CANNOT observe which account hosted:
+ // see t3a_d1_live_session_begin, which returns
+ // host_is_attested_not_verified true for exactly this reason.
+ const [meetLinkDraft, setMeetLinkDraft] = useState("");
+ const [meetHostDraft, setMeetHostDraft] = useState("");
+ const [meetNote, setMeetNote] = useState<string | null>(null);
+ // Stage 2 only. The mentor is assigned to this participant and meets
+ // them live, so the address reveals nothing they do not already hold.
+ // Stage 4 co-participant addresses are deliberately absent: identity is
+ // one of the seven unfinished parts of the impact assessment.
+ const [participantEmail, setParticipantEmail] = useState<string | null>(null);
+
+ const loadMeetSession = useCallback(async (stageEntryEventId: string) => {
+ const [{ data: ls }, { data: at }] = await Promise.all([
+ supabase
+ .from("t3a_d1_live_session")
+ .select("host_account_email, meet_link, link_status, visual_confirmation_recorded_at, e3_rests_on_attestation_alone")
+ .eq("stage_entry_event_id", stageEntryEventId)
+ .maybeSingle(),
+ supabase
+ .from("t3a_d1_session_attestation")
+ .select("attestation_code")
+ .eq("stage_entry_event_id", stageEntryEventId),
+ ]);
+ setMeetSession((ls as MeetSessionRow) ?? null);
+ setMeetAttestations(((at ?? []) as { attestation_code: string }[]).map((r) => r.attestation_code));
+ }, []);
 
  useEffect(() => {
  if (!entry) return;
  let cancelled = false;
  (async () => {
- const [{ data: ls }, { data: at }] = await Promise.all([
- supabase
- .from("t3a_d1_live_session")
- .select("host_account_email, meet_link, link_status, visual_confirmation_recorded_at, e3_rests_on_attestation_alone")
- .eq("stage_entry_event_id", entry.stage_entry_event_id)
- .maybeSingle(),
- supabase
- .from("t3a_d1_session_attestation")
- .select("attestation_code")
- .eq("stage_entry_event_id", entry.stage_entry_event_id),
- ]);
+ await loadMeetSession(entry.stage_entry_event_id);
  if (cancelled) return;
- setMeetSession((ls as MeetSessionRow) ?? null);
- setMeetAttestations(((at ?? []) as { attestation_code: string }[]).map((r) => r.attestation_code));
+ const { data: p } = await supabase
+ .from("profiles")
+ .select("email")
+ .eq("id", entry.participant_id)
+ .maybeSingle();
+ if (cancelled) return;
+ setParticipantEmail((p as { email: string | null } | null)?.email ?? null);
  })();
  return () => { cancelled = true; };
- }, [entry]);
+ }, [entry, loadMeetSession]);
+
+ /**
+  * Records the meet.new link and the account the mentor says hosted it.
+  *
+  * Through a route rather than a table write, because the table refuses
+  * every insert: RLS is enabled with a SELECT-only policy, so the four
+  * direct writes on this surface — this one, the attestations, the
+  * interruption report and the variance — were all refused and none of
+  * these controls had ever been able to function.
+  */
+ const beginMeetSession = async () => {
+ if (!entry) return;
+ setMeetNote(null);
+ const { data, error } = await supabase.rpc("t3a_d1_live_session_begin", {
+ p_stage_entry_event_id: entry.stage_entry_event_id,
+ p_meet_link: meetLinkDraft,
+ p_host_account_email: meetHostDraft,
+ });
+ if (error) { setMeetNote(error.message); return; }
+ const res = (data ?? {}) as Record<string, unknown>;
+ if (res.ok !== true) {
+ // The server's refusal and remedy, not a sentence invented here.
+ setMeetNote(
+ [res.refusal, res.remedy].filter(Boolean).join(" — ") || "That could not be recorded."
+ );
+ return;
+ }
+ setMeetLinkDraft("");
+ setMeetNote(
+ "Recorded. The platform cannot see which account meet.new hosted under, so A1 rests on your statement."
+ );
+ await loadMeetSession(entry.stage_entry_event_id);
+ };
+
+ /** CL-41. The actor is taken from the session server-side, never sent. */
+ const attest = async (code: string) => {
+ if (!entry) return;
+ setMeetNote(null);
+ const { data, error } = await supabase.rpc("t3a_d1_session_attest", {
+ p_stage_entry_event_id: entry.stage_entry_event_id,
+ p_attestation_code: code,
+ });
+ if (error) { setMeetNote(error.message); return; }
+ const res = (data ?? {}) as Record<string, unknown>;
+ if (res.ok !== true) { setMeetNote(String(res.refusal ?? "Refused.")); return; }
+ await loadMeetSession(entry.stage_entry_event_id);
+ };
 
  // CL-44. The mentor reports it; the platform records who and when, takes
  // the pause route and blocks advancement until restoration is recorded.
@@ -653,15 +732,22 @@ export default function Cockpit() {
  const [liveVideoInterrupted, setLiveVideoInterrupted] = useState(false);
  const reportLiveVideoInterrupted = async () => {
  if (!entry || !profile?.id) return;
- const { error } = await supabase.from("t3a_d1_live_session_event").insert({
- stage_entry_event_id: entry.stage_entry_event_id,
- event_kind: "video_interrupted",
- beat_code: varianceBeat || null,
- reported_by: profile.id,
- // REC-10: a platform failure never consumes a participant's attempt.
- rec10_classification: "technical_or_platform_failure",
+ // Through the route. This was a direct insert and was REFUSED by
+ // row-level security every time, so the control that replaced the
+ // automatic video-track detection could not be recorded either. The
+ // REC-10 classification is no longer sent from here: the platform
+ // derives it, because it decides whether an attempt is consumed and a
+ // mentor should not pick the consequence of their own report.
+ const { data, error } = await supabase.rpc("t3a_d1_live_session_report", {
+ p_stage_entry_event_id: entry.stage_entry_event_id,
+ p_event_kind: "video_interrupted",
+ p_beat_code: varianceBeat || null,
  });
  if (error) { setRefusal(error.message); return; }
+ if (((data ?? {}) as Record<string, unknown>).ok !== true) {
+ setRefusal(String(((data ?? {}) as Record<string, unknown>).refusal ?? "Refused."));
+ return;
+ }
  setLiveVideoInterrupted(true);
  setRefusal("LIVE_VIDEO_INTERRUPTED: the session is paused and the script cannot advance until you record restoration. Resuming is recorded as an administration variance. Where a beat's conduct could not be observed, each affected determination carries the technical-failure missing state and its conditions-compromised limitation — never a guessed answer.");
  };
@@ -791,6 +877,102 @@ export default function Cockpit() {
                Video runs in Google Meet in a separate window. Keep that
                window and this one both visible for the whole session.
              </p>
+
+             {/* Starting the meeting.
+                 The sign-in requirement comes BEFORE the link deliberately.
+                 The Workspace controls that keep recording, transcripts and
+                 note-taking off apply only to accounts in the CL-40
+                 organizational unit, so a meeting started from a personal
+                 account is not covered by any of them — and the mentor
+                 could still attest A2 in perfect good faith. That makes the
+                 account the meeting is started under the load-bearing step,
+                 not a preference. */}
+             {meetSession?.link_status !== "issued" &&
+              meetSession?.link_status !== "participant_admitted" && (
+               <div className="border-2 border-foreground p-3 space-y-3" data-region="meet-start">
+                 <div className="mono-label text-foreground">Start the meeting</div>
+                 <p className="text-sm text-foreground/80 leading-relaxed" data-meet="signin-requirement">
+                   <strong>First, check you are signed in to your
+                   @the3rdacademy.com account</strong> in the browser you are
+                   about to use. The controls that keep recording,
+                   transcripts and note-taking off apply only to that
+                   account — a meeting started from a personal account has
+                   none of them.
+                 </p>
+                 <a
+                   href="https://meet.new"
+                   target="_blank"
+                   rel="noreferrer"
+                   className="mono-label underline text-foreground hover:ink-vermilion"
+                   data-meet="new-link"
+                 >
+                   Open meet.new →
+                 </a>
+                 <p className="mono-label text-foreground/50">
+                   Then paste the link it gives you, and name the account it
+                   was hosted under.
+                 </p>
+                 <input
+                   className="w-full border-2 border-foreground bg-background px-2 py-1 text-sm rounded-none"
+                   placeholder="https://meet.google.com/..."
+                   aria-label="Meet link"
+                   data-meet="link-input"
+                   value={meetLinkDraft}
+                   onChange={(e) => setMeetLinkDraft(e.target.value)}
+                 />
+                 <input
+                   className="w-full border-2 border-foreground bg-background px-2 py-1 text-sm rounded-none"
+                   placeholder="you@the3rdacademy.com"
+                   aria-label="Host account"
+                   data-meet="host-input"
+                   value={meetHostDraft}
+                   onChange={(e) => setMeetHostDraft(e.target.value)}
+                 />
+                 <Button
+                   variant="outline"
+                   className="rounded-none border-2 border-foreground"
+                   data-control="meet-begin"
+                   onClick={beginMeetSession}
+                 >
+                   Record the meeting
+                 </Button>
+               </div>
+             )}
+
+             {/* Who to admit. Stage 2 only — see the state comment above. */}
+             {entry?.stage_code === "S2" && (
+               <div className="border border-foreground/40 p-3 space-y-1" data-region="meet-admit">
+                 <div className="mono-label text-foreground/60">Admit this participant</div>
+                 <div className="flex items-center gap-2">
+                   <code className="text-sm text-foreground" data-meet="participant-email">
+                     {participantEmail ?? "no address on file"}
+                   </code>
+                   {participantEmail && (
+                     <Button
+                       variant="outline"
+                       className="rounded-none border-2 border-foreground ml-auto"
+                       data-control="copy-participant-email"
+                       onClick={() => navigator.clipboard?.writeText(participantEmail)}
+                     >
+                       Copy
+                     </Button>
+                   )}
+                 </div>
+                 <p className="mono-label text-foreground/50">
+                   Admit them from the waiting room yourself — never
+                   automatically. The REC-11 visual confirmation is recorded
+                   against their verified Academy identity, not against the
+                   name Meet shows, which need not match.
+                 </p>
+               </div>
+             )}
+
+             {meetNote && (
+               <p className="text-sm text-foreground border-l-2 border-foreground pl-3" data-meet="note">
+                 {meetNote}
+               </p>
+             )}
+
              <dl className="grid grid-cols-2 gap-2 text-sm">
                <dt className="mono-label text-foreground/60">Channel</dt>
                <dd className="text-foreground">Google Meet</dd>
@@ -801,6 +983,17 @@ export default function Cockpit() {
                <dt className="mono-label text-foreground/60">Host account</dt>
                <dd className="text-foreground" data-live="host">
                  {meetSession?.host_account_email ?? "—"}
+                 {/* Said on the face of the panel, because the difference
+                     between a checked fact and a stated one is exactly what
+                     a reader of this record needs to know. meet.new mints
+                     the meeting in the mentor's browser, so the platform
+                     checks the DOMAIN of what it was told and cannot check
+                     that it was told the truth. */}
+                 {meetSession?.host_account_email && (
+                   <span className="mono-label text-foreground/50 block" data-live="host-basis">
+                     stated by the mentor · domain checked, account not verified
+                   </span>
+                 )}
                </dd>
                <dt className="mono-label text-foreground/60">Visual confirmation</dt>
                <dd className="text-foreground" data-live="rec11">
@@ -812,17 +1005,39 @@ export default function Cockpit() {
                  recorded. The server decides; this only shows it. */}
              <div className="border-t border-foreground/25 pt-3">
                <div className="mono-label text-foreground/60 mb-2">Session-start attestations</div>
+               {/* Each is now recordable. They were not: the table refused
+                   every insert, so t3a_d1_live_capture_permitted would have
+                   refused every real session with SESSION_ATTESTATION_MISSING
+                   permanently. The server decides WHICH are required — A4 is
+                   Stage 4 only and the route refuses it at Stage 2 — so this
+                   offers all four and lets the refusal speak. */}
                <ul className="space-y-1 text-sm" data-live="attestations">
-                 {LIVE_ATTESTATIONS.map((a) => (
-                   <li key={a.code} className="flex gap-2" data-attestation={a.code}>
-                     <span className="mono-label text-foreground/60">{a.code}</span>
-                     <span className="text-foreground/80">{a.text}</span>
-                     <span className="mono-label ml-auto">
-                       {meetAttestations.includes(a.code) ? "attested" : "—"}
-                     </span>
-                   </li>
-                 ))}
+                 {LIVE_ATTESTATIONS.map((a) => {
+                   const done = meetAttestations.includes(a.code);
+                   return (
+                     <li key={a.code} className="flex gap-2 items-start" data-attestation={a.code}>
+                       <span className="mono-label text-foreground/60">{a.code}</span>
+                       <span className="text-foreground/80">{a.text}</span>
+                       {done ? (
+                         <span className="mono-label ml-auto whitespace-nowrap">attested</span>
+                       ) : (
+                         <button
+                           type="button"
+                           className="mono-label ml-auto whitespace-nowrap underline text-foreground hover:ink-vermilion"
+                           data-control={`attest-${a.code}`}
+                           onClick={() => attest(a.code)}
+                         >
+                           attest
+                         </button>
+                       )}
+                     </li>
+                   );
+                 })}
                </ul>
+               <p className="mono-label text-foreground/50 mt-2">
+                 An attestation names you and the time you made it, and is
+                 not edited afterwards.
+               </p>
              </div>
 
              {/* CL-40. The honest default is the weaker claim. */}
