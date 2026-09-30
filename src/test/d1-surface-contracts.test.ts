@@ -48,6 +48,12 @@ const acceptance = read(ACCEPTANCE);
 const COCKPIT = "src/pages/dashboard/mentor/Cockpit.tsx";
 const cockpit = read(COCKPIT);
 
+const S1DELIVERY = "src/pages/dashboard/candidate/S1Delivery.tsx";
+const s1Delivery = read(S1DELIVERY);
+
+const SAFETYNOTICE = "src/components/dashboard/ParticipantSafetyNotice.tsx";
+const safetyNotice = read(SAFETYNOTICE);
+
 /** Strip comments so prose about a prohibition is not read as the thing. */
 const code = (src: string) =>
   src
@@ -63,6 +69,8 @@ const reconsiderationCode = code(reconsideration);
 const workSampleCode = code(workSample);
 const groupSessionCode = code(groupSession);
 const refCardCode = code(refCard);
+const s1DeliveryCode = code(s1Delivery);
+const safetyNoticeCode = code(safetyNotice);
 const reportFaceCode = code(reportFace);
 const acceptanceCode = code(acceptance);
 const cockpitCode = code(cockpit);
@@ -989,6 +997,153 @@ describe("Report face — entitlement, not identifier possession", () => {
   });
 });
 
+describe("Stage 1 delivery — CORR-006 CX-08 and CX-13", () => {
+  /**
+   * The strongest thing these assert is an ABSENCE: that no word a
+   * participant reads is written in this file. Everything else on the screen
+   * is a consequence of that.
+   */
+  it("hardcodes no crisis or support wording", () => {
+    // The single most important literal that must not be here. Annex C says
+    // the support information is held as configuration "so it can be
+    // changed or localized without a code change", and a participant
+    // outside Canada needs their own emergency number. A 9-8-8 baked into a
+    // component is a wrong number nobody can correct without a deploy.
+    // The DIGITS are checked against the RAW source, comments included. A
+    // number in a comment is one careless edit away from being a number in
+    // the markup, and a wrong one is a number a distressed person dials.
+    expect(s1Delivery).not.toMatch(/9-8-8|988|9-1-1|911/);
+    // The WORDING is checked against the comment-stripped source. NARROWED
+    // from the raw source while writing CX-31: forbidding the word "crisis"
+    // anywhere stopped a comment from explaining why the digits may not
+    // appear, which is the opposite of useful. What must not exist is crisis
+    // phrasing in the markup.
+    expect(s1DeliveryCode).not.toMatch(/crisis|harming yourself|emergency/i);
+  });
+
+  it("renders no situation, reveal or framing text of its own", () => {
+    // No sentence-shaped string literal. Control labels are short; anything
+    // with sentence punctuation inside quotes is participant wording.
+    const literals = [...s1DeliveryCode.matchAll(/"([^"\n]{25,})"/g)].map((m) => m[1]);
+    const prose = literals.filter((l) => /[.?!] |[.?!]$/.test(l) && !/^[A-Z_]+$/.test(l));
+    expect(prose).toEqual([]);
+  });
+
+  it("takes every word from the two server routes", () => {
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_render"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_participant_notices"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_reveal_shown"/);
+    expect(s1DeliveryCode).toMatch(/rpc\("t3a_d1_s1_reveal_submit"/);
+    // Never a direct write to the capture table.
+    expect(s1DeliveryCode).not.toMatch(
+      /from\("t3a_d1_s1_reveal_response"\)\s*\.\s*(insert|update|upsert|delete)/
+    );
+  });
+
+  it("shows no progress except the part number (DS-4)", () => {
+    expect(s1DeliveryCode).not.toMatch(/Progress|progressbar|percent|%\s*</i);
+    // The part number, and nothing that counts what is left.
+    expect(s1DeliveryCode).toMatch(/Part \{/);
+    // RESTATED while writing it. The first form forbade the bare word
+    // "remaining", which matched the server field
+    // seconds_remaining_at_which_to_show — a field name, not something a
+    // participant reads. What DS-4 forbids is a TOTAL or a COUNT LEFT, so
+    // that is what this asks for now.
+    expect(s1DeliveryCode).not.toMatch(/parts? remaining|remaining parts?|\bof \d+\b/i);
+    expect(s1DeliveryCode).not.toMatch(/\{reveals\.length\}|of \{reveals/);
+  });
+
+  it("gives no feedback on a response (DS-3)", () => {
+    expect(s1DeliveryCode).not.toMatch(
+      /correct|incorrect|well done|good answer|score|rating|feedback|graded/i
+    );
+  });
+
+  it("never shows the source title, sheet or applicability (DS-5)", () => {
+    expect(s1DeliveryCode).not.toMatch(/source_sheet|\bapplicability\b/);
+    // render returns no title; asserting the screen does not reach for one.
+    expect(s1DeliveryCode).not.toMatch(/render\.title|\.body\s*\?\?\.\s*title/);
+  });
+
+  it("shows nothing a confirmer does (DS-6)", () => {
+    expect(s1DeliveryCode).not.toMatch(
+      /determination|statement|t3a_d1_s1_determination|t3a_d1_s1_confirmation/i
+    );
+  });
+
+  it("offers no way back to a submitted response (DS-2)", () => {
+    expect(s1DeliveryCode).not.toMatch(/\bBack\b|\bEdit\b|goBack|previous|undo|recall/i);
+  });
+
+  it("imposes no content limit on the participant (AC-B8)", () => {
+    // A maxLength here would truncate silently, which is what AC-B8 forbids.
+    expect(s1DeliveryCode).not.toMatch(/maxLength|maxlength/);
+  });
+
+  it("shows no running clock, and the timing notice only once (AC-B4)", () => {
+    expect(s1DeliveryCode).not.toMatch(/setInterval|countdown|timeLeft|clock/i);
+    // A ref, so a re-render cannot show it twice.
+    expect(s1DeliveryCode).toMatch(/timingNoticeShown\.current/);
+  });
+
+  it("offers no pause (AC-B6)", () => {
+    expect(s1DeliveryCode).not.toMatch(/\bpause\b/i);
+  });
+});
+
+
+describe("CX-31 — where the Annex C safety wording is shown", () => {
+  /**
+   * The participant-facing files, for the ordering rule. A file added here
+   * later gets the rule for free, which is the point: the screen CX-31 is
+   * really about — the pre-session screen — does not exist yet.
+   */
+  const PARTICIPANT_FACING: Array<[string, string]> = [
+    [S1DELIVERY, s1Delivery],
+    ["src/pages/dashboard/candidate/WorkSample.tsx", read("src/pages/dashboard/candidate/WorkSample.tsx")],
+    ["src/pages/dashboard/candidate/D1Pathway.tsx", read("src/pages/dashboard/candidate/D1Pathway.tsx")],
+    ["src/pages/dashboard/candidate/Disclosures.tsx", disclosures],
+  ];
+
+  it("holds no support wording in the component that renders it", () => {
+    // Annex C.3 holds the support information as CONFIGURATION so it can be
+    // localized. A number written here is a wrong number for a participant
+    // outside Canada that nobody can correct without a deploy.
+    expect(safetyNotice).not.toMatch(/9-8-8|988|9-1-1|911/);
+    expect(safetyNoticeCode).toMatch(/rpc\("t3a_participant_safety_notice"/);
+    // Where the server gives nothing, it renders nothing rather than a
+    // sentence of its own.
+    expect(safetyNoticeCode).toMatch(/return null/);
+  });
+
+  it("shows the support information on the Stage 1 and Stage 3 screens", () => {
+    expect(code(s1Delivery)).toMatch(/<ParticipantSafetyNotice[\s\S]*?stageCode="S1"/);
+    expect(code(read("src/pages/dashboard/candidate/WorkSample.tsx")))
+      .toMatch(/<ParticipantSafetyNotice[\s\S]*?stageCode="S3"/);
+  });
+
+  it("puts the support information before any Google Meet link, on every participant screen", () => {
+    // THE RULE THAT MATTERS FOR A SCREEN NOBODY HAS BUILT YET. No
+    // participant-facing screen shows a Meet link today, so this passes
+    // vacuously — and it is the assertion that will fail the moment one does
+    // without the support information above it.
+    for (const [name, src] of PARTICIPANT_FACING) {
+      const body = code(src);
+      const meet = body.search(/meet\.new|meet\.google\.com|meet_link/);
+      if (meet < 0) continue;
+      const notice = body.search(/<ParticipantSafetyNotice/);
+      expect(notice, `${name} shows a Meet link and no support information`).toBeGreaterThanOrEqual(0);
+      expect(notice, `${name} shows a Meet link before the support information`).toBeLessThan(meet);
+    }
+  });
+
+  it("never writes a crisis number into a participant-facing screen", () => {
+    for (const [name, src] of PARTICIPANT_FACING) {
+      expect(src, `${name} hardcodes a crisis number`).not.toMatch(/9-8-8|9-1-1/);
+    }
+  });
+});
+
 describe("REC-07 Source approval — a signature, not a calculation", () => {
   const APPROVAL = "src/pages/dashboard/mentor/SourceApproval.tsx";
   const approval = read(APPROVAL);
@@ -1016,7 +1171,45 @@ describe("REC-07 Source approval — a signature, not a calculation", () => {
   });
 
   it("cannot offer approval for a version carrying no hash", () => {
-    expect(approvalCode).toMatch(/disabled=\{working === s\.content_object_id \|\| !hash\}/);
+    // RESTATED under CORR-006 CX-18. This asserted the whole disabled
+    // expression character for character, so adding the basis gate beside
+    // the hash gate failed it — while the thing it exists to protect, that
+    // a hashless version cannot be approved, was never weakened. It now
+    // asserts that !hash is one of the conditions, which is the claim.
+    expect(approvalCode).toMatch(/disabled=\{[^}]*!hash[^}]*\}/);
+  });
+
+  describe("CX-18 — an approval records what it rested on", () => {
+    it("gates the approve control on a chosen basis", () => {
+      expect(approvalCode).toMatch(/basisIsComplete\(s\.content_object_id\)/);
+      expect(approvalCode).toMatch(/disabled=\{[^}]*!basisIsComplete\([^}]*\}/);
+    });
+
+    it("sends the basis to the governed route with the approval", () => {
+      expect(approvalCode).toMatch(/p_basis_kind:/);
+      expect(approvalCode).toMatch(/p_referenced_identifier:/);
+    });
+
+    it("takes the closed list from the server rather than restating it", () => {
+      // A fourth option written into the screen is a fourth option the
+      // route refuses, met after the person has already chosen it.
+      expect(approvalCode).toMatch(/rpc\("t3a_d1_approval_basis_closed_list"\)/);
+      expect(approvalCode).not.toMatch(
+        /(bases|BASIS_KINDS)\s*(:|=)\s*\[\s*\{[^}]*requires_referenced_identifier/
+      );
+    });
+
+    it("asks for no basis when withdrawing", () => {
+      // A withdrawal rests on nothing being read. Sending a basis with one
+      // would record a reading that did not happen.
+      expect(approvalCode).toMatch(/status === "approved" \? \(picked\?\.kind \?\? null\) : null/);
+    });
+
+    it("never writes the basis onto the approval row", () => {
+      expect(approvalCode).not.toMatch(
+        /from\("t3a_d1_approval_basis"\)\s*\.\s*(insert|update|upsert|delete)/
+      );
+    });
   });
 
   it("withdraws by recording a withdrawal rather than erasing", () => {

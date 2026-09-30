@@ -24,6 +24,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ParticipantSafetyNotice from "@/components/dashboard/ParticipantSafetyNotice";
 import {
   DashboardPageHeader,
   DashSection,
@@ -205,6 +206,11 @@ const WorkSample = () => {
         meta="What you submit is read for what it shows about how you worked. It is not graded, and no judgment about its quality is recorded."
         actions={<LedgerBadge variant="outline">Not graded</LedgerBadge>}
       />
+
+      {/* CX-31: on EVERY Stage 3 screen, with the C4a line. Placed above the
+          brief because a participant who needs it should not have to read
+          past the work to find it. Its wording comes from Annex C. */}
+      <ParticipantSafetyNotice stageCode="S3" />
 
       {!current ? (
         <DashSection eyebrow="§ I · Brief" title="Nothing assigned">
