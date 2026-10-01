@@ -105,7 +105,14 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
           title={revealed ? hide : show}
           className={cn(
             "absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-8 w-8 rounded-md",
-            "text-foreground/60 hover:text-foreground",
+            // The icon reads against the input's background. On this app's
+            // dark theme that is --card and 70%-of-white gives enough
+            // contrast; on an autofill-tinted field the index.css autofill
+            // override keeps the background dark too. We also force an
+            // explicit text color on the button rather than letting the icon
+            // inherit from --foreground, so a theme that lightens the input
+            // (another dialog, say) cannot wash the icon out.
+            "text-foreground/80 hover:text-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/60"
           )}
           tabIndex={0}
