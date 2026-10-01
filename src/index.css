@@ -139,6 +139,36 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /*
+   * Chrome autofill override.
+   *
+   * Chrome paints autofilled inputs with its own light lavender background
+   * (#e8f0fe or similar) and overrides the input's text color to a near-black.
+   * On this app's dark theme that broke two things on the sign-in form at
+   * once: it made the typed password hard to read against the right value
+   * of --foreground, and it made the eye icon (`text-foreground/60`,
+   * which resolves to 60% white) invisible against the lavender fill.
+   *
+   * The fix:
+   *   -webkit-box-shadow with a very large inset shadow in the --card color
+   *     paints over Chrome's autofill highlight. The transition line keeps
+   *     Chrome's own "autofill animation" from reverting it for one frame.
+   *   -webkit-text-fill-color overrides the text color Chrome forces.
+   *   caret-color keeps the caret visible.
+   *
+   * Scoped to inputs rather than applied globally so it does not touch
+   * autofill on anything that is not an input (textareas, selects).
+   */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px hsl(var(--card)) inset !important;
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
+    caret-color: hsl(var(--foreground));
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 /* ============================================================================
