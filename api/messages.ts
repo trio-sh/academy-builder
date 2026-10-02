@@ -177,16 +177,18 @@ const OPENROUTER_MODELS = new Set([
   "nex-agi/nex-n2.5-pro:free",
   "nex-agi/nex-n2.5-mini:free",
   "qwen/qwen3.8-27b:free",
+  // Refreshed 2026-09-28
+  "stealth/space-bunny-alpha",               // ctx=1000000, max_tok=524288, coding/agentic (Stealth AI)
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-09-21
+  // Top 5 free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-09-28
   "thinkingmachines/inkling-small:free",       // ctx=1048576, max_tok=262144
+  "stealth/space-bunny-alpha",                 // ctx=1000000, max_tok=524288 — NEW
   "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
   "nvidia/nemotron-3.5-lightning:free",        // ctx=1000000, max_tok=65536
-  "nex-agi/nex-n2.5-pro:free",                // ctx=262144,  max_tok=235929 — NEW
-  "nex-agi/nex-n2.5-mini:free",               // ctx=262144,  max_tok=235929 — NEW
+  "dots-studio/dots-3-note-preview:free",      // ctx=512000,  max_tok=460800 — PROMOTED
   // OpenRouter free models (tool-capable)
   "tencent/hy3:free",
   "moonshotai/kimi-k2.6:free",
@@ -218,6 +220,8 @@ const KILO_FALLBACK_MODELS = [
   "nex-agi/nex-n2.5-pro:free",                // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
   "nex-agi/nex-n2.5-mini:free",               // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
   "qwen/qwen3.8-27b:free",                    // ctx=262144, max_tok=235929, coding (Qwen/Alibaba)
+  // OpenRouter free models added 2026-09-28
+  "stealth/space-bunny-alpha",                 // ctx=1000000, max_tok=524288, coding/agentic (Stealth AI)
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
