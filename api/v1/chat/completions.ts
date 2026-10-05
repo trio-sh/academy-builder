@@ -63,16 +63,21 @@ const OPENROUTER_MODELS = new Set([
   "nex-agi/nex-n2.5-pro:free",
   "nex-agi/nex-n2.5-mini:free",
   "qwen/qwen3.8-27b:free",
+  // Refreshed 2026-10-05
+  "stealth/space-bunny-alpha",
+  "apodex/apodex-1.1-mini:free",
+  "inclusionai/ling-3.1-flash",
+  "inclusionai/ling-3.0-flash-sante:free",
 ]);
 
 const DEFAULT_MODEL = "kilo-auto/free";
 const FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-09-21
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-10-05
   "thinkingmachines/inkling-small:free",             // ctx=1048576, max_tok=262144
+  "stealth/space-bunny-alpha",                       // ctx=1000000, max_tok=524288 — NEW
   "nvidia/nemotron-3-ultra-550b-a55b:free",          // ctx=1000000, max_tok=65536
   "nvidia/nemotron-3.5-lightning:free",              // ctx=1000000, max_tok=65536
-  "nex-agi/nex-n2.5-pro:free",                      // ctx=262144,  max_tok=235929 — NEW
-  "nex-agi/nex-n2.5-mini:free",                     // ctx=262144,  max_tok=235929 — NEW
+  "apodex/apodex-1.1-mini:free",                    // ctx=262144,  max_tok=235929 — NEW
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "tencent/hy3:free",
@@ -104,6 +109,9 @@ const FALLBACK_MODELS = [
   "nex-agi/nex-n2.5-pro:free",                     // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
   "nex-agi/nex-n2.5-mini:free",                    // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
   "qwen/qwen3.8-27b:free",                         // ctx=262144, max_tok=235929, coding (Qwen/Alibaba)
+  // OpenRouter free models added 2026-10-05
+  "inclusionai/ling-3.1-flash",                    // ctx=262144, max_tok=32768, coding/agentic (InclusionAI) — NEW
+  "inclusionai/ling-3.0-flash-sante:free",         // ctx=262144, max_tok=32768, coding/agentic (InclusionAI) — NEW
 ];
 
 const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
