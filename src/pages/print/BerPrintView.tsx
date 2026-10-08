@@ -137,20 +137,11 @@ body.ber-print-root {
   padding-bottom: 8mm; margin-bottom: 10mm;
 }
 .ber-brand { display: flex; align-items: center; gap: 10mm; }
-.ber-shield {
+.ber-brand-mark {
   width: 24mm; height: 24mm;
-  background: linear-gradient(135deg, var(--t3a-indigo) 0%, var(--t3a-purple) 100%);
-  color: var(--ink);
-  border-radius: 2mm;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-weight: 460;
-  font-size: 60pt; line-height: 1; letter-spacing: -0.03em; position: relative;
-}
-.ber-shield::after {
-  content: ""; position: absolute; inset: 1.2mm;
-  border: 0.6px solid hsla(0 0% 100% / 0.35); border-radius: 1mm;
+  object-fit: contain;
+  flex-shrink: 0;
+  user-select: none;
 }
 .ber-wordmark { display: flex; flex-direction: column; gap: 0.8mm; }
 .ber-wordmark .mast-title {
@@ -425,7 +416,13 @@ export default function BerPrintView() {
       <div className="ber-page">
         <header className="ber-masthead">
           <div className="ber-brand">
-            <div className="ber-shield">3</div>
+            <img
+              src="/logo.png"
+              alt="The 3rd Academy"
+              className="ber-brand-mark"
+              width={96}
+              height={96}
+            />
             <div className="ber-wordmark">
               <div className="mast-title">The 3rd Academy</div>
               <div className="mast-sub">Register · Behavioral Evidence</div>
