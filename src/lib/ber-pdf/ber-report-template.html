@@ -78,21 +78,7 @@ body {
   padding-bottom: 8mm; margin-bottom: 10mm;
 }
 .brand { display: flex; align-items: center; gap: 10mm; }
-.shield {
-  width: 24mm; height: 24mm;
-  background: linear-gradient(135deg, var(--t3a-indigo) 0%, var(--t3a-purple) 100%);
-  color: var(--ink);
-  border-radius: 2mm;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-weight: 460;
-  font-size: 60pt; line-height: 1; letter-spacing: -0.03em; position: relative;
-}
-.shield::after {
-  content: ""; position: absolute; inset: 1.2mm;
-  border: 0.6px solid hsla(0 0% 100% / 0.35); border-radius: 1mm;
-}
+.brand-mark { width: 24mm; height: 24mm; object-fit: contain; flex-shrink: 0; user-select: none; }
 .wordmark { display: flex; flex-direction: column; gap: 0.8mm; }
 .wordmark .mast-title {
   font-family: 'Fraunces', Georgia, serif;
@@ -293,7 +279,7 @@ body {
 <div class="page" id="page">
   <header class="masthead">
     <div class="brand">
-      <div class="shield">3</div>
+      <div class="brand-mark" src="/logo.png" alt="The 3rd Academy" />
       <div class="wordmark">
         <div class="mast-title">The 3rd Academy</div>
         <div class="mast-sub">Register · Behavioral Evidence</div>
