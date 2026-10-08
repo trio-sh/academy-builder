@@ -50,6 +50,7 @@ import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
 import VerifyBER from "./pages/VerifyBER";
+import BerPrintView from "./pages/print/BerPrintView";
 import RecipientReportAccess from "@/pages/RecipientReportAccess";
 import VerifyReportToken from "./pages/VerifyReportToken";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -107,6 +108,7 @@ const App = () => (
             <Route path="/verify/ber/:id" element={<VerifyBER />} />
             <Route path="/verify/token" element={<VerifyReportToken />} />
             <Route path="/verify/token/:token" element={<VerifyReportToken />} />
+            <Route path="/print/ber/:berId" element={<BerPrintView />} />
             <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}

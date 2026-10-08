@@ -117,7 +117,23 @@ const ReportFace = () => {
         eyebrow="§ 6 · Report face"
         title="The eleven blocks, in order"
         meta="The controlled texts render verbatim. The traceability sheet is never part of the face."
-        actions={<LedgerBadge variant="outline">No override</LedgerBadge>}
+        actions={
+          <div className="flex items-center gap-3">
+            {selected && face?.rendered && (
+              <button
+                type="button"
+                onClick={() =>
+                  window.open(`/print/ber/${selected}`, "_blank", "noopener,noreferrer")
+                }
+                className="mono-label text-background bg-foreground hover:ink-vermilion hover:bg-foreground/90 px-4 py-2 border border-foreground"
+                title="Open the printable record in a new tab"
+              >
+                Download PDF →
+              </button>
+            )}
+            <LedgerBadge variant="outline">No override</LedgerBadge>
+          </div>
+        }
       />
 
       <DashSection eyebrow="§ I · Report" title="Which report">
