@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Behavioral Evidence Report — The 3rd Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #141210;
+    --ink-soft: #3a3530;
+    --ink-mute: #6a6460;
+    --rule: #2a2520;
+    --paper: #f4ede0;
+    --paper-tint: #efe6d4;
+    --vermilion: #c7322c;
+    --vermilion-dark: #972722;
+    --gold-leaf: #a07a2e;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, 'Times New Roman', serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+  }
+  @page { size: A4; margin: 18mm 20mm 22mm 20mm; }
+
+  .page {
+    position: relative;
+    padding: 0;
+    max-width: 170mm;
+    margin: 0 auto;
+  }
+  .page::before {
+    /* Paper grain */
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(rgba(50,30,10,0.03) 1px, transparent 1.5px),
+      radial-gradient(rgba(50,30,10,0.02) 1px, transparent 1.5px);
+    background-size: 7px 7px, 11px 11px;
+    background-position: 0 0, 3px 4px;
+    opacity: 0.9;
+    z-index: 0;
+  }
+  .page > * { position: relative; z-index: 1; }
+
+  /* ── Masthead ───────────────────────────────────────────────── */
+  .masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1.5px solid var(--rule);
+    padding-bottom: 8mm;
+    margin-bottom: 10mm;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10mm;
+  }
+  .shield {
+    width: 24mm; height: 24mm;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 2mm;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 60pt;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    position: relative;
+  }
+  .shield::after {
+    content: "";
+    position: absolute;
+    inset: 1.2mm;
+    border: 0.6px solid rgba(244, 237, 224, 0.35);
+    border-radius: 1mm;
+    pointer-events: none;
+  }
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8mm;
+  }
+  .wordmark .mast-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 22pt;
+    line-height: 1;
+    letter-spacing: 0.005em;
+  }
+  .wordmark .mast-sub {
+    font-family: 'JetBrains Mono', ui-monospace, 'Menlo', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .masthead-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+  .form-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .doc-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    color: var(--ink-soft);
+    word-break: break-all;
+  }
+
+  /* ── Report title ──────────────────────────────────────────── */
+  .doc-title {
+    text-align: center;
+    margin: 2mm 0 14mm 0;
+  }
+  .doc-title .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    margin-bottom: 3mm;
+  }
+  .doc-title h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 42pt;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    margin: 0 0 3mm 0;
+  }
+  .doc-title h1 em {
+    font-style: italic;
+    color: var(--vermilion);
+  }
+  .doc-title .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13pt;
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 110mm;
+    margin: 0 auto;
+  }
+
+  /* ── Header particulars grid ───────────────────────────────── */
+  .particulars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 5mm 8mm;
+    padding: 5mm 7mm;
+    border-top: 0.5px solid var(--rule);
+    border-bottom: 0.5px solid var(--rule);
+    margin-bottom: 10mm;
+  }
+  .particular {
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+  .particular .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 6.5pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .particular .value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12pt;
+    line-height: 1.1;
+  }
+  .particular .value.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    word-break: break-all;
+  }
+  .pill {
+    display: inline-block;
+    padding: 1mm 2.5mm;
+    border: 0.5px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .pill.vermilion {
+    background: var(--vermilion);
+    color: var(--paper);
+    border-color: var(--vermilion);
+  }
+
+  /* ── Blocks ────────────────────────────────────────────────── */
+  .block {
+    margin-bottom: 10mm;
+    page-break-inside: avoid;
+  }
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 5mm;
+    padding-bottom: 2mm;
+    border-bottom: 0.5px solid var(--rule);
+    margin-bottom: 4mm;
+  }
+  .block-no {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18pt;
+    font-weight: 500;
+    color: var(--vermilion);
+    line-height: 1;
+    min-width: 10mm;
+  }
+  .block-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15pt;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    flex: 1;
+  }
+  .block-ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .block-body {
+    padding-left: 15mm;
+  }
+  .controlled {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .controlled.verbatim::before {
+    content: "“";
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24pt;
+    line-height: 0;
+    color: var(--vermilion);
+    margin-right: 1mm;
+    vertical-align: -4mm;
+  }
+
+  .not-rendering {
+    display: inline-block;
+    padding: 2mm 4mm;
+    background: var(--paper-tint);
+    border-left: 1.5px solid var(--vermilion);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+  }
+  .not-rendering .reason {
+    color: var(--ink);
+    font-weight: 500;
+    margin-left: 2mm;
+  }
+
+  /* ── Observed conduct table (block 4) ──────────────────────── */
+  .conduct-table {
+    border-top: 0.5px solid var(--rule);
+    margin-top: 2mm;
+  }
+  .conduct-row {
+    display: grid;
+    grid-template-columns: 14mm 14mm 1fr;
+    gap: 4mm;
+    padding: 3mm 0;
+    border-bottom: 0.5px solid rgba(42,37,32,0.25);
+    align-items: start;
+  }
+  .conduct-row .dim, .conduct-row .stage {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    padding-top: 0.5mm;
+  }
+  .conduct-row .statement {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+  .conduct-row .statement .mark {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--vermilion);
+    margin: 0 1mm;
+  }
+
+  /* ── Footer / colophon ─────────────────────────────────────── */
+  .colophon {
+    margin-top: 14mm;
+    padding-top: 6mm;
+    border-top: 1.5px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4mm;
+    align-items: end;
+  }
+  .colophon .issuer {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11pt;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .colophon .seal {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+  }
+  .colophon .seal .mono-stack {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
+  .colophon .stamp {
+    width: 20mm; height: 20mm;
+    border: 1.5px double var(--vermilion);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    text-align: center;
+    line-height: 1.2;
+    transform: rotate(-6deg);
+  }
+
+  /* Verification URL */
+  .verification {
+    margin-top: 4mm;
+    padding: 3mm 4mm;
+    background: var(--paper-tint);
+    border: 0.5px dashed var(--ink-mute);
+    text-align: center;
+  }
+  .verification .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 1mm;
+  }
+  .verification .url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--vermilion-dark);
+    letter-spacing: 0.03em;
+  }
+
+  @media print {
+    html, body { background: var(--paper); }
+  }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <header class="masthead">
+    <div class="brand">
+      <div class="shield">3</div>
+      <div class="wordmark">
+        <div class="mast-title">The 3rd Academy</div>
+        <div class="mast-sub">Register · Behavioral Evidence</div>
+      </div>
+    </div>
+    <div class="masthead-right">
+      <div class="form-number">Form No. T3A-D1 · 006</div>
+      <div class="doc-id" id="doc-id">—</div>
+    </div>
+  </header>
+
+  <section class="doc-title">
+    <div class="eyebrow">§ VI · Report face</div>
+    <h1>Behavioral <em>Evidence</em> Report</h1>
+    <div class="subtitle">A record of selected conduct observed in defined workplace situations — composed from recorded factual determinations under authorized observation.</div>
+  </section>
+
+  <section class="particulars" id="particulars"></section>
+
+  <main id="blocks"></main>
+
+  <footer class="colophon">
+    <div class="issuer">
+      Issued by <strong>The 3rd Academy</strong>, Register of Behavioral Evidence.<br>
+      This report contains no score, rank or recommendation. Relevance is for the reader to determine.
+    </div>
+    <div class="seal">
+      <div class="mono-stack">
+        <div>Register seal</div>
+        <div id="issued-at">—</div>
+      </div>
+      <div class="stamp">Register<br>of Record</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const face = __FACE_JSON__;
+
+  const by = (n) => face.blocks.find(b => b.block_no === n);
+  const el = (sel) => document.querySelector(sel);
+  const fmtDate = (s) => {
+    if (!s) return "—";
+    const d = new Date(s);
+    return d.toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
+  };
+  const short = (uuid) => uuid ? ("BER-" + uuid.slice(0, 8).toUpperCase()) : "BER-PENDING";
+
+  // Header particulars
+  const shortId = short(face.ber_report_id);
+  el("#doc-id").textContent = shortId;
+
+  const particulars = [
+    { label: "Participant",       value: '<span class="pill">RELEASED ON VERIFICATION</span>' },
+    { label: "Dimension",         value: 'D' + (face.dimension_id || "—").replace(/^D/, "") },
+    { label: "Status",            value: '<span class="pill vermilion">' + (face.status || "—").replace(/_/g, " ") + '</span>' },
+    { label: "Record identifier", value: '<span class="value mono">' + (face.ber_report_id || "—") + '</span>', mono: true },
+    { label: "Issued at",         value: fmtDate(face.issued_at) || "— pending —" },
+    { label: "Amended at",        value: fmtDate(face.amended_at) },
+    { label: "Withdrawn at",      value: fmtDate(face.withdrawn_at) },
+    { label: "Current through",   value: '—' },
+  ];
+  el("#particulars").innerHTML = particulars.map(p => `
+    <div class="particular">
+      <div class="label">${p.label}</div>
+      <div class="value">${p.value}</div>
+    </div>`).join("");
+
+  // Blocks
+  const blockHTML = (b) => {
+    const headRef = b.controlled_text_ref ? `<span class="block-ref">§ ${b.controlled_text_ref}</span>` : "";
+    let body;
+    if (!b.renders) {
+      body = `<div class="not-rendering">BLOCK NOT RENDERING <span class="reason">${(b.not_rendering_reason || "CONDITION_NOT_MET").replace(/_/g, " ")}</span></div>`;
+    } else if (b.block_no === 4) {
+      const rows = (b.rows || []).map(r => `
+        <div class="conduct-row">
+          <div class="dim">${r.dimension_id}</div>
+          <div class="stage">${r.stage_code}</div>
+          <div class="statement">${r.statement.replace(" — ", '<span class="mark">—</span>')}</div>
+        </div>`).join("");
+      body = `<div class="conduct-table">${rows || '<em style="color:var(--ink-mute)">No conduct recorded for this participant in this dimension.</em>'}</div>`;
+    } else if (b.block_no === 7) {
+      body = `<div class="verification">
+        <div class="label">To verify this record</div>
+        <div class="url">verify.the3rdacademy.com/${shortId}</div>
+      </div>`;
+    } else if (b.controlled_text) {
+      body = `<div class="controlled ${b.controlled_text_is_verbatim ? "verbatim" : ""}">${b.controlled_text}</div>`;
+    } else {
+      body = `<div class="controlled" style="color:var(--ink-mute);font-style:italic">${b.render_behaviour || ""}</div>`;
+    }
+    return `
+      <section class="block">
+        <div class="block-head">
+          <div class="block-no">${String(b.block_no).padStart(2, "0")}</div>
+          <div class="block-name">${b.block_name}</div>
+          ${headRef}
+        </div>
+        <div class="block-body">${body}</div>
+      </section>`;
+  };
+  el("#blocks").innerHTML = face.blocks.map(blockHTML).join("");
+
+  el("#issued-at").textContent = fmtDate(face.issued_at || new Date().toISOString());
+</script>
+</body>
+</html>
