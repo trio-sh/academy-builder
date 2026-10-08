@@ -61,33 +61,45 @@ const fmtDate = (s?: string | null) => {
 const shortId = (uuid?: string | null) =>
   uuid ? "BER-" + uuid.slice(0, 8).toUpperCase() : "BER-PENDING";
 
+// The register face wears the house palette, same as every dashboard
+// and the public site: deep indigo canvas, white type, T3A indigo and
+// purple accents, cyan stamp. Fonts match the system — Fraunces for
+// display, Instrument Sans for body, JetBrains Mono for register labels.
 const PRINT_CSS = `
 :root {
-  --ink: #141210;
-  --ink-soft: #3a3530;
-  --ink-mute: #6a6460;
-  --rule: #2a2520;
-  --paper: #f4ede0;
-  --paper-tint: #efe6d4;
-  --vermilion: #c7322c;
-  --vermilion-dark: #972722;
+  --paper: hsl(240 25% 6%);
+  --paper-deep: hsl(240 22% 9%);
+  --paper-tint: hsl(240 22% 12%);
+  --ink: hsl(0 0% 100%);
+  --ink-soft: hsl(0 0% 85%);
+  --ink-mute: hsl(0 0% 60%);
+  --rule: hsla(0 0% 100% / 0.14);
+  --rule-strong: hsla(0 0% 100% / 0.28);
+  --t3a-indigo: hsl(239 84% 67%);
+  --t3a-purple: hsl(270 91% 65%);
+  --t3a-cyan: hsl(189 94% 60%);
 }
 html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
 body.ber-print-root {
-  font-family: 'Source Serif 4','Source Serif Pro', Georgia, 'Times New Roman', serif;
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   font-size: 10.5pt;
   line-height: 1.55;
   letter-spacing: 0.005em;
   min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 50% -200px, hsl(239 84% 10%), transparent 70%),
+    var(--paper);
 }
 .ber-print-root * { box-sizing: border-box; }
 
 .ber-toolbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 20px; border-bottom: 1px solid rgba(42,37,32,0.2);
-  background: var(--paper-tint);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--rule);
+  background: hsla(240 25% 6% / 0.92);
+  backdrop-filter: blur(6px);
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -100,7 +112,7 @@ body.ber-print-root {
   font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
   cursor: pointer;
 }
-.ber-toolbar button:hover { background: var(--vermilion); border-color: var(--vermilion); }
+.ber-toolbar button:hover { background: var(--t3a-indigo); border-color: var(--t3a-indigo); color: var(--ink); }
 
 .ber-page {
   position: relative;
@@ -112,8 +124,8 @@ body.ber-print-root {
   content: "";
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background-image:
-    radial-gradient(rgba(50,30,10,0.03) 1px, transparent 1.5px),
-    radial-gradient(rgba(50,30,10,0.02) 1px, transparent 1.5px);
+    radial-gradient(hsla(0 0% 100% / 0.025) 1px, transparent 1.5px),
+    radial-gradient(hsla(0 0% 100% / 0.015) 1px, transparent 1.5px);
   background-size: 7px 7px, 11px 11px;
   background-position: 0 0, 3px 4px;
 }
@@ -121,168 +133,210 @@ body.ber-print-root {
 
 .ber-masthead {
   display: flex; align-items: flex-end; justify-content: space-between;
-  border-bottom: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule-strong);
   padding-bottom: 8mm; margin-bottom: 10mm;
 }
 .ber-brand { display: flex; align-items: center; gap: 10mm; }
 .ber-shield {
-  width: 24mm; height: 24mm; background: var(--ink); color: var(--paper);
-  border-radius: 2mm; display: flex; align-items: center; justify-content: center;
-  font-family: 'Cormorant Garamond', serif; font-weight: 700;
+  width: 24mm; height: 24mm;
+  background: linear-gradient(135deg, var(--t3a-indigo) 0%, var(--t3a-purple) 100%);
+  color: var(--ink);
+  border-radius: 2mm;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 460;
   font-size: 60pt; line-height: 1; letter-spacing: -0.03em; position: relative;
 }
 .ber-shield::after {
   content: ""; position: absolute; inset: 1.2mm;
-  border: 0.6px solid rgba(244,237,224,0.35); border-radius: 1mm;
+  border: 0.6px solid hsla(0 0% 100% / 0.35); border-radius: 1mm;
 }
 .ber-wordmark { display: flex; flex-direction: column; gap: 0.8mm; }
 .ber-wordmark .mast-title {
-  font-family: 'Cormorant Garamond', serif; font-weight: 500;
-  font-size: 22pt; line-height: 1;
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 460;
+  font-size: 22pt; line-height: 1; letter-spacing: -0.025em;
 }
 .ber-wordmark .mast-sub {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7.5pt; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--ink-mute);
 }
 .ber-masthead-right { text-align: right; display: flex; flex-direction: column; gap: 1mm; }
 .ber-form-number {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7.5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
 }
 .ber-doc-id {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 8.5pt; color: var(--ink-soft); word-break: break-all;
 }
 
 .ber-doc-title { text-align: center; margin: 2mm 0 14mm 0; }
 .ber-doc-title .eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 8pt; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--vermilion); margin-bottom: 3mm;
+  color: var(--t3a-indigo); margin-bottom: 3mm;
 }
 .ber-doc-title h1 {
-  font-family: 'Cormorant Garamond', serif; font-weight: 400;
-  font-size: 42pt; line-height: 0.95; letter-spacing: -0.015em; margin: 0 0 3mm 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 460;
+  font-size: 44pt; line-height: 0.95; letter-spacing: -0.025em; margin: 0 0 3mm 0;
 }
-.ber-doc-title h1 em { font-style: italic; color: var(--vermilion); }
+.ber-doc-title h1 em {
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-weight: 500;
+  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 .ber-doc-title .subtitle {
-  font-family: 'Cormorant Garamond', serif; font-size: 13pt; font-style: italic;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 13pt; font-style: italic;
   color: var(--ink-soft); max-width: 110mm; margin: 0 auto;
 }
 
 .ber-particulars {
   display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 5mm 8mm; padding: 5mm 7mm;
-  border-top: 0.5px solid var(--rule); border-bottom: 0.5px solid var(--rule);
+  background: hsla(0 0% 100% / 0.02);
+  border: 0.5px solid var(--rule);
   margin-bottom: 10mm;
 }
 .ber-particular { display: flex; flex-direction: column; gap: 1mm; }
 .ber-particular .label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 6.5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
 }
 .ber-particular .value {
-  font-family: 'Cormorant Garamond', serif; font-size: 12pt; line-height: 1.1;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 12pt; line-height: 1.1; color: var(--ink);
 }
 .ber-particular .value.mono {
-  font-family: 'JetBrains Mono', monospace; font-size: 8pt; word-break: break-all;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace; font-size: 8pt; word-break: break-all;
+  color: var(--ink-soft);
 }
 .ber-pill {
-  display: inline-block; padding: 1mm 2.5mm; border: 0.5px solid var(--ink);
-  font-family: 'JetBrains Mono', monospace;
+  display: inline-block; padding: 1mm 2.5mm;
+  border: 0.5px solid var(--ink);
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7.5pt; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--ink);
 }
-.ber-pill.vermilion { background: var(--vermilion); color: var(--paper); border-color: var(--vermilion); }
+.ber-pill.vermilion {
+  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
+  color: var(--ink); border-color: transparent;
+}
 
 .ber-block { margin-bottom: 10mm; page-break-inside: avoid; }
 .ber-block-head {
   display: flex; align-items: baseline; gap: 5mm;
-  padding-bottom: 2mm; border-bottom: 0.5px solid var(--rule);
+  padding-bottom: 2mm; border-bottom: 0.5px solid var(--rule-strong);
   margin-bottom: 4mm;
 }
 .ber-block-no {
-  font-family: 'Cormorant Garamond', serif; font-size: 18pt; font-weight: 500;
-  color: var(--vermilion); line-height: 1; min-width: 10mm;
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-size: 20pt; font-weight: 460;
+  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  line-height: 1; min-width: 10mm;
 }
 .ber-block-name {
-  font-family: 'Cormorant Garamond', serif; font-size: 15pt; font-weight: 500;
-  letter-spacing: -0.005em; flex: 1;
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-size: 15pt; font-weight: 460; letter-spacing: -0.015em; flex: 1;
+  color: var(--ink);
 }
 .ber-block-ref {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7pt; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-mute);
 }
 .ber-block-body { padding-left: 15mm; }
-.ber-controlled { font-family: 'Source Serif 4', Georgia, serif; font-size: 10.5pt; line-height: 1.6; color: var(--ink); }
-.ber-controlled.verbatim::before {
-  content: "“"; font-family: 'Cormorant Garamond', serif;
-  font-size: 24pt; line-height: 0; color: var(--vermilion);
-  margin-right: 1mm; vertical-align: -4mm;
+.ber-controlled {
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 10.5pt; line-height: 1.6; color: var(--ink-soft);
 }
+.ber-controlled.verbatim { border-left: 2px solid var(--t3a-indigo); padding-left: 4mm; }
+
 .ber-not-rendering {
   display: inline-block; padding: 2mm 4mm;
-  background: var(--paper-tint); border-left: 1.5px solid var(--vermilion);
-  font-family: 'JetBrains Mono', monospace;
+  background: hsla(0 0% 100% / 0.03);
+  border-left: 1.5px solid var(--t3a-purple);
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 8pt; letter-spacing: 0.08em; color: var(--ink-mute);
 }
 .ber-not-rendering .reason { color: var(--ink); font-weight: 500; margin-left: 2mm; }
 
-.ber-conduct-table { border-top: 0.5px solid var(--rule); margin-top: 2mm; }
+.ber-conduct-table { border-top: 0.5px solid var(--rule-strong); margin-top: 2mm; }
 .ber-conduct-row {
   display: grid; grid-template-columns: 14mm 14mm 1fr;
   gap: 4mm; padding: 3mm 0;
-  border-bottom: 0.5px solid rgba(42,37,32,0.25); align-items: start;
+  border-bottom: 0.5px solid var(--rule); align-items: start;
 }
 .ber-conduct-row .dim, .ber-conduct-row .stage {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 8pt; letter-spacing: 0.15em; color: var(--ink-mute); padding-top: 0.5mm;
 }
-.ber-conduct-row .statement { font-family: 'Source Serif 4', Georgia, serif; font-size: 10.5pt; line-height: 1.5; }
-.ber-conduct-row .statement .mark { font-family: 'Cormorant Garamond', serif; color: var(--vermilion); margin: 0 1mm; }
+.ber-conduct-row .statement {
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 10.5pt; line-height: 1.5; color: var(--ink);
+}
+.ber-conduct-row .statement .mark {
+  font-family: 'Fraunces', Georgia, serif;
+  color: var(--t3a-indigo); margin: 0 1mm;
+}
 
 .ber-verification {
-  margin-top: 4mm; padding: 3mm 4mm;
-  background: var(--paper-tint); border: 0.5px dashed var(--ink-mute); text-align: center;
+  margin-top: 4mm; padding: 4mm 5mm;
+  background: hsla(239 84% 67% / 0.08);
+  border: 0.5px dashed var(--t3a-indigo); text-align: center;
 }
 .ber-verification .label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
   margin-bottom: 1mm;
 }
 .ber-verification .url {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10pt; color: var(--vermilion-dark); letter-spacing: 0.03em;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
+  font-size: 11pt; color: var(--t3a-cyan); letter-spacing: 0.03em;
 }
 
 .ber-colophon {
   margin-top: 14mm; padding-top: 6mm;
-  border-top: 1.5px solid var(--rule);
+  border-top: 1.5px solid var(--rule-strong);
   display: grid; grid-template-columns: 1fr auto; gap: 4mm; align-items: end;
 }
 .ber-colophon .issuer {
-  font-family: 'Cormorant Garamond', serif; font-size: 11pt; font-style: italic; color: var(--ink-soft);
+  font-family: 'Fraunces', Georgia, serif; font-size: 11pt; font-style: italic;
+  color: var(--ink-soft);
 }
+.ber-colophon .issuer strong { color: var(--ink); font-weight: 500; font-style: normal; }
 .ber-colophon .seal { display: flex; align-items: center; gap: 4mm; }
 .ber-colophon .mono-stack {
   text-align: right;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: '"JetBrains Mono"', ui-monospace, monospace;
   font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--ink-mute); line-height: 1.5;
 }
 .ber-stamp {
   width: 20mm; height: 20mm;
-  border: 1.5px double var(--vermilion); border-radius: 50%;
+  border: 1.5px double var(--t3a-cyan); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-size: 7pt; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--vermilion); text-align: center; line-height: 1.2;
+  color: var(--t3a-cyan); text-align: center; line-height: 1.2;
   transform: rotate(-6deg);
 }
 
 .ber-loading, .ber-refused {
   padding: 60px 20px; text-align: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-size: 20pt; color: var(--ink-mute);
 }
 
@@ -290,12 +344,14 @@ body.ber-print-root {
   @page { size: A4; margin: 18mm 20mm 22mm 20mm; }
   .ber-toolbar { display: none; }
   .ber-page { margin: 0 auto; }
-  html, body { background: var(--paper); }
+  html, body { background: var(--paper); color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 `;
 
+// Fraunces (display), Instrument Sans (body) and JetBrains Mono (labels)
+// are the register's three faces, same as the rest of the system.
 const FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&display=swap";
+  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap";
 
 export default function BerPrintView() {
   const { berId } = useParams<{ berId: string }>();
