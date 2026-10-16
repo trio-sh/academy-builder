@@ -1,0 +1,319 @@
+{
+  "fixture_id": "FIX-SPECIMEN",
+  "standard": "T3A-RCE-STD-001 Part F",
+  "note": "Frozen clean room package. Every resource Table 50.1 requires, plus the render manifest. No external lookup is needed to render the reference page.",
+  "versions": {
+    "controlled_text_register": "CTR-1.0",
+    "entry_library": "D1-LIB-1.0",
+    "visual_token_map": "VTM-1.0",
+    "dimension_register": "DIM-1.0",
+    "prohibited_vocabulary": "PV-D1-1.0"
+  },
+  "render_manifest": {
+    "report_id": "BER-2027-000184",
+    "report_version": "1.0",
+    "participant_display_name": "James Carter",
+    "participant_status": "current",
+    "issue_date": "2027-06-18",
+    "evidence_currency_date": "2027-12-18",
+    "release_state": "released",
+    "review_state": "reviewed",
+    "correction_state": "none_open",
+    "entry_library_version": "D1-LIB-1.0",
+    "controlled_text_versions": {
+      "*": "CTR-1.0"
+    },
+    "presentation_version": "VTM-1.0",
+    "output_mode": "demonstration",
+    "verification_display_address": "verify.the3rdacademy.com/BER-2027-000184",
+    "verification_reference": "BER-2027-000184",
+    "participant_photo": null,
+    "claim_packages": [
+      {
+        "dimension_id": "D1",
+        "entry_id": "ST-D1-011",
+        "entry_version": "D1-LIB-1.0",
+        "evidence_state": "bounded_recurrence",
+        "supporting_contexts": [
+          {
+            "context_instance_id": "CTX-000184-S1-01",
+            "stage_code": "S1"
+          },
+          {
+            "context_instance_id": "CTX-000184-S2-01",
+            "stage_code": "S2"
+          },
+          {
+            "context_instance_id": "CTX-000184-S4-01",
+            "stage_code": "S4"
+          }
+        ],
+        "bound_values": {},
+        "heading_id": "T-DIFF-TIMING-001",
+        "differences": [
+          {
+            "difference_id": "DIF-000184-01",
+            "context_instance_id": "CTX-000184-S1-01",
+            "condition": "timing",
+            "body": "the issue was raised before enquiry."
+          },
+          {
+            "difference_id": "DIF-000184-02",
+            "context_instance_id": "CTX-000184-S2-01",
+            "condition": "timing",
+            "body": "the issue was raised in response to enquiry."
+          }
+        ],
+        "context_dependencies": []
+      }
+    ]
+  },
+  "entry_library": {
+    "version": "D1-LIB-1.0",
+    "entries": {
+      "ST-D1-011": {
+        "entry_id": "ST-D1-011",
+        "entry_version": "D1-LIB-1.0",
+        "dimension_id": "D1",
+        "entry_type": "conduct_bearing",
+        "composed_text": "the participant stated that a specific issue existed and identified what it was",
+        "placeholder_grammar": {},
+        "context_dependencies": [],
+        "use_disposition": "build_only"
+      }
+    }
+  },
+  "prohibited_vocabulary": {
+    "version": "PV-D1-1.0",
+    "D1": [
+      "honest",
+      "dishonest",
+      "integrity",
+      "ethical",
+      "unethical",
+      "trustworthy",
+      "untrustworthy",
+      "character",
+      "principled",
+      "moral",
+      "immoral",
+      "candid",
+      "transparent",
+      "deceptive",
+      "will",
+      "would",
+      "tends to",
+      "reliable",
+      "always",
+      "never"
+    ]
+  },
+  "dimension_register": {
+    "version": "DIM-1.0",
+    "dimensions": [
+      {
+        "dimension_id": "D1",
+        "full_name": "Integrity and Ethics"
+      },
+      {
+        "dimension_id": "D2",
+        "full_name": "Accountability and Ownership"
+      },
+      {
+        "dimension_id": "D3",
+        "full_name": "Execution Reliability"
+      },
+      {
+        "dimension_id": "D4",
+        "full_name": "Communication Under Pressure"
+      },
+      {
+        "dimension_id": "D5",
+        "full_name": "Collaboration and Conflict Resolution"
+      },
+      {
+        "dimension_id": "D6",
+        "full_name": "Workplace Adaptability"
+      },
+      {
+        "dimension_id": "D7",
+        "full_name": "Prioritization and Time Management"
+      },
+      {
+        "dimension_id": "D8",
+        "full_name": "Resilience and Recovery"
+      },
+      {
+        "dimension_id": "D9",
+        "full_name": "Learning Agility"
+      },
+      {
+        "dimension_id": "D10",
+        "full_name": "Professional Boundaries"
+      },
+      {
+        "dimension_id": "D11",
+        "full_name": "Creative Problem Solving"
+      },
+      {
+        "dimension_id": "D12",
+        "full_name": "Customer and Service Focus"
+      },
+      {
+        "dimension_id": "D13",
+        "full_name": "Influence and Persuasion"
+      },
+      {
+        "dimension_id": "D14",
+        "full_name": "Relationship Building"
+      }
+    ]
+  },
+  "stage_descriptions": {
+    "S1": "Stage 1 written situation",
+    "S2": "Stage 2 live interaction",
+    "S3": "Stage 3 submitted work",
+    "S4": "Stage 4 group setting"
+  },
+  "evidence_states": {
+    "bounded_recurrence": {
+      "display_label": "BOUNDED RECURRENCE",
+      "frame_text_id": "T-FRAME-REC"
+    },
+    "single_context": {
+      "display_label": "SINGLE RECORDED CONTEXT",
+      "frame_text_id": "T-FRAME-ONE"
+    },
+    "multiple_contexts": {
+      "display_label": "MULTIPLE RECORDED CONTEXTS",
+      "frame_text_id": "T-FRAME-MULTI"
+    },
+    "divergent": {
+      "display_label": "DIVERGENT ACROSS CONTEXTS",
+      "frame_text_id": "T-FRAME-DIV"
+    }
+  },
+  "controlled_texts": {
+    "T-PURPOSE-001": "A record documenting selected conduct observed in defined workplace situations. The participant controls whether this report is available to approved employers through The 3rd Academy and may withdraw future availability at any time.",
+    "T-VERIFCAP-001": "Verify the authoritative status before relying on this copy.",
+    "T-SCOPE-001": [
+      "Scope and limits.",
+      "This report contains recorded conduct for represented dimensions only. It is not a complete account of the participant's workplace conduct. Dimensions not represented are listed below; their absence is not a conclusion about the participant. This report records selected conduct in defined situations and does not state whether a participant should be selected, placed, promoted, preferred, or otherwise chosen for an opportunity."
+    ],
+    "T-FRAME-REC": "Recorded in each of the {context_count} Stage contexts identified for this entry:",
+    "T-LIMIT-001": "This statement is limited to the recorded contexts. It is not a statement about character, general tendency, suitability, or future behavior.",
+    "T-ILLUS-001": "Illustrative only. An approved Recorded Conduct Entry renders here.",
+    "T-DIFF-SEP": "These observations remain separate. Neither is preferred, averaged, or used to broaden the recurrence statement.",
+    "T-DIFFSHOWN-001": [
+      "How differences are shown.",
+      "The recurring clause stays in Observed conduct. The adjacent Differences across settings field preserves context specific variation. A difference does not erase recurrence of a separate clause, and recurrence does not erase the difference."
+    ],
+    "T-AVAIL-001": "Made available to approved employers through the participant controlled process. Evidence current until: {d}. Verification reference: {r}.",
+    "T-STUB-001": "No recorded conduct for these dimensions is carried here. Their absence is not a conclusion about the participant.",
+    "T-EVNOTE-001": "Stage 1 written situations are administered through an AI system. A Stage 1 observation enters the evidence record only after authorized human confirmation. Source linked statements remain subject to participant review, correction, amendment and evidence currency controls.",
+    "T-USE-001": [
+      "Permitted use:",
+      "This report provides supplementary behavioral evidence from defined workplace situations. It may be considered as one source of information in an employer's independent employment judgment. It does not recommend or determine an employment decision and must not be used as the sole basis for adverse employment action. It is not a prediction of job performance, retention or probation outcome."
+    ],
+    "T-DISC-001": [
+      "Disclosure limits:",
+      "This report was made available at the participant's discretion and covers only the evidence window stated above. Withdrawal ends availability for subsequent access through The 3rd Academy; it does not recall a copy already read. Earlier or later reports may exist; this page is not the complete observation history."
+    ],
+    "T-INTEG-001": [
+      "Record integrity:",
+      "Statements are source linked and subject to participant review, correction, amendment and evidence currency controls. Withdrawal is governed separately and applies to employer availability, not to the evidence record."
+    ],
+    "T-VERIF-001": [
+      "Verification:",
+      "A verification check confirms authenticity and current status; it does not disclose report content or participant identity."
+    ],
+    "T-DIFF-HEADING-001": "DIFFERENCES ACROSS SETTINGS",
+    "T-DIFF-TIMING-001": "TIMING DIFFERED BY SETTING",
+    "T-DIFF-MODE-001": "MODE DIFFERED BY SETTING",
+    "T-DIFF-PROMPT-001": "PROMPTING DIFFERED BY SETTING",
+    "T-NOTREP-ALL": "Every dimension in the catalogue is represented in this report.",
+    "T-DEMO-001": "This page is a layout specimen. It is not an issued report and records no conduct by any person.",
+    "T-PILOT-MARK": "PILOT OUTPUT — NOT AN ISSUED REPORT",
+    "T-FRAME-ONE": "In one situation, recorded in the Stage context identified for this entry:",
+    "T-FRAME-MULTI": "Recorded in {context_count} Stage contexts identified for this entry:",
+    "T-FRAME-DIV": "Recorded in {context_count} Stage contexts identified for this entry, with the differences shown alongside:",
+    "T-COLOPHON-001": "Issued under a published evidence standard. Version and governing rules at verify.the3rdacademy.com"
+  },
+  "state_maps": {
+    "T-STATUS-MAP": {
+      "current": "Current",
+      "prior": "Prior"
+    },
+    "T-VISIBILITY-MAP": {
+      "active": [
+        "Employer visibility: Participant controlled",
+        "Available to approved employers while participant visibility is active."
+      ],
+      "withdrawn": [
+        "Employer visibility: Withdrawn",
+        "This report is not available to approved employers."
+      ],
+      "not_released": [
+        "Employer visibility: Not released",
+        "This version has not been issued and is not available to any employer."
+      ]
+    },
+    "T-REVIEW-MAP": {
+      "reviewed": "The participant reviewed this report before issuance.",
+      "not_reviewed": "This report was issued without a recorded participant review."
+    },
+    "T-CORRECTION-MAP": {
+      "none_open": "Correction status: No correction open.",
+      "open": "Correction status: A correction is open.",
+      "resolved": "Correction status: A correction was made and resolved."
+    },
+    "T-FOOTER-MAP": {
+      "issued": "The 3rd Academy Inc.",
+      "demonstration": "LAYOUT SPECIMEN — NOT AN ISSUED REPORT",
+      "pilot": "PILOT OUTPUT — NOT AN ISSUED REPORT"
+    },
+    "T-REFMARK-MAP": {
+      "issued": null,
+      "demonstration": "SAMPLE REFERENCE",
+      "pilot": "PILOT REFERENCE"
+    }
+  },
+  "fixed_strings": {
+    "institution": "THE 3RD ACADEMY INC.",
+    "title": "Behavioral Evidence Report",
+    "id_labels": [
+      "PARTICIPANT",
+      "REPORT ID",
+      "ISSUED",
+      "EVIDENCE CURRENT UNTIL"
+    ],
+    "status_label": "STATUS",
+    "verify_heading": "VERIFY AUTHENTICITY AND CURRENT STATUS",
+    "recorded_conduct": "RECORDED CONDUCT",
+    "columns": [
+      "DIMENSION",
+      "RECORDED CONTEXTS",
+      "OBSERVED CONDUCT",
+      "DIFFERENCES ACROSS SETTINGS"
+    ],
+    "how_differences": "HOW DIFFERENCES ARE SHOWN",
+    "participant_review": "PARTICIPANT REVIEW",
+    "availability": "AVAILABILITY AND STATUS",
+    "evidence_note": "EVIDENCE NOTE",
+    "strip_heading": "NOT REPRESENTED IN THIS REPORT",
+    "photo_label": "PHOTO PLACEHOLDER",
+    "page_number": "Page 1 of 1"
+  },
+  "controlled_text_digest": "cc8e99e1f5e0fc08a0d2d202d26b3b005175f302ad9740f5efc8a99346f93e8d",
+  "institution_mark": {
+    "format": "png",
+    "width_pt": 19.0,
+    "height_pt": 21.2,
+    "x": 36.0,
+    "y_top": 19.8,
+    "y_bottom": 41.0,
+    "note": "The institution mark, embedded. The renderer reads no image file.",
+    "sha256": "a8fabc8c04f48174e379a66731a092614e9fd681b734e02e31c2645eb25a5722",
+    "data_base64": "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"
+  }
+}
