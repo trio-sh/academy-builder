@@ -33,7 +33,7 @@
 --
 -- Everything the standard calls for in Table 53.1 (output eligibility
 -- against release state) and Table 51.1 (manifest invariants) is folded
--- into t3a_rce_validate_render, which the client calls before serving.
+-- into t3a_rce_render_check, which the client calls before serving.
 --
 -- Nothing in this migration alters an existing entry. The frozen D1
 -- library stays frozen; the defects are held with dispositions, exactly
@@ -285,7 +285,7 @@ UPDATE public.t3a_d1_statement_library
 --   and is derived from the BER status for callers that do not pass it.
 -- p_pilot_authorization_id is required if and only if the mode is 'pilot'.
 
-CREATE OR REPLACE FUNCTION public.t3a_rce_validate_render(
+CREATE OR REPLACE FUNCTION public.t3a_rce_render_check(
   p_ber_report_id uuid,
   p_output_mode text,
   p_pilot_authorization_id uuid DEFAULT NULL,

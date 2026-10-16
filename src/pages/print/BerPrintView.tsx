@@ -612,7 +612,7 @@ function bucketByDimension(rows: ConductRow[]): DimensionBucket[] {
   return DIMENSIONS.map((d) => map.get(d.id)).filter(Boolean) as DimensionBucket[];
 }
 
-type ValidateResult = {
+type RenderCheckResult = {
   ok: boolean;
   refusal_code?: string;
   detail?: string;
@@ -628,7 +628,7 @@ type ValidateResult = {
 export default function BerPrintView() {
   const { berId } = useParams<{ berId: string }>();
   const [face, setFace] = useState<Face | null>(null);
-  const [validate, setValidate] = useState<ValidateResult | null>(null);
+  const [renderCheck, setRenderCheck] = useState<RenderCheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const docIdRef = useRef<string>("");
 
@@ -642,27 +642,27 @@ export default function BerPrintView() {
   useEffect(() => {
     const load = async () => {
       if (!berId) return;
-      // Part F validation runs first. The face only renders if the Standard
-      // approves this serve — the output mode is live, the pilot
+      // Part F render check runs first. The face only renders if the
+      // Standard approves this serve — the output mode is live, the pilot
       // authorization table (if any) is honored, the controlled text
       // register has not diverged, each composed statement's use
       // disposition permits the serve, and no composed body carries a word
       // on the prohibited vocabulary. Anything else is a refusal with the
       // Part F refusal code.
-      const { data: vdata, error: vErr } = await supabase.rpc(
-        "t3a_rce_validate_render",
+      const { data: cdata, error: cErr } = await supabase.rpc(
+        "t3a_rce_render_check",
         {
           p_ber_report_id: berId,
           p_output_mode: "demonstration",
           p_pilot_authorization_id: null,
         },
       );
-      if (vErr) {
-        setError(vErr.message);
+      if (cErr) {
+        setError(cErr.message);
         return;
       }
-      setValidate((vdata ?? null) as ValidateResult | null);
-      if (vdata && (vdata as ValidateResult).ok === false) return; // refusal — do not load the face
+      setRenderCheck((cdata ?? null) as RenderCheckResult | null);
+      if (cdata && (cdata as RenderCheckResult).ok === false) return; // refusal — do not load the face
 
       const { data, error: rpcError } = await supabase.rpc("t3a_d1_report_face", {
         p_ber_report_id: berId,
@@ -678,7 +678,7 @@ export default function BerPrintView() {
 
   if (!berId) return <div className="ber-loading">Missing report identifier.</div>;
   if (error) return <div className="ber-refused">Could not assemble this report. {error}</div>;
-  if (validate && !validate.ok) {
+  if (renderCheck && !renderCheck.ok) {
     return (
       <div className="ber-refused" style={{ textAlign: "left", maxWidth: 720, margin: "60px auto" }}>
         <style>{PRINT_CSS}</style>
@@ -686,24 +686,24 @@ export default function BerPrintView() {
           Serve refused
         </div>
         <h2 style={{ fontFamily: "'Liberation Serif', Georgia, serif", color: COLORS.NAVY, fontSize: "22pt", margin: "6px 0 10px 0" }}>
-          {validate.refusal_code ?? "refusal"}
+          {renderCheck.refusal_code ?? "refusal"}
         </h2>
-        <p style={{ fontSize: "10pt", color: COLORS.BODY, lineHeight: 1.4 }}>{validate.detail ?? ""}</p>
-        {validate.hit_words && validate.hit_words.length > 0 ? (
+        <p style={{ fontSize: "10pt", color: COLORS.BODY, lineHeight: 1.4 }}>{renderCheck.detail ?? ""}</p>
+        {renderCheck.hit_words && renderCheck.hit_words.length > 0 ? (
           <p style={{ fontSize: "9pt", color: COLORS.MUTED, marginTop: 10 }}>
-            Prohibited words carried: {validate.hit_words.join(", ")}
+            Prohibited words carried: {renderCheck.hit_words.join(", ")}
           </p>
         ) : null}
-        {validate.entry_id ? (
+        {renderCheck.entry_id ? (
           <p style={{ fontSize: "9pt", color: COLORS.MUTED, marginTop: 6 }}>
-            Entry: {validate.entry_id}
-            {validate.use_disposition ? ` · disposition ${validate.use_disposition}` : ""}
+            Entry: {renderCheck.entry_id}
+            {renderCheck.use_disposition ? ` · disposition ${renderCheck.use_disposition}` : ""}
           </p>
         ) : null}
-        {validate.sealed_digest ? (
+        {renderCheck.sealed_digest ? (
           <p style={{ fontSize: "8pt", color: COLORS.MUTED, marginTop: 6, fontFamily: "'JetBrains Mono', monospace" }}>
-            sealed: {validate.sealed_digest}<br />
-            live:   {validate.live_digest}
+            sealed: {renderCheck.sealed_digest}<br />
+            live:   {renderCheck.live_digest}
           </p>
         ) : null}
       </div>

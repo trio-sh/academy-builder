@@ -71,6 +71,14 @@ const ALLOWLIST = new Set([
   "supabase/migrations/20261005000000_t3a_d1_spelling_correction.sql",
   "scripts/extract-d1-content.mjs",
 
+  // Rename of the Part F render-check RPC. The function was shipped in
+  // 20261092 under a name that contained the forbidden token; this
+  // migration must name the old spelling to ALTER FUNCTION … RENAME it
+  // out. Same precedent as the D1 spelling correction above: a file
+  // whose job is to remove the spelling may name the spelling it
+  // removes, nothing else.
+  "supabase/migrations/20261093000000_rename_render_check.sql",
+
   // Supabase-generated types — regenerate after the schema rename PR.
   "src/types/database.types.ts",
   "src/integrations/supabase/types.ts",
