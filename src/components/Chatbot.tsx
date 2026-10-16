@@ -1369,6 +1369,10 @@ export function Chatbot() {
   // Hide the floating chatbot on the Praxis agent page to avoid duplication
   // Also hide on profile pages to prevent blocking UI elements (like the plus icon)
   if (location.pathname.endsWith("/agent") || location.pathname.endsWith("/profile")) return null;
+  // Print pages (e.g. /print/ber/:id) are standalone records intended to be
+  // read or printed to PDF. The editorial-desk sticker overlays the body
+  // and would print into the record. Skip it there.
+  if (location.pathname.startsWith("/print/")) return null;
 
   return (
     <div className="text-foreground">
