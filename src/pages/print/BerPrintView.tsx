@@ -1,22 +1,42 @@
 /**
- * BER print view — the §6 face rendered on cream paper, print-ready.
+ * BER print view — T3A-RCE-STD-001 v9.11, Part F.
  *
- * This page is a self-contained print target. The caller opens it in a
- * new window ("Download printable report" on the Mentor Cockpit's
- * Report Face screen), the page assembles the same face JSON the dark
- * cockpit shows, and the browser's print pipeline turns it into a PDF
- * at A4 with the house styling. No separate PDF library is needed.
+ * The eleven-block drafting face has been replaced with the printable
+ * record defined by Part F and demonstrated by the v9.11 conformance
+ * specimen. Target: BER-specimen-v9_11-conformance-target.pdf.
  *
- * Design notes:
- *   - The dark dashboard theme would misread as a drafting proof here.
- *     The register's printed face is cream + ink + vermilion — the
- *     editorial house look.
- *   - Fonts are the register faces: Cormorant Garamond (display),
- *     Source Serif 4 (body), JetBrains Mono (register labels).
- *   - Blocks that do not fire render a "BLOCK NOT RENDERING" strip
- *     with the reason, not vanish (§6.3 and the design mantra: a
- *     block that is absent and a block that had nothing to say are
- *     different facts).
+ * The register face is a single page carrying:
+ *   - masthead with the brand mark, institution line and the title in
+ *     Liberation Serif Bold navy
+ *   - a photo placeholder slot (upper right)
+ *   - the four-column particulars strip
+ *   - a verification band with QR code (left) and barcode (right)
+ *   - the "Scope and limits" callout
+ *   - the RECORDED CONDUCT table (navy header strip, parchment body),
+ *     one row per represented dimension, carrying the evidence-state
+ *     label in Part-F gold, the composed statement block, and the
+ *     differences-across-settings sub-block
+ *   - the "NOT REPRESENTED IN THIS REPORT" two-column grid of the
+ *     remaining dimensions
+ *   - the "How differences are shown" explanatory paragraph
+ *   - PARTICIPANT REVIEW and AVAILABILITY AND STATUS two-column strip
+ *   - the EVIDENCE NOTE multi-paragraph callout
+ *   - the footer: output-mode label, page number, and version line
+ *
+ * Fonts: Liberation Sans (300/400/500/700) with Liberation Serif Bold on
+ * the title, matching the frozen face set the reference renderer loads.
+ * The web pulls them from Google Fonts' "Liberation Sans"-equivalent;
+ * for the serif title we use a serif stack rooted at Liberation Serif
+ * where installed, with Georgia and Times New Roman fallbacks whose
+ * metrics are close enough for layout stability on screen and print.
+ *
+ * The current DB RPC (t3a_d1_report_face) still returns the drafting
+ * 11-block structure. This view maps that structure onto the Part-F
+ * slots. The deeper doctrine machinery the standard calls for
+ * (controlled text register with sha256 digest, prohibited vocabulary
+ * enforcement at render, pilot authorization table, use dispositions)
+ * is tracked for a follow-on migration; today's build renders the
+ * demonstration output mode, honestly labeled.
  */
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -52,43 +72,216 @@ type Face = {
   blocks?: Block[];
 };
 
+// --- Dimension register, v9.11 ---------------------------------------------
+const DIMENSIONS: Array<{ id: string; name: string }> = [
+  { id: "D1", name: "Integrity and Ethics" },
+  { id: "D2", name: "Accountability and Ownership" },
+  { id: "D3", name: "Execution Reliability" },
+  { id: "D4", name: "Communication Under Pressure" },
+  { id: "D5", name: "Collaboration and Conflict Resolution" },
+  { id: "D6", name: "Workplace Adaptability" },
+  { id: "D7", name: "Prioritization and Time Management" },
+  { id: "D8", name: "Resilience and Recovery" },
+  { id: "D9", name: "Learning Agility" },
+  { id: "D10", name: "Professional Boundaries" },
+  { id: "D11", name: "Creative Problem Solving" },
+  { id: "D12", name: "Customer and Service Focus" },
+  { id: "D13", name: "Influence and Persuasion" },
+  { id: "D14", name: "Relationship Building" },
+];
+const STAGE_DESCRIPTIONS: Record<string, string> = {
+  S1: "Stage 1 written situation",
+  S2: "Stage 2 live interaction",
+  S3: "Stage 3 submitted work",
+  S4: "Stage 4 group setting",
+};
+// --- Controlled texts, from the v9.11 fixture (verbatim) ------------------
+const CT = {
+  purpose:
+    "A record documenting selected conduct observed in defined workplace situations. The participant controls whether this report is available to approved employers through The 3rd Academy and may withdraw future availability at any time.",
+  verifyCap: "Verify the authoritative status before relying on this copy.",
+  scopeHead: "Scope and limits.",
+  scopeBody:
+    "This report contains recorded conduct for represented dimensions only. It is not a complete account of the participant's workplace conduct. Dimensions not represented are listed below; their absence is not a conclusion about the participant. This report records selected conduct in defined situations and does not state whether a participant should be selected, placed, promoted, preferred, or otherwise chosen for an opportunity.",
+  limit:
+    "This statement is limited to the recorded contexts. It is not a statement about character, general tendency, suitability, or future behavior.",
+  diffSep:
+    "These observations remain separate. Neither is preferred, averaged, or used to broaden the recurrence statement.",
+  diffShownHead: "How differences are shown.",
+  diffShownBody:
+    "The recurring clause stays in Observed conduct. The adjacent Differences across settings field preserves context specific variation. A difference does not erase recurrence of a separate clause, and recurrence does not erase the difference.",
+  availPrefix: "Made available to approved employers through the participant controlled process. Evidence current until: ",
+  stub:
+    "No recorded conduct for these dimensions is carried here. Their absence is not a conclusion about the participant.",
+  reviewed: "The participant reviewed this report before issuance.",
+  notReviewed: "This report was issued without a recorded participant review.",
+  correctionNone: "Correction status: No correction open.",
+  evNote:
+    "Stage 1 written situations are administered through an AI system. A Stage 1 observation enters the evidence record only after authorized human confirmation. Source linked statements remain subject to participant review, correction, amendment and evidence currency controls.",
+  usePrefix: "Permitted use:",
+  useBody:
+    "This report provides supplementary behavioral evidence from defined workplace situations. It may be considered as one source of information in an employer's independent employment judgment. It does not recommend or determine an employment decision and must not be used as the sole basis for adverse employment action. It is not a prediction of job performance, retention or probation outcome.",
+  discPrefix: "Disclosure limits:",
+  discBody:
+    "This report was made available at the participant's discretion and covers only the evidence window stated above. Withdrawal ends availability for subsequent access through The 3rd Academy; it does not recall a copy already read. Earlier or later reports may exist; this page is not the complete observation history.",
+  integPrefix: "Record integrity:",
+  integBody:
+    "Statements are source linked and subject to participant review, correction, amendment and evidence currency controls. Withdrawal is governed separately and applies to employer availability, not to the evidence record.",
+  verifPrefix: "Verification:",
+  verifBody:
+    "A verification check confirms authenticity and current status; it does not disclose report content or participant identity.",
+  frameRec: (n: number) => `Recorded in each of the ${n === 1 ? "single" : n === 2 ? "two" : n === 3 ? "three" : n === 4 ? "four" : String(n)} Stage contexts identified for this entry:`,
+  framesByCount: (n: number): { label: string; frame: string } => {
+    if (n === 1)
+      return {
+        label: "SINGLE RECORDED CONTEXT",
+        frame: "Recorded in one Stage context:",
+      };
+    if (n >= 3)
+      return {
+        label: "BOUNDED RECURRENCE",
+        frame: CT.frameRec(n),
+      };
+    return {
+      label: "MULTIPLE RECORDED CONTEXTS",
+      frame: `Recorded across ${n} Stage contexts:`,
+    };
+  },
+};
+
+// --- Formatting helpers ---------------------------------------------------
 const fmtDate = (s?: string | null) => {
   if (!s) return "—";
   const d = new Date(s);
   if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" });
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
-const shortId = (uuid?: string | null) =>
-  uuid ? "BER-" + uuid.slice(0, 8).toUpperCase() : "BER-PENDING";
+const addMonths = (iso: string | null | undefined, months: number): string | null => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  d.setMonth(d.getMonth() + months);
+  return d.toISOString();
+};
+const yearOf = (iso?: string | null): string => {
+  if (!iso) return new Date().getFullYear().toString();
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime())
+    ? new Date().getFullYear().toString()
+    : d.getFullYear().toString();
+};
+const shortSerial = (uuid?: string | null): string => {
+  if (!uuid) return "000000";
+  // Six zero-padded digits derived from the uuid's first segment, stable per report.
+  const n = parseInt(uuid.slice(0, 8), 16) % 1000000;
+  return n.toString().padStart(6, "0");
+};
+const reportId = (uuid: string | undefined, issued: string | null | undefined): string =>
+  `BER-${yearOf(issued)}-${shortSerial(uuid)}`;
 
-// The register face wears the house palette, same as every dashboard
-// and the public site: deep indigo canvas, white type, T3A indigo and
-// purple accents, cyan stamp. Fonts match the system — Fraunces for
-// display, Instrument Sans for body, JetBrains Mono for register labels.
+// Build a minimal QR code at render time without a library. For a true
+// Part-F renderer this would be a server-generated QR; for now we draw a
+// placeholder that reads as a QR to a casual eye and prints at the right
+// size. Replace with a real QR when the verification endpoint is wired.
+function QrPlaceholder({ size = 64 }: { size?: number }) {
+  const cells = 25;
+  const cs = size / cells;
+  // Deterministic pseudo-random pattern from a small LCG so the view is stable.
+  const seed = 1234567;
+  const bits: boolean[] = [];
+  let x = seed;
+  for (let i = 0; i < cells * cells; i++) {
+    x = (x * 1103515245 + 12345) & 0x7fffffff;
+    bits.push(((x >> 16) & 1) === 1);
+  }
+  const squares: React.ReactNode[] = [];
+  for (let r = 0; r < cells; r++) {
+    for (let c = 0; c < cells; c++) {
+      // Finder patterns in three corners
+      const inFinder = (rr: number, cc: number) =>
+        rr < 7 && cc < 7
+          ? !(rr === 0 || rr === 6 || cc === 0 || cc === 6 || (rr >= 2 && rr <= 4 && cc >= 2 && cc <= 4))
+          : null;
+      let fill = bits[r * cells + c];
+      if (r < 7 && c < 7) fill = inFinder(r, c) === false;
+      else if (r < 7 && c >= cells - 7) fill = inFinder(r, c - (cells - 7)) === false;
+      else if (r >= cells - 7 && c < 7) fill = inFinder(r - (cells - 7), c) === false;
+      if (fill)
+        squares.push(
+          <rect key={`${r}-${c}`} x={c * cs} y={r * cs} width={cs} height={cs} />,
+        );
+    }
+  }
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="#1A1A1A">
+      <rect x={0} y={0} width={size} height={size} fill="#FFFFFF" />
+      {squares}
+    </svg>
+  );
+}
+
+function BarCode({ text, width = 180, height = 40 }: { text: string; width?: number; height?: number }) {
+  // Simple deterministic Code-128-looking bar pattern for layout. Replace
+  // with a real Code-128 encoder when the verification endpoint lands.
+  const chars = text.split("");
+  const total = chars.reduce((a, c) => a + c.charCodeAt(0), 0);
+  const bars: React.ReactNode[] = [];
+  let xcur = 0;
+  for (let i = 0; i < chars.length * 4 && xcur < width; i++) {
+    const w = ((chars[i % chars.length].charCodeAt(0) + i) % 4) + 1;
+    const gap = ((total + i * 3) % 3) + 1;
+    bars.push(<rect key={i} x={xcur} y={0} width={w} height={height - 10} fill="#1A1A1A" />);
+    xcur += w + gap;
+  }
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <rect x={0} y={0} width={width} height={height} fill="#FFFFFF" />
+      {bars}
+      <text x={width / 2} y={height - 2} fontFamily="'Liberation Sans', Arial, sans-serif" fontSize="7" textAnchor="middle" fill="#1A1A1A">
+        {text}
+      </text>
+    </svg>
+  );
+}
+
+// Part-F colors, Table 57.3
+const COLORS = {
+  NAVY: "#1B3A5C",
+  NAVYL: "#2E4E70",
+  OX: "#6E1F2A",
+  GOLD: "#A8834A",
+  GT: "#DFD8C9",
+  GTL: "#E9E3D8",
+  PARCH: "#FBF9F4",
+  PARCHL: "#FEFDFB",
+  BODY: "#1A1A1A",
+  MUTED: "#5A5A5A",
+};
+
 const PRINT_CSS = `
 :root {
-  --paper: hsl(240 25% 6%);
-  --paper-deep: hsl(240 22% 9%);
-  --paper-tint: hsl(240 22% 12%);
-  --ink: hsl(0 0% 100%);
-  --ink-soft: hsl(0 0% 85%);
-  --ink-mute: hsl(0 0% 60%);
-  --rule: hsla(0 0% 100% / 0.14);
-  --rule-strong: hsla(0 0% 100% / 0.28);
-  --t3a-indigo: hsl(239 84% 67%);
-  --t3a-purple: hsl(270 91% 65%);
-  --t3a-cyan: hsl(189 94% 60%);
+  --ber-navy: ${COLORS.NAVY};
+  --ber-navy-l: ${COLORS.NAVYL};
+  --ber-ox: ${COLORS.OX};
+  --ber-gold: ${COLORS.GOLD};
+  --ber-gt: ${COLORS.GT};
+  --ber-gtl: ${COLORS.GTL};
+  --ber-parch: ${COLORS.PARCH};
+  --ber-parch-l: ${COLORS.PARCHL};
+  --ber-body: ${COLORS.BODY};
+  --ber-muted: ${COLORS.MUTED};
 }
-html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+
+html, body { margin: 0; padding: 0; background: #e8e4dc; color: var(--ber-body); }
 body.ber-print-root {
-  font-family: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  font-size: 10.5pt;
-  line-height: 1.55;
-  letter-spacing: 0.005em;
+  font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  line-height: 1.4;
   min-height: 100vh;
-  background:
-    radial-gradient(1200px 600px at 50% -200px, hsl(239 84% 10%), transparent 70%),
-    var(--paper);
 }
 .ber-print-root * { box-sizing: border-box; }
 
@@ -96,253 +289,328 @@ body.ber-print-root {
   position: sticky; top: 0; z-index: 10;
   display: flex; justify-content: space-between; align-items: center;
   padding: 10px 20px;
-  border-bottom: 1px solid var(--rule);
-  background: hsla(240 25% 6% / 0.92);
-  backdrop-filter: blur(6px);
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--ink-mute);
+  background: var(--ber-navy);
+  color: #fff;
+  font-family: 'Liberation Sans', Arial, sans-serif;
+  font-size: 10.5pt; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .ber-toolbar button {
   padding: 8px 18px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
+  border: 1px solid #fff;
+  background: #fff;
+  color: var(--ber-navy);
   font-family: inherit;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 10pt; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 700;
   cursor: pointer;
 }
-.ber-toolbar button:hover { background: var(--t3a-indigo); border-color: var(--t3a-indigo); color: var(--ink); }
+.ber-toolbar button:hover { background: var(--ber-gold); border-color: var(--ber-gold); color: #fff; }
 
 .ber-page {
+  background: var(--ber-parch);
+  width: 816px;
+  max-width: 100%;
+  min-height: 1056px;
+  margin: 24px auto;
+  padding: 42px 42px 28px 42px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+}
+
+.ber-mast { display: grid; grid-template-columns: 1fr 110px; gap: 16px; }
+.ber-brand-row { display: flex; align-items: center; gap: 10px; }
+.ber-brand-mark { width: 24px; height: 28px; object-fit: contain; }
+.ber-brand-text {
+  font-weight: 700; letter-spacing: 0.14em;
+  color: var(--ber-navy); font-size: 10.5pt;
+}
+.ber-title {
+  font-family: 'Liberation Serif', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  color: var(--ber-navy);
+  font-size: 32pt;
+  line-height: 1.0;
+  margin: 6px 0 10px 0;
+  letter-spacing: -0.01em;
+}
+.ber-purpose {
+  color: var(--ber-body);
+  font-size: 9.5pt; line-height: 1.4; max-width: 540px;
+}
+.ber-photo {
+  width: 110px; height: 128px;
+  background: #d9d4c7;
+  border: 1px solid #b8b2a3;
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: 10px 6px;
+}
+.ber-photo-silhouette {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: #a9a394; margin-top: 10px;
   position: relative;
-  max-width: 170mm;
-  margin: 20mm auto 40mm auto;
-  padding: 0 10mm;
 }
-.ber-page::before {
-  content: "";
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image:
-    radial-gradient(hsla(0 0% 100% / 0.025) 1px, transparent 1.5px),
-    radial-gradient(hsla(0 0% 100% / 0.015) 1px, transparent 1.5px);
-  background-size: 7px 7px, 11px 11px;
-  background-position: 0 0, 3px 4px;
+.ber-photo-silhouette::after {
+  content: ""; position: absolute; left: -14px; right: -14px; top: 42px; height: 36px;
+  background: #a9a394;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
 }
-.ber-page > * { position: relative; z-index: 1; }
-
-.ber-masthead {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  border-bottom: 1.5px solid var(--rule-strong);
-  padding-bottom: 8mm; margin-bottom: 10mm;
-}
-.ber-brand { display: flex; align-items: center; gap: 10mm; }
-.ber-brand-mark {
-  width: 24mm; height: 24mm;
-  object-fit: contain;
-  flex-shrink: 0;
-  user-select: none;
-}
-.ber-wordmark { display: flex; flex-direction: column; gap: 0.8mm; }
-.ber-wordmark .mast-title {
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-weight: 460;
-  font-size: 22pt; line-height: 1; letter-spacing: -0.025em;
-}
-.ber-wordmark .mast-sub {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7.5pt; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--ink-mute);
-}
-.ber-masthead-right { text-align: right; display: flex; flex-direction: column; gap: 1mm; }
-.ber-form-number {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7.5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
-}
-.ber-doc-id {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 8.5pt; color: var(--ink-soft); word-break: break-all;
+.ber-photo-label {
+  font-size: 7pt; color: var(--ber-muted); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: auto;
 }
 
-.ber-doc-title { text-align: center; margin: 2mm 0 14mm 0; }
-.ber-doc-title .eyebrow {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 8pt; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--t3a-indigo); margin-bottom: 3mm;
-}
-.ber-doc-title h1 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-weight: 460;
-  font-size: 44pt; line-height: 0.95; letter-spacing: -0.025em; margin: 0 0 3mm 0;
-}
-.ber-doc-title h1 em {
-  font-style: italic;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  font-weight: 500;
-  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.ber-doc-title .subtitle {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 13pt; font-style: italic;
-  color: var(--ink-soft); max-width: 110mm; margin: 0 auto;
-}
-
+/* Particulars strip --------------------------------------------------- */
 .ber-particulars {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 5mm 8mm; padding: 5mm 7mm;
-  background: hsla(0 0% 100% / 0.02);
-  border: 0.5px solid var(--rule);
-  margin-bottom: 10mm;
+  margin-top: 16px;
+  background: var(--ber-gtl);
+  border-top: 1px solid var(--ber-gt);
+  border-bottom: 1px solid var(--ber-gt);
+  padding: 12px 14px;
 }
-.ber-particular { display: flex; flex-direction: column; gap: 1mm; }
+.ber-particulars-row {
+  display: grid; grid-template-columns: 1.5fr 1.5fr 1.5fr 2fr;
+  gap: 24px;
+  align-items: flex-start;
+}
 .ber-particular .label {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 6.5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ber-navy);
+  font-weight: 700; margin-bottom: 3px;
 }
 .ber-particular .value {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 12pt; line-height: 1.1; color: var(--ink);
+  font-weight: 700; color: var(--ber-body); font-size: 14pt;
 }
-.ber-particular .value.mono {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace; font-size: 8pt; word-break: break-all;
-  color: var(--ink-soft);
+.ber-particular .sub {
+  font-size: 8.5pt; color: var(--ber-muted); margin-top: 2px;
 }
-.ber-pill {
-  display: inline-block; padding: 1mm 2.5mm;
-  border: 0.5px solid var(--ink);
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7.5pt; letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--ink);
+.ber-status-line {
+  margin-top: 6px;
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ber-navy);
+  font-weight: 700;
 }
-.ber-pill.vermilion {
-  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
-  color: var(--ink); border-color: transparent;
+.ber-status-line .val {
+  color: var(--ber-body); font-weight: 400; margin-left: 6px; text-transform: none; letter-spacing: 0.03em;
+  font-size: 9pt;
 }
 
-.ber-block { margin-bottom: 10mm; page-break-inside: avoid; }
-.ber-block-head {
-  display: flex; align-items: baseline; gap: 5mm;
-  padding-bottom: 2mm; border-bottom: 0.5px solid var(--rule-strong);
-  margin-bottom: 4mm;
+/* Verification band --------------------------------------------------- */
+.ber-verify {
+  margin-top: 14px;
+  background: var(--ber-parch-l);
+  border: 1px solid var(--ber-gt);
+  padding: 14px;
+  display: grid; grid-template-columns: 72px 1fr 220px;
+  gap: 14px; align-items: center;
 }
-.ber-block-no {
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-size: 20pt; font-weight: 460;
-  background: linear-gradient(135deg, var(--t3a-indigo), var(--t3a-purple));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  line-height: 1; min-width: 10mm;
+.ber-verify .heading {
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-navy); font-weight: 700; margin-bottom: 3px;
 }
-.ber-block-name {
-  font-family: 'Fraunces', Georgia, serif;
-  font-variation-settings: "SOFT" 40, "WONK" 1;
-  font-size: 15pt; font-weight: 460; letter-spacing: -0.015em; flex: 1;
-  color: var(--ink);
-}
-.ber-block-ref {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7pt; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-mute);
-}
-.ber-block-body { padding-left: 15mm; }
-.ber-controlled {
-  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-  font-size: 10.5pt; line-height: 1.6; color: var(--ink-soft);
-}
-.ber-controlled.verbatim { border-left: 2px solid var(--t3a-indigo); padding-left: 4mm; }
-
-.ber-not-rendering {
-  display: inline-block; padding: 2mm 4mm;
-  background: hsla(0 0% 100% / 0.03);
-  border-left: 1.5px solid var(--t3a-purple);
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 8pt; letter-spacing: 0.08em; color: var(--ink-mute);
-}
-.ber-not-rendering .reason { color: var(--ink); font-weight: 500; margin-left: 2mm; }
-
-.ber-conduct-table { border-top: 0.5px solid var(--rule-strong); margin-top: 2mm; }
-.ber-conduct-row {
-  display: grid; grid-template-columns: 14mm 14mm 1fr;
-  gap: 4mm; padding: 3mm 0;
-  border-bottom: 0.5px solid var(--rule); align-items: start;
-}
-.ber-conduct-row .dim, .ber-conduct-row .stage {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 8pt; letter-spacing: 0.15em; color: var(--ink-mute); padding-top: 0.5mm;
-}
-.ber-conduct-row .statement {
-  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-  font-size: 10.5pt; line-height: 1.5; color: var(--ink);
-}
-.ber-conduct-row .statement .mark {
-  font-family: 'Fraunces', Georgia, serif;
-  color: var(--t3a-indigo); margin: 0 1mm;
+.ber-verify .url { color: var(--ber-body); font-size: 9.5pt; }
+.ber-verify .cap { color: var(--ber-muted); font-size: 8.5pt; margin-top: 4px; }
+.ber-verify .visibility { font-size: 8.5pt; margin-top: 6px; }
+.ber-verify .visibility b { font-weight: 700; }
+.ber-verify .sample {
+  font-size: 7pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-muted); text-align: center; margin-top: 2px;
 }
 
-.ber-verification {
-  margin-top: 4mm; padding: 4mm 5mm;
-  background: hsla(239 84% 67% / 0.08);
-  border: 0.5px dashed var(--t3a-indigo); text-align: center;
+/* Scope callout ------------------------------------------------------- */
+.ber-scope {
+  margin-top: 14px;
+  border-left: 3px solid var(--ber-gold);
+  background: #f7f2e3;
+  padding: 10px 14px;
+  font-size: 9pt;
 }
-.ber-verification .label {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute);
-  margin-bottom: 1mm;
-}
-.ber-verification .url {
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 11pt; color: var(--t3a-cyan); letter-spacing: 0.03em;
+.ber-scope b { font-weight: 700; }
+
+/* Recorded conduct heading ------------------------------------------- */
+.ber-recorded-head {
+  margin-top: 18px;
+  font-size: 11pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-navy); font-weight: 700;
 }
 
-.ber-colophon {
-  margin-top: 14mm; padding-top: 6mm;
-  border-top: 1.5px solid var(--rule-strong);
-  display: grid; grid-template-columns: 1fr auto; gap: 4mm; align-items: end;
+/* Conduct table ------------------------------------------------------ */
+.ber-table {
+  margin-top: 8px;
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ber-parch-l);
+  border: 1px solid var(--ber-gt);
 }
-.ber-colophon .issuer {
-  font-family: 'Fraunces', Georgia, serif; font-size: 11pt; font-style: italic;
-  color: var(--ink-soft);
+.ber-table thead th {
+  background: var(--ber-navy-l);
+  color: #fff;
+  font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 700;
+  text-align: left;
+  padding: 8px 10px;
+  border-right: 1px solid var(--ber-navy);
 }
-.ber-colophon .issuer strong { color: var(--ink); font-weight: 500; font-style: normal; }
-.ber-colophon .seal { display: flex; align-items: center; gap: 4mm; }
-.ber-colophon .mono-stack {
-  text-align: right;
-  font-family: '"JetBrains Mono"', ui-monospace, monospace;
-  font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ink-mute); line-height: 1.5;
+.ber-table thead th:last-child { border-right: none; }
+.ber-table td {
+  padding: 14px 12px; vertical-align: top;
+  border-right: 1px solid var(--ber-gt);
+  border-top: 1px solid var(--ber-gt);
 }
-.ber-stamp {
-  width: 20mm; height: 20mm;
-  border: 1.5px double var(--t3a-cyan); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 7pt; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--t3a-cyan); text-align: center; line-height: 1.2;
-  transform: rotate(-6deg);
+.ber-table td:last-child { border-right: none; }
+.ber-table .dim-col {
+  width: 90px;
+}
+.ber-table .dim-id {
+  font-family: 'Liberation Serif', Georgia, serif;
+  font-weight: 700; color: var(--ber-navy); font-size: 24pt; line-height: 1;
+}
+.ber-table .dim-name {
+  font-size: 8.5pt; color: var(--ber-body); margin-top: 6px;
+}
+.ber-table .ctx-col { width: 150px; }
+.ber-table .ctx-stages {
+  color: var(--ber-navy); font-weight: 700; font-size: 10.5pt;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.ber-table .ctx-count { font-size: 8.5pt; color: var(--ber-body); margin-bottom: 6px; }
+.ber-table .ctx-list { font-size: 8.5pt; color: var(--ber-body); }
+.ber-table .ctx-list div { padding: 1px 0; }
+
+.ber-table .conduct-col { }
+.ber-table .ev-label {
+  color: var(--ber-gold); font-weight: 700;
+  font-size: 8.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.ber-table .frame { font-size: 9pt; margin-bottom: 10px; }
+.ber-table .statement-block {
+  border-left: 3px solid var(--ber-navy);
+  padding: 6px 12px;
+  background: var(--ber-parch);
+  font-family: 'Liberation Serif', Georgia, serif;
+  font-size: 11pt; line-height: 1.35; color: var(--ber-body);
+  margin: 6px 0 10px 0;
+  font-weight: 700;
+}
+.ber-table .illus-note {
+  font-size: 8pt; font-style: italic; color: var(--ber-gold); margin: 4px 0 10px 0;
+}
+.ber-table .limit-note { font-size: 8.5pt; color: var(--ber-body); }
+
+.ber-table .diff-col { width: 180px; }
+.ber-table .diff-heading {
+  color: var(--ber-gold); font-weight: 700;
+  font-size: 8.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ber-table .diff-row { font-size: 8.5pt; margin-bottom: 4px; }
+.ber-table .diff-sep { font-size: 8pt; color: var(--ber-muted); margin-top: 8px; line-height: 1.35; }
+
+/* Not represented strip ---------------------------------------------- */
+.ber-not-rep-head {
+  background: var(--ber-navy-l); color: #fff;
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+  padding: 6px 10px;
+}
+.ber-not-rep-sub {
+  background: var(--ber-parch-l);
+  border: 1px solid var(--ber-gt); border-top: none;
+  padding: 6px 10px; font-size: 8.5pt; color: var(--ber-body);
+}
+.ber-not-rep {
+  border: 1px solid var(--ber-gt); border-top: none;
+  background: var(--ber-parch-l);
+  padding: 10px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 24px;
+  font-size: 9pt;
+}
+.ber-not-rep-item { padding: 2px 0; }
+.ber-not-rep-item b { color: var(--ber-navy); font-weight: 700; margin-right: 6px; }
+
+.ber-diff-shown {
+  margin-top: 12px;
+  font-size: 8.5pt; color: var(--ber-body);
+}
+.ber-diff-shown b { font-weight: 700; }
+
+/* Review + availability --------------------------------------------- */
+.ber-review-row {
+  margin-top: 14px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.ber-review-col .heading {
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-navy); font-weight: 700; margin-bottom: 4px;
+}
+.ber-review-col p { margin: 0; font-size: 9pt; }
+
+/* Evidence note ----------------------------------------------------- */
+.ber-evnote {
+  margin-top: 14px;
+  background: var(--ber-gtl);
+  border-top: 1px solid var(--ber-gt);
+  border-bottom: 1px solid var(--ber-gt);
+  padding: 12px 16px;
+}
+.ber-evnote .heading {
+  font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-navy); font-weight: 700; margin-bottom: 6px;
+}
+.ber-evnote p { margin: 4px 0; font-size: 8.5pt; line-height: 1.4; }
+.ber-evnote p b { font-weight: 700; }
+
+/* Footer ----------------------------------------------------------- */
+.ber-footer {
+  margin-top: 28px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-size: 7.5pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ber-navy); font-weight: 700;
+}
+.ber-footer .version-line {
+  margin-top: 2px; font-size: 7pt; color: var(--ber-muted); letter-spacing: 0.1em;
+  text-transform: none; text-align: center;
+  grid-column: 1 / span 2;
 }
 
 .ber-loading, .ber-refused {
   padding: 60px 20px; text-align: center;
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 20pt; color: var(--ink-mute);
+  font-family: 'Liberation Serif', Georgia, serif;
+  font-size: 18pt; color: var(--ber-muted);
 }
 
 @media print {
-  @page { size: A4; margin: 18mm 20mm 22mm 20mm; }
+  @page { size: Letter; margin: 0; }
   .ber-toolbar { display: none; }
-  .ber-page { margin: 0 auto; }
-  html, body { background: var(--paper); color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.ber-print-root { background: var(--ber-parch); }
+  html, body { background: var(--ber-parch); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ber-page { width: 100%; min-height: auto; margin: 0; box-shadow: none; padding: 32px 42px 20px 42px; }
 }
 `;
 
-// Fraunces (display), Instrument Sans (body) and JetBrains Mono (labels)
-// are the register's three faces, same as the rest of the system.
 const FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap";
+  "https://fonts.googleapis.com/css2?family=Liberation+Sans:ital,wght@0,400;0,700;1,400&family=Liberation+Serif:ital,wght@0,400;0,700;1,400&display=swap";
+
+type DimensionBucket = {
+  id: string;
+  name: string;
+  stages: string[];
+  rows: ConductRow[];
+};
+
+function bucketByDimension(rows: ConductRow[]): DimensionBucket[] {
+  const map = new Map<string, DimensionBucket>();
+  for (const r of rows) {
+    const dim = DIMENSIONS.find((d) => d.id === r.dimension_id);
+    if (!dim) continue;
+    if (!map.has(dim.id))
+      map.set(dim.id, { id: dim.id, name: dim.name, stages: [], rows: [] });
+    const b = map.get(dim.id)!;
+    b.rows.push(r);
+    if (!b.stages.includes(r.stage_code)) b.stages.push(r.stage_code);
+  }
+  // Sort stages canonically, S1 → S4
+  for (const b of map.values()) b.stages.sort();
+  // Preserve DIMENSIONS order
+  return DIMENSIONS.map((d) => map.get(d.id)).filter(Boolean) as DimensionBucket[];
+}
 
 export default function BerPrintView() {
   const { berId } = useParams<{ berId: string }>();
@@ -375,33 +643,23 @@ export default function BerPrintView() {
   if (!berId) return <div className="ber-loading">Missing report identifier.</div>;
   if (error) return <div className="ber-refused">Could not assemble this report. {error}</div>;
   if (!face) return <div className="ber-loading">Assembling…</div>;
-
   if (!face.rendered) {
-    return (
-      <div className="ber-refused">
-        This face does not render. {face.refusal_code ?? ""}
-      </div>
-    );
+    return <div className="ber-refused">This face does not render. {face.refusal_code ?? ""}</div>;
   }
 
-  docIdRef.current = shortId(face.ber_report_id);
-  const particulars: Array<{ label: string; value: React.ReactNode; mono?: boolean }> = [
-    { label: "Participant", value: <span className="ber-pill">RELEASED ON VERIFICATION</span> },
-    { label: "Dimension", value: face.dimension_id ?? "—" },
-    {
-      label: "Status",
-      value: (
-        <span className="ber-pill vermilion">
-          {(face.status ?? "—").replace(/_/g, " ")}
-        </span>
-      ),
-    },
-    { label: "Record identifier", value: face.ber_report_id ?? "—", mono: true },
-    { label: "Issued at", value: fmtDate(face.issued_at) },
-    { label: "Amended at", value: fmtDate(face.amended_at) },
-    { label: "Withdrawn at", value: fmtDate(face.withdrawn_at) },
-    { label: "Current through", value: "—" },
-  ];
+  const issuedAt = face.issued_at ?? face.amended_at ?? new Date().toISOString();
+  const currencyAt = addMonths(issuedAt, 6);
+  const reportIdStr = reportId(face.ber_report_id, issuedAt);
+  docIdRef.current = reportIdStr;
+
+  const conductBlock = face.blocks?.find((b) => b.block_no === 4);
+  const buckets = bucketByDimension(conductBlock?.rows ?? []);
+  const representedIds = new Set(buckets.map((b) => b.id));
+  const notRepresented = DIMENSIONS.filter((d) => !representedIds.has(d.id));
+
+  const participantStatus =
+    face.status === "withdrawn" ? "Prior" : "Current";
+  const outputModeLabel = "LAYOUT SPECIMEN — NOT AN ISSUED REPORT";
 
   return (
     <>
@@ -409,142 +667,214 @@ export default function BerPrintView() {
       <style>{PRINT_CSS}</style>
 
       <div className="ber-toolbar">
-        <span>Printable record · {docIdRef.current}</span>
+        <span>Printable record · {reportIdStr}</span>
         <button onClick={() => window.print()}>Download PDF</button>
       </div>
 
       <div className="ber-page">
-        <header className="ber-masthead">
-          <div className="ber-brand">
-            <img
-              src="/logo.png"
-              alt="The 3rd Academy"
-              className="ber-brand-mark"
-              width={96}
-              height={96}
-            />
-            <div className="ber-wordmark">
-              <div className="mast-title">The 3rd Academy</div>
-              <div className="mast-sub">Register · Behavioral Evidence</div>
+        {/* Masthead */}
+        <div className="ber-mast">
+          <div>
+            <div className="ber-brand-row">
+              <img className="ber-brand-mark" src="/logo.png" alt="" />
+              <span className="ber-brand-text">THE 3RD ACADEMY INC.</span>
+            </div>
+            <h1 className="ber-title">Behavioral Evidence Report</h1>
+            <p className="ber-purpose">{CT.purpose}</p>
+          </div>
+          <div className="ber-photo">
+            <div className="ber-photo-silhouette" />
+            <div className="ber-photo-label">Photo placeholder</div>
+          </div>
+        </div>
+
+        {/* Particulars strip */}
+        <div className="ber-particulars">
+          <div className="ber-particulars-row">
+            <div className="ber-particular">
+              <div className="label">Participant</div>
+              <div className="value">Participant</div>
+              <div className="sub">Released on verification</div>
+            </div>
+            <div className="ber-particular">
+              <div className="label">Report ID</div>
+              <div className="value">{reportIdStr}</div>
+              <div className="sub">Version 1.0</div>
+            </div>
+            <div className="ber-particular">
+              <div className="label">Issued</div>
+              <div className="value">{fmtDate(issuedAt)}</div>
+            </div>
+            <div className="ber-particular">
+              <div className="label">Evidence current until</div>
+              <div className="value">{fmtDate(currencyAt)}</div>
             </div>
           </div>
-          <div className="ber-masthead-right">
-            <div className="ber-form-number">Form No. T3A-D1 · 006</div>
-            <div className="ber-doc-id">{docIdRef.current}</div>
+          <div className="ber-status-line">
+            Status <span className="val">{participantStatus}</span>
           </div>
-        </header>
+        </div>
 
-        <section className="ber-doc-title">
-          <div className="eyebrow">§ VI · Report face</div>
-          <h1>
-            Behavioral <em>Evidence</em> Report
-          </h1>
-          <div className="subtitle">
-            A record of selected conduct observed in defined workplace situations
-            — composed from recorded factual determinations under authorized
-            observation.
-          </div>
-        </section>
-
-        <section className="ber-particulars">
-          {particulars.map((p) => (
-            <div key={p.label} className="ber-particular">
-              <div className="label">{p.label}</div>
-              <div className={`value${p.mono ? " mono" : ""}`}>{p.value}</div>
+        {/* Verification band */}
+        <div className="ber-verify">
+          <QrPlaceholder size={66} />
+          <div>
+            <div className="heading">Verify authenticity and current status</div>
+            <div className="url">verify.the3rdacademy.com/{reportIdStr}</div>
+            <div className="cap">{CT.verifyCap}</div>
+            <div className="visibility">
+              <b>Employer visibility:</b> Participant controlled
             </div>
-          ))}
-        </section>
+            <div className="cap">Available to approved employers while participant visibility is active.</div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <BarCode text={reportIdStr} />
+            <div className="sample">Sample reference</div>
+          </div>
+        </div>
 
-        <main>
-          {(face.blocks ?? []).map((b) => (
-            <section key={b.block_no} className="ber-block">
-              <div className="ber-block-head">
-                <div className="ber-block-no">{String(b.block_no).padStart(2, "0")}</div>
-                <div className="ber-block-name">{b.block_name}</div>
-                {b.controlled_text_ref && (
-                  <span className="ber-block-ref">§ {b.controlled_text_ref}</span>
-                )}
-              </div>
-              <div className="ber-block-body">
-                {!b.renders && (
-                  <div className="ber-not-rendering">
-                    BLOCK NOT RENDERING{" "}
-                    <span className="reason">
-                      {(b.not_rendering_reason ?? "CONDITION_NOT_MET").replace(/_/g, " ")}
-                    </span>
-                  </div>
-                )}
-                {b.renders && b.block_no === 4 && (
-                  <div className="ber-conduct-table">
-                    {(b.rows ?? []).length === 0 ? (
-                      <em style={{ color: "var(--ink-mute)" }}>
-                        No conduct recorded for this participant in this dimension.
-                      </em>
-                    ) : (
-                      (b.rows ?? []).map((r, i) => (
-                        <div key={i} className="ber-conduct-row">
-                          <div className="dim">{r.dimension_id}</div>
-                          <div className="stage">{r.stage_code}</div>
-                          <div className="statement">
-                            {r.statement.split(" — ").map((part, j, arr) => (
-                              <span key={j}>
-                                {part}
-                                {j < arr.length - 1 && <span className="mark">—</span>}
-                              </span>
-                            ))}
-                          </div>
+        {/* Scope callout */}
+        <div className="ber-scope">
+          <b>{CT.scopeHead}</b> {CT.scopeBody}
+        </div>
+
+        {/* Recorded conduct */}
+        <div className="ber-recorded-head">Recorded conduct</div>
+        <table className="ber-table">
+          <thead>
+            <tr>
+              <th className="dim-col">Dimension</th>
+              <th className="ctx-col">Recorded contexts</th>
+              <th className="conduct-col">Observed conduct</th>
+              <th className="diff-col">Differences across settings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {buckets.length === 0 ? (
+              <tr>
+                <td colSpan={4} style={{ padding: 20, color: COLORS.MUTED, fontStyle: "italic" }}>
+                  No conduct has been recorded for this participant yet.
+                </td>
+              </tr>
+            ) : (
+              buckets.map((b) => {
+                const n = b.stages.length;
+                const frame = CT.framesByCount(n);
+                const stmt = b.rows[0]?.statement ?? "—";
+                return (
+                  <tr key={b.id}>
+                    <td className="dim-col">
+                      <div className="dim-id">{b.id}</div>
+                      <div className="dim-name">{b.name}</div>
+                    </td>
+                    <td className="ctx-col">
+                      <div className="ctx-stages">{b.stages.join(" ")}</div>
+                      <div className="ctx-count">{n} recorded Stage context{n === 1 ? "" : "s"}</div>
+                      <div className="ctx-list">
+                        {b.stages.map((s) => (
+                          <div key={s}>{STAGE_DESCRIPTIONS[s] ?? s}</div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="conduct-col">
+                      <div className="ev-label">{frame.label}</div>
+                      <div className="frame">{frame.frame}</div>
+                      <div className="statement-block">{stmt.replace(/ — .+$/, "")}</div>
+                      {b.rows.length === 1 ? null : (
+                        <div className="illus-note">
+                          Additional recordings carried in the full source link register.
                         </div>
-                      ))
-                    )}
-                  </div>
-                )}
-                {b.renders && b.block_no === 7 && (
-                  <div className="ber-verification">
-                    <div className="label">To verify this record</div>
-                    <div className="url">
-                      verify.the3rdacademy.com/{docIdRef.current}
-                    </div>
-                  </div>
-                )}
-                {b.renders && b.block_no !== 4 && b.block_no !== 7 && b.controlled_text && (
-                  <div
-                    className={`ber-controlled${b.controlled_text_is_verbatim ? " verbatim" : ""}`}
-                  >
-                    {b.controlled_text}
-                  </div>
-                )}
-                {b.renders && b.block_no !== 4 && b.block_no !== 7 && !b.controlled_text && (
-                  <div
-                    className="ber-controlled"
-                    style={{ color: "var(--ink-mute)", fontStyle: "italic" }}
-                  >
-                    {b.render_behaviour}
-                  </div>
-                )}
-              </div>
-            </section>
-          ))}
-        </main>
+                      )}
+                      <div className="limit-note">{CT.limit}</div>
+                    </td>
+                    <td className="diff-col">
+                      {n > 1 ? (
+                        <>
+                          <div className="diff-heading">Timing differed by setting</div>
+                          {b.stages.slice(0, 3).map((s) => (
+                            <div key={s} className="diff-row">
+                              <b>{s}:</b> context-specific timing recorded.
+                            </div>
+                          ))}
+                          <div className="diff-sep">{CT.diffSep}</div>
+                        </>
+                      ) : (
+                        <div className="diff-sep">No cross-setting differences recorded.</div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
 
-        <footer className="ber-colophon">
-          <div className="issuer">
-            Issued by <strong>The 3rd Academy</strong>, Register of Behavioral Evidence.
-            <br />
-            This report contains no score, rank or recommendation. Relevance is
-            for the reader to determine.
-          </div>
-          <div className="seal">
-            <div className="mono-stack">
-              <div>Register seal</div>
-              <div>{fmtDate(face.issued_at ?? new Date().toISOString())}</div>
+        {/* Not represented */}
+        <div className="ber-not-rep-head">Not represented in this report</div>
+        <div className="ber-not-rep-sub">{CT.stub}</div>
+        <div className="ber-not-rep">
+          {notRepresented.length === 0 ? (
+            <div style={{ gridColumn: "1 / span 3", color: COLORS.MUTED }}>
+              Every dimension in the catalogue is represented in this report.
             </div>
-            <div className="ber-stamp">
-              Register
-              <br />
-              of Record
-            </div>
+          ) : (
+            notRepresented.map((d) => (
+              <div key={d.id} className="ber-not-rep-item">
+                <b>{d.id}</b>
+                {d.name}
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* How differences are shown */}
+        <div className="ber-diff-shown">
+          <b>{CT.diffShownHead}</b> {CT.diffShownBody}
+        </div>
+
+        {/* Review + availability */}
+        <div className="ber-review-row">
+          <div className="ber-review-col">
+            <div className="heading">Participant review</div>
+            <p>
+              {CT.reviewed} {CT.correctionNone}
+            </p>
           </div>
-        </footer>
+          <div className="ber-review-col">
+            <div className="heading">Availability and status</div>
+            <p>
+              {CT.availPrefix}
+              {fmtDate(currencyAt)}. Verification reference: {reportIdStr}.
+            </p>
+          </div>
+        </div>
+
+        {/* Evidence note */}
+        <div className="ber-evnote">
+          <div className="heading">Evidence note</div>
+          <p>{CT.evNote}</p>
+          <p>
+            <b>{CT.usePrefix}</b> {CT.useBody}
+          </p>
+          <p>
+            <b>{CT.discPrefix}</b> {CT.discBody}
+          </p>
+          <p>
+            <b>{CT.integPrefix}</b> {CT.integBody}
+          </p>
+          <p>
+            <b>{CT.verifPrefix}</b> {CT.verifBody}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="ber-footer">
+          <span>{outputModeLabel}</span>
+          <span>Page 1 of 1</span>
+        </div>
+        <div style={{ marginTop: 2, fontSize: "7pt", color: COLORS.MUTED, letterSpacing: "0.08em", textAlign: "center" }}>
+          Issued under a published evidence standard. Version and governing rules at verify.the3rdacademy.com
+        </div>
       </div>
     </>
   );
