@@ -584,11 +584,46 @@ body.ber-print-root {
 }
 
 @media print {
-  @page { size: Letter; margin: 0; }
+  /* 8 mm page margin keeps the Part F face on a single physical page
+     at Letter and A4. Browsers that print with "Default" margins pad
+     another 4-5 mm — total ~13 mm, still safe for every consumer
+     printer's unprintable zone. The box inside carries 0 padding so
+     the design width equals the printable width; the internal
+     per-section padding we already set gives the content its breathing
+     room. */
+  @page { size: Letter; margin: 8mm; }
   .ber-toolbar { display: none; }
   body.ber-print-root { background: var(--ber-parch); }
-  html, body { background: var(--ber-parch); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .ber-page { width: 100%; min-height: auto; margin: 0; box-shadow: none; padding: 32px 42px 20px 42px; }
+  html, body {
+    background: var(--ber-parch);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ber-page {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  /* Trim vertical gaps so the full page fits inside the printable area
+     without reflowing onto a second page. On screen the design has
+     generous spacing; print tightens it ~30 %. */
+  .ber-mast { gap: 18px; }
+  .ber-particulars { margin-top: 10px; padding: 9px 12px; }
+  .ber-verify { margin-top: 10px; padding: 10px 12px; }
+  .ber-scope { margin-top: 10px; padding: 8px 12px; }
+  .ber-recorded-head { margin-top: 12px; }
+  .ber-table { margin-top: 6px; }
+  .ber-table td { padding: 9px 10px; }
+  .ber-not-rep-head { margin-top: 0; padding: 5px 10px; }
+  .ber-not-rep { padding: 8px 10px; gap: 2px 24px; }
+  .ber-not-rep-sub { padding: 5px 10px; }
+  .ber-diff-shown { margin-top: 8px; }
+  .ber-review-row { margin-top: 10px; }
+  .ber-evnote { margin-top: 10px; padding: 9px 12px; }
+  .ber-evnote p { margin: 2px 0; }
+  .ber-footer { margin-top: 14px; }
 }
 `;
 
