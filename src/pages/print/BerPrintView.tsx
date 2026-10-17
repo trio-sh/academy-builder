@@ -650,10 +650,14 @@ body.ber-print-root {
   .ber-diff-shown { margin-top: 6px; font-size: 7.5pt; }
   .ber-review-row { margin-top: 8px; }
   .ber-review-col p { font-size: 8pt; }
-  .ber-evnote { margin-top: 8px; padding: 7px 10px; }
-  .ber-evnote .heading { font-size: 7.5pt; margin-bottom: 4px; }
-  .ber-evnote p { font-size: 7.5pt; margin: 2px 0; line-height: 1.3; }
-  .ber-footer { margin-top: 10px; font-size: 7pt; }
+  /* Evidence Note block: slight tightening (padding, inter-paragraph
+     margin, line-height) so the footer's "Issued under a published
+     evidence standard" sub-line fits above the one-page clip. Font
+     size unchanged — still 7.5pt — so legibility is kept. */
+  .ber-evnote { margin-top: 6px; padding: 5px 10px; }
+  .ber-evnote .heading { font-size: 7.5pt; margin-bottom: 3px; }
+  .ber-evnote p { font-size: 7.5pt; margin: 1px 0; line-height: 1.25; }
+  .ber-footer { margin-top: 6px; font-size: 7pt; }
 }
 `;
 
