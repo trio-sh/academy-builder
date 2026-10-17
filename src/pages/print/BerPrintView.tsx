@@ -617,38 +617,43 @@ body.ber-print-root {
      pagination decisions, so getting the record on one physical page
      needs real content tightening. The on-screen view is untouched;
      these rules apply only when @media print matches. */
-  .ber-mast { gap: 10px; }
-  .ber-title { font-size: 22pt; margin: 2px 0 4px 0; line-height: 1.15; }
-  .ber-purpose { font-size: 8pt; line-height: 1.25; }
-  .ber-particulars { margin-top: 5px; padding: 4px 10px; }
-  .ber-particulars-row { gap: 2px 18px; }
-  .ber-particular .value { font-size: 10.5pt; }
-  .ber-status-line { margin-top: 2px; }
-  .ber-verify { margin-top: 5px; padding: 5px 10px; }
-  .ber-verify .cap, .ber-verify .visibility { font-size: 7pt; line-height: 1.25; }
-  .ber-scope { margin-top: 5px; padding: 4px 10px; font-size: 7.5pt; line-height: 1.25; }
-  .ber-recorded-head { margin-top: 6px; font-size: 9.5pt; }
-  .ber-table { margin-top: 3px; }
-  .ber-table thead th { padding: 3px 8px; font-size: 7pt; }
-  .ber-table td { padding: 4px 8px; }
-  .ber-table .dim-id { font-size: 18pt; }
-  .ber-table .dim-name { font-size: 7pt; }
-  .ber-table .statement-block { font-size: 9.5pt; padding: 4px 10px; margin: 2px 0 4px 0; line-height: 1.3; }
-  .ber-table .illus-note, .ber-table .limit-note { font-size: 7pt; line-height: 1.25; }
-  .ber-table .frame { font-size: 7.5pt; margin-bottom: 3px; }
-  .ber-table .ctx-stages { font-size: 9pt; margin-bottom: 2px; }
-  .ber-table .ctx-count, .ber-table .ctx-list { font-size: 7pt; line-height: 1.25; }
+  .ber-mast { gap: 14px; }
+  .ber-title { font-size: 24pt; margin: 4px 0 6px 0; }
+  .ber-purpose { font-size: 8.5pt; line-height: 1.3; }
+  .ber-particulars { margin-top: 8px; padding: 6px 10px; }
+  .ber-particulars-row { gap: 4px 18px; }
+  .ber-particular .value { font-size: 11pt; }
+  .ber-status-line { margin-top: 4px; }
+  /* Verify-authenticity band (QR + barcode row): tightened so the trailing
+     footer content fits on one page without touching the rest of the face. */
+  .ber-verify { margin-top: 4px; padding: 4px 10px; }
+  .ber-verify .cap, .ber-verify .visibility { font-size: 6.5pt; line-height: 1.2; }
+  .ber-scope { margin-top: 8px; padding: 6px 10px; font-size: 8pt; }
+  .ber-recorded-head { margin-top: 10px; font-size: 10pt; }
+  .ber-table { margin-top: 5px; }
+  .ber-table thead th { padding: 5px 8px; font-size: 7.5pt; }
+  .ber-table td { padding: 7px 8px; }
+  .ber-table .dim-id { font-size: 20pt; }
+  .ber-table .dim-name { font-size: 7.5pt; }
+  .ber-table .statement-block { font-size: 10pt; padding: 5px 10px; margin: 4px 0 6px 0; }
+  .ber-table .illus-note, .ber-table .limit-note { font-size: 7.5pt; }
+  .ber-table .frame { font-size: 8pt; margin-bottom: 6px; }
+  .ber-table .ctx-stages { font-size: 9.5pt; margin-bottom: 4px; }
+  .ber-table .ctx-count, .ber-table .ctx-list { font-size: 7.5pt; }
+  /* Not-represented-in-this-report band (D2-D14 dimension grid): tightened
+     so the trailing footer content fits on one page without touching the
+     rest of the face. */
   .ber-not-rep-head { margin-top: 0; padding: 3px 10px; font-size: 6.5pt; }
   .ber-not-rep-sub { padding: 3px 10px; font-size: 7pt; }
-  .ber-not-rep { padding: 4px 10px; gap: 0 20px; font-size: 7.5pt; }
+  .ber-not-rep { padding: 4px 10px; gap: 0 20px; font-size: 7.5pt; line-height: 1.2; }
   .ber-not-rep-item { padding: 0; }
-  .ber-diff-shown { margin-top: 4px; font-size: 7pt; }
-  .ber-review-row { margin-top: 5px; }
-  .ber-review-col p { font-size: 7.5pt; line-height: 1.3; margin: 2px 0; }
-  .ber-evnote { margin-top: 5px; padding: 5px 10px; }
-  .ber-evnote .heading { font-size: 7pt; margin-bottom: 2px; }
-  .ber-evnote p { font-size: 7pt; margin: 1px 0; line-height: 1.25; }
-  .ber-footer { margin-top: 6px; font-size: 6.5pt; }
+  .ber-diff-shown { margin-top: 6px; font-size: 7.5pt; }
+  .ber-review-row { margin-top: 8px; }
+  .ber-review-col p { font-size: 8pt; }
+  .ber-evnote { margin-top: 8px; padding: 7px 10px; }
+  .ber-evnote .heading { font-size: 7.5pt; margin-bottom: 4px; }
+  .ber-evnote p { font-size: 7.5pt; margin: 2px 0; line-height: 1.3; }
+  .ber-footer { margin-top: 10px; font-size: 7pt; }
 }
 `;
 
