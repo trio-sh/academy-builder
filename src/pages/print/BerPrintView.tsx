@@ -584,14 +584,15 @@ body.ber-print-root {
 }
 
 @media print {
-  /* 8 mm page margin keeps the Part F face on a single physical page
-     at Letter and A4. Browsers that print with "Default" margins pad
-     another 4-5 mm — total ~13 mm, still safe for every consumer
-     printer's unprintable zone. The box inside carries 0 padding so
-     the design width equals the printable width; the internal
-     per-section padding we already set gives the content its breathing
-     room. */
-  @page { size: Letter; margin: 8mm; }
+  /* 5 mm page margin: tight but safe for every modern consumer
+     printer's unprintable zone (laser printers typically clip at 4 mm,
+     inkjet at 3 mm). The internal per-section padding we already set
+     gives the content its own breathing room, so this margin is a
+     printer-safety band rather than a design frame. Combined with the
+     per-section font-size tightening below, the Part F face fits on a
+     single physical Letter page even at the ~756 px wide PDF viewport
+     Playwright renders at. */
+  @page { size: Letter; margin: 5mm; }
   .ber-toolbar { display: none; }
   body.ber-print-root { background: var(--ber-parch); }
   html, body {
