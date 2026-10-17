@@ -1371,8 +1371,11 @@ export function Chatbot() {
   if (location.pathname.endsWith("/agent") || location.pathname.endsWith("/profile")) return null;
   // Print pages (e.g. /print/ber/:id) are standalone records intended to be
   // read or printed to PDF. The editorial-desk sticker overlays the body
-  // and would print into the record. Skip it there.
+  // and would print into the record. Also hide on the Mentor Cockpit's
+  // report-face page: that page renders the same BER face for review,
+  // and the sticker crowds it the same way.
   if (location.pathname.startsWith("/print/")) return null;
+  if (location.pathname.includes("/report-face")) return null;
 
   return (
     <div className="text-foreground">
