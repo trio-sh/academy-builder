@@ -586,26 +586,32 @@ body.ber-print-root {
 @media print {
   /* 5 mm page margin: tight but safe for every modern consumer
      printer's unprintable zone (laser printers typically clip at 4 mm,
-     inkjet at 3 mm). The internal per-section padding we already set
-     gives the content its own breathing room, so this margin is a
-     printer-safety band rather than a design frame. Combined with the
-     per-section font-size tightening below, the Part F face fits on a
-     single physical Letter page even at the ~756 px wide PDF viewport
-     Playwright renders at. */
+     inkjet at 3 mm). */
   @page { size: Letter; margin: 5mm; }
   .ber-toolbar { display: none; }
   body.ber-print-root { background: var(--ber-parch); }
+  /* Pin the printed layout to paper width (8.5 in minus the 5 mm × 2
+     page margin = ~8.11 in) regardless of whatever viewport width the
+     print pipeline is using. Chrome's print-emulation uses 1280 px,
+     Playwright's pdf() renders at ~756 px — both end up with the same
+     typographic layout once width is nailed to paper. */
   html, body {
     background: var(--ber-parch);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    width: 8.11in;
+    margin: 0 auto;
   }
   .ber-page {
-    width: 100%;
+    width: 8.11in;
     min-height: auto;
+    height: 10.6in;
+    overflow: hidden;
     margin: 0;
     padding: 0;
     box-shadow: none;
+    page-break-after: avoid;
+    page-break-inside: avoid;
   }
   /* Chrome's print pipeline ignores transform:scale and zoom for
      pagination decisions, so getting the record on one physical page
