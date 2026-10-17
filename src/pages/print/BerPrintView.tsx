@@ -605,6 +605,16 @@ body.ber-print-root {
     margin: 0;
     padding: 0;
     box-shadow: none;
+    /* After @media-print tightening, the designed box still measures
+       ~1167 px tall against a printable area of ~996 px (Letter 792 pt
+       - 2 × 8 mm margin). Shrink the whole page by 15 % so the record
+       lands on one physical sheet. Chrome rasterizes transform:scale
+       in its print pipeline cleanly for both text and vector art, and
+       transform-origin: top left keeps the page anchored to the margin
+       so nothing bleeds off. */
+    transform: scale(0.86);
+    transform-origin: top left;
+    width: 116.3%;
   }
   /* Trim vertical gaps so the full page fits inside the printable area
      without reflowing onto a second page. On screen the design has
