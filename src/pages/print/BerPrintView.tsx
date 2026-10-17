@@ -718,12 +718,25 @@ export default function BerPrintView() {
     void load();
   }, [berId]);
 
-  if (!berId) return <div className="ber-loading">Missing report identifier.</div>;
-  if (error) return <div className="ber-refused">Could not assemble this report. {error}</div>;
+  // Every state carries PRINT_CSS + the font link in a shared frame so
+  // the body always paints cream and the refusal / loading messages are
+  // legible. Without this, a signed-out visitor (or anyone who prints
+  // before the face RPC returns) sees the app's global dark theme and
+  // prints a blank-looking record because the message text is dark on
+  // dark.
+  const frame = (children: React.ReactNode) => (
+    <>
+      <link href={FONTS_HREF} rel="stylesheet" />
+      <style>{PRINT_CSS}</style>
+      {children}
+    </>
+  );
+
+  if (!berId) return frame(<div className="ber-loading">Missing report identifier.</div>);
+  if (error) return frame(<div className="ber-refused">Could not assemble this report. {error}</div>);
   if (renderCheck && !renderCheck.ok) {
-    return (
+    return frame(
       <div className="ber-refused" style={{ textAlign: "left", maxWidth: 720, margin: "60px auto" }}>
-        <style>{PRINT_CSS}</style>
         <div style={{ fontSize: "11pt", color: COLORS.NAVY, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700 }}>
           Serve refused
         </div>
@@ -748,12 +761,14 @@ export default function BerPrintView() {
             live:   {renderCheck.live_digest}
           </p>
         ) : null}
-      </div>
+      </div>,
     );
   }
-  if (!face) return <div className="ber-loading">Assembling…</div>;
+  if (!face) return frame(<div className="ber-loading">Assembling…</div>);
   if (!face.rendered) {
-    return <div className="ber-refused">This face does not render. {face.refusal_code ?? ""}</div>;
+    return frame(
+      <div className="ber-refused">This face does not render. {face.refusal_code ?? ""}</div>,
+    );
   }
 
   const issuedAt = face.issued_at ?? face.amended_at ?? new Date().toISOString();
@@ -770,11 +785,8 @@ export default function BerPrintView() {
     face.status === "withdrawn" ? "Prior" : "Current";
   const outputModeLabel = "LAYOUT SPECIMEN — NOT AN ISSUED REPORT";
 
-  return (
+  return frame(
     <>
-      <link href={FONTS_HREF} rel="stylesheet" />
-      <style>{PRINT_CSS}</style>
-
       <div className="ber-toolbar">
         <span>Printable record · {reportIdStr}</span>
         <button onClick={() => window.print()}>Download PDF</button>
@@ -995,6 +1007,6 @@ export default function BerPrintView() {
           Issued under a published evidence standard. Version and governing rules at verify.the3rdacademy.com
         </div>
       </div>
-    </>
+    </>,
   );
 }
