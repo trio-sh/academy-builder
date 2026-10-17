@@ -316,7 +316,15 @@ body.ber-print-root {
   box-shadow: 0 2px 16px rgba(0,0,0,0.15);
 }
 
-.ber-mast { display: grid; grid-template-columns: 1fr 110px; gap: 16px; }
+.ber-mast {
+  display: grid;
+  /* Fixed photo column + 24px gutter so the title and purpose paragraph
+     never crowd or wrap under the photo frame. */
+  grid-template-columns: 1fr 94px;
+  gap: 24px;
+  align-items: start;
+}
+.ber-mast-left { min-width: 0; padding-right: 8px; }
 .ber-brand-row { display: flex; align-items: center; gap: 10px; }
 .ber-brand-mark { width: 24px; height: 28px; object-fit: contain; }
 .ber-brand-text {
@@ -327,35 +335,34 @@ body.ber-print-root {
   font-family: 'Liberation Serif', Georgia, 'Times New Roman', serif;
   font-weight: 700;
   color: var(--ber-navy);
-  font-size: 32pt;
-  line-height: 1.0;
+  font-size: 28pt;
+  line-height: 1.05;
   margin: 6px 0 10px 0;
   letter-spacing: -0.01em;
 }
 .ber-purpose {
   color: var(--ber-body);
-  font-size: 9.5pt; line-height: 1.4; max-width: 540px;
+  font-size: 9.5pt; line-height: 1.4;
 }
 .ber-photo {
-  width: 110px; height: 128px;
+  /* The photo cell sits in its own fixed column; nothing in the left
+     column can reach it. */
+  width: 94px; height: 110px;
   background: #d9d4c7;
   border: 1px solid #b8b2a3;
   display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-  padding: 10px 6px;
+  padding: 8px 6px;
+  overflow: hidden;
 }
+/* Avatar silhouette: a single SVG so sizing stays predictable and no
+   pseudo-element can bleed out of the frame. */
 .ber-photo-silhouette {
-  width: 46px; height: 46px; border-radius: 50%;
-  background: #a9a394; margin-top: 10px;
-  position: relative;
-}
-.ber-photo-silhouette::after {
-  content: ""; position: absolute; left: -14px; right: -14px; top: 42px; height: 36px;
-  background: #a9a394;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  width: 48px; height: 56px;
+  color: #a9a394;
 }
 .ber-photo-label {
-  font-size: 7pt; color: var(--ber-muted); letter-spacing: 0.08em; text-transform: uppercase;
-  margin-top: auto;
+  font-size: 6.5pt; color: var(--ber-muted); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 2px; text-align: center; line-height: 1.1;
 }
 
 /* Particulars strip --------------------------------------------------- */
@@ -741,7 +748,7 @@ export default function BerPrintView() {
       <div className="ber-page">
         {/* Masthead */}
         <div className="ber-mast">
-          <div>
+          <div className="ber-mast-left">
             <div className="ber-brand-row">
               <img className="ber-brand-mark" src="/logo.png" alt="" />
               <span className="ber-brand-text">THE 3RD ACADEMY INC.</span>
@@ -750,7 +757,17 @@ export default function BerPrintView() {
             <p className="ber-purpose">{CT.purpose}</p>
           </div>
           <div className="ber-photo">
-            <div className="ber-photo-silhouette" />
+            <svg
+              className="ber-photo-silhouette"
+              viewBox="0 0 48 56"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              {/* Head */}
+              <circle cx="24" cy="18" r="11" />
+              {/* Shoulders / torso silhouette, clipped at the frame bottom */}
+              <path d="M 2 56 C 2 40, 10 32, 24 32 C 38 32, 46 40, 46 56 Z" />
+            </svg>
             <div className="ber-photo-label">Photo placeholder</div>
           </div>
         </div>
