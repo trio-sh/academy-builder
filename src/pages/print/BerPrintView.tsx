@@ -605,34 +605,43 @@ body.ber-print-root {
     margin: 0;
     padding: 0;
     box-shadow: none;
-    /* After @media-print tightening, the designed box still measures
-       ~1167 px tall against a printable area of ~996 px (Letter 792 pt
-       - 2 × 8 mm margin). zoom shrinks both the visual and the layout
-       box, so Chrome's print pipeline sees a smaller element that
-       fits one physical page. transform: scale was tried first and
-       produced a near-empty PDF because Chrome culls content whose
-       layout box extends past the page viewport, even when the
-       transform brings it visually back inside. */
-    zoom: 0.86;
   }
-  /* Trim vertical gaps so the full page fits inside the printable area
-     without reflowing onto a second page. On screen the design has
-     generous spacing; print tightens it ~30 %. */
-  .ber-mast { gap: 18px; }
-  .ber-particulars { margin-top: 10px; padding: 9px 12px; }
-  .ber-verify { margin-top: 10px; padding: 10px 12px; }
-  .ber-scope { margin-top: 10px; padding: 8px 12px; }
-  .ber-recorded-head { margin-top: 12px; }
-  .ber-table { margin-top: 6px; }
-  .ber-table td { padding: 9px 10px; }
-  .ber-not-rep-head { margin-top: 0; padding: 5px 10px; }
-  .ber-not-rep { padding: 8px 10px; gap: 2px 24px; }
-  .ber-not-rep-sub { padding: 5px 10px; }
-  .ber-diff-shown { margin-top: 8px; }
-  .ber-review-row { margin-top: 10px; }
-  .ber-evnote { margin-top: 10px; padding: 9px 12px; }
-  .ber-evnote p { margin: 2px 0; }
-  .ber-footer { margin-top: 14px; }
+  /* Chrome's print pipeline ignores transform:scale and zoom for
+     pagination decisions, so getting the record on one physical page
+     needs real content tightening. The on-screen view is untouched;
+     these rules apply only when @media print matches. */
+  .ber-mast { gap: 14px; }
+  .ber-title { font-size: 24pt; margin: 4px 0 6px 0; }
+  .ber-purpose { font-size: 8.5pt; line-height: 1.3; }
+  .ber-particulars { margin-top: 8px; padding: 6px 10px; }
+  .ber-particulars-row { gap: 4px 18px; }
+  .ber-particular .value { font-size: 11pt; }
+  .ber-status-line { margin-top: 4px; }
+  .ber-verify { margin-top: 8px; padding: 7px 10px; }
+  .ber-verify .cap, .ber-verify .visibility { font-size: 7.5pt; }
+  .ber-scope { margin-top: 8px; padding: 6px 10px; font-size: 8pt; }
+  .ber-recorded-head { margin-top: 10px; font-size: 10pt; }
+  .ber-table { margin-top: 5px; }
+  .ber-table thead th { padding: 5px 8px; font-size: 7.5pt; }
+  .ber-table td { padding: 7px 8px; }
+  .ber-table .dim-id { font-size: 20pt; }
+  .ber-table .dim-name { font-size: 7.5pt; }
+  .ber-table .statement-block { font-size: 10pt; padding: 5px 10px; margin: 4px 0 6px 0; }
+  .ber-table .illus-note, .ber-table .limit-note { font-size: 7.5pt; }
+  .ber-table .frame { font-size: 8pt; margin-bottom: 6px; }
+  .ber-table .ctx-stages { font-size: 9.5pt; margin-bottom: 4px; }
+  .ber-table .ctx-count, .ber-table .ctx-list { font-size: 7.5pt; }
+  .ber-not-rep-head { margin-top: 0; padding: 4px 10px; font-size: 7pt; }
+  .ber-not-rep-sub { padding: 4px 10px; font-size: 7.5pt; }
+  .ber-not-rep { padding: 6px 10px; gap: 1px 20px; font-size: 8pt; }
+  .ber-not-rep-item { padding: 1px 0; }
+  .ber-diff-shown { margin-top: 6px; font-size: 7.5pt; }
+  .ber-review-row { margin-top: 8px; }
+  .ber-review-col p { font-size: 8pt; }
+  .ber-evnote { margin-top: 8px; padding: 7px 10px; }
+  .ber-evnote .heading { font-size: 7.5pt; margin-bottom: 4px; }
+  .ber-evnote p { font-size: 7.5pt; margin: 2px 0; line-height: 1.3; }
+  .ber-footer { margin-top: 10px; font-size: 7pt; }
 }
 `;
 
