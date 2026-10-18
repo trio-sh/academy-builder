@@ -626,7 +626,7 @@ body.ber-print-root {
   .ber-status-line { margin-top: 4px; }
   /* Verify-authenticity band (QR + barcode row): tightened so the trailing
      footer content fits on one page without touching the rest of the face. */
-  .ber-verify { margin-top: 4px; padding: 4px 10px; }
+  .ber-verify { margin-top: 3px; padding: 2px 10px; }
   .ber-verify .cap, .ber-verify .visibility { font-size: 6.5pt; line-height: 1.2; }
   .ber-scope { margin-top: 8px; padding: 6px 10px; font-size: 8pt; }
   .ber-recorded-head { margin-top: 10px; font-size: 10pt; }
@@ -643,11 +643,11 @@ body.ber-print-root {
   /* Not-represented-in-this-report band (D2-D14 dimension grid): tightened
      so the trailing footer content fits on one page without touching the
      rest of the face. */
-  .ber-not-rep-head { margin-top: 0; padding: 3px 10px; font-size: 6.5pt; }
-  .ber-not-rep-sub { padding: 3px 10px; font-size: 7pt; }
-  .ber-not-rep { padding: 4px 10px; gap: 0 20px; font-size: 7.5pt; line-height: 1.2; }
+  .ber-not-rep-head { margin-top: 0; padding: 2px 10px; font-size: 6.5pt; }
+  .ber-not-rep-sub { padding: 2px 10px; font-size: 7pt; }
+  .ber-not-rep { padding: 2px 10px; gap: 0 20px; font-size: 7.5pt; line-height: 1.1; }
   .ber-not-rep-item { padding: 0; }
-  .ber-diff-shown { margin-top: 6px; font-size: 7.5pt; }
+  .ber-diff-shown { margin-top: 4px; font-size: 7.5pt; }
   .ber-review-row { margin-top: 8px; }
   .ber-review-col p { font-size: 8pt; }
   /* Evidence Note block: slight tightening (padding, inter-paragraph
@@ -657,7 +657,7 @@ body.ber-print-root {
   .ber-evnote { margin-top: 6px; padding: 5px 10px; }
   .ber-evnote .heading { font-size: 7.5pt; margin-bottom: 3px; }
   .ber-evnote p { font-size: 7.5pt; margin: 1px 0; line-height: 1.25; }
-  .ber-footer { margin-top: 6px; font-size: 7pt; }
+  .ber-footer { margin-top: 2px; font-size: 7pt; }
 }
 `;
 
