@@ -1050,7 +1050,7 @@ export default function BerPrintView() {
           <span>{outputModeLabel}</span>
           <span>Page 1 of 1</span>
         </div>
-        <div style={{ marginTop: 2, fontSize: "7pt", color: COLORS.MUTED, letterSpacing: "0.08em", textAlign: "center" }}>
+        <div style={{ marginTop: 0, fontSize: "7pt", color: COLORS.MUTED, textAlign: "center", lineHeight: 1.1 }}>
           Prepared under The 3rd Academy evidence standard.
         </div>
       </div>
