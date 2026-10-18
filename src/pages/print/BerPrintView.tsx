@@ -98,7 +98,7 @@ const STAGE_DESCRIPTIONS: Record<string, string> = {
 // --- Controlled texts, from the v9.11 fixture (verbatim) ------------------
 const CT = {
   purpose:
-    "A record documenting selected conduct observed in defined workplace situations. The participant controls whether this report is available to approved employers through The 3rd Academy and may withdraw future availability at any time.",
+    "A record of how conduct appeared in defined workplace-pressure situations. The participant controls whether this report is available to approved employers through The 3rd Academy and may withdraw future availability at any time.",
   verifyCap: "Verify the authoritative status before relying on this copy.",
   scopeHead: "Scope and limits.",
   scopeBody:
@@ -819,6 +819,17 @@ export default function BerPrintView() {
     face.status === "withdrawn" ? "Prior" : "Current";
   const outputModeLabel = "LAYOUT SPECIMEN — NOT AN ISSUED REPORT";
 
+  // T3A-DEV-CR-BER-001 Change 2 (and §6.4 default): the subline
+  // "Name shown on released copies" appears only when the Participant
+  // field holds a placeholder — either empty, or the literal word
+  // "Participant" (case-insensitive). A real participant name shows
+  // no subline. The specimen face has no participant_name source so
+  // the value is the literal placeholder, which keeps the subline on.
+  const participantValue = "Participant";
+  const isParticipantPlaceholder =
+    participantValue.trim() === "" ||
+    participantValue.trim().toLowerCase() === "participant";
+
   return frame(
     <>
       <div className="ber-toolbar">
@@ -858,8 +869,10 @@ export default function BerPrintView() {
           <div className="ber-particulars-row">
             <div className="ber-particular">
               <div className="label">Participant</div>
-              <div className="value">Participant</div>
-              <div className="sub">Released on verification</div>
+              <div className="value">{participantValue}</div>
+              {isParticipantPlaceholder ? (
+                <div className="sub">Name shown on released copies</div>
+              ) : null}
             </div>
             <div className="ber-particular">
               <div className="label">Report ID</div>
@@ -947,7 +960,7 @@ export default function BerPrintView() {
                       <div className="statement-block">{stmt.replace(/ — .+$/, "")}</div>
                       {b.rows.length === 1 ? null : (
                         <div className="illus-note">
-                          Additional recordings carried in the full source link register.
+                          Source links are held by The 3rd Academy.
                         </div>
                       )}
                       <div className="limit-note">{CT.limit}</div>
@@ -1038,7 +1051,7 @@ export default function BerPrintView() {
           <span>Page 1 of 1</span>
         </div>
         <div style={{ marginTop: 2, fontSize: "7pt", color: COLORS.MUTED, letterSpacing: "0.08em", textAlign: "center" }}>
-          Issued under a published evidence standard. Version and governing rules at verify.the3rdacademy.com
+          Prepared under The 3rd Academy evidence standard.
         </div>
       </div>
     </>,
