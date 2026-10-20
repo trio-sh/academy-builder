@@ -1,0 +1,82 @@
+{
+ "passed": 10,
+ "total": 10,
+ "failed": [],
+ "results": [
+  {
+   "id": "CR-068",
+   "label": "opening the gateway works and writes a canonical observation.path_opened event",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-068",
+   "label": "the event is accepted (not quarantined), chained and carries the canonical payload",
+   "pass": true,
+   "detail": {
+    "event_name": "observation.path_opened",
+    "event_processing_state": "accepted",
+    "ph": true,
+    "has_id": true
+   }
+  },
+  {
+   "id": "CR-068",
+   "label": "the event chain verifies",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-20",
+   "label": "a progression decision sent with free text is refused by the live endpoint",
+   "pass": true,
+   "detail": "DT-20 FREE_TEXT_REFUSED: a progression decision takes a controlled rationale code, not free text"
+  },
+  {
+   "id": "CR-068",
+   "label": "a progression decision without free text is recorded",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-068",
+   "label": "it writes a canonical observation.progression_recorded event, accepted",
+   "pass": true,
+   "detail": {
+    "event_name": "observation.progression_recorded",
+    "event_processing_state": "accepted"
+   }
+  },
+  {
+   "id": "CR-068",
+   "label": "a controlled rationale code is accepted and carried in the event",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-20",
+   "label": "a sentence passed as the code is refused",
+   "pass": true,
+   "detail": "DT-20 FREE_TEXT_REFUSED: rationale code must be a code"
+  },
+  {
+   "id": "CR-068",
+   "label": "refused calls wrote no event",
+   "pass": true,
+   "detail": [
+    25,
+    28
+   ]
+  },
+  {
+   "id": "DT-20",
+   "label": "no rationale text is stored on the judgment row",
+   "pass": true,
+   "detail": [
+    {
+     "decision_rationale": null
+    }
+   ]
+  }
+ ]
+}
