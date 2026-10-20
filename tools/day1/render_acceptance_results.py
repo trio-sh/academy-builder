@@ -5,7 +5,7 @@
 import json, sys
 dim, src, out = sys.argv[1], sys.argv[2], sys.argv[3]
 d = json.load(open(src))
-ref = {"D2": "d2", "D3": "d3"}[dim]
+ref = {"D2": "d2", "D3": "d3", "D4": "d4"}[dim]
 L = [f"# {dim} acceptance results (Section 11)", "",
      f"Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/{ref}-acceptance-run.json`. The run re-reads the labelled results of the {dim} step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.", "",
      f"**{d['pass']} of {d['identifiers_required']} identifiers PASS, {d['fail']} FAIL, {d['not_run']} NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.", "",

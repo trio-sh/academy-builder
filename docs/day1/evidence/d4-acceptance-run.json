@@ -1,0 +1,1340 @@
+{
+ "identifiers_required": 84,
+ "identifiers_reported": 84,
+ "missing": [],
+ "pass": 78,
+ "fail": 0,
+ "not_run": 6,
+ "failed": [],
+ "results": [
+  {
+   "id": "D4-01",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an unapproved D4 source is unreachable from the serving gate and from production composition",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "source_not_approved",
+      "source_not_approved"
+     ]
+    },
+    {
+     "label": "and from assignment of a Stage 3 source",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3j-stage3-stage4-test.json: an unapproved Stage 3 source cannot be assigned"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-02",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D4 source with a null situation class cannot be approved",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: a D4 source with a null situation class cannot be approved"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-03",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 2 entry with no confirmed Stage 1: s1_confirmation_absent, record absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: closed but no confirmation: record absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-03a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 instance still open: s1_instance_not_closed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: a Stage 1 instance that is not closed refuses with its own sub-reason"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-03b",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "confirmation by an actor other than the assigned mentor: wrong actor, not treated as absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: a confirmation by someone other than the assigned mentor fails the gate as a wrong-actor control failure, distinct from absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-03c",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 observation uncommitted: s1_observation_not_committed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: assigned mentor confirmed, nothing committed: s1_observation_not_committed"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-03d",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no progression, or a progression that blocks: s1_progression_absent_or_blocks",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: committed, no progression: s1_progression_absent_or_blocks"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-04",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D4-07 and Q-D4-07b are unavailable at Stage 1: an answer for either is refused and no row is written",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "answer_for_question_not_served",
+      "answer_for_question_not_served"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-05",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D4-02 A1 with Q-D4-02b nothing selected is refused: the parent asserts designated items were contained and the child identifies none",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D4-02b: a listed answer needs at least one item",
+      "reason": "selection_does_not_match_answer",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-06",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D4-07 A3 resolves to ST-D4-036 alone; the unserved child contributes no negative sentence",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "ST-D4-036"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-07",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound item from another source version is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D4-03b item not on material_items of this source version",
+      "reason": "bound_item_not_on_source",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-08",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound item from a D1 source is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D4-02b item not on material_items of this source version",
+      "reason": "bound_item_not_on_source",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-09",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a served question unanswered with no missing state code is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D4-09",
+      "reason": "served_question_unanswered",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-10",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "not_applicable and not_yet_observed cannot be posted as missing states",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "missing_state_not_postable",
+      "missing_state_not_postable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-11",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D1 input to a D4 computation is refused as a dimension isolation violation, and D1 observations never enter the D4 observation set",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "dimension_isolation_violation",
+      "source_stage_mismatch"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-12",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D4 clause instance against a D1 clause instance is refused",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: a D4 clause instance against a D3 clause instance refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-13",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "FR-D4-2 with no approved cross-context row is refused; the side by side condition still shows",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: two observations with no approved cross-context relationship: no multi-context frame, the reason is given"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-14",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "three matching keys with differing state codes: no recurrence frame; the multiple context frame with divergence instead",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: three matching keys but differing state codes: no fourth-state frame (a key does not assert the same conduct)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-15",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a material contradiction in the full set blocks the recurrence frame although three match",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: no cherry-picking: a fourth current observation that contradicts blocks the frame although three match"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-16",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "recurrence configuration unloaded: refused regardless of the data",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: three Stages, three related contexts, two observers, same key and code, but the recurrence configuration is not locked: frame unavailable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-17",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a recurrence blocker never counts toward the recurring state",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: ST-D4-053 never satisfies the recurring state"
+     ]
+    },
+    {
+     "label": "ST-D4-015 is a recurrence blocker and is never equivalent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: ST-D4-010 and ST-D4-015 are the recurrence blockers",
+      "d4-step3e-compose-test.json: no communication at all composes, and ST-D4-015 carries its key (ST-D4-010 is suppressed as the duplicated absence statement when Q-D4-01 records none) but is a recurrence blocker and never equivalent"
+     ]
+    },
+    {
+     "label": "ST-D4-010 and ST-D4-015 are the two recurrence blockers",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: ST-D4-010 and ST-D4-015 are the recurrence blockers"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-18",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D4 row below the floor (one context) cannot be issued: named blocker below_issuance_floor",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-19",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "one authorized observer across the mentor-observed Stages is refused (fewer_than_two_authorized_observers), and the state does not reach the multiple context frame on one observer",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "participant_review_incomplete",
+      "checklist_incomplete_or_failed",
+      "checklist_incomplete_or_failed",
+      "below_issuance_floor",
+      "fewer_than_two_authorized_observers",
+      "commit_seal_absent",
+      "commit_seal_absent",
+      "consent_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-20",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the observer of the D1 record of a two-dimension report cannot be its evidence reviewer",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: an actor who observed the D1 record of a two-dimension report may not evidence-review it"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-21",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the reviewer cannot be the issuer",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: the reviewer cannot be the issuer"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-22",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no participant response to the pre-issue review notice: issuance blocks; no timeout",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: with no recorded participant outcome the report is blocked, silence is not completion"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-23",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a correction against a D4 sentence blocks the report; the D4 record is in reconsideration and D1 is untouched",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: a correction against a D4 record blocks the report; the D4 record is in reconsideration and the D1 record is not"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-24",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an in-place edit of a composed statement is refused; supersession only",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: editing a composed statement after commit refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-25",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a two-dimension report on one page fails and logs layout_overflow; the multi page form renders it without expanding or compressing the single page",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "layout_overflow",
+      "renderable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-26",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no overall, composite, average or profile element: such an element fails the scan, and none of the 68 statements carries one",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      false,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-27",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no Section 3.2 comparative or evaluative word, and no word that belongs to another dimension, in rendered D4 output",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: a closed-list evaluative phrase fails (strong response)"
+     ]
+    },
+    {
+     "label": "a word that belongs to D2 or D4 fails as cross_dimension_assertion",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: a word that belongs to another dimension fails as cross_dimension_assertion (escalated)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-28",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no named third party in any D4 statement or template (outputs name controlled roles, never people)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "statements": 0,
+      "templates": 0
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-29",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D4 mentor cannot be authorized from a D1 calibration record",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3i-calibration-pilot-test.json: a D1 clearance confers nothing: D4 authorization with no D4 clearance is refused and logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-30",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a participant who met the same D4 interaction pattern family is excluded",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: the same situation pattern family in D4 excludes a different version"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-30a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the Stage 2 seven-beat form met under D1 excludes the D4 Stage 2 form without any mapping",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: having sat the Stage 2 seven-beat form under D1 excludes the D4 Stage 2 form (the form crosses)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-30b",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a cross-dimension pattern exclusion with the mapping table empty: refused and logged cross_dimension_mapping_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: a cross dimension pattern comparison with the mapping table empty refuses and logs cross_dimension_mapping_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-31",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "D4 Stage entry with only D1 mentor_observation consent: refused and logged consent_not_inherited",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: D4 Stage entry with only D1 mentor_observation recorded refuses and logs consent_not_inherited"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-32",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "issuing a report that holds a D4 record on D1 consent alone: refused and logged consent_not_inherited",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: an issuance written for that report is skipped and the refusal is logged (not a raised error that rolls the log back)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-33",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "pool availability needs employer_share for every dimension in the report",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: with employer_share granted for D1 only, availability of a D1+D4 report refuses and logs"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-34",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an unloaded evidence currency value blocks issuance (checklist item 13)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: an unloaded evidence currency value blocks issuance"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-35",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "the correction commitment text does not render when the response time is unloaded",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Participant correction screen (surface step). The value is not loaded and has no default in the database."
+    }
+   ]
+  },
+  {
+   "id": "D4-36",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: verification_link_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d4-step3m-consent-routes-timing-test.json: verification_resend_cooldown unloaded: the route fails closed, logs, and supplies no duration",
+      "d4-step3m-consent-routes-timing-test.json: mentor_invitation_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d4-step3m-consent-routes-timing-test.json: pool_session_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d4-step3m-consent-routes-timing-test.json: verification_reference_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d4-step3m-consent-routes-timing-test.json: stage_entry_hold_ttl unloaded: the route fails closed, logs, and supplies no duration"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-37",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "a report with the permitted-use text unloaded: the render refuses",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Report renderer (Step 6). The text is not loaded."
+    }
+   ]
+  },
+  {
+   "id": "D4-38",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a Stage 3 artifact with no tooling declaration is refused and logged",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3j-stage3-stage4-test.json: a missing tooling declaration refuses under AI_USE_DECLARATION_REQUIRED and the refusal persists"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-39",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "the Mentor Cockpit opened below 1280 by 800 refuses capture",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Cockpit screen (surface step)."
+    }
+   ]
+  },
+  {
+   "id": "D4-40",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: an accommodation that changed the response channel marks the observation timing_not_comparable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-41",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 4 entry with no group participation record is refused",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3j-stage3-stage4-test.json: one missing permission among four still refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-42",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "capture or read of followup_contact or aggregate_regional is refused and logged disabled_consent_route",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: capture and read of followup_contact and aggregate_regional refuse and log disabled_consent_route"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-43",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no named-recipient, release-token, passcode or released-to-your-organization construction in any output; such a construction fails the scan",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "statements": 0,
+      "scan": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-44",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a source with either drafting-test row empty cannot be approved: drafting_test_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: the table backstop refuses an approval of a loaded D4 source"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-45",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a drafting-test reviewer equal to the source author is refused",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: a reviewer who is a member of the author list is refused and logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-46",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a Stage 3 source with no rights record is refused at submission, rights_route_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3d-gateway-test.json: the refusal is the named code rights_route_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-47",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 4 entry with s4_activation_state unloaded: s4_not_activated, the attempt recorded with its result",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3j-stage3-stage4-test.json: entry refuses with s4_not_activated and the attempt is recorded with its result"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-48",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no second release model, no bypass of s4_activation_state, and no override reaching a real Stage 4 entry (database routines and application source scanned)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "startFns": [],
+      "actRefs": [],
+      "poolModes": [],
+      "tokenCreators": [],
+      "srcHits": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-48a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a superseded release route invoked directly is refused and logged superseded_route_invoked with caller and route",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: each superseded release route logs superseded_route_invoked with the caller and the route name"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-49",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D4-02b and Q-D4-03b selecting the same item both compose as separate determinations; neither is suppressed as a duplicate",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: the same material item selected at Q-D4-02b and Q-D4-03b composes both as separate determinations"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-50",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a resolution table with one row naming a question absent from the question objects is refused whole and logged; the loader does not skip the row",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step4a-register-test.json: a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-58",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a source whose served question has an empty definition cannot enter the production approval path: question_definition_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step4a-register-test.json: a source whose served question has an empty definition cannot enter the production approval path; the refusal is logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-59",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a calibration run on a question with an empty definition does not open: question_definition_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3i-calibration-pilot-test.json: a calibration run on a question with an empty definition does not open; the refusal is logged question_definition_incomplete",
+      "d4-step3i-calibration-pilot-test.json: a calibration run that names no question does not open either",
+      "d4-step3i-calibration-pilot-test.json: locking B does not open the view for A"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-60",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the demonstration fixtures and the full acceptance suite run with every question definition empty: the refusal sits on production approval and calibration only",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step4a-register-test.json: every one of the 15 questions carries calibration_ready false"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-61",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a Stage 1 pattern composes with the stage_1_only limitation",
+     "status": "PASS",
+     "how": "run",
+     "detail": null
+    },
+    {
+     "label": "a Stage 1 statement carrying a channel use entry refuses and logs stage_form_violation",
+     "status": "PASS",
+     "how": "run",
+     "detail": "stage_form_violation"
+    },
+    {
+     "label": "a performed act verb at Stage 1 refuses and logs stage_form_violation",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: a performed-act verb at Stage 1 refuses and logs stage_form_violation (verb added for the test, then removed)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-51",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "the evidence currency statement appears visibly in block 4 of a rendered report",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D4-34)."
+    }
+   ]
+  },
+  {
+   "id": "D4-52",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "any contact initiation from an employer surface is refused and logged contact_permission_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: a contact initiation attempt refuses and logs contact_permission_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-53",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "every loaded source carries the clearance status from its own sheet, and none serves while the clearance is pending",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "values": [
+       "CLEARED"
+      ],
+      "first_failing_precondition": "drafting_test_incomplete"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-54",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D4-02b needs material_items",
+      "reason": "BOUND_FAMILY_ABSENT_OR_EMPTY",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-55",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound-family item taking only its first physical line is refused at load: bound_item_integrity_failed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: loading that source REFUSES and logs bound_item_integrity_failed"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-56",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a CE-D4-04 timing determination with no loaded mentor_action_sequence is refused: beat_sequence_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: a timing determination on a source with no loaded sequence refuses and logs beat_sequence_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-57",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "b2_pause_seconds is read from the beat marked is_decision_point, not from a hard-coded B2",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3m-consent-routes-timing-test.json: the pause is read from the beat marked as the decision point (B3 here), not a hard coded B2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-62",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "the four fixtures end to end and the specimen report face rendered in full with the specimen watermark",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Multi page report renderer (Step 6). The fixtures are seeded and the eligibility gate is reachable (D4-PP-09)."
+    }
+   ]
+  },
+  {
+   "id": "D4-63",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no flag, override or test mode lifts an approval, calibration or activation refusal: every test mode parameter is service route only (checked in the routine, in the routine it delegates to, or by the grant), and no bypass routine exists",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "testModeFns": [],
+      "overrideFns": [],
+      "srcHits": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-64",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "every Section 3.2 manner word fails the scan, and none of the D4 statements or templates carries one",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "unflagged_manner_words": [],
+      "statements": 0,
+      "templates": 0
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-65",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an altered committed observation with a recomputed hash is refused: commit_seal_invalid (the seal is a server side signature)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: under any other key the seal reads as invalid (commit_seal_invalid)"
+     ]
+    },
+    {
+     "label": "the seal key is never in the database: an unloaded key refuses",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: with the signing key not loaded the seal refuses as commit_seal_key_unloaded"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-66",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a second observation record under an identifier already committed is refused; the first record stands",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3e-compose-test.json: a second original commit under the same observation identifier is refused by the store; the first record stands",
+      "d4-step3e-compose-test.json: a second original seal under the same identifier is refused as well"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-67",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "a single page route for a D4 report refuses format_mismatch and logs it",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: a single page render of a report that carries D4 refuses format_mismatch and logs it"
+     ]
+    },
+    {
+     "label": "a D4 only report renders as three pages through the multi page renderer",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "Multi page report renderer (Step 6). The gate that routes to it is tested above."
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-01",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "two D4 observations with an approved row, agreeing: the multiple context frame is available",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: the third state is breadth: two related contexts with different statements still reach it"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-02",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "two D4 observations, approved row, diverging: held side by side with the divergence condition, neither preferred",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: two observations with different statements are held side by side with the divergence condition"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-03",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "three observations, three Stages, same key and state code, no contradiction, configuration locked: the recurring frame for that clause",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: with the configuration locked the clause recurs across Stages (FR-3), for that clause"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-04",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 end to end in the fixed order: confirmation, commit, progression; Stage 2 then permits",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3f-stage1-auth-test.json: proceed permits Stage 2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-05",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 2 with the seven beats: a complete timing record permits the timing determination and the determinations commit",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "timing": null,
+      "decision_point": "B2",
+      "composed": "composed"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-06",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D4 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "gate": [],
+      "insert": "ok",
+      "rows": [
+       0,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-07",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a successful correction: a new composed statement supersedes, the original is retained",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3h-report-gate-test.json: a successful correction produces a NEW statement that supersedes the old"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-08",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "availability granted on a report carrying D4 (employer_share for both dimensions), the pool entry holds no dimension, stage or conduct field, the participant withdraws, the entry leaves the pool, and the evidence record is untouched",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "make": {
+       "outcome": "available",
+       "recipient_release_id": "fd5cb092-0d78-4b36-83d3-d801f9e578e3"
+      },
+      "state": {
+       "available": true,
+       "withdrawn_at": null,
+       "report_status": "issued",
+       "correction_open": false,
+       "made_available_at": "2026-10-20T20:28:06.641637+00:00"
+      },
+      "withdraw": {
+       "outcome": "withdrawn",
+       "recipient_release_id": "fd5cb092-0d78-4b36-83d3-d801f9e578e3"
+      },
+      "after": {
+       "w": true,
+       "cs": 0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-09",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the four demonstration fixtures are seeded as written (Q-D4-06, Q-D4-07 and Q-D4-07b not served at Stage 1; Q-D4-06 and Q-D4-09 not served at Stage 3); the eligibility check is reachable on a demonstration report and no issued report is created",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "fixtures": [
+       {
+        "id": "DEMO-D4-S1-001",
+        "stage": 1,
+        "qs": 15,
+        "served": 12,
+        "pattern": "IPF-D4-01"
+       },
+       {
+        "id": "DEMO-D4-S2-001",
+        "stage": 2,
+        "qs": 15,
+        "served": 13,
+        "pattern": "IPF-D4-03"
+       },
+       {
+        "id": "DEMO-D4-S3-001",
+        "stage": 3,
+        "qs": 15,
+        "served": 13,
+        "pattern": "IPF-D4-02"
+       },
+       {
+        "id": "DEMO-D4-S4-001",
+        "stage": 4,
+        "qs": 15,
+        "served": 14,
+        "pattern": "IPF-D4-07"
+       }
+      ],
+      "s1": "Q-D4-06,Q-D4-07,Q-D4-07b",
+      "s3": "Q-D4-06,Q-D4-09",
+      "issued": [
+       10,
+       10
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "D4-PP-10",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "one participant with D1 and D4 observations: each dimension's state is unchanged by the other's records",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d4-step3g-evidence-state-test.json: two D1 observations leave the D4 state unchanged (and the D1 state is its own)"
+     ]
+    }
+   ]
+  }
+ ]
+}

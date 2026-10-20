@@ -1,0 +1,126 @@
+{
+ "counts": [
+  {
+   "questions": 15,
+   "capture_sets": 15,
+   "capture_lines": 47,
+   "branch_rules": 6,
+   "statements": 47,
+   "refusal_rules": 19,
+   "templates": 13,
+   "sources": 33,
+   "demo_fixtures": 4,
+   "register_rows": 47,
+   "vocab": 83,
+   "placeholders": 6,
+   "review_items": 2
+  }
+ ],
+ "branch_rules_derived": [
+  {
+   "n": 6
+  }
+ ],
+ "approvals_or_active": [
+  {
+   "n": 0
+  }
+ ],
+ "source_approvals": null,
+ "ready_questions": [
+  {
+   "n": 0
+  }
+ ],
+ "semantic_fields_written": [
+  {
+   "n": 0
+  }
+ ],
+ "coverage": [
+  {
+   "patterns": 1744,
+   "resolved": 720,
+   "designed_refusals": 1024,
+   "gaps": 0,
+   "ambiguous": 0
+  }
+ ],
+ "bound_item_failures": [],
+ "blockers": [
+  {
+   "statement_key": "ST-D4-010"
+  },
+  {
+   "statement_key": "ST-D4-015"
+  }
+ ],
+ "first_failing_precondition_S2_001": [
+  {
+   "c": "drafting_test_incomplete"
+  }
+ ],
+ "d2_d3_unchanged": [
+  {
+   "d2st": 61,
+   "d3st": 68,
+   "d3q": 16
+  }
+ ],
+ "residue": [
+  {
+   "refusals": 0,
+   "composed": 0,
+   "seals": 0
+  }
+ ],
+ "anon_exec_new_functions": [],
+ "seal_table_rls_and_grants": [
+  {
+   "rls": true,
+   "anon_sel": false,
+   "auth_sel": false
+  }
+ ],
+ "seal_key_in_db": [
+  {
+   "n": 0
+  }
+ ],
+ "config_rows_for_seal_key": [
+  {
+   "n": 0
+  }
+ ],
+ "probe_serving_gate_refuses": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE source_not_approved\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_production_resolution": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE no_approved_statement\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_s4_not_activated": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE activation_state=null\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_compose_unapproved": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE source_not_approved\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_single_page_d4_refuses": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE format_mismatch\\nCONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE\\n\"}"
+ },
+ "probe_rollback_dry_run": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE rollback_dry_run d4_statements=0 d4_objects=0 seal_table=gone d3_statements=68 d2_statements=61 stage_form_fn_args=p_stage text, p_statements jsonb\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "after_dry_run": [
+  {
+   "d4_statements": 47,
+   "seal": "t3a_commit_seal",
+   "review": 2
+  }
+ ]
+}

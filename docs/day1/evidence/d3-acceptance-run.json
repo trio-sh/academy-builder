@@ -233,7 +233,7 @@
      "how": "run",
      "detail": [
       "dimension_isolation_violation",
-      "applicability_table_absent"
+      "source_stage_mismatch"
      ]
     }
    ]
@@ -366,6 +366,8 @@
       "checklist_incomplete_or_failed",
       "below_issuance_floor",
       "fewer_than_two_authorized_observers",
+      "commit_seal_absent",
+      "commit_seal_absent",
       "consent_absent"
      ]
     }
@@ -1144,18 +1146,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "f1472eef-59ae-4ec6-a5a8-93adb5c78c75"
+       "recipient_release_id": "9866e15f-0a3c-4276-a0c6-17d09f77943f"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-20T20:08:31.609898+00:00"
+       "made_available_at": "2026-10-20T20:29:33.070842+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "f1472eef-59ae-4ec6-a5a8-93adb5c78c75"
+       "recipient_release_id": "9866e15f-0a3c-4276-a0c6-17d09f77943f"
       },
       "after": {
        "w": true,
@@ -1207,8 +1209,8 @@
       "s1": "Q-D3-08",
       "s3": "Q-D3-08,Q-D3-09",
       "issued": [
-       7,
-       7
+       13,
+       13
       ]
      }
     }

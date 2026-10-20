@@ -25,7 +25,8 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             # the D3 content load and the D3 demonstration fixtures carry authored source text as data, as the D2 load does (CR-082 pattern)
             # re-emits the prohibited-output scan, whose rule names are the detection vocabulary (the same text the evidence state migration carries)
             "supabase/migrations/20261218000000_d3_shared_machinery.sql",
-            "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql"]
+            "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql",
+            "supabase/migrations/20261223000000_d4_content_registry.sql", "supabase/migrations/20261224000000_d4_demonstration_fixtures.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)

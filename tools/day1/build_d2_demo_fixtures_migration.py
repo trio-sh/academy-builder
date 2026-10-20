@@ -41,14 +41,26 @@ def parse(part):
             cur.append(l)
     blocks[label] = "\n".join(cur).strip("\n")
     hdr = {r[0]: r[1] for r in table(blocks["_header"].split("\n"))[1:]}
+    if "Stage" not in hdr:
+        # compact header (D4 edition): "Identifier | DEMO-D4-S1-001 · Stage 1 · SC-D4-1 · IPF-D4-01 · AF-S1-SEQUENTIAL-REVEAL" and "scenario_class | observation_ready · demonstration true · name_clearance_status CLEARED"
+        ident_parts = [x.strip() for x in hdr["Identifier"].split("·")]
+        hdr = {"Identifier": ident_parts[0], "Stage": ident_parts[1].replace("Stage", "").strip(), DIM.lower() + "_situation_class": ident_parts[2],
+               "interaction_pattern_family_id": ident_parts[3], "administration_form_id": ident_parts[4]}
+        sc_parts = [x.strip() for x in table(blocks["_header"].split("\n"))[2][1].split("·")]
+        hdr["scenario_class"] = sc_parts[0]; hdr["demonstration"] = "true" if "demonstration true" in sc_parts[1] else "false"
+        hdr["name_clearance_status"] = sc_parts[2].replace("name_clearance_status", "").strip()
     sheet, key = {}, None
-    for l in blocks["Source sheet"].split("\n"):
+    sheet_src = blocks.get("Source sheet") or blocks.get("Source sheet.") or ""
+    for l in sheet_src.split("\n"):
         mm = re.match(r"- ([a-z_0-9]+): ?(.*)$", l)
         if mm: key = mm.group(1); sheet[key] = mm.group(2).strip()
         elif l.strip().startswith("-") and key: sheet[key] = (sheet[key] + "; " if sheet[key] else "") + l.strip().lstrip("- ").strip()
     # a row may name two questions ("Q-D3-06a and Q-D3-06b"); each question gets its own entry carrying the same state and basis
-    app = [{"question": q.strip(), "state": r[1], "basis": r[2]} for r in table(blocks["Question applicability"].split("\n"))[1:] for q in r[0].split(" and ")]
-    script = [{"beat": r[0], "type": r[1], "verbatim_text": r[2], "capture": r[3] if len(r) > 3 else None} for r in table(blocks["Script"].split("\n"))[1:]] if "Script" in blocks else None
+    app_src = blocks.get("Question applicability") or next(v for v in blocks.values() if "| Question | State | Basis |" in v)
+    app_lines = [l for l in app_src.split("\n") if l.strip().startswith("|")]
+    app = [{"question": q.strip(), "state": r[1], "basis": r[2]} for r in table(app_lines)[1:] for q in r[0].split(" and ")]
+    if not sheet: sheet = {"source_sheet_text": "\n".join(l for l in sheet_src.split("\n") if not l.strip().startswith("|")).strip()}
+    script = [{"beat": r[0], "type": r[1], "verbatim_text": r[2], "capture": r[3] if len(r) > 3 else None} for r in table(blocks["Script"].split("\n"))[1:]] if "Script" in blocks and any(l.strip().startswith("|") for l in blocks["Script"].split("\n")) else None
     quotes = {k: "\n".join(x.lstrip("> ").rstrip() if x.startswith(">") else x for x in v.split("\n") if x.startswith(">")).replace("\n\n", "\n").strip() for k, v in blocks.items() if ">" in v}
     reveals = re.findall(r"^- (R\d+) . (.+)$", blocks.get("Reveal sequence", ""), re.M)
     return n, ident, title, hdr, blocks, sheet, app, script, quotes, reveals
@@ -56,7 +68,7 @@ def parse(part):
 stmts = []
 for p in parts:
     n, ident, title, hdr, blocks, sheet, app, script, quotes, reveals = parse(p)
-    assert len(app) == {"D2": 15, "D3": 16}[DIM], (ident, len(app))
+    assert len(app) == {"D2": 15, "D3": 16, "D4": 15}[DIM], (ident, len(app))
     assert hdr["Identifier"] == ident and hdr["demonstration"] == "true"
     stage_code = "S" + hdr["Stage"]
     body = {"source_identifier": ident, "title": title, "stage": int(hdr["Stage"]), "stage_code": stage_code, "demonstration": True, "serving_eligible": False,
