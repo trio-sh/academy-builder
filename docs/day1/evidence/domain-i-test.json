@@ -1,0 +1,156 @@
+{
+ "passed": 19,
+ "total": 19,
+ "failed": [],
+ "results": [
+  {
+   "id": "I-app",
+   "label": "a free email provider is refused: free_provider_refused true, status declined",
+   "pass": true,
+   "detail": {
+    "application_id": "bbe694a8-ae5f-4e12-87f7-771283222368",
+    "free_provider_refused": true,
+    "application_status": "declined",
+    "email_domain": "gmail.com",
+    "cs": "captured"
+   }
+  },
+  {
+   "id": "I-app",
+   "label": "a business domain is not refused; the domain is derived",
+   "pass": true,
+   "detail": {
+    "application_id": "27ac6ad4-a038-4c8b-8f5f-0ba0d10adecd",
+    "free_provider_refused": false,
+    "application_status": null,
+    "email_domain": "acme-0749f017.ca",
+    "cs": "captured"
+   }
+  },
+  {
+   "id": "I-app",
+   "label": "application_status outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_employer_application\" violates check constraint \"t3a_e"
+  },
+  {
+   "id": "I-org",
+   "label": "organization identity facts are fixed",
+   "pass": true,
+   "detail": "T3A_IMMUTABLE_COLUMN: application_id cannot change after it is written"
+  },
+  {
+   "id": "DT-35",
+   "label": "as a pending organization, pool, report and count requests are all refused",
+   "pass": true,
+   "detail": [
+    "EMPLOYER_NOT_VERIFIED",
+    "EMPLOYER_NOT_VERIFIED",
+    "EMPLOYER_NOT_VERIFIED"
+   ]
+  },
+  {
+   "id": "DT-35",
+   "label": "the refusals return no count or metadata",
+   "pass": true,
+   "detail": [
+    "detail",
+    "reason",
+    "outcome"
+   ]
+  },
+  {
+   "id": "DT-34",
+   "label": "a verified organization may query on participant stated fields",
+   "pass": true,
+   "detail": {
+    "outcome": "accepted",
+    "pool_query_id": "85f95017-673e-4aae-94c3-e0ff16c112a2"
+   }
+  },
+  {
+   "id": "DT-34",
+   "label": "observed_stage: an observed or conduct derived criterion is refused",
+   "pass": true,
+   "detail": "POOL_CRITERION_NOT_ALLOWED"
+  },
+  {
+   "id": "DT-34",
+   "label": "conduct_pattern: an observed or conduct derived criterion is refused",
+   "pass": true,
+   "detail": "POOL_CRITERION_NOT_ALLOWED"
+  },
+  {
+   "id": "DT-34",
+   "label": "ber_status: an observed or conduct derived criterion is refused",
+   "pass": true,
+   "detail": "POOL_CRITERION_NOT_ALLOWED"
+  },
+  {
+   "id": "DT-34",
+   "label": "dimension_score: an observed or conduct derived criterion is refused",
+   "pass": true,
+   "detail": "POOL_CRITERION_NOT_ALLOWED"
+  },
+  {
+   "id": "DT-34",
+   "label": "stage_code: an observed or conduct derived criterion is refused",
+   "pass": true,
+   "detail": "POOL_CRITERION_NOT_ALLOWED"
+  },
+  {
+   "id": "DT-33",
+   "label": "a hire is recorded; the row carries no participant or report reference",
+   "pass": true,
+   "detail": [
+    "organization_id",
+    "hire_recorded_id",
+    "recorded_at"
+   ]
+  },
+  {
+   "id": "DT-33",
+   "label": "t3a_employer_attestation carries no participant or report reference",
+   "pass": true,
+   "detail": [
+    "organization_id",
+    "employer_attestation_id",
+    "attested_at"
+   ]
+  },
+  {
+   "id": "DT-33",
+   "label": "t3a_workspace_note carries no participant or report reference",
+   "pass": true,
+   "detail": [
+    "organization_id",
+    "workspace_note_id",
+    "noted_at"
+   ]
+  },
+  {
+   "id": "I-contact",
+   "label": "contact request state outside the listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_employer_contact_request\" violates check constraint \"t"
+  },
+  {
+   "id": "I-socket",
+   "label": "employment linkage socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_employment_linkage_socket is a SOCKET structure; ca"
+  },
+  {
+   "id": "I-rls",
+   "label": "anonymous callers cannot read employer organizations",
+   "pass": true,
+   "detail": "permission denied for table t3a_employer_organization"
+  },
+  {
+   "id": "DT-01(I)",
+   "label": "all 34 Domain I fields mapped",
+   "pass": true,
+   "detail": 34
+  }
+ ]
+}
