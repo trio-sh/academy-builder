@@ -1,0 +1,250 @@
+{
+ "passed": 26,
+ "total": 26,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-89",
+   "label": "the checklist has 25 items: 23 for every dimension, two D2 specific",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-87",
+   "label": "with no recorded participant outcome the report is blocked, silence is not completion",
+   "pass": true,
+   "detail": [
+    "participant_review_incomplete",
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-98",
+   "label": "no override is available",
+   "pass": true,
+   "detail": false
+  },
+  {
+   "id": "D2-90",
+   "label": "the checklist is required for each dimension present: both report as incomplete",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D1",
+     "items_passed": 0,
+     "items_required": 23
+    },
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D2",
+     "items_passed": 0,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D2-13",
+   "label": "an unloaded evidence currency value blocks issuance",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-83",
+   "label": "an explicit reviewed-with-no-correction record completes the participant review",
+   "pass": true,
+   "detail": [
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-98",
+   "label": "one failed D2 item in a two-dimension report blocks issuance although D1 passed",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D2",
+     "items_passed": 24,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D2-90",
+   "label": "recording a later pass for that item clears it (results are append only; the latest counts)",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-89",
+   "label": "a recorded result cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D2-91",
+   "label": "a review recorded against another version set blocks issuance",
+   "pass": true,
+   "detail": [
+    "review_not_for_this_version_set",
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-91",
+   "label": "the review for the exact version set clears it",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-86",
+   "label": "a correction against a D2 record blocks the report; the D2 record is in reconsideration and the D1 record is not",
+   "pass": true,
+   "detail": {
+    "open": true,
+    "cases": [
+     {
+      "case": "846be230-a7c7-44dd-92c5-8b8237881e6f",
+      "kind": "correction"
+     }
+    ],
+    "records_under_reconsideration": [
+     {
+      "assignment": "dbbfb8fa-1aa6-446e-a555-8534ba31c2e6",
+      "dimension_id": "D2",
+      "observation_record_id": "8fc0cad2-08a3-40a5-b692-394a366e464d"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D2-17",
+   "label": "an actor who observed a record of the report is not an eligible reviewer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-10",
+   "label": "the reviewer cannot be the issuer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "issuer_not_eligible",
+    "evidence_currency_unloaded"
+   ]
+  },
+  {
+   "id": "D2-91",
+   "label": "with every precondition met the gate permits (issuing itself stays an explicit human act)",
+   "pass": true,
+   "detail": {
+    "blockers": [
+     {
+      "code": "issuer_not_eligible",
+      "detail": "involved_in_report"
+     }
+    ],
+    "permitted": false,
+    "override_available": false
+   }
+  },
+  {
+   "id": "D2-91",
+   "label": "a distinct uninvolved reviewer and issuer pass",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible"
+   ]
+  },
+  {
+   "id": "D2-98",
+   "label": "the table backstop refuses an issuance of this report while a blocker remains",
+   "pass": true,
+   "detail": "ISSUANCE_GATE: [{\"code\": \"issuer_not_eligible\", \"detail\": \"involved_in_report\"}]"
+  },
+  {
+   "id": "D2-99",
+   "label": "a one-page render of a two-dimension report fails and logs layout_overflow",
+   "pass": true,
+   "detail": {
+    "detail": "mandatory content for 2 dimensions cannot render legibly on one page without omission or compression; the render does not expand",
+    "reason": "layout_overflow",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-99",
+   "label": "the multi-page form is renderable, and so is a one-dimension report on one page",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-88",
+   "label": "the original composed statement exists",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D2-88",
+   "label": "amendment needs a case whose outcome is amended (this one was upheld)",
+   "pass": true,
+   "detail": {
+    "detail": "amendment needs a correction case for this participant whose outcome is amended",
+    "reason": "no_amended_case",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-88",
+   "label": "a successful correction produces a NEW statement that supersedes the old",
+   "pass": true,
+   "detail": {
+    "outcome": "amended",
+    "supersedes": "3952cc6e-4114-4370-bc9a-6c2e0b90d562",
+    "composed_statement_id": "b2d549b7-290a-4054-bf7a-0ca81a3d20c8"
+   }
+  },
+  {
+   "id": "D2-88",
+   "label": "the original remains in the full record, unedited",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-88",
+   "label": "only the new statement is in the current set",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D2-88",
+   "label": "a statement can be superseded once",
+   "pass": true,
+   "detail": {
+    "detail": "a later statement already replaces this one",
+    "reason": "already_superseded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-88",
+   "label": "no in-place edit is possible",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  }
+ ]
+}

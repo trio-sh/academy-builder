@@ -1,0 +1,13 @@
+{
+ "apply": [],
+ "before": [
+  {
+   "i": 0,
+   "r": 1
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"gate\\\": {\\\"blockers\\\": [{\\\"code\\\": \\\"participant_review_incomplete\\\", \\\"detail\\\": \\\"no explicit recorded outcome; silence is never consent and no timeout applies\\\"}, {\\\"code\\\": \\\"checklist_incomplete_or_failed\\\", \\\"dimension_id\\\": \\\"D1\\\", \\\"items_passed\\\": 0, \\\"items_required\\\": 23}, {\\\"code\\\": \\\"evidence_currency_unloaded\\\"}], \\\"permitted\\\": false, \\\"override_available\\\": false}, \\\"items\\\": 25}\\nCONTEXT:  PL/pgSQL function inline_code_block line 2 at RAISE\\n\"}"
+ }
+}
