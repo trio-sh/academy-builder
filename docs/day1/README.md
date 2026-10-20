@@ -7,7 +7,8 @@ Interim deliverables from the reconciliation stage. Nothing here changes the run
 | `reconciliation-report.md` | R1 inventory facts, R2 first pass mapping, prohibited items present (M6), security findings, baseline for DT-02, Growth Log findings |
 | `reconciliation-mapping.csv` | One row per dictionary field (600). Mapping class is an automated name and type first pass, not a confirmed mapping |
 | `conflict-register.md` | Running register. Each entry states the default applied |
+| `test-environment.md` | How the non production database was built, how faithful it is, and its first use |
 | `BUILD-PLAN.md` | Order of work for this week's packages and the decisions needed |
-| `evidence/` | Raw outputs: `inventory.min.json` (catalog only), `row-counts.json` (aggregates), `m6-scan.json`, `open-write-policies.json`, `forbidden-identifiers-baseline.json`, `r2-summary.json` |
+| `evidence/` | Raw outputs: `inventory.min.json` (catalog only), `row-counts.json` (aggregates), `m6-scan.json`, `open-write-policies.json`, `forbidden-identifiers-baseline.json`, `r2-summary.json`, `nonprod-replay-fidelity.json`, `policy-test-results.json` |
 
 No participant row content is stored in these files.

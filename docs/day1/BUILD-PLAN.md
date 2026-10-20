@@ -37,5 +37,5 @@ Minimum 2 elements per dimension and a 36 month history window and a 12 month ed
 
 ## Needs a decision from Hans (blocking)
 
-1. **A non production environment** (CR-002). Options: a Supabase branch (paid), a second Supabase project, or a local Postgres with a small shim for the `auth` schema and roles. Until one exists no migration is applied and database tests stay UNRUN.
-2. **Whether to close the open access policies now** (CR-004), ahead of the rest. They are the one finding that affects live users today.
+1. ~~A non production environment~~ (CR-002) **Done.** Throwaway Postgres, see `test-environment.md`.
+2. **Apply `20261100000000_close_open_access_policies.sql` to production** (CR-004). Written and tested on the throwaway database; it is the one finding that affects live users today.

@@ -1,0 +1,77 @@
+{
+ "environment": "Throwaway Neon PostgreSQL 17 (expires 2026-10-23) with Supabase shim; schema replayed from repo migrations",
+ "migration": "supabase/migrations/20261100000000_close_open_access_policies.sql",
+ "run_date": "2026-10-20",
+ "probes": [
+  {
+   "probe": "1 A reads growth entries (all visible?)",
+   "before": "rows=1 n=2",
+   "after": "rows=1 n=1"
+  },
+  {
+   "probe": "2 A updates B's growth entry",
+   "before": "UPDATE rowCount=1",
+   "after": "UPDATE rowCount=0"
+  },
+  {
+   "probe": "3 A deletes B's growth entry",
+   "before": "DELETE rowCount=1",
+   "after": "DELETE rowCount=0"
+  },
+  {
+   "probe": "4 A inserts an entry for B",
+   "before": "INSERT rowCount=1",
+   "after": "DENIED: new row violates row-level security policy for table \"growth_log_entri"
+  },
+  {
+   "probe": "5 A inserts own entry",
+   "before": "INSERT rowCount=1",
+   "after": "INSERT rowCount=1"
+  },
+  {
+   "probe": "6 A updates own entry",
+   "before": "UPDATE rowCount=1",
+   "after": "UPDATE rowCount=1"
+  },
+  {
+   "probe": "7 mentor M reads A's growth entries",
+   "before": "rows=1 n=1",
+   "after": "rows=1 n=0"
+  },
+  {
+   "probe": "8 A reads growth_logs (all visible?)",
+   "before": "rows=1 n=2",
+   "after": "rows=1 n=1"
+  },
+  {
+   "probe": "9 anon reads mentor_assignments",
+   "before": "rows=1 n=1",
+   "after": "rows=1 n=0"
+  },
+  {
+   "probe": "10 anon updates mentor_assignments",
+   "before": "UPDATE rowCount=1",
+   "after": "UPDATE rowCount=0"
+  },
+  {
+   "probe": "11 anon inserts notifications",
+   "before": "INSERT rowCount=1",
+   "after": "DENIED: new row violates row-level security policy for table \"notifications\""
+  },
+  {
+   "probe": "12 A inserts own notification",
+   "before": "INSERT rowCount=1",
+   "after": "INSERT rowCount=1"
+  },
+  {
+   "probe": "13 anon reads public training modules",
+   "before": "rows=1 n=16",
+   "after": "rows=1 n=16"
+  },
+  {
+   "probe": "14 service_role reads growth entries",
+   "before": "rows=1 n=2",
+   "after": "rows=1 n=2"
+  }
+ ]
+}

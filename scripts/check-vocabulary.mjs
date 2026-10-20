@@ -79,6 +79,11 @@ const ALLOWLIST = new Set([
   // removes, nothing else.
   "supabase/migrations/20261093000000_rename_render_check.sql",
 
+  // Day 1 CR-004: closes anonymous access on retired legacy tables. The
+  // file must name those tables (including the retired skill passport
+  // table) to re-target their policies; it adds no new use of the term.
+  "supabase/migrations/20261100000000_close_open_access_policies.sql",
+
   // Supabase-generated types — regenerate after the schema rename PR.
   "src/types/database.types.ts",
   "src/integrations/supabase/types.ts",

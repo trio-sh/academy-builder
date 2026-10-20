@@ -1,0 +1,300 @@
+{
+ "files": 152,
+ "statements": 3332,
+ "applied": 3285,
+ "errors": 47,
+ "files_with_errors": [
+  {
+   "file": "002_complete_schema.sql",
+   "stmts": 117,
+   "applied": 114,
+   "errors": [
+    {
+     "code": "42703",
+     "msg": "column \"profile_id\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column \"profile_id\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column \"profile_id\" does not exist"
+    }
+   ]
+  },
+  {
+   "file": "003_storage_setup.sql",
+   "stmts": 14,
+   "applied": 3,
+   "errors": [
+    {
+     "code": "42710",
+     "msg": "policy \"Users can upload their own resumes\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can update their own resumes\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can delete their own resumes\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Anyone can read resumes\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can upload their own avatar\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can update their own avatar\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can delete their own avatar\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Anyone can read avatars\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Authenticated users can upload project files\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Authenticated users can read project files\" for table \"objects\" already exists"
+    },
+    {
+     "code": "42710",
+     "msg": "policy \"Users can delete their uploaded project files\" for table \"objects\" already exists"
+    }
+   ]
+  },
+  {
+   "file": "20260130_platform_updates.sql",
+   "stmts": 58,
+   "applied": 56,
+   "errors": [
+    {
+     "code": "42P01",
+     "msg": "relation \"escrow_transactions\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"escrow_transactions\" does not exist"
+    }
+   ]
+  },
+  {
+   "file": "20260902000000_t3a_d1_role_and_progression.sql",
+   "stmts": 74,
+   "applied": 68,
+   "errors": [
+    {
+     "code": "42710",
+     "msg": "type \"t3a_progression_decision\" already exists"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_progression_decision\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_progression_decision\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_progression_decision\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_progression_decision\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_progression_decision\" does not exist"
+    }
+   ]
+  },
+  {
+   "file": "20260903000000_t3a_d1_gateway_and_source.sql",
+   "stmts": 58,
+   "applied": 56,
+   "errors": [
+    {
+     "code": "42703",
+     "msg": "column \"participant_id\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column \"participant_id\" does not exist"
+    }
+   ]
+  },
+  {
+   "file": "20260904000000_t3a_d1_statement_library.sql",
+   "stmts": 46,
+   "applied": 33,
+   "errors": [
+    {
+     "code": "42703",
+     "msg": "column \"stage_code\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column \"statement_library_id\" referenced in foreign key constraint does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column \"observation_record_id\" does not exist"
+    },
+    {
+     "code": "42703",
+     "msg": "column t3a_composed_statement.observation_record_id does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42883",
+     "msg": "function public.t3a_resolve_observation(uuid) does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_resolution_rule\" does not exist"
+    },
+    {
+     "code": "42P01",
+     "msg": "relation \"public.t3a_statement_coverage\" does not exist"
+    }
+   ]
+  },
+  {
+   "file": "20261049000000_t3a_d1_ax_approval_standing_enforcement.sql",
+   "stmts": 24,
+   "applied": 23,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "AX_07_PRECONDITION_MOVED: expected 37 standing approved and 3 standing withdrawn across current versions, found 0 and 0"
+    }
+   ]
+  },
+  {
+   "file": "20261050000000_t3a_d1_reapp001_section_5_executed.sql",
+   "stmts": 7,
+   "applied": 5,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "RA_02R_NO_APPROVER_ON_RECORD: SRC-D1-S1-010 has no prior approver to name"
+    },
+    {
+     "code": "P0001",
+     "msg": "AX_T7_FAILED: expected 43 raw approved rows and 40 standing across current versions, found 0 and 0"
+    }
+   ]
+  },
+  {
+   "file": "20261053000000_t3a_d1_issue3_phase3_suite_executed.sql",
+   "stmts": 3,
+   "applied": 2,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CS_52_FAILED: a source is unservable after Section 6"
+    }
+   ]
+  },
+  {
+   "file": "20261056000000_t3a_d1_close001_section3_lift_condition.sql",
+   "stmts": 11,
+   "applied": 10,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CL_17_FAILED: expected a recorded finding for each of the ten Stage 4 approvals, found 0"
+    }
+   ]
+  },
+  {
+   "file": "20261062000000_t3a_d1_close001_cl16_stage4_withdrawals.sql",
+   "stmts": 7,
+   "applied": 5,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CL_16_WRONG_COUNT: expected ten Stage 4 withdrawals, wrote 0"
+    },
+    {
+     "code": "P0001",
+     "msg": "CL_18_FAILED: expected 30 servable, 10 unservable and all ten unservable being Stage 4; found 0 servable, 40 unservable, 10 Stage 4 unservable"
+    }
+   ]
+  },
+  {
+   "file": "20261073000000_t3a_d1_corr006_section5_approval_basis.sql",
+   "stmts": 33,
+   "applied": 32,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CX16_WRONG_COUNT: 0 basis rows exist, expected exactly twenty-seven."
+    }
+   ]
+  },
+  {
+   "file": "20261084000000_t3a_d1_corr006_section6_library_quarantine.sql",
+   "stmts": 20,
+   "applied": 19,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CX21_ROWS_CHANGED: counts read (0, 0, 0, 0) and were measured as (1, 0, 0, 0) before this section. Nothing here deletes or alters a row, so a difference means s"
+    }
+   ]
+  },
+  {
+   "file": "20261086000000_t3a_d1_corr006_section11_evidence_return.sql",
+   "stmts": 11,
+   "applied": 10,
+   "errors": [
+    {
+     "code": "P0001",
+     "msg": "CX34_APPROVAL_ROWS_LOST: t3a_d1_source_approval holds 0 rows and held 98. No approval row is altered or deleted."
+    }
+   ]
+  }
+ ],
+ "catalog_diff_vs_production": {
+  "public_tables": "233 vs 233, none missing",
+  "public_columns": "2092 vs 2092, none missing or extra",
+  "policies": "418 production, 428 test, 0 missing, 10 extra",
+  "routines": "344 production, 347 test; the 3 extra are the shim wrappers digest, gen_random_bytes, uuid_generate_v4"
+ }
+}
