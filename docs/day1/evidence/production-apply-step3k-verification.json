@@ -1,0 +1,39 @@
+{
+ "policies_after": [
+  {
+   "policyname": "t3a_d1_group_member_access",
+   "cmd": "SELECT"
+  },
+  {
+   "policyname": "t3a_d1_group_member_write",
+   "cmd": "ALL"
+  },
+  {
+   "policyname": "t3a_d1_group_session_read",
+   "cmd": "SELECT"
+  },
+  {
+   "policyname": "t3a_d1_group_session_write",
+   "cmd": "ALL"
+  },
+  {
+   "policyname": "t3a_d1_work_sample_read",
+   "cmd": "SELECT"
+  },
+  {
+   "policyname": "t3a_d1_work_sample_write",
+   "cmd": "ALL"
+  }
+ ],
+ "anon_exec_after": [
+  {
+   "b": false
+  }
+ ],
+ "rows": [
+  {
+   "ws": 0,
+   "gs": 0
+  }
+ ]
+}

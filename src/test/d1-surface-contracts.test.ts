@@ -520,7 +520,9 @@ describe("§8.4 Stage 3 — no grade and no artifact on a report face", () => {
   });
 
   it("runs the provenance check server-side rather than locally", () => {
-    expect(workSampleCode).toMatch(/rpc\("t3a_d1_work_sample_provenance_check"/);
+    expect(workSampleCode).toMatch(/rpc\("t3a_s3_submit"/);
+    expect(workSampleCode).toMatch(/rpc\("t3a_s3_respond"/);
+    expect(workSampleCode).not.toMatch(/\.update\(/);
   });
 
   it("reads only its own submissions table", () => {

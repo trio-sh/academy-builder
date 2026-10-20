@@ -54,12 +54,14 @@ await run(`update t3a_correction_case set challenge_status='evidence_disclosed' 
 await run(`update t3a_correction_case set challenge_status='under_reconsideration' where correction_case_id='${cc}'`); await run(`update t3a_correction_case set challenge_status='upheld', terminal_outcome='upheld', resolved_at=now() where correction_case_id='${cc}'`);
 await run(`update t3a_reconsideration_assignment set outcome='upheld', status='resolved' where correction_case_id='${cc}'`).catch(() => {});
 await run(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('evidence_currency','synthetic test value','0.0','${IS}')`);
+for (const t of ["scenario_logging", "mentor_observation"]) await svc(`select t3a_record_consent('${P}','${t}','granted','D2',null,'1.0','${"a".repeat(64)}','checkbox','en-CA','observation') r`);
 g = await gate(`'${IS}'`, `'${RV}'`);
 rec("D2-91", "with every precondition met the gate permits (issuing itself stays an explicit human act)", g.permitted === true || (g.blockers.length === 1 && g.blockers[0].code === "issuer_not_eligible"), g);
 g = await gate(`'${IS}'`, `'${M1}'`); rec("D2-91", "a distinct uninvolved reviewer and issuer pass", g.blockers.every(b => b.code === "issuer_not_eligible") && has(g, "issuer_not_eligible"), g.blockers.map(b => b.code));
 // backstop
 const bk = await tryq(`insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, state, version_set_at_issuance, rendered_body_hash) values ('${rep}','${P}','D2','${M1}','issued','{}'::jsonb,'${"a".repeat(64)}')`);
-rec("D2-98", "the table backstop refuses an issuance of this report while a blocker remains", /ISSUANCE_GATE|ISSUANCE_HELD|permission|violat|null value|invalid|enum/i.test(bk.msg) && bk.msg !== "ok", bk.msg.slice(0, 160));
+const issued = (await run(`select count(*)::int n from t3a_d1_report_issuance where ber_report_id='${rep}'`))[0].n;
+rec("D2-98", "the table backstop refuses an issuance of this report while a blocker remains (the row is not written and the refusal is logged)", issued === 0 && (await run(`select count(*)::int n from t3a_capture_refusal where route='report.issue' and subject_ref='${rep}'`))[0].n >= 1, bk.msg.slice(0, 160));
 // layout
 const n0 = (await run(`select count(*)::int n from t3a_capture_refusal where reason_code='layout_overflow'`))[0].n;
 const lo = (await run(`select t3a_report_render_gate('${rep}','one_page') r`))[0].r;

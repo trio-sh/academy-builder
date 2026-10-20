@@ -1,0 +1,106 @@
+{
+ "passed": 14,
+ "total": 14,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-WP-1",
+   "label": "a participant still reads their own submission",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D2-WP-1",
+   "label": "another participant cannot read it",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D2-WP-2",
+   "label": "a participant cannot move their own submission to a state by direct write",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D2-WP-2",
+   "label": "a participant cannot insert a submission row directly",
+   "pass": true,
+   "detail": "new row violates row-level security policy for table \"t3a_d1_work_sample_submission\""
+  },
+  {
+   "id": "D2-WP-3",
+   "label": "a facilitator cannot insert a session directly, bypassing composition",
+   "pass": true,
+   "detail": "new row violates row-level security policy for table \"t3a_d1_group_session\""
+  },
+  {
+   "id": "D2-WP-3",
+   "label": "a facilitator cannot add a member directly",
+   "pass": true,
+   "detail": "new row violates row-level security policy for table \"t3a_d1_group_session_member\""
+  },
+  {
+   "id": "D2-WP-3",
+   "label": "the facilitator still reads their session",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D2-WP-3",
+   "label": "the observed participant cannot read the session row",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D2-WP-4",
+   "label": "a caller who is not signed in cannot record a member event",
+   "pass": true,
+   "detail": "permission denied for function t3a_d1_group_member_event"
+  },
+  {
+   "id": "D2-WP-4",
+   "label": "a signed in stranger is refused and the attempt is logged",
+   "pass": true,
+   "detail": {
+    "detail": "only the facilitator, or the person themselves, records a disconnection or withdrawal",
+    "reason": "not_permitted_for_this_session",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-WP-4",
+   "label": "the facilitator records a co-participant disconnection as a variance, removing nothing",
+   "pass": true,
+   "detail": {
+    "effect": "ADMINISTRATION_VARIANCE_ON_OBSERVED_RECORD",
+    "recorded": true,
+    "co_participant_records_removed": 0
+   }
+  },
+  {
+   "id": "D2-WP-4",
+   "label": "the observed participant's own disconnection pauses the stage instance",
+   "pass": true,
+   "detail": {
+    "effect": "STAGE_INSTANCE_PAUSED",
+    "recorded": true
+   }
+  },
+  {
+   "id": "D2-WP-4",
+   "label": "a participant cannot record an event for someone else",
+   "pass": true,
+   "detail": {
+    "detail": "only the facilitator, or the person themselves, records a disconnection or withdrawal",
+    "reason": "not_permitted_for_this_session",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-WP-5",
+   "label": "the six D1 stage functions are not executable by anon",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

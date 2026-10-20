@@ -81,8 +81,8 @@ const ex3 = (await run(`select t3a_prior_exposure('${P}','${s1c.v}') r`))[0].r; 
 const d1s2 = await mk("SRC-D1-T-S2-" + RUN, "D1", "S2", {}); await si(d1s2.v);
 const d2s2 = await mk("SRC-D2-T-S2-" + RUN, "D2", "S2", { d2_situation_class: "SC-D2-3" });
 const ex4 = (await run(`select t3a_prior_exposure('${P}','${d2s2.v}') r`))[0].r; rec("D2-28", "having sat the Stage 2 seven-beat form under D1 excludes the D2 Stage 2 form (the form crosses)", ex4.reasons.includes("administration_form_met") && !ex4.reasons.includes("pattern_family_met"), ex4);
-n0 = await refused("cross_dimension_pattern_unmapped"); const cp = await svc(`select t3a_pattern_compare('D1','P-D1-01','D2','IPF-D2-01') r`);
-rec("D2-28", "a cross-dimension pattern comparison refuses and logs while the mapping table is empty", cp.rows[0]?.r?.reason === "cross_dimension_pattern_unmapped" && (await refused("cross_dimension_pattern_unmapped")) === n0 + 1, cp.rows[0]?.r || cp.msg);
+n0 = await refused("cross_dimension_mapping_absent"); const cp = await svc(`select t3a_pattern_compare('D1','P-D1-01','D2','IPF-D2-01') r`);
+rec("D2-28", "a cross-dimension pattern comparison refuses and logs while the mapping table is empty", cp.rows[0]?.r?.reason === "cross_dimension_mapping_absent" && (await refused("cross_dimension_mapping_absent")) === n0 + 1, cp.rows[0]?.r || cp.msg);
 rec("D2-28", "the mapping table is empty", (await run(`select count(*)::int n from t3a_cross_dimension_pattern_map`))[0].n === 0, null);
 const gx = await svc(`select t3a_source_serving_gate('${s1.v}','S1','${P}') r`); rec("D2-28", "the serving gate applies the exposure exclusion", gx.rows[0]?.r?.reason === "prior_exposure_exclusion", gx.rows[0]?.r);
 // 024, 029 independent attempt counters

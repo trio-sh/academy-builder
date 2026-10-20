@@ -1,0 +1,307 @@
+{
+ "passed": 36,
+ "total": 36,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-31",
+   "label": "D1 grants alone leave the D2 state at consent_not_inherited",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-31",
+   "label": "D2 Stage entry with only D1 mentor_observation recorded refuses and logs consent_not_inherited",
+   "pass": true,
+   "detail": {
+    "detail": "consent for D2 is not recorded; a grant for another dimension confers nothing",
+    "reason": "consent_not_inherited",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "with nothing recorded the state is consent_absent",
+   "pass": true,
+   "detail": {
+    "detail": "consent for D2 is not recorded; a grant for another dimension confers nothing",
+    "reason": "consent_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "D1 is not re-judged by this check",
+   "pass": true,
+   "detail": {
+    "note": "D1 is governed by its own gate",
+    "outcome": "consented"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "the serving gate refuses a D2 Stage entry on D1 consent alone",
+   "pass": true,
+   "detail": {
+    "detail": "consent for D2 is not recorded; a grant for another dimension confers nothing",
+    "reason": "consent_not_inherited",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "with the D2 grants recorded the same entry is servable",
+   "pass": true,
+   "detail": {
+    "outcome": "servable",
+    "source_version_id": "8c147d63-a61d-48e6-a1b9-3bb71d4d7616"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "a withdrawn D2 grant closes the entry again",
+   "pass": true,
+   "detail": "recorded"
+  },
+  {
+   "id": "D2-32",
+   "label": "a report carrying a D2 record with only D1 consent is blocked with consent_not_inherited",
+   "pass": true,
+   "detail": [
+    "participant_review_incomplete",
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "consent_not_inherited"
+   ]
+  },
+  {
+   "id": "D2-32",
+   "label": "an issuance written for that report is skipped and the refusal is logged (not a raised error that rolls the log back)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-33",
+   "label": "pool availability needs employer_share for every dimension in the report: the function checks the report's own dimension list",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-33",
+   "label": "with employer_share granted for D1 only, availability of a D1+D2 report refuses and logs",
+   "pass": true,
+   "detail": {
+    "detail": "employer_share consent for dimension D2 is not granted",
+    "reason": "EMPLOYER_SHARE_CONSENT_REQUIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "capture and read of followup_contact and aggregate_regional refuse and log disabled_consent_route",
+   "pass": true,
+   "detail": 12
+  },
+  {
+   "id": "D2-42",
+   "label": "nothing was stored for either type",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-42",
+   "label": "RECORDING is not an offered consent type",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-52",
+   "label": "a contact initiation attempt refuses and logs contact_permission_absent",
+   "pass": true,
+   "detail": {
+    "detail": "no contact permission exists; availability is not permission to contact",
+    "reason": "contact_permission_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-52",
+   "label": "the contact permission object exists with no value loaded",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-52",
+   "label": "no value can be written to it yet (the object is a closed socket)",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_contact_permission is a SOCKET structure; capture i"
+  },
+  {
+   "id": "D2-48a",
+   "label": "each superseded release route logs superseded_route_invoked with the caller and the route name",
+   "pass": true,
+   "detail": 14
+  },
+  {
+   "id": "D2-30b",
+   "label": "a cross dimension pattern comparison with the mapping table empty refuses and logs cross_dimension_mapping_absent",
+   "pass": true,
+   "detail": {
+    "detail": "no approved mapping row; pattern identifiers of different dimensions are not interchangeable",
+    "reason": "cross_dimension_mapping_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-55",
+   "label": "all 34 loaded D2 sources pass the integrity check (parsed items equal the source sheet)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-55",
+   "label": "an item truncated to its first physical line is detected against the source sheet",
+   "pass": true,
+   "detail": [
+    "material_disclosure_items:MD1"
+   ]
+  },
+  {
+   "id": "D2-55",
+   "label": "loading that source REFUSES and logs bound_item_integrity_failed",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-56",
+   "label": "a timing determination on a source with no loaded sequence refuses and logs beat_sequence_absent",
+   "pass": true,
+   "detail": {
+    "detail": "no mentor action sequence is loaded for this source; no timing determination is answered",
+    "reason": "beat_sequence_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-57",
+   "label": "the pause is read from the beat marked as the decision point (B3 here), not a hard coded B2",
+   "pass": true,
+   "detail": {
+    "outcome": "read",
+    "beat_code": "B3",
+    "b2_pause_seconds_max": 25,
+    "b2_pause_seconds_min": 20
+   }
+  },
+  {
+   "id": "D2-57",
+   "label": "a loaded sequence that marks no decision point is not derived from B2 or from a pause",
+   "pass": true,
+   "detail": {
+    "detail": "the sequence is loaded but marks no decision point beat; none is derived",
+    "reason": "decision_point_beat_not_named",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-40",
+   "label": "only the observer records the administration condition",
+   "pass": true,
+   "detail": {
+    "detail": "the observer records the administration condition",
+    "reason": "only_the_observer_records",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-40",
+   "label": "an accommodation that changed the response channel marks the observation timing_not_comparable",
+   "pass": true,
+   "detail": {
+    "outcome": "recorded",
+    "timing_not_comparable": true
+   }
+  },
+  {
+   "id": "D2-40",
+   "label": "the observation set carries the flag, so comparison and recurrence calculations exclude it",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-40",
+   "label": "a flagged observation makes no pair for the cross context test (both sides must be unflagged)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-36",
+   "label": "verification_link_ttl unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "verification_link_ttl is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "verification_resend_cooldown unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "verification_resend_cooldown is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "mentor_invitation_ttl unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "mentor_invitation_ttl is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "pool_session_ttl unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "pool_session_ttl is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "verification_reference_ttl unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "verification_reference_ttl is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "stage_entry_hold_ttl unloaded: the route fails closed, logs, and supplies no duration",
+   "pass": true,
+   "detail": {
+    "detail": "stage_entry_hold_ttl is not loaded; this route fails closed and no duration defaults",
+    "reason": "timing_value_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-36",
+   "label": "a loaded value opens the route with that value",
+   "pass": true,
+   "detail": {
+    "outcome": "open",
+    "seconds": 900
+   }
+  }
+ ]
+}

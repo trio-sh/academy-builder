@@ -17,7 +17,8 @@
     "participant_review_incomplete",
     "checklist_incomplete_or_failed",
     "checklist_incomplete_or_failed",
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -58,7 +59,8 @@
    "detail": [
     "checklist_incomplete_or_failed",
     "checklist_incomplete_or_failed",
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -79,7 +81,8 @@
    "label": "recording a later pass for that item clears it (results are append only; the latest counts)",
    "pass": true,
    "detail": [
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -94,7 +97,8 @@
    "pass": true,
    "detail": [
     "review_not_for_this_version_set",
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -102,7 +106,8 @@
    "label": "the review for the exact version set clears it",
    "pass": true,
    "detail": [
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -113,15 +118,15 @@
     "open": true,
     "cases": [
      {
-      "case": "846be230-a7c7-44dd-92c5-8b8237881e6f",
+      "case": "cd672562-4831-4e1f-89c9-4b0dc7a478a7",
       "kind": "correction"
      }
     ],
     "records_under_reconsideration": [
      {
-      "assignment": "dbbfb8fa-1aa6-446e-a555-8534ba31c2e6",
+      "assignment": "6c0d6a34-b432-4ba5-8593-3c05bfeea012",
       "dimension_id": "D2",
-      "observation_record_id": "8fc0cad2-08a3-40a5-b692-394a366e464d"
+      "observation_record_id": "caf7fe6c-2df5-40f6-8d09-540034a5cd0d"
      }
     ]
    }
@@ -133,7 +138,8 @@
    "detail": [
     "correction_open",
     "reviewer_not_eligible",
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -144,7 +150,8 @@
     "correction_open",
     "reviewer_not_eligible",
     "issuer_not_eligible",
-    "evidence_currency_unloaded"
+    "evidence_currency_unloaded",
+    "consent_absent"
    ]
   },
   {
@@ -172,9 +179,9 @@
   },
   {
    "id": "D2-98",
-   "label": "the table backstop refuses an issuance of this report while a blocker remains",
+   "label": "the table backstop refuses an issuance of this report while a blocker remains (the row is not written and the refusal is logged)",
    "pass": true,
-   "detail": "ISSUANCE_GATE: [{\"code\": \"issuer_not_eligible\", \"detail\": \"involved_in_report\"}]"
+   "detail": "ok"
   },
   {
    "id": "D2-99",
@@ -214,8 +221,8 @@
    "pass": true,
    "detail": {
     "outcome": "amended",
-    "supersedes": "3952cc6e-4114-4370-bc9a-6c2e0b90d562",
-    "composed_statement_id": "b2d549b7-290a-4054-bf7a-0ca81a3d20c8"
+    "supersedes": "5b337dd0-a707-4d39-b69d-5883f28184a8",
+    "composed_statement_id": "d6bac2ba-5324-4884-9bb5-bc76723e48d8"
    }
   },
   {

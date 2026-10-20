@@ -5,6 +5,8 @@ const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
 neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
 const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
 await c.query("set search_path to public, extensions");
+// This test predates the D2 content load and deletes every non D1 structure row, so it must not run once D2 content is loaded.
+if ((await c.query("select count(*)::int n from t3a_d1_question_object where dimension_id <> 'D1'")).rows[0].n > 0) { console.log(JSON.stringify({ skipped: "D2 content is loaded; this step 3a test would delete it" })); await c.end(); process.exit(0); }
 const run = async (sql) => (await c.query(sql)).rows;
 const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass: !!pass, detail });
 const cleanup = async () => {

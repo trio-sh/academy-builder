@@ -113,15 +113,17 @@ const WorkSample = () => {
     void load();
   }, [load]);
 
-  const setState = async (submissionId: string, state: string, extra: Record<string, unknown> = {}) => {
+  // Every lifecycle change goes through the server routes. A screen cannot move a submission to a state the route would refuse.
+  const respond = async (submissionId: string, response: "accept" | "decline") => {
     setIsWorking(true);
-    const { error } = await supabase
-      .from("t3a_d1_work_sample_submission")
-      .update({ state, ...extra })
-      .eq("submission_id", submissionId);
+    const { data, error } = await supabase.rpc("t3a_s3_respond", {
+      p_submission: submissionId,
+      p_response: response,
+    });
     setIsWorking(false);
-    if (error) {
-      toast({ title: "That could not be recorded.", variant: "destructive" });
+    const verdict = data as { outcome?: string; reason?: string } | null;
+    if (error || verdict?.outcome === "refused") {
+      toast({ title: verdict?.reason ?? "That could not be recorded.", variant: "destructive" });
       return false;
     }
     await load();
@@ -131,9 +133,7 @@ const WorkSample = () => {
   const onDecline = async (submissionId: string) => {
     // A decline records that the situation did not run. It is never an
     // evidence outcome and never adverse, and no reason is collected.
-    const ok = await setState(submissionId, "DECLINED", {
-      declined_at: new Date().toISOString(),
-    });
+    const ok = await respond(submissionId, "decline");
     if (ok) {
       toast({
         title: "Declined",
@@ -143,47 +143,34 @@ const WorkSample = () => {
     }
   };
 
-  const onSubmit = async (submissionId: string) => {
+  // First submission or resubmission: the eleven-field provenance check runs server-side (twelve on a resubmission, where the prior submission is named).
+  const onSubmit = async (submissionId: string, resubmit = false) => {
     setIsWorking(true);
-    const { error } = await supabase
-      .from("t3a_d1_work_sample_submission")
-      .update({
-        state: "SUBMITTED",
-        submitted_at: new Date().toISOString(),
-        artifact_ref: artifactRef,
-        authorship_attestation: authorship,
-        assistance_declaration: assistance,
-        assistance_detail: assistance ? assistanceDetail || null : null,
-        tooling_declaration: tooling,
-        tooling_detail: tooling ? toolingDetail || null : null,
-      })
-      .eq("submission_id", submissionId);
-
-    if (error) {
-      setIsWorking(false);
-      toast({ title: "That submission could not be recorded.", variant: "destructive" });
-      return;
-    }
-
-    // The eleven-field provenance check runs server-side on submit.
-    const { data } = await supabase.rpc("t3a_d1_work_sample_provenance_check", {
-      p_submission_id: submissionId,
+    const { data, error } = await supabase.rpc("t3a_s3_submit", {
+      p_submission: resubmit ? null : submissionId,
+      p_artifact_ref: artifactRef,
+      p_authorship: authorship,
+      p_assistance: assistance,
+      p_assistance_detail: assistance ? assistanceDetail || null : null,
+      p_tooling: tooling,
+      p_tooling_detail: tooling ? toolingDetail || null : null,
+      p_prior: resubmit ? submissionId : null,
     });
     setIsWorking(false);
 
-    const verdict = data as { passed?: boolean; refusal_code?: string; missing?: string } | null;
-    if (!verdict?.passed) {
+    const verdict = data as { outcome?: string; reason?: string; detail?: string } | null;
+    if (error || verdict?.outcome !== "submitted") {
       toast({
-        title: verdict?.refusal_code ?? "The submission did not pass the provenance check.",
-        description: verdict?.missing ? `Absent: ${verdict.missing}` : undefined,
+        title: verdict?.reason ?? "That submission could not be recorded.",
+        description: verdict?.detail,
         variant: "destructive",
       });
       await load();
       return;
     }
 
-    await setState(submissionId, "PROVENANCE_CHECKED");
     toast({ title: "Submitted" });
+    await load();
   };
 
   if (isLoading) return <LedgerLoading />;
@@ -255,7 +242,7 @@ const WorkSample = () => {
               <div className="flex gap-4 mt-8">
                 <Button
                   disabled={isWorking}
-                  onClick={() => void setState(current.submission_id, "ACCEPTED")}
+                  onClick={() => void respond(current.submission_id, "accept")}
                 >
                   Accept
                 </Button>
@@ -277,7 +264,7 @@ const WorkSample = () => {
             )}
           </DashSection>
 
-          {["ACCEPTED", "IN_PROGRESS", "SUBMITTED"].includes(current.state) && (
+          {["ACCEPTED", "IN_PROGRESS", "AVAILABLE_FOR_CAPTURE"].includes(current.state) && (
             <DashSection eyebrow="§ II · Submit" title="Your work, and three declarations">
               <div className="max-w-2xl space-y-8">
                 <label className="block">
@@ -389,9 +376,9 @@ const WorkSample = () => {
 
                 <Button
                   disabled={isWorking || !maySubmit}
-                  onClick={() => void onSubmit(current.submission_id)}
+                  onClick={() => void onSubmit(current.submission_id, current.state === "AVAILABLE_FOR_CAPTURE")}
                 >
-                  {isWorking ? "Submitting…" : "Submit"}
+                  {isWorking ? "Submitting…" : current.state === "AVAILABLE_FOR_CAPTURE" ? "Submit a new version" : "Submit"}
                 </Button>
               </div>
             </DashSection>
