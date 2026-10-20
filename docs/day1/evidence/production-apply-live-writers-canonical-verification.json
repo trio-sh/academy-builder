@@ -1,0 +1,102 @@
+{
+ "before": {
+  "events": [
+   {
+    "n": 0
+   }
+  ],
+  "stage_entries": [
+   {
+    "n": 8
+   }
+  ]
+ },
+ "apply": "ok",
+ "readiness": [
+  {
+   "r": {
+    "ready": false,
+    "ingest_mode": "legacy_tolerant",
+    "missing_settings": [
+     "attempt_rules_version",
+     "stage_entry_hold_ttl",
+     "response_time_committed_version"
+    ],
+    "canonical_writers": "off"
+   }
+  }
+ ],
+ "switches": [
+  {
+   "key": "ingest_mode",
+   "value": "legacy_tolerant"
+  },
+  {
+   "key": "canonical_writers",
+   "value": "off"
+  }
+ ],
+ "branches": [
+  {
+   "proname": "t3a_commit_observation",
+   "has_switch": false,
+   "keeps_legacy": false
+  },
+  {
+   "proname": "t3a_commit_observation",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_confirm_s1_observation",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_create_disclosure",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_create_stage_entry_event",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_open_challenge",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_ratify_question_set",
+   "has_switch": true,
+   "keeps_legacy": true
+  },
+  {
+   "proname": "t3a_revoke_disclosure",
+   "has_switch": true,
+   "keeps_legacy": true
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE activation=refused reason=SETTINGS_MISSING checker_findings={}\\nCONTEXT:  PL/pgSQL function inline_code_block line 6 at RAISE\\n\"}"
+ },
+ "after": {
+  "events": [
+   {
+    "n": 0
+   }
+  ],
+  "switches": [
+   {
+    "key": "ingest_mode",
+    "value": "legacy_tolerant"
+   },
+   {
+    "key": "canonical_writers",
+    "value": "off"
+   }
+  ]
+ }
+}

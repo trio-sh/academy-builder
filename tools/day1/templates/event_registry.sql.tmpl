@@ -203,7 +203,8 @@ begin
           v := v || ('FORMAT:' || k);
         else
           begin
-            if (val #>> '{}')::timestamptz > p_occurred_at then v := v || ('TIMESTAMP_AFTER_OCCURRED:' || k); end if;
+            -- a time that names a future moment (an expiry or an end) is allowed to be after the event; every other time must not be
+            if (val #>> '{}')::timestamptz > p_occurred_at and k !~ '(_expires_at|_ends_at)$' then v := v || ('TIMESTAMP_AFTER_OCCURRED:' || k); end if;
           exception when others then v := v || ('FORMAT:' || k);
           end;
         end if;

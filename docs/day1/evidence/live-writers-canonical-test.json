@@ -1,0 +1,164 @@
+{
+ "passed": 20,
+ "total": 20,
+ "failed": [],
+ "results": [
+  {
+   "id": "CR-069",
+   "label": "switch off: stage entry works as before and writes the old style event (tolerant path resolves the alias)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "readiness lists the three settings that are not set",
+   "pass": true,
+   "detail": {
+    "ready": false,
+    "ingest_mode": "legacy_tolerant",
+    "missing_settings": [
+     "attempt_rules_version",
+     "stage_entry_hold_ttl",
+     "response_time_committed_version"
+    ],
+    "canonical_writers": "off"
+   }
+  },
+  {
+   "id": "CR-069",
+   "label": "activation is refused while a setting is missing, and nothing flips",
+   "pass": true,
+   "detail": {
+    "reason": "SETTINGS_MISSING",
+    "outcome": "refused",
+    "readiness": {
+     "ready": false,
+     "ingest_mode": "legacy_tolerant",
+     "missing_settings": [
+      "attempt_rules_version",
+      "stage_entry_hold_ttl",
+      "response_time_committed_version"
+     ],
+     "canonical_writers": "off"
+    }
+   }
+  },
+  {
+   "id": "CR-069",
+   "label": "a signed in user cannot activate",
+   "pass": true,
+   "detail": "permission denied for function t3a_activate_canonical_writers"
+  },
+  {
+   "id": "CR-069",
+   "label": "with the settings in place, activation flips both switches",
+   "pass": true,
+   "detail": {
+    "outcome": "activated",
+    "readiness": {
+     "ready": true,
+     "ingest_mode": "strict",
+     "missing_settings": [],
+     "canonical_writers": "on"
+    }
+   }
+  },
+  {
+   "id": "CR-069",
+   "label": "stage entry emits a canonical observation.stage_entered event, accepted, with session, mode, hold and authority",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "an S2 entry without an entry authority actor is refused",
+   "pass": true,
+   "detail": "T3A_EVENT_REFUSED: rejected (PAYLOAD_INVALID)"
+  },
+  {
+   "id": "DT-39",
+   "label": "with the hold time unset, stage entry refuses and does not default",
+   "pass": true,
+   "detail": "CONFIGURATION_UNSET: stage_entry_hold_ttl is not set; this route refuses and does not default"
+  },
+  {
+   "id": "DT-17",
+   "label": "an observation with no served instance is refused (both hashes are needed)",
+   "pass": true,
+   "detail": "DT-17 DUAL_HASH_MISSING: an observation needs a served instance whose source version and rendered instance both carry a hash"
+  },
+  {
+   "id": "CR-069",
+   "label": "with a served instance the observation commits and emits observation.committed, accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-17",
+   "label": "the observation carries its served instance and a snapshot hash",
+   "pass": true,
+   "detail": {
+    "s": true,
+    "h": true
+   }
+  },
+  {
+   "id": "DT-17",
+   "label": "the event carries both hashes and they differ",
+   "pass": true,
+   "detail": {
+    "a": "1111111111111111111111111111111111111111111111111111111111111111",
+    "b": "2222222222222222222222222222222222222222222222222222222222222222",
+    "c": "ab88cddc3c820ed43961528b44f7e6a0795627f5c39e18f42e3a534c8c8d2e83"
+   }
+  },
+  {
+   "id": "CR-069",
+   "label": "S1 confirmation emits observation.s1_confirmed, accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "opening a challenge emits challenge.opened, accepted, and fills the new challenge columns",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "creating a disclosure emits release.recipient_created with the address hash only",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "revoking it emits release.changed, accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "ratifying a question set emits registry.version_approved with a version hash, accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "CR-069",
+   "label": "no event from any writer was quarantined or rejected",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "CR-069",
+   "label": "the hash chain verifies after all nine writers have run",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "CR-024",
+   "label": "strict mode: a direct insert into the event log is refused",
+   "pass": true,
+   "detail": "permission denied for table t3a_event_log"
+  }
+ ]
+}
