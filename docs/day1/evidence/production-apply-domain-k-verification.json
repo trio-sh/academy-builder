@@ -1,0 +1,28 @@
+{
+ "domain": "K",
+ "migration": "20261114000000_day1_rehearsal.sql",
+ "rows_before": {
+  "t3a_rehearsal_session": 0,
+  "t3a_coaching_feedback": 0,
+  "t3a_rehearsal_telemetry_aggregate": 0
+ },
+ "apply": "ok",
+ "mapped": 40,
+ "dt01": {
+  "resolved": 413,
+  "unmapped": 109,
+  "passes": false
+ },
+ "rows_after": {
+  "t3a_rehearsal_session": 0,
+  "t3a_coaching_feedback": 0,
+  "t3a_rehearsal_telemetry_aggregate": 0
+ },
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE attempt_numbers=1 2 firewall_findings=0\\nCONTEXT:  PL/pgSQL function inline_code_block line 9 at RAISE\\n\"}"
+ },
+ "new_tables_rows": {
+  "t3a_rehearsal_attempt": 0
+ }
+}
