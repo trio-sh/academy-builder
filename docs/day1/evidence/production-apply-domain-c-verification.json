@@ -1,0 +1,90 @@
+{
+ "counts_after": {
+  "t3a_observation_path_gateway": [
+   {
+    "n": 7
+   }
+  ],
+  "t3a_stage_entry_event": [
+   {
+    "n": 8
+   }
+  ],
+  "t3a_attempt": [
+   {
+    "n": 4
+   }
+  ],
+  "t3a_mentor_assignment": [
+   {
+    "n": 3
+   }
+  ],
+  "t3a_observation": [
+   {
+    "n": 0
+   }
+  ]
+ },
+ "attempts_numbered": [
+  {
+   "attempt_id": "b635fbed-bf42-472c-ab2b-46460a410ffe",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "attempt_no": 1,
+   "counted": true
+  },
+  {
+   "attempt_id": "1a8cddda-3471-418e-8639-c7c93b625737",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "attempt_no": 2,
+   "counted": true
+  },
+  {
+   "attempt_id": "af309707-0106-4ec2-bf50-a042e1cd62cf",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "attempt_no": 3,
+   "counted": true
+  },
+  {
+   "attempt_id": "f637bf02-4c1f-42d1-98dd-7d3a750dc634",
+   "dimension_id": "D1",
+   "stage_code": "S4",
+   "attempt_no": 1,
+   "counted": true
+  }
+ ],
+ "stage_entry_state": [
+  {
+   "cs": "captured",
+   "count": 8
+  }
+ ],
+ "mapped": [
+  {
+   "count": 36
+  }
+ ],
+ "config": [
+  {
+   "enforce_required": false
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 109,
+   "unmapped": 413,
+   "passes": false
+  }
+ ],
+ "cap_fn": [
+  {
+   "r": {
+    "permitted": true,
+    "completed_observations": 0
+   }
+  }
+ ]
+}

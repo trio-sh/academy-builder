@@ -1,0 +1,31 @@
+{
+ "mapped": [
+  {
+   "count": 63
+  }
+ ],
+ "counts": [
+  {
+   "s": 0,
+   "sv": 0,
+   "si": 0
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 168,
+   "unmapped": 354,
+   "passes": false
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE comparison_state=not_authored longitudinal=not_eligible\\nCONTEXT:  PL/pgSQL function inline_code_block line 8 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "s": 0,
+   "co": 50
+  }
+ ]
+}
