@@ -1,0 +1,81 @@
+{
+ "entries": [
+  {
+   "id": "2ba8009a-e4c0-41e9-9297-13456a7b3171",
+   "candidate_id": "b62888d2-9a66-4872-94ab-2c1e3ca1762d",
+   "created_at": "2026-09-20 19:00:56.739263+00",
+   "event_type": "signup",
+   "title": "Journey Started \u2014 Welcome to The 3rd Academy",
+   "description": "Growth Log created. Your journey toward verified workplace readiness begins here.",
+   "metadata": {},
+   "source_component": "System",
+   "source_id": null
+  },
+  {
+   "id": "66ba5f67-a4f1-47d1-8fbb-a121c659cfdb",
+   "candidate_id": "b62888d2-9a66-4872-94ab-2c1e3ca1762d",
+   "created_at": "2026-09-20 19:01:29.179033+00",
+   "event_type": "resume_upload",
+   "title": "Resume Uploaded",
+   "description": "Uploaded resume: Anye_Happiness_Ade_Resume (2).pdf",
+   "metadata": {},
+   "source_component": "Profile",
+   "source_id": null
+  },
+  {
+   "id": "33c1ff5c-66bb-40b7-8009-08edc7b19a6c",
+   "candidate_id": "b62888d2-9a66-4872-94ab-2c1e3ca1762d",
+   "created_at": "2026-09-20 19:01:47.179445+00",
+   "event_type": "assessment",
+   "title": "Resume Enhancer \u2014 Basic Profile Created",
+   "description": "AI-analyzed resume. Anye Happiness Ade is a technical founder and AI platform architect who has built and launched multiple products end-to-end, including PiPilot, TweetChat, and other software platforms. His experience centers on founding companies, leading full-stack engineering, and shipping production AI/agentic systems that support large user volumes and real deployment outcomes.",
+   "metadata": {},
+   "source_component": "ResumeEnhancer",
+   "source_id": null
+  },
+  {
+   "id": "4d094dbf-4112-456e-8a3c-fc313b39d0a3",
+   "candidate_id": "b62888d2-9a66-4872-94ab-2c1e3ca1762d",
+   "created_at": "2026-09-20 19:02:00.626195+00",
+   "event_type": "training",
+   "title": "Mentor Matching Queued",
+   "description": "You'll be matched with a mentor as one becomes available.",
+   "metadata": {},
+   "source_component": "MentorMatching",
+   "source_id": null
+  },
+  {
+   "id": "982da5c4-b85b-4409-adee-9eb04804d387",
+   "candidate_id": "f68e503b-ed9a-47bc-92c5-1d2a9aaf3f1a",
+   "created_at": "2026-09-21 06:40:58.850119+00",
+   "event_type": "training",
+   "title": "Mentor Matching Queued",
+   "description": "You'll be matched with a mentor as one becomes available.",
+   "metadata": {},
+   "source_component": "MentorMatching",
+   "source_id": null
+  }
+ ],
+ "policies": [
+  {
+   "polname": "growth_log_entries_owner_select",
+   "polcmd": "r",
+   "using_expr": "(candidate_id = auth.uid())"
+  },
+  {
+   "polname": "growth_log_entries_owner_insert",
+   "polcmd": "a",
+   "using_expr": null
+  },
+  {
+   "polname": "growth_log_entries_owner_update",
+   "polcmd": "w",
+   "using_expr": "(candidate_id = auth.uid())"
+  },
+  {
+   "polname": "growth_log_entries_owner_delete",
+   "polcmd": "d",
+   "using_expr": "(candidate_id = auth.uid())"
+  }
+ ]
+}
