@@ -1,0 +1,602 @@
+[
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_modules",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_modules",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_modules",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_modules",
+  "policyname": "bridgefast_modules_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_progress",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_progress",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_progress",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_progress",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "bridgefast_progress",
+  "policyname": "bridgefast_progress_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "conversations",
+  "policyname": "Users can create conversations",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "conversations",
+  "policyname": "Users can view conversations they're in",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "(EXISTS ( SELECT 1\n   FROM conversation_participants\n  WHERE ((conversation_participants.conversation_id = conversations.id) AND (conversation_participants.user_id = auth.uid()))))",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "conversations",
+  "policyname": "conversations_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "employer_profiles_delete_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "DELETE",
+  "qual": "((profile_id = auth.uid()) OR is_admin())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "employer_profiles_insert_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "((profile_id = auth.uid()) OR is_admin())"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "employer_profiles_read",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "employer_profiles",
+  "policyname": "employer_profiles_update_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "UPDATE",
+  "qual": "((profile_id = auth.uid()) OR is_admin())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "endorsements",
+  "policyname": "endorsements_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "endorsements",
+  "policyname": "endorsements_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "growth_log_entries",
+  "policyname": "Users can insert own growth log",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "(auth.uid() = candidate_id)"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "growth_log_entries",
+  "policyname": "Users can view own growth log",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "(auth.uid() = candidate_id)",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "growth_log_entries",
+  "policyname": "growth_log_entries_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "growth_logs",
+  "policyname": "growth_logs_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_applications",
+  "policyname": "liveworks_applications_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_applications",
+  "policyname": "liveworks_applications_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_milestones",
+  "policyname": "liveworks_milestones_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_milestones",
+  "policyname": "liveworks_milestones_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_projects",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_projects",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_projects",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_projects",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "liveworks_projects",
+  "policyname": "liveworks_projects_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_assignments",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_assignments",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_assignments",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_assignments",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_assignments",
+  "policyname": "mentor_assignments_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_observations",
+  "policyname": "mentor_observations_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "mentor_observations",
+  "policyname": "mentor_observations_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "notifications_delete_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "DELETE",
+  "qual": "((user_id = auth.uid()) OR is_admin())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "notifications_insert_any",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "notifications_read_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "SELECT",
+  "qual": "((user_id = auth.uid()) OR is_admin())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "notifications",
+  "policyname": "notifications_update_own",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "UPDATE",
+  "qual": "((user_id = auth.uid()) OR is_admin())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "skill_passports",
+  "policyname": "skill_passports_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "skill_passports",
+  "policyname": "skill_passports_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "Allow all delete",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "DELETE",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "Allow all insert",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "INSERT",
+  "qual": null,
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "Allow all select",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "true",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "Allow all update",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "UPDATE",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "t3x_connections_read",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "SELECT",
+  "qual": "((candidate_id = auth.uid()) OR t3a_is_oversight_admin() OR t3a_is_service_context())",
+  "with_check": null
+ },
+ {
+  "schemaname": "public",
+  "tablename": "t3x_connections",
+  "policyname": "t3x_connections_write",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "t3a_is_service_context()",
+  "with_check": "t3a_is_service_context()"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "talentvisa_nominations",
+  "policyname": "talentvisa_nominations_all",
+  "permissive": "PERMISSIVE",
+  "roles": "{public}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ },
+ {
+  "schemaname": "public",
+  "tablename": "talentvisa_nominations",
+  "policyname": "talentvisa_nominations_rw",
+  "permissive": "PERMISSIVE",
+  "roles": "{authenticated}",
+  "cmd": "ALL",
+  "qual": "true",
+  "with_check": "true"
+ }
+]

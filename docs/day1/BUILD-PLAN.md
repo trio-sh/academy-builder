@@ -38,4 +38,4 @@ Minimum 2 elements per dimension and a 36 month history window and a 12 month ed
 ## Needs a decision from Hans (blocking)
 
 1. ~~A non production environment~~ (CR-002) **Done.** Throwaway Postgres, see `test-environment.md`.
-2. **Apply `20261100000000_close_open_access_policies.sql` to production** (CR-004). Written and tested on the throwaway database; it is the one finding that affects live users today.
+2. ~~Apply `20261100000000_close_open_access_policies.sql` to production~~ (CR-004) **Done 20 Oct 2026**, verified, with a rollback script.
