@@ -1,0 +1,204 @@
+{
+ "passed": 22,
+ "total": 22,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-48",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 552,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D2-51",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D2-45",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": "resolved"
+  },
+  {
+   "id": "D2-45",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D2-01",
+    "Q-D2-03a",
+    "Q-D2-03b"
+   ]
+  },
+  {
+   "id": "D2-45",
+   "label": "the Stage 1 and 3 twin and the Stage 2 and 4 twin resolve to different statements",
+   "pass": true,
+   "detail": [
+    "ST-D2-019",
+    "ST-D2-054"
+   ]
+  },
+  {
+   "id": "D2-45",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the statement contained 3 of the items the situation identified"
+  },
+  {
+   "id": "D2-53",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-53",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-47",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-01 A1 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-47",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-54",
+   "label": "a D1 question in a D2 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D1-01 is not a D2 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-RR",
+   "label": "RR-D2-01: a Stage 1 response cannot evidence an action performed",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D2-01",
+    "detail": "A written Stage 1 response cannot evidence an action performed",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-RR",
+   "label": "RR-D2-02: an action recorded with no action identified refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D2-02",
+    "detail": "The parent records an action and the child identifies none; the service must not choose",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-RR",
+   "label": "RR-D2-12: nothing stated to anyone, yet a surfacing timed, refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D2-12",
+    "detail": "Where the shortfall was stated to no one, no surfacing can be timed",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-RR",
+   "label": "RR-D2-14: the duplicated absence statement ST-D2-023 is suppressed, ST-D2-017 stays",
+   "pass": true,
+   "detail": [
+    "ST-D2-017"
+   ]
+  },
+  {
+   "id": "D2-41",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-02b follows Q-D2-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-5.8",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D2-09"
+   ]
+  },
+  {
+   "id": "D2-5.8",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-5.8",
+   "label": "not_yet_observed is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-01 missing:not_yet_observed",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-5.7c",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D2-015 affected_party_label",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-47",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 3
+  },
+  {
+   "id": "D1-same",
+   "label": "D1 statements are not reachable from a D2 resolution",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}
