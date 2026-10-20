@@ -1,0 +1,79 @@
+{
+ "tables": [
+  {
+   "table_name": "t3a_calibration_clearance"
+  },
+  {
+   "table_name": "t3a_calibration_participant"
+  },
+  {
+   "table_name": "t3a_pilot_stop"
+  }
+ ],
+ "rls": [
+  {
+   "relname": "t3a_calibration_clearance",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_calibration_participant",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_pilot_stop",
+   "relrowsecurity": true
+  }
+ ],
+ "anon_grants": [
+  {
+   "n": 0
+  }
+ ],
+ "fn_exec": [
+  {
+   "clearance_auth": false,
+   "stop_anon": false,
+   "trace_auth": false
+  }
+ ],
+ "boundary_triggers": [
+  {
+   "n": 5
+  }
+ ],
+ "auth_trigger": [
+  {
+   "n": 1
+  }
+ ],
+ "clearances": [
+  {
+   "n": 0
+  }
+ ],
+ "stops": [
+  {
+   "n": 0
+  }
+ ],
+ "probe_authorization": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE rows_inserted=0\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "probe_stop": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE path_open_d2=f d1_open=t refusal=pilot_path_stopped\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "probe_employer": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE employer_route_disabled_in_pilot\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "residue_after": [
+  {
+   "stops": 0,
+   "auths": 0,
+   "refusals": 0
+  }
+ ],
+ "note": "Applied, then re-applied once after renaming the stop column tier to stop_level (empty table dropped and recreated); re-probe: affected path stop gives pilot_path_stopped for D2, D1 stays open, zero residue."
+}

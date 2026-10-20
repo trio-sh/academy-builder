@@ -44,6 +44,7 @@ const authIns = (m, dim, ref) => run(`insert into t3a_mentor_authorization(mento
 await authIns(M1, "D1", "1.0");
 let n1 = await refused("unauthorized_dimension"); let og = (await run(`select t3a_observer_gate('${M1}','D2','${P}') r`))[0].r;
 rec("D2-16", "a mentor holding only D1 authorization is refused for D2 and the refusal is logged", og.reason === "unauthorized_dimension" && (await refused("unauthorized_dimension")) === n1 + 1, og);
+await run(`insert into t3a_calibration_clearance(dimension_id, reference_set_version, construct_version, determination_version, statement_version, source_version_ids) values ('D2','2.1','t','t','t',array[gen_random_uuid()])`); // synthetic clearance, throwaway database only
 await authIns(M1, "D2", "2.1"); og = (await run(`select t3a_observer_gate('${M1}','D2','${P}') r`))[0].r; rec("D2-9", "D2 authorization resting on a clearance that names the version set authorizes (the version set is a required column, so an unnamed one cannot exist)", og.outcome === "authorized", og);
 await authIns(M2, "D2", "2.1"); og = (await run(`select t3a_observer_gate('${M2}','D2','${P}') r`))[0].r; rec("D2-9", "D2 authorization resting on a named clearance authorizes", og.outcome === "authorized", og);
 rec("D2-9", "and that D2 authorization does not authorize D1", (await run(`select t3a_observer_gate('${M2}','D1','${P}') r`))[0].r.reason === "unauthorized_dimension", null);
