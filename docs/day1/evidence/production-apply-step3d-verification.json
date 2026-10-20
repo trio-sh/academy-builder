@@ -1,0 +1,46 @@
+{
+ "apply": [],
+ "d1_before": [
+  {
+   "q": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "d1_approved": 94,
+   "approvals": 108
+  }
+ ],
+ "d1_after": [
+  {
+   "q": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "d1_approved": 94,
+   "approvals": 108
+  }
+ ],
+ "d1_identical": true,
+ "d2_precondition_sample": [
+  {
+   "identifier": "SRC-D2-S1-001",
+   "c": "drafting_test_incomplete"
+  },
+  {
+   "identifier": "SRC-D2-S1-002",
+   "c": "drafting_test_incomplete"
+  },
+  {
+   "identifier": "SRC-D2-S1-003",
+   "c": "drafting_test_incomplete"
+  }
+ ],
+ "d2_sources_blocked_on_drafting_tests": [
+  {
+   "n": 34,
+   "total": 34
+  }
+ ],
+ "serving_gate_real_d2_source": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"detail\\\": \\\"only an exact approved version serves\\\", \\\"reason\\\": \\\"source_not_approved\\\", \\\"outcome\\\": \\\"refused\\\"}\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "serving_gate_stage4": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"detail\\\": \\\"Stage 4 entry is disabled behind s4_activation_state, which is not loaded\\\", \\\"reason\\\": \\\"s4_not_activated\\\", \\\"outcome\\\": \\\"refused\\\"}\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ }
+}
