@@ -179,9 +179,9 @@ const S1Workbench = () => {
       setSourceVerbatim((body.verbatim as string) ?? "");
 
       const [{ data: setRows }, { data: lineRows }, { data: resRows }] = await Promise.all([
-        supabase.from("t3a_d1_capture_set").select("*").order("display_order"),
-        supabase.from("t3a_d1_capture_line").select("*").order("line_order"),
-        supabase.from("t3a_d1_capture_resolution").select("*"),
+        supabase.from("t3a_d1_capture_set").select("*").eq("dimension_id", "D1").order("display_order"),
+        supabase.from("t3a_d1_capture_line").select("*").eq("dimension_id", "D1").order("line_order"),
+        supabase.from("t3a_d1_capture_resolution").select("*").eq("dimension_id", "D1"),
       ]);
       setSets((setRows ?? []) as CaptureSet[]);
       setLines((lineRows ?? []) as CaptureLine[]);

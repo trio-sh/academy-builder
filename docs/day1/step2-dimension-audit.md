@@ -24,6 +24,6 @@ attempt against its Stage entry; progression decision against its observation re
 
 ## Still open (carried to Step 3)
 
-1. Sixteen D1 functions read the capture structure by code alone (`t3a_d1_capture_for_question`, `serve_capture`, `capture_groups`, `branch_answers`, `capture_close_beat`, `capture_visible_at_beat`, `beat_advance_permitted`, `compose_observation`, `coverage_matrix`, `reference_card`, `version_set`, `question_capture_map_guard`, `capture_selection_guard` and three helpers). They are correct while only D1 rows exist. Each takes a dimension when D2 content is loaded; this is the first item of Step 3. The mentor workbench (`S1Workbench.tsx`) also reads these tables unfiltered and gets a `dimension_id` filter at the same time.
+1. Done in Step 3a (migration 20261204): twelve D1 readers and the mentor workbench are dimension aware or pinned to D1. Output is byte identical in production and with D2 rows loaded on the throwaway database (`evidence/step3a-readers-test.json`, `production-apply-step3a-verification.json`). The D1 specific serving and composition logic is deliberately not generalized.
 2. D2 and D3 Section 5 (about 4,400 lines of content) was not read in full, so further collisions inside it are possible. The content load will fail on a collision rather than overwrite; each one is logged.
 3. `t3a_statement_library` cannot be updated by anyone (`t3a_statement_library_immutable` names columns that do not exist). The retirement is therefore a mapping, not a status change on the rows.
