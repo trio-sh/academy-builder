@@ -25,7 +25,7 @@ Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/e
 | DT-17 | Dual hash | **PASS-DB** | `domain-e-test.json` | Via t3a_commit_observation |
 | DT-18 | Sequential unmasking | **PASS-DB** | `domain-e-test.json` | The live S1 flow does not write t3a_stage_sequence yet (CR-047) |
 | DT-19 | S1 outcome before S2 | **PASS-DB** | `domain-e-test.json` | enforce_sequence is off (CR-047) |
-| DT-20 | No free text | **PASS-DB** | `domain-e-test.json` | Guard and table triggers built; edge functions do not call the guard yet (CR-047) |
+| DT-20 | No free text | **PASS-DB** | `live-writers-test.json` | Guard and table triggers built. The progression decision endpoint now refuses free text and the mentor screen sends none (CR-068); other mentor endpoints do not call the guard yet (CR-047) |
 | DT-21 | Accommodation reason | **PASS-DB** | `domain-e-test.json` | Same as DT-20 |
 | DT-22 | Append only observations | **PASS** | `dt22-dt26-test.json` | Observation guard hardened in 20261124: the older guard watched 12 columns and allowed DELETE |
 | DT-23 | Event envelope and payload | **PASS** | `event-registry-test.json` | E2, E5 |

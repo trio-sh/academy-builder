@@ -23,7 +23,7 @@ S = {
  16: ("PASS-DB", "domain-e-test.json", "Refused by the table trigger on every route"), 17: ("PASS-DB", "domain-e-test.json", "Via t3a_commit_observation"),
  18: ("PASS-DB", "domain-e-test.json", "The live S1 flow does not write t3a_stage_sequence yet (CR-047)"),
  19: ("PASS-DB", "domain-e-test.json", "enforce_sequence is off (CR-047)"),
- 20: ("PASS-DB", "domain-e-test.json", "Guard and table triggers built; edge functions do not call the guard yet (CR-047)"),
+ 20: ("PASS-DB", "live-writers-test.json", "Guard and table triggers built. The progression decision endpoint now refuses free text and the mentor screen sends none (CR-068); other mentor endpoints do not call the guard yet (CR-047)"),
  21: ("PASS-DB", "domain-e-test.json", "Same as DT-20"),
  22: ("PASS", "dt22-dt26-test.json", "Observation guard hardened in 20261124: the older guard watched 12 columns and allowed DELETE"),
  23: ("PASS", "event-registry-test.json", "E2, E5"), 24: ("PASS", "event-registry-test.json", "E8, E9, E12; nightly job has no scheduler yet (CR-025)"),

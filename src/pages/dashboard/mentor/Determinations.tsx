@@ -67,7 +67,7 @@ const DECISION_META: Record<ProgressionDecision, { label: string; body: string; 
   },
   pause: {
     label: "Pause",
-    body: "Suspend observation on this dimension. A rationale for pausing is entered against the record.",
+    body: "Suspend observation on this dimension. The decision is entered against the record.",
     tone: "stop",
   },
 };
@@ -207,7 +207,6 @@ function DeterminationDetail({
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [decision, setDecision] = useState<ProgressionDecision | "">("");
-  const [rationale, setRationale] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -242,7 +241,6 @@ function DeterminationDetail({
     };
   }, [stage.dimension_id]);
 
-  const rationaleOk = rationale.trim().length >= 20;
   const allAnswered = useMemo(
     () => (questions ?? []).every((q) => answers[q.question_id] !== undefined && answers[q.question_id] !== ""),
     [questions, answers]
@@ -250,10 +248,6 @@ function DeterminationDetail({
 
   const handleSubmit = async () => {
     if (!decision) return;
-    if (!rationaleOk) {
-      setError("Rationale is required and must be at least two sentences (≥20 characters).");
-      return;
-    }
     setSaving(true);
     setError(null);
     try {
@@ -261,7 +255,6 @@ function DeterminationDetail({
         p_stage_instance_id: stage.stage_instance_id,
         p_dimension_id: stage.dimension_id,
         p_decision: decision,
-        p_rationale: rationale.trim(),
       });
       if (rpcErr) {
         setError(rpcErr.message);
@@ -360,26 +353,9 @@ function DeterminationDetail({
           })}
         </div>
 
-        <div className="mt-8">
-          <label className="mono-label text-foreground block mb-2">
-            § Rationale — required, minimum two sentences
-          </label>
-          <textarea
-            value={rationale}
-            onChange={(e) => setRationale(e.target.value)}
-            rows={5}
-            placeholder="Name the observation and the reasoning. Not a summary of the person — a record of what the answers to the questions above bear on the decision."
-            className="w-full bg-background border border-foreground/40 focus:border-foreground outline-none px-3 py-2 text-sm text-foreground rounded-none"
-          />
-          <div className="flex justify-between mt-2">
-            <span className="marginalia text-[0.75rem] text-foreground/60">
-              Rationale is written to the register with the decision and cannot be edited afterwards.
-            </span>
-            <span className={`mono-label text-[0.75rem] ${rationaleOk ? "text-foreground/60" : "ink-vermilion"}`}>
-              {rationale.trim().length} / 20 min
-            </span>
-          </div>
-        </div>
+        <p className="mt-8 marginalia text-[0.8125rem] text-foreground/60">
+          The decision is written to the register and cannot be edited afterwards. No free text is taken: a reason is recorded only as a controlled code, and no code list is loaded yet.
+        </p>
 
         {error && (
           <div className="mt-6 border-2 border-vermilion bg-vermilion/[0.06] p-4">
@@ -397,7 +373,7 @@ function DeterminationDetail({
           </button>
           <Button
             onClick={handleSubmit}
-            disabled={saving || !decision || !rationaleOk}
+            disabled={saving || !decision}
             className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6 py-2 text-sm font-medium tracking-wide"
           >
             {saving ? (
