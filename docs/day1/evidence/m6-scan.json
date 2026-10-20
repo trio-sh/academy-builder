@@ -1,0 +1,180 @@
+{
+ "definite": {
+  "score/rating/rank/percentile/BARS (5.1.1)": {
+   "bridgefast_progress": [
+    "final_score"
+   ],
+   "bridgefast_quiz_attempts": [
+    "max_score",
+    "score"
+   ],
+   "candidate_self_assessments": [
+    "behavioral_scores"
+   ],
+   "mentor_observations": [
+    "behavioral_scores"
+   ],
+   "mentor_profiles": [
+    "avg_rating"
+   ],
+   "observation_feedback": [
+    "bars_score"
+   ],
+   "observation_loops": [
+    "bars_score"
+   ],
+   "observation_synthesis": [
+    "overall_bars_score"
+   ],
+   "self_assessments": [
+    "behavioral_scores"
+   ],
+   "skill_passports": [
+    "behavioral_scores"
+   ],
+   "students": [
+    "avg_behavioral_score"
+   ],
+   "t3a_observation": [
+    "ordinal_anchor"
+   ],
+   "teacher_observations": [
+    "behavioral_scores"
+   ],
+   "training_certificates": [
+    "score"
+   ]
+  },
+  "level_1..4 / observation_level (5.1.2)": {
+   "observation_loops": [
+    "observation_level"
+   ],
+   "observation_sessions": [
+    "observation_level"
+   ]
+  },
+  "tier/band/match (5.1.3)": {
+   "candidate_profiles": [
+    "current_tier"
+   ],
+   "employer_profiles": [
+    "subscription_tier"
+   ],
+   "skill_passports": [
+    "readiness_tier"
+   ],
+   "t3a_discovery_query_log": [
+    "pool_band_after",
+    "pool_band_before"
+   ],
+   "talentvisa_quotas": [
+    "tier"
+   ]
+  },
+  "skill_passport (5.1.4)": {
+   "candidate_profiles": [
+    "has_skill_passport"
+   ],
+   "skill_passports": [
+    "(object name)"
+   ]
+  },
+  "endorsement/recommend (5.1.5)": {
+   "endorsements": [
+    "(object name)"
+   ],
+   "mentor_profiles": [
+    "total_endorsements"
+   ],
+   "observation_loops": [
+    "endorsement_decision"
+   ]
+  },
+  "escalate (5.1.6)": {
+   "t3a_safety_event": [
+    "escalated_at",
+    "escalated_to_safety_contact"
+   ]
+  },
+  "dimensions_flagged/dimension_scores (5.1.9)": {
+   "t3a_mentor_judgment": [
+    "dimensions_flagged"
+   ]
+  },
+  "AI suggestion/override (5.1.10)": {
+   "t3a_mentor_judgment": [
+    "ai_assist_notes_accepted",
+    "ai_assist_notes_ignored"
+   ]
+  },
+  "hire/outcome (5.1.17)": {
+   "t3a_employer_hire_record": [
+    "hired_on"
+   ]
+  }
+ },
+ "needs_review": {
+  "free-text note or rationale (5.1.11)": {
+   "behavioral_consistency_index": [
+    "mentor_notes"
+   ],
+   "candidate_self_assessments": [
+    "notes"
+   ],
+   "escrow_transactions": [
+    "notes"
+   ],
+   "liveworks_milestones": [
+    "payment_notes"
+   ],
+   "mentor_assigned_dimensions": [
+    "notes"
+   ],
+   "mentor_observations": [
+    "notes"
+   ],
+   "mentor_sessions": [
+    "notes"
+   ],
+   "self_assessments": [
+    "notes"
+   ],
+   "t3a_change_classification": [
+    "rationale"
+   ],
+   "t3a_content_load_event": [
+    "notes"
+   ],
+   "t3a_d1_change_classification": [
+    "rationale"
+   ],
+   "t3a_d1_conflict_declaration": [
+    "rationale"
+   ],
+   "t3a_d1_content_load_event": [
+    "notes"
+   ],
+   "t3a_d1_progression_decision": [
+    "rationale"
+   ],
+   "t3a_mentor_judgment": [
+    "decision_rationale"
+   ],
+   "t3a_observation": [
+    "evidence_notes"
+   ],
+   "t3a_rce_standing_defect": [
+    "notes"
+   ],
+   "t3a_role_authorization": [
+    "notes"
+   ],
+   "teacher_observations": [
+    "notes"
+   ]
+  }
+ },
+ "routines_with_prohibited_terms": [
+  "submit_endorsement"
+ ]
+}
