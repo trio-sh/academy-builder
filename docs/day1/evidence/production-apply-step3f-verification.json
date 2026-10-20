@@ -1,0 +1,12 @@
+{
+ "apply": [],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"gate\\\": {\\\"eligible\\\": false, \\\"sub_reason\\\": \\\"s1_instance_not_closed\\\", \\\"refusal_code\\\": \\\"s1_confirmation_absent\\\"}, \\\"note\\\": {\\\"detail\\\": \\\"no such Stage 1 instance\\\", \\\"reason\\\": \\\"not_a_stage_1_instance\\\", \\\"outcome\\\": \\\"refused\\\"}, \\\"observer\\\": {\\\"detail\\\": \\\"the mentor holds no authorization\\\", \\\"reason\\\": \\\"unauthorized_dimension\\\", \\\"outcome\\\": \\\"refused\\\"}}\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "confirmations_before": [
+  {
+   "c": 0
+  }
+ ]
+}
