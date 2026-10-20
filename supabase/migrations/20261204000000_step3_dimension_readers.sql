@@ -803,7 +803,7 @@ BEGIN
   -- The capture sets, with their lines, in register order
   -- -------------------------------------------------------------------
   -- Each line carries its text and its order and nothing else. There is
-  -- no weight, no rank, no flag and no field a preference could be
+  -- nothing that orders the lines and no field a preference could be
   -- written into — see section 3.
   --
   -- Applicability is read off the source sheet, never inferred. Where a

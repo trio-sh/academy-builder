@@ -113,5 +113,6 @@ for o in out:
     else:
         text += o.rstrip() + ";\n\n"
 # capture_groups / coverage_matrix change their argument list or result shape: drop the old forms first where needed
+text = text.replace("no weight, no rank, no flag and no field a preference could be", "nothing that orders the lines and no field a preference could be")
 OUT.write_text(text, encoding="utf-8")
 print("wrote", OUT, len(text))
