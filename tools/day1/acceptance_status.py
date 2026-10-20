@@ -37,7 +37,7 @@ S = {
  36: ("PASS", "domain-p-test.json", "The existing oversight log is the content read log (CR-063)"),
  37: ("PASS", "domain-p-test.json", ""), 38: ("PASS-DB", "domain-p-test.json", "Records an operator verification; the actual hosting and backup inspection is the operator's"),
  39: ("PASS", "domain-p-test.json", "Deployment values are unset until the founder sets them (CR-062)"),
- 40: ("OPEN", "reconciliation-report.md", "R1 and R2 first pass done; R3 to R6 not yet. Backfills so far write no history"),
+ 40: ("PASS", "reconciliation_report.json", "R1 to R6 done. The report (markdown and JSON) lists every one of the 522 fields with its class, table, action and counts; the only writes to existing rows are 17 rows touched in new columns; no historical value changed (CR-070)"),
  41: ("PASS", "domain-no-test.json", "Package tool test_tools.py passes 53 of 53 in a clean environment (CR-001); the database records pass and fail results"),
  42: ("PASS", "acceptance-rules-test.json", ""), 43: ("PASS", "event-registry-test.json", "E13"), 44: ("PASS", "acceptance-rules-test.json", ""),
  45: ("PASS", "acceptance-rules-test.json", "Staleness is read from the report's version set (CR-065)"), 46: ("PASS", "acceptance-rules-test.json", ""),

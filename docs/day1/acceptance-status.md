@@ -2,7 +2,7 @@
 
 Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/evidence/`. Tests ran on the throwaway database (`test-environment.md`); the migrations were then applied to production with a before snapshot, a rollback and a zero-residue probe.
 
-**48 PASS, 13 PASS-DB (database half proven, application half open), 3 OPEN, 3 UNRUN** of 67.
+**49 PASS, 13 PASS-DB (database half proven, application half open), 2 OPEN, 3 UNRUN** of 67.
 
 | Test | What | Status | Evidence | Note |
 |---|---|---|---|---|
@@ -45,7 +45,7 @@ Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/e
 | DT-37 | Retention guard | **PASS** | `domain-p-test.json` |  |
 | DT-38 | Canada hosting | **PASS-DB** | `domain-p-test.json` | Records an operator verification; the actual hosting and backup inspection is the operator's |
 | DT-39 | Unset configuration | **PASS** | `domain-p-test.json` | Deployment values are unset until the founder sets them (CR-062) |
-| DT-40 | Reconciliation report | **OPEN** | `reconciliation-report.md` | R1 and R2 first pass done; R3 to R6 not yet. Backfills so far write no history |
+| DT-40 | Reconciliation report | **PASS** | `reconciliation_report.json` | R1 to R6 done. The report (markdown and JSON) lists every one of the 522 fields with its class, table, action and counts; the only writes to existing rows are 17 rows touched in new columns; no historical value changed (CR-070) |
 | DT-41 | Manifest signature | **PASS** | `domain-no-test.json` | Package tool test_tools.py passes 53 of 53 in a clean environment (CR-001); the database records pass and fail results |
 | DT-42 | Commercial lever | **PASS** | `acceptance-rules-test.json` |  |
 | DT-43 | Idempotent replay | **PASS** | `event-registry-test.json` | E13 |
