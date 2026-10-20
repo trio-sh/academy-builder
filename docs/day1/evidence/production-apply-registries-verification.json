@@ -1,0 +1,71 @@
+{
+ "applied_at": "2026-10-20",
+ "server": "PostgreSQL 17.6",
+ "migrations": [
+  "20261101000000_day1_field_registry.sql",
+  "20261102000000_day1_event_registry.sql"
+ ],
+ "pre_state": "none of the 11 new tables existed; t3a_event_log held 0 rows (snapshot: event-log-snapshot-before-prod.json)",
+ "loaded": {
+  "fields": 600,
+  "prohibited_items": 23,
+  "events": 122,
+  "aliases": 10,
+  "reference_rules": 8,
+  "ingest_mode": "legacy_tolerant"
+ },
+ "catalog_checks": {
+  "rls_on_all_new_tables": {
+   "on_": 11,
+   "n": 11
+  },
+  "anon_authenticated_table_privileges_on_new_tables": 0,
+  "event_log_user_grants": [
+   [
+    "authenticated",
+    "SELECT"
+   ]
+  ],
+  "anon_or_authenticated_can_execute": [],
+  "event_log_triggers": [
+   "t3a_event_log_envelope",
+   "t3a_event_log_no_delete",
+   "t3a_event_log_no_update"
+  ],
+  "actor_type_check": "CHECK ((actor_type = ANY (ARRAY['PARTICIPANT'::text, 'MENTOR'::text, 'EMPLOYER'::text, 'REVIEWER'::text, 'AI_ENGINE'::text, 'SYSTEM'::text, 'ADMIN'::text, 'EMPLOYER_USER'::text, 'ADMINISTRATOR'::text, 'SYSTEM_SERVICE'::t",
+  "event_category_enum": "OBSERVATION,MENTOR,PARTICIPANT,EMPLOYER,SYSTEM,GOVERNANCE,CONSENT,REPORT,REHEARSAL,PROGRAM,REGISTRY,COMMERCIAL",
+  "definer_functions_that_write_the_log": 10
+ },
+ "zero_residue_probe": {
+  "method": "one transaction that exercises the paths and ends with a deliberate exception so nothing is written",
+  "legacy_path": {
+   "event_name": "observation.committed",
+   "state": "accepted",
+   "seq": 1,
+   "first_links_to_genesis": true,
+   "hash_ok": true
+  },
+  "strict_synthetic_event": "accepted",
+  "strict_real_event_unknown_account": {
+   "outcome": "rejected",
+   "reason": "REFERENCE_NOT_FOUND"
+  },
+  "strict_unknown_event": {
+   "outcome": "rejected",
+   "reason": "EVENT_NOT_REGISTERED"
+  },
+  "chain_findings": 0,
+  "rows_left_behind": {
+   "t3a_event_log": 0,
+   "t3a_event_rejection": 0,
+   "t3a_event_idempotency": 0,
+   "t3a_quality_event": 0
+  }
+ },
+ "payload_checker_on_production": {
+  "package_fixtures_checked": 244,
+  "with_violations": 0
+ },
+ "not_run_on_production": "No event was written to the production log: it is append-only, so test events could not be removed. The nine live writer functions were not exercised (no production data); see CR-027.",
+ "rollback": "rollback_day1_registries.sql"
+}
