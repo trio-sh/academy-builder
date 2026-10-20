@@ -1,6 +1,6 @@
 -- Step 3e: the dimension determination commit guard and the immutable composed statement (D2 INS-002 rules 030 to 044, INS-003 046, 050, 052).
 --
--- t3a_dimension_compose validates what the mentor selected against the SERVED source (applicability read from the source's own table, bound items drawn
+-- t3a_dimension_compose checks what the mentor selected against the SERVED source (applicability read from the source's own table, bound items drawn
 -- only from that source version, controlled missing states only, no free text), resolves it through the resolution service, and stores ONE immutable
 -- composed statement. It does not write the observation; the canonical commit route does, with the composed statement id.
 --
