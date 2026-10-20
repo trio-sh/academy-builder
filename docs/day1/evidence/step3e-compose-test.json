@@ -24,7 +24,7 @@
    "pass": true,
    "detail": {
     "state_code": "ST-D2-001",
-    "observation_id": "9f7c9599-8d39-42a0-960a-b644ca916756",
+    "observation_id": "92ef1a08-1767-4ebd-8013-2baa7c78dfab",
     "conduct_element_id": "CE-D2-01",
     "recurrence_blocker": false,
     "recurrence_equivalence_key_id": "REK-D2-001"
@@ -263,7 +263,7 @@
    "pass": true,
    "detail": {
     "state_code": "ST-D2-053",
-    "observation_id": "d28c962c-f83c-47ad-85cc-3277d9e46176",
+    "observation_id": "6dc45c2e-efbe-4696-80cb-21dcbcf009dd",
     "conduct_element_id": "CE-D2-09",
     "recurrence_blocker": true,
     "recurrence_equivalence_key_id": "REK-D2-009"

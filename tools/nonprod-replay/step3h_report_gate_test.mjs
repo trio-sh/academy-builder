@@ -19,7 +19,7 @@ const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_
 const gate = async (rv = "null", is = "null") => (await run(`select t3a_report_issuance_gate('${rep}', ${rv}, ${is}) g`))[0].g;
 const has = (g, code) => g.blockers.some(b => b.code === code);
 
-rec("D2-89", "the checklist has 25 items: 23 for every dimension, two D2 specific", (await run(`select count(*)::int n from t3a_dimension_review_item`))[0].n === 25 && (await run(`select cardinality(t3a_review_items_for('D1')) a, cardinality(t3a_review_items_for('D2')) b`)).every(r => r.a === 23 && r.b === 25), null);
+rec("D2-89", "the checklist has 25 items: 23 for every dimension, two D2 specific", (await run(`select count(*)::int n from t3a_dimension_review_item where dimension_id is null or dimension_id = 'D2'`))[0].n === 25 && (await run(`select cardinality(t3a_review_items_for('D1')) a, cardinality(t3a_review_items_for('D2')) b, cardinality(t3a_review_items_for('D3')) c`)).every(r => r.a === 23 && r.b === 25 && r.c === 25), null);
 await run(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('evidence_currency','','0.0','${IS}')`);
 let g = await gate(); rec("D2-87", "with no recorded participant outcome the report is blocked, silence is not completion", has(g, "participant_review_incomplete"), g.blockers.map(b => b.code));
 rec("D2-98", "no override is available", g.override_available === false, g.override_available);

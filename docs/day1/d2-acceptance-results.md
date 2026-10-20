@@ -1,8 +1,8 @@
 # D2 acceptance results (Section 11)
 
-Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d2-acceptance-run.json`. The run re-reads the labelled results of the earlier step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
+Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d2-acceptance-run.json`. The run re-reads the labelled results of the D2 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**70 of 74 identifiers PASS, 0 FAIL, 4 NOT RUN.** The four not run need the report renderer or a screen, which are the next steps; each states why.
+**70 of 74 identifiers PASS, 0 FAIL, 4 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -78,15 +78,12 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D2-PP-05 | PASS | run | Stage 2 with the seven beats: a complete timing record permits the timing determination and the determinations commit |
 | D2-PP-06 | PASS | run | a D2 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written) |
 | D2-PP-07 | PASS | evidence | a successful correction: a new composed statement supersedes, the original is retained |
-| D2-PP-08 | PASS | evidence | availability granted, read as the current version, then withdrawn; the evidence record untouched |
+| D2-PP-08 | PASS | run | availability granted on a report carrying D2 (employer_share for both dimensions), the pool entry holds no dimension, stage or conduct field, the participant withdraws, the entry leaves the pool, and the evidence record is untouched |
 | D2-PP-09 | PASS | run | the four demonstration fixtures are seeded as written (Q-D2-02b not served at Stage 1; Q-D2-08a and Q-D2-09 not served at Stage 3); the eligibility check is reachable on a demonstration report and no issued report is created |
 | D2-PP-10 | PASS | evidence | one participant with D1 and D2 observations: each dimension's state is unchanged by the other's records |
 
 ## Reading this honestly
 
-- PASS means the stated behavior was observed on the throwaway database. It is not a statement about production data: production holds no approved D2 source, no authorized D2 mentor, no clearance and no consent, so no D2 observation can occur there. That is the designed first state.
-- D2-18 and D2-19 (the issuance floor) were not built when the Stage gates were; they were found missing by this run and built in step 3n.
-- D2-11 is satisfied structurally: the evidence state reads only the participant's records of the dimension asked for, and a D1 input to a D2 computation is refused and logged.
-- D2-28 and D2-43 are scans of the 61 statements and 13 templates and of constructed renders; the same scans run again on rendered output when the renderer exists.
-- D2-35, D2-37, D2-39 and D2-51 are NOT RUN: the correction commitment text, the permitted-use block, the Cockpit size rule and the currency statement in block 4 are rendering or screen behaviors. Their database side (no default value, the issuance block on an unloaded currency) is covered above.
-- Test identifiers inside the earlier `step3*-test.json` files are build instruction numbers, not these identifiers (CR-119).
+- PASS means the stated behavior was observed on the throwaway database. It is not a statement about production data: production holds no approved source, no authorized mentor, no clearance and no consent for this dimension, so no observation can occur there. That is the designed first state.
+- Entries marked `evidence` are results of the earlier step files, re-read here; entries marked `run` were run by the acceptance file itself.
+- Test identifiers inside the earlier step evidence files are build instruction numbers, not these identifiers (CR-119).

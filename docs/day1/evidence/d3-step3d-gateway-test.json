@@ -1,0 +1,256 @@
+{
+ "passed": 28,
+ "total": 28,
+ "failed": [],
+ "results": [
+  {
+   "id": "D3-regs",
+   "label": "the loaded D3 sources hold no approval and cannot be approved: first failing precondition is named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-27",
+   "label": "the table backstop refuses an approval of a loaded D3 source",
+   "pass": true,
+   "detail": "SOURCE_APPROVAL_PRECONDITION: drafting_test_incomplete"
+  },
+  {
+   "id": "D3-27",
+   "label": "a D3 source with a null situation class cannot be approved",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "with no author recorded the drafting test write is refused (fails closed) and logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "a reviewer who is a member of the author list is refused and logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "one populated row is not enough",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "an empty outcome is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_source_drafting_test\" violates check constraint \"t3a_s"
+  },
+  {
+   "id": "D-01",
+   "label": "with both rows the next precondition is the submission",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-02",
+   "label": "a Stage 3 source with no rights record cannot enter the approval queue (logged, before approval review)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D-02",
+   "label": "the refusal is the named code rights_route_absent",
+   "pass": true,
+   "detail": {
+    "detail": "a Stage 3 source with no rights record cannot enter the approval queue",
+    "reason": "rights_route_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-02",
+   "label": "with a rights record the source can be submitted",
+   "pass": true,
+   "detail": {
+    "outcome": "queued",
+    "source_version_id": "739b1b75-5a25-4955-81fe-875437d8bf87"
+   }
+  },
+  {
+   "id": "D3-27",
+   "label": "queued, the next precondition is the name clearance (the sheet's own claim is not clearance)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-27",
+   "label": "with every precondition met none fails",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-26",
+   "label": "an unapproved version is unreachable",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-26",
+   "label": "a source cannot serve at another Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S1",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-26",
+   "label": "only an exact approved, active, eligible version serves (synthetic approval)",
+   "pass": true,
+   "detail": {
+    "outcome": "servable",
+    "source_version_id": "e15c66dc-c789-470f-bc10-36d62ad271b8"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "Stage 4 entry refuses and logs s4_not_activated while the value is unloaded",
+   "pass": true,
+   "detail": {
+    "detail": "Stage 4 entry is disabled behind s4_activation_state, which is not loaded",
+    "reason": "s4_not_activated",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "a participant with no history is not excluded",
+   "pass": true,
+   "detail": {
+    "reasons": [],
+    "excluded": false,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D3-01"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "the exact version already met excludes",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "source_version_met",
+     "administration_form_met",
+     "pattern_family_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D3-01"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "the same situation pattern family in D3 excludes a different version",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "administration_form_met",
+     "pattern_family_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D3-01"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "a different pattern in the same form still meets the form exclusion but not the pattern one",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "administration_form_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D3-02"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "having sat the Stage 2 seven-beat form under D1 excludes the D3 Stage 2 form (the form crosses)",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "administration_form_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S2-SEVEN-BEAT",
+    "interaction_pattern_family_id": "IPF-D3-03"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "a cross-dimension pattern comparison refuses and logs while the mapping table is empty",
+   "pass": true,
+   "detail": {
+    "detail": "no approved mapping row; pattern identifiers of different dimensions are not interchangeable",
+    "reason": "cross_dimension_mapping_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-28",
+   "label": "the mapping table is empty",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-28",
+   "label": "the serving gate applies the exposure exclusion",
+   "pass": true,
+   "detail": {
+    "detail": "[\"source_version_met\", \"administration_form_met\", \"pattern_family_met\"]",
+    "reason": "prior_exposure_exclusion",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-29",
+   "label": "three D3 Stage 2 attempts, then a D1 Stage 2 entry is permitted (independent counters)",
+   "pass": true,
+   "detail": [
+    {
+     "permitted": true,
+     "completed_observations": 1
+    },
+    [
+     {
+      "attempt_no": 1
+     }
+    ]
+   ]
+  },
+  {
+   "id": "D3-24",
+   "label": "a fourth D3 Stage 2 attempt is refused (cap of three per Stage per dimension)",
+   "pass": true,
+   "detail": {
+    "remedy": "CX-27: there is no cooldown after the third completed observation because there is no fourth attempt.",
+    "permitted": false,
+    "refusal_code": "ATTEMPT_CAP_REACHED",
+    "completed_observations": 3
+   }
+  },
+  {
+   "id": "D3-24",
+   "label": "D3 carries its own cooldown ladder (seven and fourteen days)",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

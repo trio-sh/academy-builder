@@ -91,9 +91,9 @@ prior("D2-24", "an in-place edit of a composed statement is refused; supersessio
 prior("D2-25", "a two-dimension report on one page fails and logs layout_overflow; the form does not expand or compress", "step3h", "layout_overflow");
 
 // ---------------- D2-26 .. D2-28 : rendered output scans (on the 61 statements, the 13 templates and constructed renders) ----------------
-const bad = await run(`select count(*)::int n from t3a_d1_statement_library l where l.dimension_id='D2' and (t3a_prohibited_output_check('D2', l.statement_body)->>'outcome') <> 'passed'`);
+const bad = await run(`select count(*)::int n from t3a_d1_statement_library l where l.dimension_id='D2' and (t3a_prohibited_output_check('D2', l.statement_body)->>'passed')::boolean is not true`);
 const ov = (await run(`select t3a_prohibited_output_check('D2', 'Overall profile: 3 of 5 dimensions complete, average strong') r`))[0].r;
-pass("D2-26", "no overall, composite, average or profile element: such an element fails the scan, and none of the 61 statements carries one", ov.outcome !== "passed" && bad[0].n === 0, [ov.outcome, bad[0].n]);
+pass("D2-26", "no overall, composite, average or profile element: such an element fails the scan, and none of the 61 statements carries one", ov.passed === false && ov.findings.some(f => f.rule === "cross_dimension_aggregate") && bad[0].n === 0, [ov.passed, bad[0].n]);
 prior("D2-27", "no Section 3.2 prohibited verb or retired term in rendered D2 output", "step3g", "verb of purpose");
 const names = await run(`select statement_key from t3a_d1_statement_library l where l.dimension_id='D2' and l.statement_body ~ '(^|[.!?] +)?[a-z, ]+ [A-Z][a-z]+ [A-Z][a-z]+'`);
 const tpl = await run(`select count(*)::int n from t3a_d1_language_template where dimension_id='D2' and template_body ~ '[a-z] [A-Z][a-z]+ [A-Z][a-z]+'`).catch(() => [{ n: 0 }]);
@@ -119,7 +119,7 @@ prior("D2-41", "Stage 4 entry with no group participation record is refused", "s
 prior("D2-42", "capture or read of followup_contact or aggregate_regional is refused and logged disabled_consent_route", "step3m", "disabled_consent_route");
 const nr = await run(`select statement_key from t3a_d1_statement_library where dimension_id='D2' and statement_body ~* '(named recipient|release token|redemption passcode|released to your organization)'`);
 const nrv = (await run(`select t3a_prohibited_output_check('D2', 'This report was released to your organization with a release token') r`))[0].r;
-pass("D2-43", "no named-recipient, release-token, passcode or released-to-your-organization construction in any output; such a construction fails the scan", nr.length === 0 && nrv.outcome !== "passed", { statements: nr.length, scan: nrv.outcome });
+pass("D2-43", "no named-recipient, release-token, passcode or released-to-your-organization construction in any output; such a construction fails the scan", nr.length === 0 && nrv.passed === false, { statements: nr.length, scan: nrv.passed });
 prior("D2-44", "a source with either drafting-test row empty cannot be approved: drafting_test_incomplete", "step3d", "table backstop refuses an approval");
 prior("D2-45", "a drafting-test reviewer equal to the source author is refused", "step3d", "member of the author list");
 prior("D2-46", "a Stage 3 source with no rights record is refused at submission, rights_route_absent", "step3d", "rights_route_absent");
@@ -194,7 +194,17 @@ const ins6 = await c.query(`insert into t3a_d1_report_issuance(ber_report_id, pa
 const after6 = (await run(`select count(*)::int n from t3a_d1_report_issuance where ber_report_id='${rep6}'`))[0].n;
 pass("D2-PP-06", "a D2 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written)", g6.permitted === true && after6 === before6 + 1, { gate: g6.blockers?.map(b => b.code), insert: ins6, rows: [before6, after6] });
 prior("D2-PP-07", "a successful correction: a new composed statement supersedes, the original is retained", "step3h", "successful correction produces a new");
-prior("D2-PP-08", "availability granted, read as the current version, then withdrawn; the evidence record untouched", "step0", "withdraw");
+// PP-08: grant employer availability on a report carrying D2, read the pool state, withdraw; the evidence record is untouched
+const PPU = await mkU("pp8", "candidate"); await run(`update profiles set first_name='Pat', last_name='Pool' where id='${PPU}'`);
+for (const dm of ["D1", "D2"]) await svc(`select t3a_record_consent('${PPU}','employer_share','granted','${dm}',null,'1.0','${H}','checkbox','en-CA','observation') r`);
+const rep8 = await mkRep(PPU, ["D1", "D2"]); await run(`update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep8}'`);
+const cs8 = (await run(`select count(*)::int n from t3a_dimension_composed_statement where participant_id='${PPU}'`))[0].n;
+const mk8 = await asRole("authenticated", PPU, `select t3a_pool_make_available('${rep8}','Analyst','Toronto','Immediately','CA',false) r`);
+const st8 = await asRole("authenticated", PPU, `select t3a_pool_state('${rep8}') r`);
+const leak8 = (await run(`select (to_jsonb(e) ?| array['dimension_id','stage_code','conduct','observation_ref']) l from t3a_employer_pool_entry e where ber_report_id='${rep8}'`))[0];
+const wd8 = await asRole("authenticated", PPU, `select t3a_pool_withdraw('${rep8}') r`);
+const after8 = (await run(`select (e.visibility_withdrawn_at is not null) w, (select count(*)::int from t3a_dimension_composed_statement where participant_id='${PPU}') cs from t3a_employer_pool_entry e where ber_report_id='${rep8}'`))[0];
+pass("D2-PP-08", "availability granted on a report carrying D2 (employer_share for both dimensions), the pool entry holds no dimension, stage or conduct field, the participant withdraws, the entry leaves the pool, and the evidence record is untouched", mk8.r?.outcome === "available" && st8.r?.available === true && leak8 && leak8.l === false && wd8.r?.outcome === "withdrawn" && after8.w === true && after8.cs === cs8, { make: mk8.r || mk8.msg, state: st8.r, withdraw: wd8.r || wd8.msg, after: after8 });
 // PP-09: the full demonstration run across the four fixtures; nothing is issued
 const demo = await run(`select o.identifier, v.body from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier like 'DEMO-D2-S_-001' order by 1`);
 const specimen = await mkRep(P, ["D1", "D2"]); await run(`update t3a_d1_ber_report set specimen_render_flag = true where ber_report_id='${specimen}'`);

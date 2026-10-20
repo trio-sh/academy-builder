@@ -230,7 +230,7 @@
    "id": "D2-73",
    "label": "a frame refused is logged",
    "pass": true,
-   "detail": 1
+   "detail": 6
   },
   {
    "id": "D2-70",

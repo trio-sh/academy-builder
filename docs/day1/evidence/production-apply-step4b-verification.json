@@ -1,0 +1,74 @@
+{
+ "counts": {
+  "questions": 16,
+  "capture_sets": 16,
+  "capture_lines": 55,
+  "branch_rules": 6,
+  "statements": 68,
+  "refusal_rules": 16,
+  "templates": 13,
+  "sources": 39,
+  "demo_fixtures": 4,
+  "register_rows": 55,
+  "vocab": 44
+ },
+ "branch_rules_derived": 6,
+ "approvals_or_active": 0,
+ "source_approvals": 0,
+ "ready_questions": 0,
+ "coverage": [
+  {
+   "patterns": 372,
+   "resolved": 313,
+   "designed_refusals": 59,
+   "gaps": 0,
+   "ambiguous": 0
+  }
+ ],
+ "bound_item_failures": [],
+ "blockers": [
+  {
+   "statement_key": "ST-D3-043"
+  },
+  {
+   "statement_key": "ST-D3-051"
+  }
+ ],
+ "first_failing_precondition_S2_001": [
+  {
+   "c": "drafting_test_incomplete"
+  }
+ ],
+ "serving_gate": null,
+ "probe_serving_gate_refuses": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE source_not_approved\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_s4_not_activated": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE s4_not_activated\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_production_resolution": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE no_approved_statement\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "d2_unchanged": [
+  {
+   "st": 61,
+   "qo": 15,
+   "src": 34
+  }
+ ],
+ "residue": [
+  {
+   "refusals": 0,
+   "auths": 0,
+   "clearances": 0
+  }
+ ],
+ "semantic_fields_written": 0,
+ "probe_submit_refuses_question_definition": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE question_definition_incomplete\\nCONTEXT:  PL/pgSQL function inline_code_block line 2 at RAISE\\n\"}"
+ }
+}

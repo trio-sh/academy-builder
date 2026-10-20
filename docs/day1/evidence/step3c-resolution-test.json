@@ -192,7 +192,7 @@
    "id": "D2-47",
    "label": "a refusal on the logged route persists in the refusal log",
    "pass": true,
-   "detail": 3
+   "detail": 13
   },
   {
    "id": "D1-same",

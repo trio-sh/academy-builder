@@ -1,0 +1,234 @@
+{
+ "passed": 25,
+ "total": 25,
+ "failed": [],
+ "results": [
+  {
+   "id": "D3-cov",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 372,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D3-cov",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D3-res",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": "resolved"
+  },
+  {
+   "id": "D3-res",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D3-01",
+    "Q-D3-01b"
+   ]
+  },
+  {
+   "id": "D3-res",
+   "label": "the Stage 1 stated plan twin and the Stage 2 twin resolve to different statements",
+   "pass": true,
+   "detail": [
+    "ST-D3-064",
+    "ST-D3-042"
+   ]
+  },
+  {
+   "id": "D3-res",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the participant placed 2 of the work items the situation presented in a stated order"
+  },
+  {
+   "id": "D3-res",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01 A4 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "a D1 question in a D3 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D1-01 is not a D3 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-01: a Stage 1 response cannot evidence a check performed",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D3-01",
+    "detail": "A written Stage 1 response cannot evidence a check performed",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-02: a Stage 1 response cannot evidence a means used",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D3-02",
+    "detail": "A written Stage 1 response cannot evidence a means used",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-03: a Stage 1 response cannot evidence an action performed on the dependency",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D3-03",
+    "detail": "A written Stage 1 response cannot evidence an action performed",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-04: an order asserted with no item identified refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D3-04",
+    "detail": "The parent asserts an order and the child identifies none; the service must not choose",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-06: a component affected with none identified refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D3-06",
+    "detail": "The parent asserts a component was affected and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-RR",
+   "label": "RR-D3-16: the duplicated absence statement ST-D3-035 is suppressed, ST-D3-039 stays",
+   "pass": true,
+   "detail": [
+    "ST-D3-039"
+   ]
+  },
+  {
+   "id": "D3-res",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-02b follows Q-D3-02 A1/A2/A3",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "Q-D3-06a and Q-D3-06b are independent: neither constrains the other",
+   "pass": true,
+   "detail": [
+    2,
+    1
+   ]
+  },
+  {
+   "id": "D3-res",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D3-09"
+   ]
+  },
+  {
+   "id": "D3-res",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "not_yet_observed is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01 missing:not_yet_observed",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D3-005 placed_item_count",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-res",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 15
+  },
+  {
+   "id": "D3-res",
+   "label": "D1 statements are not reachable from a D3 resolution",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

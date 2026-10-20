@@ -128,15 +128,15 @@
     "open": true,
     "cases": [
      {
-      "case": "ebc02214-1451-494e-8cde-b135803597a2",
+      "case": "b1a362e1-7686-4cde-9a58-97c47fb55448",
       "kind": "correction"
      }
     ],
     "records_under_reconsideration": [
      {
-      "assignment": "366adcc6-0929-482d-9a07-10c395e4341e",
+      "assignment": "94beca81-61cb-4ae2-8434-a48c006cd5ea",
       "dimension_id": "D2",
-      "observation_record_id": "649119c8-f6f2-435e-aad4-f1b053abbed0"
+      "observation_record_id": "aaab4bf1-cd08-4845-b1cb-3f378cb43a4d"
      }
     ]
    }
@@ -254,8 +254,8 @@
    "pass": true,
    "detail": {
     "outcome": "amended",
-    "supersedes": "083a4dcd-2ca7-49db-8fd2-c9bf75ff5a3f",
-    "composed_statement_id": "89893af2-2fa1-4920-9e79-c82786277dca"
+    "supersedes": "b13794b2-e679-4a08-9015-4ab00ca421f3",
+    "composed_statement_id": "56e37758-92c0-45e8-8beb-44228d069258"
    }
   },
   {

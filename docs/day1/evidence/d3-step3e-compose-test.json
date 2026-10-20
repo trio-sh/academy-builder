@@ -1,0 +1,354 @@
+{
+ "passed": 39,
+ "total": 39,
+ "failed": [],
+ "results": [
+  {
+   "id": "D3-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement (fourteen served questions; 06a and 06b are not served on this source)",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant placed 2 of the work items the situation presented in a stated order",
+    "the participant identified 1 of the checks the situation made available"
+   ]
+  },
+  {
+   "id": "D3-composed",
+   "label": "clause instance = observation + element + recurrence key + state code (state code is the statement id)",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D3-001",
+    "observation_id": "de705c7d-3cc8-4cda-8693-9fddee012eea",
+    "conduct_element_id": "CE-D3-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D3-001"
+   }
+  },
+  {
+   "id": "D3-24",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D3-24",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D3-09",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-09",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-09",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-10",
+   "label": "a coined missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09 no answer given",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-10",
+   "label": "not_applicable and not_yet_observed are refused as missing states",
+   "pass": true,
+   "detail": [
+    "missing_state_not_postable",
+    "missing_state_not_postable"
+   ]
+  },
+  {
+   "id": "D3-composed",
+   "label": "technical_failure attaches the conditions-compromised limitation",
+   "pass": true,
+   "detail": [
+    "conditions_compromised"
+   ]
+  },
+  {
+   "id": "D3-04",
+   "label": "an answer for a question the source marks NOT SERVED refuses (Q-D3-08 on this Stage 1 source); no row is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-08",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-04",
+   "label": "Q-D3-06a is NOT SERVED on this source: an answer refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-06a",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "a parent that does not serve its child leaves the child out, and that is not a missing value",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-composed",
+   "label": "a child answered although its parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-02b follows Q-D3-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "a child answered under a missing parent refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-02b follows Q-D3-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-07",
+   "label": "an item not on this source version's list refuses (another version's item)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-03b item not on stated_requirements of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-08",
+   "label": "an item drawn from a D1 style list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-07b item not on deliverable_components of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-03b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-05",
+   "label": "a listed answer with no items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-03b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-05",
+   "label": "Q-D3-02 A1 with Q-D3-02b nothing selected refuses (the parent asserts a component was affected, the child identifies none)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "an answer that takes no items refuses when items are sent",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-03b: this answer takes no items",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "Q-D3-09 A3 composes from items marked overstated, with the count taken from the marks",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-composed",
+   "label": "the mixed position is its own answer: overstated and understated marks together compose",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-composed",
+   "label": "the same component marked both ways refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09",
+    "reason": "item_marked_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "marks that do not match the answer line refuse",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09: LISTED:OVERSTATED Selected each component stated as further along than the source records, and marked none less far along.",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "a matched answer takes no marks",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-09: this answer takes no items",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-49",
+   "label": "Q-D3-02b and Q-D3-07b selecting the same component both compose as separate determinations; neither is suppressed",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-61",
+   "label": "a Stage 1 check performed refuses (RR-D3-01): a written response cannot evidence it",
+   "pass": true,
+   "detail": {
+    "detail": "A written Stage 1 response cannot evidence a check performed",
+    "reason": "RR-D3-01",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-61",
+   "label": "a Stage 1 statement for an action-bearing element resolves to the stated-plan variant",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D3-61",
+   "label": "Stage 1 rendered statements contain none of the closed performed act verbs",
+   "pass": true,
+   "detail": "[{\"entry_type\":\"conduct_bearing\",\"state_code\":\"ST-D3-001\",\"clause_text\":\"the participant named a specific item of work to do first\",\"question_code\":\"Q-D3-01\",\"conduct_element\":\"CE-D3-01\"},{\"entry_type"
+  },
+  {
+   "id": "D3-61",
+   "label": "a performed act verb at Stage 1 refuses and logs stage_form_violation (checked with a verb added for the test, then removed)",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D3-01",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-01",
+   "label": "production composition needs a servable source and refuses on this unapproved one",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-composed",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-12",
+   "label": "two D3 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D3-12",
+   "label": "a D3 clause instance against a D1 clause instance refuses (keys are dimension scoped)",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-17",
+   "label": "ST-D3-043 carries its key but is a recurrence blocker and never equivalent",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D3-043",
+    "observation_id": "40399f09-0daa-456c-8d87-1ab1557590c7",
+    "conduct_element_id": "CE-D3-07",
+    "recurrence_blocker": true,
+    "recurrence_equivalence_key_id": "REK-D3-007"
+   }
+  },
+  {
+   "id": "D3-17",
+   "label": "ST-D3-051 carries its key but is a recurrence blocker and never equivalent",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D3-051",
+    "observation_id": "05211ce2-f062-42b2-9f3a-f67c343bcc2f",
+    "conduct_element_id": "CE-D3-09",
+    "recurrence_blocker": true,
+    "recurrence_equivalence_key_id": "REK-D3-009"
+   }
+  }
+ ]
+}

@@ -23,7 +23,7 @@
    "id": "D-04",
    "label": "the refusal is logged (persisted, not rolled back)",
    "pass": true,
-   "detail": 9
+   "detail": 26
   },
   {
    "id": "D-04",
@@ -144,7 +144,7 @@
       "r": {
        "event": "consent.granted",
        "outcome": "recorded",
-       "consent_id": "1edd12c6-91ab-4521-8bb2-08fc586d2d29"
+       "consent_id": "50c6d5ef-c50b-46b8-a0a5-302209631729"
       }
      }
     ]
@@ -160,7 +160,7 @@
      {
       "r": {
        "outcome": "available",
-       "recipient_release_id": "fb2205e4-2093-4919-a491-b8d515677bd8"
+       "recipient_release_id": "e1f18ea6-5825-4acc-947e-0d4a1c7872bb"
       }
      }
     ]
@@ -235,7 +235,7 @@
      "withdrawn_at": null,
      "report_status": "issued",
      "correction_open": false,
-     "made_available_at": "2026-10-20T19:32:10.510397+00:00"
+     "made_available_at": "2026-10-20T20:04:15.333122+00:00"
     }
    }
   },
@@ -249,7 +249,7 @@
      {
       "r": {
        "outcome": "withdrawn",
-       "recipient_release_id": "fb2205e4-2093-4919-a491-b8d515677bd8"
+       "recipient_release_id": "e1f18ea6-5825-4acc-947e-0d4a1c7872bb"
       }
      }
     ]

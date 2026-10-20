@@ -21,7 +21,11 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             # dimension content loads carry authored source text as data ("tiers", "validated" inside scenario prose), not identifiers (CR-082)
             "supabase/migrations/20261205000000_d2_content_registry.sql",
             # carries the closed retired vocabulary of D2 Section 4.2 as data for the prohibited-output check (CR-019 pattern)
-            "supabase/migrations/20261210000000_step3_evidence_state.sql"]
+            "supabase/migrations/20261210000000_step3_evidence_state.sql",
+            # the D3 content load and the D3 demonstration fixtures carry authored source text as data, as the D2 load does (CR-082 pattern)
+            # re-emits the prohibited-output scan, whose rule names are the detection vocabulary (the same text the evidence state migration carries)
+            "supabase/migrations/20261218000000_d3_shared_machinery.sql",
+            "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)

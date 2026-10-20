@@ -448,7 +448,7 @@
      "status": "PASS",
      "how": "run",
      "detail": [
-      null,
+      false,
       0
      ]
     }
@@ -715,7 +715,8 @@
      "status": "PASS",
      "how": "run",
      "detail": {
-      "statements": 0
+      "statements": 0,
+      "scan": false
      }
     }
    ]
@@ -1050,17 +1051,30 @@
    "status": "PASS",
    "entries": [
     {
-     "label": "availability granted, read as the current version, then withdrawn; the evidence record untouched",
+     "label": "availability granted on a report carrying D2 (employer_share for both dimensions), the pool entry holds no dimension, stage or conduct field, the participant withdraws, the entry leaves the pool, and the evidence record is untouched",
      "status": "PASS",
-     "how": "evidence",
-     "detail": [
-      "step0-release-test.json: the participant withdraws",
-      "step0-release-test.json: withdrawing again is refused",
-      "step0-release-test.json: a withdrawn entry blocks a fresh entry for the same report (one entry per report)",
-      "step0-release-test.json: a withdrawn report leaves the pool",
-      "step0-release-test.json: withdrawing employer_share consent takes every entry for that dimension out of the pool",
-      "step0-release-test.json: a withdrawn report cannot be made available"
-     ]
+     "how": "run",
+     "detail": {
+      "make": {
+       "outcome": "available",
+       "recipient_release_id": "0dcfafb0-0822-40dd-95b0-bee936d0794d"
+      },
+      "state": {
+       "available": true,
+       "withdrawn_at": null,
+       "report_status": "issued",
+       "correction_open": false,
+       "made_available_at": "2026-10-20T20:08:13.617366+00:00"
+      },
+      "withdraw": {
+       "outcome": "withdrawn",
+       "recipient_release_id": "0dcfafb0-0822-40dd-95b0-bee936d0794d"
+      },
+      "after": {
+       "w": true,
+       "cs": 0
+      }
+     }
     }
    ]
   },
@@ -1106,8 +1120,8 @@
       "s1": "Q-D2-02b",
       "s3": "Q-D2-08a,Q-D2-09",
       "issued": [
-       2,
-       2
+       6,
+       6
       ]
      }
     }

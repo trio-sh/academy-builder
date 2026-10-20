@@ -90,8 +90,14 @@ conds = [("conditions_compromised", p + "COMP-001"), ("evidence_expired", p + "E
          ("stage_1_only", None), ("single_or_multiple_observer", p + "SINGLE-001"), ("mixed_or_divergent", p + "DIV-001"), ("earlier_attempt_differs", p + "ATT-001")]
 for i, (c, t) in enumerate(conds, 1):
     rows.append(f"insert into public.t3a_d1_condition_precedence(dimension_id, condition_code, precedence_order, language_template_id, renders_before_conduct, effect) values ({lit(dim)},{lit(c)},{i},{lit(t)},true,{lit('Fixed order of ' + REF + ' Section 5.13; the limitation is stated before the conduct description')});")
+# the retired list is a comma list ending at its first full stop; a conversion fault can run the next paragraph into the last entry, so the list stops there
+words = []
 for w in R["prohibited_vocabulary"]:
-    rows.append(f"insert into public.t3a_rce_prohibited_vocabulary(dimension_id, word, version, reason) values ({lit(dim)},{lit(w)},{lit('PV-' + dim + '-1.0')},{lit(REF + ' Section 5.7a retired vocabulary')});")
+    if ". " in w:
+        words.append(w.split(". ")[0]); break
+    words.append(w)
+for w in words:
+    rows.append(f"insert into public.t3a_rce_prohibited_vocabulary(dimension_id, word, version, reason) values ({lit(dim)},{lit(w)},{lit('PV-' + dim + '-1.0')},{lit(REF + ' Section 5.7a retired vocabulary')}) on conflict do nothing;")
 
 # --- 6. sources (loaded, not servable) -------------------------------------------------------------------------------------------
 reg = R["source_register"]

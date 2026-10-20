@@ -1,0 +1,518 @@
+{
+ "passed": 54,
+ "total": 54,
+ "failed": [],
+ "results": [
+  {
+   "id": "D3-S3-1",
+   "label": "an unapproved Stage 3 source cannot be assigned",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-1",
+   "label": "a participant cannot assign work to themselves",
+   "pass": true,
+   "detail": {
+    "detail": "a Stage 3 assignment is made by a person with standing or through the service route",
+    "reason": "APPROVER_LACKS_STANDING",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-1",
+   "label": "a deadline in the past is refused",
+   "pass": true,
+   "detail": {
+    "detail": "a brief is assigned with a deadline that has not passed",
+    "reason": "deadline_required_in_future",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-1",
+   "label": "an approved source with a rights record assigns, carrying its dimension",
+   "pass": true,
+   "detail": {
+    "outcome": "assigned",
+    "dimension_id": "D3",
+    "submission_id": "e0ad2bf6-7058-4cc9-9d87-bad8544b21ef",
+    "stage_instance_id": "4ec243ae-74dd-430c-abf6-03d3c2a3a4e1"
+   }
+  },
+  {
+   "id": "D3-S3-2",
+   "label": "only the assigned participant responds",
+   "pass": true,
+   "detail": {
+    "detail": "only the assigned participant responds",
+    "reason": "not_your_assignment",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-2",
+   "label": "submission before acceptance is refused",
+   "pass": true,
+   "detail": {
+    "detail": "state is ASSIGNED",
+    "reason": "invalid_state_for_submission",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-2",
+   "label": "accept",
+   "pass": true,
+   "detail": {
+    "outcome": "accepted"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "a missing tooling declaration refuses under AI_USE_DECLARATION_REQUIRED and the refusal persists",
+   "pass": true,
+   "detail": {
+    "detail": "the tooling declaration is required",
+    "reason": "AI_USE_DECLARATION_REQUIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "the authorship attestation must be affirmed",
+   "pass": true,
+   "detail": {
+    "detail": "the authorship attestation must be affirmed to submit",
+    "reason": "AUTHORSHIP_ATTESTATION_NOT_AFFIRMED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "assistance yes with no controlled selection is refused",
+   "pass": true,
+   "detail": {
+    "detail": "a controlled detail is selected exactly when the declaration is yes",
+    "reason": "DECLARATION_DETAIL_MISMATCH",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "a detail selected with a no declaration is refused",
+   "pass": true,
+   "detail": {
+    "detail": "a controlled detail is selected exactly when the declaration is yes",
+    "reason": "DECLARATION_DETAIL_MISMATCH",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "free text outside the controlled list is rejected",
+   "pass": true,
+   "detail": "new row for relation \"t3a_d1_work_sample_submission\" violates check constraint \"t3a_d1_work_sample_s"
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "an empty artifact is refused",
+   "pass": true,
+   "detail": {
+    "detail": "artifact_ref",
+    "reason": "PROVENANCE_FIELD_MISSING",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-3",
+   "label": "nothing was written by the refused attempts",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-S3-4",
+   "label": "a first submission passes the eleven field check (not twelve) and becomes available for capture",
+   "pass": true,
+   "detail": {
+    "outcome": "submitted",
+    "resubmission": false,
+    "submission_id": "e0ad2bf6-7058-4cc9-9d87-bad8544b21ef",
+    "fields_checked": 11
+   }
+  },
+  {
+   "id": "D3-S3-4",
+   "label": "the lifecycle ends at AVAILABLE_FOR_CAPTURE",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-S3-5",
+   "label": "a resubmission is a new row with prior_version_ref, checked on twelve fields",
+   "pass": true,
+   "detail": {
+    "outcome": "submitted",
+    "resubmission": true,
+    "submission_id": "264bd379-9531-4208-93ec-c1fd4b8be24e",
+    "fields_checked": 12
+   }
+  },
+  {
+   "id": "D3-S3-5",
+   "label": "nothing is overwritten: the prior artifact stays and is marked superseded by the new row",
+   "pass": true,
+   "detail": [
+    {
+     "submission_id": "e0ad2bf6-7058-4cc9-9d87-bad8544b21ef",
+     "artifact_ref": "x://first",
+     "superseded_by": "264bd379-9531-4208-93ec-c1fd4b8be24e",
+     "prior_version_ref": null,
+     "state": "AVAILABLE_FOR_CAPTURE"
+    },
+    {
+     "submission_id": "264bd379-9531-4208-93ec-c1fd4b8be24e",
+     "artifact_ref": "x://second",
+     "superseded_by": null,
+     "prior_version_ref": "e0ad2bf6-7058-4cc9-9d87-bad8544b21ef",
+     "state": "AVAILABLE_FOR_CAPTURE"
+    }
+   ]
+  },
+  {
+   "id": "D3-S3-5",
+   "label": "a superseded submission cannot be resubmitted again",
+   "pass": true,
+   "detail": {
+    "detail": "prior state is AVAILABLE_FOR_CAPTURE, already superseded",
+    "reason": "prior_not_resubmittable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-6",
+   "label": "a decline is not an evidence outcome and collects no reason; another source is offered",
+   "pass": true,
+   "detail": {
+    "outcome": "declined",
+    "evidence_outcome": false,
+    "offer_another_source": true
+   }
+  },
+  {
+   "id": "D3-S3-6",
+   "label": "a decline consumes no attempt",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-S3-7",
+   "label": "the sweep is a service route only",
+   "pass": true,
+   "detail": "permission denied for function t3a_s3_deadline_sweep"
+  },
+  {
+   "id": "D3-S3-7",
+   "label": "a missed deadline is recorded as an attribute only: no statement, not adverse, no attempt consumed",
+   "pass": true,
+   "detail": {
+    "marked": 1,
+    "adverse": false,
+    "outcome": "swept",
+    "attempt_consumed": false,
+    "composes_statement": false
+   }
+  },
+  {
+   "id": "D3-S3-8",
+   "label": "the participant cannot capture determinations on their own work",
+   "pass": true,
+   "detail": {
+    "detail": "a participant does not capture determinations on their own submission",
+    "reason": "participant_cannot_capture_own_work",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-8",
+   "label": "a mentor with no D3 authorization is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the mentor holds no authorization",
+    "reason": "unauthorized_dimension",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S3-8",
+   "label": "an authorized D3 mentor may capture; the work is not graded and the artifact is not on a report face",
+   "pass": true,
+   "detail": {
+    "outcome": "may_capture",
+    "grades_the_work": false,
+    "artifact_on_report_face": false
+   }
+  },
+  {
+   "id": "D3-S3-8",
+   "label": "a superseded submission is not available for capture",
+   "pass": true,
+   "detail": {
+    "detail": "superseded by a later submission",
+    "reason": "not_available_for_capture",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "accommodation not settled before composition is refused",
+   "pass": true,
+   "detail": {
+    "detail": "accommodation needs are settled before composition, never during the session",
+    "reason": "accommodation_not_settled",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "a fourth co-participant is refused",
+   "pass": true,
+   "detail": {
+    "detail": "up to three co-participants",
+    "reason": "too_many_co_participants",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "the observed participant cannot also be a co-participant",
+   "pass": true,
+   "detail": {
+    "detail": "the facilitator, the observed participant and each co-participant are different people",
+    "reason": "roles_must_be_distinct",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "a co-participant cannot be listed twice",
+   "pass": true,
+   "detail": {
+    "detail": "the facilitator, the observed participant and each co-participant are different people",
+    "reason": "roles_must_be_distinct",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "a facilitator with no D3 authorization is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the mentor holds no authorization",
+    "reason": "unauthorized_dimension",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-1",
+   "label": "a participant cannot compose a session",
+   "pass": true,
+   "detail": {
+    "detail": "a session is composed by a person with standing or through the service route",
+    "reason": "APPROVER_LACKS_STANDING",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-2",
+   "label": "composition names one observed participant and three co-participants; one observation record is to be written",
+   "pass": true,
+   "detail": {
+    "outcome": "composed",
+    "group_session_id": "e334868b-f4a8-4930-adb7-c0e699562464",
+    "observation_records_to_be_written": 1
+   }
+  },
+  {
+   "id": "D3-S4-3",
+   "label": "a co-participant generates no observation record",
+   "pass": true,
+   "detail": {
+    "permitted": false,
+    "refusal_code": "CO_PARTICIPANT_GENERATES_NO_OBSERVATION_RECORD"
+   }
+  },
+  {
+   "id": "D3-S4-3",
+   "label": "the observed participant has exactly one lane",
+   "pass": true,
+   "detail": {
+    "permitted": true,
+    "capture_lanes": 1
+   }
+  },
+  {
+   "id": "D3-S4-4",
+   "label": "the facilitator sees the one lane",
+   "pass": true,
+   "detail": {
+    "lanes": 1,
+    "outcome": "visible",
+    "lane_for": "494c7695-eb28-4104-9acf-33cab3f90dcb"
+   }
+  },
+  {
+   "id": "D3-S4-4",
+   "label": "neither the observed participant nor a co-participant sees the lane, and both attempts are logged",
+   "pass": true,
+   "detail": [
+    {
+     "detail": "no participant sees the capture lane, a determination or progression",
+     "reason": "lane_visible_to_facilitator_only",
+     "outcome": "refused"
+    },
+    {
+     "detail": "no participant sees the capture lane, a determination or progression",
+     "reason": "lane_visible_to_facilitator_only",
+     "outcome": "refused"
+    }
+   ]
+  },
+  {
+   "id": "D3-S4-4",
+   "label": "a co-participant cannot read the session or its members directly",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-03",
+   "label": "entry refuses with s4_not_activated and the attempt is recorded with its result",
+   "pass": true,
+   "detail": {
+    "reason": "s4_not_activated",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "a loaded empty value does not open Stage 4 (fail closed)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-03",
+   "label": "any value other than 'activated' leaves Stage 4 closed",
+   "pass": true,
+   "detail": {
+    "reason": "s4_not_activated",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "only the facilitator enters",
+   "pass": true,
+   "detail": {
+    "reason": "facilitator_only",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "an unknown session refuses",
+   "pass": true,
+   "detail": {
+    "reason": "session_not_found",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "with no group notice loaded the participation permission refuses and nothing is stored",
+   "pass": true,
+   "detail": {
+    "detail": "the approved group participation notice is not loaded",
+    "reason": "group_notice_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "a person outside the session cannot give or record a permission for it",
+   "pass": true,
+   "detail": {
+    "detail": "only a member gives their own permission",
+    "reason": "NOT_A_MEMBER_OF_THIS_SESSION",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "with activation synthetically loaded, entry still refuses until every person has given the permission",
+   "pass": true,
+   "detail": {
+    "reason": "group_participation_missing",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "one missing permission among four still refuses",
+   "pass": true,
+   "detail": {
+    "reason": "group_participation_missing",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "each permission is bound to the notice version and hash",
+   "pass": true,
+   "detail": 4
+  },
+  {
+   "id": "D3-S4-5",
+   "label": "a permission cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D3-S4-6",
+   "label": "with every permission, an approved source and synthetic activation, entry succeeds and opens one lane",
+   "pass": true,
+   "detail": {
+    "outcome": "entered",
+    "capture_lanes": 1
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "resetting the value closes Stage 4 again",
+   "pass": true,
+   "detail": {
+    "reason": "s4_not_activated",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-S4-7",
+   "label": "a pilot stop on the observed participant's path refuses composition",
+   "pass": true,
+   "detail": {
+    "detail": "a pilot stop is in force",
+    "reason": "pilot_path_stopped",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "there is no override: no function other than t3a_s4_enter starts a session",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}
