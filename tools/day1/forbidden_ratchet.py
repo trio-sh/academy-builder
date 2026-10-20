@@ -15,7 +15,9 @@ CHECK = ROOT / "docs/day1/package/tools/check_forbidden_identifiers.py"
 BASE = ROOT / "docs/day1/evidence/forbidden-identifiers-baseline.json"
 # exact exclusions (package 4.2): build output, docs, the package tools and tests, and two migrations that carry the prohibited list as data (CR-019)
 EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
-            "supabase/migrations/20261101000000_day1_field_registry.sql", "supabase/migrations/20261100000000_close_open_access_policies.sql"]
+            "supabase/migrations/20261101000000_day1_field_registry.sql", "supabase/migrations/20261100000000_close_open_access_policies.sql",
+            # carries the live t3a_commit_observation unchanged apart from the canonical branch, so it still names ordinal_anchor (CR-003); the scan of it shows those three hits only
+            "supabase/migrations/20261127000000_day1_live_writers_canonical.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)
