@@ -1,29 +1,26 @@
 /**
- * Disclosures you have released — T3A-D1-EXEC-001 §8.4 participant
- * pathway, against the §7.5 named-recipient model.
+ * Who can read your report — T3A-D1-EXEC-001 §8.4 participant pathway,
+ * against the approved employer pool (D2/D3 D-04).
  *
- * Required screens: disclosures you have released.
- * Required actions: release a report to a named recipient; revoke a
- * release.
+ * The named recipient route is closed. A report is released by making it
+ * available to approved employers, and by taking that back.
+ *
+ * Required screens: where your reports are available.
+ * Required actions: make an issued report available; withdraw it.
  *
  * Must not appear on the participant pathway, and are absent here:
  *   — any score, rank, readiness indicator or progress percentage;
- *   — any mentor pool, list, name, count or availability.
+ *   — any mentor pool, list, name, count or mentor availability.
  *
- * §7.1: a DISCLOSURE consent is per release and never standing. Each
- * release is its own consent record naming one recipient and covering
- * one report at one version. Releasing again to the same person is a new
- * consent, not a reuse of an old one.
- *
- * §7.5: the participant may revoke at any time, and a revoked token
- * returns the revoked state and no content, immediately.
+ * Consent (employer_share) is per dimension and never inherited. The text
+ * the participant is shown is hashed and the hash is recorded with the
+ * consent, so the record names the wording that was agreed to.
  */
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   DashboardPageHeader,
   DashSection,
@@ -32,35 +29,42 @@ import {
   EmptyState,
 } from "@/components/dashboard/primitives";
 
-type ReleaseRow = {
-  release_token_id: string;
-  consent_id: string;
-  ber_report_id: string;
-  report_version: string;
-  recipient_name: string;
-  recipient_org: string | null;
-  recipient_address: string;
-  issued_at: string;
-  expires_at: string;
-  redeemed_at: string | null;
-  revoked_at: string | null;
-  superseded_at: string | null;
+// Untyped handle: the Day 1 release functions are not in the generated types.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+const CONSENT_COPY_VERSION = "1.0";
+const CONSENT_COPY =
+  "I agree that approved employers may read this one report, and nothing else, while it is available. I can withdraw at any time, and the report leaves the pool from then on.";
+
+const sha256Hex = async (text: string): Promise<string> => {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 };
 
 type ReportRow = {
   ber_report_id: string;
   dimension_id: string;
-  status: string;
   issued_at: string | null;
+  withdrawn_at: string | null;
+  amended_at: string | null;
 };
 
-/** The state a release is in, from the record alone. */
-const releaseState = (r: ReleaseRow): { label: string; live: boolean } => {
-  if (r.revoked_at) return { label: "Revoked", live: false };
-  if (r.superseded_at) return { label: "Superseded by a later version", live: false };
-  if (new Date(r.expires_at) <= new Date()) return { label: "Expired", live: false };
-  if (r.redeemed_at) return { label: "Open — read", live: true };
-  return { label: "Open — not yet read", live: true };
+type PoolState = {
+  available: boolean;
+  report_status?: string;
+  correction_open?: boolean;
+  made_available_at?: string;
+  withdrawn_at?: string | null;
+};
+
+const REFUSALS: Record<string, string> = {
+  EMPLOYER_SHARE_CONSENT_REQUIRED: "Agree to the wording first.",
+  NAME_NOT_STATED: "Add your name to your profile first.",
+  REPORT_NOT_ISSUED: "Only an issued report can be made available.",
+  REPORT_WITHDRAWN: "This report has been withdrawn.",
+  REPORT_SUPERSEDED: "This report has been replaced by a later version.",
+  ALREADY_AVAILABLE: "This report is already available.",
 };
 
 const Disclosures = () => {
@@ -68,33 +72,26 @@ const Disclosures = () => {
   const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [releases, setReleases] = useState<ReleaseRow[]>([]);
-  const [reports, setReports] = useState<ReportRow[]>([]);
   const [isWorking, setIsWorking] = useState(false);
-
-  const [reportId, setReportId] = useState("");
-  const [recipientName, setRecipientName] = useState("");
-  const [recipientOrg, setRecipientOrg] = useState("");
-  const [recipientAddress, setRecipientAddress] = useState("");
+  const [reports, setReports] = useState<ReportRow[]>([]);
+  const [states, setStates] = useState<Record<string, PoolState>>({});
+  const [form, setForm] = useState<Record<string, { role: string; location: string; start: string; auth: string; agreed: boolean }>>({});
 
   const load = useCallback(async () => {
     if (!user?.id) return;
-
     const { data: issued } = await supabase
       .from("t3a_d1_ber_report")
-      .select("ber_report_id, dimension_id, status, issued_at")
+      .select("ber_report_id, dimension_id, issued_at, withdrawn_at, amended_at")
       .eq("participant_id", user.id)
       .not("issued_at", "is", null);
-    setReports((issued ?? []) as ReportRow[]);
-
-    // Own releases only. The policy restricts these rows to the
-    // participant whose consent they hang from.
-    const { data: tokens } = await supabase
-      .from("t3a_d1_release_token")
-      .select("*")
-      .order("issued_at", { ascending: false });
-    setReleases((tokens ?? []) as ReleaseRow[]);
-
+    const rows = (issued ?? []) as ReportRow[];
+    setReports(rows);
+    const next: Record<string, PoolState> = {};
+    for (const r of rows) {
+      const { data } = await db.rpc("t3a_pool_state", { p_ber_report_id: r.ber_report_id });
+      next[r.ber_report_id] = (data ?? { available: false }) as PoolState;
+    }
+    setStates(next);
     setIsLoading(false);
   }, [user?.id]);
 
@@ -102,68 +99,79 @@ const Disclosures = () => {
     void load();
   }, [load]);
 
-  // The link is returned once and stored only as a hash, so it is held
-  // here until the participant has copied it and nowhere else.
-  const [issuedLink, setIssuedLink] = useState<string | null>(null);
+  const field = (id: string) => form[id] ?? { role: "", location: "", start: "", auth: "", agreed: false };
+  const setField = (id: string, patch: Partial<ReturnType<typeof field>>) =>
+    setForm((f) => ({ ...f, [id]: { ...field(id), ...patch } }));
 
-  const onRelease = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onMakeAvailable = async (r: ReportRow) => {
+    if (!user?.id) return;
+    const f = field(r.ber_report_id);
     setIsWorking(true);
-
-    // §7.1 — each release is its own DISCLOSURE consent naming one
-    // recipient and one report at one version. The server creates both
-    // the consent and the token; this form previously showed a success
-    // message and created neither, so there was nothing for the named
-    // recipient to redeem.
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 30);
-
-    const { data } = await supabase.rpc("t3a_d1_issue_release_token", {
-      p_ber_report_id: reportId,
-      p_recipient_name: recipientName,
-      p_recipient_org: recipientOrg,
-      p_recipient_address: recipientAddress,
-      p_expires_at: expires.toISOString(),
+    const hash = await sha256Hex(CONSENT_COPY);
+    const consent = await db.rpc("t3a_record_consent", {
+      p_account: user.id,
+      p_type: "employer_share",
+      p_status: "granted",
+      p_dim: r.dimension_id,
+      p_stage: null,
+      p_copy_version: CONSENT_COPY_VERSION,
+      p_copy_hash: hash,
+      p_method: "checkbox",
+      p_language: "en",
+      p_purpose: "report_release",
     });
-    setIsWorking(false);
-
-    const result = data as { issued?: boolean; token?: string; refusal_code?: string } | null;
-    if (!result?.issued) {
-      toast({
-        title: result?.refusal_code ?? "That release could not be made.",
-        variant: "destructive",
-      });
+    const consentResult = consent.data as { reason?: string } | null;
+    if (consent.error || consentResult?.reason) {
+      setIsWorking(false);
+      toast({ title: "That could not be recorded.", variant: "destructive" });
       return;
     }
-
-    setIssuedLink(`${window.location.origin}/report?t=${result.token}`);
-    setReportId("");
-    setRecipientName("");
-    setRecipientOrg("");
-    setRecipientAddress("");
-    toast({
-      title: "Release issued",
-      description: "Send the link to the person you named. It works only from their address.",
+    const { data } = await db.rpc("t3a_pool_make_available", {
+      p_ber_report_id: r.ber_report_id,
+      p_stated_role_or_field: f.role.trim() || null,
+      p_work_location_preference: f.location.trim() || null,
+      p_availability_to_start: f.start.trim() || null,
+      p_work_authorization_jurisdiction: f.auth.trim() || null,
+      p_open_to_liveworks: null,
     });
+    setIsWorking(false);
+    const result = data as { outcome?: string; reason?: string } | null;
+    if (result?.outcome !== "available") {
+      toast({ title: REFUSALS[result?.reason ?? ""] ?? "That could not be done.", variant: "destructive" });
+      return;
+    }
+    toast({ title: "Available to approved employers", description: "You can withdraw it at any time." });
     await load();
   };
 
-  const onRevoke = async (releaseTokenId: string) => {
+  const onWithdraw = async (r: ReportRow) => {
+    if (!user?.id) return;
     setIsWorking(true);
-    const { error } = await supabase
-      .from("t3a_d1_release_token")
-      .update({ revoked_at: new Date().toISOString() })
-      .eq("release_token_id", releaseTokenId);
+    const { data } = await db.rpc("t3a_pool_withdraw", { p_ber_report_id: r.ber_report_id });
+    const result = data as { outcome?: string } | null;
+    if (result?.outcome === "withdrawn") {
+      // Consent is withdrawn with it, for this dimension only. The consequence is stated on the page.
+      await db.rpc("t3a_record_consent", {
+        p_account: user.id,
+        p_type: "employer_share",
+        p_status: "withdrawn",
+        p_dim: r.dimension_id,
+        p_stage: null,
+        p_copy_version: CONSENT_COPY_VERSION,
+        p_copy_hash: await sha256Hex(CONSENT_COPY),
+        p_method: "checkbox",
+        p_language: "en",
+        p_purpose: "report_release",
+        p_reuse: "future_only",
+        p_consequence_displayed: true,
+      });
+    }
     setIsWorking(false);
-
-    if (error) {
-      toast({ title: "That release could not be revoked.", variant: "destructive" });
+    if (result?.outcome !== "withdrawn") {
+      toast({ title: "That could not be withdrawn.", variant: "destructive" });
       return;
     }
-    toast({
-      title: "Release revoked",
-      description: "The recipient sees the revoked state and no content from now on.",
-    });
+    toast({ title: "Withdrawn", description: "The report is out of the pool from now on." });
     await load();
   };
 
@@ -172,81 +180,76 @@ const Disclosures = () => {
   return (
     <div>
       <DashboardPageHeader
-        eyebrow="§ Your disclosures"
-        title="Who you have let read a report"
-        meta="You decide who reads your Behavioral Evidence Report™, and you can take that back at any time."
+        eyebrow="§ Your reports"
+        title="Who can read your report"
+        meta="Approved employers can read a report only while you keep it available, and you can take that back at any time."
         actions={<LedgerBadge variant="outline">You control this</LedgerBadge>}
       />
 
-      <DashSection eyebrow="§ I · Released" title="Releases you have made">
-        {releases.length === 0 ? (
-          <EmptyState title="You have not released a report to anyone." />
+      <DashSection eyebrow="§ I · Your reports" title="Where each report stands">
+        {reports.length === 0 ? (
+          <EmptyState title="You have no issued report yet." />
         ) : (
           <div className="border-t-2 border-foreground">
-            {releases.map((r) => {
-              const state = releaseState(r);
+            {reports.map((r) => {
+              const s = states[r.ber_report_id] ?? { available: false };
+              const live = s.available && !s.withdrawn_at;
+              const dead = r.withdrawn_at !== null;
+              const f = field(r.ber_report_id);
               return (
-                <article
-                  key={r.release_token_id}
-                  className="py-6 border-b border-foreground/20 flex flex-wrap gap-y-4 gap-x-10"
-                >
-                  <div className="min-w-[15rem] flex-1">
-                    <h3 className="display-serif text-xl text-foreground">
-                      {r.recipient_name}
-                    </h3>
-                    {r.recipient_org && (
-                      <p className="text-foreground/70">{r.recipient_org}</p>
-                    )}
-                    <p className="text-foreground/55 text-[0.875rem] mt-1">
-                      {r.recipient_address}
-                    </p>
-                  </div>
+                <article key={r.ber_report_id} className="py-6 border-b border-foreground/20">
+                  <h3 className="display-serif text-xl text-foreground">
+                    {r.dimension_id} · issued {r.issued_at ? new Date(r.issued_at).toLocaleDateString() : ""}
+                  </h3>
+                  <p className="text-foreground/70 mt-1">
+                    {dead
+                      ? "Withdrawn"
+                      : live
+                        ? s.correction_open
+                          ? "Available to approved employers — a correction is open"
+                          : "Available to approved employers"
+                        : "Not available to anyone"}
+                  </p>
 
-                  <dl className="min-w-[14rem] flex-1 space-y-1.5 text-[0.9375rem]">
-                    <div className="flex gap-3">
-                      <dt className="mono-label text-foreground/55 w-28">State</dt>
-                      <dd
-                        className={cn(
-                          "text-foreground/85",
-                          !state.live && "ink-vermilion"
-                        )}
-                      >
-                        {state.label}
-                      </dd>
-                    </div>
-                    <div className="flex gap-3">
-                      <dt className="mono-label text-foreground/55 w-28">Version</dt>
-                      <dd className="text-foreground/80">{r.report_version}</dd>
-                    </div>
-                    <div className="flex gap-3">
-                      <dt className="mono-label text-foreground/55 w-28">Released</dt>
-                      <dd className="text-foreground/80">
-                        {new Date(r.issued_at).toLocaleDateString()}
-                      </dd>
-                    </div>
-                    <div className="flex gap-3">
-                      <dt className="mono-label text-foreground/55 w-28">Expires</dt>
-                      <dd className="text-foreground/80">
-                        {new Date(r.expires_at).toLocaleDateString()}
-                      </dd>
-                    </div>
-                  </dl>
+                  {live && (
+                    <Button variant="outline" className="mt-4" disabled={isWorking} onClick={() => void onWithdraw(r)}>
+                      Withdraw
+                    </Button>
+                  )}
 
-                  <div className="self-center">
-                    {state.live ? (
-                      <Button
-                        variant="outline"
-                        disabled={isWorking}
-                        onClick={() => void onRevoke(r.release_token_id)}
-                      >
-                        Revoke
+                  {!live && !dead && !r.amended_at && (
+                    <div className="mt-4 space-y-4 max-w-xl">
+                      {(
+                        [
+                          ["role", "The role or field you are looking for"],
+                          ["location", "Where you want to work"],
+                          ["start", "When you could start"],
+                          ["auth", "Where you are authorized to work"],
+                        ] as const
+                      ).map(([key, label]) => (
+                        <label className="block" key={key}>
+                          <span className="mono-label text-foreground/70 block mb-2">{label}</span>
+                          <input
+                            value={f[key]}
+                            onChange={(e) => setField(r.ber_report_id, { [key]: e.target.value })}
+                            className="w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground"
+                          />
+                        </label>
+                      ))}
+                      <label className="flex gap-3 items-start">
+                        <input
+                          type="checkbox"
+                          checked={f.agreed}
+                          onChange={(e) => setField(r.ber_report_id, { agreed: e.target.checked })}
+                          className="mt-1"
+                        />
+                        <span className="text-foreground/80 text-[0.9375rem] leading-relaxed">{CONSENT_COPY}</span>
+                      </label>
+                      <Button disabled={isWorking || !f.agreed} onClick={() => void onMakeAvailable(r)}>
+                        {isWorking ? "Working…" : "Make it available"}
                       </Button>
-                    ) : (
-                      <span className="mono-label text-foreground/40">
-                        No longer readable
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </article>
               );
             })}
@@ -254,115 +257,21 @@ const Disclosures = () => {
         )}
 
         <p className="text-foreground/65 text-[0.875rem] mt-8 max-w-2xl leading-relaxed">
-          A release covers one report at one version. If a report is later
-          amended, the person you released it to sees that it has been
-          superseded — not the new version — until you release again.
+          Your agreement covers this dimension only. A report that is later amended is marked for correction, and a
+          report you withdraw leaves the pool from then on.
         </p>
       </DashSection>
 
-      <DashSection eyebrow="§ II · Release" title="Let someone read a report">
-        {issuedLink && (
-          <div className="border-2 border-foreground p-5 mb-8 max-w-2xl">
-            <p className="mono-label text-foreground/60 mb-2">
-              Shown once
-            </p>
-            <p className="text-foreground/85 break-all text-[0.9375rem]">{issuedLink}</p>
-            <p className="text-foreground/65 text-[0.875rem] mt-3 leading-relaxed">
-              Send this to the person you named. It is stored only as a hash, so
-              it cannot be recovered afterwards — if it is lost, release again.
-            </p>
-          </div>
-        )}
-
-        {reports.length === 0 ? (
-          <p className="text-foreground/75 max-w-2xl leading-relaxed">
-            You have no issued report to release yet. A report can only be
-            released once it has been issued.
-          </p>
-        ) : (
-          <form className="space-y-6 max-w-xl" onSubmit={(e) => void onRelease(e)}>
-            <label className="block">
-              <span className="mono-label text-foreground/70 block mb-2">Report</span>
-              <select
-                value={reportId}
-                onChange={(e) => setReportId(e.target.value)}
-                className="w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground"
-              >
-                <option value="">—</option>
-                {reports.map((r) => (
-                  <option key={r.ber_report_id} value={r.ber_report_id}>
-                    {r.dimension_id} · issued{" "}
-                    {r.issued_at ? new Date(r.issued_at).toLocaleDateString() : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="mono-label text-foreground/70 block mb-2">
-                Their name
-              </span>
-              <input
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
-                className="w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mono-label text-foreground/70 block mb-2">
-                Their organization
-              </span>
-              <input
-                value={recipientOrg}
-                onChange={(e) => setRecipientOrg(e.target.value)}
-                className="w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mono-label text-foreground/70 block mb-2">
-                Their email address
-              </span>
-              <input
-                type="email"
-                value={recipientAddress}
-                onChange={(e) => setRecipientAddress(e.target.value)}
-                className="w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground"
-              />
-              <span className="block text-foreground/55 text-[0.875rem] mt-2 leading-relaxed">
-                The link goes to this address and only works from it. They do
-                not need an account, and having one gives them nothing extra.
-              </span>
-            </label>
-
-            <Button
-              type="submit"
-              disabled={
-                isWorking ||
-                reportId === "" ||
-                recipientName.trim() === "" ||
-                recipientAddress.trim() === ""
-              }
-            >
-              {isWorking ? "Releasing…" : "Release it"}
-            </Button>
-          </form>
-        )}
-      </DashSection>
-
-      <DashSection eyebrow="§ III · What a reader may do" title="The limits travel with it">
+      <DashSection eyebrow="§ II · What a reader may do" title="The limits travel with it">
         <div className="border-l-2 border-foreground pl-8 max-w-3xl space-y-5">
           <p className="text-foreground/85 leading-relaxed">
-            Whoever you release to may read the report for the purpose you
-            released it for. They may not copy it to another party, add it to a
-            database, use it to build a profile, or use it for a decision about
-            anyone but you.
+            An approved employer may read the report for the purpose you made it available for. They may not copy it
+            to another party, add it to a database, use it to build a profile, or use it for a decision about anyone
+            but you.
           </p>
           <p className="text-foreground/85 leading-relaxed">
-            They see the report itself and nothing else — not your full record,
-            not how it was assembled, not any other report, and not anyone
-            else's.
+            They see the report itself and nothing else — not your full record, not how it was assembled, not any
+            other report, and not anyone else's.
           </p>
         </div>
       </DashSection>

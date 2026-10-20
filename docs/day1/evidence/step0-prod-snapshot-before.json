@@ -1,0 +1,103 @@
+{
+ "grants_before": [
+  {
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  }
+ ],
+ "indexes_before": [
+  {
+   "indexname": "t3a_employer_pool_entry_pkey"
+  },
+  {
+   "indexname": "t3a_employer_pool_entry_participant_id_key"
+  },
+  {
+   "indexname": "t3a_employer_pool_available_idx"
+  }
+ ],
+ "constraints_before": [
+  {
+   "conname": "t3a_employer_pool_entry_participant_id_fkey"
+  },
+  {
+   "conname": "t3a_employer_pool_entry_participant_id_key"
+  },
+  {
+   "conname": "t3a_employer_pool_entry_pkey"
+  }
+ ],
+ "function_defs": [
+  "CREATE OR REPLACE FUNCTION public.t3a_d1_issue_release_token(p_ber_report_id uuid, p_recipient_name text, p_recipient_org text, p_recipient_address text, p_expires_at timestamp with time zone)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_actor   uuid := auth.uid();\n  r         public.t3a_d1_ber_report;\n  v_consent uuid;\n  v_token   text;\nBEGIN\n  IF v_actor IS NULL THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'NO_PARTICIPANT_IDENTIFIED');\n  END IF;\n\n  SELECT * INTO r FROM public.t3a_d1_ber_report\n   WHERE ber_report_id = p_ber_report_id;\n\n  IF r.ber_report_id IS NULL THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'BER_REPORT_NOT_FOUND');\n  END IF;\n\n  -- Only the participant releases their own report. Nobody releases it\n  -- for them, including anyone with administrative standing.\n  IF r.participant_id <> v_actor THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'ONLY_THE_PARTICIPANT_RELEASES_THEIR_REPORT');\n  END IF;\n\n  IF r.issued_at IS NULL THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'REPORT_NOT_ISSUED');\n  END IF;\n\n  IF coalesce(btrim(p_recipient_name), '') = ''\n     OR coalesce(btrim(p_recipient_address), '') = '' THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'RECIPIENT_MUST_BE_NAMED_AND_ADDRESSED');\n  END IF;\n\n  IF p_expires_at IS NULL OR p_expires_at <= now() THEN\n    RETURN jsonb_build_object('issued', false,\n      'refusal_code', 'RELEASE_MUST_EXPIRE_IN_THE_FUTURE');\n  END IF;\n\n  -- Its own consent, per release.\n  INSERT INTO public.t3a_d1_consent\n    (participant_id, consent_type, state, granted_at, capture_channel, capture_actor)\n  VALUES (v_actor, 'DISCLOSURE', 'GRANTED', now(), 'participant_surface', v_actor)\n  RETURNING consent_id INTO v_consent;\n\n  -- The token is returned once and stored only as a hash, so the link\n  -- cannot be recovered from the record by anyone, including us.\n  v_token := encode(extensions.gen_random_bytes(32), 'hex');\n\n  INSERT INTO public.t3a_d1_release_token\n    (consent_id, ber_report_id, report_version, recipient_name,\n     recipient_org, recipient_address, token_hash, expires_at)\n  VALUES (v_consent, p_ber_report_id, coalesce(r.version_set ->> 'label', 'v1'),\n          btrim(p_recipient_name), nullif(btrim(coalesce(p_recipient_org, '')), ''),\n          btrim(p_recipient_address),\n          encode(extensions.digest(v_token, 'sha256'), 'hex'),\n          p_expires_at);\n\n  RETURN jsonb_build_object('issued', true,\n    'token', v_token,\n    'recipient_address', btrim(p_recipient_address),\n    'expires_at', p_expires_at,\n    'note', 'This link is shown once. It is stored only as a hash, so it cannot be recovered afterwards.');\nEND;\n$function$\n",
+  "CREATE OR REPLACE FUNCTION public.t3a_d1_redeem_release_token(p_token text, p_verified_address text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  t public.t3a_d1_release_token;\n  v_hash text := encode(extensions.digest(p_token, 'sha256'), 'hex');\nBEGIN\n  SELECT * INTO t FROM public.t3a_d1_release_token WHERE token_hash = v_hash;\n\n  IF t.release_token_id IS NULL THEN\n    RETURN jsonb_build_object('content', false, 'state', 'UNKNOWN_TOKEN');\n  END IF;\n\n  -- Address verification at redemption. The token is bound to the\n  -- recipient, so a correct token at the wrong address returns nothing.\n  IF lower(btrim(coalesce(p_verified_address,''))) <> lower(btrim(t.recipient_address)) THEN\n    RETURN jsonb_build_object('content', false, 'state', 'ADDRESS_NOT_VERIFIED');\n  END IF;\n\n  -- A revoked token returns the revoked state and no content,\n  -- immediately.\n  IF t.revoked_at IS NOT NULL THEN\n    RETURN jsonb_build_object('content', false, 'state', 'REVOKED');\n  END IF;\n\n  IF t.expires_at <= now() THEN\n    RETURN jsonb_build_object('content', false, 'state', 'EXPIRED');\n  END IF;\n\n  -- A release covers one version. Where the report is amended, the\n  -- recipient sees the superseded state, not the new version, until a\n  -- new release is made.\n  IF t.superseded_at IS NOT NULL THEN\n    RETURN jsonb_build_object('content', false, 'state', 'SUPERSEDED');\n  END IF;\n\n  -- The consent is per release and never standing.\n  IF NOT EXISTS (SELECT 1 FROM public.t3a_d1_consent c\n                 WHERE c.consent_id = t.consent_id\n                   AND c.consent_type = 'DISCLOSURE'\n                   AND c.state = 'GRANTED') THEN\n    RETURN jsonb_build_object('content', false, 'state', 'DISCLOSURE_CONSENT_NOT_GRANTED');\n  END IF;\n\n  UPDATE public.t3a_d1_release_token\n     SET redeemed_at = coalesce(redeemed_at, now())\n   WHERE release_token_id = t.release_token_id;\n\n  RETURN jsonb_build_object(\n    'content', true,\n    'render_target', 'report_face',\n    'ber_report_id', t.ber_report_id,\n    'report_version', t.report_version);\nEND;\n$function$\n",
+  "CREATE OR REPLACE FUNCTION public.t3a_create_disclosure(p_ber_report_id uuid, p_recipient_org_id uuid, p_recipient_email text, p_access_scope text, p_access_period_starts timestamp with time zone, p_access_period_ends timestamp with time zone, p_release_identity_now boolean DEFAULT false, p_release_report_now boolean DEFAULT false, p_recipient_binding_token text DEFAULT NULL::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_participant uuid := auth.uid();\n  v_owner uuid;\n  v_id uuid;\nBEGIN\n  IF v_participant IS NULL THEN\n    PERFORM t3a_raise('\u00a713 createDisclosure', 'unauthenticated caller');\n  END IF;\n\n  SELECT participant_id INTO v_owner\n    FROM t3a_ber_report WHERE ber_report_id = p_ber_report_id;\n  IF v_owner IS NULL THEN\n    PERFORM t3a_raise('\u00a713', 'ber_report not found');\n  END IF;\n  IF v_owner <> v_participant THEN\n    PERFORM t3a_raise('\u00a713',\n      'participant can only release their own report \u2014 no administrator-created release');\n  END IF;\n  IF p_access_period_ends <= p_access_period_starts THEN\n    PERFORM t3a_raise('\u00a713',\n      'access_period_ends must be after access_period_starts');\n  END IF;\n\n  INSERT INTO t3a_disclosure (\n    ber_report_id, participant_id, recipient_org_id, recipient_email,\n    access_scope, access_period_starts, access_period_ends,\n    identity_released_at, report_released_at,\n    status, recipient_binding_token_hash\n  ) VALUES (\n    p_ber_report_id, v_participant, p_recipient_org_id, p_recipient_email,\n    p_access_scope, p_access_period_starts, p_access_period_ends,\n    CASE WHEN p_release_identity_now THEN now() END,\n    CASE WHEN p_release_report_now   THEN now() END,\n    'granted',\n    CASE WHEN p_recipient_binding_token IS NOT NULL\n         THEN encode(digest(p_recipient_binding_token, 'sha256'), 'hex')\n    END\n  ) RETURNING disclosure_id INTO v_id;\n\n  IF public.t3a_canonical_writers_on() THEN\n    PERFORM public.t3a_emit_event(\n      'release.recipient_created', 'PARTICIPANT', v_participant::text, 'participant', 'release', v_id,\n      jsonb_build_object(\n        'recipient_release_id', v_id,\n        'recipient_address_hash', encode(digest(lower(btrim(p_recipient_email)), 'sha256'), 'hex'),\n        'token_state', 'active'),\n      'disclosure_created:' || v_id::text, NULL, v_participant);\n  ELSE\n  INSERT INTO t3a_event_log (\n      event_name, event_category, actor_type, actor_id,\n      subject_id, resource_type, resource_id, payload, integrity_hash\n    ) VALUES (\n      'disclosure_created', 'PARTICIPANT', 'PARTICIPANT', v_participant,\n      v_participant, 'disclosure', v_id,\n      jsonb_build_object(\n        'ber_report_id', p_ber_report_id,\n        'identity_released', p_release_identity_now,\n        'report_released', p_release_report_now\n      ),\n      encode(digest(v_id::text || v_participant::text || now()::text, 'sha256'), 'hex')\n    );\n  END IF;\n\n  RETURN v_id;\nEND;\n$function$\n"
+ ]
+}

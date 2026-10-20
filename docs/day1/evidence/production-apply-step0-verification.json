@@ -1,0 +1,21 @@
+{
+ "apply": [],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"issue\\\": {\\\"issued\\\": false, \\\"refusal_code\\\": \\\"NAMED_RECIPIENT_RELEASE_RETIRED\\\"}, \\\"redeem\\\": {\\\"state\\\": \\\"PLATFORM_RELEASE_MIGRATION_REQUIRES_GOVERNED_RECORD\\\", \\\"content\\\": false}, \\\"tokens\\\": 0, \\\"face_md5\\\": \\\"f6957f4c5add074ae4626f06d881419e\\\", \\\"triggers\\\": 5, \\\"create_disclosure_null\\\": true}\\nCONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "tok": 0,
+   "rel": 0,
+   "pool": 0,
+   "refl": 0
+  }
+ ],
+ "authenticated_table_grants": [
+  {
+   "privilege_type": "SELECT"
+  }
+ ],
+ "face_md5_before": "f6957f4c5add074ae4626f06d881419e"
+}
