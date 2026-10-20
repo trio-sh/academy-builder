@@ -51,4 +51,4 @@ Open work in Step 1:
 4. **Reconciliation R3 to R6** (DT-40) and DT-50 once the D1 content is loaded.
 5. Scheduler for the nightly chain check (CR-025); founder decisions in the conflict register.
 
-Steps 0 and 2 are done. Next is Step 3 (D2), starting with parameterizing the sixteen D1 readers by dimension.
+Steps 0 and 2 are done. Step 3 (D2): 3a readers dimension aware and 3b content load (registers, 61 statements, 14 refusal rules, 13 templates, 34 sources, all not servable) are applied to production; next is the instruction packages INS-001 to INS-011 and tests D2-01 to D2-57, D2-PP-01 to D2-PP-10.

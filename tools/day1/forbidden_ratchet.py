@@ -17,7 +17,9 @@ BASE = ROOT / "docs/day1/evidence/forbidden-identifiers-baseline.json"
 EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             "supabase/migrations/20261101000000_day1_field_registry.sql", "supabase/migrations/20261100000000_close_open_access_policies.sql",
             # carries the live t3a_commit_observation unchanged apart from the canonical branch, so it still names ordinal_anchor (CR-003); the scan of it shows those three hits only
-            "supabase/migrations/20261127000000_day1_live_writers_canonical.sql"]
+            "supabase/migrations/20261127000000_day1_live_writers_canonical.sql",
+            # dimension content loads carry authored source text as data ("tiers", "validated" inside scenario prose), not identifiers (CR-082)
+            "supabase/migrations/20261205000000_d2_content_registry.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)

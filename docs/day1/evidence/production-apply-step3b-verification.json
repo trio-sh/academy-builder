@@ -1,0 +1,33 @@
+{
+ "apply": [],
+ "golden_before": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "cards": "abf276b929fb0d05feae1592b0ec1027",
+   "d1_statements": 44
+  }
+ ],
+ "golden_after": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "cards": "abf276b929fb0d05feae1592b0ec1027",
+   "d1_statements": 44
+  }
+ ],
+ "d1_identical": true,
+ "d2_counts": [
+  {
+   "q": 15,
+   "s": 15,
+   "l": 52,
+   "st": 61,
+   "rr": 14,
+   "src": 34,
+   "approved": 0
+  }
+ ]
+}
