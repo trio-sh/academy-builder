@@ -19,7 +19,9 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             # carries the live t3a_commit_observation unchanged apart from the canonical branch, so it still names ordinal_anchor (CR-003); the scan of it shows those three hits only
             "supabase/migrations/20261127000000_day1_live_writers_canonical.sql",
             # dimension content loads carry authored source text as data ("tiers", "validated" inside scenario prose), not identifiers (CR-082)
-            "supabase/migrations/20261205000000_d2_content_registry.sql"]
+            "supabase/migrations/20261205000000_d2_content_registry.sql",
+            # carries the closed retired vocabulary of D2 Section 4.2 as data for the prohibited-output check (CR-019 pattern)
+            "supabase/migrations/20261210000000_step3_evidence_state.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)
