@@ -1,0 +1,25 @@
+{
+ "event_id": "21fa6476-6b19-468d-a711-5647d4e8b4bc",
+ "event_name": "observation.response_submitted",
+ "event_category": "OBSERVATION",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "observation",
+ "resource_id": "ec6b52df-6f20-4c8a-911f-ccda1bb7f302",
+ "payload": {
+  "served_instance_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "response_sequence_number": 1,
+  "response_submitted_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_086e922b1e93460c8ad0c781e34812d6",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

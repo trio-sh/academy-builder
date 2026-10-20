@@ -1,0 +1,361 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "urn:t3a:dev:day1:event-envelope:v1.3",
+ "title": "T3A-DEV-DAY1-001 event envelope (Domain N), Version 1.3",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "event_id",
+  "event_name",
+  "event_category",
+  "occurred_at",
+  "ingested_at",
+  "actor_type",
+  "actor_id",
+  "actor_role_code",
+  "resource_type",
+  "resource_id",
+  "payload",
+  "schema_version",
+  "dictionary_version",
+  "integrity_status",
+  "integrity_hash",
+  "event_idempotency_key",
+  "event_processing_state",
+  "record_property"
+ ],
+ "properties": {
+  "event_id": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "event_name": {
+   "enum": [
+    "account.created",
+    "account.email_verified",
+    "account.identity_link_changed",
+    "account.lifecycle_changed",
+    "account.role_granted",
+    "account.role_revoked",
+    "account.state_changed",
+    "account.verification_sent",
+    "calibration.pair_recorded",
+    "calibration.reference_loaded",
+    "calibration.sample_drawn",
+    "challenge.assigned",
+    "challenge.evidence_disclosed",
+    "challenge.opened",
+    "challenge.resolved",
+    "commerce.order_completed",
+    "commerce.refund_issued",
+    "complaint.changed",
+    "consent.contact_changed",
+    "consent.declined",
+    "consent.granted",
+    "consent.lsa_changed",
+    "consent.withdrawn",
+    "correction.changed",
+    "employer.application_changed",
+    "employer.application_decided",
+    "employer.application_submitted",
+    "employer.attestation_recorded",
+    "employer.contact_requested",
+    "employer.design_partner_changed",
+    "employer.hire_recorded",
+    "employer.note_changed",
+    "employer.pool_queried",
+    "employer.report_accessed",
+    "employer.terms_accepted",
+    "employer.verification_changed",
+    "governance.content_read",
+    "governance.control_operated",
+    "governance.incident_changed",
+    "governance.legal_hold_changed",
+    "governance.privileged_access",
+    "governance.recusal_recorded",
+    "governance.suppression_applied",
+    "growthlog.entry_changed",
+    "growthlog.entry_created",
+    "identity.assurance_completed",
+    "lsa.comparison_built",
+    "lsa.report_issued",
+    "lsa.snapshot_built",
+    "mentor.agreement_signed",
+    "mentor.appeal_changed",
+    "mentor.assigned",
+    "mentor.authorization_changed",
+    "mentor.calibration_recorded",
+    "mentor.conflict_declared",
+    "mentor.engagement_recorded",
+    "mentor.function_recorded",
+    "mentor.invitation_redeemed",
+    "mentor.invited",
+    "mentor.qualification_recorded",
+    "mentor.supervision_recorded",
+    "mentor.suspension_changed",
+    "observation.attempt_closed",
+    "observation.beat_marked",
+    "observation.clause_withdrawn",
+    "observation.committed",
+    "observation.corrected",
+    "observation.currency_expired",
+    "observation.determination_recorded",
+    "observation.determinations_locked",
+    "observation.path_completed",
+    "observation.path_opened",
+    "observation.progression_corrected",
+    "observation.progression_recorded",
+    "observation.response_submitted",
+    "observation.s1_confirmed",
+    "observation.s1_outcome_delivered",
+    "observation.session_abandoned",
+    "observation.session_ended",
+    "observation.session_started",
+    "observation.source_served",
+    "observation.stage_entered",
+    "observation.welfare_stop_recorded",
+    "participant.document_uploaded",
+    "participant.enrolled",
+    "participant.notice_acknowledged",
+    "participant.profile_updated",
+    "permission.group_participation_recorded",
+    "pilot.cohort_assigned",
+    "privacy.request_changed",
+    "program.agreement_changed",
+    "program.cohort_created",
+    "program.created",
+    "program.membership_changed",
+    "program.organization_registered",
+    "registry.status_changed",
+    "registry.version_approved",
+    "registry.version_registered",
+    "rehearsal.artifact_saved",
+    "rehearsal.choice_made",
+    "rehearsal.content_displayed",
+    "rehearsal.feedback_displayed",
+    "rehearsal.reflection_saved",
+    "rehearsal.retention_check_changed",
+    "rehearsal.session_completed",
+    "rehearsal.session_started",
+    "release.changed",
+    "release.recipient_created",
+    "report.assembled",
+    "report.issued",
+    "report.participant_review_changed",
+    "report.rendered",
+    "report.review_completed",
+    "report.status_changed",
+    "report.verification_checked",
+    "retention.run_completed",
+    "system.configuration_changed",
+    "system.deployment_verified",
+    "system.error_detected",
+    "system.manifest_verified",
+    "system.schema_updated",
+    "telemetry.period_closed"
+   ]
+  },
+  "event_category": {
+   "enum": [
+    "COMMERCIAL",
+    "CONSENT",
+    "EMPLOYER",
+    "GOVERNANCE",
+    "MENTOR",
+    "OBSERVATION",
+    "PARTICIPANT",
+    "PROGRAM",
+    "REGISTRY",
+    "REHEARSAL",
+    "REPORT",
+    "SYSTEM"
+   ]
+  },
+  "occurred_at": {
+   "type": "string",
+   "format": "date-time"
+  },
+  "ingested_at": {
+   "type": "string",
+   "format": "date-time"
+  },
+  "actor_type": {
+   "enum": [
+    "PARTICIPANT",
+    "MENTOR",
+    "EMPLOYER_USER",
+    "ADMINISTRATOR",
+    "SYSTEM_SERVICE"
+   ]
+  },
+  "actor_id": {
+   "type": "string",
+   "minLength": 1
+  },
+  "actor_role_code": {
+   "type": "string",
+   "minLength": 1
+  },
+  "subject_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "session_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "correlation_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "application_session_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "resource_type": {
+   "enum": [
+    "account",
+    "consent",
+    "observation",
+    "determination",
+    "source_version",
+    "served_instance",
+    "report",
+    "release",
+    "challenge",
+    "employer_organization",
+    "program",
+    "configuration",
+    "registry_asset",
+    "growth_log_entry",
+    "rehearsal_session",
+    "order",
+    "mentor",
+    "event"
+   ]
+  },
+  "resource_id": {
+   "type": "string",
+   "minLength": 1
+  },
+  "payload": {
+   "type": "object",
+   "maxProperties": 32,
+   "description": "Validated against event_payload_registry_v1.3.json for the named event (required, optional and conditional keys); serialized size at most 4096 bytes; enforced by tools/check_records.py"
+  },
+  "artifact_ref_id": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "schema_version": {
+   "type": "string",
+   "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+  },
+  "dictionary_version": {
+   "const": "1.3"
+  },
+  "integrity_status": {
+   "enum": [
+    "ok",
+    "missing_keys",
+    "invalid_bounds",
+    "suspected_duplicate",
+    "manual_review"
+   ]
+  },
+  "integrity_hash": {
+   "type": "string",
+   "pattern": "^[a-f0-9]{64}$"
+  },
+  "previous_hash": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "pattern": "^[a-f0-9]{64}$"
+  },
+  "supersedes_event_id": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "format": "uuid"
+  },
+  "source_system": {
+   "enum": [
+    "web",
+    "mobile",
+    "api",
+    "internal_job"
+   ]
+  },
+  "event_idempotency_key": {
+   "type": "string",
+   "pattern": "^[A-Za-z0-9_.:\\-]{8,128}$"
+  },
+  "event_sequence_no": {
+   "type": [
+    "integer",
+    "null"
+   ],
+   "minimum": 0
+  },
+  "event_processing_state": {
+   "enum": [
+    "accepted",
+    "quarantined",
+    "rejected",
+    "corrected"
+   ]
+  },
+  "policy_decision_ref": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "change_request_ref": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "record_property": {
+   "enum": [
+    "real",
+    "synthetic_test",
+    "demonstration"
+   ]
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "event_sequence_no": {
+      "type": "integer",
+      "minimum": 1
+     }
+    },
+    "required": [
+     "event_sequence_no"
+    ]
+   },
+   "then": {
+    "required": [
+     "previous_hash"
+    ]
+   }
+  }
+ ]
+}

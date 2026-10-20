@@ -1,0 +1,23 @@
+{
+ "event_id": "b04cf3a3-3e38-4a0d-aefa-1300acbebf22",
+ "event_name": "report.status_changed",
+ "event_category": "REPORT",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "report",
+ "resource_id": "8edddede-882b-47ab-b5c0-a42dd94d990e",
+ "payload": {
+  "ber_status": "not_eligible"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_1dacd3dc62304e2fbfd8bd08eca6d150",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

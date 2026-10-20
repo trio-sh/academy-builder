@@ -1,0 +1,29 @@
+{
+ "event_id": "499be671-4ce4-4eec-b685-1f1058db7217",
+ "event_name": "account.role_granted",
+ "event_category": "PARTICIPANT",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "account",
+ "resource_id": "9a740d27-3edd-4440-a0ce-aabdb085a06d",
+ "payload": {
+  "role_assignment_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "role_code": "mentor",
+  "role_grant_basis": "self_serve_individual",
+  "role_granted_by": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "role_granted_at": "2026-10-18T10:00:00Z",
+  "role_effective_from": "2026-10-18T10:00:00Z",
+  "role_rules_version": "1.0.0"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_bc0c9446629b46fab6e10fba01c6544c",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

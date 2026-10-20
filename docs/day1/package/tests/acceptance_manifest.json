@@ -1,0 +1,427 @@
+{
+ "identifier": "T3A-DEV-DAY1-001",
+ "version": "1.3",
+ "result_values": [
+  "PASS",
+  "FAIL",
+  "UNRUN"
+ ],
+ "evidence_rules": "Each PASS or FAIL needs its own evidence file of at least 200 bytes, not reused by any other test, naming the test id and the build_id, with a matching SHA 256. A human reviewer still judges whether the evidence proves the expected result.",
+ "results_file_format": {
+  "build_id": "deployment or commit identifier, at least 6 characters",
+  "run_at": "timestamp UTC",
+  "tests": [
+   {
+    "id": "DT-01",
+    "result": "PASS | FAIL | UNRUN",
+    "evidence_path": "path relative to the results file, required for PASS and FAIL",
+    "evidence_sha256": "SHA 256 of the evidence file",
+    "reason": "required for UNRUN and FAIL",
+    "missing_repository_material": "list, required when UNRUN is caused by absent material"
+   }
+  ]
+ },
+ "tests": [
+  {
+   "id": "DT-01",
+   "name": "Dictionary coverage",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-02",
+   "name": "Forbidden identifiers",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-03",
+   "name": "Server side role",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-04",
+   "name": "Unverified holding state",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-05",
+   "name": "Consent one type per interaction",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-06",
+   "name": "Consent not inherited",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-07",
+   "name": "Withdrawal deletes nothing",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-08",
+   "name": "Socket consent routes",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-09",
+   "name": "lsa consent default",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-10",
+   "name": "Gateway before Stage",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-11",
+   "name": "Stage entry timing",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-12",
+   "name": "Attempt monotonic",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-13",
+   "name": "Welfare stop",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-14",
+   "name": "Capture never blocks",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-15",
+   "name": "Mandatory field refusal",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-16",
+   "name": "Observer at S1",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-17",
+   "name": "Dual hash",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-18",
+   "name": "Sequential unmasking",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-19",
+   "name": "S1 outcome before S2",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-20",
+   "name": "No free text",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-21",
+   "name": "Accommodation reason",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-22",
+   "name": "Append only observations",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-23",
+   "name": "Event envelope and payload",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-24",
+   "name": "Hash chain",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-25",
+   "name": "Unknown event name",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-26",
+   "name": "Demonstration inheritance",
+   "repository_material_needed": [
+    "Demonstration pathway"
+   ]
+  },
+  {
+   "id": "DT-27",
+   "name": "Reviewer is not issuer",
+   "repository_material_needed": [
+    "Report pathway"
+   ]
+  },
+  {
+   "id": "DT-28",
+   "name": "Verification code",
+   "repository_material_needed": [
+    "Report pathway"
+   ]
+  },
+  {
+   "id": "DT-29",
+   "name": "Growth Log isolation",
+   "repository_material_needed": [
+    "Growth Log"
+   ]
+  },
+  {
+   "id": "DT-30",
+   "name": "Growth Log feeds nothing",
+   "repository_material_needed": [
+    "Growth Log"
+   ]
+  },
+  {
+   "id": "DT-31",
+   "name": "lsa reads no Growth Log",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-32",
+   "name": "Rehearsal firewall",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-33",
+   "name": "Hire row unlinked",
+   "repository_material_needed": [
+    "Employer surfaces"
+   ]
+  },
+  {
+   "id": "DT-34",
+   "name": "Pool filters",
+   "repository_material_needed": [
+    "Employer surfaces"
+   ]
+  },
+  {
+   "id": "DT-35",
+   "name": "Unverified employer",
+   "repository_material_needed": [
+    "Employer surfaces"
+   ]
+  },
+  {
+   "id": "DT-36",
+   "name": "Content read logging",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-37",
+   "name": "Retention guard",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-38",
+   "name": "Canada hosting",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-39",
+   "name": "Unset configuration",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-40",
+   "name": "Reconciliation report",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-41",
+   "name": "Manifest signature",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-42",
+   "name": "Commercial lever",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-43",
+   "name": "Idempotent replay",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-44",
+   "name": "Late event ordering",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-45",
+   "name": "Concurrent correction",
+   "repository_material_needed": [
+    "Stage pathways",
+    "Report pathway"
+   ]
+  },
+  {
+   "id": "DT-46",
+   "name": "Preview and issue race",
+   "repository_material_needed": [
+    "Report pathway"
+   ]
+  },
+  {
+   "id": "DT-47",
+   "name": "Historical reuse",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-48",
+   "name": "Two clause instances",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-49",
+   "name": "Dormant write failure",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-50",
+   "name": "BER regression",
+   "repository_material_needed": [
+    "BER golden fixtures"
+   ]
+  },
+  {
+   "id": "DT-51",
+   "name": "Stage 1 determinism",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-52",
+   "name": "Stage 4 co participants",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-53",
+   "name": "Optional fields withheld",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-54",
+   "name": "Legal hold",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-55",
+   "name": "Cross organization isolation",
+   "repository_material_needed": [
+    "Employer surfaces"
+   ]
+  },
+  {
+   "id": "DT-56",
+   "name": "Dictionary drift",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-57",
+   "name": "Source title preserved",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-58",
+   "name": "One source bank",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-59",
+   "name": "Error journal",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-60",
+   "name": "Typed capture state",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-61",
+   "name": "Legacy columns keep working",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-62",
+   "name": "Legacy consent mapping",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-63",
+   "name": "Growth Log observation view",
+   "repository_material_needed": [
+    "Stage pathways",
+    "Growth Log"
+   ]
+  },
+  {
+   "id": "DT-64",
+   "name": "Lifecycle fixtures",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-65",
+   "name": "Conditional requiredness",
+   "repository_material_needed": [
+    "Stage pathways"
+   ]
+  },
+  {
+   "id": "DT-66",
+   "name": "Reference existence",
+   "repository_material_needed": []
+  },
+  {
+   "id": "DT-67",
+   "name": "Pinned definitions",
+   "repository_material_needed": []
+  }
+ ]
+}

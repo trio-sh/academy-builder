@@ -1,0 +1,25 @@
+{
+ "event_id": "cc29129b-7f4a-4c99-8d7f-9c014cf83234",
+ "event_name": "program.agreement_changed",
+ "event_category": "PROGRAM",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "program",
+ "resource_id": "49759dbd-bde0-429d-a673-10ccb1c3889b",
+ "payload": {
+  "data_use_agreement_ref": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "partner_relationship_effective_at": "2026-10-18T10:00:00Z",
+  "partner_relationship_ended_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_d17b870de2594f83a8a956494a7c30d0",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

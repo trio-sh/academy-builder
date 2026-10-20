@@ -1,0 +1,27 @@
+{
+ "event_id": "ecc15b2a-8296-4ef2-9167-a952b45392d0",
+ "event_name": "rehearsal.session_completed",
+ "event_category": "REHEARSAL",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "rehearsal_session",
+ "resource_id": "ac9d35b9-644f-4f75-8a3f-28f214df6eb3",
+ "payload": {
+  "rehearsal_started_at": "2026-10-18T10:00:00Z",
+  "rehearsal_completed_at": "2026-10-18T10:00:00Z",
+  "rehearsal_completion_state": "complete",
+  "module_completion_state": "complete",
+  "module_completion_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_062005bf4d8e472fb45c95c9cb1fcfe1",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

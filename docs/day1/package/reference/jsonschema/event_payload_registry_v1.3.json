@@ -1,0 +1,5105 @@
+{
+ "identifier": "T3A-DEV-DAY1-001",
+ "version": "1.3",
+ "max_payload_bytes": 4096,
+ "events": [
+  {
+   "name": "account.created",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "account_id",
+    "account_created_at",
+    "identity_assurance_method",
+    "age_eligibility_attestation",
+    "record_property"
+   ],
+   "optional_payload": [
+    "account_creation_route"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "account_id",
+     "account_created_at",
+     "identity_assurance_method",
+     "age_eligibility_attestation",
+     "record_property"
+    ],
+    "properties": {
+     "account_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "account_created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "identity_assurance_method": {
+      "enum": [
+       "account_authentication"
+      ]
+     },
+     "age_eligibility_attestation": {
+      "enum": [
+       "attested_18_or_over",
+       "attested_under_18"
+      ]
+     },
+     "record_property": {
+      "enum": [
+       "real",
+       "synthetic_test",
+       "demonstration"
+      ]
+     },
+     "account_creation_route": {
+      "enum": [
+       "public_signup",
+       "mentor_invitation",
+       "employer_application",
+       "administrator_provisioned",
+       "legacy_unknown"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 325
+  },
+  {
+   "name": "account.email_verified",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "account_id",
+    "email_verified_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "account_id",
+     "email_verified_at"
+    ],
+    "properties": {
+     "account_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "email_verified_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 131
+  },
+  {
+   "name": "account.identity_link_changed",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "identity_link_status"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "identity_link_status"
+    ],
+    "properties": {
+     "identity_link_status": {
+      "enum": [
+       "unverified",
+       "verified",
+       "challenged",
+       "deactivated"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 39
+  },
+  {
+   "name": "account.lifecycle_changed",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "participant_lifecycle_state"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "participant_lifecycle_state"
+    ],
+    "properties": {
+     "participant_lifecycle_state": {
+      "enum": [
+       "registered",
+       "onboarding",
+       "active",
+       "inactive",
+       "closed"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 45
+  },
+  {
+   "name": "account.role_granted",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "role_assignment_id",
+    "role_code",
+    "role_grant_basis",
+    "role_granted_by",
+    "role_granted_at",
+    "role_effective_from",
+    "role_rules_version"
+   ],
+   "optional_payload": [
+    "role_effective_until",
+    "participant_pseudonym_ref"
+   ],
+   "conditional": [
+    {
+     "when_field": "role_code",
+     "in": [
+      "participant"
+     ],
+     "require": [
+      "participant_pseudonym_ref"
+     ]
+    },
+    {
+     "when_field": "role_code",
+     "not_in": [
+      "participant"
+     ],
+     "forbid": [
+      "participant_pseudonym_ref"
+     ]
+    }
+   ],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "role_assignment_id",
+     "role_code",
+     "role_grant_basis",
+     "role_granted_by",
+     "role_granted_at",
+     "role_effective_from",
+     "role_rules_version"
+    ],
+    "properties": {
+     "role_assignment_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "role_code": {
+      "enum": [
+       "participant",
+       "mentor",
+       "employer_user",
+       "coordinator",
+       "oversight_administrator",
+       "commercial",
+       "system_service"
+      ]
+     },
+     "role_grant_basis": {
+      "enum": [
+       "self_serve_individual",
+       "invitation_redeemed",
+       "employer_application_approved",
+       "administrator_grant"
+      ]
+     },
+     "role_granted_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "role_granted_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "role_effective_from": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "role_rules_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "role_effective_until": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "participant_pseudonym_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    },
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "role_code": {
+         "enum": [
+          "participant"
+         ]
+        }
+       },
+       "required": [
+        "role_code"
+       ]
+      },
+      "then": {
+       "required": [
+        "participant_pseudonym_ref"
+       ]
+      }
+     },
+     {
+      "if": {
+       "properties": {
+        "role_code": {
+         "not": {
+          "enum": [
+           "participant"
+          ]
+         }
+        }
+       },
+       "required": [
+        "role_code"
+       ]
+      },
+      "then": {
+       "not": {
+        "anyOf": [
+         {
+          "required": [
+           "participant_pseudonym_ref"
+          ]
+         }
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "worst_case_payload_bytes": 555
+  },
+  {
+   "name": "account.role_revoked",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "role_revoked_by"
+   ],
+   "optional_payload": [
+    "role_revoked_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "role_revoked_by"
+    ],
+    "properties": {
+     "role_revoked_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "role_revoked_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 134
+  },
+  {
+   "name": "account.state_changed",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "account_state"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "account_state"
+    ],
+    "properties": {
+     "account_state": {
+      "enum": [
+       "active",
+       "restricted",
+       "suspended",
+       "closed"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 31
+  },
+  {
+   "name": "account.verification_sent",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "account_id",
+    "email_verification_sent_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "account_id",
+     "email_verification_sent_at"
+    ],
+    "properties": {
+     "account_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "email_verification_sent_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 140
+  },
+  {
+   "name": "calibration.pair_recorded",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "stimulus_unit_id"
+   ],
+   "optional_payload": [
+    "paired_determination_set_id",
+    "agreement_threshold_version"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "stimulus_unit_id"
+    ],
+    "properties": {
+     "stimulus_unit_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "paired_determination_set_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "agreement_threshold_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 236
+  },
+  {
+   "name": "calibration.reference_loaded",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "reference_set_version"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "reference_set_version"
+    ],
+    "properties": {
+     "reference_set_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 51
+  },
+  {
+   "name": "calibration.sample_drawn",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "moderation_sample_flag"
+   ],
+   "optional_payload": [
+    "sampling_plan_version"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "moderation_sample_flag"
+    ],
+    "properties": {
+     "moderation_sample_flag": {
+      "type": "boolean"
+     },
+     "sampling_plan_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 82
+  },
+  {
+   "name": "challenge.assigned",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "reconsiderer_id",
+    "second_check_actor_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "reconsiderer_id",
+     "second_check_actor_id"
+    ],
+    "properties": {
+     "reconsiderer_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "second_check_actor_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 174
+  },
+  {
+   "name": "challenge.evidence_disclosed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "evidence_disclosed_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "evidence_disclosed_at"
+    ],
+    "properties": {
+     "evidence_disclosed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 57
+  },
+  {
+   "name": "challenge.opened",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "challenge_case_id",
+    "opened_by",
+    "opened_at",
+    "challenge_target_ref",
+    "challenge_ground",
+    "response_time_committed_version",
+    "issuance_hold"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "challenge_case_id",
+     "opened_by",
+     "opened_at",
+     "challenge_target_ref",
+     "challenge_ground",
+     "response_time_committed_version",
+     "issuance_hold"
+    ],
+    "properties": {
+     "challenge_case_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "opened_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "opened_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "challenge_target_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "challenge_ground": {
+      "enum": [
+       "factual_error",
+       "mistaken_identity",
+       "procedural_failure",
+       "observer_conflict",
+       "inaccurate_description",
+       "compromised_conditions"
+      ]
+     },
+     "response_time_committed_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "issuance_hold": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 420
+  },
+  {
+   "name": "challenge.resolved",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "challenge_outcome",
+    "outcome_reason_code",
+    "resolved_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "challenge_outcome",
+     "outcome_reason_code",
+     "resolved_at"
+    ],
+    "properties": {
+     "challenge_outcome": {
+      "enum": [
+       "upheld",
+       "amended",
+       "clause_withdrawn",
+       "not_upheld"
+      ]
+     },
+     "outcome_reason_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 141
+  },
+  {
+   "name": "commerce.order_completed",
+   "category": "COMMERCIAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "order_id",
+    "account_id",
+    "product_code",
+    "package_code",
+    "package_entitlements",
+    "purchased_at",
+    "access_starts_at",
+    "access_ends_at",
+    "price_amount",
+    "currency",
+    "tax_jurisdiction",
+    "founding_member_flag",
+    "payment_provider_ref"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "order_id",
+     "account_id",
+     "product_code",
+     "package_code",
+     "package_entitlements",
+     "purchased_at",
+     "access_starts_at",
+     "access_ends_at",
+     "price_amount",
+     "currency",
+     "tax_jurisdiction",
+     "founding_member_flag",
+     "payment_provider_ref"
+    ],
+    "properties": {
+     "order_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "account_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "product_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "package_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "package_entitlements": {
+      "enum": [
+       "observation_engagements",
+       "mentor_hour_allocation",
+       "access_duration"
+      ]
+     },
+     "purchased_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "access_starts_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "access_ends_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "price_amount": {
+      "type": "number"
+     },
+     "currency": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "tax_jurisdiction": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "founding_member_flag": {
+      "type": "boolean"
+     },
+     "payment_provider_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 690
+  },
+  {
+   "name": "commerce.refund_issued",
+   "category": "COMMERCIAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "refund_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "refund_id"
+    ],
+    "properties": {
+     "refund_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 79
+  },
+  {
+   "name": "complaint.changed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "complaint_id"
+   ],
+   "optional_payload": [
+    "complaint_acknowledged_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "complaint_id"
+    ],
+    "properties": {
+     "complaint_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "complaint_acknowledged_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 141
+  },
+  {
+   "name": "consent.contact_changed",
+   "category": "CONSENT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "contact_consent_status"
+   ],
+   "optional_payload": [
+    "contact_consent_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "contact_consent_status"
+    ],
+    "properties": {
+     "contact_consent_status": {
+      "enum": [
+       "granted",
+       "declined",
+       "withdrawn"
+      ]
+     },
+     "contact_consent_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 91
+  },
+  {
+   "name": "consent.declined",
+   "category": "CONSENT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "consent_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "consent_id"
+    ],
+    "properties": {
+     "consent_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 80
+  },
+  {
+   "name": "consent.granted",
+   "category": "CONSENT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "consent_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "consent_id"
+    ],
+    "properties": {
+     "consent_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 80
+  },
+  {
+   "name": "consent.lsa_changed",
+   "category": "CONSENT",
+   "status": "DORMANT",
+   "required_payload": [
+    "lsa_consent_state"
+   ],
+   "optional_payload": [
+    "lsa_consent_text_version",
+    "lsa_consent_timestamp",
+    "lsa_withdrawal_timestamp"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "lsa_consent_state"
+    ],
+    "properties": {
+     "lsa_consent_state": {
+      "enum": [
+       "never_asked",
+       "granted",
+       "declined",
+       "withdrawn"
+      ]
+     },
+     "lsa_consent_text_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "lsa_consent_timestamp": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "lsa_withdrawal_timestamp": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 201
+  },
+  {
+   "name": "consent.withdrawn",
+   "category": "CONSENT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "consent_id",
+    "consequence_displayed"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "consent_id",
+     "consequence_displayed"
+    ],
+    "properties": {
+     "consent_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "consequence_displayed": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 110
+  },
+  {
+   "name": "correction.changed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "correction_request_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "correction_request_id"
+    ],
+    "properties": {
+     "correction_request_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 91
+  },
+  {
+   "name": "employer.application_changed",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "employer_application_id",
+    "application_status"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "employer_application_id",
+     "application_status"
+    ],
+    "properties": {
+     "employer_application_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "application_status": {
+      "enum": [
+       "pending",
+       "approved",
+       "declined",
+       "withdrawn"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 126
+  },
+  {
+   "name": "employer.application_decided",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "approval_decision",
+    "approver_id",
+    "decided_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "approval_decision",
+     "approver_id",
+     "decided_at"
+    ],
+    "properties": {
+     "approval_decision": {
+      "enum": [
+       "approved",
+       "declined"
+      ]
+     },
+     "approver_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "decided_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 156
+  },
+  {
+   "name": "employer.application_submitted",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "business_registry_id"
+   ],
+   "optional_payload": [
+    "free_provider_refused",
+    "domain_age_flag"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "business_registry_id"
+    ],
+    "properties": {
+     "business_registry_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "free_provider_refused": {
+      "type": "boolean"
+     },
+     "domain_age_flag": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 144
+  },
+  {
+   "name": "employer.attestation_recorded",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "employer_attestation_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "employer_attestation_id"
+    ],
+    "properties": {
+     "employer_attestation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 93
+  },
+  {
+   "name": "employer.contact_requested",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "contact_request_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "contact_request_id"
+    ],
+    "properties": {
+     "contact_request_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 88
+  },
+  {
+   "name": "employer.design_partner_changed",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "design_partner_flag"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "design_partner_flag"
+    ],
+    "properties": {
+     "design_partner_flag": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 30
+  },
+  {
+   "name": "employer.hire_recorded",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "hire_recorded_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "hire_recorded_id"
+    ],
+    "properties": {
+     "hire_recorded_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 86
+  },
+  {
+   "name": "employer.note_changed",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "organization_id",
+    "workspace_note_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "organization_id",
+     "workspace_note_id"
+    ],
+    "properties": {
+     "organization_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "workspace_note_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 170
+  },
+  {
+   "name": "employer.pool_queried",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "pool_query_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "pool_query_id"
+    ],
+    "properties": {
+     "pool_query_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 83
+  },
+  {
+   "name": "employer.report_accessed",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "report_access_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "report_access_id"
+    ],
+    "properties": {
+     "report_access_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 86
+  },
+  {
+   "name": "employer.terms_accepted",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "record_use_terms_version",
+    "terms_accepted_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "record_use_terms_version",
+     "terms_accepted_at"
+    ],
+    "properties": {
+     "record_use_terms_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "terms_accepted_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 105
+  },
+  {
+   "name": "employer.verification_changed",
+   "category": "EMPLOYER",
+   "status": "ACTIVE",
+   "required_payload": [
+    "organization_id",
+    "verification_status"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "organization_id",
+     "verification_status"
+    ],
+    "properties": {
+     "organization_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "verification_status": {
+      "enum": [
+       "pending",
+       "verified",
+       "not_verified"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 122
+  },
+  {
+   "name": "governance.content_read",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "content_read_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "content_read_id"
+    ],
+    "properties": {
+     "content_read_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 85
+  },
+  {
+   "name": "governance.control_operated",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "control_run_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "control_run_id"
+    ],
+    "properties": {
+     "control_run_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 84
+  },
+  {
+   "name": "governance.incident_changed",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "incident_id"
+   ],
+   "optional_payload": [
+    "severity",
+    "affected_record_count",
+    "notified_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "incident_id"
+    ],
+    "properties": {
+     "incident_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "severity": {
+      "enum": [
+       "low",
+       "medium",
+       "high",
+       "critical"
+      ]
+     },
+     "affected_record_count": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "notified_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 185
+  },
+  {
+   "name": "governance.legal_hold_changed",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "legal_hold_ref"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "legal_hold_ref"
+    ],
+    "properties": {
+     "legal_hold_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 84
+  },
+  {
+   "name": "governance.privileged_access",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "privileged_access_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "privileged_access_id"
+    ],
+    "properties": {
+     "privileged_access_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 90
+  },
+  {
+   "name": "governance.recusal_recorded",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "recusal_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "recusal_id"
+    ],
+    "properties": {
+     "recusal_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 80
+  },
+  {
+   "name": "governance.suppression_applied",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [
+    "suppression_id",
+    "suppression_reason"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "suppression_id",
+     "suppression_reason"
+    ],
+    "properties": {
+     "suppression_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "suppression_reason": {
+      "enum": [
+       "small_n",
+       "dominance",
+       "integrity_low",
+       "gate_not_met"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 121
+  },
+  {
+   "name": "growthlog.entry_changed",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "created_at",
+    "updated_at",
+    "schema_version"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "created_at",
+     "updated_at",
+     "schema_version"
+    ],
+    "properties": {
+     "created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 132
+  },
+  {
+   "name": "growthlog.entry_created",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "entry_id",
+    "created_by",
+    "entry_kind"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "entry_id",
+     "created_by",
+     "entry_kind"
+    ],
+    "properties": {
+     "entry_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "created_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "entry_kind": {
+      "enum": [
+       "practice_note",
+       "rehearsal_reference"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 191
+  },
+  {
+   "name": "identity.assurance_completed",
+   "category": "PARTICIPANT",
+   "status": "SOCKET",
+   "required_payload": [
+    "identity_assurance_provider_ref"
+   ],
+   "optional_payload": [
+    "identity_assurance_evidence_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "identity_assurance_provider_ref"
+    ],
+    "properties": {
+     "identity_assurance_provider_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "identity_assurance_evidence_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 200
+  },
+  {
+   "name": "lsa.comparison_built",
+   "category": "OBSERVATION",
+   "status": "DORMANT",
+   "required_payload": [
+    "resolution_trace_ref"
+   ],
+   "optional_payload": [
+    "transition_rule_version",
+    "lsa_sufficiency_rule_version",
+    "finding_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "resolution_trace_ref"
+    ],
+    "properties": {
+     "resolution_trace_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "transition_rule_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "lsa_sufficiency_rule_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "finding_code": {
+      "enum": [
+       "progression",
+       "regression",
+       "consistency",
+       "mixed",
+       "descriptive_only",
+       "insufficient",
+       "incomparable"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 231
+  },
+  {
+   "name": "lsa.report_issued",
+   "category": "OBSERVATION",
+   "status": "DORMANT",
+   "required_payload": [
+    "lsa_report_id"
+   ],
+   "optional_payload": [
+    "lsa_verification_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "lsa_report_id"
+    ],
+    "properties": {
+     "lsa_report_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "lsa_verification_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 140
+  },
+  {
+   "name": "lsa.snapshot_built",
+   "category": "OBSERVATION",
+   "status": "DORMANT",
+   "required_payload": [
+    "lsa_snapshot_id"
+   ],
+   "optional_payload": [
+    "snapshot_at",
+    "longitudinal_case_id",
+    "comparison_scope_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "lsa_snapshot_id"
+    ],
+    "properties": {
+     "lsa_snapshot_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "snapshot_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "longitudinal_case_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "comparison_scope_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 305
+  },
+  {
+   "name": "mentor.agreement_signed",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "mentor_agreement_version",
+    "mentor_agreement_signed_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "mentor_agreement_version",
+     "mentor_agreement_signed_at"
+    ],
+    "properties": {
+     "mentor_agreement_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "mentor_agreement_signed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 114
+  },
+  {
+   "name": "mentor.appeal_changed",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "mentor_appeal_id"
+   ],
+   "optional_payload": [
+    "opened_at",
+    "decided_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "mentor_appeal_id"
+    ],
+    "properties": {
+     "mentor_appeal_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "opened_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "decided_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 173
+  },
+  {
+   "name": "mentor.assigned",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "mentor_assignment_id",
+    "assignment_method",
+    "prior_allocation_count"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "mentor_assignment_id",
+     "assignment_method",
+     "prior_allocation_count"
+    ],
+    "properties": {
+     "mentor_assignment_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "assignment_method": {
+      "enum": [
+       "automatic",
+       "coordinator"
+      ]
+     },
+     "prior_allocation_count": {
+      "type": "integer",
+      "minimum": 0
+     }
+    }
+   },
+   "worst_case_payload_bytes": 162
+  },
+  {
+   "name": "mentor.authorization_changed",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "authorization_id",
+    "authorized_dimension_id",
+    "authorization_status",
+    "effective_from",
+    "reviewer_authorization",
+    "issuer_authorization"
+   ],
+   "optional_payload": [
+    "effective_to"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "authorization_id",
+     "authorized_dimension_id",
+     "authorization_status",
+     "effective_from",
+     "reviewer_authorization",
+     "issuer_authorization"
+    ],
+    "properties": {
+     "authorization_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "authorized_dimension_id": {
+      "enum": [
+       "D1",
+       "D2",
+       "D3",
+       "D4",
+       "D5",
+       "D6",
+       "D7",
+       "D8",
+       "D9",
+       "D10",
+       "D11",
+       "D12",
+       "D13",
+       "D14"
+      ]
+     },
+     "authorization_status": {
+      "enum": [
+       "authorized",
+       "supervised",
+       "suspended",
+       "lapsed",
+       "withdrawn"
+      ]
+     },
+     "effective_from": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "reviewer_authorization": {
+      "type": "boolean"
+     },
+     "issuer_authorization": {
+      "type": "boolean"
+     },
+     "effective_to": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 308
+  },
+  {
+   "name": "mentor.calibration_recorded",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "calibration_record_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "calibration_record_id"
+    ],
+    "properties": {
+     "calibration_record_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 91
+  },
+  {
+   "name": "mentor.conflict_declared",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "conflict_declaration_id",
+    "declared_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "conflict_declaration_id",
+     "declared_at"
+    ],
+    "properties": {
+     "conflict_declaration_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "declared_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 138
+  },
+  {
+   "name": "mentor.engagement_recorded",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observations_per_month_commitment"
+   ],
+   "optional_payload": [
+    "engagement_started_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observations_per_month_commitment"
+    ],
+    "properties": {
+     "observations_per_month_commitment": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "engagement_started_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 106
+  },
+  {
+   "name": "mentor.function_recorded",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "evidence_cycle_id",
+    "cycle_function"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "evidence_cycle_id",
+     "cycle_function"
+    ],
+    "properties": {
+     "evidence_cycle_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "cycle_function": {
+      "enum": [
+       "guide",
+       "observer",
+       "evidence_reviewer"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 124
+  },
+  {
+   "name": "mentor.invitation_redeemed",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "mentor_invitation_id",
+    "invitation_redeemed_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "mentor_invitation_id",
+     "invitation_redeemed_at"
+    ],
+    "properties": {
+     "mentor_invitation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "invitation_redeemed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 146
+  },
+  {
+   "name": "mentor.invited",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "mentor_invitation_id",
+    "invited_by",
+    "invitation_sent_at",
+    "invitation_expires_at"
+   ],
+   "optional_payload": [
+    "sourcing_channel",
+    "sourcing_employer_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "mentor_invitation_id",
+     "invited_by",
+     "invitation_sent_at",
+     "invitation_expires_at"
+    ],
+    "properties": {
+     "mentor_invitation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "invited_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "invitation_sent_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "invitation_expires_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "sourcing_channel": {
+      "enum": [
+       "primary_contributor_network",
+       "professional_network",
+       "professional_association",
+       "retiring_employee_channel",
+       "other"
+      ]
+     },
+     "sourcing_employer_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 413
+  },
+  {
+   "name": "mentor.qualification_recorded",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observer_qualification_record_ref"
+   ],
+   "optional_payload": [
+    "qualification_reviewed_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observer_qualification_record_ref"
+    ],
+    "properties": {
+     "observer_qualification_record_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "qualification_reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 162
+  },
+  {
+   "name": "mentor.supervision_recorded",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "supervised_sessions_completed"
+   ],
+   "optional_payload": [
+    "supervised_status_started_at",
+    "supervision_finding_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "supervised_sessions_completed"
+    ],
+    "properties": {
+     "supervised_sessions_completed": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "supervised_status_started_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "supervision_finding_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 169
+  },
+  {
+   "name": "mentor.suspension_changed",
+   "category": "MENTOR",
+   "status": "ACTIVE",
+   "required_payload": [
+    "independent_approver_id"
+   ],
+   "optional_payload": [
+    "suspension_started_at",
+    "suspension_extension_count"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "independent_approver_id"
+    ],
+    "properties": {
+     "independent_approver_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "suspension_started_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "suspension_extension_count": {
+      "type": "integer",
+      "minimum": 0
+     }
+    }
+   },
+   "worst_case_payload_bytes": 190
+  },
+  {
+   "name": "observation.attempt_closed",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "attempt_counted",
+    "attempt_event_class"
+   ],
+   "optional_payload": [
+    "cooldown_class",
+    "cooldown_ends_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "attempt_counted",
+     "attempt_event_class"
+    ],
+    "properties": {
+     "attempt_counted": {
+      "type": "boolean"
+     },
+     "attempt_event_class": {
+      "enum": [
+       "completed_observation",
+       "technical_failure",
+       "accommodation_interruption",
+       "administration_failure",
+       "cancelled_before_start",
+       "identity_verification_failure",
+       "participant_no_show",
+       "withdrawal_after_start_before_commit",
+       "welfare_stop"
+      ]
+     },
+     "cooldown_class": {
+      "enum": [
+       "none",
+       "specification_cooldown",
+       "rescheduling_cooldown"
+      ]
+     },
+     "cooldown_ends_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 179
+  },
+  {
+   "name": "observation.beat_marked",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "stage_instance_id",
+    "beat_code",
+    "beat_started_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "stage_instance_id",
+     "beat_code",
+     "beat_started_at"
+    ],
+    "properties": {
+     "stage_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "beat_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "beat_started_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 181
+  },
+  {
+   "name": "observation.clause_withdrawn",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observation_id",
+    "clause_instance_id"
+   ],
+   "optional_payload": [
+    "challenge_case_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observation_id",
+     "clause_instance_id"
+    ],
+    "properties": {
+     "observation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "clause_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "challenge_case_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 255
+  },
+  {
+   "name": "observation.committed",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observation_id",
+    "dimension_id",
+    "stage_code",
+    "stage_instance_id",
+    "served_instance_id",
+    "source_version_id",
+    "source_version_hash",
+    "rendered_instance_hash",
+    "record_snapshot_hash",
+    "attempt_no",
+    "committed_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observation_id",
+     "dimension_id",
+     "stage_code",
+     "stage_instance_id",
+     "served_instance_id",
+     "source_version_id",
+     "source_version_hash",
+     "rendered_instance_hash",
+     "record_snapshot_hash",
+     "attempt_no",
+     "committed_at"
+    ],
+    "properties": {
+     "observation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "dimension_id": {
+      "enum": [
+       "D1",
+       "D2",
+       "D3",
+       "D4",
+       "D5",
+       "D6",
+       "D7",
+       "D8",
+       "D9",
+       "D10",
+       "D11",
+       "D12",
+       "D13",
+       "D14"
+      ]
+     },
+     "stage_code": {
+      "enum": [
+       "S1",
+       "S2",
+       "S3",
+       "S4"
+      ]
+     },
+     "stage_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "served_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_version_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_version_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "rendered_instance_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "record_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "attempt_no": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "committed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 716
+  },
+  {
+   "name": "observation.corrected",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "supersedes",
+    "superseded_by"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "supersedes",
+     "superseded_by"
+    ],
+    "properties": {
+     "supersedes": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "superseded_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 161
+  },
+  {
+   "name": "observation.currency_expired",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observation_id",
+    "evidence_currency_expires_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observation_id",
+     "evidence_currency_expires_at"
+    ],
+    "properties": {
+     "observation_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "evidence_currency_expires_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 146
+  },
+  {
+   "name": "observation.determination_recorded",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "determination_id",
+    "question_id",
+    "answer_option_id",
+    "determined_by",
+    "determined_at",
+    "question_serving_state",
+    "branch_trigger_ref"
+   ],
+   "optional_payload": [
+    "capture_edit_history_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "determination_id",
+     "question_id",
+     "answer_option_id",
+     "determined_by",
+     "determined_at",
+     "question_serving_state",
+     "branch_trigger_ref"
+    ],
+    "properties": {
+     "determination_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "question_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "answer_option_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "determined_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "determined_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "question_serving_state": {
+      "enum": [
+       "direct",
+       "conditional",
+       "not_served"
+      ]
+     },
+     "branch_trigger_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "capture_edit_history_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 594
+  },
+  {
+   "name": "observation.determinations_locked",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "s2_determinations_locked_at",
+    "s1_output_unmasked_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "s2_determinations_locked_at",
+     "s1_output_unmasked_at"
+    ],
+    "properties": {
+     "s2_determinations_locked_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "s1_output_unmasked_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 118
+  },
+  {
+   "name": "observation.path_completed",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observation_path_completed_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observation_path_completed_at"
+    ],
+    "properties": {
+     "observation_path_completed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 65
+  },
+  {
+   "name": "observation.path_opened",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "observation_path_gateway_id",
+    "gateway_opened_at",
+    "coaching_terminated_at"
+   ],
+   "optional_payload": [
+    "s1_not_required_ruleset_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "observation_path_gateway_id",
+     "gateway_opened_at",
+     "coaching_terminated_at"
+    ],
+    "properties": {
+     "observation_path_gateway_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "gateway_opened_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "coaching_terminated_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "s1_not_required_ruleset_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 298
+  },
+  {
+   "name": "observation.progression_corrected",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "corrected_decision_ref"
+   ],
+   "optional_payload": [
+    "original_decision_date",
+    "correction_effective_date"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "corrected_decision_ref"
+    ],
+    "properties": {
+     "corrected_decision_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "original_decision_date": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "correction_effective_date": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 207
+  },
+  {
+   "name": "observation.progression_recorded",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "progression_decision_id",
+    "decision",
+    "decided_by",
+    "decided_at"
+   ],
+   "optional_payload": [
+    "decision_rationale_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "progression_decision_id",
+     "decision",
+     "decided_by",
+     "decided_at"
+    ],
+    "properties": {
+     "progression_decision_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "decision": {
+      "enum": [
+       "proceed",
+       "redirect",
+       "pause"
+      ]
+     },
+     "decided_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "decided_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "decision_rationale_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 296
+  },
+  {
+   "name": "observation.response_submitted",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "served_instance_id",
+    "response_sequence_number",
+    "response_submitted_at"
+   ],
+   "optional_payload": [
+    "assistance_declaration",
+    "response_artifact_ref",
+    "submission_origin"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "served_instance_id",
+     "response_sequence_number",
+     "response_submitted_at"
+    ],
+    "properties": {
+     "served_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "response_sequence_number": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "response_submitted_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "assistance_declaration": {
+      "enum": [
+       "AI_USE_ALLOWED",
+       "AI_USE_DISALLOWED",
+       "AI_USE_DECLARATION_REQUIRED"
+      ]
+     },
+     "response_artifact_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "submission_origin": {
+      "enum": [
+       "web",
+       "mobile",
+       "upload"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 356
+  },
+  {
+   "name": "observation.s1_confirmed",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "s1_human_confirmation_actor_id",
+    "s1_human_confirmation_at",
+    "confirmation_role",
+    "authorization_snapshot_ref",
+    "s1_exposure_flag"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "s1_human_confirmation_actor_id",
+     "s1_human_confirmation_at",
+     "confirmation_role",
+     "authorization_snapshot_ref",
+     "s1_exposure_flag"
+    ],
+    "properties": {
+     "s1_human_confirmation_actor_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "s1_human_confirmation_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "confirmation_role": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "authorization_snapshot_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "s1_exposure_flag": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 330
+  },
+  {
+   "name": "observation.s1_outcome_delivered",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "s1_outcome_delivered_to_mentor_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "s1_outcome_delivered_to_mentor_at"
+    ],
+    "properties": {
+     "s1_outcome_delivered_to_mentor_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 69
+  },
+  {
+   "name": "observation.session_abandoned",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "abandonment_state"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "abandonment_state"
+    ],
+    "properties": {
+     "abandonment_state": {
+      "enum": [
+       "none",
+       "timeout",
+       "user_exit",
+       "connection_lost"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 40
+  },
+  {
+   "name": "observation.session_ended",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "session_id",
+    "stage_instance_id",
+    "session_ended_at",
+    "session_serving_state",
+    "session_admin_state"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "session_id",
+     "stage_instance_id",
+     "session_ended_at",
+     "session_serving_state",
+     "session_admin_state"
+    ],
+    "properties": {
+     "session_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "stage_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "session_ended_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "session_serving_state": {
+      "enum": [
+       "not_served",
+       "served",
+       "aborted",
+       "completed"
+      ]
+     },
+     "session_admin_state": {
+      "enum": [
+       "normal",
+       "disrupted",
+       "withdrawn",
+       "welfare_stopped",
+       "corrected"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 292
+  },
+  {
+   "name": "observation.session_started",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "session_id",
+    "stage_instance_id",
+    "session_started_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "session_id",
+     "stage_instance_id",
+     "session_started_at"
+    ],
+    "properties": {
+     "session_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "stage_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "session_started_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 217
+  },
+  {
+   "name": "observation.source_served",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "served_instance_id",
+    "served_at",
+    "rendered_instance_hash",
+    "stage1_engine_version",
+    "stage1_script_version",
+    "capture_catalog_version",
+    "resolution_rule_version",
+    "delivery_script_version",
+    "served_language"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "served_instance_id",
+     "served_at",
+     "rendered_instance_hash",
+     "stage1_engine_version",
+     "stage1_script_version",
+     "capture_catalog_version",
+     "resolution_rule_version",
+     "delivery_script_version",
+     "served_language"
+    ],
+    "properties": {
+     "served_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "served_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "rendered_instance_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "stage1_engine_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "stage1_script_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "capture_catalog_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "resolution_rule_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "delivery_script_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "served_language": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 523
+  },
+  {
+   "name": "observation.stage_entered",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "stage_entry_event_id",
+    "stage_instance_id",
+    "stage_code",
+    "session_id",
+    "session_identity_method",
+    "assistance_rules_version",
+    "observation_mode",
+    "attempt_no",
+    "attempt_rules_version",
+    "observation_notification_timestamp",
+    "stage_entry_hold_expires_at"
+   ],
+   "optional_payload": [
+    "entry_authority_actor_id",
+    "attempt_reason",
+    "prior_progression_decision_ref",
+    "cooldown_completed_at",
+    "guidance_between_stages_received",
+    "guide_account_id",
+    "accommodation_applied",
+    "accommodation_class",
+    "prior_exposure_known_state"
+   ],
+   "conditional": [
+    {
+     "when_field": "stage_code",
+     "in": [
+      "S2",
+      "S4"
+     ],
+     "require": [
+      "entry_authority_actor_id"
+     ]
+    }
+   ],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "stage_entry_event_id",
+     "stage_instance_id",
+     "stage_code",
+     "session_id",
+     "session_identity_method",
+     "assistance_rules_version",
+     "observation_mode",
+     "attempt_no",
+     "attempt_rules_version",
+     "observation_notification_timestamp",
+     "stage_entry_hold_expires_at"
+    ],
+    "properties": {
+     "stage_entry_event_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "stage_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "stage_code": {
+      "enum": [
+       "S1",
+       "S2",
+       "S3",
+       "S4"
+      ]
+     },
+     "session_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "session_identity_method": {
+      "enum": [
+       "account_authentication"
+      ]
+     },
+     "assistance_rules_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "observation_mode": {
+      "enum": [
+       "s1_deterministic_engine",
+       "s2_live_video",
+       "s3_asynchronous_submission",
+       "s4_live_group"
+      ]
+     },
+     "attempt_no": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "attempt_rules_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "observation_notification_timestamp": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "stage_entry_hold_expires_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "entry_authority_actor_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "attempt_reason": {
+      "enum": [
+       "first",
+       "retake_after_redirect",
+       "retake_after_pause",
+       "retake_elected_after_proceed"
+      ]
+     },
+     "prior_progression_decision_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "cooldown_completed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "guidance_between_stages_received": {
+      "type": "boolean"
+     },
+     "guide_account_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "accommodation_applied": {
+      "type": "boolean"
+     },
+     "accommodation_class": {
+      "enum": [
+       "access_preserving",
+       "demand_modifying"
+      ]
+     },
+     "prior_exposure_known_state": {
+      "enum": [
+       "known_exposure",
+       "no_known_exposure",
+       "not_collected"
+      ]
+     }
+    },
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "stage_code": {
+         "enum": [
+          "S2",
+          "S4"
+         ]
+        }
+       },
+       "required": [
+        "stage_code"
+       ]
+      },
+      "then": {
+       "required": [
+        "entry_authority_actor_id"
+       ]
+      }
+     }
+    ]
+   },
+   "worst_case_payload_bytes": 1165
+  },
+  {
+   "name": "observation.welfare_stop_recorded",
+   "category": "OBSERVATION",
+   "status": "ACTIVE",
+   "required_payload": [
+    "welfare_stop_ref"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "welfare_stop_ref"
+    ],
+    "properties": {
+     "welfare_stop_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 86
+  },
+  {
+   "name": "participant.document_uploaded",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "profile_document_ref"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "profile_document_ref"
+    ],
+    "properties": {
+     "profile_document_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 90
+  },
+  {
+   "name": "participant.enrolled",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "enrollment_event_id"
+   ],
+   "optional_payload": [
+    "enrollment_scope",
+    "enrolled_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "enrollment_event_id"
+    ],
+    "properties": {
+     "enrollment_event_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "enrollment_scope": {
+      "enum": [
+       "rehearsal_product",
+       "observation_pathway",
+       "program"
+      ]
+     },
+     "enrolled_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 175
+  },
+  {
+   "name": "participant.notice_acknowledged",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "privacy_notice_version",
+    "privacy_notice_hash"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "privacy_notice_version",
+     "privacy_notice_hash"
+    ],
+    "properties": {
+     "privacy_notice_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "privacy_notice_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 139
+  },
+  {
+   "name": "participant.profile_updated",
+   "category": "PARTICIPANT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "occupational_classification_version"
+   ],
+   "optional_payload": [
+    "country_of_residence",
+    "subdivision_of_residence",
+    "privacy_jurisdiction_code",
+    "preferred_language",
+    "timezone",
+    "profile_field_source",
+    "notification_channel_preference",
+    "target_industry_code",
+    "role_seniority_context_code",
+    "recruitment_channel_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "occupational_classification_version"
+    ],
+    "properties": {
+     "occupational_classification_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "country_of_residence": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "subdivision_of_residence": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "privacy_jurisdiction_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "preferred_language": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "timezone": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "profile_field_source": {
+      "enum": [
+       "stated_by_participant",
+       "imported_document",
+       "administrator_entered"
+      ]
+     },
+     "notification_channel_preference": {
+      "enum": [
+       "email",
+       "in_platform"
+      ]
+     },
+     "target_industry_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "role_seniority_context_code": {
+      "enum": [
+       "entry",
+       "early_career",
+       "experienced",
+       "supervisory",
+       "executive"
+      ]
+     },
+     "recruitment_channel_code": {
+      "enum": [
+       "search",
+       "social_media",
+       "referral",
+       "employer",
+       "community_organization",
+       "job_fair",
+       "partner_program",
+       "other"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 588
+  },
+  {
+   "name": "permission.group_participation_recorded",
+   "category": "CONSENT",
+   "status": "SOCKET",
+   "required_payload": [
+    "group_participation_record_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "group_participation_record_id"
+    ],
+    "properties": {
+     "group_participation_record_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 99
+  },
+  {
+   "name": "pilot.cohort_assigned",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "pilot_cohort_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "pilot_cohort_id"
+    ],
+    "properties": {
+     "pilot_cohort_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 85
+  },
+  {
+   "name": "privacy.request_changed",
+   "category": "GOVERNANCE",
+   "status": "ACTIVE",
+   "required_payload": [],
+   "optional_payload": [
+    "data_access_request_id",
+    "data_correction_request_id"
+   ],
+   "conditional": [
+    {
+     "require_any": [
+      "data_access_request_id",
+      "data_correction_request_id"
+     ]
+    }
+   ],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [],
+    "properties": {
+     "data_access_request_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "data_correction_request_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    },
+    "allOf": [
+     {
+      "anyOf": [
+       {
+        "required": [
+         "data_access_request_id"
+        ]
+       },
+       {
+        "required": [
+         "data_correction_request_id"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "worst_case_payload_bytes": 186
+  },
+  {
+   "name": "program.agreement_changed",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "data_use_agreement_ref"
+   ],
+   "optional_payload": [
+    "partner_relationship_effective_at",
+    "partner_relationship_ended_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "data_use_agreement_ref"
+    ],
+    "properties": {
+     "data_use_agreement_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "partner_relationship_effective_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "partner_relationship_ended_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 222
+  },
+  {
+   "name": "program.cohort_created",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "cohort_id",
+    "cohort_type",
+    "cohort_definition_version"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "cohort_id",
+     "cohort_type",
+     "cohort_definition_version"
+    ],
+    "properties": {
+     "cohort_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "cohort_type": {
+      "enum": [
+       "pilot",
+       "program",
+       "design_partner"
+      ]
+     },
+     "cohort_definition_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 163
+  },
+  {
+   "name": "program.created",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "organization_program_id",
+    "program_version",
+    "operating_jurisdiction_code",
+    "jurisdiction_rule_version"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "organization_program_id",
+     "program_version",
+     "operating_jurisdiction_code",
+     "jurisdiction_rule_version"
+    ],
+    "properties": {
+     "organization_program_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "program_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "operating_jurisdiction_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "jurisdiction_rule_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 252
+  },
+  {
+   "name": "program.membership_changed",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "program_membership_id"
+   ],
+   "optional_payload": [
+    "program_enrolled_at",
+    "program_exit_at",
+    "membership_basis_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "program_membership_id"
+    ],
+    "properties": {
+     "program_membership_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "program_enrolled_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "program_exit_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "membership_basis_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 281
+  },
+  {
+   "name": "program.organization_registered",
+   "category": "PROGRAM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "organization_type"
+   ],
+   "optional_payload": [
+    "organization_industry_code"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "organization_type"
+    ],
+    "properties": {
+     "organization_type": {
+      "enum": [
+       "employer",
+       "workforce_agency",
+       "settlement_agency",
+       "professional_association",
+       "education_provider",
+       "community_organization",
+       "other"
+      ]
+     },
+     "organization_industry_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 111
+  },
+  {
+   "name": "registry.status_changed",
+   "category": "REGISTRY",
+   "status": "ACTIVE",
+   "required_payload": [
+    "source_status",
+    "serving_eligible"
+   ],
+   "optional_payload": [
+    "source_effective_until"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "source_status",
+     "serving_eligible"
+    ],
+    "properties": {
+     "source_status": {
+      "enum": [
+       "authored_not_approved",
+       "approved",
+       "suspended",
+       "retired"
+      ]
+     },
+     "serving_eligible": {
+      "type": "boolean"
+     },
+     "source_effective_until": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 123
+  },
+  {
+   "name": "registry.version_approved",
+   "category": "REGISTRY",
+   "status": "ACTIVE",
+   "required_payload": [
+    "approval_record_id",
+    "approved_at",
+    "source_effective_from",
+    "version_hash"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "approval_record_id",
+     "approved_at",
+     "source_effective_from",
+     "version_hash"
+    ],
+    "properties": {
+     "approval_record_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "approved_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "source_effective_from": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "version_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 268
+  },
+  {
+   "name": "registry.version_registered",
+   "category": "REGISTRY",
+   "status": "ACTIVE",
+   "required_payload": [
+    "source_id",
+    "source_version_id",
+    "source_version_hash",
+    "scenario_class",
+    "compatibility_class",
+    "situation_class",
+    "secondary_situation_class",
+    "interaction_pattern_family_id",
+    "administration_form_id",
+    "name_clearance_status",
+    "source_bank_id",
+    "source_created_at",
+    "source_created_by",
+    "source_material_manifest_ref",
+    "asset_id",
+    "current_version",
+    "previous_version",
+    "change_request_id",
+    "changed_by",
+    "changed_at",
+    "dimension_schema_version"
+   ],
+   "optional_payload": [
+    "min_seconds",
+    "max_seconds",
+    "content_sensitivity",
+    "atlas_moment_id",
+    "comparison_family_id",
+    "comparison_demand_id",
+    "observation_opportunity_id",
+    "demand_conditions_version",
+    "form_relationship_id",
+    "longitudinal_use_status",
+    "atlas_terrain_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "source_id",
+     "source_version_id",
+     "source_version_hash",
+     "scenario_class",
+     "compatibility_class",
+     "situation_class",
+     "secondary_situation_class",
+     "interaction_pattern_family_id",
+     "administration_form_id",
+     "name_clearance_status",
+     "source_bank_id",
+     "source_created_at",
+     "source_created_by",
+     "source_material_manifest_ref",
+     "asset_id",
+     "current_version",
+     "previous_version",
+     "change_request_id",
+     "changed_by",
+     "changed_at",
+     "dimension_schema_version"
+    ],
+    "properties": {
+     "source_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_version_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_version_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "scenario_class": {
+      "enum": [
+       "instructional",
+       "private_rehearsal",
+       "observation_ready",
+       "work_sample",
+       "team_simulation"
+      ]
+     },
+     "compatibility_class": {
+      "enum": [
+       "A",
+       "B",
+       "C"
+      ]
+     },
+     "situation_class": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "secondary_situation_class": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "interaction_pattern_family_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "administration_form_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "name_clearance_status": {
+      "enum": [
+       "CLEARED",
+       "PENDING"
+      ]
+     },
+     "source_bank_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_created_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "source_created_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "source_material_manifest_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "asset_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "current_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "previous_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "change_request_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "changed_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "changed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "dimension_schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "min_seconds": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "max_seconds": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "content_sensitivity": {
+      "enum": [
+       "standard",
+       "SENSITIVE_CONTENT"
+      ]
+     },
+     "atlas_moment_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "comparison_family_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "comparison_demand_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "observation_opportunity_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "demand_conditions_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "form_relationship_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "longitudinal_use_status": {
+      "enum": [
+       "eligible",
+       "not_eligible"
+      ]
+     },
+     "atlas_terrain_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 2098
+  },
+  {
+   "name": "rehearsal.artifact_saved",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "participant_artifact_ref"
+   ],
+   "optional_payload": [
+    "participant_artifact_version"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "participant_artifact_ref"
+    ],
+    "properties": {
+     "participant_artifact_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "participant_artifact_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 150
+  },
+  {
+   "name": "rehearsal.choice_made",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "rehearsal_choice_record_id"
+   ],
+   "optional_payload": [
+    "rehearsal_decision_path_ref",
+    "response_modality",
+    "voice_transcript_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "rehearsal_choice_record_id"
+    ],
+    "properties": {
+     "rehearsal_choice_record_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "rehearsal_decision_path_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "response_modality": {
+      "enum": [
+       "text",
+       "voice",
+       "accessible_alternative"
+      ]
+     },
+     "voice_transcript_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 324
+  },
+  {
+   "name": "rehearsal.content_displayed",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "rehearsal_session_id",
+    "module_id",
+    "module_version"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "rehearsal_session_id",
+     "module_id",
+     "module_version"
+    ],
+    "properties": {
+     "rehearsal_session_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "module_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "module_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 209
+  },
+  {
+   "name": "rehearsal.feedback_displayed",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "feedback_source_type"
+   ],
+   "optional_payload": [
+    "feedback_viewed_at",
+    "feedback_acknowledged_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "feedback_source_type"
+    ],
+    "properties": {
+     "feedback_source_type": {
+      "enum": [
+       "canned_reference",
+       "self_reflection",
+       "human_developmental"
+      ]
+     },
+     "feedback_viewed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "feedback_acknowledged_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 157
+  },
+  {
+   "name": "rehearsal.reflection_saved",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "participant_reflection_ref"
+   ],
+   "optional_payload": [
+    "reflection_prompt_id",
+    "reflection_prompt_version",
+    "final_personal_sentence_ref"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "participant_reflection_ref"
+    ],
+    "properties": {
+     "participant_reflection_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "reflection_prompt_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "reflection_prompt_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "final_personal_sentence_ref": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 332
+  },
+  {
+   "name": "rehearsal.retention_check_changed",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "retention_check_instance_id"
+   ],
+   "optional_payload": [
+    "retention_check_status"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "retention_check_instance_id"
+    ],
+    "properties": {
+     "retention_check_instance_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "retention_check_status": {
+      "enum": [
+       "pending",
+       "served",
+       "completed",
+       "declined",
+       "expired"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 134
+  },
+  {
+   "name": "rehearsal.session_completed",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "rehearsal_started_at"
+   ],
+   "optional_payload": [
+    "rehearsal_completed_at",
+    "rehearsal_completion_state",
+    "module_completion_state",
+    "module_completion_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "rehearsal_started_at"
+    ],
+    "properties": {
+     "rehearsal_started_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "rehearsal_completed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "rehearsal_completion_state": {
+      "enum": [
+       "complete",
+       "partial",
+       "abandoned"
+      ]
+     },
+     "module_completion_state": {
+      "enum": [
+       "complete",
+       "partial",
+       "abandoned"
+      ]
+     },
+     "module_completion_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 245
+  },
+  {
+   "name": "rehearsal.session_started",
+   "category": "REHEARSAL",
+   "status": "ACTIVE",
+   "required_payload": [
+    "rehearsal_session_id",
+    "module_id",
+    "module_version",
+    "workplace_moment_id",
+    "rehearsal_attempt_id",
+    "rehearsal_attempt_no"
+   ],
+   "optional_payload": [
+    "module_dimension_id",
+    "module_segment_id",
+    "private_scenario_id",
+    "private_scenario_version"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "rehearsal_session_id",
+     "module_id",
+     "module_version",
+     "workplace_moment_id",
+     "rehearsal_attempt_id",
+     "rehearsal_attempt_no"
+    ],
+    "properties": {
+     "rehearsal_session_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "module_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "module_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "workplace_moment_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "rehearsal_attempt_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "rehearsal_attempt_no": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "module_dimension_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "module_segment_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "private_scenario_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "private_scenario_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 731
+  },
+  {
+   "name": "release.changed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "release_mode",
+    "employer_visibility_state",
+    "availability_changed_at"
+   ],
+   "optional_payload": [
+    "talentvisa_active"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "release_mode",
+     "employer_visibility_state",
+     "availability_changed_at"
+    ],
+    "properties": {
+     "release_mode": {
+      "enum": [
+       "named_pilot_recipient",
+       "approved_employer_pool"
+      ]
+     },
+     "employer_visibility_state": {
+      "enum": [
+       "available_to_approved_employers",
+       "not_available",
+       "future_availability_withdrawn"
+      ]
+     },
+     "availability_changed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "talentvisa_active": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 187
+  },
+  {
+   "name": "release.recipient_created",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "recipient_release_id",
+    "recipient_address_hash",
+    "token_state"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "recipient_release_id",
+     "recipient_address_hash",
+     "token_state"
+    ],
+    "properties": {
+     "recipient_release_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "recipient_address_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "token_state": {
+      "enum": [
+       "active",
+       "revoked",
+       "expired",
+       "superseded"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 207
+  },
+  {
+   "name": "report.assembled",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "dimension_evidence_state",
+    "report_type"
+   ],
+   "optional_payload": [
+    "cross_cutting_condition_flags"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "dimension_evidence_state",
+     "report_type"
+    ],
+    "properties": {
+     "dimension_evidence_state": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "report_type": {
+      "enum": [
+       "ber",
+       "lsa"
+      ]
+     },
+     "cross_cutting_condition_flags": {
+      "enum": [
+       "stage1_only",
+       "mixed_divergent",
+       "single_observer",
+       "conditions_compromised",
+       "earlier_attempt_differs",
+       "evidence_expired"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 140
+  },
+  {
+   "name": "report.issued",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "ber_report_id",
+    "ber_version",
+    "issued_by",
+    "issued_at",
+    "ber_standard_version",
+    "sufficiency_rules_version",
+    "permitted_use_version",
+    "observer_multiplicity_statement_code",
+    "verification_code",
+    "report_content_digest"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "ber_report_id",
+     "ber_version",
+     "issued_by",
+     "issued_at",
+     "ber_standard_version",
+     "sufficiency_rules_version",
+     "permitted_use_version",
+     "observer_multiplicity_statement_code",
+     "verification_code",
+     "report_content_digest"
+    ],
+    "properties": {
+     "ber_report_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "ber_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "issued_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "issued_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "ber_standard_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "sufficiency_rules_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "permitted_use_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "observer_multiplicity_statement_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "verification_code": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "report_content_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 606
+  },
+  {
+   "name": "report.participant_review_changed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "report_preview_digest",
+    "preview_state"
+   ],
+   "optional_payload": [
+    "participant_review_opened_at",
+    "participant_review_completed_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "report_preview_digest",
+     "preview_state"
+    ],
+    "properties": {
+     "report_preview_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     },
+     "preview_state": {
+      "enum": [
+       "current",
+       "stale"
+      ]
+     },
+     "participant_review_opened_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "participant_review_completed_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 244
+  },
+  {
+   "name": "report.rendered",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "specimen_render_flag"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "specimen_render_flag"
+    ],
+    "properties": {
+     "specimen_render_flag": {
+      "type": "boolean"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 31
+  },
+  {
+   "name": "report.review_completed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "reviewer_independence_state",
+    "evidence_review_id",
+    "reviewer_id",
+    "review_completed_at",
+    "version_set_hash"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "reviewer_independence_state",
+     "evidence_review_id",
+     "reviewer_id",
+     "review_completed_at",
+     "version_set_hash"
+    ],
+    "properties": {
+     "reviewer_independence_state": {
+      "enum": [
+       "independent",
+       "conflict_declared",
+       "excluded_by_rule"
+      ]
+     },
+     "evidence_review_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "reviewer_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "review_completed_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "version_set_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 354
+  },
+  {
+   "name": "report.status_changed",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "ber_status"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "ber_status"
+    ],
+    "properties": {
+     "ber_status": {
+      "enum": [
+       "not_eligible",
+       "assembling",
+       "reviewer_review",
+       "participant_review",
+       "challenge_open",
+       "ready_to_issue",
+       "issued",
+       "amended",
+       "withdrawn",
+       "expired",
+       "evidence_expired"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 36
+  },
+  {
+   "name": "report.verification_checked",
+   "category": "REPORT",
+   "status": "ACTIVE",
+   "required_payload": [
+    "verification_check_id"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "verification_check_id"
+    ],
+    "properties": {
+     "verification_check_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 91
+  },
+  {
+   "name": "retention.run_completed",
+   "category": "GOVERNANCE",
+   "status": "SOCKET",
+   "required_payload": [
+    "destruction_run_id"
+   ],
+   "optional_payload": [
+    "anonymization_run_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "destruction_run_id"
+    ],
+    "properties": {
+     "destruction_run_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "anonymization_run_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 176
+  },
+  {
+   "name": "system.configuration_changed",
+   "category": "SYSTEM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "session_archive_tab_state",
+    "configuration_version",
+    "set_by",
+    "set_at",
+    "verification_link_ttl",
+    "verification_resend_cooldown",
+    "mentor_invitation_ttl",
+    "recipient_release_token_ttl",
+    "recipient_passcode_ttl",
+    "stage_entry_hold_ttl"
+   ],
+   "optional_payload": [
+    "liveworks_activation_state",
+    "retention_period_value",
+    "counsel_ratified_at"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "session_archive_tab_state",
+     "configuration_version",
+     "set_by",
+     "set_at",
+     "verification_link_ttl",
+     "verification_resend_cooldown",
+     "mentor_invitation_ttl",
+     "recipient_release_token_ttl",
+     "recipient_passcode_ttl",
+     "stage_entry_hold_ttl"
+    ],
+    "properties": {
+     "session_archive_tab_state": {
+      "enum": [
+       "frozen"
+      ]
+     },
+     "configuration_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "set_by": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "set_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "verification_link_ttl": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "verification_resend_cooldown": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "mentor_invitation_ttl": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "recipient_release_token_ttl": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "recipient_passcode_ttl": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "stage_entry_hold_ttl": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "liveworks_activation_state": {
+      "enum": [
+       "not_activated",
+       "activated"
+      ]
+     },
+     "retention_period_value": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "counsel_ratified_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 573
+  },
+  {
+   "name": "system.deployment_verified",
+   "category": "SYSTEM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "hosting_region",
+    "backup_region"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "hosting_region",
+     "backup_region"
+    ],
+    "properties": {
+     "hosting_region": {
+      "enum": [
+       "ca"
+      ]
+     },
+     "backup_region": {
+      "enum": [
+       "ca"
+      ]
+     }
+    }
+   },
+   "worst_case_payload_bytes": 45
+  },
+  {
+   "name": "system.error_detected",
+   "category": "SYSTEM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "error_journal_id",
+    "error_journal_written_at"
+   ],
+   "optional_payload": [
+    "severity",
+    "reconciled_event_id"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "error_journal_id",
+     "error_journal_written_at"
+    ],
+    "properties": {
+     "error_journal_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "error_journal_written_at": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "severity": {
+      "enum": [
+       "low",
+       "medium",
+       "high",
+       "critical"
+      ]
+     },
+     "reconciled_event_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 253
+  },
+  {
+   "name": "system.manifest_verified",
+   "category": "SYSTEM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "manifest_verified_at"
+   ],
+   "optional_payload": [],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "manifest_verified_at"
+    ],
+    "properties": {
+     "manifest_verified_at": {
+      "type": "string",
+      "format": "date-time"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 56
+  },
+  {
+   "name": "system.schema_updated",
+   "category": "SYSTEM",
+   "status": "ACTIVE",
+   "required_payload": [
+    "asset_id",
+    "current_version",
+    "compatibility_class"
+   ],
+   "optional_payload": [
+    "previous_version"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "asset_id",
+     "current_version",
+     "compatibility_class"
+    ],
+    "properties": {
+     "asset_id": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+     },
+     "current_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     },
+     "compatibility_class": {
+      "enum": [
+       "A",
+       "B",
+       "C"
+      ]
+     },
+     "previous_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+     }
+    }
+   },
+   "worst_case_payload_bytes": 191
+  },
+  {
+   "name": "telemetry.period_closed",
+   "category": "REHEARSAL",
+   "status": "SOCKET",
+   "required_payload": [
+    "cohort_period"
+   ],
+   "optional_payload": [
+    "sessions_started",
+    "sessions_completed",
+    "feedback_generated_count",
+    "feedback_acknowledged_count",
+    "retake_within_window_count"
+   ],
+   "conditional": [],
+   "payload_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "cohort_period"
+    ],
+    "properties": {
+     "cohort_period": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+     },
+     "sessions_started": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "sessions_completed": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "feedback_generated_count": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "feedback_acknowledged_count": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "retake_within_window_count": {
+      "type": "integer",
+      "minimum": 0
+     }
+    }
+   },
+   "worst_case_payload_bytes": 242
+  }
+ ]
+}

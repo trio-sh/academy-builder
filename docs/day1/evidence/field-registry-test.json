@@ -1,0 +1,105 @@
+{
+ "environment": "throwaway PostgreSQL 17 + Supabase shim; migration applied twice (second run is a no-op)",
+ "migration": "supabase/migrations/20261101000000_day1_field_registry.sql",
+ "run_date": "2026-10-20",
+ "dictionary_sha256": "2595989efe30...",
+ "dt01_status": "FAIL (expected at this stage): registry loaded, 0 of 522 ACTIVE and DORMANT fields mapped to a physical column yet",
+ "checks": [
+  {
+   "id": "R1",
+   "name": "field rows and status split match the dictionary",
+   "result": "PASS",
+   "detail": "db={\"n\":600,\"a\":508,\"s\":78,\"d\":14} dictionary={\"n\":600,\"a\":508,\"s\":78,\"d\":14}"
+  },
+  {
+   "id": "R2",
+   "name": "prohibited items loaded",
+   "result": "PASS",
+   "detail": "db=23 dictionary=23"
+  },
+  {
+   "id": "R3",
+   "name": "every row's identity, type, status, store and enum values equal the dictionary (hash compare)",
+   "result": "PASS",
+   "detail": "sha256 0313760c8904afe8 vs 0313760c8904afe8"
+  },
+  {
+   "id": "R4",
+   "name": "version row records the sha256 of the dictionary file",
+   "result": "PASS",
+   "detail": "recorded 2595989efe30 file 2595989efe30"
+  },
+  {
+   "id": "R5",
+   "name": "UPDATE on registry refused",
+   "result": "PASS",
+   "detail": "T3A_APPEND_ONLY: the field registry is insert only; add a new dictionary_version instead"
+  },
+  {
+   "id": "R6",
+   "name": "DELETE on registry refused",
+   "result": "PASS",
+   "detail": "T3A_APPEND_ONLY: the field registry is insert only; add a new dictionary_version instead"
+  },
+  {
+   "id": "R7",
+   "name": "DELETE on prohibited list refused",
+   "result": "PASS",
+   "detail": "T3A_APPEND_ONLY: the field registry is insert only; add a new dictionary_version instead"
+  },
+  {
+   "id": "R8",
+   "name": "UPDATE on version row refused",
+   "result": "PASS",
+   "detail": "T3A_APPEND_ONLY: the field registry is insert only; add a new dictionary_version instead"
+  },
+  {
+   "id": "R9a",
+   "name": "anon cannot read the registry",
+   "result": "PASS",
+   "detail": "permission denied for table t3a_field_registry"
+  },
+  {
+   "id": "R9b",
+   "name": "authenticated cannot read the registry",
+   "result": "PASS",
+   "detail": "permission denied for table t3a_field_registry"
+  },
+  {
+   "id": "D1",
+   "name": "DT-01 reports every ACTIVE/DORMANT field unmapped and does not pass",
+   "result": "PASS",
+   "detail": "{\"dictionary_version\":\"1.3\",\"fields_total\":600,\"fields_active_dormant\":522,\"resolved\":0,\"unmapped\":522,\"missing_capture_state_column\":133,\"dangling_physical\":0,\"passes\":false}"
+  },
+  {
+   "id": "D2",
+   "name": "DT-01 counts a mapping to a real column as resolved",
+   "result": "PASS",
+   "detail": "{\"resolved\":1,\"dangling_physical\":0}"
+  },
+  {
+   "id": "D3",
+   "name": "DT-01 flags a mapping to a column that does not exist",
+   "result": "PASS",
+   "detail": "{\"resolved\":1,\"dangling_physical\":1,\"passes\":false}"
+  },
+  {
+   "id": "D4",
+   "name": "a field cannot map to both a column and a payload key",
+   "result": "PASS",
+   "detail": "new row for relation \"t3a_field_physical_map\" violates check constraint \"t3a_fie"
+  },
+  {
+   "id": "D5",
+   "name": "a map row for a field not in the registry is refused",
+   "result": "PASS",
+   "detail": "insert or update on table \"t3a_field_physical_map\" violates foreign key constrai"
+  },
+  {
+   "id": "R10",
+   "name": "every STATE field names its capture_state companion, and only those",
+   "result": "PASS",
+   "detail": "violations=0"
+  }
+ ]
+}

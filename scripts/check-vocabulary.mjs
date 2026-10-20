@@ -84,6 +84,11 @@ const ALLOWLIST = new Set([
   // table) to re-target their policies; it adds no new use of the term.
   "supabase/migrations/20261100000000_close_open_access_policies.sql",
 
+  // Day 1 field registry: generated from the dictionary, it stores package
+  // Table 5.1 (the list of retired terms the CI check enforces) as data.
+  // Naming a retired term in a row that prohibits it is not a use of it.
+  "supabase/migrations/20261101000000_day1_field_registry.sql",
+
   // Supabase-generated types — regenerate after the schema rename PR.
   "src/types/database.types.ts",
   "src/integrations/supabase/types.ts",

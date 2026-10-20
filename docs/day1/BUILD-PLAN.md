@@ -9,7 +9,7 @@ Rule from every package: do not stop on a decision. Apply the stated default, lo
 | Step | What | Depends on | Status |
 |---|---|---|---|
 | 0 | Shared release model (D2/D3 "D-04"): disable the named recipient route with refuse and log, build pool visibility, replay D1 golden outputs. Own change | A non production environment (CR-002) | Not started |
-| 1 | Day 1 data capture, in the package's own order (11.1.1 to 11.1.17) | Step 0 for release; CR-002 for tests | R1 done, R2 first pass done, rest not started |
+| 1 | Day 1 data capture, in the package's own order (11.1.1 to 11.1.17) | Step 0 for release; CR-002 for tests | R1, R2 first pass and 11.1.2 (field registry, tested) done; 11.1.3 onward not started |
 | 2 | Dimension parameterization audit: confirm or add `dimension_id` and per dimension keys on every shared table the D2, D3 and D4 packages touch; retire the August 2026 D2/D3/D4 draft content with a mapping | Step 1 | Not started |
 | 3 | D2 pathway: content load from the JSON build package, then the 11 instruction packages, then tests D2-01 to D2-57 and PP-01 to PP-10 | Step 2 | Not started |
 | 4 | D3 pathway on the same code. Only content and its decisions differ | Step 3 | Not started |

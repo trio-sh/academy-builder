@@ -1,0 +1,25 @@
+{
+ "event_id": "18f7677b-504c-495d-b6b7-909970939720",
+ "event_name": "system.schema_updated",
+ "event_category": "SYSTEM",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "configuration",
+ "resource_id": "32d99b48-b97f-491e-b0f5-3c8800dce583",
+ "payload": {
+  "asset_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "current_version": "1.0.0",
+  "compatibility_class": "A"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_e5a994d9e20843419653bd7756245388",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

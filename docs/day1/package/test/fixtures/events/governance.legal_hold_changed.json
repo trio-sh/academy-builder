@@ -1,0 +1,23 @@
+{
+ "event_id": "80785176-c71b-4329-8277-ca61a64c3d64",
+ "event_name": "governance.legal_hold_changed",
+ "event_category": "GOVERNANCE",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "event",
+ "resource_id": "4fd774f6-832d-4b0c-97c0-0145ee84f837",
+ "payload": {
+  "legal_hold_ref": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_f42a1f5b7680454c85d644d29f40da60",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

@@ -1,0 +1,25 @@
+{
+ "event_id": "cf6d265d-184f-4fcf-b734-868e2a1ae279",
+ "event_name": "mentor.assigned",
+ "event_category": "MENTOR",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "mentor",
+ "resource_id": "742e167c-071d-4c17-b3a2-44279baa9370",
+ "payload": {
+  "mentor_assignment_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "assignment_method": "automatic",
+  "prior_allocation_count": 1
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_2a225384d8714cf29fdf02795210b53b",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

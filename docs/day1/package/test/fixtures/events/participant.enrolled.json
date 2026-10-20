@@ -1,0 +1,25 @@
+{
+ "event_id": "4ed2db56-25b3-4b53-98ef-a47bd39ef894",
+ "event_name": "participant.enrolled",
+ "event_category": "PARTICIPANT",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "account",
+ "resource_id": "56e8cda6-ee0a-477b-909a-c69a8c0cc63a",
+ "payload": {
+  "enrollment_event_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "enrollment_scope": "rehearsal_product",
+  "enrolled_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_e1217a049af6465eacac4e1c0a992979",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

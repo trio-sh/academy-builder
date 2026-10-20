@@ -1,0 +1,220 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "urn:t3a:dev:day1:lsa-observation-sidecar:v1.3",
+ "title": "Optional dormant lsa sidecar row (paragraph 3.4). Allowlisted keys and typed values only",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "sidecar_id",
+  "observation_id",
+  "participant_pseudonym_ref",
+  "source_version_id",
+  "source_version_hash",
+  "dormant_fields",
+  "capture_state",
+  "lsa_consent_state",
+  "dictionary_version",
+  "record_property"
+ ],
+ "properties": {
+  "sidecar_id": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "observation_id": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "participant_pseudonym_ref": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "clause_instance_id": {
+   "type": "string",
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+  },
+  "source_version_id": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "source_version_hash": {
+   "type": "string",
+   "pattern": "^[a-f0-9]{64}$"
+  },
+  "dormant_fields": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "comparison_family_id": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "comparison_demand_id": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "observation_opportunity_id": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "demand_conditions_version": {
+     "type": "string",
+     "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+    },
+    "form_relationship_id": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "variation_intent": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "longitudinal_use_status": {
+     "enum": [
+      "eligible",
+      "not_eligible"
+     ]
+    },
+    "situation_context": {
+     "type": "object",
+     "maxProperties": 32
+    },
+    "observed_opportunity_ref": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "attempt_no": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "attempt_reason": {
+     "enum": [
+      "first",
+      "retake_after_redirect",
+      "retake_after_pause",
+      "retake_elected_after_proceed"
+     ]
+    },
+    "prior_progression_decision_ref": {
+     "type": "string",
+     "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z][A-Za-z0-9]*(-[A-Za-z0-9]+)+)$"
+    },
+    "cooldown_completed_at": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "attempt_event_class": {
+     "enum": [
+      "completed_observation",
+      "technical_failure",
+      "accommodation_interruption",
+      "administration_failure",
+      "cancelled_before_start",
+      "identity_verification_failure",
+      "participant_no_show",
+      "withdrawal_after_start_before_commit",
+      "welfare_stop"
+     ]
+    },
+    "stage_code": {
+     "enum": [
+      "S1",
+      "S2",
+      "S3",
+      "S4"
+     ]
+    },
+    "dimension_id": {
+     "enum": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "D14"
+     ]
+    },
+    "observed_at": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "committed_at": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "prior_exposure_known_state": {
+     "enum": [
+      "known_exposure",
+      "no_known_exposure",
+      "not_collected"
+     ]
+    },
+    "accommodation_class": {
+     "enum": [
+      "access_preserving",
+      "demand_modifying"
+     ]
+    },
+    "assistance_declaration": {
+     "enum": [
+      "AI_USE_ALLOWED",
+      "AI_USE_DISALLOWED",
+      "AI_USE_DECLARATION_REQUIRED"
+     ]
+    },
+    "observation_mode": {
+     "enum": [
+      "s1_deterministic_engine",
+      "s2_live_video",
+      "s3_asynchronous_submission",
+      "s4_live_group"
+     ]
+    }
+   }
+  },
+  "capture_state": {
+   "enum": [
+    "captured",
+    "not_captured",
+    "never_asked",
+    "declined",
+    "no_response",
+    "not_applicable",
+    "technical_failure",
+    "withdrawn",
+    "not_authored",
+    "not_served"
+   ]
+  },
+  "lsa_consent_state": {
+   "enum": [
+    "never_asked",
+    "granted",
+    "declined",
+    "withdrawn"
+   ]
+  },
+  "dictionary_version": {
+   "const": "1.3"
+  },
+  "supersedes_sidecar_id": {
+   "type": "string",
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+  },
+  "record_property": {
+   "enum": [
+    "real",
+    "synthetic_test",
+    "demonstration"
+   ]
+  }
+ }
+}

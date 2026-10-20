@@ -1,0 +1,25 @@
+{
+ "event_id": "65eecc2f-1552-4207-8910-5131123b44f5",
+ "event_name": "program.cohort_created",
+ "event_category": "PROGRAM",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "program",
+ "resource_id": "07f633f1-fe3c-45da-bc21-51a9d6346bcf",
+ "payload": {
+  "cohort_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "cohort_type": "pilot",
+  "cohort_definition_version": "1.0.0"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_709c79ef82414604b8249d8bc9b0ef45",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}
