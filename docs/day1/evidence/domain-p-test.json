@@ -1,0 +1,221 @@
+{
+ "passed": 28,
+ "total": 28,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-36",
+   "label": "an oversight read without a basis is refused",
+   "pass": true,
+   "detail": "OVERSIGHT_BASIS_REQUIRED"
+  },
+  {
+   "id": "DT-36",
+   "label": "a person who is not an oversight holder cannot read content",
+   "pass": true,
+   "detail": "OVERSIGHT_NOT_A_HOLDER"
+  },
+  {
+   "id": "DT-36",
+   "label": "an oversight read of a message writes a log row with person, time, subject and basis",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-36",
+   "label": "the log grew by one row for the read",
+   "pass": true,
+   "detail": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "DT-37",
+   "label": "a destruction run with counsel_ratified_at null is refused and logged; nothing destroyed",
+   "pass": true,
+   "detail": {
+    "detail": "the schedule for this class has not been ratified by counsel; nothing is destroyed",
+    "reason": "COUNSEL_NOT_RATIFIED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-37",
+   "label": "even when ratified the destruction route is a closed socket, logged, nothing destroyed",
+   "pass": true,
+   "detail": {
+    "detail": "the destruction route is a socket and is not enabled; nothing is destroyed",
+    "reason": "DESTRUCTION_ROUTE_CLOSED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-37",
+   "label": "an unknown retention class is refused",
+   "pass": true,
+   "detail": {
+    "detail": "no schedule row for this class",
+    "reason": "RETENTION_CLASS_UNKNOWN",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-37",
+   "label": "the destruction and anonymization run table refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_retention_run_socket is a SOCKET structur"
+  },
+  {
+   "id": "DT-54",
+   "label": "with a legal hold in place the run skips the resource, untouched, and is logged",
+   "pass": true,
+   "detail": {
+    "detail": "the resource is under legal hold; the run skips it and is logged",
+    "reason": "LEGAL_HOLD",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-54",
+   "label": "a hold's release time is set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: released_at was set at 2026-10-20T12:05:43.945376+00:00 "
+  },
+  {
+   "id": "DT-38",
+   "label": "a hosting or backup region other than ca is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "hosting and backup must both be in Canada (ca)",
+    "reason": "REGION_NOT_CA",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-38",
+   "label": "hosting_region and backup_region = ca and system.deployment_verified is recorded",
+   "pass": true,
+   "detail": {
+    "outcome": "verified"
+   }
+  },
+  {
+   "id": "DT-38",
+   "label": "the configuration cannot be set to another region",
+   "pass": true,
+   "detail": "new row for relation \"t3a_deployment_config\" violates check constraint"
+  },
+  {
+   "id": "DT-39",
+   "label": "an unset required value refuses its route, logged, no default",
+   "pass": true,
+   "detail": {
+    "detail": "a required configuration value is not set; the route refuses and does not default",
+    "reason": "CONFIGURATION_UNSET",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-39",
+   "label": "once set, the value is returned",
+   "pass": true,
+   "detail": {
+    "value": 604800,
+    "outcome": "set"
+   }
+  },
+  {
+   "id": "DT-39",
+   "label": "removing the value makes the route refuse again",
+   "pass": true,
+   "detail": {
+    "detail": "a required configuration value is not set; the route refuses and does not default",
+    "reason": "CONFIGURATION_UNSET",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-39",
+   "label": "a zero or negative timing value is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_deployment_config\" violates check constraint"
+  },
+  {
+   "id": "DT-59",
+   "label": "with the store available the event is emitted first and the action may proceed",
+   "pass": true,
+   "detail": {
+    "outcome": "emitted",
+    "event_id": "71367c4a-3567-4855-ab0a-ebf31066a68b"
+   }
+  },
+  {
+   "id": "DT-59",
+   "label": "when the event cannot be written the parent action is refused and an error journal row is kept outside the event log",
+   "pass": true,
+   "detail": {
+    "reason": "EVENT_STORE_UNAVAILABLE",
+    "outcome": "refused",
+    "error_journal_id": "a14344d4-29f2-4d88-9956-a7065a413006"
+   }
+  },
+  {
+   "id": "DT-59",
+   "label": "on recovery the journal row is reconciled to the emitted event",
+   "pass": true,
+   "detail": {
+    "outcome": "reconciled",
+    "event_id": "3705d1c8-a54d-4ff3-b2f5-b14107ccc0e9"
+   }
+  },
+  {
+   "id": "DT-59",
+   "label": "a reconciled journal row cannot be re-pointed",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: reconciled_event_id was set at 3705d1c8-a54d-4ff3-b2f5-b"
+  },
+  {
+   "id": "P-incident",
+   "label": "an incident severity outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_incident\" violates check constraint \"t3a_inc"
+  },
+  {
+   "id": "P-incident",
+   "label": "an incident is recorded with severity and count",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "P-suppress",
+   "label": "a suppression reason outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_suppression\" violates check constraint \"t3a_"
+  },
+  {
+   "id": "P-suppress",
+   "label": "a listed suppression reason is recorded",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "P-priv",
+   "label": "privileged access is recorded with its basis",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "P-control",
+   "label": "a control run is recorded",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-01(P)",
+   "label": "all 30 Domain P fields mapped",
+   "pass": true,
+   "detail": 30
+  }
+ ]
+}

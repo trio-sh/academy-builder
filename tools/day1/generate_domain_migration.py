@@ -63,7 +63,7 @@ def extend_table(t, fields, cs_codes, maprows):
     cs_pairs, required, backfill = [], [], []
     for fs in t["fields"]:
         f = fields[fs["q"]]; col = fs.get("col", f["field"]); exists = fs.get("exists", False)
-        cs_col = f["capture_state_field"] if f["if_absent"] == "STATE" and f["capture_state_field"] else None
+        cs_col = f["capture_state_field"] if f["if_absent"] == "STATE" and f["capture_state_field"] and not fs.get("no_companion") else None
         if not exists:
             ty = fs.get("type") or PGTYPE[f["canonical_type"]]
             inline = []

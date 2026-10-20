@@ -1,0 +1,145 @@
+{
+ "passed": 22,
+ "total": 22,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-08",
+   "label": "t3a_aggregate_dataset_socket: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_aggregate_dataset_socket is a S"
+  },
+  {
+   "id": "DT-08",
+   "label": "t3a_licensee_socket: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_licensee_socket is a SOCKET str"
+  },
+  {
+   "id": "DT-08",
+   "label": "t3a_research_socket: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_research_socket is a SOCKET str"
+  },
+  {
+   "id": "DT-08",
+   "label": "t3a_followup_socket: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_followup_socket is a SOCKET str"
+  },
+  {
+   "id": "Q-empty",
+   "label": "the closed tables hold no rows",
+   "pass": true,
+   "detail": "0"
+  },
+  {
+   "id": "Q-rls",
+   "label": "anonymous callers have no read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_licensee_socket"
+  },
+  {
+   "id": "R-org",
+   "label": "an organization type outside the seven listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_partner_organization\" violates check constra"
+  },
+  {
+   "id": "R-org",
+   "label": "the organization type is fixed",
+   "pass": true,
+   "detail": "T3A_IMMUTABLE_COLUMN: organization_type cannot change after it is writ"
+  },
+  {
+   "id": "R-org",
+   "label": "the relationship start is set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: partner_relationship_effective_at was set at 2026-10-20T"
+  },
+  {
+   "id": "R-program",
+   "label": "a program version is never edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "R-program",
+   "label": "a program version must be a version string",
+   "pass": true,
+   "detail": "new row for relation \"t3a_program\" violates check constraint \"t3a_prog"
+  },
+  {
+   "id": "R-member",
+   "label": "the exit time is set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: program_exit_at was set at 2026-10-20T13:06:51.297149+00"
+  },
+  {
+   "id": "R-cohort",
+   "label": "a cohort is stored with its type, definition and jurisdiction",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "R-cohort",
+   "label": "a jurisdiction that is not a code is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_cohort\" violates check constraint \"t3a_cohor"
+  },
+  {
+   "id": "R-cohort",
+   "label": "a cohort type outside pilot, program, design_partner is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_cohort\" violates check constraint \"t3a_cohor"
+  },
+  {
+   "id": "DT-55",
+   "label": "no organization can see another organization's records",
+   "pass": true,
+   "detail": {
+    "a": false,
+    "b": false
+   }
+  },
+  {
+   "id": "DT-55",
+   "label": "t3a_partner_organization: no client read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_partner_organization"
+  },
+  {
+   "id": "DT-55",
+   "label": "t3a_program: no client read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_program"
+  },
+  {
+   "id": "DT-55",
+   "label": "t3a_program_membership: no client read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_program_membership"
+  },
+  {
+   "id": "DT-55",
+   "label": "t3a_cohort: no client read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_cohort"
+  },
+  {
+   "id": "DT-55",
+   "label": "institutional_tenant_id stays empty: the socket refuses writes",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_institutional_socket is a SOCKE"
+  },
+  {
+   "id": "DT-01(Q,R)",
+   "label": "all 31 Domain Q and 18 Domain R fields mapped",
+   "pass": true,
+   "detail": [
+    31,
+    18
+   ]
+  }
+ ]
+}

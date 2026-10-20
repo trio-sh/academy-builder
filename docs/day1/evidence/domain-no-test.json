@@ -1,0 +1,123 @@
+{
+ "passed": 14,
+ "total": 14,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-01(N)",
+   "label": "all 29 Domain N fields mapped to t3a_event_log",
+   "pass": true,
+   "detail": {
+    "n": 29,
+    "t": 1
+   }
+  },
+  {
+   "id": "DT-01(N)",
+   "label": "every mapped event log column exists",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "O-change",
+   "label": "a signed in user cannot change a registry asset (service route only)",
+   "pass": true,
+   "detail": "permission denied for function t3a_register_change"
+  },
+  {
+   "id": "O-change",
+   "label": "a change without a reason is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "a change needs its reason and its approval authority",
+    "reason": "REASON_AND_AUTHORITY_REQUIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "O-change",
+   "label": "a change with reason and authority is recorded",
+   "pass": true,
+   "detail": {
+    "outcome": "changed",
+    "change_request_id": "4d40a836-bb58-4540-9f8e-461ab45512e5"
+   }
+  },
+  {
+   "id": "O-change",
+   "label": "the previous version is kept when the current one moves",
+   "pass": true,
+   "detail": {
+    "current_version": "1.1",
+    "previous_version": "1.0"
+   }
+  },
+  {
+   "id": "O-change",
+   "label": "a compatibility class outside A, B, C is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_change_request\" violates check constraint \"t3a_change_"
+  },
+  {
+   "id": "O-change",
+   "label": "change requests cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "DT-39",
+   "label": "reading an unset configuration key refuses visibly, is logged and returns no default",
+   "pass": true,
+   "detail": {
+    "detail": "a required configuration value is not set; the route refuses and does not default",
+    "reason": "CONFIGURATION_UNSET",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-39",
+   "label": "once set, the value is returned with its version",
+   "pass": true,
+   "detail": {
+    "value": "86400",
+    "outcome": "set",
+    "version": "1.0"
+   }
+  },
+  {
+   "id": "DT-39",
+   "label": "a signed in user cannot set configuration",
+   "pass": true,
+   "detail": "permission denied for function t3a_config_set"
+  },
+  {
+   "id": "DT-39",
+   "label": "the latest value wins; earlier rows are kept",
+   "pass": true,
+   "detail": {
+    "value": "43200",
+    "outcome": "set",
+    "version": "1.1"
+   }
+  },
+  {
+   "id": "DT-41",
+   "label": "a valid and a tampered manifest signature are both recorded, the tampered one as a fail",
+   "pass": true,
+   "detail": [
+    {
+     "verification_result": "pass"
+    },
+    {
+     "verification_result": "fail"
+    }
+   ]
+  },
+  {
+   "id": "DT-01(O)",
+   "label": "all 20 Domain O fields mapped",
+   "pass": true,
+   "detail": 20
+  }
+ ]
+}
