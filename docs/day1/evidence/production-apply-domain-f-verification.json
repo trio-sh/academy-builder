@@ -1,0 +1,31 @@
+{
+ "mapped": [
+  {
+   "count": 48
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 293,
+   "unmapped": 229,
+   "passes": false
+  }
+ ],
+ "counts": [
+  {
+   "i": 0,
+   "a": 0,
+   "c": 0
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE noversion=AGREEMENT_VERSION_REQUIRED second=INVITATION_ALREADY_REDEEMED\\nCONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "i": 0,
+   "ref": 0
+  }
+ ]
+}
