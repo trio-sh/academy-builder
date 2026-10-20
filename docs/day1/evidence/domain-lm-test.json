@@ -1,0 +1,144 @@
+{
+ "passed": 21,
+ "total": 21,
+ "failed": [],
+ "results": [
+  {
+   "id": "L-order",
+   "label": "an order is stored with its entitlements, window, price, currency and tax jurisdiction",
+   "pass": true
+  },
+  {
+   "id": "L-access",
+   "label": "the account is inside its paid access window",
+   "pass": true
+  },
+  {
+   "id": "L-order",
+   "label": "an entitlement outside the three listed is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_order\" violates check constraint \"t3a_order_package_en"
+  },
+  {
+   "id": "L-order",
+   "label": "a currency that is not a three letter upper case code is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_order\" violates check constraint \"t3a_order_currency_c"
+  },
+  {
+   "id": "L-order",
+   "label": "an access window that ends before it starts is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_order\" violates check constraint \"t3a_order_check\""
+  },
+  {
+   "id": "L-order",
+   "label": "a negative price is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_order\" violates check constraint \"t3a_order_price_amou"
+  },
+  {
+   "id": "L-order",
+   "label": "an order cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "L-refund",
+   "label": "a refund ends paid access without changing the order",
+   "pass": true
+  },
+  {
+   "id": "L-rls",
+   "label": "a participant reads only their own orders",
+   "pass": true,
+   "detail": [
+    {
+     "n": 1
+    },
+    {
+     "n": 0
+    }
+   ]
+  },
+  {
+   "id": "L-rls",
+   "label": "a signed in user cannot write an order directly",
+   "pass": true,
+   "detail": "permission denied for table t3a_order"
+  },
+  {
+   "id": "L-boundary",
+   "label": "orders point only at accounts and orders; no foreign key reaches evidence, reports or scores",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "L-socket",
+   "label": "the subscription socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_subscription_socket is a SOCKET structure"
+  },
+  {
+   "id": "M-dormant",
+   "label": "t3a_lsa_snapshot: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_lsa_snapshot is a SOCKET structure; captu"
+  },
+  {
+   "id": "M-dormant",
+   "label": "t3a_lsa_report: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_lsa_report is a SOCKET structure; capture"
+  },
+  {
+   "id": "M-dormant",
+   "label": "t3a_longitudinal_case: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_longitudinal_case is a SOCKET structure; "
+  },
+  {
+   "id": "M-dormant",
+   "label": "t3a_lsa_sidecar: every write is refused",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_lsa_sidecar is a SOCKET structure; captur"
+  },
+  {
+   "id": "M-tab",
+   "label": "the Session Archive tab exists and is frozen",
+   "pass": true,
+   "detail": [
+    {
+     "s": "frozen"
+    }
+   ]
+  },
+  {
+   "id": "M-tab",
+   "label": "the tab cannot be set to anything but frozen",
+   "pass": true,
+   "detail": "T3A_SESSION_ARCHIVE_FROZEN: the Session Archive tab is frozen; activation is a s"
+  },
+  {
+   "id": "M-tab",
+   "label": "anonymous callers cannot read the tab state",
+   "pass": true,
+   "detail": "permission denied for table t3a_session_archive_tab"
+  },
+  {
+   "id": "DT-31",
+   "label": "no database function reads both the Growth Log and the Session Archive tables",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-01(L,M)",
+   "label": "all 17 Domain L and 18 Domain M fields mapped",
+   "pass": true,
+   "detail": [
+    17,
+    18
+   ]
+  }
+ ]
+}
