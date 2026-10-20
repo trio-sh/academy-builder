@@ -1,0 +1,56 @@
+{
+ "before": {
+  "events": [
+   {
+    "n": 0
+   }
+  ],
+  "judgments": [
+   {
+    "n": 0
+   }
+  ],
+  "mentors": [
+   {
+    "n": 0
+   }
+  ]
+ },
+ "apply": "ok",
+ "signatures": [
+  {
+   "s": "t3a_create_observation_path_gateway(text,text,text)"
+  },
+  {
+   "s": "t3a_record_progression_decision(uuid,t3a_dimension_code,t3a_progression_decision,text,text)"
+  }
+ ],
+ "uses_emit": [
+  {
+   "proname": "t3a_create_observation_path_gateway",
+   "emits": true,
+   "inserts_directly": false
+  },
+  {
+   "proname": "t3a_record_progression_decision",
+   "emits": true,
+   "inserts_directly": false
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE no mentor in production to probe with\\nCONTEXT:  PL/pgSQL function inline_code_block line 4 at RAISE\\n\"}"
+ },
+ "after": {
+  "events": [
+   {
+    "n": 0
+   }
+  ],
+  "judgments": [
+   {
+    "n": 0
+   }
+  ]
+ }
+}
