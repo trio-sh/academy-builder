@@ -32,6 +32,62 @@ def load_plan(domain):
     m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
     return m
 
+EXTEND_HELPERS = """create table if not exists public.t3a_capture_config (
+  singleton boolean primary key default true check (singleton),
+  enforce_required boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+insert into public.t3a_capture_config (singleton) values (true) on conflict do nothing;
+alter table public.t3a_capture_config enable row level security;
+revoke all on public.t3a_capture_config from anon, authenticated;
+
+create or replace function public.t3a_require_fields() returns trigger language plpgsql as $$
+declare c text;
+begin
+  if not (select enforce_required from public.t3a_capture_config) then return new; end if;
+  foreach c in array tg_argv loop
+    if to_jsonb(new)->c is null or to_jsonb(new)->c = 'null'::jsonb then
+      raise exception 'T3A_REQUIRED_FIELD_MISSING: % is required on %', c, tg_table_name using errcode = '23502';
+    end if;
+  end loop;
+  return new;
+end $$;
+
+"""
+
+def extend_table(t, fields, cs_codes, maprows):
+    """Add the missing Day 1 columns to a table that already exists and may hold rows. Existing columns are only mapped.
+    Every new column is nullable so existing rows stay valid; fields the dictionary REFUSEs when absent are enforced
+    by t3a_require_fields once t3a_capture_config.enforce_required is switched on (the live writers do not supply them yet)."""
+    tn = t["name"]; out = [f"-- {tn}: extended in place (existing rows are kept)"]
+    cs_pairs, required, backfill = [], [], []
+    for fs in t["fields"]:
+        f = fields[fs["q"]]; col = fs.get("col", f["field"]); exists = fs.get("exists", False)
+        cs_col = f["capture_state_field"] if f["if_absent"] == "STATE" and f["capture_state_field"] else None
+        if not exists:
+            ty = fs.get("type") or PGTYPE[f["canonical_type"]]
+            inline = []
+            if f["canonical_type"] == "enum" and f["enum_values"] and ty == "text":
+                inline.append(f"check ({col} is null or {col} in ({', '.join(q(v) for v in f['enum_values'])}))")
+            if f["canonical_type"] == "version_string": inline.append(f"check ({col} is null or {col} ~ {q(SEMVER)})")
+            if f["canonical_type"] == "sha256_hex": inline.append(f"check ({col} is null or {col} ~ '^[0-9a-f]{{64}}$')")
+            inline += fs.get("checks", [])
+            out.append(f"alter table public.{tn} add column if not exists {col} {ty}{(' default ' + fs['default']) if fs.get('default') else ''} {' '.join(inline)};".replace("  ", " "))
+            if f["if_absent"] == "REFUSE": required.append(col)
+        if cs_col:
+            vals = ", ".join(q(v) for v in cs_codes)
+            out.append(f"alter table public.{tn} add column if not exists {cs_col} text not null default 'not_captured' check ({cs_col} in ({vals}));")
+            cs_pairs.append(f"{col}:{cs_col}"); backfill.append((col, cs_col))
+        maprows.append((fs["q"], fs.get("mapping_class", "M1" if exists else "M5"), tn, col, cs_col, fs.get("note")))
+    for col, cs_col in backfill:
+        out.append(f"update public.{tn} set {cs_col} = 'captured' where {col} is not null and {cs_col} = 'not_captured';")
+    if cs_pairs:
+        out.append(f"drop trigger if exists t3a_capture_state_fill on public.{tn};\ncreate trigger t3a_capture_state_fill before insert or update on public.{tn} for each row execute function public.t3a_capture_state_fill({', '.join(q(p) for p in cs_pairs)});")
+    if required:
+        out.append(f"drop trigger if exists t3a_2_required_fields_trg on public.{tn};\ncreate trigger t3a_2_required_fields_trg before insert on public.{tn} for each row execute function public.t3a_require_fields({', '.join(q(c) for c in required)});")
+    for ix in t.get("indexes", []): out.append(ix)
+    return out
+
 def main(domain, check_only):
     r = subprocess.run([sys.executable, str(PKG / "tools/check_dictionary.py"), str(DICT)], capture_output=True, text=True)
     if "RESULT PASS" not in r.stdout:
@@ -54,6 +110,8 @@ def main(domain, check_only):
 
     ddl, maprows, cs_trigger_calls = [], [], []
     for t in plan.TABLES:
+        if t.get("extend"):
+            ddl.extend(extend_table(t, fields, cs_codes, maprows)); continue
         cols, checks, cs_pairs, notes = [], [], [], []
         for c in t.get("key_columns", []):
             cols.append("  " + c)
@@ -151,6 +209,7 @@ begin raise exception 'T3A_SOCKET_ROUTE_CLOSED: % is a SOCKET structure; capture
 -- Dictionary sha256: {sha}
 -- Maps {len(maprows)} fields into t3a_field_physical_map.
 """
+    if any(t.get("extend") for t in plan.TABLES): pre = pre + "\n" + EXTEND_HELPERS
     sql = head + "\n" + pre + "\n" + "\n\n".join(ddl) + "\n\n" + mapsql + "\n\n" + logic
     out = ROOT / f"supabase/migrations/{plan.MIGRATION}.sql"
     if check_only:
