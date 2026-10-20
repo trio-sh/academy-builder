@@ -222,14 +222,6 @@ export async function uploadResume(
       console.error("Failed to update candidate profile:", error);
     }
 
-    // Create growth log entry
-    await supabase.from("growth_log_entries").insert({
-      candidate_id: userId,
-      event_type: "resume_upload",
-      title: "Resume Uploaded",
-      description: `Uploaded resume: ${file.name}`,
-      source_component: "Profile",
-    });
   }
 
   return result;

@@ -2,7 +2,7 @@
 
 Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/evidence/`. Tests ran on the throwaway database (`test-environment.md`); the migrations were then applied to production with a before snapshot, a rollback and a zero-residue probe.
 
-**48 PASS, 13 PASS-DB (database half proven, application half open), 3 OPEN, 3 UNRUN** of 67.
+**51 PASS, 11 PASS-DB (database half proven, application half open), 2 OPEN, 3 UNRUN** of 67.
 
 | Test | What | Status | Evidence | Note |
 |---|---|---|---|---|
@@ -34,8 +34,8 @@ Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/e
 | DT-26 | Demonstration inheritance | **PASS** | `dt22-dt26-test.json` | Applies to accounts and events, the only tables with record_property |
 | DT-27 | Reviewer is not issuer | **PASS** | `domain-g-test.json` |  |
 | DT-28 | Verification code | **PASS** | `domain-g-test.json` | The one existing report has no code (CR-052) |
-| DT-29 | Growth Log isolation | **PASS-DB** | `domain-j-test.json` | Database read paths tested for participant, mentor, employer, administrator. The app screens that read Growth Log still exist (CR-058) |
-| DT-30 | Growth Log feeds nothing | **OPEN** |  | 13 source files still read or write the Growth Log (src/pages/dashboard/*, TrainingModuleViewer, AssessmentViewer, lib/*). To be removed; the database now discards the writes |
+| DT-29 | Growth Log isolation | **PASS** | `domain-j-test.json` | Database read paths tested for participant, mentor, employer, administrator; no screen outside the participant's own page reads the Growth Log (src/test/d1-surface-contracts.test.ts) |
+| DT-30 | Growth Log feeds nothing | **PASS** | `d1-surface-contracts.test.ts` | A code test fails if any file other than the participant's own Growth Log page touches the Growth Log tables, add_growth_log_entry, or the participant table (CR-067) |
 | DT-31 | lsa reads no Growth Log | **PASS** | `domain-lm-test.json` | No Session Archive consumer exists; no database function reads both |
 | DT-32 | Rehearsal firewall | **PASS-DB** | `domain-k-test.json` | No foreign key, no column, no database function named has_rehearsed. scripts/check-firewall.mjs already scans the code and mentions the name only as a prohibition |
 | DT-33 | Hire row unlinked | **PASS** | `domain-i-test.json` |  |
@@ -68,7 +68,7 @@ Rebuilt by `tools/day1/acceptance_status.py`. Evidence files are in `docs/day1/e
 | DT-60 | Typed capture state | **PASS** | `production-apply-event-log-capture-state-verification.json` | Typed columns stay null; the companion holds the code. Applied to every domain table and the event log |
 | DT-61 | Legacy columns keep working | **UNRUN** |  | Needs each live feature exercised in the app against the legacy columns; no legacy column was changed or read differently in this build |
 | DT-62 | Legacy consent mapping | **PASS** | `acceptance-rules-test.json` | No mapping is made by default (CR-065) |
-| DT-63 | Growth Log observation view | **PASS-DB** | `domain-j-test.json` | The database writes nothing to the Growth Log and offers the regenerated view; the app does not use the view yet |
+| DT-63 | Growth Log observation view | **PASS** | `domain-j-test.json` | The database writes nothing to the Growth Log; the participant's Growth Log page shows their observations from the regenerated view (CR-067) |
 | DT-64 | Lifecycle fixtures | **PASS** | `event-registry-test.json` | E2 |
 | DT-65 | Conditional requiredness | **PASS** | `acceptance-rules-test.json` | Required-fields switch is off for live writers (CR-038) |
 | DT-66 | Reference existence | **PASS** | `event-registry-test.json` | E14; reference rules for 8 id keys (CR-022) |

@@ -1325,3 +1325,30 @@ describe("Two review findings on #284, and what they were", () => {
     expect(cockpitCode).toMatch(/liveVideoInterrupted/);
   });
 });
+
+describe("Growth Log (Day 1 Domain J, DT-30)", () => {
+  // The platform writes nothing to the Growth Log and nothing outside the participant's own page reads it.
+  const sources = import.meta.glob("/src/**/*.{ts,tsx}", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+  const consumers = (needle: string) =>
+    Object.entries(sources)
+      .filter(([path]) => !/\/src\/(test\/|types\/|integrations\/)/.test(path))
+      .filter(([, code]) => code.includes(needle))
+      .map(([path]) => path);
+
+  it("no screen or library reads or writes the older platform written Growth Log tables", () => {
+    expect(consumers('from("growth_log_entries")')).toEqual([]);
+    expect(consumers("from('growth_log_entries')")).toEqual([]);
+    expect(consumers('from("growth_logs")')).toEqual([]);
+    expect(consumers("add_growth_log_entry")).toEqual([]);
+  });
+
+  it("only the participant's own Growth Log page reads the participant Growth Log table", () => {
+    expect(consumers("t3a_growth_log_entry")).toEqual(["/src/pages/dashboard/candidate/GrowthLog.tsx"]);
+  });
+
+  it("the Growth Log page draws no chart and reads no passport or candidate profile", () => {
+    const page = sources["/src/pages/dashboard/candidate/GrowthLog.tsx"] ?? "";
+    expect(page).not.toMatch(/recharts|Chart|candidate_profiles/);
+    expect(page).not.toContain(["skill", "passports"].join("_"));
+  });
+});

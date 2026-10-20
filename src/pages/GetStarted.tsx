@@ -296,13 +296,6 @@ const GetStarted = () => {
             .eq("id", user.id);
         }
 
-        await supabase.from("growth_log_entries").insert({
-          candidate_id: user.id,
-          event_type: "assessment",
-          title: "Profile Setup Complete",
-          description: `LiveWorks profile created with ${skillsArray.length} skills`,
-          source_component: "GetStarted",
-        });
       }
 
       // Create mentor_profiles row for mentors so they appear in Find a Mentor
@@ -356,26 +349,12 @@ const GetStarted = () => {
               });
             }
 
-            await supabase.from("growth_log_entries").insert({
-              candidate_id: user.id,
-              event_type: "training",
-              title: "Mentor Match Requested",
-              description: `Matched with a mentor (${topMentor.compatibilityLevel} compatibility, ${Math.round(topMentor.score.total)}% match). Awaiting mentor approval.`,
-              source_component: "MentorMatching",
-            });
 
             toast({
               title: "Setup complete!",
               description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match). They'll confirm shortly.`,
             });
           } else {
-            await supabase.from("growth_log_entries").insert({
-              candidate_id: user.id,
-              event_type: "training",
-              title: "Mentor Matching Queued",
-              description: "You'll be matched with a mentor as one becomes available.",
-              source_component: "MentorMatching",
-            });
 
             toast({
               title: "Setup complete!",
@@ -454,13 +433,6 @@ const GetStarted = () => {
         updated_at: new Date().toISOString(),
       }, { onConflict: 'profile_id' });
 
-      await supabase.from("growth_log_entries").insert({
-        candidate_id: user.id,
-        event_type: "resume_upload",
-        title: "Resume Uploaded",
-        description: `Uploaded resume: ${file.name}`,
-        source_component: "Profile",
-      });
 
       setUploadedFile(file.name);
 
@@ -479,13 +451,6 @@ const GetStarted = () => {
         }
         await supabase.from("candidate_profiles").update(updateData).eq("profile_id", user.id);
 
-        await supabase.from("growth_log_entries").insert({
-          candidate_id: user.id,
-          event_type: "assessment",
-          title: "Resume Enhancer — Basic Profile Created",
-          description: `AI-analyzed resume. ${enhancerResult.summary}`,
-          source_component: "ResumeEnhancer",
-        });
       } catch (enhancerErr) {
         console.error("Resume Enhancer error (non-blocking):", enhancerErr);
         await supabase.from("candidate_profiles").update({

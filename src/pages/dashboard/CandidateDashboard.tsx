@@ -21,6 +21,7 @@ import WorkSample from "@/pages/dashboard/candidate/WorkSample";
 import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
 import S1Delivery from "@/pages/dashboard/candidate/S1Delivery";
+import GrowthLog from "@/pages/dashboard/candidate/GrowthLog";
 import {
   BridgeFastLanding,
   FreePractice,
@@ -119,7 +120,6 @@ import {
 } from "lucide-react";
 
 type CandidateProfile = Database["public"]["Tables"]["candidate_profiles"]["Row"];
-type GrowthLogEntry = Database["public"]["Tables"]["growth_log_entries"]["Row"];
 type BridgeFastModule = Database["public"]["Tables"]["bridgefast_modules"]["Row"];
 type BridgeFastProgress = Database["public"]["Tables"]["bridgefast_progress"]["Row"];
 type Notification = Database["public"]["Tables"]["notifications"]["Row"];
@@ -189,9 +189,7 @@ const navItems = [
 const Overview = () => {
  const { profile, user } = useAuth();
  const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
- const [growthLogCount, setGrowthLogCount] = useState(0);
  const [isLoading, setIsLoading] = useState(true);
- const [recentActivity, setRecentActivity] = useState<GrowthLogEntry[]>([]);
  const [hasMentorAssignment, setHasMentorAssignment] = useState(false);
 
  useEffect(() => {
@@ -207,20 +205,6 @@ const Overview = () => {
  .single();
  setCandidateProfile(cp);
 
- // Fetch growth log count and recent entries
- const { count } = await supabase
- .from("growth_log_entries")
- .select("*", { count: "exact", head: true })
- .eq("candidate_id", user.id);
- setGrowthLogCount(count || 0);
-
- const { data: recent } = await supabase
- .from("growth_log_entries")
- .select("*")
- .eq("candidate_id", user.id)
- .order("created_at", { ascending: false })
- .limit(5);
- setRecentActivity(recent || []);
 
  // Check for mentor assignment (candidate_id references candidate_profiles.id)
  if (cp?.id) {
@@ -265,12 +249,6 @@ const Overview = () => {
  label: "Current Tier",
  value: getTierDisplay(candidateProfile?.current_tier),
  icon: Award,
- color: ""
- },
- {
- label: "Growth Log Entries",
- value: growthLogCount.toString(),
- icon: BarChart3,
  color: ""
  },
  {
@@ -457,58 +435,6 @@ const Overview = () => {
  </div>
  </DashSection>
 
- {/* Recent activity */}
- <DashSection eyebrow="§ III · Recent activity" title="Latest entries in your record">
- {recentActivity.length > 0 ? (
- <div className="border-t-2 border-foreground">
- {recentActivity.map((entry, index) => (
- <div
- key={entry.id}
- className="grid grid-cols-12 gap-4 py-5 px-2 md:px-4 border-b border-foreground/20 items-baseline"
- >
- <div className="col-span-3 md:col-span-2">
- <span className="mono-num text-foreground/50 text-xs">
- {new Date(entry.created_at).toLocaleDateString("en-US", {
- month: "short",
- day: "numeric",
- })}
- </span>
- </div>
- <div className="col-span-1 mono-label text-foreground/40">
- {String(index + 1).padStart(2, "0")}
- </div>
- <div className="col-span-8 md:col-span-9">
- <p className="display-serif text-lg text-foreground leading-tight">
- {entry.title}
- </p>
- {entry.description && (
- <p className="text-foreground/70 text-[0.875rem] mt-1 leading-relaxed">
- {entry.description}
- </p>
- )}
- </div>
- </div>
- ))}
- </div>
- ) : (
- <EmptyState
- eyebrow="§ No entries yet"
- title={
- <>
- Your register is <span className="italic display-serif-italic">open.</span>
- </>
- }
- body="Complete your profile and connect with a mentor to begin adding entries to the record."
- action={
- <Link to="/dashboard/candidate/profile">
- <Button className="bg-foreground text-background hover:bg-foreground/90 rounded-none shadow-none px-6">
- Complete profile →
- </Button>
- </Link>
- }
- />
- )}
- </DashSection>
  </div>
  );
 };
@@ -985,400 +911,6 @@ const SkillPassport = () => {
  );
 };
 
-// Growth Log component
-const GrowthLog = () => {
- const { user } = useAuth();
- const [entries, setEntries] = useState<GrowthLogEntry[]>([]);
- const [passportData, setPassportData] = useState<SkillPassportRecord | null>(null);
- const [isLoading, setIsLoading] = useState(true);
- const [viewMode, setViewMode] = useState<"timeline" | "charts">("charts");
-
- useEffect(() => {
- const fetchEntries = async () => {
- if (!user?.id) return;
-
- const { data } = await supabase
- .from("growth_log_entries")
- .select("*")
- .eq("candidate_id", user.id)
- .order("created_at", { ascending: false });
-
- // Get candidate_profiles.id for skill_passports FK
- const { data: cp } = await supabase
- .from("candidate_profiles")
- .select("id")
- .eq("profile_id", user.id)
- .single();
-
- // Fetch passport for behavioral scores (candidate_id = candidate_profiles.id)
- if (cp) {
- const { data: passport } = await supabase
- .from("skill_passports")
- .select("*")
- .eq("candidate_id", cp.id)
- .eq("is_active", true)
- .limit(1)
- .maybeSingle();
- setPassportData(passport);
- }
-
- setEntries(data || []);
- setIsLoading(false);
- };
-
- fetchEntries();
- }, [user?.id]);
-
- const getEventIcon = (type: string) => {
- const icons: Record<string, typeof TrendingUp> = {
- signup: User,
- resume_upload: Upload,
- training: BookOpen,
- observation: Star,
- tier_change: Award,
- assessment: BarChart3,
- project: Briefcase,
- endorsement: Shield,
- };
- return icons[type] || TrendingUp;
- };
-
- const getEventColor = (type: string) => {
- const colors: Record<string, string> = {
- signup: "",
- resume_upload: "",
- training: "",
- observation: "",
- tier_change: "",
- assessment: "",
- project: "",
- endorsement: "",
- };
- return colors[type] || "";
- };
-
- // Calculate activity trends data (last 30 days)
- const getActivityTrendsData = () => {
- const last30Days: Record<string, number> = {};
- const today = new Date();
-
- // Initialize last 30 days
- for (let i = 29; i >= 0; i--) {
- const date = new Date(today);
- date.setDate(date.getDate() - i);
- const key = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
- last30Days[key] = 0;
- }
-
- // Count entries per day
- entries.forEach((entry) => {
- const entryDate = new Date(entry.created_at);
- const daysDiff = Math.floor((today.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
- if (daysDiff < 30) {
- const key = entryDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
- if (last30Days[key] !== undefined) {
- last30Days[key]++;
- }
- }
- });
-
- return Object.entries(last30Days).map(([date, count]) => ({
- date,
- activities: count,
- }));
- };
-
- // Calculate behavioral radar data
- const getBehavioralRadarData = () => {
- const scores = (passportData?.behavioral_scores || {}) as Record<string, number>;
- return BEHAVIORAL_DIMENSIONS.map((dim) => ({
- dimension: dim.label,
- score: scores[dim.id] || 0,
- fullMark: 4,
- }));
- };
-
- // Calculate event type distribution
- const getEventDistribution = () => {
- const distribution: Record<string, number> = {};
- entries.forEach((entry) => {
- distribution[entry.event_type] = (distribution[entry.event_type] || 0) + 1;
- });
- return Object.entries(distribution).map(([type, count]) => ({
- type: type.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
- count,
- }));
- };
-
- // Calculate growth stats
- const getGrowthStats = () => {
- const thisWeek = entries.filter((e) => {
- const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
- return daysDiff < 7;
- }).length;
-
- const lastWeek = entries.filter((e) => {
- const daysDiff = Math.floor((Date.now() - new Date(e.created_at).getTime()) / (1000 * 60 * 60 * 24));
- return daysDiff >= 7 && daysDiff < 14;
- }).length;
-
- // Only calculate growth rate if there's a baseline from last week
- // If lastWeek is 0, showing 100% growth is unrealistic - show 0 instead
- const growthRate = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : 0;
-
- return { thisWeek, lastWeek, growthRate };
- };
-
- if (isLoading) {
- return (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-foreground" />
- </div>
- );
- }
-
- const activityData = getActivityTrendsData();
- const radarData = getBehavioralRadarData();
- const eventDistribution = getEventDistribution();
- const growthStats = getGrowthStats();
-
- return (
- <motion.div
- variants={containerVariants}
- initial="hidden"
- animate="visible"
- className="space-y-8"
- >
- <motion.div variants={itemVariants} className="flex items-center justify-between">
- <div>
- <h1 className="text-3xl font-bold text-foreground mb-2">Growth Log</h1>
- <p className="text-foreground/60">
- Your complete behavioral development timeline.
- </p>
- </div>
- <div className="flex gap-2">
- <Button
- variant={viewMode === "charts" ? "default" : "outline"}
- size="sm"
- onClick={() => setViewMode("charts")}
- className={viewMode === "charts" ? "bg-foreground/10" : "border-foreground/25 text-foreground"}
- >
- <BarChart3 className="w-4 h-4 mr-2" />
- Analytics
- </Button>
- <Button
- variant={viewMode === "timeline" ? "default" : "outline"}
- size="sm"
- onClick={() => setViewMode("timeline")}
- className={viewMode === "timeline" ? "bg-foreground/10" : "border-foreground/25 text-foreground"}
- >
- <Clock className="w-4 h-4 mr-2" />
- Timeline
- </Button>
- </div>
- </motion.div>
-
- {/* Stats Overview */}
- <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
- <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40">
- <p className="text-sm text-foreground/60 mb-1">Total Activities</p>
- <p className="text-2xl font-bold text-foreground">{entries.length}</p>
- </div>
- <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40">
- <p className="text-sm text-foreground/60 mb-1">This Week</p>
- <p className="text-2xl font-bold text-foreground">{growthStats.thisWeek}</p>
- </div>
- <div className="p-4 rounded-xl bg-foreground/[0.05] border border-foreground/40">
- <p className="text-sm text-foreground/60 mb-1">Growth Rate</p>
- <p className={`text-2xl font-bold ${growthStats.growthRate >= 0 ? "text-foreground" : "ink-vermilion"}`}>
- {growthStats.growthRate >= 0 ? "+" : ""}{growthStats.growthRate}%
- </p>
- </div>
- <div className="p-4 rounded-xl bg-vermilion/[0.08] border border-vermilion">
- <p className="text-sm text-foreground/60 mb-1">Event Types</p>
- <p className="text-2xl font-bold text-foreground">{eventDistribution.length}</p>
- </div>
- </motion.div>
-
- {viewMode === "charts" && (
- <>
- {/* Activity Trends Chart */}
- <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
- <h2 className="text-lg font-semibold text-foreground mb-4">Activity Trends (Last 30 Days)</h2>
- <div className="h-64">
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={activityData}>
- <defs>
- <linearGradient id="activityGradient" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
- <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
- </linearGradient>
- </defs>
- <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
- <XAxis
- dataKey="date"
- tick={{ fill: "#9ca3af", fontSize: 10 }}
- tickLine={{ stroke: "#4b5563" }}
- interval="preserveStartEnd"
- />
- <YAxis
- tick={{ fill: "#9ca3af", fontSize: 12 }}
- tickLine={{ stroke: "#4b5563" }}
- allowDecimals={false}
- />
- <Tooltip
- contentStyle={{
- backgroundColor: "#1f2937",
- border: "1px solid #374151",
- borderRadius: "8px",
- color: "#fff",
- }}
- />
- <Area
- type="monotone"
- dataKey="activities"
- stroke="#6366f1"
- strokeWidth={2}
- fill="url(#activityGradient)"
- />
- </AreaChart>
- </ResponsiveContainer>
- </div>
- </motion.div>
-
- {/* Behavioral Dimensions Radar */}
- <div className="grid md:grid-cols-2 gap-6">
- <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
- <h2 className="text-lg font-semibold text-foreground mb-4">Behavioral Profile</h2>
- <div className="h-72">
- <ResponsiveContainer width="100%" height="100%">
- <RadarChart data={radarData}>
- <PolarGrid stroke="#374151" />
- <PolarAngleAxis
- dataKey="dimension"
- tick={{ fill: "#9ca3af", fontSize: 10 }}
- />
- <PolarRadiusAxis
- angle={30}
- domain={[0, 4]}
- tick={{ fill: "#6b7280", fontSize: 10 }}
- />
- <Radar
- name="Score"
- dataKey="score"
- stroke="#10b981"
- fill="#10b981"
- fillOpacity={0.3}
- strokeWidth={2}
- />
- <Tooltip
- contentStyle={{
- backgroundColor: "#1f2937",
- border: "1px solid #374151",
- borderRadius: "8px",
- color: "#fff",
- }}
- />
- </RadarChart>
- </ResponsiveContainer>
- </div>
- </motion.div>
-
- <motion.div variants={itemVariants} className="p-6 rounded-xl bg-background border border-foreground/25">
- <h2 className="text-lg font-semibold text-foreground mb-4">Activity Breakdown</h2>
- <div className="space-y-3">
- {eventDistribution.map((item) => {
- const maxCount = Math.max(...eventDistribution.map((e) => e.count));
- const percentage = (item.count / maxCount) * 100;
- return (
- <div key={item.type}>
- <div className="flex justify-between text-sm mb-1">
- <span className="text-foreground/60">{item.type}</span>
- <span className="text-foreground font-medium">{item.count}</span>
- </div>
- <div className="h-2 bg-background rounded-full overflow-hidden">
- <div
- className="h-full bg-foreground rounded-full transition-all duration-500"
- style={{ width: `${percentage}%` }}
- />
- </div>
- </div>
- );
- })}
- {eventDistribution.length === 0 && (
- <p className="text-foreground/50 text-center py-4">No activities recorded yet</p>
- )}
- </div>
- </motion.div>
- </div>
- </>
- )}
-
- {viewMode === "timeline" && (
- <>
- {entries.length > 0 ? (
- <motion.div variants={itemVariants} className="relative">
- {/* Timeline line */}
- <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-foreground" />
-
- <div className="space-y-6">
- {entries.map((entry, index) => {
- const Icon = getEventIcon(entry.event_type);
- return (
- <motion.div
- key={entry.id}
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ delay: index * 0.1 }}
- className="relative pl-14"
- >
- {/* Timeline dot */}
- <div className={`absolute left-0 w-10 h-10 rounded-xl bg-foreground/[0.05] ${getEventColor(entry.event_type)} flex items-center justify-center shadow-lg`}>
- <Icon className="w-5 h-5 text-foreground" />
- </div>
-
- <div className="p-5 rounded-xl bg-background border border-foreground/25 hover:border-foreground/25 transition-colors">
- <div className="flex items-start justify-between mb-2">
- <h3 className="font-semibold text-foreground">{entry.title}</h3>
- <span className="text-xs text-foreground/50 whitespace-nowrap ml-4">
- {new Date(entry.created_at).toLocaleDateString("en-US", {
- month: "short",
- day: "numeric",
- year: "numeric",
- })}
- </span>
- </div>
- {entry.description && (
- <p className="text-sm text-foreground/60">{entry.description}</p>
- )}
- {entry.source_component && (
- <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs bg-background text-foreground/60">
- {entry.source_component}
- </span>
- )}
- </div>
- </motion.div>
- );
- })}
- </div>
- </motion.div>
- ) : (
- <motion.div
- variants={itemVariants}
- className="p-8 rounded-2xl bg-background border border-foreground/25 text-center"
- >
- <TrendingUp className="w-12 h-12 text-foreground/40 mx-auto mb-4" />
- <p className="text-foreground/60">No entries yet</p>
- <p className="text-sm text-foreground/50 mt-1">
- Your growth log will populate as you complete activities
- </p>
- </motion.div>
- )}
- </>
- )}
- </motion.div>
- );
-};
 
 // Quiz questions for each behavioral dimension
 const QUIZ_QUESTIONS: Record<string, { question: string; options: string[]; correct: number }[]> = {
@@ -2120,20 +1652,6 @@ const SelfAssessmentPage = () => {
 
  if (error) throw error;
 
- // Create growth log entry
- await supabase.from("growth_log_entries").insert({
- candidate_id: user.id,
- event_type: "assessment",
- title: "Readiness Reflection Completed",
- description: `Personal readiness reflection recorded across ${Object.keys(currentScores).length} behavioral dimensions. This is a preparation tool — not part of formal observation.`,
- source_component: "SelfAssessment",
- metadata: {
- scores: currentScores,
- overall: getOverallScore(),
- strengths,
- areas_for_improvement: improvements,
- },
- });
 
  setShowSuccess(true);
 
@@ -2880,15 +2398,6 @@ const Projects = () => {
  return;
  }
 
- // Create growth log entry
- await supabase.from("growth_log_entries").insert({
- candidate_id: user.id,
- event_type: "project",
- title: "Applied to LiveWorks Project",
- description: `Applied to: ${selectedProject.title}`,
- source_component: "LiveWorks",
- source_id: application.id,
- });
 
  // Update local state
  setMyApplications(prev => {
@@ -3283,14 +2792,6 @@ const Connections = () => {
  setConnections(prev =>
  prev.map(c => c.id === connectionId ? { ...c, status: newStatus, responded_at: new Date().toISOString() } : c)
  );
- await supabase.from("growth_log_entries").insert({
- candidate_id: user?.id,
- event_type: "tier_change",
- title: accept ? "Accepted Connection" : "Declined Connection",
- description: "Response sent to a connection request. Accepting a connection does not release the Behavioral Evidence Report.",
- source_component: "T3X",
- source_id: connectionId,
- });
  } catch (error) {
  console.error("Error:", error);
  } finally {
@@ -3662,14 +3163,6 @@ const Profile = () => {
  setCandidateProfile(updatedProfile);
  }
 
- // Create growth log entry for resume upload
- await supabase.from("growth_log_entries").insert({
- candidate_id: user.id,
- event_type: "resume_upload",
- title: "Resume Uploaded",
- description: `Uploaded resume: ${file.name}`,
- source_component: "Profile",
- });
 
  setUploadSuccess(true);
 
@@ -3710,20 +3203,6 @@ const Profile = () => {
  .map(([dim, reason]) => `• ${dim.replace(/_/g, " ")}: ${reason}`)
  .join("\n");
 
- // Create growth log entry for Resume Enhancer / Basic Profile creation
- await supabase.from("growth_log_entries").insert({
- candidate_id: user.id,
- event_type: "assessment",
- title: "Resume Enhancer — Basic Profile Created",
- description: `AI-analyzed resume. ${enhancerResult.summary}\n\nObservation areas identified (${enhancerResult.observationDimensions.length} dimensions):\n${rationaleEntries}`,
- source_component: "ResumeEnhancer",
- metadata: {
- experienceLevel: enhancerResult.experienceLevel,
- industryFocus: enhancerResult.industryFocus,
- strengthAreas: enhancerResult.strengthAreas,
- suggestedSkills: enhancerResult.suggestedSkills,
- },
- });
 
  setEnhancerSummary(enhancerResult.summary);
 
@@ -3747,13 +3226,6 @@ const Profile = () => {
  updated_at: new Date().toISOString(),
  }).eq("profile_id", user.id);
 
- await supabase.from("growth_log_entries").insert({
- candidate_id: user.id,
- event_type: "assessment",
- title: "Resume Enhancer — Basic Profile Created",
- description: "Basic Profile created with default observation dimensions (AI analysis unavailable).",
- source_component: "ResumeEnhancer",
- });
 
  // Refresh candidate profile
  const { data: refreshedProfile } = await supabase
