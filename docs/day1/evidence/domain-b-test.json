@@ -1,0 +1,191 @@
+{
+ "passed": 23,
+ "total": 23,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-05",
+   "label": "an interaction carrying two consent types is refused and writes no consent row",
+   "pass": true,
+   "detail": {
+    "detail": "one interaction carries exactly one consent_type",
+    "reason": "CONSENT_ONE_TYPE_PER_INTERACTION",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-05",
+   "label": "the refusal is logged",
+   "pass": true
+  },
+  {
+   "id": "B-grant",
+   "label": "a participant records consent for their own account; consent.granted event written",
+   "pass": true,
+   "detail": {
+    "event": "consent.granted",
+    "outcome": "recorded",
+    "consent_id": "a6bcd4cd-8156-487d-bbd5-8869f69f3d28"
+   }
+  },
+  {
+   "id": "B-actor",
+   "label": "recording consent for someone else's account is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "a person records consent only for their own account",
+    "reason": "CONSENT_ACTOR_MISMATCH",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-06",
+   "label": "consent granted for D1 is current for D1 and absent for D2",
+   "pass": true,
+   "detail": {
+    "cur1": "granted",
+    "cur2": null
+   }
+  },
+  {
+   "id": "DT-06",
+   "label": "Stage entry for D2 refuses for want of D2 consent",
+   "pass": true,
+   "detail": "CONSENT_REQUIRED: mentor_observation consent for dimension D2 is not granted; consent is never inherited across dimensio"
+  },
+  {
+   "id": "DT-06",
+   "label": "Stage entry for D1 passes the consent gate (any other refusal is a later check)",
+   "pass": true,
+   "detail": "insert or update on table \"t3a_stage_entry_event\" violates foreign key constraint \"t3a_stage_entry_event_observation_pat"
+  },
+  {
+   "id": "DT-07",
+   "label": "withdrawal without the consequence shown is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the consequence of withdrawal must be shown before it is processed",
+    "reason": "CONSEQUENCE_NOT_DISPLAYED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-07",
+   "label": "withdrawal with the consequence shown is recorded; consent.withdrawn event present",
+   "pass": true,
+   "detail": {
+    "event": "consent.withdrawn",
+    "outcome": "recorded",
+    "consent_id": "97bfa6f0-3544-4cfb-9835-e930fa5b8697"
+   }
+  },
+  {
+   "id": "DT-07",
+   "label": "withdrawal deletes nothing: earlier grant still readable, supersession row written",
+   "pass": true,
+   "detail": [
+    {
+     "consent_status": "granted"
+    },
+    {
+     "consent_status": "withdrawn"
+    }
+   ]
+  },
+  {
+   "id": "DT-07",
+   "label": "new capture refuses after withdrawal",
+   "pass": true,
+   "detail": "CONSENT_REQUIRED: scenario_logging consent for dimension D1 is not granted; consent is never inherited across dimensions"
+  },
+  {
+   "id": "B-gate-off",
+   "label": "with the switch off the gate does not refuse (live screens unchanged)",
+   "pass": true,
+   "detail": "null value in column \"source_version_id\" of relation \"t3a_observation\" violates not-null constraint"
+  },
+  {
+   "id": "DT-08",
+   "label": "followup_contact: refused and logged, no row",
+   "pass": true,
+   "detail": {
+    "detail": "followup_contact capture is not enabled",
+    "reason": "CONSENT_ROUTE_DISABLED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-08",
+   "label": "aggregate_regional: refused and logged, no row",
+   "pass": true,
+   "detail": {
+    "detail": "aggregate_regional capture is not enabled",
+    "reason": "CONSENT_ROUTE_DISABLED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-08",
+   "label": "research_participation: refused and logged, no row",
+   "pass": true,
+   "detail": {
+    "detail": "research_participation capture is not enabled",
+    "reason": "CONSENT_ROUTE_DISABLED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-08",
+   "label": "a direct insert of a disabled type is refused by the table",
+   "pass": true,
+   "detail": "new row for relation \"t3a_consent_record\" violates check constraint \"t3a_consent_record_co"
+  },
+  {
+   "id": "DT-09",
+   "label": "no lsa consent text loaded: state is never_asked; the table is closed",
+   "pass": true
+  },
+  {
+   "id": "B-append",
+   "label": "consent records cannot be edited",
+   "pass": true
+  },
+  {
+   "id": "B-append",
+   "label": "consent records cannot be deleted",
+   "pass": true
+  },
+  {
+   "id": "B-rls",
+   "label": "a signed-in user reads only their own consent",
+   "pass": true,
+   "detail": {
+    "own": {
+     "n": 3
+    },
+    "other": {
+     "n": 0
+    }
+   }
+  },
+  {
+   "id": "B-rls",
+   "label": "no direct write by a signed-in user",
+   "pass": true,
+   "detail": "permission denied for table t3a_consent_record"
+  },
+  {
+   "id": "B-ip",
+   "label": "the stored address is only a hash column; no raw address column exists",
+   "pass": true
+  },
+  {
+   "id": "DT-01(B)",
+   "label": "all 29 Domain B fields mapped",
+   "pass": true,
+   "detail": {
+    "n": 29
+   }
+  }
+ ]
+}
