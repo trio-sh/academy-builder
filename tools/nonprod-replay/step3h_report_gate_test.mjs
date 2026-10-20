@@ -55,6 +55,17 @@ await run(`update t3a_correction_case set challenge_status='under_reconsideratio
 await run(`update t3a_reconsideration_assignment set outcome='upheld', status='resolved' where correction_case_id='${cc}'`).catch(() => {});
 await run(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('evidence_currency','synthetic test value','0.0','${IS}')`);
 for (const t of ["scenario_logging", "mentor_observation"]) await svc(`select t3a_record_consent('${P}','${t}','granted','D2',null,'1.0','${"a".repeat(64)}','checkbox','en-CA','observation') r`);
+
+// the issuance floor: two related contexts and two distinct authorized observers (synthetic observations on the throwaway database)
+const srcOfH = async (id) => (await run(`select v.content_version_id v from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier='${id}'`))[0].v;
+await run(`delete from t3a_cross_context_relationship`);
+const sA = await srcOfH("SRC-D2-S2-001"), sB = await srcOfH("SRC-D2-S3-001");
+g = await gate(`'${IS}'`, `'${RV}'`); rec("D2-18", "before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers", has(g, "below_issuance_floor") && has(g, "fewer_than_two_authorized_observers"), g.blockers.map(b => b.code));
+const obsF1 = (await run(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, observer_id, is_committed) values ('${P}','D2','S2','${M2}',true) returning observation_record_id i`))[0].i;
+const obsF2 = (await run(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, observer_id, is_committed) values ('${P}','D2','S3','${M1}',true) returning observation_record_id i`))[0].i;
+for (const [o, sv, st] of [[obsF1, sA, "S2"], [obsF2, sB, "S3"]]) await run(`insert into t3a_dimension_composed_statement(dimension_id, observation_ref, participant_id, stage_code, source_version_id, answers, clauses, clause_instances, conditions) values ('D2','${o}','${P}','${st}','${sv}','{}'::jsonb,'[]'::jsonb,'[]'::jsonb,'[]'::jsonb)`);
+g = await gate(`'${IS}'`, `'${RV}'`); rec("D2-18", "two observers but no approved cross context relationship is still below the floor (one context)", has(g, "below_issuance_floor") && !has(g, "fewer_than_two_authorized_observers"), g.blockers.map(b => b.code));
+await run(`insert into t3a_cross_context_relationship(dimension_id, source_version_a, source_version_b, approved_by) values ('D2','${sA < sB ? sA : sB}','${sA < sB ? sB : sA}','${RV}') on conflict do nothing`);
 g = await gate(`'${IS}'`, `'${RV}'`);
 rec("D2-91", "with every precondition met the gate permits (issuing itself stays an explicit human act)", g.permitted === true || (g.blockers.length === 1 && g.blockers[0].code === "issuer_not_eligible"), g);
 g = await gate(`'${IS}'`, `'${M1}'`); rec("D2-91", "a distinct uninvolved reviewer and issuer pass", g.blockers.every(b => b.code === "issuer_not_eligible") && has(g, "issuer_not_eligible"), g.blockers.map(b => b.code));

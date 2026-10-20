@@ -1,6 +1,6 @@
 {
- "passed": 26,
- "total": 26,
+ "passed": 28,
+ "total": 28,
  "failed": [],
  "results": [
   {
@@ -18,6 +18,8 @@
     "checklist_incomplete_or_failed",
     "checklist_incomplete_or_failed",
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -60,6 +62,8 @@
     "checklist_incomplete_or_failed",
     "checklist_incomplete_or_failed",
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -82,6 +86,8 @@
    "pass": true,
    "detail": [
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -98,6 +104,8 @@
    "detail": [
     "review_not_for_this_version_set",
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -107,6 +115,8 @@
    "pass": true,
    "detail": [
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -118,15 +128,15 @@
     "open": true,
     "cases": [
      {
-      "case": "cd672562-4831-4e1f-89c9-4b0dc7a478a7",
+      "case": "ebc02214-1451-494e-8cde-b135803597a2",
       "kind": "correction"
      }
     ],
     "records_under_reconsideration": [
      {
-      "assignment": "6c0d6a34-b432-4ba5-8593-3c05bfeea012",
+      "assignment": "366adcc6-0929-482d-9a07-10c395e4341e",
       "dimension_id": "D2",
-      "observation_record_id": "caf7fe6c-2df5-40f6-8d09-540034a5cd0d"
+      "observation_record_id": "649119c8-f6f2-435e-aad4-f1b053abbed0"
      }
     ]
    }
@@ -139,6 +149,8 @@
     "correction_open",
     "reviewer_not_eligible",
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
    ]
   },
@@ -151,7 +163,28 @@
     "reviewer_not_eligible",
     "issuer_not_eligible",
     "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_absent"
+   ]
+  },
+  {
+   "id": "D2-18",
+   "label": "before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers"
+   ]
+  },
+  {
+   "id": "D2-18",
+   "label": "two observers but no approved cross context relationship is still below the floor (one context)",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor"
    ]
   },
   {
@@ -221,8 +254,8 @@
    "pass": true,
    "detail": {
     "outcome": "amended",
-    "supersedes": "5b337dd0-a707-4d39-b69d-5883f28184a8",
-    "composed_statement_id": "d6bac2ba-5324-4884-9bb5-bc76723e48d8"
+    "supersedes": "083a4dcd-2ca7-49db-8fd2-c9bf75ff5a3f",
+    "composed_statement_id": "89893af2-2fa1-4920-9e79-c82786277dca"
    }
   },
   {

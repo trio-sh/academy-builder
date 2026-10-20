@@ -207,7 +207,7 @@
    "label": "the confirmation pins the exact source version and its hash",
    "pass": true,
    "detail": {
-    "v": "a2aad4d6-e02c-4020-a2f5-4a238c8db26e",
+    "v": "303ec1f1-4351-472e-8b82-cd1c82c896b5",
     "h": "6e0bce782a0a4f8d1ad7da1333221564d22ca3a461f6b619ba42ef82e155c06c"
    }
   },
@@ -229,7 +229,7 @@
     "text": "SYNTHETIC TEST TEXT",
     "outcome": "rendered",
     "text_ref": "T-EVNOTE-001",
-    "source_version_id": "a2aad4d6-e02c-4020-a2f5-4a238c8db26e"
+    "source_version_id": "303ec1f1-4351-472e-8b82-cd1c82c896b5"
    }
   },
   {

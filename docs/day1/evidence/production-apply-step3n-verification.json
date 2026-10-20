@@ -1,0 +1,21 @@
+{
+ "probe_floor": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE permitted=false blockers=participant_review_incomplete,checklist_incomplete_or_failed,checklist_incomplete_or_failed,evidence_currency_unloaded,below_issuance_floor,fewer_than_two_authorized_observers,consent_absent\\nCONTEXT:  PL/pgSQL function inline_code_block line 6 at RAISE\\n\"}"
+ },
+ "reports": [
+  {
+   "n": 1
+  }
+ ],
+ "issuances": [
+  {
+   "n": 0
+  }
+ ],
+ "reports_after": [
+  {
+   "n": 1
+  }
+ ]
+}

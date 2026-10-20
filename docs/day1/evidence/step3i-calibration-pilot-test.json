@@ -65,32 +65,32 @@
     "outcome": "visible",
     "selections": [
      {
-      "reviewer_id": "1f0932a1-ae94-4b76-9901-b3ee487970c9",
+      "reviewer_id": "b456e285-4bdd-4c0d-b113-b755e93b95d7",
       "decision_body": {
        "units": [
         {
          "answer": "A1",
-         "unit_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239-0",
+         "unit_id": "550452fe-602b-44e9-a647-120d1f967c09-0",
          "question_code": "Q-D2-01",
-         "source_version_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239"
+         "source_version_id": "550452fe-602b-44e9-a647-120d1f967c09"
         },
         {
          "answer": "A1",
-         "unit_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239-1",
+         "unit_id": "550452fe-602b-44e9-a647-120d1f967c09-1",
          "question_code": "Q-D2-01",
-         "source_version_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239"
+         "source_version_id": "550452fe-602b-44e9-a647-120d1f967c09"
         },
         {
          "answer": "A2",
-         "unit_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239-2",
+         "unit_id": "550452fe-602b-44e9-a647-120d1f967c09-2",
          "question_code": "Q-D2-01",
-         "source_version_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239"
+         "source_version_id": "550452fe-602b-44e9-a647-120d1f967c09"
         },
         {
          "answer": "A1",
-         "unit_id": "3fa12bb1-e3fc-438c-a320-aedafbab81d9-0",
+         "unit_id": "5dca05c1-0cea-434f-a307-a8d0486aa188-0",
          "question_code": "Q-D2-01",
-         "source_version_id": "3fa12bb1-e3fc-438c-a320-aedafbab81d9"
+         "source_version_id": "5dca05c1-0cea-434f-a307-a8d0486aa188"
         }
        ]
       }
@@ -117,7 +117,7 @@
     "units": 3,
     "status": "CALCULATED",
     "question_code": "Q-D2-01",
-    "source_version_id": "5e146ed8-b824-4252-9e20-c7d4ac5c7239",
+    "source_version_id": "550452fe-602b-44e9-a647-120d1f967c09",
     "question_agreement_units": 2,
     "statement_concordance_units": 2
    }
@@ -131,7 +131,7 @@
     "status": "NOT_CALCULATED",
     "minimum": 3,
     "question_code": "Q-D2-01",
-    "source_version_id": "3fa12bb1-e3fc-438c-a320-aedafbab81d9",
+    "source_version_id": "5dca05c1-0cea-434f-a307-a8d0486aa188",
     "question_remains_uncleared_for_this_source": true
    }
   },
@@ -211,7 +211,7 @@
    "pass": true,
    "detail": {
     "outcome": "stopped",
-    "pilot_stop_id": "acfbcd50-83ae-4f9f-92a6-2556f7ded24a"
+    "pilot_stop_id": "774cdec0-16d8-4423-911c-04970a82e0da"
    }
   },
   {

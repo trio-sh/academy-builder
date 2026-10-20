@@ -54,7 +54,7 @@
    "pass": true,
    "detail": {
     "outcome": "servable",
-    "source_version_id": "8c147d63-a61d-48e6-a1b9-3bb71d4d7616"
+    "source_version_id": "5f206186-7072-472e-8ae1-8f4140dac0bb"
    }
   },
   {
@@ -71,6 +71,8 @@
     "participant_review_incomplete",
     "checklist_incomplete_or_failed",
     "checklist_incomplete_or_failed",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
     "consent_not_inherited"
    ]
   },
@@ -100,7 +102,7 @@
    "id": "D2-42",
    "label": "capture and read of followup_contact and aggregate_regional refuse and log disabled_consent_route",
    "pass": true,
-   "detail": 12
+   "detail": 20
   },
   {
    "id": "D2-42",
@@ -140,7 +142,7 @@
    "id": "D2-48a",
    "label": "each superseded release route logs superseded_route_invoked with the caller and the route name",
    "pass": true,
-   "detail": 14
+   "detail": 25
   },
   {
    "id": "D2-30b",

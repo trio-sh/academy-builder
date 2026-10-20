@@ -40,8 +40,8 @@
    "detail": {
     "outcome": "assigned",
     "dimension_id": "D2",
-    "submission_id": "3dd5c9e9-aff5-4e92-880a-c412c9a27855",
-    "stage_instance_id": "63f52e0c-442e-408c-88d9-cd783b14bf25"
+    "submission_id": "17841fdc-9220-4e38-af4d-15eda16f4f7e",
+    "stage_instance_id": "4a5ead69-efe6-45d5-99bd-ee4aeb701567"
    }
   },
   {
@@ -141,7 +141,7 @@
    "detail": {
     "outcome": "submitted",
     "resubmission": false,
-    "submission_id": "3dd5c9e9-aff5-4e92-880a-c412c9a27855",
+    "submission_id": "17841fdc-9220-4e38-af4d-15eda16f4f7e",
     "fields_checked": 11
    }
   },
@@ -158,7 +158,7 @@
    "detail": {
     "outcome": "submitted",
     "resubmission": true,
-    "submission_id": "4106d6dc-5c3d-4abc-9793-8799ed1566b4",
+    "submission_id": "6744bce5-8741-4de4-9741-1932615fcfc3",
     "fields_checked": 12
    }
   },
@@ -168,17 +168,17 @@
    "pass": true,
    "detail": [
     {
-     "submission_id": "3dd5c9e9-aff5-4e92-880a-c412c9a27855",
+     "submission_id": "17841fdc-9220-4e38-af4d-15eda16f4f7e",
      "artifact_ref": "x://first",
-     "superseded_by": "4106d6dc-5c3d-4abc-9793-8799ed1566b4",
+     "superseded_by": "6744bce5-8741-4de4-9741-1932615fcfc3",
      "prior_version_ref": null,
      "state": "AVAILABLE_FOR_CAPTURE"
     },
     {
-     "submission_id": "4106d6dc-5c3d-4abc-9793-8799ed1566b4",
+     "submission_id": "6744bce5-8741-4de4-9741-1932615fcfc3",
      "artifact_ref": "x://second",
      "superseded_by": null,
-     "prior_version_ref": "3dd5c9e9-aff5-4e92-880a-c412c9a27855",
+     "prior_version_ref": "17841fdc-9220-4e38-af4d-15eda16f4f7e",
      "state": "AVAILABLE_FOR_CAPTURE"
     }
    ]
@@ -333,7 +333,7 @@
    "pass": true,
    "detail": {
     "outcome": "composed",
-    "group_session_id": "96c8d06e-788e-44e1-8d31-decf8f965f36",
+    "group_session_id": "3d4cf8cc-d912-4cd1-a56c-fe265437df89",
     "observation_records_to_be_written": 1
    }
   },
@@ -362,7 +362,7 @@
    "detail": {
     "lanes": 1,
     "outcome": "visible",
-    "lane_for": "03d05551-f459-4d93-8abf-b45f2fb27ca4"
+    "lane_for": "4513b84d-cd66-4d9a-a7ee-985a9d3139d1"
    }
   },
   {
