@@ -1,0 +1,129 @@
+{
+ "environment": "throwaway PostgreSQL 17 + Supabase shim; migration applied three times (idempotent)",
+ "migration": "supabase/migrations/20261102000000_day1_event_registry.sql",
+ "run_date": "2026-10-20",
+ "fixtures": "docs/day1/package/test/fixtures/events (244 files)",
+ "acceptance_tests_touched": "DT-22, DT-23, DT-24, DT-25, DT-43, DT-64, DT-65, DT-66 (partial, see conflict register CR-022)",
+ "checks": [
+  {
+   "id": "E1",
+   "name": "event registry holds every dictionary event with the same status split",
+   "result": "PASS",
+   "detail": "db={\"n\":122,\"a\":114,\"d\":4,\"s\":4} dictionary={\"n\":122,\"a\":114,\"d\":4,\"s\":4}"
+  },
+  {
+   "id": "E2",
+   "name": "DT-23/64: every ACTIVE and DORMANT fixture (full and minimal) is accepted",
+   "result": "PASS",
+   "detail": "236/236 accepted of 244 fixtures; "
+  },
+  {
+   "id": "E3",
+   "name": "SOCKET events are refused and logged (12.1.4)",
+   "result": "PASS",
+   "detail": "8/8"
+  },
+  {
+   "id": "E4",
+   "name": "DT-25: unknown event name is rejected, logged in the journal, and not stored",
+   "result": "PASS",
+   "detail": "{\"detail\":[],\"reason\":\"EVENT_NOT_REGISTERED\",\"outcome\":\"rejected\"}"
+  },
+  {
+   "id": "E5",
+   "name": "DT-23: removing any required key, or adding an unknown key, fails the schema",
+   "result": "PASS",
+   "detail": "429 mutations, 0 not caught; "
+  },
+  {
+   "id": "E6",
+   "name": "DT-65: conditional rules (participant grant needs a pseudonym, others forbid it; S2 and S4 need an entry authority; a privacy request needs one of two ids)",
+   "result": "PASS",
+   "detail": "{\"t1\":[],\"t2\":[\"CONDITIONAL_REQUIRE:participant_pseudonym_ref\"],\"t3\":[\"CONDITIONAL_FORBID:participant_pseudonym_ref\"],\"t4\":[],\"s1\":[],\"s2\":[\"CONDITIONAL_REQUIRE:entry_authority_actor_id\"],\"p0\":[\"REQUIRE_ANY:data_access_request_id|data_correction_request_id\"]}"
+  },
+  {
+   "id": "E7",
+   "name": "payloads over 4096 bytes are flagged",
+   "result": "PASS",
+   "detail": "PAYLOAD_TOO_LARGE,PATTERN:control_run_id"
+  },
+  {
+   "id": "E8",
+   "name": "hash chain: sequence 1..3, first links to genesis, each links to the one before, hashes recompute",
+   "result": "PASS",
+   "detail": "seq=1,2,3 recomputed=3"
+  },
+  {
+   "id": "E9",
+   "name": "verification finds nothing wrong on an untouched log",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "id": "E10",
+   "name": "DT-22: UPDATE and DELETE on the event log are refused for the table owner",
+   "result": "PASS",
+   "detail": "t3a_event_log is append-only (\u00a721.6). Corrections must be ne | t3a_event_log is append-only (\u00a721.6). Corrections must be ne"
+  },
+  {
+   "id": "E11",
+   "name": "DT-22: signed-in and anonymous roles cannot insert, update or delete event rows directly",
+   "result": "PASS",
+   "detail": "true,true,true,true"
+  },
+  {
+   "id": "E12",
+   "name": "DT-24: a directly altered event is flagged, a critical quality event is written and governance.control_operated is emitted",
+   "result": "PASS",
+   "detail": "findings=integrity_hash_mismatch quality=[{\"severity\":\"critical\",\"kind\":\"event_chain_integrity_failure\"}] gov=1"
+  },
+  {
+   "id": "E13",
+   "name": "DT-43: replay returns the first event, same key with a different payload is quarantined, different keys are both accepted",
+   "result": "PASS",
+   "detail": "[\"accepted\",\"replay\",\"quarantined\",\"accepted\",\"accepted\"]"
+  },
+  {
+   "id": "E14",
+   "name": "DT-66: a real event naming an existing account is accepted; a well-formed event naming no record is refused with a named reason",
+   "result": "PASS",
+   "detail": "[\"accepted\",{\"detail\":[\"REFERENCE_NOT_FOUND:account_id\"],\"reason\":\"REFERENCE_NOT_FOUND\",\"outcome\":\"rejected\"}]"
+  },
+  {
+   "id": "E15",
+   "name": "occurred_at later than ingestion is refused",
+   "result": "PASS",
+   "detail": "{\"detail\":[],\"reason\":\"OCCURRED_AT_IN_FUTURE\",\"outcome\":\"rejected\"}"
+  },
+  {
+   "id": "E16",
+   "name": "an actor type outside the dictionary vocabulary is refused",
+   "result": "PASS",
+   "detail": "{\"detail\":[],\"reason\":\"ACTOR_TYPE_INVALID\",\"outcome\":\"rejected\"}"
+  },
+  {
+   "id": "E17",
+   "name": "legacy writers still work: the old name resolves to the canonical event, an unknown old name is quarantined, hashes are replaced by the chain hash",
+   "result": "PASS",
+   "detail": "[{\"event_name\":\"observation.committed\",\"s\":\"accepted\",\"h\":\"4fa0bfb47b8d3a3bde4a556df7a69a16849c0d2664ad46ea7746b667d540308f\",\"p\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"n\":1},{\"event_name\":\"weird_legacy_event\",\"s\":\"quarantined\",\"h\":\"39e6e5caf4e181746567cc136e122e2b325c8d4"
+  },
+  {
+   "id": "E18",
+   "name": "strict mode refuses direct inserts into the log",
+   "result": "PASS",
+   "detail": "T3A_EVENT_DIRECT_INSERT_REFUSED: write events through t3a_ingest_event"
+  },
+  {
+   "id": "E19",
+   "name": "anonymous and signed-in roles cannot call the ingestion function",
+   "result": "PASS",
+   "detail": "true,true"
+  },
+  {
+   "id": "E20",
+   "name": "t3a_emit_event raises so a parent action rolls back when its event is refused (12.1.6)",
+   "result": "PASS",
+   "detail": "T3A_EVENT_REFUSED: rejected (EVENT_NOT_REGISTERED)"
+  }
+ ]
+}

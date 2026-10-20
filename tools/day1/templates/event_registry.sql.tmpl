@@ -1,0 +1,463 @@
+-- Day 1 event registry, envelope, hash chain and strict ingestion (T3A-DEV-DAY1-001 v@@DICT_VERSION@@, step 11.1.3).
+-- GENERATED: do not edit by hand. Regenerate with: python3 tools/day1/generate_event_migration.py   (verify with --check)
+-- Source: docs/day1/package/@@DICT_FILE@@
+-- Source sha256: @@DICT_SHA@@
+--
+-- Additive. The existing t3a_event_log is kept and extended so the nine live pathway functions that write to it
+-- keep working. New code writes through t3a_ingest_event (strict). Old writers pass through a tolerant path until
+-- each pathway is migrated, then t3a_event_config.ingest_mode is set to 'strict'.
+--
+-- Defaults chosen where the package is silent (recorded in docs/day1/conflict-register.md):
+--   * stream = one (resource_type, resource_id) pair; the first event of a stream chains to a genesis value of 64 zeros;
+--   * integrity_hash = sha256 over event_id | event_name | occurred_at (UTC, milliseconds) | actor_id | payload text;
+--   * reference existence is enforced for real events only; synthetic_test and demonstration events skip it.
+
+-- ---------------------------------------------------------------- configuration
+create table if not exists public.t3a_event_config (
+  key        text primary key,
+  value      text not null,
+  updated_at timestamptz not null default now()
+);
+insert into public.t3a_event_config (key, value) values
+  ('ingest_mode', 'legacy_tolerant'),
+  ('dictionary_version', '@@DICT_VERSION@@'),
+  ('schema_version', '1.0'),
+  ('max_payload_bytes', '4096'),
+  ('genesis_hash', repeat('0', 64))
+on conflict (key) do nothing;
+
+-- ---------------------------------------------------------------- registries
+create table if not exists public.t3a_event_registry (
+  dictionary_version text not null references public.t3a_field_registry_version(dictionary_version),
+  event_name         text not null check (event_name ~ '^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$'),
+  event_category     text not null,
+  status             text not null check (status in ('ACTIVE','DORMANT','SOCKET')),
+  trigger_text       text,
+  required_payload   text[] not null,
+  optional_payload   text[] not null,
+  conditional        jsonb not null default '[]'::jsonb,
+  payload_schema     jsonb not null,
+  worst_case_payload_bytes integer,
+  primary key (dictionary_version, event_name),
+  check (jsonb_typeof(payload_schema) = 'object' and jsonb_typeof(conditional) = 'array')
+);
+
+create table if not exists public.t3a_event_name_alias (
+  alias              text primary key,
+  dictionary_version text not null,
+  event_name         text not null,
+  confidence         text not null check (confidence in ('package','direct','provisional')),
+  note               text,
+  foreign key (dictionary_version, event_name) references public.t3a_event_registry(dictionary_version, event_name)
+);
+
+create table if not exists public.t3a_event_reference_rule (
+  payload_key text primary key,
+  ref_table   text not null,
+  ref_column  text not null,
+  note        text
+);
+
+create table if not exists public.t3a_event_idempotency (
+  idempotency_key  text primary key,
+  payload_sha256   char(64) not null check (payload_sha256 ~ '^[0-9a-f]{64}$'),
+  source_system    text not null,
+  first_accepted_at timestamptz not null default now(),
+  event_id         uuid not null unique
+);
+
+create table if not exists public.t3a_event_rejection (
+  rejection_id    uuid primary key default gen_random_uuid(),
+  attempted_name  text,
+  resolved_name   text,
+  reason_code     text not null,
+  detail          text,
+  payload_sha256  char(64),
+  actor_ref       text,
+  record_property text,
+  source_system   text,
+  occurred_at     timestamptz,
+  rejected_at     timestamptz not null default now()
+);
+
+create table if not exists public.t3a_quality_event (
+  quality_event_id uuid primary key default gen_random_uuid(),
+  severity         text not null check (severity in ('critical','major','minor')),
+  kind             text not null,
+  detail           jsonb not null default '{}'::jsonb,
+  event_id         uuid,
+  created_at       timestamptz not null default now()
+);
+
+create or replace function public.t3a_event_registry_append_only() returns trigger
+language plpgsql as $$
+begin
+  raise exception 'T3A_APPEND_ONLY: this event store is insert only';
+end $$;
+
+do $$
+declare t text;
+begin
+  foreach t in array array['t3a_event_registry','t3a_event_rejection','t3a_quality_event'] loop
+    execute format('drop trigger if exists t3a_append_only on public.%I', t);
+    execute format('create trigger t3a_append_only before update or delete on public.%I for each row execute function public.t3a_event_registry_append_only()', t);
+  end loop;
+  foreach t in array array['t3a_event_config','t3a_event_registry','t3a_event_name_alias','t3a_event_reference_rule','t3a_event_idempotency','t3a_event_rejection','t3a_quality_event'] loop
+    execute format('alter table public.%I enable row level security', t);
+    execute format('revoke all on public.%I from anon, authenticated', t);
+  end loop;
+end $$;
+
+-- ---------------------------------------------------------------- envelope on the existing log
+alter type public.t3a_event_category add value if not exists 'REPORT';
+alter type public.t3a_event_category add value if not exists 'REHEARSAL';
+alter type public.t3a_event_category add value if not exists 'PROGRAM';
+alter type public.t3a_event_category add value if not exists 'REGISTRY';
+alter type public.t3a_event_category add value if not exists 'COMMERCIAL';
+
+alter table public.t3a_event_log
+  add column if not exists schema_version text not null default '1.0',
+  add column if not exists dictionary_version text not null default '@@DICT_VERSION@@',
+  add column if not exists previous_hash char(64),
+  add column if not exists record_property text not null default 'real',
+  add column if not exists event_idempotency_key text,
+  add column if not exists event_sequence_no integer,
+  add column if not exists event_processing_state text not null default 'accepted',
+  add column if not exists actor_role_code text,
+  add column if not exists policy_decision_ref uuid,
+  add column if not exists change_request_ref text,
+  add column if not exists application_session_id uuid,
+  add column if not exists actor_ref text,
+  add column if not exists stream_key text;
+
+do $$ begin
+  if not exists (select 1 from pg_constraint where conrelid = 'public.t3a_event_log'::regclass and conname = 't3a_event_log_record_property_check') then
+    alter table public.t3a_event_log add constraint t3a_event_log_record_property_check check (record_property in ('real','synthetic_test','demonstration'));
+  end if;
+  if not exists (select 1 from pg_constraint where conrelid = 'public.t3a_event_log'::regclass and conname = 't3a_event_log_processing_state_check') then
+    alter table public.t3a_event_log add constraint t3a_event_log_processing_state_check check (event_processing_state in ('accepted','quarantined','rejected','corrected'));
+  end if;
+end $$;
+
+-- Widen the actor type check to the union of the old and the dictionary vocabularies.
+alter table public.t3a_event_log drop constraint if exists t3a_event_log_actor_type_check;
+alter table public.t3a_event_log add constraint t3a_event_log_actor_type_check check (actor_type = any (array[
+  'PARTICIPANT','MENTOR','EMPLOYER','REVIEWER','AI_ENGINE','SYSTEM','ADMIN','EMPLOYER_USER','ADMINISTRATOR','SYSTEM_SERVICE']));
+
+create unique index if not exists t3a_event_log_idem_accepted_idx
+  on public.t3a_event_log (event_idempotency_key) where event_idempotency_key is not null and event_processing_state = 'accepted';
+create unique index if not exists t3a_event_log_stream_seq_idx
+  on public.t3a_event_log (stream_key, event_sequence_no) where event_sequence_no is not null;
+create index if not exists t3a_event_log_ingested_idx on public.t3a_event_log (ingested_at);
+
+-- ---------------------------------------------------------------- hashing
+create or replace function public.t3a_event_canonical_hash(p_event_id uuid, p_event_name text, p_occurred_at timestamptz, p_actor_id uuid, p_payload jsonb)
+returns text language sql immutable as $$
+  select encode(extensions.digest(
+    p_event_id::text || '|' || p_event_name || '|' ||
+    to_char(p_occurred_at at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') || '|' ||
+    p_actor_id::text || '|' || coalesce(p_payload::text, ''), 'sha256'), 'hex')
+$$;
+
+create or replace function public.t3a_event_actor_uuid(p_ref text) returns uuid
+language sql immutable as $$
+  select case when p_ref ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then p_ref::uuid
+              else md5('t3a-process:' || p_ref)::uuid end
+$$;
+
+-- ---------------------------------------------------------------- payload checker (JSON Schema subset the registry uses)
+create or replace function public.t3a_check_event_payload(p_event_name text, p_payload jsonb, p_occurred_at timestamptz, p_dictionary_version text default null)
+returns text[] language plpgsql stable as $$
+declare
+  r public.t3a_event_registry%rowtype;
+  v text[] := '{}';
+  k text; val jsonb; prop jsonb; t jsonb; allowed text[]; typ text; ok boolean; cond jsonb; wf text; wv text; applies boolean; items text[]; x text;
+  ver text := coalesce(p_dictionary_version, (select c.value from public.t3a_event_config c where c.key = 'dictionary_version'));
+  max_bytes integer := (select c.value::integer from public.t3a_event_config c where c.key = 'max_payload_bytes');
+begin
+  select * into r from public.t3a_event_registry e where e.event_name = p_event_name and e.dictionary_version = ver;
+  if not found then return array['EVENT_NOT_REGISTERED']; end if;
+  if p_payload is null or jsonb_typeof(p_payload) <> 'object' then return array['PAYLOAD_NOT_OBJECT']; end if;
+  if octet_length(p_payload::text) > coalesce(max_bytes, 4096) then v := array_append(v, 'PAYLOAD_TOO_LARGE'::text); end if;
+  for k in select jsonb_array_elements_text(r.payload_schema->'required') loop
+    if not (p_payload ? k) then v := v || ('MISSING_KEY:' || k); end if;
+  end loop;
+  for k, val in select e.key, e.value from jsonb_each(p_payload) e loop
+    prop := r.payload_schema->'properties'->k;
+    if prop is null then v := v || ('UNKNOWN_KEY:' || k); continue; end if;
+    t := prop->'type';
+    allowed := case jsonb_typeof(t) when 'array' then array(select jsonb_array_elements_text(t)) else array[t #>> '{}'] end;
+    typ := jsonb_typeof(val);
+    if typ = 'number' then
+      ok := 'number' = any(allowed) or ('integer' = any(allowed) and (val #>> '{}')::numeric = trunc((val #>> '{}')::numeric));
+    else
+      ok := typ = any(allowed);
+    end if;
+    if not ok then v := v || ('TYPE:' || k); continue; end if;
+    if typ = 'null' then continue; end if;
+    if prop ? 'enum' and not ((prop->'enum') @> jsonb_build_array(val)) then v := v || ('ENUM:' || k); end if;
+    if typ = 'string' then
+      if prop ? 'pattern' and (val #>> '{}') !~ (prop->>'pattern') then v := v || ('PATTERN:' || k); end if;
+      if prop->>'format' = 'date-time' then
+        if (val #>> '{}') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$' then
+          v := v || ('FORMAT:' || k);
+        else
+          begin
+            if (val #>> '{}')::timestamptz > p_occurred_at then v := v || ('TIMESTAMP_AFTER_OCCURRED:' || k); end if;
+          exception when others then v := v || ('FORMAT:' || k);
+          end;
+        end if;
+      end if;
+    end if;
+    if typ = 'number' and prop ? 'minimum' and (val #>> '{}')::numeric < (prop->>'minimum')::numeric then v := v || ('MINIMUM:' || k); end if;
+  end loop;
+  for cond in select jsonb_array_elements(r.conditional) loop
+    if cond ? 'require_any' then
+      items := array(select jsonb_array_elements_text(cond->'require_any'));
+      if not exists (select 1 from unnest(items) i where p_payload ? i) then v := v || ('REQUIRE_ANY:' || array_to_string(items, '|')); end if;
+    else
+      wf := cond->>'when_field'; wv := p_payload->>wf; applies := false;
+      if wv is not null then
+        if cond ? 'in' then applies := wv = any(array(select jsonb_array_elements_text(cond->'in'))); end if;
+        if cond ? 'not_in' then applies := not (wv = any(array(select jsonb_array_elements_text(cond->'not_in')))); end if;
+      end if;
+      if applies then
+        if cond ? 'require' then
+          for x in select jsonb_array_elements_text(cond->'require') loop
+            if not (p_payload ? x) then v := v || ('CONDITIONAL_REQUIRE:' || x); end if;
+          end loop;
+        end if;
+        if cond ? 'forbid' then
+          for x in select jsonb_array_elements_text(cond->'forbid') loop
+            if p_payload ? x then v := v || ('CONDITIONAL_FORBID:' || x); end if;
+          end loop;
+        end if;
+      end if;
+    end if;
+  end loop;
+  return v;
+end $$;
+
+-- 7.3: every identifier the registry has a rule for must name an existing record.
+create or replace function public.t3a_check_event_references(p_payload jsonb) returns text[]
+language plpgsql stable as $$
+declare v text[] := '{}'; rule record; val text; found boolean;
+begin
+  for rule in select * from public.t3a_event_reference_rule loop
+    if p_payload ? rule.payload_key and jsonb_typeof(p_payload->rule.payload_key) = 'string' then
+      val := p_payload->>rule.payload_key;
+      execute format('select exists (select 1 from public.%I where %I::text = $1)', rule.ref_table, rule.ref_column) into found using val;
+      if not found then v := v || ('REFERENCE_NOT_FOUND:' || rule.payload_key); end if;
+    end if;
+  end loop;
+  return v;
+end $$;
+
+-- ---------------------------------------------------------------- envelope trigger: chain, defaults, alias, legacy tolerance
+create or replace function public.t3a_event_log_envelope() returns trigger
+language plpgsql as $$
+declare
+  cfg_ver text := (select c.value from public.t3a_event_config c where c.key = 'dictionary_version');
+  mode text := (select c.value from public.t3a_event_config c where c.key = 'ingest_mode');
+  genesis text := (select c.value from public.t3a_event_config c where c.key = 'genesis_hash');
+  via_ingest boolean := coalesce(current_setting('t3a.event_path', true), '') = 'ingest';
+  canon text; last_seq integer; last_hash text;
+begin
+  select a.event_name into canon from public.t3a_event_name_alias a where a.alias = new.event_name and a.dictionary_version = cfg_ver;
+  if canon is not null then new.event_name := canon; end if;
+  if not via_ingest then
+    if mode = 'strict' then
+      raise exception 'T3A_EVENT_DIRECT_INSERT_REFUSED: write events through t3a_ingest_event';
+    end if;
+    if not exists (select 1 from public.t3a_event_registry e where e.event_name = new.event_name and e.dictionary_version = cfg_ver) then
+      new.event_processing_state := 'quarantined';
+      new.integrity_status := 'manual_review';
+    end if;
+  end if;
+  new.ingested_at := date_trunc('milliseconds', clock_timestamp());
+  new.occurred_at := date_trunc('milliseconds', coalesce(new.occurred_at, new.ingested_at));
+  new.actor_ref := coalesce(new.actor_ref, new.actor_id::text);
+  new.actor_role_code := coalesce(new.actor_role_code, lower(new.actor_type));
+  new.dictionary_version := cfg_ver;
+  new.stream_key := coalesce(new.resource_type, 'none') || ':' || coalesce(new.resource_id::text, 'none');
+  perform pg_advisory_xact_lock(hashtextextended(new.stream_key, 0));
+  select e.event_sequence_no, e.integrity_hash into last_seq, last_hash
+    from public.t3a_event_log e where e.stream_key = new.stream_key and e.event_sequence_no is not null
+    order by e.event_sequence_no desc limit 1;
+  new.event_sequence_no := coalesce(last_seq, 0) + 1;
+  new.previous_hash := coalesce(last_hash, genesis);
+  new.integrity_hash := public.t3a_event_canonical_hash(new.event_id, new.event_name, new.occurred_at, new.actor_id, new.payload);
+  return new;
+end $$;
+
+drop trigger if exists t3a_event_log_envelope on public.t3a_event_log;
+create trigger t3a_event_log_envelope before insert on public.t3a_event_log
+  for each row execute function public.t3a_event_log_envelope();
+
+-- ---------------------------------------------------------------- strict ingestion
+create or replace function public.t3a_ingest_event(
+  p_event_name text, p_actor_type text, p_actor_ref text, p_actor_role_code text,
+  p_resource_type text, p_resource_id uuid, p_payload jsonb, p_idempotency_key text,
+  p_occurred_at timestamptz default null, p_subject_id uuid default null, p_session_id uuid default null,
+  p_correlation_id uuid default null, p_source_system text default 'internal_job', p_record_property text default 'real',
+  p_artifact_ref_id text default null, p_supersedes_event_id uuid default null, p_policy_decision_ref uuid default null,
+  p_change_request_ref text default null, p_application_session_id uuid default null)
+returns jsonb language plpgsql security definer set search_path = public, extensions as $$
+declare
+  cfg_ver text := (select c.value from public.t3a_event_config c where c.key = 'dictionary_version');
+  canon text; reg public.t3a_event_registry%rowtype; problems text[]; digest_hex text; prior public.t3a_event_idempotency%rowtype;
+  new_id uuid := gen_random_uuid(); occurred timestamptz; state text := 'accepted'; actor uuid;
+  procedure_reject text;
+begin
+  select a.event_name into canon from public.t3a_event_name_alias a where a.alias = p_event_name and a.dictionary_version = cfg_ver;
+  canon := coalesce(canon, p_event_name);
+  digest_hex := encode(extensions.digest(coalesce(p_payload::text, ''), 'sha256'), 'hex');
+  occurred := date_trunc('milliseconds', coalesce(p_occurred_at, clock_timestamp()));
+
+  -- rejection helper: log durably and return, never raise (a raise would roll the log entry back)
+  select * into reg from public.t3a_event_registry e where e.event_name = canon and e.dictionary_version = cfg_ver;
+  if not found then procedure_reject := 'EVENT_NOT_REGISTERED';
+  elsif reg.status = 'SOCKET' then procedure_reject := 'EVENT_SOCKET_ROUTE_CLOSED';
+  end if;
+  if procedure_reject is null and (p_actor_type is null or p_actor_type <> all (array['PARTICIPANT','MENTOR','EMPLOYER_USER','ADMINISTRATOR','SYSTEM_SERVICE'])) then procedure_reject := 'ACTOR_TYPE_INVALID'; end if;
+  if procedure_reject is null and (p_actor_ref is null or p_actor_ref = '') then procedure_reject := 'ACTOR_MISSING'; end if;
+  if procedure_reject is null and (p_actor_role_code is null or p_actor_role_code = '') then procedure_reject := 'ACTOR_ROLE_MISSING'; end if;
+  if procedure_reject is null and (p_resource_type is null or p_resource_id is null) then procedure_reject := 'RESOURCE_MISSING'; end if;
+  if procedure_reject is null and (p_idempotency_key is null or p_idempotency_key = '') then procedure_reject := 'IDEMPOTENCY_KEY_MISSING'; end if;
+  if procedure_reject is null and p_record_property is not null and p_record_property <> all (array['real','synthetic_test','demonstration']) then procedure_reject := 'RECORD_PROPERTY_INVALID'; end if;
+  if procedure_reject is null and occurred > clock_timestamp() then procedure_reject := 'OCCURRED_AT_IN_FUTURE'; end if;
+  if procedure_reject is null then
+    problems := public.t3a_check_event_payload(canon, p_payload, occurred, cfg_ver);
+    if coalesce(array_length(problems, 1), 0) > 0 then procedure_reject := 'PAYLOAD_INVALID'; end if;
+  end if;
+  if procedure_reject is null and coalesce(p_record_property, 'real') = 'real' then
+    problems := public.t3a_check_event_references(p_payload);
+    if coalesce(array_length(problems, 1), 0) > 0 then procedure_reject := 'REFERENCE_NOT_FOUND'; end if;
+  end if;
+  if procedure_reject is not null then
+    insert into public.t3a_event_rejection (attempted_name, resolved_name, reason_code, detail, payload_sha256, actor_ref, record_property, source_system, occurred_at)
+    values (p_event_name, canon, procedure_reject, array_to_string(problems, '; '), digest_hex, p_actor_ref, p_record_property, p_source_system, occurred);
+    return jsonb_build_object('outcome', 'rejected', 'reason', procedure_reject, 'detail', coalesce(problems, '{}'::text[]));
+  end if;
+
+  -- idempotency: a replay returns the first event; the same key with a different payload digest is quarantined
+  perform pg_advisory_xact_lock(hashtextextended('idem:' || p_idempotency_key, 0));
+  select * into prior from public.t3a_event_idempotency i where i.idempotency_key = p_idempotency_key;
+  if found then
+    if prior.payload_sha256 = digest_hex then
+      return jsonb_build_object('outcome', 'replay', 'event_id', prior.event_id);
+    end if;
+    state := 'quarantined';
+  end if;
+
+  actor := public.t3a_event_actor_uuid(p_actor_ref);
+  perform set_config('t3a.event_path', 'ingest', true);
+  insert into public.t3a_event_log (
+    event_id, event_name, event_category, occurred_at, actor_type, actor_id, actor_ref, actor_role_code, subject_id, session_id,
+    correlation_id, resource_type, resource_id, payload, artifact_ref_id, integrity_status, integrity_hash, supersedes_event_id,
+    source_system, record_property, event_idempotency_key, event_processing_state, policy_decision_ref, change_request_ref, application_session_id)
+  values (
+    new_id, canon, reg.event_category::public.t3a_event_category, occurred, p_actor_type, actor, p_actor_ref, p_actor_role_code, p_subject_id, p_session_id,
+    p_correlation_id, p_resource_type, p_resource_id, p_payload, p_artifact_ref_id,
+    case when state = 'quarantined' then 'manual_review'::public.t3a_integrity_status else 'ok'::public.t3a_integrity_status end, 'pending', p_supersedes_event_id,
+    p_source_system, coalesce(p_record_property, 'real'), p_idempotency_key, state, p_policy_decision_ref, p_change_request_ref, p_application_session_id);
+  perform set_config('t3a.event_path', '', true);
+  if state = 'accepted' then
+    insert into public.t3a_event_idempotency (idempotency_key, payload_sha256, source_system, event_id) values (p_idempotency_key, digest_hex, coalesce(p_source_system, 'internal_job'), new_id);
+  else
+    insert into public.t3a_quality_event (severity, kind, detail, event_id)
+    values ('major', 'idempotency_key_reused_with_different_payload', jsonb_build_object('idempotency_key', p_idempotency_key), new_id);
+  end if;
+  return jsonb_build_object('outcome', state, 'event_id', new_id);
+end $$;
+
+-- For parent actions: refuse the whole action when its event is not accepted (12.1.6).
+create or replace function public.t3a_emit_event(
+  p_event_name text, p_actor_type text, p_actor_ref text, p_actor_role_code text,
+  p_resource_type text, p_resource_id uuid, p_payload jsonb, p_idempotency_key text,
+  p_occurred_at timestamptz default null, p_subject_id uuid default null, p_session_id uuid default null,
+  p_correlation_id uuid default null, p_source_system text default 'internal_job', p_record_property text default 'real')
+returns uuid language plpgsql security definer set search_path = public, extensions as $$
+declare r jsonb;
+begin
+  r := public.t3a_ingest_event(p_event_name, p_actor_type, p_actor_ref, p_actor_role_code, p_resource_type, p_resource_id, p_payload,
+          p_idempotency_key, p_occurred_at, p_subject_id, p_session_id, p_correlation_id, p_source_system, p_record_property);
+  if r->>'outcome' not in ('accepted', 'replay') then
+    raise exception 'T3A_EVENT_REFUSED: % (%)', r->>'outcome', coalesce(r->>'reason', 'quarantined');
+  end if;
+  return (r->>'event_id')::uuid;
+end $$;
+
+-- ---------------------------------------------------------------- chain verification (DT-24)
+create or replace function public.t3a_event_chain_findings(p_since interval default interval '24 hours')
+returns table (event_id uuid, stream_key text, problem text)
+language sql stable security definer set search_path = public, extensions as $$
+  select e.event_id, e.stream_key, 'integrity_hash_mismatch'::text
+    from public.t3a_event_log e
+   where e.ingested_at >= now() - p_since and e.event_sequence_no is not null
+     and e.integrity_hash <> public.t3a_event_canonical_hash(e.event_id, e.event_name, e.occurred_at, e.actor_id, e.payload)
+  union all
+  select e.event_id, e.stream_key,
+         case when p.event_id is null and e.event_sequence_no > 1 then 'sequence_gap'
+              when p.event_id is null then 'first_event_not_genesis'
+              else 'chain_break' end
+    from public.t3a_event_log e
+    left join public.t3a_event_log p on p.stream_key = e.stream_key and p.event_sequence_no = e.event_sequence_no - 1
+   where e.ingested_at >= now() - p_since and e.event_sequence_no is not null
+     and ((p.event_id is null and (e.event_sequence_no > 1 or e.previous_hash <> (select c.value from public.t3a_event_config c where c.key = 'genesis_hash')))
+          or (p.event_id is not null and e.previous_hash <> p.integrity_hash))
+$$;
+
+create or replace function public.t3a_verify_event_chain(p_since interval default interval '24 hours', p_raise boolean default true)
+returns table (event_id uuid, stream_key text, problem text)
+language plpgsql security definer set search_path = public, extensions as $$
+declare n integer; run_id uuid := gen_random_uuid();
+begin
+  select count(*) into n from public.t3a_event_chain_findings(p_since);
+  if n > 0 and p_raise then
+    insert into public.t3a_quality_event (severity, kind, detail)
+    values ('critical', 'event_chain_integrity_failure', jsonb_build_object('findings', n, 'run', run_id, 'since', p_since::text));
+    perform public.t3a_ingest_event('governance.control_operated', 'SYSTEM_SERVICE', 'svc_event_chain_verifier', 'system_service',
+      'control_run', run_id, jsonb_build_object('control_run_id', run_id::text), 'chain-verify-' || run_id::text);
+  end if;
+  return query select f.event_id, f.stream_key, f.problem from public.t3a_event_chain_findings(p_since) f;
+end $$;
+
+-- ---------------------------------------------------------------- privileges: events are written only through definer functions
+revoke insert, update, delete on public.t3a_event_log from anon, authenticated;
+revoke execute on function public.t3a_ingest_event(text,text,text,text,text,uuid,jsonb,text,timestamptz,uuid,uuid,uuid,text,text,text,uuid,uuid,text,uuid) from public, anon, authenticated;
+revoke execute on function public.t3a_emit_event(text,text,text,text,text,uuid,jsonb,text,timestamptz,uuid,uuid,uuid,text,text) from public, anon, authenticated;
+revoke execute on function public.t3a_verify_event_chain(interval, boolean) from public, anon, authenticated;
+revoke execute on function public.t3a_event_chain_findings(interval) from public, anon, authenticated;
+revoke execute on function public.t3a_check_event_payload(text, jsonb, timestamptz, text) from public, anon, authenticated;
+revoke execute on function public.t3a_check_event_references(jsonb) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------- load
+insert into public.t3a_event_registry
+  (dictionary_version, event_name, event_category, status, trigger_text, required_payload, optional_payload, conditional, payload_schema, worst_case_payload_bytes)
+select '@@DICT_VERSION@@', x.name, x.category, x.status, x."trigger",
+       coalesce(array(select jsonb_array_elements_text(x.required_payload)), '{}'),
+       coalesce(array(select jsonb_array_elements_text(x.optional_payload)), '{}'),
+       coalesce(x.conditional, '[]'::jsonb), x.payload_schema, x.worst_case_payload_bytes
+from jsonb_to_recordset($dict$@@EVENTS_JSON@@$dict$::jsonb) as x(
+  name text, category text, status text, "trigger" text, required_payload jsonb, optional_payload jsonb, conditional jsonb, payload_schema jsonb, worst_case_payload_bytes integer)
+on conflict (dictionary_version, event_name) do nothing;
+
+insert into public.t3a_event_name_alias (alias, dictionary_version, event_name, confidence, note) values
+@@ALIAS_ROWS@@
+on conflict (alias) do nothing;
+
+insert into public.t3a_event_reference_rule (payload_key, ref_table, ref_column, note) values
+@@REFERENCE_ROWS@@
+on conflict (payload_key) do nothing;
+
+do $$
+declare n_events integer; n_active integer; n_dormant integer; n_socket integer;
+begin
+  select count(*), count(*) filter (where status='ACTIVE'), count(*) filter (where status='DORMANT'), count(*) filter (where status='SOCKET')
+    into n_events, n_active, n_dormant, n_socket from public.t3a_event_registry where dictionary_version = '@@DICT_VERSION@@';
+  if n_events <> @@EVENT_COUNT@@ then
+    raise exception 'T3A_EVENT_REGISTRY_LOAD_MISMATCH: expected @@EVENT_COUNT@@ events, found %', n_events;
+  end if;
+  raise notice 'event registry @@DICT_VERSION@@ loaded: % events (% ACTIVE, % DORMANT, % SOCKET)', n_events, n_active, n_dormant, n_socket;
+end $$;

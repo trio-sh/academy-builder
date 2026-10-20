@@ -10,6 +10,6 @@ Interim deliverables from the reconciliation stage. Nothing here changes the run
 | `test-environment.md` | How the non production database was built, how faithful it is, and its first use |
 | `package/` | Working copy of the package (dictionary, tools, schemas, fixtures) so CI can re-run its checks |
 | `BUILD-PLAN.md` | Order of work for this week's packages and the decisions needed |
-| `evidence/` | Raw outputs: `inventory.min.json` (catalog only), `row-counts.json` (aggregates), `m6-scan.json`, `open-write-policies.json`, `forbidden-identifiers-baseline.json`, `r2-summary.json`, `nonprod-replay-fidelity.json`, `policy-test-results.json`, `field-registry-test.json`, `rollback_close_open_access_policies.sql`, `production-apply-verification.json` |
+| `evidence/` | Raw outputs: `inventory.min.json` (catalog only), `row-counts.json` (aggregates), `m6-scan.json`, `open-write-policies.json`, `forbidden-identifiers-baseline.json`, `r2-summary.json`, `nonprod-replay-fidelity.json`, `policy-test-results.json`, `field-registry-test.json`, `event-registry-test.json`, `event-reference-gaps.json`, `rollback_close_open_access_policies.sql`, `production-apply-verification.json` |
 
 No participant row content is stored in these files.
