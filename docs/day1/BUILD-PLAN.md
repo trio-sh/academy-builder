@@ -39,3 +39,16 @@ Minimum 2 elements per dimension and a 36 month history window and a 12 month ed
 
 1. ~~A non production environment~~ (CR-002) **Done.** Throwaway Postgres, see `test-environment.md`.
 2. ~~Apply `20261100000000_close_open_access_policies.sql` to production~~ (CR-004) **Done 20 Oct 2026**, verified, with a rollback script.
+
+## Where Step 1 stands (20 Oct 2026)
+
+All 600 fields are mapped and DT-01 passes in production. 48 of 67 acceptance tests PASS, 13 PASS on the database side, 3 are OPEN, 3 UNRUN (`acceptance-status.md`).
+
+Open work in Step 1:
+1. **Move the live writers** to the new functions: the nine D1 pathway functions to `t3a_emit_event` (then `ingest_mode` strict, CR-024), observation commit to `t3a_commit_observation`, S1 flow to `t3a_stage_sequence`, mentor endpoints to `t3a_mentor_input_guard`, served instances to `t3a_record_served_instance`, consent screens to `t3a_record_consent` (then `enforce_gate`, CR-035), the interface to the required fields (then `enforce_required`, CR-038). Each switch stays off until its writer is moved.
+2. **Growth Log in the app** (DT-30): remove the 13 files that read or write it, the score radar, the trend chart and `mentor_note`; use `t3a_growth_log_observation_view`.
+3. **Legacy cleanup** (DT-02): the 1,990 legacy hits, in stages; the ratchet stops it growing.
+4. **Reconciliation R3 to R6** (DT-40) and DT-50 once the D1 content is loaded.
+5. Scheduler for the nightly chain check (CR-025); founder decisions in the conflict register.
+
+Then Step 0 (release model D-04), Step 2 onward.

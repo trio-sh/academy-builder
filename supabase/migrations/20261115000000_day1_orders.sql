@@ -61,7 +61,7 @@ create table if not exists public.t3a_order (
   check (access_ends_at > access_starts_at)
 );
 
-comment on table public.t3a_order is 'Domain L orders. Insert only; a refund is a row in t3a_refund. An order never creates, changes or scores evidence.';
+comment on table public.t3a_order is 'Domain L orders. Insert only; a refund is a row in t3a_refund. An order never creates, changes or weighs evidence.';
 
 drop trigger if exists t3a_append_only on public.t3a_order;
 create trigger t3a_append_only before update or delete on public.t3a_order for each row execute function public.t3a_deny_mutation();
@@ -131,7 +131,7 @@ on conflict (dictionary_version, qualified_name) do nothing;
 -- Domain L behaviour (hand written; tables above are generated)
 -- ---------------------------------------------------------------------------------------------
 
--- Is this account inside a paid access window now? An order grants access and nothing else: it never touches a report, a score or a Stage.
+-- Is this account inside a paid access window now? An order grants access and nothing else: it never touches a report, a measure or a Stage.
 create or replace function public.t3a_account_has_paid_access(p_account uuid, p_at timestamptz default now()) returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from public.t3a_order o where o.account_id = p_account and o.access_starts_at <= p_at and o.access_ends_at > p_at

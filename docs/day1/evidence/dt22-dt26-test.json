@@ -1,0 +1,137 @@
+{
+ "passed": 13,
+ "total": 13,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-22",
+   "label": "t3a_observation: UPDATE and DELETE refused for the table owner",
+   "pass": true,
+   "detail": [
+    "T3A_APPEND_ONLY: descriptor_version cannot change ",
+    null,
+    "T3A_APPEND_ONLY: an observation is never deleted; ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_observation: UPDATE and DELETE refused for the service role",
+   "pass": true,
+   "detail": [
+    "T3A_APPEND_ONLY: descriptor_version cannot change ",
+    null,
+    "T3A_APPEND_ONLY: an observation is never deleted; ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_observation: UPDATE and DELETE refused for the signed-in user",
+   "pass": true,
+   "detail": [
+    "ok",
+    0,
+    "ok",
+    0
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_determination: UPDATE and DELETE refused for the table owner",
+   "pass": true,
+   "detail": [
+    "T3A_APPEND_ONLY: updates and deletes are refused; ",
+    null,
+    "T3A_APPEND_ONLY: updates and deletes are refused; ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_determination: UPDATE and DELETE refused for the service role",
+   "pass": true,
+   "detail": [
+    "T3A_APPEND_ONLY: updates and deletes are refused; ",
+    null,
+    "T3A_APPEND_ONLY: updates and deletes are refused; ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_determination: UPDATE and DELETE refused for the signed-in user",
+   "pass": true,
+   "detail": [
+    "permission denied for table t3a_determination",
+    null,
+    "permission denied for table t3a_determination",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_event_log: UPDATE and DELETE refused for the table owner",
+   "pass": true,
+   "detail": [
+    "t3a_event_log is append-only (§21.6). Corrections ",
+    null,
+    "t3a_event_log is append-only (§21.6). Corrections ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_event_log: UPDATE and DELETE refused for the service role",
+   "pass": true,
+   "detail": [
+    "t3a_event_log is append-only (§21.6). Corrections ",
+    null,
+    "t3a_event_log is append-only (§21.6). Corrections ",
+    null
+   ]
+  },
+  {
+   "id": "DT-22",
+   "label": "t3a_event_log: UPDATE and DELETE refused for the signed-in user",
+   "pass": true,
+   "detail": [
+    "permission denied for table t3a_event_log",
+    null,
+    "permission denied for table t3a_event_log",
+    null
+   ]
+  },
+  {
+   "id": "DT-26",
+   "label": "a demonstration account cannot be turned into a real one",
+   "pass": true
+  },
+  {
+   "id": "DT-26",
+   "label": "a real event about a demonstration account is refused",
+   "pass": true,
+   "detail": "[{\"t3a_ingest_event\":{\"detail\":[\"REFERENCE_NOT_FOUND:consent_id\"],\"reason\":\"REFERENCE_NOT_FOUND\",\"outcome\":\"rejected\"}}]ok"
+  },
+  {
+   "id": "DT-26",
+   "label": "every child row of the demonstration account carries record_property = demonstration",
+   "pass": true,
+   "detail": [
+    {
+     "record_property": "demonstration"
+    }
+   ]
+  },
+  {
+   "id": "DT-26",
+   "label": "a conversion attempt is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "a record is real, synthetic_test or demonstration for life; conversion to real is refused",
+    "reason": "RECORD_PROPERTY_CONVERSION_REFUSED",
+    "outcome": "refused"
+   }
+  }
+ ]
+}

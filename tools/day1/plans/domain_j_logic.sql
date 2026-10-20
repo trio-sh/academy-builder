@@ -44,7 +44,7 @@ do $$ declare r record; begin
 end $$;
 create policy growth_log_entries_owner_select_visible on public.growth_log_entries for select to authenticated using (candidate_id = auth.uid() and platform_hidden_at is null);
 
--- What the participant sees of their observations is regenerated from the canonical record. No scores, no trend, no progress,
+-- What the participant sees of their observations is regenerated from the canonical record. No measures, no trend line, no progress figure,
 -- no mentor wording. Their own rows only (security invoker + row security on the base table is not enough, so the view filters itself).
 create or replace view public.t3a_growth_log_observation_view with (security_invoker = false) as
   select o.observation_id, o.participant_id, o.stage_code, o.dimension_id, o.created_at as committed_at

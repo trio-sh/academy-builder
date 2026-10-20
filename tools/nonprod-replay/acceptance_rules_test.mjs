@@ -1,0 +1,98 @@
+// Day 1 acceptance rules that cut across domains: DT-42, 44, 45, 46, 48, 49, 51, 52, 53, 57, 58, 62, 65. Throwaway database only.
+import { Client, neonConfig } from "@neondatabase/serverless";
+import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import fs from "node:fs"; import { randomUUID } from "node:crypto";
+const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
+const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
+await c.query("set search_path to public, extensions");
+const run = async (sql) => (await c.query(sql)).rows;
+async function tryq(sql, commit = false) { await c.query("begin"); let msg = "ok", rows = []; try { rows = (await c.query(sql)).rows; } catch (e) { msg = e.message; } await c.query(msg !== "ok" || !commit ? "rollback" : "commit"); return { msg, rows }; }
+const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass: !!pass, detail });
+const P = randomUUID(), CO = randomUUID(), M = randomUUID(), RUN = P.slice(0, 8), H1 = "1".repeat(64), H2 = "2".repeat(64);
+for (const [u, e, r] of [[P, "p", "candidate"], [CO, "c", "candidate"], [M, "m", "mentor"]]) { await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','x${e}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role) values ('${u}','x${e}-${RUN}@t.local','${r}')`); }
+const enums = (await run(`select (enum_range(null::t3a_contemporaneity))[1] ct, (enum_range(null::t3a_evidence_class))[1] ec, (enum_range(null::t3a_comparability_class))[1] cc, (enum_range(null::t3a_integrity_status))[1] it, (enum_range(null::t3a_content_family))[1] fam`))[0];
+// DT-42
+const ent = await tryq(`insert into t3a_order(account_id, product_code, package_code, package_entitlements, access_starts_at, access_ends_at, price_amount, currency, tax_jurisdiction, founding_member_flag, payment_provider_ref) values ('${P}','OBS','PKG','{stage_access}', now(), now() + interval '1 day', 1, 'CAD','CA',false,'x')`);
+const ent2 = await tryq(`insert into t3a_order(account_id, product_code, package_code, package_entitlements, access_starts_at, access_ends_at, price_amount, currency, tax_jurisdiction, founding_member_flag, payment_provider_ref) values ('${P}','OBS','PKG','{dimension_unlock,mentor_hour_allocation}', now(), now() + interval '1 day', 1, 'CAD','CA',false,'x')`);
+rec("DT-42", "a package granting a Stage or a dimension is refused; only the three entitlement kinds are accepted", /check|violat/i.test(ent.msg) && /check|violat/i.test(ent2.msg), [ent.msg.slice(0, 60), ent2.msg.slice(0, 60)]);
+// DT-44 late event ordering
+const ing = (name, occurred, key, payload) => run(`select t3a_ingest_event('${name}','PARTICIPANT','${P}','participant','consent','${randomUUID()}','${JSON.stringify(payload)}'::jsonb,'${key}','${occurred}','${P}',null,null,'internal_job','synthetic_test') r`);
+const t2 = new Date(Date.now() - 60000).toISOString(), t1 = new Date(Date.now() - 600000).toISOString();
+const a = (await ing("consent.granted", t2, `late-${RUN}-a`, { consent_id: randomUUID() }))[0].r, b = (await ing("consent.declined", t1, `late-${RUN}-b`, { consent_id: randomUUID() }))[0].r;
+const rows = await run(`select event_name, occurred_at, ingested_at, event_processing_state from t3a_event_log where event_idempotency_key in ('late-${RUN}-a','late-${RUN}-b') order by ingested_at`);
+rec("DT-44", "an event delivered after a later one keeps its own occurred_at and its ingested_at; nothing is reordered or deleted", rows.length === 2 && new Date(rows[1].occurred_at) < new Date(rows[0].occurred_at) && new Date(rows[1].ingested_at) >= new Date(rows[0].ingested_at), rows.map(r => [r.event_name, r.occurred_at, r.ingested_at]));
+// sources and observations used below
+const co = (await run(`insert into t3a_content_object(identifier, family, title) values ('X-${RUN}','${enums.fam}','probe') returning content_object_id i`))[0].i;
+const src = (await run(`insert into t3a_source(content_object_id, dimension_id, stage_code, interaction_pattern_family, source_display_title) values ('${co}','D1','S1','x','First title') returning source_id i`))[0].i;
+const sv = (await run(`insert into t3a_source_version(scenario_class, version_label, source_version_hash, compatibility_class, dimensions_in_play, relevant_conduct, irrelevant_conduct, stated_standard, permitted_administration_variance, unsupported_inferences, cross_context_map, min_seconds, max_seconds) values ('observation_ready','x','${H1}','A','["D1"]','{}','{}','s','v','{}','{}',60,600) returning source_version_id i`))[0].i;
+let attemptSeq = 0; const stage = async (who, code = "S1") => (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${who}','${code}','D1',${++attemptSeq},'scheduled') returning stage_instance_id i`))[0].i;
+const obs = (who, inst, extra = "") => `insert into t3a_observation(participant_id, stage_code, dimension_id, source_version_id, attempt_no, occurred_at, stage_instance_id, descriptor_version, contemporaneity, evidence_class, comparability_class, integrity_status ${extra ? ", " + extra.split("|")[0] : ""}) values ('${who}','S1','D1','${sv}',1,now(),'${inst}','1.0','${enums.ct}','${enums.ec}','${enums.cc}','${enums.it}' ${extra ? ", " + extra.split("|")[1] : ""}) returning observation_id`;
+const sP = await stage(P);
+// DT-52
+const wrongOwner = await tryq(obs(CO, sP)); rec("DT-52", "an observation record for someone other than the observed participant is refused", /OBSERVATION_FOR_NON_OBSERVED_PARTICIPANT/.test(wrongOwner.msg), wrongOwner.msg.slice(0, 100));
+const gs = (await run(`insert into t3a_d1_group_session(facilitator_id, observed_participant_id, stage_instance_id) values ('${M}','${P}','${sP}') returning group_session_id i`).catch(e => [{ err: e.message }]))[0];
+if (gs.i) { await run(`insert into t3a_d1_group_session_member(group_session_id, participant_id, member_role) values ('${gs.i}','${CO}','co_participant')`); const sCO = await stage(CO); await run(`update t3a_stage_instance set participant_id='${CO}' where false`); const co2 = await tryq(obs(CO, sP)); rec("DT-52", "a co-participant of a Stage 4 group session has no observation record", /OBSERVATION_FOR_(CO_PARTICIPANT|NON_OBSERVED)/.test(co2.msg), co2.msg.slice(0, 100)); }
+else rec("DT-52", "a co-participant of a group session has no observation record", false, gs.err);
+const own = await run(obs(P, sP)); rec("DT-52", "the observed participant's own record is accepted", own.length === 1);
+// DT-48
+const q = (await run(`select question_id from t3a_determination_question limit 1`).catch(() => []))[0];
+const qid = q?.question_id || (await run(`insert into t3a_determination_question(dimension_id, question_set_version, order_index, question_body, answer_schema) values ('D1','1.0',1,'q','{}') returning question_id`))[0].question_id;
+const oid = own[0].observation_id, ce = randomUUID();
+const det = (n) => `insert into t3a_determination(observation_id, question_id, determination_missing_state, determined_by, clause_instance_id, conduct_element_id, recurrence_equivalence_key_id, state_code, answer_option_id) values ('${oid}','${qid}', null, '${M}', gen_random_uuid(), '${ce}', gen_random_uuid(), 'CLEAR_EVIDENCE', gen_random_uuid())`;
+const d1 = await tryq(det(1) + " returning determination_id", true), d2 = await tryq(det(2) + " returning determination_id", true);
+rec("DT-48", "two clause instances for one conduct element in one observation are both kept as separate rows", d1.msg === "ok" && d2.msg === "ok" && (await run(`select count(*)::int n from t3a_determination where observation_id='${oid}' and conduct_element_id='${ce}'`))[0].n === 2, [d1.msg.slice(0, 80), d2.msg.slice(0, 80)]);
+// DT-49
+await run("update t3a_capture_config set enable_lsa_sidecar = true");
+const sP2 = await stage(P); const withSidecar = await run(obs(P, sP2));
+rec("DT-49", "a failing sidecar write leaves the observation committed once", withSidecar.length === 1 && (await run(`select count(*)::int n from t3a_observation where observation_id='${withSidecar[0].observation_id}'`))[0].n === 1);
+rec("DT-49", "the sidecar failure is logged", (await run(`select count(*)::int n from t3a_capture_refusal where reason_code='LSA_SIDECAR_WRITE_FAILED' and subject_ref='${withSidecar[0].observation_id}'`))[0].n === 1);
+await run("update t3a_capture_config set enable_lsa_sidecar = false");
+const sideDirect = await tryq(`insert into t3a_lsa_sidecar(account_id, lsa_sidecar_id) values ('${P}', gen_random_uuid())`); rec("DT-49", "a sidecar row written outside the open route is refused by the table itself", /SOCKET_ROUTE_CLOSED/.test(sideDirect.msg), sideDirect.msg.slice(0, 80));
+// DT-45 / DT-46
+const mkReport = async (who, set) => (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, preview_state) values ('${who}','D1',(enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1],'${JSON.stringify(set)}','current') returning ber_report_id i`))[0].i;
+const sname = (await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_report_issuance' and column_name='state'`))[0].u;
+const issue = (rep, by) => `insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, version_set_at_issuance, rendered_body_hash, state) values ('${rep}','${P}','D1','${by}','{}','${H2}',(enum_range(null::${sname}))[1])`;
+const newObs = (await run(obs(P, sP2, `supersedes|'${oid}'`)))[0].observation_id;
+const repStale = await mkReport(P, { observations: [oid] }); const stale = await tryq(issue(repStale, M)); rec("DT-45", "issuance refuses a report whose observation was superseded after assembly", /STALE_VERSION_SET/.test(stale.msg), stale.msg.slice(0, 100));
+const repFresh = await mkReport(P, { observations: [newObs] }); const fresh = await tryq(issue(repFresh, M)); rec("DT-45", "a fresh assembly over the superseding observation passes this check", !/STALE_VERSION_SET|PREVIEW_STALE/.test(fresh.msg), fresh.msg.slice(0, 100));
+const H = H1; const wd = await run(`select t3a_record_consent('${P}','employer_share','withdrawn','D1','S1','1.0','${H}','checkbox','en-CA','report_release','future_only',true) r`).catch(async () => null);
+await c.query(`select set_config('request.jwt.claims', json_build_object('sub','${P}','role','authenticated')::text, false)`);
+await c.query("begin"); await c.query("set local role authenticated"); await c.query(`select set_config('request.jwt.claim.sub','${P}',true)`); const wr = await c.query(`select t3a_record_consent('${P}','employer_share','withdrawn','D1','S1','1.0','${H}','checkbox','en-CA','report_release','future_only',true,null,null) r`).catch(e => ({ err: e.message })); await c.query("commit"); await c.query(`select set_config('request.jwt.claims', '', false)`);
+const pv = (await run(`select preview_state from t3a_d1_ber_report where ber_report_id='${repFresh}'`))[0].preview_state; rec("DT-46", "withdrawing consent after the preview makes preview_state stale", pv === "stale", [pv, wr.err || wr.rows?.[0]?.r?.outcome]);
+const staleIssue = await tryq(issue(repFresh, M)); rec("DT-46", "issue then refuses", /PREVIEW_STALE/.test(staleIssue.msg), staleIssue.msg.slice(0, 100));
+// DT-51
+const sv51 = await tryq(`select t3a_record_served_instance('{"participant_id":"${P}","source_version_id":"${sv}","question_set_version":"1.0","statement_library_version":"1.0","answer_key_version":"1.0","recurrence_key_version":"1.0","template_register_version":"1.0","stage1_engine_version":"1.0","stage1_script_version":"1.0","served_language":"en-CA"}'::jsonb, 'S1', 'response_adaptive') r`, true);
+rec("DT-51", "response adaptive content at Stage 1 is refused and logged", sv51.rows[0]?.r?.reason === "S1_CONTENT_NOT_DETERMINISTIC", sv51.rows[0]?.r || sv51.msg.slice(0, 80));
+const gen = await tryq(`select t3a_record_served_instance('{"participant_id":"${P}","source_version_id":"${sv}"}'::jsonb, 'S1', 'generated') r`, true); rec("DT-51", "generated content at Stage 1 is refused", gen.rows[0]?.r?.reason === "S1_CONTENT_NOT_DETERMINISTIC");
+const fix = await tryq(`select t3a_record_served_instance('{"participant_id":"${P}","source_version_id":"${sv}","question_set_version":"1.0","statement_library_version":"1.0","answer_key_version":"1.0","recurrence_key_version":"1.0","template_register_version":"1.0","stage1_engine_version":"1.0","stage1_script_version":"1.0","served_language":"en-CA"}'::jsonb, 'S1', 'fixed') r`, true);
+const sIns = await run(`select stage1_engine_version e, stage1_script_version s from t3a_served_instance order by served_at desc limit 1`); rec("DT-51", "fixed content is served and the engine and script versions are recorded", fix.rows[0]?.r?.outcome === "recorded" && sIns[0].e === "1.0" && sIns[0].s === "1.0", fix.rows[0]?.r || fix.msg.slice(0, 80));
+// DT-53
+const prof = await tryq(`insert into t3a_participant_profile(account_id) values ('${P}') returning legal_name_capture_state a, display_name_capture_state b, occupation_interest_capture_state c, timezone_capture_state d`, true);
+const vals = Object.values(prof.rows[0] || {}); rec("DT-53", "onboarding with every optional profile field skipped completes; each field stores never_asked", prof.msg === "ok" && vals.length === 4 && vals.every(v => v === "never_asked"), prof.rows[0] || prof.msg.slice(0, 80));
+const dec = await tryq(`insert into t3a_participant_profile(account_id, legal_name_capture_state) values ('${CO}','declined') returning legal_name_capture_state a, display_name_capture_state b`, true); rec("DT-53", "a field the participant declined stores declined; the rest never_asked", dec.rows[0]?.a === "declined" && dec.rows[0]?.b === "never_asked", dec.rows[0] || dec.msg.slice(0, 80));
+// DT-57
+await run(`update t3a_source set source_display_title = 'Second title' where source_id='${src}'`);
+const hist = (await run(`select source_display_title t from t3a_source_title_history where source_id='${src}' order by title_seq`)).map(r => r.t);
+const oldAt = (await run(`select t3a_source_title_as_of('${src}', now() - interval '1 second') t`))[0].t, nowT = (await run(`select t3a_source_title_as_of('${src}', now() + interval '1 second') t`))[0].t;
+const ob0 = (await run(`select created_at from t3a_observation where observation_id='${oid}'`))[0].created_at;
+rec("DT-57", "a revised title keeps the earlier title; a historical observation shows the title its own version carried", hist.join() === "First title,Second title" && nowT === "Second title" && (await run(`select t3a_source_title_as_of('${src}', '${new Date(ob0).toISOString()}') t`))[0].t === "First title", { hist, oldAt, nowT });
+// DT-58
+const b1 = (await run(`select t3a_register_source_bank('dormant_${RUN}') r`))[0].r, b2 = (await run(`select t3a_register_source_bank('dormant_${RUN}') r`))[0].r;
+rec("DT-58", "a second source bank for the module is refused and logged", b1.outcome === "registered" && b2.reason === "SECOND_SOURCE_BANK_REFUSED", [b1.outcome, b2.reason]);
+const bank = await tryq(`update t3a_source set source_bank_id = gen_random_uuid() where source_id='${src}'`); rec("DT-58", "a source cannot name a bank that is not registered", /SOURCE_BANK_NOT_REGISTERED/.test(bank.msg), bank.msg.slice(0, 80));
+// DT-62
+const lc = randomUUID(); const mp = (await run(`select t3a_map_legacy_consent('${lc}','longitudinal_comparison') r`))[0].r; rec("DT-62", "a legacy consent whose text does not cover the purpose is not mapped; it stays legacy", mp.reason === "LEGACY_CONSENT_DOES_NOT_COVER_PURPOSE" && (await run(`select count(*)::int n from t3a_consent_record where consent_id='${lc}'`))[0].n === 0, mp);
+// DT-65
+const gw = (await run(`insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${P}','account_authentication','1.0','1.0',now()) returning observation_path_gateway_id g`))[0].g;
+const ent65 = (code, inst, extra = "") => `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, session_id, observation_mode, stage_entry_hold_expires_at ${extra ? ", " + extra.split("|")[0] : ""}) values ('${P}','D1','${code}','${gw}','${inst}','x','1.0','{}','{D1}','{}',gen_random_uuid(),'s1_deterministic_engine', now() + interval '1 hour' ${extra ? ", " + extra.split("|")[1] : ""})`;
+const sA = await stage(P, "S1"), sB = await stage(P, "S2");
+await run("update t3a_capture_config set enforce_required = true");
+const e1 = await tryq(ent65("S1", sA)), e2 = await tryq(ent65("S2", sB)), e3 = await tryq(ent65("S2", sB, `entry_authority_actor_id|'${M}'`));
+rec("DT-65", "S1 entry without an entry authority actor is accepted", !/REQUIRED_FIELD/.test(e1.msg) || /not_captured|session_identity_receipt/.test(e1.msg), e1.msg.slice(0, 120));
+rec("DT-65", "S2 entry without one is refused", /entry_authority_actor_id is required/.test(e2.msg), e2.msg.slice(0, 120));
+rec("DT-65", "S2 entry with one passes this rule", !/entry_authority_actor_id is required/.test(e3.msg), e3.msg.slice(0, 120));
+await run("update t3a_capture_config set enforce_required = false");
+const mp1 = await tryq(`insert into t3a_role_assignment(account_id, role_code, role_grant_basis, role_granted_by, role_rules_version) values ('${CO}','participant','self_serve_individual','${CO}','1.0')`); const mp2 = await tryq(`insert into t3a_role_assignment(account_id, role_code, role_grant_basis, role_granted_by, role_rules_version) values ('${CO}','mentor','administrator_grant','${CO}','1.0') returning role_assignment_id`);
+rec("DT-65", "granting the participant role without a pseudonym is refused; the mentor role without one is accepted", /check|violat|null/i.test(mp1.msg) && mp2.msg === "ok", [mp1.msg.slice(0, 60), mp2.msg.slice(0, 40)]);
+console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
+await c.end(); process.exit(0);

@@ -54,7 +54,7 @@ create table if not exists public.t3a_growth_log_entry (
   check (schema_version is null or schema_version ~ '^[0-9]+\.[0-9]+(\.[0-9]+)?$')
 );
 
-comment on table public.t3a_growth_log_entry is 'Domain J Growth Log: the participant''s own practice notes and rehearsal references. Participant only. Feeds nothing, scores nothing, is read by no one else; the platform writes nothing here.';
+comment on table public.t3a_growth_log_entry is 'Domain J Growth Log: the participant''s own practice notes and rehearsal references. Participant only. Feeds nothing, measures nothing, is read by no one else; the platform writes nothing here.';
 
 drop trigger if exists t3a_capture_state_fill on public.t3a_growth_log_entry;
 create trigger t3a_capture_state_fill before insert or update on public.t3a_growth_log_entry for each row execute function public.t3a_capture_state_fill('text:text_capture_state', 'module_reference:module_reference_capture_state');
@@ -128,7 +128,7 @@ do $$ declare r record; begin
 end $$;
 create policy growth_log_entries_owner_select_visible on public.growth_log_entries for select to authenticated using (candidate_id = auth.uid() and platform_hidden_at is null);
 
--- What the participant sees of their observations is regenerated from the canonical record. No scores, no trend, no progress,
+-- What the participant sees of their observations is regenerated from the canonical record. No measures, no trend line, no progress figure,
 -- no mentor wording. Their own rows only (security invoker + row security on the base table is not enough, so the view filters itself).
 create or replace view public.t3a_growth_log_observation_view with (security_invoker = false) as
   select o.observation_id, o.participant_id, o.stage_code, o.dimension_id, o.created_at as committed_at

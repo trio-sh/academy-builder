@@ -1,0 +1,211 @@
+{
+ "passed": 26,
+ "total": 26,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-42",
+   "label": "a package granting a Stage or a dimension is refused; only the three entitlement kinds are accepted",
+   "pass": true,
+   "detail": [
+    "new row for relation \"t3a_order\" violates check constraint \"",
+    "new row for relation \"t3a_order\" violates check constraint \""
+   ]
+  },
+  {
+   "id": "DT-44",
+   "label": "an event delivered after a later one keeps its own occurred_at and its ingested_at; nothing is reordered or deleted",
+   "pass": true,
+   "detail": [
+    [
+     "consent.granted",
+     "2026-10-20T12:10:59.111Z",
+     "2026-10-20T12:11:59.151Z"
+    ],
+    [
+     "consent.declined",
+     "2026-10-20T12:01:59.111Z",
+     "2026-10-20T12:11:59.209Z"
+    ]
+   ]
+  },
+  {
+   "id": "DT-52",
+   "label": "an observation record for someone other than the observed participant is refused",
+   "pass": true,
+   "detail": "OBSERVATION_FOR_NON_OBSERVED_PARTICIPANT: an observation record belongs to the participant whose Sta"
+  },
+  {
+   "id": "DT-52",
+   "label": "a co-participant of a Stage 4 group session has no observation record",
+   "pass": true,
+   "detail": "OBSERVATION_FOR_NON_OBSERVED_PARTICIPANT: an observation record belongs to the participant whose Sta"
+  },
+  {
+   "id": "DT-52",
+   "label": "the observed participant's own record is accepted",
+   "pass": true
+  },
+  {
+   "id": "DT-48",
+   "label": "two clause instances for one conduct element in one observation are both kept as separate rows",
+   "pass": true,
+   "detail": [
+    "ok",
+    "ok"
+   ]
+  },
+  {
+   "id": "DT-49",
+   "label": "a failing sidecar write leaves the observation committed once",
+   "pass": true
+  },
+  {
+   "id": "DT-49",
+   "label": "the sidecar failure is logged",
+   "pass": true
+  },
+  {
+   "id": "DT-49",
+   "label": "a sidecar row written outside the open route is refused by the table itself",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_lsa_sidecar is a SOCKET structure; capture is not e"
+  },
+  {
+   "id": "DT-45",
+   "label": "issuance refuses a report whose observation was superseded after assembly",
+   "pass": true,
+   "detail": "STALE_VERSION_SET: an observation in this report was superseded after assembly; a fresh assembly is "
+  },
+  {
+   "id": "DT-45",
+   "label": "a fresh assembly over the superseding observation passes this check",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-46",
+   "label": "withdrawing consent after the preview makes preview_state stale",
+   "pass": true,
+   "detail": [
+    "stale",
+    "recorded"
+   ]
+  },
+  {
+   "id": "DT-46",
+   "label": "issue then refuses",
+   "pass": true,
+   "detail": "PREVIEW_STALE: consent changed after the participant preview; the preview must be shown again before"
+  },
+  {
+   "id": "DT-51",
+   "label": "response adaptive content at Stage 1 is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "Stage 1 serves fixed content only; response_adaptive content is refused",
+    "reason": "S1_CONTENT_NOT_DETERMINISTIC",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-51",
+   "label": "generated content at Stage 1 is refused",
+   "pass": true
+  },
+  {
+   "id": "DT-51",
+   "label": "fixed content is served and the engine and script versions are recorded",
+   "pass": true,
+   "detail": {
+    "outcome": "recorded",
+    "served_instance_id": "2a7f03c6-359b-496e-82dd-f750f9929445"
+   }
+  },
+  {
+   "id": "DT-53",
+   "label": "onboarding with every optional profile field skipped completes; each field stores never_asked",
+   "pass": true,
+   "detail": {
+    "a": "never_asked",
+    "b": "never_asked",
+    "c": "never_asked",
+    "d": "never_asked"
+   }
+  },
+  {
+   "id": "DT-53",
+   "label": "a field the participant declined stores declined; the rest never_asked",
+   "pass": true,
+   "detail": {
+    "a": "declined",
+    "b": "never_asked"
+   }
+  },
+  {
+   "id": "DT-57",
+   "label": "a revised title keeps the earlier title; a historical observation shows the title its own version carried",
+   "pass": true,
+   "detail": {
+    "hist": [
+     "First title",
+     "Second title"
+    ],
+    "oldAt": "First title",
+    "nowT": "Second title"
+   }
+  },
+  {
+   "id": "DT-58",
+   "label": "a second source bank for the module is refused and logged",
+   "pass": true,
+   "detail": [
+    "registered",
+    "SECOND_SOURCE_BANK_REFUSED"
+   ]
+  },
+  {
+   "id": "DT-58",
+   "label": "a source cannot name a bank that is not registered",
+   "pass": true,
+   "detail": "SOURCE_BANK_NOT_REGISTERED: a source names only a registered source bank"
+  },
+  {
+   "id": "DT-62",
+   "label": "a legacy consent whose text does not cover the purpose is not mapped; it stays legacy",
+   "pass": true,
+   "detail": {
+    "detail": "no counsel confirmation that the stored text covers longitudinal_comparison; the record stays legacy and a fresh grant is needed",
+    "reason": "LEGACY_CONSENT_DOES_NOT_COVER_PURPOSE",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-65",
+   "label": "S1 entry without an entry authority actor is accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-65",
+   "label": "S2 entry without one is refused",
+   "pass": true,
+   "detail": "T3A_REQUIRED_FIELD_MISSING: entry_authority_actor_id is required to enter S2"
+  },
+  {
+   "id": "DT-65",
+   "label": "S2 entry with one passes this rule",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-65",
+   "label": "granting the participant role without a pseudonym is refused; the mentor role without one is accepted",
+   "pass": true,
+   "detail": [
+    "new row for relation \"t3a_role_assignment\" violates check co",
+    "ok"
+   ]
+  }
+ ]
+}

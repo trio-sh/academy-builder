@@ -5,7 +5,7 @@ MIGRATION = "20261113000000_day1_growth_log"
 TABLES = [
     {
         "name": "t3a_growth_log_entry", "mode": "state",
-        "comment": "Domain J Growth Log: the participant's own practice notes and rehearsal references. Participant only. Feeds nothing, scores nothing, is read by no one else; the platform writes nothing here.",
+        "comment": "Domain J Growth Log: the participant's own practice notes and rehearsal references. Participant only. Feeds nothing, measures nothing, is read by no one else; the platform writes nothing here.",
         "own_read": "created_by = auth.uid()",
         "fields": [
             {"q": "J.entry_id", "pk": True, "default": "gen_random_uuid()"},

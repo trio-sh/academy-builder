@@ -7,7 +7,7 @@ ENT = "('observation_engagements', 'mentor_hour_allocation', 'access_duration')"
 TABLES = [
     {
         "name": "t3a_order", "mode": "insert_only",
-        "comment": "Domain L orders. Insert only; a refund is a row in t3a_refund. An order never creates, changes or scores evidence.",
+        "comment": "Domain L orders. Insert only; a refund is a row in t3a_refund. An order never creates, changes or weighs evidence.",
         "own_read": "account_id = auth.uid()",
         "fields": [
             {"q": "L.order_id", "pk": True, "default": "gen_random_uuid()"},

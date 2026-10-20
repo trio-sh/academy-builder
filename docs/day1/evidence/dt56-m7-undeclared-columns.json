@@ -1,0 +1,2109 @@
+{
+ "columns_in_t3a_tables": 2453,
+ "undeclared_columns": 1591,
+ "tables_with_undeclared": 255,
+ "by_table": {
+  "t3a_account": [
+   "capture_gaps",
+   "dictionary_version",
+   "updated_at"
+  ],
+  "t3a_action_sequence_rule": [
+   "rule_id",
+   "stage_code",
+   "ordered_authorities"
+  ],
+  "t3a_ai_provenance_socket": [
+   "served_instance_id"
+  ],
+  "t3a_anonymization_event": [
+   "anonymization_event_id",
+   "retention_class",
+   "resource_type",
+   "resource_id",
+   "executed_at"
+  ],
+  "t3a_attempt": [
+   "attempt_id",
+   "participant_id",
+   "dimension_id",
+   "stage_code",
+   "stage_entry_event_id",
+   "outcome",
+   "created_at",
+   "ended_at"
+  ],
+  "t3a_authority_snapshot": [
+   "authority_snapshot_id",
+   "actor_id",
+   "authority",
+   "dimension_id",
+   "stage_code",
+   "role_authorization_id",
+   "snapshot",
+   "captured_at"
+  ],
+  "t3a_ber_report": [
+   "ber_report_id",
+   "participant_id",
+   "version",
+   "status",
+   "issue_metadata",
+   "supersedes",
+   "permitted_use_version",
+   "current_until",
+   "created_at"
+  ],
+  "t3a_ber_statement": [
+   "ber_statement_id",
+   "ber_report_id",
+   "dimension_id",
+   "composed_statement_id",
+   "contributing_observation_ids",
+   "stages_contributing",
+   "recurrence_note"
+  ],
+  "t3a_calibration_record": [
+   "mentor_id",
+   "recorded_at"
+  ],
+  "t3a_capture_config": [
+   "singleton",
+   "enforce_required",
+   "updated_at",
+   "enforce_sequence",
+   "enable_lsa_sidecar"
+  ],
+  "t3a_capture_refusal": [
+   "refusal_id",
+   "route",
+   "reason_code",
+   "subject_ref",
+   "detail",
+   "refused_at"
+  ],
+  "t3a_challenge_case": [
+   "ber_report_id",
+   "participant_id",
+   "disputed_statement_id",
+   "disputed_observation_id",
+   "status",
+   "reviewer_assignment",
+   "outcome",
+   "outcome_reasoning",
+   "observation_notification_timestamp",
+   "response_time_committed",
+   "d1_ber_report_id"
+  ],
+  "t3a_change_classification": [
+   "change_classification_id",
+   "content_version_id",
+   "kind",
+   "calibration_clearance_affecting",
+   "prior_clearance_carries_over",
+   "supersedes_change_id",
+   "actor",
+   "effective_date",
+   "rationale"
+  ],
+  "t3a_change_request": [
+   "asset_id"
+  ],
+  "t3a_coaching_feedback": [
+   "coaching_feedback_id",
+   "rehearsal_session_id",
+   "feedback_body",
+   "created_at"
+  ],
+  "t3a_cohort": [
+   "created_at"
+  ],
+  "t3a_complaint": [
+   "participant_id",
+   "raised_at"
+  ],
+  "t3a_composed_statement": [
+   "composed_statement_id",
+   "rendered_body",
+   "composed_at",
+   "statement_library_version",
+   "answer_key"
+  ],
+  "t3a_configuration_value": [
+   "configuration_seq"
+  ],
+  "t3a_conflict_declaration": [
+   "mentor_id",
+   "participant_id",
+   "employer_org_id",
+   "reason_class",
+   "cleared_at"
+  ],
+  "t3a_consent_config": [
+   "singleton",
+   "enforce_gate",
+   "updated_at"
+  ],
+  "t3a_consent_record": [
+   "account_id",
+   "recorded_seq"
+  ],
+  "t3a_consent_refusal": [
+   "refusal_id",
+   "account_id",
+   "consent_type",
+   "reason_code",
+   "detail",
+   "refused_at"
+  ],
+  "t3a_consent_state": [
+   "consent_state_id",
+   "participant_id",
+   "consent_type",
+   "consent_status",
+   "consent_timestamp",
+   "consent_copy_version",
+   "consent_method",
+   "language_preference",
+   "jurisdiction_code",
+   "created_at"
+  ],
+  "t3a_consent_state_ref": [
+   "account_id",
+   "consent_ids",
+   "created_at"
+  ],
+  "t3a_consent_supersession": [
+   "consent_id"
+  ],
+  "t3a_contact_consent": [
+   "contact_consent_id",
+   "account_id",
+   "recorded_at"
+  ],
+  "t3a_content_load_event": [
+   "content_load_event_id",
+   "env_state",
+   "content_object_id",
+   "content_version_id",
+   "governed_status",
+   "loaded_by",
+   "loaded_at",
+   "manifest_id",
+   "notes"
+  ],
+  "t3a_content_object": [
+   "content_object_id",
+   "identifier",
+   "family",
+   "title",
+   "dimension_id",
+   "current_version_id",
+   "current_operational_state",
+   "created_at",
+   "created_by",
+   "updated_at",
+   "updated_by",
+   "retired_at",
+   "retired_by",
+   "retired_reason"
+  ],
+  "t3a_content_version": [
+   "content_version_id",
+   "content_object_id",
+   "version_no",
+   "approval_status",
+   "operational_state",
+   "approved_by",
+   "approved_at",
+   "effective_at",
+   "superseded_by",
+   "retired_at",
+   "retired_reason",
+   "body",
+   "body_hash",
+   "created_at",
+   "created_by"
+  ],
+  "t3a_control_run": [
+   "control_code",
+   "result",
+   "run_at"
+  ],
+  "t3a_correction_case": [
+   "correction_case_id",
+   "raised_by",
+   "participant_id",
+   "ground",
+   "narrative",
+   "status",
+   "raised_at",
+   "resolved_at",
+   "challenge_status",
+   "terminal_outcome",
+   "ber_report_id"
+  ],
+  "t3a_correction_request": [
+   "ber_report_id",
+   "participant_id",
+   "requested_at"
+  ],
+  "t3a_coverage_snapshot": [
+   "snapshot_id",
+   "published_at",
+   "reports_available",
+   "areas_in_service",
+   "previous_snapshot_id"
+  ],
+  "t3a_d1_acceptance_evidence": [
+   "evidence_id",
+   "test_id",
+   "outcome",
+   "actual_result",
+   "build_version",
+   "tester",
+   "executed_at",
+   "conflict_note"
+  ],
+  "t3a_d1_acceptance_test": [
+   "test_id",
+   "section_ref",
+   "section_title",
+   "test_name",
+   "required_result",
+   "display_order"
+  ],
+  "t3a_d1_ai_administration_confirmation": [
+   "ai_administration_confirmation_id",
+   "ai_administration_run_id",
+   "stage_entry_event_id",
+   "source_version_id",
+   "confirmed_by",
+   "authority_snapshot_id",
+   "confirmed_at",
+   "confirmation_note"
+  ],
+  "t3a_d1_ai_administration_run": [
+   "ai_administration_run_id",
+   "stage_entry_event_id",
+   "participant_id",
+   "dimension_id",
+   "source_version_id",
+   "model_ref_version_id",
+   "prompt_ref_version_id",
+   "admin_config_version_id",
+   "safety_config_version_id",
+   "rendered_body",
+   "rendered_body_hash",
+   "env_state_at_run",
+   "run_started_at",
+   "run_completed_at",
+   "status"
+  ],
+  "t3a_d1_approval_audit_finding": [
+   "approval_audit_finding_id",
+   "source_approval_id",
+   "finding",
+   "established",
+   "recorded_at",
+   "recorded_by"
+  ],
+  "t3a_d1_approval_basis": [
+   "source_approval_id",
+   "basis_kind",
+   "referenced_identifier",
+   "basis_text",
+   "basis_entered_on",
+   "recorded_under",
+   "recorded_at"
+  ],
+  "t3a_d1_approval_basis_kind": [
+   "basis_kind",
+   "records",
+   "requires_referenced_identifier",
+   "closed_list_under"
+  ],
+  "t3a_d1_approval_refusal_log": [
+   "approval_refusal_id",
+   "source_id",
+   "source_version_id",
+   "attempted_status",
+   "refusal_code",
+   "standing_at_refusal",
+   "attempted_by",
+   "refused_at"
+  ],
+  "t3a_d1_assurance_check": [
+   "id",
+   "sweep_id",
+   "kind",
+   "target_id",
+   "result",
+   "observation",
+   "checked_at"
+  ],
+  "t3a_d1_authority_register": [
+   "key",
+   "category",
+   "state",
+   "payload",
+   "set_by",
+   "set_at",
+   "note",
+   "updated_at"
+  ],
+  "t3a_d1_bank_session_window": [
+   "stage_code",
+   "min_seconds",
+   "max_seconds",
+   "issued_under",
+   "note"
+  ],
+  "t3a_d1_beat_capture_binding": [
+   "source_identifier",
+   "beat_code",
+   "capture_set_code",
+   "revisable",
+   "qualifier_as_written"
+  ],
+  "t3a_d1_beat_timestamp": [
+   "stage_entry_event_id",
+   "beat_code",
+   "recorded_at",
+   "duration_seconds",
+   "recorded_by"
+  ],
+  "t3a_d1_ber_report": [
+   "participant_id",
+   "dimension_id",
+   "status",
+   "version_set",
+   "supersedes",
+   "assembled_at",
+   "review_completed_at",
+   "issued_at",
+   "amended_at",
+   "withdrawn_at"
+  ],
+  "t3a_d1_branch_rule": [
+   "rule_code",
+   "rule_condition",
+   "rule_effect",
+   "rule_order"
+  ],
+  "t3a_d1_build_conflict_register": [
+   "entry_id",
+   "opened_by",
+   "scope",
+   "classification",
+   "status",
+   "blocked_on",
+   "amended_by",
+   "note",
+   "recorded_at"
+  ],
+  "t3a_d1_calibration_agreement": [
+   "exercise_id",
+   "reviewer_count",
+   "submitted_count",
+   "agreement_body",
+   "computed_at"
+  ],
+  "t3a_d1_calibration_exercise": [
+   "id",
+   "title",
+   "purpose_note",
+   "evidence_bundle",
+   "reviewer_prompt",
+   "state",
+   "opened_at",
+   "opened_by",
+   "closed_at",
+   "closed_by",
+   "created_at",
+   "created_by"
+  ],
+  "t3a_d1_calibration_participation": [
+   "id",
+   "exercise_id",
+   "reviewer_id",
+   "decision_body",
+   "submitted_at",
+   "created_at"
+  ],
+  "t3a_d1_capture_line": [
+   "capture_line_id",
+   "capture_set_code",
+   "line_text",
+   "line_order",
+   "branch_code",
+   "is_whole_session_answer"
+  ],
+  "t3a_d1_capture_resolution": [
+   "resolution_id",
+   "question_code",
+   "capture_set_code",
+   "capture_line_order",
+   "statement_key",
+   "conduct_element"
+  ],
+  "t3a_d1_capture_selection": [
+   "capture_selection_id",
+   "stage_entry_event_id",
+   "question_code",
+   "capture_set_code",
+   "beat_code",
+   "line_order",
+   "selected_by",
+   "selected_at"
+  ],
+  "t3a_d1_capture_set": [
+   "capture_set_code",
+   "title",
+   "applicability_note",
+   "display_order",
+   "records_first_occurrence"
+  ],
+  "t3a_d1_change_classification": [
+   "change_classification_id",
+   "content_version_id",
+   "kind",
+   "calibration_clearance_affecting",
+   "prior_clearance_carries_over",
+   "supersedes_change_id",
+   "actor",
+   "effective_date",
+   "rationale"
+  ],
+  "t3a_d1_co_participant_briefing": [
+   "source_identifier",
+   "co_participant_ordinal",
+   "stated_at_beat",
+   "position_text"
+  ],
+  "t3a_d1_composed_statement": [
+   "composed_statement_id",
+   "observation_record_id",
+   "statement_library_id",
+   "resolution_rule_id",
+   "composed_body",
+   "answer_pattern_snapshot",
+   "bound_variable_values",
+   "supersedes",
+   "version_set",
+   "composed_at",
+   "composed_by"
+  ],
+  "t3a_d1_condition_precedence": [
+   "condition_code",
+   "precedence_order",
+   "language_template_id",
+   "renders_before_conduct",
+   "effect"
+  ],
+  "t3a_d1_confidential_concern": [
+   "concern_id",
+   "participant_id",
+   "dimension_id",
+   "narrative",
+   "status",
+   "routed_to",
+   "raised_at",
+   "resolved_at"
+  ],
+  "t3a_d1_conflict_declaration": [
+   "conflict_declaration_id",
+   "actor_id",
+   "target_kind",
+   "target_ref",
+   "declared_at",
+   "rationale",
+   "revoked_at"
+  ],
+  "t3a_d1_consent": [
+   "consent_id",
+   "participant_id",
+   "consent_type",
+   "notice_version_id",
+   "notice_version_hash",
+   "stage_class",
+   "stage_instance_id",
+   "source_version_id",
+   "state",
+   "granted_at",
+   "declined_at",
+   "withdrawn_at",
+   "capture_channel",
+   "capture_actor",
+   "superseded_by",
+   "audit_ref",
+   "created_at"
+  ],
+  "t3a_d1_consent_notice_version": [
+   "notice_version_id",
+   "notice_version_hash",
+   "names_google_meet",
+   "states_no_recording",
+   "approved_at",
+   "approved_by_as_signed",
+   "recorded_at"
+  ],
+  "t3a_d1_consent_type": [
+   "consent_type",
+   "covers",
+   "available"
+  ],
+  "t3a_d1_content_identity_assertion": [
+   "source_identifier",
+   "superseded_version_id",
+   "current_version_id",
+   "field_name",
+   "previous_value",
+   "corrected_value",
+   "is_superset",
+   "asserted_at"
+  ],
+  "t3a_d1_content_load_event": [
+   "content_load_event_id",
+   "env_state",
+   "content_object_id",
+   "content_version_id",
+   "governed_status",
+   "loaded_by",
+   "loaded_at",
+   "manifest_id",
+   "notes"
+  ],
+  "t3a_d1_content_version": [
+   "content_version_id",
+   "content_object_id",
+   "version_no",
+   "approval_status",
+   "operational_state",
+   "approved_by",
+   "approved_at",
+   "effective_at",
+   "superseded_by",
+   "retired_at",
+   "retired_reason",
+   "body",
+   "body_hash",
+   "created_at",
+   "created_by"
+  ],
+  "t3a_d1_corr006_evidence_item": [
+   "item",
+   "asked_for",
+   "expected",
+   "verdict",
+   "measured",
+   "where_proved"
+  ],
+  "t3a_d1_correction_test": [
+   "correction_test_id",
+   "instrument",
+   "test_name",
+   "fixture",
+   "required_result",
+   "restated_by",
+   "supersedes_fixture",
+   "why_restated",
+   "defined_at"
+  ],
+  "t3a_d1_correction_test_outcome": [
+   "outcome_id",
+   "correction_test_id",
+   "outcome",
+   "actual_result",
+   "build_version",
+   "tester",
+   "executed_at",
+   "conflict_note"
+  ],
+  "t3a_d1_founder_reapproval": [
+   "source_identifier",
+   "source_version_id",
+   "basis",
+   "approver_as_signed",
+   "signed_on",
+   "recorded_at"
+  ],
+  "t3a_d1_group_session": [
+   "group_session_id",
+   "source_version_id",
+   "stage_instance_id",
+   "facilitator_id",
+   "observed_participant_id",
+   "composed_at",
+   "accommodation_settled",
+   "started_at",
+   "ended_at",
+   "paused_at"
+  ],
+  "t3a_d1_group_session_member": [
+   "member_id",
+   "group_session_id",
+   "participant_id",
+   "member_role",
+   "pre_brief_ref",
+   "disconnected_at",
+   "withdrew_at"
+  ],
+  "t3a_d1_involvement": [
+   "actor_id",
+   "participant_id",
+   "dimension_id",
+   "involving_action",
+   "contributing_record_kind",
+   "contributing_record_id",
+   "recorded_at"
+  ],
+  "t3a_d1_issuance_floor_config": [
+   "singleton",
+   "status",
+   "minimum_committed_observations",
+   "minimum_distinct_observers",
+   "minimum_distinct_stages",
+   "approved_by",
+   "approved_at",
+   "set_at"
+  ],
+  "t3a_d1_language_template": [
+   "language_template_id",
+   "dimension_id",
+   "template_body",
+   "bound_variables",
+   "eligible_states",
+   "precedence",
+   "content_version_id",
+   "retired",
+   "created_at"
+  ],
+  "t3a_d1_lift_condition": [
+   "lift_condition_id",
+   "scope",
+   "step_order",
+   "condition_text",
+   "owner",
+   "satisfied",
+   "satisfied_by",
+   "set_by",
+   "supersedes",
+   "recorded_at"
+  ],
+  "t3a_d1_live_session": [
+   "stage_entry_event_id",
+   "channel",
+   "host_account_email",
+   "meet_link",
+   "link_status",
+   "link_released_at",
+   "visual_confirmation_recorded_at",
+   "e3_rests_on_attestation_alone",
+   "created_at"
+  ],
+  "t3a_d1_live_session_event": [
+   "live_session_event_id",
+   "stage_entry_event_id",
+   "event_kind",
+   "beat_code",
+   "reported_by",
+   "reported_at",
+   "rec10_classification",
+   "narrative"
+  ],
+  "t3a_d1_mentor_action_sequence": [
+   "source_identifier",
+   "beat_ordinal",
+   "beat_code",
+   "action_type",
+   "content_verbatim",
+   "is_decision_point",
+   "pause_seconds_min",
+   "pause_seconds_max",
+   "role_label"
+  ],
+  "t3a_d1_participant_review_action": [
+   "review_action_id",
+   "ber_report_id",
+   "participant_id",
+   "action",
+   "correction_case_id",
+   "recorded_at",
+   "actor_context"
+  ],
+  "t3a_d1_pathway_audit": [
+   "pathway_audit_id",
+   "event",
+   "actor_id",
+   "participant_id",
+   "dimension_id",
+   "stage_instance_id",
+   "served_instance_id",
+   "sub_reason",
+   "body",
+   "occurred_at"
+  ],
+  "t3a_d1_pilot_cohort": [
+   "id",
+   "code",
+   "title",
+   "purpose_note",
+   "cap",
+   "entry_opens_at",
+   "entry_closes_at",
+   "exit_criteria",
+   "state",
+   "opened_at",
+   "opened_by",
+   "closed_at",
+   "closed_by",
+   "created_at",
+   "created_by"
+  ],
+  "t3a_d1_pilot_enrollment": [
+   "id",
+   "cohort_id",
+   "participant_id",
+   "state",
+   "invited_at",
+   "activated_at",
+   "withdrawn_at",
+   "completed_at",
+   "note"
+  ],
+  "t3a_d1_pilot_event": [
+   "id",
+   "cohort_id",
+   "participant_id",
+   "kind",
+   "body",
+   "prev_chain_hash",
+   "chain_hash",
+   "created_at"
+  ],
+  "t3a_d1_production_release": [
+   "id",
+   "state",
+   "gate_result",
+   "evaluated_at",
+   "released_at",
+   "released_by",
+   "rolled_back_at",
+   "rolled_back_by",
+   "rollback_target",
+   "rollback_reason",
+   "created_at",
+   "created_by"
+  ],
+  "t3a_d1_production_runbook_step": [
+   "id",
+   "release_id",
+   "step_no",
+   "title",
+   "detail",
+   "state",
+   "completed_at",
+   "completed_by",
+   "note"
+  ],
+  "t3a_d1_progression_decision": [
+   "participant_id",
+   "dimension_id",
+   "recorded_by",
+   "authority_snapshot_id",
+   "observation_record_id",
+   "cleared_from",
+   "cleared_at",
+   "cleared_by",
+   "rationale",
+   "created_at"
+  ],
+  "t3a_d1_question_capture_map": [
+   "question_code",
+   "capture_set_code",
+   "source_bound_family",
+   "ruling_reference",
+   "ruled_by",
+   "ruled_at",
+   "note",
+   "conduct_element",
+   "answer_type",
+   "applicability_rule",
+   "control_ordinal"
+  ],
+  "t3a_d1_question_object": [
+   "question_code",
+   "conduct_element",
+   "answer_type",
+   "applicability",
+   "missing_state_eligible",
+   "display_order"
+  ],
+  "t3a_d1_release_token": [
+   "release_token_id",
+   "consent_id",
+   "ber_report_id",
+   "report_version",
+   "recipient_name",
+   "recipient_org",
+   "recipient_address",
+   "token_hash",
+   "issued_at",
+   "expires_at",
+   "redeemed_at",
+   "revoked_at",
+   "superseded_at"
+  ],
+  "t3a_d1_rendered_instance": [
+   "rendered_instance_id",
+   "source_version_id",
+   "canonical_source_hash",
+   "presentation_variant_values",
+   "rendered_instance_hash",
+   "created_at"
+  ],
+  "t3a_d1_report_block": [
+   "block_no",
+   "block_name",
+   "render_behaviour",
+   "controlled_text_ref",
+   "renders_always",
+   "render_target"
+  ],
+  "t3a_d1_report_controlled_text": [
+   "text_ref",
+   "block_no",
+   "body",
+   "verbatim"
+  ],
+  "t3a_d1_report_disclosure": [
+   "disclosure_id",
+   "issuance_id",
+   "ber_report_id",
+   "participant_id",
+   "recipient_kind",
+   "recipient_email",
+   "recipient_display",
+   "purpose",
+   "state",
+   "released_at",
+   "revoked_at",
+   "expires_at"
+  ],
+  "t3a_d1_report_issuance": [
+   "issuance_id",
+   "ber_report_id",
+   "participant_id",
+   "dimension_id",
+   "authority_snapshot_id",
+   "version_set_at_issuance",
+   "rendered_body_hash",
+   "state",
+   "supersedes",
+   "superseded_at",
+   "withdrawn_at"
+  ],
+  "t3a_d1_report_refusal_log": [
+   "report_refusal_id",
+   "participant_id",
+   "dimension_id",
+   "requested_template_id",
+   "reason",
+   "detail",
+   "refused_at"
+  ],
+  "t3a_d1_report_verification_token": [
+   "verification_token_id",
+   "disclosure_id",
+   "token_hash",
+   "token_prefix",
+   "created_at",
+   "last_used_at"
+  ],
+  "t3a_d1_resolution_refusal": [
+   "resolution_refusal_id",
+   "observation_record_id",
+   "reason",
+   "detail",
+   "answer_pattern_snapshot",
+   "refused_at"
+  ],
+  "t3a_d1_resolution_rule": [
+   "resolution_rule_id",
+   "dimension_id",
+   "question_set_version",
+   "stage_code",
+   "answer_pattern",
+   "answer_pattern_key",
+   "statement_library_id",
+   "precedence",
+   "active",
+   "created_at"
+  ],
+  "t3a_d1_review_checklist_item": [
+   "item_no",
+   "requirement",
+   "rule_reference"
+  ],
+  "t3a_d1_review_result": [
+   "review_result_id",
+   "ber_report_id",
+   "item_no",
+   "outcome",
+   "detail",
+   "reviewed_by",
+   "reviewed_at"
+  ],
+  "t3a_d1_s1_confirmation": [
+   "s1_confirmation_id",
+   "stage_instance_id",
+   "participant_id",
+   "dimension_id",
+   "confirmed_by",
+   "s1_closed_at",
+   "captured_at"
+  ],
+  "t3a_d1_s1_determination": [
+   "s1_determination_id",
+   "stage_instance_id",
+   "participant_id",
+   "dimension_id",
+   "captured_by",
+   "question_id",
+   "selection",
+   "captured_at",
+   "missing_state"
+  ],
+  "t3a_d1_s1_provenance_slot": [
+   "slot_column",
+   "holds",
+   "issued_identifier",
+   "supplied_by",
+   "issued_under"
+  ],
+  "t3a_d1_s1_reveal_response": [
+   "reveal_response_id",
+   "ai_administration_run_id",
+   "reveal_ordinal",
+   "reveal_label",
+   "reveal_verbatim_hash",
+   "shown_at",
+   "submitted_at",
+   "response_text",
+   "outcome"
+  ],
+  "t3a_d1_s1_routing": [
+   "s1_routing_id",
+   "stage_instance_id",
+   "participant_id",
+   "dimension_id",
+   "assigned_mentor_id",
+   "routed_at",
+   "cleared_at",
+   "previous_mentor_id",
+   "reassignment_reason"
+  ],
+  "t3a_d1_s1_time_window": [
+   "source_identifier",
+   "min_seconds",
+   "max_seconds",
+   "issued_under"
+  ],
+  "t3a_d1_s1_workbench_session": [
+   "workbench_session_id",
+   "ai_administration_run_id",
+   "participant_id",
+   "captured_by",
+   "opened_at",
+   "captured_at",
+   "administration_ended_at",
+   "confirmed_at"
+  ],
+  "t3a_d1_s2_administration_variance": [
+   "variance_id",
+   "stage_instance_id",
+   "beat_code",
+   "variance_kind",
+   "narrative",
+   "recorded_by",
+   "recorded_at"
+  ],
+  "t3a_d1_s2_live_view_signal": [
+   "signal_id",
+   "stage_instance_id",
+   "from_actor",
+   "to_actor",
+   "kind",
+   "payload",
+   "created_at"
+  ],
+  "t3a_d1_s2_mentor_load_event": [
+   "load_event_id",
+   "stage_instance_id",
+   "measure",
+   "delay_seconds",
+   "observed_at"
+  ],
+  "t3a_d1_s2_session_event": [
+   "session_event_id",
+   "stage_instance_id",
+   "event_kind",
+   "beat_code",
+   "reason",
+   "recorded_by",
+   "recorded_at",
+   "event_seq"
+  ],
+  "t3a_d1_s4_theme_line": [
+   "source_identifier",
+   "theme_line",
+   "theme_line_hash",
+   "issued_under"
+  ],
+  "t3a_d1_session_attestation": [
+   "stage_entry_event_id",
+   "attestation_code",
+   "attested_by",
+   "attested_at"
+  ],
+  "t3a_d1_source_approval": [
+   "source_approval_id",
+   "source_id",
+   "source_version_id",
+   "status",
+   "approved_by",
+   "approved_at"
+  ],
+  "t3a_d1_source_approval_provenance": [
+   "source_approval_id",
+   "carry_forward_basis",
+   "carried_from_version_id",
+   "identity_assertion_passed",
+   "recorded_at"
+  ],
+  "t3a_d1_source_name_clearance": [
+   "name_clearance_id",
+   "source_version_id",
+   "presentation_variant_values",
+   "status",
+   "cleared_at",
+   "cleared_by"
+  ],
+  "t3a_d1_specification_cooldown": [
+   "completed_observations",
+   "wait_days",
+   "issued_under",
+   "note"
+  ],
+  "t3a_d1_stage4_impact_assessment": [
+   "source_identifier",
+   "source_version_id",
+   "title",
+   "situation_class",
+   "bearing_interest",
+   "welfare_attention",
+   "welfare_basis",
+   "theme_line",
+   "result",
+   "instrument",
+   "completed_by",
+   "recorded_at"
+  ],
+  "t3a_d1_stage4_impact_assessment_part": [
+   "source_identifier",
+   "part_no",
+   "part_name",
+   "finding",
+   "controls"
+  ],
+  "t3a_d1_stage4_refusal": [
+   "refusal_code",
+   "rule",
+   "enforced_by",
+   "enforcement_kind",
+   "recorded_at"
+  ],
+  "t3a_d1_stage_claim": [
+   "scope",
+   "test_id",
+   "status",
+   "reason",
+   "set_by",
+   "supersedes",
+   "recorded_at"
+  ],
+  "t3a_d1_stage_consent_requirement": [
+   "stage_or_act",
+   "consent_type"
+  ],
+  "t3a_d1_statement_library": [
+   "statement_library_id",
+   "content_version_id",
+   "dimension_id",
+   "question_set_version",
+   "stage_code",
+   "statement_key",
+   "statement_body",
+   "bound_variables",
+   "bound_condition_renderings",
+   "supersedes",
+   "retired",
+   "created_at",
+   "use_disposition"
+  ],
+  "t3a_d1_statement_trace": [
+   "trace_id",
+   "ber_report_id",
+   "sentence_ref",
+   "trace_body",
+   "created_at"
+  ],
+  "t3a_d1_superseded_capture_label": [
+   "label",
+   "superseded_into",
+   "basis",
+   "recorded_at"
+  ],
+  "t3a_d1_traceability_field": [
+   "field_no",
+   "field_name",
+   "records"
+  ],
+  "t3a_d1_version_lineage": [
+   "version_lineage_id",
+   "child_version_id",
+   "parent_version_id",
+   "parent_family",
+   "relation",
+   "created_at"
+  ],
+  "t3a_d1_welfare_withdrawal": [
+   "welfare_withdrawal_id",
+   "attempt_id",
+   "stopped_by",
+   "stopped_by_actor",
+   "stage_code",
+   "observation_had_begun",
+   "recorded_at",
+   "recorded_under"
+  ],
+  "t3a_d1_welfare_withholding": [
+   "welfare_withholding_id",
+   "stage_instance_id",
+   "participant_id",
+   "dimension_id",
+   "stage_code",
+   "safety_event_id",
+   "withheld_by",
+   "withheld_at",
+   "recorded_under"
+  ],
+  "t3a_d1_work_sample_submission": [
+   "submission_id",
+   "participant_id",
+   "source_version_id",
+   "stage_instance_id",
+   "state",
+   "assigned_at",
+   "deadline_at",
+   "submitted_at",
+   "deadline_missed",
+   "artifact_ref",
+   "authorship_attestation",
+   "assistance_declaration",
+   "assistance_detail",
+   "tooling_declaration",
+   "tooling_detail",
+   "prior_version_ref",
+   "superseded_by",
+   "declined_at"
+  ],
+  "t3a_data_access_request": [
+   "account_id",
+   "requested_at",
+   "resolved_at"
+  ],
+  "t3a_data_correction_request": [
+   "account_id",
+   "requested_at",
+   "resolved_at"
+  ],
+  "t3a_deployment_config": [
+   "singleton",
+   "updated_at"
+  ],
+  "t3a_destruction_event": [
+   "destruction_event_id",
+   "retention_class",
+   "resource_type",
+   "resource_id",
+   "executed_at",
+   "reason"
+  ],
+  "t3a_determination": [
+   "observation_id"
+  ],
+  "t3a_determination_question": [
+   "question_id",
+   "dimension_id",
+   "question_set_version",
+   "order_index",
+   "question_body",
+   "answer_schema",
+   "approved_at",
+   "approved_by",
+   "created_at"
+  ],
+  "t3a_dimension_evidence": [
+   "dimension_evidence_id",
+   "participant_id",
+   "dimension_id",
+   "evidence_state",
+   "derived_at"
+  ],
+  "t3a_disclosure": [
+   "disclosure_id",
+   "ber_report_id",
+   "participant_id",
+   "recipient_org_id",
+   "recipient_email",
+   "access_scope",
+   "access_period_starts",
+   "access_period_ends",
+   "identity_released_at",
+   "report_released_at",
+   "revoked_at",
+   "status",
+   "recipient_binding_token_hash",
+   "created_at"
+  ],
+  "t3a_discoverability": [
+   "participant_id",
+   "discovery_consent",
+   "accepts_access_requests",
+   "discoverability_confirmed_at",
+   "discoverability_confirm_interval",
+   "updated_at"
+  ],
+  "t3a_discovery_query_log": [
+   "query_log_id",
+   "employer_id",
+   "criteria",
+   "pool_band_before",
+   "pool_band_after",
+   "occurred_at"
+  ],
+  "t3a_employer_account_audit": [
+   "audit_id",
+   "account_profile_id",
+   "employer_profile_id",
+   "organization_record_exists",
+   "audited_at",
+   "check_work_email_domain",
+   "check_free_provider",
+   "check_legal_entity",
+   "check_domain_age_flag",
+   "creation_route",
+   "approval_record_exists",
+   "approver",
+   "approval_basis",
+   "name_matches_address",
+   "finding_public_signup_route",
+   "finding_approved_without_basis",
+   "previous_state",
+   "new_state",
+   "produced_by_check"
+  ],
+  "t3a_employer_application": [
+   "employer_profile_id",
+   "submitted_at",
+   "creation_route",
+   "approved_by",
+   "withdrawn_at"
+  ],
+  "t3a_employer_attestation": [
+   "organization_id",
+   "attested_at"
+  ],
+  "t3a_employer_contact_request": [
+   "organization_id",
+   "requested_at"
+  ],
+  "t3a_employer_desk_config": [
+   "config_key",
+   "config_value",
+   "updated_at",
+   "updated_by"
+  ],
+  "t3a_employer_desk_config_change": [
+   "change_id",
+   "config_key",
+   "previous_value",
+   "new_value",
+   "changed_at",
+   "changed_by",
+   "actor_name"
+  ],
+  "t3a_employer_desk_event": [
+   "event_id",
+   "event_seq",
+   "occurred_at",
+   "actor_id",
+   "event_code",
+   "route",
+   "subject_kind",
+   "subject_id",
+   "detail"
+  ],
+  "t3a_employer_free_provider": [
+   "domain"
+  ],
+  "t3a_employer_hire_record": [
+   "hire_record_id",
+   "employer_profile_id",
+   "role_title",
+   "hired_on",
+   "recorded_at"
+  ],
+  "t3a_employer_organization": [
+   "application_id",
+   "created_at",
+   "updated_at"
+  ],
+  "t3a_employer_pool_entry": [
+   "pool_entry_id",
+   "participant_id",
+   "stated_full_name",
+   "stated_role_or_field",
+   "work_location_preference",
+   "availability_to_start",
+   "work_authorization_jurisdiction",
+   "open_to_liveworks",
+   "ber_report_id",
+   "observation_period_start",
+   "observation_period_end",
+   "report_status",
+   "current_through",
+   "correction_open",
+   "made_available_at",
+   "visibility_withdrawn_at"
+  ],
+  "t3a_employer_pool_query": [
+   "organization_id",
+   "criteria",
+   "queried_at"
+  ],
+  "t3a_employer_product_feedback": [
+   "feedback_id",
+   "employer_profile_id",
+   "submitted_by",
+   "category",
+   "body",
+   "submitted_at"
+  ],
+  "t3a_employer_report_view": [
+   "view_id",
+   "employer_profile_id",
+   "participant_id",
+   "viewed_at"
+  ],
+  "t3a_employer_saved_report": [
+   "saved_id",
+   "employer_profile_id",
+   "participant_id",
+   "saved_at"
+  ],
+  "t3a_employer_workspace_note": [
+   "note_id",
+   "employer_profile_id",
+   "participant_id",
+   "note_body",
+   "created_at"
+  ],
+  "t3a_employment_link": [
+   "employment_link_id",
+   "participant_id",
+   "employer_org_id",
+   "opportunity_id",
+   "linkage_route",
+   "ber_version_released_at_linkage",
+   "respondent_id",
+   "respondent_role",
+   "relationship_to_participant",
+   "followup_due_dates",
+   "question_set_version",
+   "created_at"
+  ],
+  "t3a_env_capability": [
+   "singleton",
+   "env_state",
+   "set_by",
+   "set_at",
+   "note",
+   "identity_assurance_mode"
+  ],
+  "t3a_error_journal": [
+   "event_name",
+   "error_detail",
+   "parent_ref"
+  ],
+  "t3a_evidence_review": [
+   "ber_report_id"
+  ],
+  "t3a_followup_metadata": [
+   "followup_id",
+   "employment_link_id",
+   "followup_window",
+   "followup_sent_timestamp",
+   "followup_response_status",
+   "question_set_version",
+   "followup_response_structured",
+   "verification_level",
+   "delivery_channel",
+   "created_at"
+  ],
+  "t3a_governance_config": [
+   "governance_config_id",
+   "config_key",
+   "version",
+   "value",
+   "spec_citation",
+   "approved_by",
+   "approved_at",
+   "effective_from",
+   "superseded_by"
+  ],
+  "t3a_group_participation_socket": [
+   "account_id"
+  ],
+  "t3a_hire_record": [
+   "organization_id",
+   "recorded_at"
+  ],
+  "t3a_identity_assurance": [
+   "identity_assurance_id",
+   "participant_id",
+   "identity_assurance_method",
+   "identity_assurance_evidence_ref",
+   "registration_jurisdiction",
+   "country_code",
+   "sub_jurisdiction",
+   "language_preference",
+   "timezone",
+   "occupational_classification_version",
+   "captured_at"
+  ],
+  "t3a_identity_assurance_socket": [
+   "account_id"
+  ],
+  "t3a_incident": [
+   "opened_at"
+  ],
+  "t3a_job_family_socket": [
+   "ber_report_id"
+  ],
+  "t3a_legacy_consent_coverage": [
+   "legacy_consent_id",
+   "purpose",
+   "confirmed_by",
+   "confirmed_at"
+  ],
+  "t3a_legal_hold": [
+   "resource_type",
+   "resource_id",
+   "placed_at",
+   "released_at"
+  ],
+  "t3a_longitudinal_case": [
+   "account_id"
+  ],
+  "t3a_lsa_consent": [
+   "account_id"
+  ],
+  "t3a_lsa_report": [
+   "account_id"
+  ],
+  "t3a_lsa_sidecar": [
+   "account_id"
+  ],
+  "t3a_lsa_snapshot": [
+   "account_id"
+  ],
+  "t3a_manifest_verification": [
+   "manifest_ref",
+   "verification_result",
+   "verification_id"
+  ],
+  "t3a_mentor_appeal": [
+   "mentor_id"
+  ],
+  "t3a_mentor_assignment": [
+   "mentor_id",
+   "participant_id",
+   "stage_instance_id",
+   "conflict_declaration_ref",
+   "created_at"
+  ],
+  "t3a_mentor_authorization": [
+   "mentor_id",
+   "created_at"
+  ],
+  "t3a_mentor_confidence_socket": [
+   "determination_id"
+  ],
+  "t3a_mentor_invitation": [
+   "invitee_email"
+  ],
+  "t3a_mentor_judgment": [
+   "mentor_judgment_id",
+   "stage_instance_id",
+   "observation_id",
+   "human_confirmation_actor_id",
+   "human_confirmation_at",
+   "progression_decision",
+   "progression_dimension_id",
+   "decision_rationale",
+   "dimensions_flagged",
+   "confidence_per_dimension",
+   "key_moment_markers",
+   "ai_assist_notes_accepted",
+   "ai_assist_notes_ignored",
+   "ai_anchor_override",
+   "ai_anchor_original_value",
+   "session_technical_issues",
+   "created_at"
+  ],
+  "t3a_mentor_request": [
+   "mentor_request_id",
+   "requester_id",
+   "area_of_work",
+   "current_work_context",
+   "availability",
+   "time_zone",
+   "additional_context",
+   "status",
+   "assigned_mentor_id",
+   "created_at",
+   "updated_at"
+  ],
+  "t3a_moderation_sample": [
+   "moderation_sample_id",
+   "observation_id",
+   "sampled_at",
+   "paired_anchor_by_mentor",
+   "paired_anchor_value"
+  ],
+  "t3a_observation": [
+   "attempt_no",
+   "response_sequence",
+   "abandonment_reason",
+   "late_entry_delay_seconds",
+   "observer_authorization_at_date",
+   "ordinal_anchor",
+   "descriptor_version",
+   "determination_answers",
+   "composed_statement_id",
+   "relevance_basis",
+   "administration_conditions",
+   "evidence_notes"
+  ],
+  "t3a_observation_gateway": [
+   "observation_gateway_id",
+   "participant_id",
+   "dimension_id",
+   "initial_route",
+   "registration_identity_assurance_ref",
+   "env_state_at_creation",
+   "created_at"
+  ],
+  "t3a_observation_path_gateway": [
+   "participant_id",
+   "observation_consent_version"
+  ],
+  "t3a_observation_record": [
+   "observation_record_id",
+   "participant_id",
+   "dimension_id",
+   "stage_code",
+   "observer_id",
+   "confirmer_id",
+   "authority_snapshot_id",
+   "version_set",
+   "is_committed",
+   "committed_at",
+   "created_at",
+   "updated_at"
+  ],
+  "t3a_oversight_account_request": [
+   "request_id",
+   "requested_by",
+   "email",
+   "first_name",
+   "last_name",
+   "basis",
+   "requested_at",
+   "fulfilled_at",
+   "fulfilled_profile_id"
+  ],
+  "t3a_oversight_action_catalogue": [
+   "action_code",
+   "description",
+   "basis_required"
+  ],
+  "t3a_oversight_disclosure": [
+   "disclosure_id",
+   "draft_text",
+   "drafted_at",
+   "counsel_cleared",
+   "cleared_by",
+   "effective_from"
+  ],
+  "t3a_oversight_holder": [
+   "holder_id",
+   "holder_name",
+   "holder_email",
+   "granted_by",
+   "granted_at",
+   "revoked_at",
+   "revocation_basis"
+  ],
+  "t3a_oversight_log": [
+   "entry_seq",
+   "holder_id",
+   "holder_name",
+   "holder_email",
+   "occurred_at",
+   "entry_kind",
+   "action_code",
+   "subject_kind",
+   "subject_id",
+   "subject_person",
+   "basis",
+   "detail",
+   "prev_hash",
+   "entry_hash"
+  ],
+  "t3a_oversight_protected_surface": [
+   "table_name",
+   "category",
+   "registered_at"
+  ],
+  "t3a_participant_contact_consent": [
+   "participant_id",
+   "contact_open",
+   "notice_version",
+   "consent_timestamp",
+   "withdrawn_at",
+   "updated_at"
+  ],
+  "t3a_participant_document": [
+   "document_id",
+   "account_id",
+   "uploaded_at"
+  ],
+  "t3a_participant_enrollment": [
+   "account_id"
+  ],
+  "t3a_participant_profile": [
+   "account_id",
+   "updated_at"
+  ],
+  "t3a_partner_organization": [
+   "partner_organization_id",
+   "created_at"
+  ],
+  "t3a_privacy_notice_acknowledgement": [
+   "acknowledgement_id",
+   "account_id",
+   "acknowledged_at"
+  ],
+  "t3a_privileged_access": [
+   "actor_id",
+   "access_basis",
+   "accessed_at"
+  ],
+  "t3a_privileged_access_event": [
+   "privileged_access_event_id",
+   "actor_id",
+   "target_type",
+   "target_id",
+   "occurred_at",
+   "justification",
+   "alert_raised"
+  ],
+  "t3a_program": [
+   "partner_organization_id",
+   "created_at"
+  ],
+  "t3a_program_membership": [
+   "account_id",
+   "organization_program_id"
+  ],
+  "t3a_provenance": [
+   "provenance_id",
+   "resource_type",
+   "resource_id",
+   "data_source",
+   "entered_by",
+   "entered_at",
+   "scenario_version",
+   "rubric_version",
+   "schema_version",
+   "ai_model_version",
+   "ai_prompt_version",
+   "ai_config_version",
+   "ai_model_deployment_id",
+   "ai_prompt_hash",
+   "ai_system_message_version",
+   "ai_output_schema_version",
+   "consequential_config_values",
+   "version_change_reason",
+   "approval_authority",
+   "consent_status_at_capture",
+   "sufficiency_rules_version",
+   "permitted_use_version"
+  ],
+  "t3a_rce_controlled_text": [
+   "text_id",
+   "version",
+   "body",
+   "retired",
+   "created_at"
+  ],
+  "t3a_rce_controlled_text_register": [
+   "version",
+   "sha256_digest",
+   "sealed_at",
+   "sealed_by",
+   "note"
+  ],
+  "t3a_rce_pilot_authorization": [
+   "authorization_id",
+   "authorized_by",
+   "authorization_scope",
+   "granted_at",
+   "expires_at",
+   "revoked_at",
+   "note"
+  ],
+  "t3a_rce_prohibited_vocabulary": [
+   "dimension_id",
+   "word",
+   "version",
+   "reason",
+   "created_at"
+  ],
+  "t3a_rce_standing_defect": [
+   "defect_id",
+   "defect_serial",
+   "entry_or_item",
+   "dimension_id",
+   "defect_description",
+   "classification",
+   "section_breached",
+   "use_disposition",
+   "recorded_at",
+   "recorded_by",
+   "notes"
+  ],
+  "t3a_reconsideration_assignment": [
+   "reconsideration_assignment_id",
+   "correction_case_id",
+   "observation_record_id",
+   "status",
+   "reason_if_held_open",
+   "outcome",
+   "created_at",
+   "updated_at",
+   "ins006_state",
+   "awaiting_information_since"
+  ],
+  "t3a_record_informed_decision": [
+   "attestation_id",
+   "employer_profile_id",
+   "ber_report_id",
+   "statement",
+   "interaction_context",
+   "stated_at",
+   "is_employer_statement"
+  ],
+  "t3a_refund": [
+   "order_id",
+   "refunded_at"
+  ],
+  "t3a_registry_asset": [
+   "updated_at"
+  ],
+  "t3a_rehearsal_activity_history": [
+   "activity_history_id",
+   "rehearsal_session_id",
+   "event_name",
+   "occurred_at",
+   "payload"
+  ],
+  "t3a_rehearsal_artifact": [
+   "rehearsal_artifact_id",
+   "rehearsal_session_id",
+   "payload",
+   "created_at"
+  ],
+  "t3a_rehearsal_attempt": [
+   "participant_id",
+   "rehearsal_session_id",
+   "recorded_at"
+  ],
+  "t3a_rehearsal_session": [
+   "participant_id",
+   "scenario_class",
+   "source_version_id",
+   "abandoned",
+   "created_at"
+  ],
+  "t3a_rehearsal_telemetry_aggregate": [
+   "telemetry_id",
+   "retake_window_days",
+   "scenario_class",
+   "suppression_reason",
+   "created_at"
+  ],
+  "t3a_rendered_instance": [
+   "rendered_instance_id",
+   "source_version_id",
+   "canonical_source_hash",
+   "created_at"
+  ],
+  "t3a_report_access": [
+   "ber_report_id",
+   "accessor_id",
+   "accessed_at"
+  ],
+  "t3a_report_release": [
+   "ber_report_id",
+   "created_at"
+  ],
+  "t3a_resolution_refusal": [
+   "resolution_refusal_id",
+   "observation_record_id",
+   "reason",
+   "detail",
+   "answer_pattern_snapshot",
+   "refused_at"
+  ],
+  "t3a_retention_schedule": [
+   "retention_period",
+   "updated_at",
+   "rule_expression",
+   "participant_deletable"
+  ],
+  "t3a_retired_library_reach": [
+   "reach_id",
+   "kind",
+   "what_it_is",
+   "reaches",
+   "state_now",
+   "why",
+   "recorded_under"
+  ],
+  "t3a_retired_participant_sentence": [
+   "sentence_hash",
+   "retired_text",
+   "replaced_by",
+   "retired_under",
+   "why"
+  ],
+  "t3a_role_assignment": [
+   "account_id"
+  ],
+  "t3a_role_assignment_revocation": [
+   "role_assignment_id"
+  ],
+  "t3a_role_authorization": [
+   "role_authorization_id",
+   "actor_id",
+   "authority",
+   "dimension_id",
+   "stage_codes",
+   "status",
+   "granted_by",
+   "granted_at",
+   "effective_from",
+   "effective_to",
+   "suspended_at",
+   "withdrawn_at",
+   "calibration_clearance_ref",
+   "notes"
+  ],
+  "t3a_role_grant": [
+   "role_grant_id",
+   "user_id",
+   "spec_role",
+   "granted_at",
+   "granted_by",
+   "revoked_at"
+  ],
+  "t3a_role_grant_attempt": [
+   "attempt_id",
+   "target_profile_id",
+   "attempted_by",
+   "from_role",
+   "to_role",
+   "operation",
+   "outcome",
+   "reason_code",
+   "basis",
+   "service_context",
+   "attempted_at"
+  ],
+  "t3a_safety_contact": [
+   "safety_contact_id",
+   "designated_person",
+   "designated_name",
+   "designated_by",
+   "designated_at",
+   "awaiting_designation",
+   "issued_under",
+   "note"
+  ],
+  "t3a_safety_event": [
+   "safety_event_id",
+   "occurred_at",
+   "stage_code",
+   "source_version_id",
+   "acted_by",
+   "acted_as",
+   "stopped",
+   "signposted",
+   "escalated_to_safety_contact",
+   "emergency_services_contacted",
+   "escalated_at",
+   "concerns_person",
+   "recorded_at"
+  ],
+  "t3a_served_instance": [
+   "participant_id",
+   "source_version_id",
+   "stage_entry_event_id",
+   "rendered_instance_id"
+  ],
+  "t3a_session_archive_tab": [
+   "singleton",
+   "updated_at"
+  ],
+  "t3a_source": [
+   "content_object_id",
+   "dimension_id",
+   "stage_code",
+   "interaction_pattern_family",
+   "updated_at"
+  ],
+  "t3a_source_approval": [
+   "source_approval_id",
+   "source_id",
+   "source_version_id",
+   "status",
+   "approved_by",
+   "approved_at"
+  ],
+  "t3a_source_bank": [
+   "module_code",
+   "source_bank_id",
+   "registered_at"
+  ],
+  "t3a_source_name_clearance": [
+   "name_clearance_id",
+   "source_version_id",
+   "presentation_variant_values",
+   "status",
+   "cleared_at",
+   "cleared_by"
+  ],
+  "t3a_source_title_history": [
+   "title_seq",
+   "source_id",
+   "source_display_title",
+   "effective_from"
+  ],
+  "t3a_source_version": [
+   "version_label",
+   "dimensions_in_play",
+   "ai_model_reference",
+   "ai_prompt_text_ref",
+   "approved_by",
+   "retired_at",
+   "created_at"
+  ],
+  "t3a_stage_entry_event": [
+   "observation_path_gateway_id",
+   "session_identity",
+   "assistance_rules_version",
+   "created_at",
+   "participant_id",
+   "dimension_id",
+   "source_version_id",
+   "presentation_variant_seed",
+   "administration_conditions_snapshot",
+   "session_identity_receipt_id",
+   "env_state_at_entry",
+   "entered_at"
+  ],
+  "t3a_stage_instance": [
+   "stage_instance_id",
+   "participant_id",
+   "stage_code",
+   "dimension_id",
+   "attempt_no",
+   "state",
+   "scheduled_at",
+   "activated_at",
+   "completed_at",
+   "created_at"
+  ],
+  "t3a_stage_sequence": [
+   "stage_instance_id",
+   "participant_id",
+   "dimension_id",
+   "created_at"
+  ],
+  "t3a_statement_library": [
+   "statement_id",
+   "dimension_id",
+   "question_set_version",
+   "answer_key",
+   "statement_body",
+   "approved_at",
+   "approved_by",
+   "created_at"
+  ],
+  "t3a_subscription_socket": [
+   "order_id"
+  ],
+  "t3a_suppression": [
+   "applied_at"
+  ],
+  "t3a_suppression_event": [
+   "suppression_event_id",
+   "reason_code",
+   "context",
+   "occurred_at"
+  ],
+  "t3a_verification_check": [
+   "ber_report_id",
+   "outcome",
+   "checked_at"
+  ],
+  "t3a_version_lineage": [
+   "version_lineage_id",
+   "child_version_id",
+   "parent_version_id",
+   "parent_family",
+   "relation",
+   "created_at"
+  ],
+  "t3a_workspace_note": [
+   "organization_id",
+   "noted_at"
+  ]
+ },
+ "note": "DT-56: every persisted column in the t3a_ tables is either a mapped Domain A to R field (or its capture state companion) or is listed here as M7 (undeclared in the dictionary). The registry, event and field map tables are excluded as the registry itself. Nothing here is deleted."
+}

@@ -45,7 +45,7 @@ const sv = (await run(`insert into t3a_source_version(scenario_class, version_la
 const si = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${P}','S1','D1',1,'scheduled') returning stage_instance_id i`))[0].i;
 const enums = (await run(`select (enum_range(null::t3a_contemporaneity))[1] ct, (enum_range(null::t3a_evidence_class))[1] ec, (enum_range(null::t3a_comparability_class))[1] cc, (enum_range(null::t3a_integrity_status))[1] it`))[0];
 await run(`insert into t3a_observation(participant_id, stage_code, dimension_id, source_version_id, attempt_no, occurred_at, stage_instance_id, descriptor_version, contemporaneity, evidence_class, comparability_class, integrity_status) values ('${P}','S1','D1','${sv}',1,now(),'${si}','1.0','${enums.ct}','${enums.ec}','${enums.cc}','${enums.it}')`);
-const glBefore = (await run(`select (select count(*)::int from growth_log_entries) a, (select count(*)::int from t3a_growth_log_entry) b`))[0];
+const glBefore = (await run(`select (select count(*)::int from growth_log_entries) a, (select count(*)::int from t3a_growth_log_entry where created_by='${P}') b`))[0];
 const view = await as("authenticated", P, `select * from t3a_growth_log_observation_view`); const viewQ = await as("authenticated", Q, `select * from t3a_growth_log_observation_view`);
 rec("DT-63", "after an observation is committed, no Growth Log row was written", glBefore.a === before && glBefore.b === 1, glBefore);
 rec("DT-63", "the participant's view shows the observation regenerated from the canonical record; another participant sees none", view.rows.length === 1 && viewQ.rows.length === 0, { own: view.rows.length, other: viewQ.rows.length });
