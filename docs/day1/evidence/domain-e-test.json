@@ -1,0 +1,179 @@
+{
+ "passed": 20,
+ "total": 20,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-15",
+   "label": "S2 observation with no observer_id is refused and the refusal is logged with its reason",
+   "pass": true,
+   "detail": {
+    "detail": "S2 records need observer_id",
+    "reason": "OBSERVER_REQUIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-15",
+   "label": "the same S2 record with an observer commits",
+   "pass": true,
+   "detail": {
+    "outcome": "committed",
+    "observation_id": "ca14c77e-e80f-440b-aba6-03289ee0344c",
+    "source_version_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "rendered_instance_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+   }
+  },
+  {
+   "id": "DT-16",
+   "label": "observer_id on an S1 record is refused (function route)",
+   "pass": true,
+   "detail": {
+    "detail": "S1 records carry confirmer fields, not observer_id",
+    "reason": "OBSERVER_NOT_ALLOWED_AT_S1",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-16",
+   "label": "observer_id on an S1 record is refused by the table trigger on any route",
+   "pass": true,
+   "detail": "T3A_OBSERVER_NOT_ALLOWED_AT_S1: observer_id is not set on a Stage 1 record; use the confir"
+  },
+  {
+   "id": "DT-16",
+   "label": "S1 record with the confirmer fields commits",
+   "pass": true,
+   "detail": {
+    "outcome": "committed",
+    "observation_id": "996d9fe7-2e02-4adc-b264-87f732438641",
+    "source_version_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "rendered_instance_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+   }
+  },
+  {
+   "id": "DT-17",
+   "label": "committed observation carries both hashes, and they are different objects",
+   "pass": true,
+   "detail": {
+    "outcome": "committed",
+    "observation_id": "996d9fe7-2e02-4adc-b264-87f732438641",
+    "source_version_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "rendered_instance_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+   }
+  },
+  {
+   "id": "DT-17",
+   "label": "an observation with no served instance (no rendered hash) is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "both the source version hash and the rendered instance hash are required",
+    "reason": "DUAL_HASH_MISSING",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-18",
+   "label": "opening the S1 output before the S2 determinations are locked is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "the S1 output opens only after the S2 determinations are locked",
+    "reason": "S2_DETERMINATIONS_NOT_LOCKED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-18",
+   "label": "after the lock the output opens and s1_output_unmasked_at is written",
+   "pass": true,
+   "detail": {
+    "outcome": "opened",
+    "s1_output_unmasked_at": "2026-10-20T11:47:17.384973+00:00"
+   }
+  },
+  {
+   "id": "DT-18",
+   "label": "a milestone time cannot be cleared or changed",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: s2_determinations_locked_at was set at 2026-10-20T11:47:17.314592+"
+  },
+  {
+   "id": "DT-19",
+   "label": "S2 entry before the S1 outcome is delivered to the mentor is refused",
+   "pass": true,
+   "detail": "S1_OUTCOME_NOT_DELIVERED: Stage 2 entry waits for the Stage 1 outcome to be delivered to the mentor"
+  },
+  {
+   "id": "DT-19",
+   "label": "after delivery the S2 entry passes this gate (any other refusal is a later check)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-20",
+   "label": "a free text rationale posted to a mentor endpoint is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "only controlled codes and identifiers are accepted; refused keys: decision_rationale",
+    "reason": "FREE_TEXT_REFUSED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-20",
+   "label": "a free text conclusion is refused",
+   "pass": true,
+   "detail": {
+    "detail": "only controlled codes and identifiers are accepted; refused keys: conclusion",
+    "reason": "FREE_TEXT_REFUSED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-20",
+   "label": "controlled codes and identifiers are accepted",
+   "pass": true,
+   "detail": {
+    "outcome": "accepted"
+   }
+  },
+  {
+   "id": "DT-20",
+   "label": "a sentence in a code field is refused",
+   "pass": true,
+   "detail": {
+    "detail": "only controlled codes and identifiers are accepted; refused keys: state_code",
+    "reason": "FREE_TEXT_REFUSED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-21",
+   "label": "an accommodation reason is refused; only accommodation_class is stored",
+   "pass": true,
+   "detail": {
+    "detail": "only controlled codes and identifiers are accepted; refused keys: accommodation_reason",
+    "reason": "ACCOMMODATION_REASON_REFUSED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "DT-20",
+   "label": "the live mentor table itself refuses free text in its rationale column",
+   "pass": true,
+   "detail": "T3A_FREE_TEXT_REFUSED: decision_rationale takes controlled codes only; free text is not st"
+  },
+  {
+   "id": "DT-20",
+   "label": "the determination table has no free text column",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-01(E)",
+   "label": "all 78 Domain E fields mapped",
+   "pass": true,
+   "detail": 78
+  }
+ ]
+}

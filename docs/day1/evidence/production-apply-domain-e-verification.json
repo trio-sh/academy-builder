@@ -1,0 +1,38 @@
+{
+ "before": [
+  {
+   "o": 0,
+   "p": 0,
+   "m": 0,
+   "c": 0,
+   "er": false
+  }
+ ],
+ "mapped": [
+  {
+   "count": 78
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 246,
+   "unmapped": 276,
+   "passes": false
+  }
+ ],
+ "flags": [
+  {
+   "enforce_required": false,
+   "enforce_sequence": false
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE free=FREE_TEXT_REFUSED accommodation=ACCOMMODATION_REASON_REFUSED codes=accepted\\nCONTEXT:  PL/pgSQL function inline_code_block line 6 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "refusals": 0
+  }
+ ]
+}
