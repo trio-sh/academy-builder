@@ -33,7 +33,7 @@ rec("render-1", "a D4 only report renders three pages: cover, one dimension page
 rec("render-1", "the contents list D4 as represented and thirteen dimensions as not represented", (r.pages[0].text.match(/Not represented/g) || []).length === 13, null);
 // a refusal draws nothing
 await p.close(); p = await open("/print/ber-multi/BER-REAL-1"); r = await probe(p);
-rec("render-refuse", "a real report identifier produces no page (claim package source not built)", r.pages.length === 0 && /claim_package_source_not_built/.test(r.refused || ""), r.refused);
+rec("render-refuse", "a real report identifier with no signed in participant produces no page: the server route refuses and the screen shows the refusal", r.pages.length === 0 && !!r.refused, r.refused);
 await p.close(); p = await open("/print/ber-multi/specimen?only=D99"); r = await probe(p);
 rec("render-refuse", "a manifest with no represented dimension refuses claim_package_absent and draws no page", r.pages.length === 0 && /claim_package_absent/.test(r.refused || ""), r.refused);
 await p.close(); p = await open("/print/ber-multi/specimen?drop=T-USE-001"); r = await probe(p);

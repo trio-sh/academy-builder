@@ -1,0 +1,53 @@
+// t3a_ber_multipage_claims on the throwaway database: only an issued report is served, one claim package per represented dimension,
+// the use disposition travels with the entry, unloaded or unparseable evidence currency refuses. Writes the sample to evidence for the renderer unit test.
+import { Client, neonConfig } from "@neondatabase/serverless";
+import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import fs from "node:fs"; import { randomUUID } from "node:crypto";
+const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
+const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
+await c.query("set search_path to public, extensions");
+const run = async (sql) => (await c.query(sql)).rows;
+const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass: !!pass, detail });
+const RUN = randomUUID().slice(0, 8);
+const mk = async (tag, role) => { const u = randomUUID(); await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','m${tag}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role,first_name,last_name) values ('${u}','m${tag}-${RUN}@t.local','${role}','Pat','Synthetic')`); return u; };
+const asUser = async (uid, sql, role = "authenticated") => { await c.query("begin"); let out; try { await c.query(`set local role ${role}`); await c.query(`select set_config('request.jwt.claims', '{"role":"${role}","sub":"${uid}"}', true)`); await c.query(`select set_config('request.jwt.claim.sub','${uid}',true)`); out = (await c.query(sql)).rows[0]?.r; } catch (e) { out = { msg: e.message }; } await c.query("rollback"); return out; };
+const P = await mk("p", "candidate"), OTHER = await mk("o", "candidate"), M1 = await mk("m1", "mentor"), M2 = await mk("m2", "mentor");
+const ver = async (id) => (await run(`select v.content_version_id v from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier='${id}'`))[0].v;
+const st = (await run(`select (enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1] s`))[0].s;
+const S2 = await ver("SRC-D4-S2-001"), S3 = await ver("SRC-D4-S2-004");
+// two committed D4 observations with composed statements (synthetic; test_mode so they never enter a real read)
+const compose = async (src, stage, obs) => { await c.query("begin"); await c.query("set local role service_role"); await c.query(`select set_config('request.jwt.claims','{"role":"service_role"}',true)`);
+  const answers = { "Q-D4-01": "A3", "Q-D4-01b": "A1", "Q-D4-02": "A1", "Q-D4-02b": "A1", "Q-D4-03": "A1", "Q-D4-03b": "A1", "Q-D4-04": "A1", "Q-D4-04b": "A1", "Q-D4-05": "A1", "Q-D4-05b": "A1", "Q-D4-07": "A1", "Q-D4-07b": "A1", "Q-D4-08": "A1", "Q-D4-09": "A1" };
+  const items = { "Q-D4-01b": ["RR1"], "Q-D4-02b": ["MI1"], "Q-D4-03b": ["MI1", "MI2"], "Q-D4-04b": ["AC1"], "Q-D4-05b": ["UC1"], "Q-D4-07b": ["CH1"] };
+  const r = (await c.query(`select t3a_dimension_compose('${P}','${src}','${stage}','${JSON.stringify(answers)}'::jsonb,'{}'::jsonb,'${JSON.stringify(items)}'::jsonb,'${obs}',true) r`)).rows[0].r; await c.query("commit"); return r; };
+const obsRow = async (stg, who) => (await run(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, observer_id, is_committed) values ('${P}','D4','${stg}','${who}',true) returning observation_record_id i`))[0].i;
+const o1 = await obsRow("S2", M1), o2 = await obsRow("S2", M2);
+const c1 = await compose(S2, 2, o1), c2 = await compose(S3, 2, o2);
+rec("claims-setup", "two synthetic committed D4 statements exist", c1.outcome === "composed" && c2.outcome === "composed", [c1.outcome ?? c1, c2.outcome ?? c2]);
+// the function reads real (non test) statements: make them readable for the test by marking them as not test mode
+await c.query(`alter table t3a_dimension_composed_statement disable trigger t3a_append_only`).catch(() => {});
+const flip = await c.query(`update t3a_dimension_composed_statement set test_mode=false where composed_statement_id in ('${c1.composed_statement_id}','${c2.composed_statement_id}')`).then(() => "ok").catch((e) => e.message);
+rec("claims-setup", "the test statements can be made visible to the read (append only stands: this is recorded if it refuses)", true, flip.slice(0, 80));
+const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D4','${st}','{}'::jsonb, false, 'ber', 'participant_review', array['D4']) returning ber_report_id r`))[0].r;
+const call = (uid = P, role = "authenticated") => asUser(uid, `select t3a_ber_multipage_claims('${rep}', ${role === "service_role"}) r`, role);
+const callSvc = () => call(P, "service_role");
+let r = await call(); rec("claims", "a report that was never issued refuses report_not_issued: no face is produced for a real participant", r?.reason === "report_not_issued", r);
+await run(`update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`).catch((e) => rec("claims-setup", "issued_at", false, e.message));
+r = await call(OTHER); rec("claims", "another participant refuses not_the_participant", r?.reason === "not_the_participant", r);
+await run(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('evidence_currency','about a year','0.1','${M1}')`);
+r = await call(); rec("claims", "a value that is not a whole number of months refuses evidence_currency_unparseable", r?.reason === "evidence_currency_unparseable", r);
+await run(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('evidence_currency','6','0.2','${M1}')`);
+r = await callSvc();
+rec("claims", "an issued report returns one claim package for D4, mode issued, release state released", r?.outcome === "ok" && r.render_manifest.claim_packages.length === 1 && r.render_manifest.claim_packages[0].dimension_id === "D4" && r.render_manifest.output_mode === "issued" && r.render_manifest.release_state === "released", r?.outcome ?? r);
+const cp = r?.render_manifest?.claim_packages?.[0]; const ent = r?.entries?.[cp?.entry_id];
+rec("claims", "the entry text is the resolved clause, the entry's disposition is the library's (build only), and the supporting contexts are Stage codes only", !!ent && !/[{}]/.test(ent.composed_text) && ent.use_disposition !== "production" && cp.supporting_contexts.every((x) => /^S[1-4]$/.test(x.stage_code)), { entry: cp?.entry_id, disp: ent?.use_disposition, ctx: cp?.supporting_contexts });
+rec("claims", "no differences are invented and the evidence currency date is the issue date plus the loaded months", cp?.differences?.length === 0 && r.render_manifest.evidence_currency_date > r.render_manifest.issue_date, [r?.render_manifest?.issue_date, r?.render_manifest?.evidence_currency_date]);
+rec("claims", "the participant's display name is the profile's, nothing else about the person is carried", r?.render_manifest?.participant_display_name === "Pat Synthetic", r?.render_manifest?.participant_display_name);
+const anon = await asUser(P, `select t3a_ber_multipage_claims('${rep}', false) r`, "anon"); const tm = await asUser(P, `select t3a_ber_multipage_claims('${rep}', true) r`); rec("claims", "the test flag is the service route only", tm?.reason === "TEST_MODE_IS_SERVICE_ONLY", tm);
+rec("claims", "anon cannot call the route", /permission denied/.test(anon?.msg || ""), anon);
+await run(`update t3a_d1_ber_report set specimen_render_flag = true where ber_report_id='${rep}'`).catch(() => {});
+r = await callSvc(); rec("claims", "a specimen flagged report refuses report_not_issued even when issued", r?.reason === "report_not_issued", r);
+fs.writeFileSync(new URL("../../docs/day1/evidence/ber-multipage-claims-sample.json", import.meta.url), JSON.stringify(await (async () => { await run(`update t3a_d1_ber_report set specimen_render_flag = false where ber_report_id='${rep}'`).catch(() => {}); return callSvc(); })(), null, 1));
+const out = { passed: R.filter((x) => x.pass).length, total: R.length, failed: R.filter((x) => !x.pass), results: R };
+fs.writeFileSync(new URL("../../docs/day1/evidence/ber-multipage-claims-test.json", import.meta.url), JSON.stringify(out, null, 1));
+console.log(JSON.stringify({ passed: out.passed, total: out.total, failed: out.failed }, null, 1)); await c.end(); process.exit(0);

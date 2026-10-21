@@ -8,8 +8,9 @@
  * Nothing is drawn unless every control passes (checkAndResolve and paginate). A refusal shows its code and
  * no page. A page whose content runs past the content box is measured after layout and refuses `layout_overflow`.
  *
- * Source of the manifest: only the frozen specimen (FIX-MULTIPAGE, demonstration mode) is wired here. A real
- * report's claim packages are not built yet (CR-162), so a report identifier refuses instead of guessing.
+ * Source of the manifest: the frozen specimen (FIX-MULTIPAGE, demonstration mode) at /print/ber-multi/specimen, and for a real
+ * report the server's t3a_ber_multipage_claims route (CR-168): issued reports only, mode issued, so an entry that is not
+ * approved for production refuses at issue. A real participant is never shown as a specimen.
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import {
   type Layout, type Package, type Resolved, type ResolvedBlock, type Page, type Measure,
 } from "@/lib/berMultipage";
 import { BarCode, COLORS, FONTS_HREF, QrPlaceholder } from "./BerPrintView";
+import { supabase } from "@/lib/supabase";
 
 const C = COLORS;
 const PT = (n: number) => `${n}pt`;
@@ -351,8 +353,27 @@ export default function BerMultiPrintView() {
       {children}
     </>
   );
+  const [live, setLive] = useState<{ pkg?: Package; refused?: { code: string; detail?: string } } | null>(null);
+  useEffect(() => {
+    if (!berId || berId === "specimen") return;
+    let on = true;
+    void supabase.rpc("t3a_ber_multipage_claims", { p_ber_report_id: berId }).then(({ data, error }) => {
+      if (!on) return;
+      const d = data as { outcome?: string; reason?: string; detail?: string; render_manifest?: Package["render_manifest"]; entries?: Record<string, never> } | null;
+      if (error || !d) { setLive({ refused: { code: "route_unavailable", detail: error?.message } }); return; }
+      if (d.outcome !== "ok" || !d.render_manifest) { setLive({ refused: { code: d.reason ?? "refused", detail: d.detail } }); return; }
+      // the registers (controlled texts, maps, fixed strings, dimension register) are the frozen package's; the manifest and the entries are the server's
+      const base = JSON.parse(JSON.stringify(fixture)) as Package;
+      base.render_manifest = d.render_manifest;
+      base.entry_library = { version: "LIB", entries: d.entries as unknown as Package["entry_library"]["entries"] };
+      setLive({ pkg: base });
+    });
+    return () => { on = false; };
+  }, [berId]);
   if (berId !== "specimen") {
-    return frame(<Refused code="claim_package_source_not_built" detail="A report's claim packages are not assembled from the evidence record yet (CR-162). Only the frozen specimen renders; nothing is guessed for a real report." />);
+    if (!live) return frame(<div className="mp-refused">Checking this report…</div>);
+    if (live.refused) return frame(<Refused code={live.refused.code} detail={live.refused.detail} />);
+    return frame(<BerMultiDocument pkg={live.pkg!} />);
   }
   return frame(
     <>

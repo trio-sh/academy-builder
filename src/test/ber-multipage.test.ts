@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import fixture from "@/lib/berMultipage/fix-multipage.json";
+import claims from "../../docs/day1/evidence/ber-multipage-claims-sample.json";
 import {
   checkAndResolve, paginate, controlledTextDigest, canonicalJson, GEOMETRY, checkGeometry, blockHeight, approxMeasure,
   type Package,
@@ -150,5 +151,19 @@ describe("multi page BER (STD v9.19, Section 62)", () => {
   it("four identical runs give identical layouts", () => {
     const run = () => { const p = base(); const r = ok(p); const l = paginate(p, r); return JSON.stringify(l); };
     const a = run(); expect([run(), run(), run()].every((x) => x === a)).toBe(true);
+  });
+
+  it("a real report's claim packages from the server: issued mode, a build only entry refuses at issue; an entry approved for production renders three pages", () => {
+    const live = (disp: string): Package => {
+      const p = base(); const c = claims as any;
+      p.render_manifest = JSON.parse(JSON.stringify(c.render_manifest));
+      p.entry_library = { version: "LIB", entries: JSON.parse(JSON.stringify(c.entries)) };
+      for (const e of Object.values(p.entry_library.entries)) (e as any).use_disposition = disp;
+      return p;
+    };
+    expect(code(live("build_only"))).toBe("entry_use_disposition_refused");
+    const p = live("production"); const r = ok(p); const l = paginate(p, r);
+    expect(l.ok).toBe(true); if (l.ok) expect(l.value.total).toBe(3);
+    expect(p.render_manifest.output_mode).toBe("issued");
   });
 });

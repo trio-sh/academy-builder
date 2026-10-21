@@ -91,9 +91,9 @@
   },
   {
    "id": "render-refuse",
-   "label": "a real report identifier produces no page (claim package source not built)",
+   "label": "a real report identifier with no signed in participant produces no page: the server route refuses and the screen shows the refusal",
    "pass": true,
-   "detail": "REPORT NOT PRODUCED\nclaim_package_source_not_built\n\nA report's claim packages are not assembled from the evidence record yet (CR-162). Only the frozen specimen renders; nothing is guessed for a real report.\n\nNo page is produced for a manifest the Standard refuses."
+   "detail": "REPORT NOT PRODUCED\nroute_unavailable\n\npermission denied for function t3a_ber_multipage_claims\n\nNo page is produced for a manifest the Standard refuses."
   },
   {
    "id": "render-refuse",
