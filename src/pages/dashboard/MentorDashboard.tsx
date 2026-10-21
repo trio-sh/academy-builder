@@ -382,14 +382,6 @@ const ObservationFormModal = () => {
 
         // Create growth log entry for candidate (uses profiles.id)
         if (cpForLog) {
-          await supabase.from("growth_log_entries").insert({
-            candidate_id: cpForLog.profile_id,
-            event_type: "observation",
-            title: "Mentor Observation Completed",
-            description: `Behavioral observation recorded by mentor`,
-            source_component: "MentorLink",
-            source_id: observation.id,
-          });
         }
 
         // Check if this is the 3rd observation for this assignment (ready for endorsement)
@@ -1354,19 +1346,6 @@ const Mentees = () => {
           action_url: "/dashboard/candidate/training",
         });
 
-        // Log to candidate's growth log
-        await supabase.from("growth_log_entries").insert({
-          candidate_id: cp.profile_id,
-          event_type: "training",
-          title: "Mentor Recommended BridgeFast Modules",
-          description: `Your mentor recommended ${selectedModules.length} BridgeFast module(s): ${moduleNames}`,
-          source_component: "MentorRecommendation",
-          metadata: {
-            module_ids: selectedModules,
-            module_names: moduleNames,
-            mentor_note: recommendNote,
-          },
-        });
       }
 
       setRecommendModal(null);
@@ -1796,23 +1775,6 @@ const AssignDimensions = () => {
 
       setExistingDimensions(selectedDimensions);
 
-      // Get profiles.id for growth_log_entries (candidateId = candidate_profiles.id)
-      const { data: cpForLog } = await supabase
-        .from("candidate_profiles")
-        .select("profile_id")
-        .eq("id", candidateId)
-        .single();
-
-      // Create growth log entry (FK to profiles.id)
-      if (cpForLog) {
-        await supabase.from("growth_log_entries").insert({
-          candidate_id: cpForLog.profile_id,
-          event_type: "observation",
-          title: "Observation Dimensions Assigned",
-          description: `Your mentor has assigned ${selectedDimensions.length} behavioral dimensions for observation.`,
-          source_component: "MentorLink",
-        });
-      }
     } catch (error) {
       console.error("Error saving dimensions:", error);
     } finally {
@@ -2774,16 +2736,6 @@ const Endorsements = () => {
         escalate: "Escalate - Flagged for governance review",
       };
 
-      // Growth log entry (non-blocking — don't let this fail the critical path)
-      supabase.from("growth_log_entries").insert({
-        candidate_id: growthCandidateId,
-        event_type: "endorsement",
-        title: `Mentor Endorsement: ${endorsementForm.decision.charAt(0).toUpperCase() + endorsementForm.decision.slice(1)}`,
-        description: decisionLabels[endorsementForm.decision],
-        source_component: "MentorLink",
-        source_id: endorsement.id,
-      }).then(() => {}, (e: unknown) => console.log("Growth log write:", e));
-
       // If decision is "proceed", generate Behavioral Evidence Report
       if (endorsementForm.decision === "proceed") {
         // Calculate aggregate behavioral scores from observation_feedback (S1 + S2)
@@ -2822,27 +2774,8 @@ const Endorsements = () => {
 
         // has_skill_passport + is_listed_on_t3x already set above in the tier update
 
-        // Create growth log entry for passport (non-blocking)
-        supabase.from("growth_log_entries").insert({
-          candidate_id: growthCandidateId,
-          event_type: "endorsement",
-          title: "Behavioral Evidence Report Earned",
-          description: `Verification Code: ${verificationCode}`,
-          source_component: "SkillPassport",
-        }).then(() => {}, (e: unknown) => console.log("Passport growth log:", e));
       }
 
-      // If escalate, create an escalation notification for admin/governance
-      if (endorsementForm.decision === "escalate") {
-        supabase.from("growth_log_entries").insert({
-          candidate_id: growthCandidateId,
-          event_type: "escalation",
-          title: "Observation Escalated — Governance Review",
-          description: `Concern: ${endorsementForm.escalateConcern || endorsementForm.justification}. Awaiting governance review.`,
-          source_component: "MentorLink",
-          source_id: endorsement.id,
-        }).then(() => {}, (e: unknown) => console.log("Escalation growth log:", e));
-      }
 
       // Update assignment status
       await supabase

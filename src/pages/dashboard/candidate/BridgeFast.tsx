@@ -83,7 +83,7 @@ type StartedItem =
 
 /**
  * Reads whatever the participant has started. Today only Free Practice
- * has real progress in the growth_log_entries table; WorkRehearsal
+ * has real progress, in the private rehearsal store (t3a_rehearsal_progress); WorkRehearsal
  * ownership is deferred with Section D commerce. When ownership
  * lands, extend this to read from t3a_wr_entitlement + progress.
  */
@@ -100,28 +100,16 @@ function useStartedItems() {
         return;
       }
       const out: StartedItem[] = [];
-      const { data: logs } = await supabase
-        .from("growth_log_entries")
-        .select("*")
-        .eq("candidate_id", user.id)
-        .eq("event_type", "training")
-        .order("created_at", { ascending: false })
-        .limit(20);
-
-      const seenSlugs = new Set<string>();
-      (logs ?? []).forEach((log) => {
-        const m = (log.metadata as { module_slug?: string } | null) ?? {};
-        const slug = m.module_slug;
-        if (!slug || seenSlugs.has(slug)) return;
-        seenSlugs.add(slug);
-        const mod = INTERACTIVE_MODULES.find((im) => im.slug === slug);
+      const { data: progress } = await supabase.rpc("t3a_rehearsal_progress");
+      ((progress as { module_slug: string; last_practiced_at: string }[] | null) ?? []).forEach((row) => {
+        const mod = INTERACTIVE_MODULES.find((im) => im.slug === row.module_slug);
         if (!mod) return;
         out.push({
           kind: "free_practice",
           title: mod.title,
           href: `/dashboard/candidate/training/module/${mod.slug}`,
           resumeLabel: "Resume practice",
-          updatedAt: log.created_at,
+          updatedAt: row.last_practiced_at,
         });
       });
 
@@ -260,15 +248,10 @@ export function FreePractice() {
         if (!cancelled) setLoading(false);
         return;
       }
-      const { data } = await supabase
-        .from("growth_log_entries")
-        .select("metadata")
-        .eq("candidate_id", user.id)
-        .eq("event_type", "training");
+      const { data } = await supabase.rpc("t3a_rehearsal_progress");
       const set = new Set<string>();
-      (data ?? []).forEach((r) => {
-        const m = (r.metadata as { module_slug?: string } | null) ?? {};
-        if (m.module_slug) set.add(m.module_slug);
+      ((data as { module_slug: string; completion_state: string }[] | null) ?? []).forEach((r) => {
+        if (r.module_slug && r.completion_state === "complete") set.add(r.module_slug);
       });
       if (!cancelled) {
         setCompletedSlugs(set);

@@ -293,18 +293,6 @@ export async function parseAndUpdateProfile(
         })
         .eq("profile_id", userId);
 
-      // Create growth log entry
-      await supabase.from("growth_log_entries").insert({
-        candidate_id: userId,
-        event_type: "resume_upload",
-        title: "Resume Parsed",
-        description: `Extracted ${parsed.skills.length} skills from resume`,
-        source_component: "ResumeParser",
-        metadata: {
-          skillsFound: parsed.skills.length,
-          categories: Object.keys(parsed.skillCategories),
-        },
-      });
     }
 
     return { success: true, parsed };

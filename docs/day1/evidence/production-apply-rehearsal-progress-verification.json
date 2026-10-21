@@ -1,0 +1,13 @@
+{
+ "apply": "ok",
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE recorded=t progress_rows=1 slug=probe-module\\nCONTEXT:  PL/pgSQL function inline_code_block line 9 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "s": 0,
+   "m": 0
+  }
+ ]
+}
