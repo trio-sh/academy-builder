@@ -5,7 +5,7 @@
  * differ in pagination and nothing else (¶62.3). Every page is 612 x 792 points. Page 1 is the cover, pages
  * 2 onward carry the dimension blocks (three at most, a block never splits), the last page carries the controls.
  *
- * Nothing is drawn unless every control passes (validateAndResolve and paginate). A refusal shows its code and
+ * Nothing is drawn unless every control passes (checkAndResolve and paginate). A refusal shows its code and
  * no page. A page whose content runs past the content box is measured after layout and refuses `layout_overflow`.
  *
  * Source of the manifest: only the frozen specimen (FIX-MULTIPAGE, demonstration mode) is wired here. A real
@@ -15,7 +15,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import fixture from "@/lib/berMultipage/fix-multipage.json";
 import {
-  GEOMETRY, longDate, paginate, validateAndResolve, frameText,
+  GEOMETRY, longDate, paginate, checkAndResolve, frameText,
   type Layout, type Package, type Resolved, type ResolvedBlock, type Page, type Measure,
 } from "@/lib/berMultipage";
 import { BarCode, COLORS, FONTS_HREF, QrPlaceholder } from "./BerPrintView";
@@ -300,7 +300,7 @@ function PageView({ pkg, r, layout, page }: { pkg: Package; r: Resolved; layout:
 
 export function BerMultiDocument({ pkg }: { pkg: Package }) {
   const measure = useMemo(() => browserMeasure(), []);
-  const resolved = useMemo(() => validateAndResolve(pkg, "multi_page"), [pkg]);
+  const resolved = useMemo(() => checkAndResolve(pkg, "multi_page"), [pkg]);
   const layout = useMemo(() => (resolved.ok ? paginate(pkg, resolved.value, measure) : null), [pkg, resolved, measure]);
   const root = useRef<HTMLDivElement>(null);
   const [overflow, setOverflow] = useState<string | null>(null);

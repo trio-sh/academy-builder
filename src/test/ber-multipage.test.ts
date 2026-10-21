@@ -1,13 +1,13 @@
 import { describe, it, expect } from "vitest";
 import fixture from "@/lib/berMultipage/fix-multipage.json";
 import {
-  validateAndResolve, paginate, controlledTextDigest, canonicalJson, GEOMETRY, checkGeometry, blockHeight, approxMeasure,
+  checkAndResolve, paginate, controlledTextDigest, canonicalJson, GEOMETRY, checkGeometry, blockHeight, approxMeasure,
   type Package,
 } from "@/lib/berMultipage";
 
 const base = (): Package => JSON.parse(JSON.stringify(fixture));
-const ok = (p: Package) => { const r = validateAndResolve(p); if (!r.ok) throw new Error(r.code + ": " + r.detail); return r.value; };
-const code = (p: Package, fmt: "multi_page" | "one_page" = "multi_page") => { const r = validateAndResolve(p, fmt); return r.ok ? "ok" : r.code; };
+const ok = (p: Package) => { const r = checkAndResolve(p); if (!r.ok) throw new Error(r.code + ": " + r.detail); return r.value; };
+const code = (p: Package, fmt: "multi_page" | "one_page" = "multi_page") => { const r = checkAndResolve(p, fmt); return r.ok ? "ok" : r.code; };
 
 describe("multi page BER (STD v9.19, Section 62)", () => {
   it("the controlled text register matches its authorized digest", async () => {

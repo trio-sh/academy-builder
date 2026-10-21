@@ -151,7 +151,7 @@ export interface Resolved {
  * Every control that runs before a page is drawn. The first failing control wins and nothing is produced.
  * `format` is the renderer being asked: the multi page renderer accepts one or more represented dimensions.
  */
-export function validateAndResolve(pkg: Package, format: "multi_page" | "one_page" = "multi_page"): Result<Resolved> {
+export function checkAndResolve(pkg: Package, format: "multi_page" | "one_page" = "multi_page"): Result<Resolved> {
   const man = pkg.render_manifest;
   if (!man) return refuse("render_input_invalid", "no render manifest");
   for (const f of REQUIRED) {
