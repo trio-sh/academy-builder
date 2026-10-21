@@ -50,6 +50,9 @@ interface A0Response {
 
 let _reqCounter = 0;
 
+/** The request logger's shape: only what the helpers call (createLogger returns this, not a full Console). */
+type RequestLog = { info: (...args: any[]) => void; warn: (...args: any[]) => void; error: (...args: any[]) => void };
+
 function createLogger(prefix?: string) {
   const reqId = `req-${++_reqCounter}-${Date.now().toString(36)}`;
   const tag = prefix ? `[${reqId}][${prefix}]` : `[${reqId}]`;
@@ -152,7 +155,7 @@ function quickPdfCheck(messages: OpenAIMessage[]): boolean {
  * Enhanced LLM-based context-aware document intent detection.
  * Uses A0 LLM to analyze conversation context and determine if the user is requesting document generation.
  */
-async function isPdfRequest(messages: OpenAIMessage[], log?: Console): Promise<boolean> {
+async function isPdfRequest(messages: OpenAIMessage[], log?: RequestLog): Promise<boolean> {
   try {
     // Quick pre-check: if obvious keywords exist, do a fast regex check first
     const hasQuickMatch = quickPdfCheck(messages);
@@ -232,7 +235,7 @@ Respond with ONLY "YES" or "NO" - nothing else.`
  * Enhanced LLM-based complexity detection for routing to Kilo Gateway.
  * Detects complex queries that need long-form responses, deep analysis, or multi-step reasoning.
  */
-async function isComplexQuery(messages: OpenAIMessage[], log?: Console): Promise<boolean> {
+async function isComplexQuery(messages: OpenAIMessage[], log?: RequestLog): Promise<boolean> {
   try {
     // Build context from recent messages (last 5 messages or last 2000 chars)
     const recentMessages = messages.slice(-5);
