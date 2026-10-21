@@ -208,24 +208,9 @@ describe("Step 1: Candidate Completes Readiness Reflection", () => {
     expect(weakDimensions).toHaveLength(2);
   });
 
-  it("should log the reflection completion in growth log", () => {
-    const logEntry = {
-      id: "gl-001",
-      candidate_id: CANDIDATE_PROFILE_ID,
-      created_at: new Date().toISOString(),
-      event_type: "assessment" as const,
-      title: "Readiness Reflection Completed",
-      description: "Completed initial self-assessment identifying strengths and growth areas.",
-      metadata: { weak_dimensions: ["communication_pressure", "accountability_ownership"] },
-      source_component: "readiness_reflection",
-      source_id: "sa-001",
-    };
-
-    db.growth_log_entries.push(logEntry);
-
-    expect(db.growth_log_entries).toHaveLength(1);
-    expect(db.growth_log_entries[0].event_type).toBe("assessment");
-    expect(db.growth_log_entries[0].source_component).toBe("readiness_reflection");
+  it("should not write the reflection completion to the Growth Log", () => {
+    // The Growth Log is the participant's own notebook; the platform writes nothing to it (Day 1 Domain J).
+    expect(db.growth_log_entries).toHaveLength(0);
   });
 });
 
@@ -343,24 +328,9 @@ describe("Step 3: Candidate Completes BridgeFast Module", () => {
     expect(db.bridgefast_progress[0].completed_at).not.toBeNull();
   });
 
-  it("should log module completion in growth log", () => {
-    const logEntry = {
-      id: "gl-002",
-      candidate_id: CANDIDATE_PROFILE_ID,
-      created_at: new Date().toISOString(),
-      event_type: "training" as const,
-      title: "BridgeFast Module Completed: Communication Under Pressure",
-      description: "Completed BridgeFast training module with a score of 85%.",
-      metadata: { module_id: MODULE_ID, score: 85, dimension: "communication_pressure" },
-      source_component: "bridgefast",
-      source_id: PROGRESS_ID,
-    };
-
-    db.growth_log_entries.push(logEntry);
-
-    expect(db.growth_log_entries).toHaveLength(1);
-    expect(db.growth_log_entries[0].event_type).toBe("training");
-    expect(db.growth_log_entries[0].source_component).toBe("bridgefast");
+  it("should not write module completion to the Growth Log", () => {
+    // Practice progress lives in the private rehearsal store (t3a_rehearsal_record_practice), not in the Growth Log.
+    expect(db.growth_log_entries).toHaveLength(0);
   });
 
   it("should update candidate tier after completing module", () => {
@@ -863,47 +833,8 @@ describe("Full E2E Flow: Readiness Reflection → Connection → Messaging", () 
     expect(db.messages).toHaveLength(0);
   });
 
-  it("should track the full journey in growth log", () => {
-    // Add growth log entries for each major step
-    const entries = [
-      {
-        id: "gl-001",
-        candidate_id: CANDIDATE_PROFILE_ID,
-        event_type: "assessment" as const,
-        title: "Readiness Reflection Completed",
-        source_component: "readiness_reflection",
-      },
-      {
-        id: "gl-002",
-        candidate_id: CANDIDATE_PROFILE_ID,
-        event_type: "endorsement" as const,
-        title: "Mentor Endorsement: Redirect to BridgeFast",
-        source_component: "endorsement",
-      },
-      {
-        id: "gl-003",
-        candidate_id: CANDIDATE_PROFILE_ID,
-        event_type: "training" as const,
-        title: "BridgeFast Module Completed",
-        source_component: "bridgefast",
-      },
-      {
-        id: "gl-004",
-        candidate_id: CANDIDATE_PROFILE_ID,
-        event_type: "tier_change" as const,
-        title: "Readiness Tier Updated to Tier 1",
-        source_component: "tier_system",
-      },
-    ];
-
-    db.growth_log_entries.push(...entries);
-
-    expect(db.growth_log_entries).toHaveLength(4);
-
-    const eventTypes = db.growth_log_entries.map((e: any) => e.event_type);
-    expect(eventTypes).toContain("assessment");
-    expect(eventTypes).toContain("endorsement");
-    expect(eventTypes).toContain("training");
-    expect(eventTypes).toContain("tier_change");
+  it("should leave the Growth Log empty across the whole journey", () => {
+    // Nothing in the journey (reflection, endorsement, module, tier change) is written to the Growth Log by the platform.
+    expect(db.growth_log_entries).toHaveLength(0);
   });
 });

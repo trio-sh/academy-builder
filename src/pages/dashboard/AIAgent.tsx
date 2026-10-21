@@ -289,7 +289,6 @@ interface StatusEvent {
 interface UserContext {
  profile: Record<string, unknown> | null;
  roleProfile: Record<string, unknown> | null;
- growthLog: Record<string, unknown>[] | null;
  mentorAssignment: Record<string, unknown> | null;
  trainingProgress: Record<string, unknown>[] | null;
  skillPassport: Record<string, unknown> | null;
@@ -368,7 +367,7 @@ const DEFAULT_TOOLS = [
  properties: {
  table: {
  type: "string",
- enum: ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"],
+ enum: ["bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"],
  description: "The data category to look up",
  },
  },
@@ -1120,7 +1119,7 @@ async function executeCustomTool(
  const table = args.table as string || "";
  if (!table) return "Error: No table specified";
  try {
- const allowedTables = ["growth_log_entries", "bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"];
+ const allowedTables = ["bridgefast_progress", "mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "notifications", "liveworks_projects", "liveworks_applications"];
  if (!allowedTables.includes(table)) return `Access denied: table "${table}" not queryable`;
  const userId = userContext.profile && (userContext.profile as Record<string, unknown>).id;
  if (!userId) return "Error: No user context available";
@@ -1129,7 +1128,6 @@ async function executeCustomTool(
  let query = supabase.from(table).select("*").limit(20);
  const tablesUsingRoleProfileId = ["mentor_assignments", "mentor_observations", "endorsements", "skill_passports", "t3x_connections", "liveworks_projects", "liveworks_applications"];
  const tableUserColumn: Record<string, string> = {
- growth_log_entries: "candidate_id",
  bridgefast_progress: "candidate_id",
  mentor_assignments: userRole === "mentor" ? "mentor_id" : "candidate_id",
  mentor_observations: userRole === "mentor" ? "mentor_id" : "candidate_id",
@@ -1447,7 +1445,7 @@ function extractPageContext(): string {
 
 async function loadUserContext(userId: string, role: string): Promise<UserContext> {
  const ctx: UserContext = {
- profile: null, roleProfile: null, growthLog: null,
+ profile: null, roleProfile: null,
  mentorAssignment: null, trainingProgress: null,
  skillPassport: null, notifications: null, connections: null,
  };
@@ -1461,16 +1459,14 @@ async function loadUserContext(userId: string, role: string): Promise<UserContex
  ctx.roleProfile = cp;
  const cpId = cp?.id;
  if (cpId) {
- const [gl, ma, tp, sp, conn] = await Promise.all([
- supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).order("created_at", { ascending: false }).limit(20),
+ const [ma, tp, sp, conn] = await Promise.all([
  supabase.from("mentor_assignments").select("*").eq("candidate_id", cpId).eq("status", "active").maybeSingle(),
- supabase.from("growth_log_entries").select("*").eq("candidate_id", userId).eq("event_type", "training").order("created_at", { ascending: false }).limit(10),
+ supabase.rpc("t3a_rehearsal_progress"),
  supabase.from("skill_passports").select("*").eq("candidate_id", cpId).eq("is_active", true).maybeSingle(),
  supabase.from("t3x_connections").select("*").eq("candidate_id", cpId).order("created_at", { ascending: false }).limit(10),
  ]);
- ctx.growthLog = gl.data;
  ctx.mentorAssignment = ma.data;
- ctx.trainingProgress = tp.data;
+ ctx.trainingProgress = tp.data as Record<string, unknown>[] | null;
  ctx.skillPassport = sp.data;
  ctx.connections = conn.data;
  }
@@ -1544,9 +1540,6 @@ function summarizeUserContext(ctx: UserContext, role: string): string {
  parts.push(`Admin Stats: ${a.totalUsers} total users, ${a.totalCandidates} candidates, ${a.totalMentors} mentors`);
  }
 
- if (ctx.growthLog?.length) {
- parts.push(`Recent Growth Log (${ctx.growthLog.length} entries):\n${ctx.growthLog.slice(0, 5).map((e: Record<string, unknown>) => `- [${e.event_type}] ${e.title} (${new Date(e.created_at as string).toLocaleDateString()})`).join("\n")}`);
- }
 
  if (ctx.mentorAssignment) {
  const ma = ctx.mentorAssignment as Record<string, unknown>;
@@ -2493,7 +2486,7 @@ export default function AIAgent() {
  tc.function.name,
  args,
  navigateFn,
- userContext || { profile: null, roleProfile: null, growthLog: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null },
+ userContext || { profile: null, roleProfile: null, mentorAssignment: null, trainingProgress: null, skillPassport: null, notifications: null, connections: null },
  loadedToolsRef.current,
  (n) => {
  loadedToolsRef.current = new Set(loadedToolsRef.current).add(n);
@@ -2971,7 +2964,6 @@ export default function AIAgent() {
  {" • Skills: "}{((userContext.roleProfile as Record<string, unknown>).skills as string[] || []).slice(0, 5).join(", ") || "None set"}
  </p>
  )}
- {userContext.growthLog && <p>{userContext.growthLog.length} growth log entries</p>}
  </div>
  </div>
  )}

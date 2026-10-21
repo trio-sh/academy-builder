@@ -428,21 +428,6 @@ export const AssessmentViewer = () => {
 
  if (error) throw error;
 
- // Create growth log entry
- await supabase.from('growth_log_entries').insert({
- candidate_id: user.id,
- event_type: 'assessment',
- title: 'Interactive Self-Assessment Completed',
- description: `Completed behavioral self-assessment with overall score of ${getOverallScore(scores).toFixed(1)}/5`,
- source_component: 'InteractiveAssessment',
- metadata: {
- scores,
- overall: getOverallScore(scores),
- strengths,
- improvements,
- goals
- }
- });
 
  setIsComplete(true);
  } catch (error) {

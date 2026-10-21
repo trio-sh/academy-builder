@@ -532,18 +532,10 @@ export const TrainingModuleViewer = () => {
  }
  }
 
- // Create growth log entry
- const { error: logError } = await supabase.from('growth_log_entries').insert({
- candidate_id: user.id,
- event_type: 'training',
- title: `Completed Interactive Module: ${module.title}`,
- description: `Completed ${module.title} with score ${totalScore}/${module.totalPoints}`,
- source_component: 'InteractiveTraining',
- metadata: { module_id: module.id, module_slug: module.slug, score: totalScore }
- });
-
- if (logError) {
- console.error('Error creating growth log entry:', logError);
+ // The practice is recorded in the participant's private rehearsal store. The platform writes nothing to the Growth Log.
+ const { error: practiceError } = await supabase.rpc('t3a_rehearsal_record_practice', { p_slug: module.slug, p_state: 'complete' });
+ if (practiceError) {
+ console.error('Error recording practice:', practiceError);
  }
  } catch (error) {
  console.error('Error saving module completion:', error);

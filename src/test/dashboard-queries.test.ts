@@ -176,8 +176,8 @@ describe("Candidate Dashboard Queries", () => {
     expect(TABLE_COLUMNS.candidate_profiles).toContain("profile_id");
   });
 
-  it("should query growth_log_entries by candidate_id", () => {
-    mockSupabase.from("growth_log_entries");
+  it("should keep growth_log_entries as a frozen table that no screen reads or writes", () => {
+    // Frozen by the Day 1 build (Domain J). The participant's Growth Log is t3a_growth_log_entry.
     expect(VALID_TABLES.has("growth_log_entries")).toBe(true);
   });
 

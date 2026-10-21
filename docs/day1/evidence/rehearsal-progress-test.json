@@ -1,0 +1,63 @@
+{
+ "passed": 8,
+ "total": 8,
+ "failed": [],
+ "results": [
+  {
+   "id": "CR-067",
+   "label": "a participant records a practice, twice; both are kept",
+   "pass": true,
+   "detail": [
+    "ok",
+    "ok"
+   ]
+  },
+  {
+   "id": "CR-067",
+   "label": "progress shows one row per module with the latest state",
+   "pass": true,
+   "detail": [
+    {
+     "module_slug": "conflict-opening",
+     "last_practiced_at": "2026-10-20T16:02:03.994Z",
+     "completion_state": "complete"
+    }
+   ]
+  },
+  {
+   "id": "CR-067",
+   "label": "another participant sees none of it",
+   "pass": true
+  },
+  {
+   "id": "CR-067",
+   "label": "anonymous callers cannot record",
+   "pass": true,
+   "detail": "permission denied for function t3a_rehearsal_record_practice"
+  },
+  {
+   "id": "CR-067",
+   "label": "a slug that is not a slug is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_rehearsal_module\" violates check constraint "
+  },
+  {
+   "id": "CR-067",
+   "label": "a completion state outside the three listed is refused",
+   "pass": true,
+   "detail": "T3A_REHEARSAL_STATE: finished is not a completion state"
+  },
+  {
+   "id": "CR-067",
+   "label": "the module registry has no client read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_rehearsal_module"
+  },
+  {
+   "id": "DT-32",
+   "label": "the rehearsal firewall still reports nothing",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}
