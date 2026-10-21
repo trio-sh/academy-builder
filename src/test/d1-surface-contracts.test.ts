@@ -579,11 +579,12 @@ describe("§8.3/§8.4 Stage 4 shared session — one lane, and it is the observe
     expect(groupSessionCode).not.toMatch(/permitted:\s*true/);
   });
 
-  it("calls only the two governed session routines", () => {
+  it("calls only the three governed session routines (capture verdict, member event, and the server's Stage 4 entry)", () => {
     const rpcs = [...groupSessionCode.matchAll(/rpc\("([a-z0-9_]+)"/g)].map((m) => m[1]);
     expect([...new Set(rpcs)].sort()).toEqual([
       "t3a_d1_group_capture_permitted",
       "t3a_d1_group_member_event",
+      "t3a_s4_enter",
     ]);
   });
 

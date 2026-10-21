@@ -145,6 +145,25 @@ const GroupSessionWorkspace = () => {
     await load();
   };
 
+  // Starting a session is the server's decision. Stage 4 entry refuses (and records the attempt) unless Stage 4 is activated,
+  // the source is servable, every member has given their own group participation permission and accommodation is settled.
+  const [startResult, setStartResult] = useState<{ outcome?: string; reason?: string } | null>(null);
+  const onStart = async () => {
+    if (!selected) return;
+    setIsWorking(true);
+    const { data } = await supabase.rpc("t3a_s4_enter", { p_group_session: selected });
+    setIsWorking(false);
+    setStartResult((data ?? { outcome: "refused", reason: "no_answer" }) as { outcome?: string; reason?: string });
+    await load();
+  };
+  const REFUSAL_TEXT: Record<string, string> = {
+    s4_not_activated: "Stage 4 is not open. It opens only on a founder decision, and nothing here can open it.",
+    group_participation_missing: "Every person in the session gives their own permission first. At least one has not.",
+    accommodation_not_settled: "Accommodation is settled before a session is composed, and this one records none as settled.",
+    facilitator_only: "Only the facilitator of this session can start it.",
+    session_not_found: "That session was not found.",
+  };
+
   if (isLoading) return <LedgerLoading />;
 
   const session = sessions.find((s) => s.group_session_id === selected) ?? null;
@@ -300,6 +319,23 @@ const GroupSessionWorkspace = () => {
               co-participant's pack is session material and creates no evidence
               object.
             </p>
+          </DashSection>
+
+          <DashSection eyebrow="§ V · Start" title="Starting is the server's decision">
+            <div className="max-w-3xl">
+              <Button variant="outline" disabled={isWorking || !!session.started_at} onClick={() => void onStart()}>
+                {session.started_at ? "Session started" : "Start the session"}
+              </Button>
+              {startResult && startResult.outcome === "refused" && (
+                <div className="border-2 border-vermilion bg-vermilion/[0.06] p-4 mt-4" data-testid="stage4-refusal">
+                  <div className="mono-label ink-vermilion mb-1">§ Refused · {startResult.reason}</div>
+                  <p className="text-sm text-foreground">{REFUSAL_TEXT[startResult.reason ?? ""] ?? "The server refused this start. The attempt is recorded with its reason."}</p>
+                </div>
+              )}
+              {startResult && startResult.outcome === "entered" && (
+                <p className="text-foreground/80 mt-4">The session has started. One capture lane, for the observed participant only.</p>
+              )}
+            </div>
           </DashSection>
 
           <DashSection eyebrow="§ IV · What nobody in the room sees" title="Not even the observed participant">
