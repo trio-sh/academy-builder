@@ -1,0 +1,16 @@
+erDiagram
+  t3a_d1_report_block {
+    integer block_no PK
+    text block_name
+    text render_behaviour
+    text controlled_text_ref
+    boolean renders_always
+    text render_target
+  }
+  t3a_d1_report_controlled_text {
+    text text_ref PK
+    integer block_no
+    text body
+    boolean verbatim
+  }
+  t3a_d1_report_block ||--o{ t3a_d1_report_controlled_text : "block_no"

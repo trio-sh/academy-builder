@@ -1,0 +1,17 @@
+erDiagram
+  t3a_event_log {
+    uuid event_id PK
+    text event_name
+    t3a_event_category event_category
+    timestamp_with_time_zone occurred_at
+    timestamp_with_time_zone ingested_at
+    text actor_type
+    uuid actor_id
+    uuid subject_id
+    uuid session_id
+    uuid correlation_id
+    text resource_type
+    uuid resource_id
+    text _27_more_columns
+  }
+  t3a_event_log ||--o{ t3a_event_log : "supersedes_event_id"

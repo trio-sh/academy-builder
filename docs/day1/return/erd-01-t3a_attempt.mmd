@@ -1,0 +1,1144 @@
+erDiagram
+  t3a_attempt {
+    uuid attempt_id PK
+    uuid participant_id
+    text dimension_id
+    t3a_stage_code stage_code
+    uuid stage_entry_event_id
+    text outcome
+    boolean counted
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone ended_at
+    integer attempt_no
+    text attempt_event_class
+    text attempt_rules_version
+    text _12_more_columns
+  }
+  t3a_authority_snapshot {
+    uuid authority_snapshot_id PK
+    uuid actor_id
+    t3a_authority authority
+    text dimension_id
+    text stage_code
+    uuid role_authorization_id
+    jsonb snapshot
+    timestamp_with_time_zone captured_at
+  }
+  t3a_ber_report {
+    uuid ber_report_id PK
+    uuid participant_id
+    integer version
+    t3a_ber_status status
+    jsonb issue_metadata
+    uuid supersedes
+    text permitted_use_version
+    date current_until
+    timestamp_with_time_zone created_at
+  }
+  t3a_ber_statement {
+    uuid ber_statement_id PK
+    uuid ber_report_id
+    t3a_dimension_code dimension_id
+    uuid composed_statement_id
+    ARRAY contributing_observation_ids
+    ARRAY stages_contributing
+    text recurrence_note
+  }
+  t3a_challenge_case {
+    uuid challenge_case_id PK
+    uuid ber_report_id
+    uuid participant_id
+    uuid disputed_statement_id
+    uuid disputed_observation_id
+    t3a_challenge_ground challenge_ground
+    t3a_challenge_status status
+    uuid reviewer_assignment
+    timestamp_with_time_zone evidence_disclosed_at
+    text outcome
+    text outcome_reasoning
+    timestamp_with_time_zone observation_notification_timestamp
+    text _12_more_columns
+  }
+  t3a_change_classification {
+    uuid change_classification_id PK
+    uuid content_version_id
+    t3a_change_kind kind
+    boolean calibration_clearance_affecting
+    boolean prior_clearance_carries_over
+    uuid supersedes_change_id
+    uuid actor
+    timestamp_with_time_zone effective_date
+    text rationale
+  }
+  t3a_commit_seal {
+    uuid composed_statement_id PK
+    uuid observation_ref
+    uuid participant_id
+    text dimension_id
+    boolean is_superseding
+    text payload_hash
+    text seal
+    text key_version
+    timestamp_with_time_zone sealed_at
+  }
+  t3a_composed_statement {
+    uuid composed_statement_id PK
+    uuid statement_id
+    text rendered_body
+    timestamp_with_time_zone composed_at
+    text statement_library_version
+    jsonb answer_key
+    text statement_version
+    character statement_digest
+  }
+  t3a_conflict_declaration {
+    uuid conflict_declaration_id PK
+    uuid mentor_id
+    uuid participant_id
+    uuid employer_org_id
+    text reason_class
+    timestamp_with_time_zone declared_at
+    timestamp_with_time_zone cleared_at
+    ARRAY declared_entity_refs
+    uuid recusal_id
+  }
+  t3a_content_load_event {
+    uuid content_load_event_id PK
+    t3a_env_state env_state
+    uuid content_object_id
+    uuid content_version_id
+    t3a_governed_config_status governed_status
+    uuid loaded_by
+    timestamp_with_time_zone loaded_at
+    uuid manifest_id
+    text notes
+  }
+  t3a_content_object {
+    uuid content_object_id PK
+    text identifier
+    t3a_content_family family
+    text title
+    text dimension_id
+    uuid current_version_id
+    t3a_operational_state current_operational_state
+    timestamp_with_time_zone created_at
+    uuid created_by
+    timestamp_with_time_zone updated_at
+    uuid updated_by
+    timestamp_with_time_zone retired_at
+    text _2_more_columns
+  }
+  t3a_content_version {
+    uuid content_version_id PK
+    uuid content_object_id
+    text version_no
+    t3a_approval_status approval_status
+    t3a_operational_state operational_state
+    uuid approved_by
+    timestamp_with_time_zone approved_at
+    timestamp_with_time_zone effective_at
+    uuid superseded_by
+    timestamp_with_time_zone retired_at
+    text retired_reason
+    jsonb body
+    text _3_more_columns
+  }
+  t3a_correction_case {
+    uuid correction_case_id PK
+    uuid raised_by
+    uuid participant_id
+    text ground
+    text narrative
+    text status
+    timestamp_with_time_zone raised_at
+    timestamp_with_time_zone resolved_at
+    t3a_d1_challenge_case_status challenge_status
+    t3a_d1_challenge_case_status terminal_outcome
+    uuid ber_report_id
+  }
+  t3a_correction_request {
+    uuid ber_report_id
+    uuid participant_id
+    timestamp_with_time_zone requested_at
+    uuid correction_request_id PK
+    text correction_outcome
+  }
+  t3a_cross_context_relationship {
+    text dimension_id PK
+    uuid source_version_a PK
+    uuid source_version_b PK
+    uuid approved_by
+    timestamp_with_time_zone approved_at
+  }
+  t3a_d1_ai_administration_confirmation {
+    uuid ai_administration_confirmation_id PK
+    uuid ai_administration_run_id
+    uuid stage_entry_event_id
+    uuid source_version_id
+    uuid confirmed_by
+    uuid authority_snapshot_id
+    timestamp_with_time_zone confirmed_at
+    text confirmation_note
+  }
+  t3a_d1_ai_administration_run {
+    uuid ai_administration_run_id PK
+    uuid stage_entry_event_id
+    uuid participant_id
+    text dimension_id
+    uuid source_version_id
+    uuid model_ref_version_id
+    uuid prompt_ref_version_id
+    uuid admin_config_version_id
+    uuid safety_config_version_id
+    text rendered_body
+    text rendered_body_hash
+    t3a_env_state env_state_at_run
+    text _3_more_columns
+  }
+  t3a_d1_approval_audit_finding {
+    uuid approval_audit_finding_id PK
+    uuid source_approval_id
+    text finding
+    jsonb established
+    timestamp_with_time_zone recorded_at
+    text recorded_by
+  }
+  t3a_d1_approval_basis {
+    uuid source_approval_id PK
+    text basis_kind
+    text referenced_identifier
+    text basis_text
+    date basis_entered_on
+    text recorded_under
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_d1_approval_basis_kind {
+    text basis_kind PK
+    text records
+    boolean requires_referenced_identifier
+    text closed_list_under
+  }
+  t3a_d1_beat_capture_binding {
+    text source_identifier PK
+    text beat_code PK
+    text capture_set_code PK
+    boolean revisable
+    text qualifier_as_written
+    text dimension_id
+  }
+  t3a_d1_beat_timestamp {
+    uuid stage_entry_event_id PK
+    text beat_code PK
+    timestamp_with_time_zone recorded_at
+    integer duration_seconds
+    uuid recorded_by
+  }
+  t3a_d1_ber_report {
+    uuid ber_report_id PK
+    uuid participant_id
+    text dimension_id
+    t3a_d1_ber_status status
+    jsonb version_set
+    uuid supersedes
+    timestamp_with_time_zone assembled_at
+    timestamp_with_time_zone review_completed_at
+    timestamp_with_time_zone issued_at
+    timestamp_with_time_zone amended_at
+    timestamp_with_time_zone withdrawn_at
+    text ber_version
+    text _16_more_columns
+  }
+  t3a_d1_capture_line {
+    uuid capture_line_id PK
+    text capture_set_code
+    text line_text
+    integer line_order
+    text branch_code
+    boolean is_whole_session_answer
+    text dimension_id
+  }
+  t3a_d1_capture_resolution {
+    uuid resolution_id PK
+    text question_code
+    text capture_set_code
+    integer capture_line_order
+    text statement_key
+    text conduct_element
+    text dimension_id
+  }
+  t3a_d1_capture_selection {
+    uuid capture_selection_id PK
+    uuid stage_entry_event_id
+    text question_code
+    text capture_set_code
+    text beat_code
+    integer line_order
+    uuid selected_by
+    timestamp_with_time_zone selected_at
+    text dimension_id
+  }
+  t3a_d1_capture_set {
+    text capture_set_code PK
+    text title
+    text applicability_note
+    integer display_order
+    boolean records_first_occurrence
+    text dimension_id PK
+  }
+  t3a_d1_change_classification {
+    uuid change_classification_id PK
+    uuid content_version_id
+    t3a_change_kind kind
+    boolean calibration_clearance_affecting
+    boolean prior_clearance_carries_over
+    uuid supersedes_change_id
+    uuid actor
+    timestamp_with_time_zone effective_date
+    text rationale
+  }
+  t3a_d1_composed_statement {
+    uuid composed_statement_id PK
+    uuid observation_record_id
+    uuid statement_library_id
+    uuid resolution_rule_id
+    text composed_body
+    jsonb answer_pattern_snapshot
+    jsonb bound_variable_values
+    uuid supersedes
+    jsonb version_set
+    timestamp_with_time_zone composed_at
+    uuid composed_by
+  }
+  t3a_d1_content_load_event {
+    uuid content_load_event_id PK
+    t3a_env_state env_state
+    uuid content_object_id
+    uuid content_version_id
+    t3a_governed_config_status governed_status
+    uuid loaded_by
+    timestamp_with_time_zone loaded_at
+    uuid manifest_id
+    text notes
+  }
+  t3a_d1_content_version {
+    uuid content_version_id PK
+    uuid content_object_id
+    text version_no
+    t3a_approval_status approval_status
+    t3a_operational_state operational_state
+    uuid approved_by
+    timestamp_with_time_zone approved_at
+    timestamp_with_time_zone effective_at
+    uuid superseded_by
+    timestamp_with_time_zone retired_at
+    text retired_reason
+    jsonb body
+    text _3_more_columns
+  }
+  t3a_d1_founder_reapproval {
+    text source_identifier PK
+    uuid source_version_id PK
+    text basis
+    text approver_as_signed
+    date signed_on
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_d1_language_template {
+    text language_template_id PK
+    text dimension_id
+    text template_body
+    ARRAY bound_variables
+    ARRAY eligible_states
+    integer precedence
+    uuid content_version_id
+    boolean retired
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_live_session {
+    uuid stage_entry_event_id PK
+    text channel
+    text host_account_email
+    text meet_link
+    text link_status
+    timestamp_with_time_zone link_released_at
+    timestamp_with_time_zone visual_confirmation_recorded_at
+    boolean e3_rests_on_attestation_alone
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_live_session_event {
+    uuid live_session_event_id PK
+    uuid stage_entry_event_id
+    text event_kind
+    text beat_code
+    uuid reported_by
+    timestamp_with_time_zone reported_at
+    text rec10_classification
+    text narrative
+  }
+  t3a_d1_participant_review_action {
+    uuid review_action_id PK
+    uuid ber_report_id
+    uuid participant_id
+    t3a_d1_review_action action
+    uuid correction_case_id
+    timestamp_with_time_zone recorded_at
+    jsonb actor_context
+  }
+  t3a_d1_progression_decision {
+    uuid progression_decision_id PK
+    uuid participant_id
+    text dimension_id
+    t3a_progression_value decision
+    uuid recorded_by
+    uuid authority_snapshot_id
+    uuid observation_record_id
+    uuid cleared_from
+    timestamp_with_time_zone cleared_at
+    uuid cleared_by
+    text rationale
+    timestamp_with_time_zone created_at
+    text _9_more_columns
+  }
+  t3a_d1_question_capture_map {
+    text question_code PK
+    text capture_set_code
+    text source_bound_family
+    text ruling_reference
+    text ruled_by
+    timestamp_with_time_zone ruled_at
+    text note
+    text conduct_element
+    text answer_type
+    text applicability_rule
+    integer control_ordinal
+    text dimension_id
+  }
+  t3a_d1_rendered_instance {
+    uuid rendered_instance_id PK
+    uuid source_version_id
+    text canonical_source_hash
+    jsonb presentation_variant_values
+    text rendered_instance_hash
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_report_disclosure {
+    uuid disclosure_id PK
+    uuid issuance_id
+    uuid ber_report_id
+    uuid participant_id
+    text recipient_kind
+    text recipient_email
+    text recipient_display
+    text purpose
+    t3a_d1_disclosure_state state
+    timestamp_with_time_zone released_at
+    timestamp_with_time_zone revoked_at
+    timestamp_with_time_zone expires_at
+  }
+  t3a_d1_report_issuance {
+    uuid issuance_id PK
+    uuid ber_report_id
+    uuid participant_id
+    text dimension_id
+    uuid issued_by
+    uuid authority_snapshot_id
+    jsonb version_set_at_issuance
+    text rendered_body_hash
+    t3a_d1_issuance_state state
+    uuid supersedes
+    timestamp_with_time_zone issued_at
+    timestamp_with_time_zone superseded_at
+    text _1_more_columns
+  }
+  t3a_d1_report_verification_token {
+    uuid verification_token_id PK
+    uuid disclosure_id
+    text token_hash
+    text token_prefix
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone last_used_at
+  }
+  t3a_d1_resolution_refusal {
+    uuid resolution_refusal_id PK
+    uuid observation_record_id
+    t3a_resolution_refusal_reason reason
+    text detail
+    jsonb answer_pattern_snapshot
+    timestamp_with_time_zone refused_at
+  }
+  t3a_d1_resolution_rule {
+    uuid resolution_rule_id PK
+    text dimension_id
+    text question_set_version
+    t3a_stage_code stage_code
+    jsonb answer_pattern
+    text answer_pattern_key
+    uuid statement_library_id
+    integer precedence
+    boolean active
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_s1_reveal_response {
+    uuid reveal_response_id PK
+    uuid ai_administration_run_id
+    integer reveal_ordinal
+    text reveal_label
+    text reveal_verbatim_hash
+    timestamp_with_time_zone shown_at
+    timestamp_with_time_zone submitted_at
+    text response_text
+    text outcome
+  }
+  t3a_d1_s1_workbench_session {
+    uuid workbench_session_id PK
+    uuid ai_administration_run_id
+    uuid participant_id
+    uuid captured_by
+    timestamp_with_time_zone opened_at
+    timestamp_with_time_zone captured_at
+    timestamp_with_time_zone administration_ended_at
+    timestamp_with_time_zone confirmed_at
+  }
+  t3a_d1_session_attestation {
+    uuid stage_entry_event_id PK
+    text attestation_code PK
+    uuid attested_by
+    timestamp_with_time_zone attested_at
+  }
+  t3a_d1_source_approval {
+    uuid source_approval_id PK
+    uuid source_id
+    uuid source_version_id
+    text status
+    uuid approved_by
+    timestamp_with_time_zone approved_at
+  }
+  t3a_d1_source_approval_provenance {
+    uuid source_approval_id PK
+    text carry_forward_basis
+    uuid carried_from_version_id
+    boolean identity_assertion_passed
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_d1_source_name_clearance {
+    uuid name_clearance_id PK
+    uuid source_version_id
+    jsonb presentation_variant_values
+    text status
+    timestamp_with_time_zone cleared_at
+    uuid cleared_by
+  }
+  t3a_d1_stage4_impact_assessment {
+    text source_identifier PK
+    uuid source_version_id
+    text title
+    text situation_class
+    text bearing_interest
+    text welfare_attention
+    text welfare_basis
+    text theme_line
+    text result
+    text instrument
+    text completed_by
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_d1_stage4_impact_assessment_part {
+    text source_identifier PK
+    integer part_no PK
+    text part_name
+    text finding
+    text controls
+  }
+  t3a_d1_statement_library {
+    uuid statement_library_id PK
+    uuid content_version_id
+    text dimension_id
+    text question_set_version
+    t3a_stage_code stage_code
+    text statement_key
+    text statement_body
+    ARRAY bound_variables
+    jsonb bound_condition_renderings
+    uuid supersedes
+    boolean retired
+    timestamp_with_time_zone created_at
+    text _7_more_columns
+  }
+  t3a_d1_version_lineage {
+    uuid version_lineage_id PK
+    uuid child_version_id
+    uuid parent_version_id
+    t3a_content_family parent_family
+    text relation
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_welfare_withdrawal {
+    uuid welfare_withdrawal_id PK
+    uuid attempt_id
+    text stopped_by
+    uuid stopped_by_actor
+    t3a_stage_code stage_code
+    boolean observation_had_begun
+    timestamp_with_time_zone recorded_at
+    text recorded_under
+  }
+  t3a_d1_welfare_withholding {
+    uuid welfare_withholding_id PK
+    uuid stage_instance_id
+    uuid participant_id
+    text dimension_id
+    t3a_stage_code stage_code
+    uuid safety_event_id
+    uuid withheld_by
+    timestamp_with_time_zone withheld_at
+    text recorded_under
+  }
+  t3a_determination {
+    uuid observation_id
+    uuid determination_id PK
+    uuid question_id
+    uuid answer_option_id
+    ARRAY list_selection_ids
+    text determination_missing_state
+    text determination_missing_state_capture_state
+    uuid determined_by
+    timestamp_with_time_zone determined_at
+    uuid clause_instance_id
+    uuid conduct_element_id
+    uuid recurrence_equivalence_key_id
+    text _1_more_columns
+  }
+  t3a_determination_question {
+    uuid question_id PK
+    t3a_dimension_code dimension_id
+    text question_set_version
+    integer order_index
+    text question_body
+    jsonb answer_schema
+    timestamp_with_time_zone approved_at
+    uuid approved_by
+    timestamp_with_time_zone created_at
+  }
+  t3a_dimension_composed_statement {
+    uuid composed_statement_id PK
+    text dimension_id
+    uuid observation_ref
+    uuid participant_id
+    text stage_code
+    uuid source_version_id
+    jsonb answers
+    jsonb missing
+    jsonb selections
+    jsonb clauses
+    jsonb clause_instances
+    jsonb conditions
+    text _3_more_columns
+  }
+  t3a_dimension_review_item {
+    integer item_no PK
+    text dimension_id
+    text requirement
+    integer display_no
+  }
+  t3a_dimension_review_result {
+    uuid ber_report_id PK
+    text dimension_id PK
+    integer item_no PK
+    text outcome
+    uuid reviewer_id
+    character version_set_hash
+    timestamp_with_time_zone recorded_at PK
+  }
+  t3a_dimension_statement_withdrawal {
+    uuid composed_statement_id PK
+    text reason
+    timestamp_with_time_zone withdrawn_at
+  }
+  t3a_disclosure {
+    uuid disclosure_id PK
+    uuid ber_report_id
+    uuid participant_id
+    uuid recipient_org_id
+    text recipient_email
+    text access_scope
+    timestamp_with_time_zone access_period_starts
+    timestamp_with_time_zone access_period_ends
+    timestamp_with_time_zone identity_released_at
+    timestamp_with_time_zone report_released_at
+    timestamp_with_time_zone revoked_at
+    t3a_disclosure_status status
+    text _2_more_columns
+  }
+  t3a_employment_link {
+    uuid employment_link_id PK
+    uuid participant_id
+    uuid employer_org_id
+    uuid opportunity_id
+    text linkage_route
+    uuid ber_version_released_at_linkage
+    uuid respondent_id
+    text respondent_role
+    text relationship_to_participant
+    ARRAY followup_due_dates
+    text question_set_version
+    timestamp_with_time_zone created_at
+  }
+  t3a_evidence_review {
+    uuid ber_report_id
+    uuid evidence_review_id PK
+    uuid reviewer_id
+    timestamp_with_time_zone review_completed_at
+    character version_set_hash
+    jsonb review_checklist_results
+  }
+  t3a_mentor_assignment {
+    uuid mentor_assignment_id PK
+    uuid mentor_id
+    uuid participant_id
+    uuid stage_instance_id
+    t3a_assignment_method assignment_method
+    integer prior_allocation_count
+    uuid conflict_declaration_ref
+    timestamp_with_time_zone created_at
+    boolean guidance_between_stages_received
+    text guidance_between_stages_received_capture_state
+    uuid guide_account_id
+    text guide_account_id_capture_state
+  }
+  t3a_mentor_judgment {
+    uuid mentor_judgment_id PK
+    uuid stage_instance_id
+    uuid observation_id
+    uuid human_confirmation_actor_id
+    timestamp_with_time_zone human_confirmation_at
+    text confirmation_role
+    jsonb authorization_snapshot_ref
+    t3a_progression_decision progression_decision
+    t3a_dimension_code progression_dimension_id
+    text decision_rationale
+    ARRAY dimensions_flagged
+    jsonb confidence_per_dimension
+    text _7_more_columns
+  }
+  t3a_moderation_sample {
+    uuid moderation_sample_id PK
+    uuid observation_id
+    text sampling_plan_version
+    timestamp_with_time_zone sampled_at
+    uuid paired_anchor_by_mentor
+    integer paired_anchor_value
+    text sampling_plan_version_capture_state
+  }
+  t3a_observation {
+    uuid observation_id PK
+    uuid participant_id
+    t3a_stage_code stage_code
+    t3a_dimension_code dimension_id
+    uuid source_version_id
+    integer attempt_no
+    timestamp_with_time_zone occurred_at
+    uuid stage_instance_id
+    jsonb response_sequence
+    jsonb submission_origin
+    jsonb assistance_declaration
+    text abandonment_state
+    text _71_more_columns
+  }
+  t3a_observation_path_gateway {
+    uuid observation_path_gateway_id PK
+    uuid participant_id
+    text session_identity_method
+    text observation_consent_version
+    text assistance_rules_version
+    timestamp_with_time_zone coaching_terminated_at
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone observation_notification_timestamp
+    timestamp_with_time_zone observation_path_completed_at
+  }
+  t3a_observation_record {
+    uuid observation_record_id PK
+    uuid participant_id
+    text dimension_id
+    text stage_code
+    uuid observer_id
+    uuid confirmer_id
+    uuid authority_snapshot_id
+    jsonb version_set
+    boolean is_committed
+    timestamp_with_time_zone committed_at
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+  }
+  t3a_observation_timing_flag {
+    uuid observation_record_id PK
+    boolean timing_not_comparable
+    boolean response_channel_changed
+    boolean pause_window_changed
+    uuid recorded_by
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_reconsideration_assignment {
+    uuid reconsideration_assignment_id PK
+    uuid correction_case_id
+    uuid observation_record_id
+    uuid reconsiderer_id
+    t3a_reconsideration_status status
+    t3a_involvement_reason reason_if_held_open
+    text outcome
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+    t3a_d1_reconsideration_assignment_state ins006_state
+    timestamp_with_time_zone awaiting_information_since
+  }
+  t3a_rendered_instance {
+    uuid rendered_instance_id PK
+    uuid source_version_id
+    text canonical_source_hash
+    jsonb presentation_variant_values
+    text rendered_instance_hash
+    timestamp_with_time_zone created_at
+  }
+  t3a_report_access {
+    uuid ber_report_id
+    uuid accessor_id
+    uuid report_access_id PK
+    timestamp_with_time_zone accessed_at
+  }
+  t3a_report_release {
+    uuid ber_report_id
+    uuid recipient_release_id PK
+    text release_mode
+    character recipient_address_hash
+    text token_state
+    text employer_visibility_state
+    timestamp_with_time_zone availability_changed_at
+    boolean talentvisa_active
+    text talentvisa_active_capture_state
+    timestamp_with_time_zone created_at
+  }
+  t3a_resolution_refusal {
+    uuid resolution_refusal_id PK
+    uuid observation_record_id
+    t3a_resolution_refusal_reason reason
+    text detail
+    jsonb answer_pattern_snapshot
+    timestamp_with_time_zone refused_at
+  }
+  t3a_role_authorization {
+    uuid role_authorization_id PK
+    uuid actor_id
+    t3a_authority authority
+    text dimension_id
+    ARRAY stage_codes
+    t3a_authorization_status status
+    uuid granted_by
+    timestamp_with_time_zone granted_at
+    timestamp_with_time_zone effective_from
+    timestamp_with_time_zone effective_to
+    timestamp_with_time_zone suspended_at
+    timestamp_with_time_zone withdrawn_at
+    text _2_more_columns
+  }
+  t3a_safety_event {
+    uuid safety_event_id PK
+    timestamp_with_time_zone occurred_at
+    t3a_stage_code stage_code
+    uuid source_version_id
+    uuid acted_by
+    text acted_as
+    boolean stopped
+    boolean signposted
+    boolean escalated_to_safety_contact
+    boolean emergency_services_contacted
+    timestamp_with_time_zone escalated_at
+    uuid concerns_person
+    text _1_more_columns
+  }
+  t3a_served_instance {
+    uuid participant_id
+    uuid source_version_id
+    uuid stage_entry_event_id
+    uuid rendered_instance_id
+    uuid served_instance_id PK
+    timestamp_with_time_zone served_at
+    text question_set_version
+    text statement_library_version
+    text answer_key_version
+    text recurrence_key_version
+    text template_register_version
+    text stage1_engine_version
+    text _2_more_columns
+  }
+  t3a_source {
+    uuid source_id PK
+    uuid content_object_id
+    text dimension_id
+    t3a_stage_code stage_code
+    text interaction_pattern_family
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+    uuid source_bank_id
+    text source_display_title
+    uuid source_created_by
+    timestamp_with_time_zone source_effective_from
+    timestamp_with_time_zone source_effective_until
+    text _34_more_columns
+  }
+  t3a_source_approval {
+    uuid source_approval_id PK
+    uuid source_id
+    uuid source_version_id
+    text status
+    uuid approved_by
+    timestamp_with_time_zone approved_at
+  }
+  t3a_source_approval_request {
+    uuid request_id PK
+    uuid source_version_id
+    uuid requested_by
+    timestamp_with_time_zone requested_at
+  }
+  t3a_source_authorship {
+    uuid source_version_id PK
+    ARRAY source_author_identity
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_source_drafting_test {
+    uuid source_version_id PK
+    integer test_no PK
+    text outcome
+    text reviewer_identity
+    date tested_on
+    text version_tested_ref
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_source_name_clearance {
+    uuid name_clearance_id PK
+    uuid source_version_id
+    jsonb presentation_variant_values
+    text status
+    timestamp_with_time_zone cleared_at
+    uuid cleared_by
+  }
+  t3a_source_rights_record {
+    uuid source_version_id PK
+    text rights_basis
+    text confidentiality_basis
+    text permitted_use_basis
+    text authorship_provenance_basis
+    uuid approver_id
+    date approved_on
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_source_title_history {
+    bigint title_seq PK
+    uuid source_id
+    text source_display_title
+    timestamp_with_time_zone effective_from
+  }
+  t3a_source_version {
+    uuid source_version_id PK
+    t3a_scenario_class scenario_class
+    text version_label
+    text source_version_hash
+    text compatibility_class
+    integer min_seconds
+    integer max_seconds
+    jsonb dimensions_in_play
+    jsonb relevant_conduct
+    jsonb irrelevant_conduct
+    text stated_standard
+    text permitted_administration_variance
+    text _14_more_columns
+  }
+  t3a_stage_entry_event {
+    uuid stage_entry_event_id PK
+    uuid observation_path_gateway_id
+    uuid stage_instance_id
+    t3a_stage_code stage_code
+    ARRAY dimensions_in_play
+    text session_identity
+    text assistance_rules_version
+    jsonb administration_conditions
+    timestamp_with_time_zone created_at
+    uuid participant_id
+    text dimension_id
+    uuid source_version_id
+    text _14_more_columns
+  }
+  t3a_stage_instance {
+    uuid stage_instance_id PK
+    uuid participant_id
+    t3a_stage_code stage_code
+    t3a_dimension_code dimension_id
+    integer attempt_no
+    t3a_stage_instance_state state
+    timestamp_with_time_zone scheduled_at
+    timestamp_with_time_zone activated_at
+    timestamp_with_time_zone completed_at
+    timestamp_with_time_zone created_at
+  }
+  t3a_stage_sequence {
+    uuid stage_instance_id PK
+    uuid participant_id
+    text dimension_id
+    timestamp_with_time_zone s1_outcome_delivered_to_mentor_at
+    timestamp_with_time_zone s2_determinations_locked_at
+    timestamp_with_time_zone s1_output_unmasked_at
+    timestamp_with_time_zone created_at
+  }
+  t3a_statement_library {
+    uuid statement_id PK
+    t3a_dimension_code dimension_id
+    text question_set_version
+    jsonb answer_key
+    text statement_body
+    timestamp_with_time_zone approved_at
+    uuid approved_by
+    timestamp_with_time_zone created_at
+  }
+  t3a_verification_check {
+    uuid ber_report_id
+    text outcome
+    uuid verification_check_id PK
+    timestamp_with_time_zone checked_at
+  }
+  t3a_version_lineage {
+    uuid version_lineage_id PK
+    uuid child_version_id
+    uuid parent_version_id
+    t3a_content_family parent_family
+    text relation
+    timestamp_with_time_zone created_at
+  }
+  t3a_stage_entry_event ||--o{ t3a_attempt : "stage_entry_event_id"
+  t3a_role_authorization ||--o{ t3a_authority_snapshot : "role_authorization_id"
+  t3a_ber_report ||--o{ t3a_ber_report : "supersedes"
+  t3a_ber_report ||--o{ t3a_ber_statement : "ber_report_id"
+  t3a_composed_statement ||--o{ t3a_ber_statement : "composed_statement_id"
+  t3a_ber_report ||--o{ t3a_challenge_case : "ber_report_id"
+  t3a_ber_statement ||--o{ t3a_challenge_case : "disputed_statement_id"
+  t3a_d1_ber_report ||--o{ t3a_challenge_case : "d1_ber_report_id"
+  t3a_observation ||--o{ t3a_challenge_case : "disputed_observation_id"
+  t3a_change_classification ||--o{ t3a_change_classification : "supersedes_change_id"
+  t3a_content_version ||--o{ t3a_change_classification : "content_version_id"
+  t3a_dimension_composed_statement ||--o{ t3a_commit_seal : "composed_statement_id"
+  t3a_statement_library ||--o{ t3a_composed_statement : "statement_id"
+  t3a_content_object ||--o{ t3a_content_load_event : "content_object_id"
+  t3a_content_version ||--o{ t3a_content_load_event : "content_version_id"
+  t3a_content_object ||--o{ t3a_content_version : "content_object_id"
+  t3a_content_version ||--o{ t3a_content_version : "superseded_by"
+  t3a_d1_ber_report ||--o{ t3a_correction_case : "ber_report_id"
+  t3a_d1_ber_report ||--o{ t3a_correction_request : "ber_report_id"
+  t3a_d1_content_version ||--o{ t3a_cross_context_relationship : "source_version_b"
+  t3a_d1_content_version ||--o{ t3a_cross_context_relationship : "source_version_a"
+  t3a_authority_snapshot ||--o{ t3a_d1_ai_administration_confirmation : "authority_snapshot_id"
+  t3a_d1_ai_administration_run ||--o{ t3a_d1_ai_administration_confirmation : "ai_administration_run_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_confirmation : "source_version_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_ai_administration_confirmation : "stage_entry_event_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_run : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_run : "admin_config_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_run : "model_ref_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_run : "prompt_ref_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_ai_administration_run : "safety_config_version_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_ai_administration_run : "stage_entry_event_id"
+  t3a_d1_source_approval ||--o{ t3a_d1_approval_audit_finding : "source_approval_id"
+  t3a_d1_approval_basis_kind ||--o{ t3a_d1_approval_basis : "basis_kind"
+  t3a_d1_source_approval ||--o{ t3a_d1_approval_basis : "source_approval_id"
+  t3a_d1_capture_set ||--o{ t3a_d1_beat_capture_binding : "dimension_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_beat_timestamp : "stage_entry_event_id"
+  t3a_d1_ber_report ||--o{ t3a_d1_ber_report : "supersedes"
+  t3a_d1_capture_set ||--o{ t3a_d1_capture_line : "dimension_id"
+  t3a_d1_capture_set ||--o{ t3a_d1_capture_resolution : "dimension_id"
+  t3a_d1_capture_set ||--o{ t3a_d1_capture_selection : "dimension_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_capture_selection : "stage_entry_event_id"
+  t3a_d1_change_classification ||--o{ t3a_d1_change_classification : "supersedes_change_id"
+  t3a_d1_content_version ||--o{ t3a_d1_change_classification : "content_version_id"
+  t3a_d1_composed_statement ||--o{ t3a_d1_composed_statement : "supersedes"
+  t3a_d1_resolution_rule ||--o{ t3a_d1_composed_statement : "resolution_rule_id"
+  t3a_d1_statement_library ||--o{ t3a_d1_composed_statement : "statement_library_id"
+  t3a_observation_record ||--o{ t3a_d1_composed_statement : "observation_record_id"
+  t3a_content_object ||--o{ t3a_d1_content_load_event : "content_object_id"
+  t3a_d1_content_version ||--o{ t3a_d1_content_load_event : "content_version_id"
+  t3a_content_object ||--o{ t3a_d1_content_version : "content_object_id"
+  t3a_d1_content_version ||--o{ t3a_d1_content_version : "superseded_by"
+  t3a_d1_content_version ||--o{ t3a_d1_founder_reapproval : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_language_template : "content_version_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_live_session : "stage_entry_event_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_live_session_event : "stage_entry_event_id"
+  t3a_d1_ber_report ||--o{ t3a_d1_participant_review_action : "ber_report_id"
+  t3a_authority_snapshot ||--o{ t3a_d1_progression_decision : "authority_snapshot_id"
+  t3a_d1_progression_decision ||--o{ t3a_d1_progression_decision : "cleared_from"
+  t3a_observation_record ||--o{ t3a_d1_progression_decision : "observation_record_id"
+  t3a_d1_capture_set ||--o{ t3a_d1_question_capture_map : "dimension_id"
+  t3a_d1_content_version ||--o{ t3a_d1_rendered_instance : "source_version_id"
+  t3a_d1_ber_report ||--o{ t3a_d1_report_disclosure : "ber_report_id"
+  t3a_d1_report_issuance ||--o{ t3a_d1_report_disclosure : "issuance_id"
+  t3a_authority_snapshot ||--o{ t3a_d1_report_issuance : "authority_snapshot_id"
+  t3a_d1_ber_report ||--o{ t3a_d1_report_issuance : "ber_report_id"
+  t3a_d1_report_issuance ||--o{ t3a_d1_report_issuance : "supersedes"
+  t3a_d1_report_disclosure ||--o{ t3a_d1_report_verification_token : "disclosure_id"
+  t3a_observation_record ||--o{ t3a_d1_resolution_refusal : "observation_record_id"
+  t3a_d1_statement_library ||--o{ t3a_d1_resolution_rule : "statement_library_id"
+  t3a_d1_ai_administration_run ||--o{ t3a_d1_s1_reveal_response : "ai_administration_run_id"
+  t3a_d1_ai_administration_run ||--o{ t3a_d1_s1_workbench_session : "ai_administration_run_id"
+  t3a_stage_entry_event ||--o{ t3a_d1_session_attestation : "stage_entry_event_id"
+  t3a_content_object ||--o{ t3a_d1_source_approval : "source_id"
+  t3a_d1_content_version ||--o{ t3a_d1_source_approval : "source_version_id"
+  t3a_d1_source_approval ||--o{ t3a_d1_source_approval_provenance : "source_approval_id"
+  t3a_d1_content_version ||--o{ t3a_d1_source_name_clearance : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_stage4_impact_assessment : "source_version_id"
+  t3a_d1_stage4_impact_assessment ||--o{ t3a_d1_stage4_impact_assessment_part : "source_identifier"
+  t3a_d1_content_version ||--o{ t3a_d1_statement_library : "content_version_id"
+  t3a_d1_statement_library ||--o{ t3a_d1_statement_library : "supersedes"
+  t3a_d1_content_version ||--o{ t3a_d1_version_lineage : "child_version_id"
+  t3a_d1_content_version ||--o{ t3a_d1_version_lineage : "parent_version_id"
+  t3a_attempt ||--o{ t3a_d1_welfare_withdrawal : "attempt_id"
+  t3a_safety_event ||--o{ t3a_d1_welfare_withholding : "safety_event_id"
+  t3a_determination_question ||--o{ t3a_determination : "question_id"
+  t3a_observation ||--o{ t3a_determination : "observation_id"
+  t3a_d1_content_version ||--o{ t3a_dimension_composed_statement : "source_version_id"
+  t3a_dimension_composed_statement ||--o{ t3a_dimension_composed_statement : "supersedes_composed_statement_id"
+  t3a_d1_ber_report ||--o{ t3a_dimension_review_result : "ber_report_id"
+  t3a_dimension_review_item ||--o{ t3a_dimension_review_result : "item_no"
+  t3a_dimension_composed_statement ||--o{ t3a_dimension_statement_withdrawal : "composed_statement_id"
+  t3a_ber_report ||--o{ t3a_disclosure : "ber_report_id"
+  t3a_ber_report ||--o{ t3a_employment_link : "ber_version_released_at_linkage"
+  t3a_d1_ber_report ||--o{ t3a_evidence_review : "ber_report_id"
+  t3a_conflict_declaration ||--o{ t3a_mentor_assignment : "conflict_declaration_ref"
+  t3a_stage_instance ||--o{ t3a_mentor_assignment : "stage_instance_id"
+  t3a_observation ||--o{ t3a_mentor_judgment : "observation_id"
+  t3a_stage_instance ||--o{ t3a_mentor_judgment : "stage_instance_id"
+  t3a_observation ||--o{ t3a_moderation_sample : "observation_id"
+  t3a_composed_statement ||--o{ t3a_observation : "composed_statement_id"
+  t3a_observation ||--o{ t3a_observation : "superseded_by"
+  t3a_observation ||--o{ t3a_observation : "supersedes"
+  t3a_source_version ||--o{ t3a_observation : "source_version_id"
+  t3a_stage_instance ||--o{ t3a_observation : "stage_instance_id"
+  t3a_authority_snapshot ||--o{ t3a_observation_record : "authority_snapshot_id"
+  t3a_observation_record ||--o{ t3a_observation_timing_flag : "observation_record_id"
+  t3a_correction_case ||--o{ t3a_reconsideration_assignment : "correction_case_id"
+  t3a_observation_record ||--o{ t3a_reconsideration_assignment : "observation_record_id"
+  t3a_content_version ||--o{ t3a_rendered_instance : "source_version_id"
+  t3a_d1_ber_report ||--o{ t3a_report_access : "ber_report_id"
+  t3a_d1_ber_report ||--o{ t3a_report_release : "ber_report_id"
+  t3a_observation_record ||--o{ t3a_resolution_refusal : "observation_record_id"
+  t3a_d1_content_version ||--o{ t3a_safety_event : "source_version_id"
+  t3a_rendered_instance ||--o{ t3a_served_instance : "rendered_instance_id"
+  t3a_source_version ||--o{ t3a_served_instance : "source_version_id"
+  t3a_stage_entry_event ||--o{ t3a_served_instance : "stage_entry_event_id"
+  t3a_content_object ||--o{ t3a_source : "content_object_id"
+  t3a_content_version ||--o{ t3a_source_approval : "source_version_id"
+  t3a_source ||--o{ t3a_source_approval : "source_id"
+  t3a_d1_content_version ||--o{ t3a_source_approval_request : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_source_authorship : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_source_drafting_test : "source_version_id"
+  t3a_content_version ||--o{ t3a_source_name_clearance : "source_version_id"
+  t3a_d1_content_version ||--o{ t3a_source_rights_record : "source_version_id"
+  t3a_source ||--o{ t3a_source_title_history : "source_id"
+  t3a_d1_content_version ||--o{ t3a_stage_entry_event : "source_version_id"
+  t3a_observation_path_gateway ||--o{ t3a_stage_entry_event : "observation_path_gateway_id"
+  t3a_stage_instance ||--o{ t3a_stage_sequence : "stage_instance_id"
+  t3a_d1_ber_report ||--o{ t3a_verification_check : "ber_report_id"
+  t3a_content_version ||--o{ t3a_version_lineage : "child_version_id"
+  t3a_content_version ||--o{ t3a_version_lineage : "parent_version_id"

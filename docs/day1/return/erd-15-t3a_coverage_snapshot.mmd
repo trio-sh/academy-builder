@@ -1,0 +1,9 @@
+erDiagram
+  t3a_coverage_snapshot {
+    uuid snapshot_id PK
+    timestamp_with_time_zone published_at
+    integer reports_available
+    ARRAY areas_in_service
+    uuid previous_snapshot_id
+  }
+  t3a_coverage_snapshot ||--o{ t3a_coverage_snapshot : "previous_snapshot_id"

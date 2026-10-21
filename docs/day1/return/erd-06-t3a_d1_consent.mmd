@@ -1,0 +1,44 @@
+erDiagram
+  t3a_d1_consent {
+    uuid consent_id PK
+    uuid participant_id
+    text consent_type
+    text notice_version_id
+    text notice_version_hash
+    text stage_class
+    uuid stage_instance_id
+    uuid source_version_id
+    text state
+    timestamp_with_time_zone granted_at
+    timestamp_with_time_zone declined_at
+    timestamp_with_time_zone withdrawn_at
+    text _5_more_columns
+  }
+  t3a_d1_consent_type {
+    text consent_type PK
+    text covers
+    boolean available
+  }
+  t3a_d1_release_token {
+    uuid release_token_id PK
+    uuid consent_id
+    uuid ber_report_id
+    text report_version
+    text recipient_name
+    text recipient_org
+    text recipient_address
+    text token_hash
+    timestamp_with_time_zone issued_at
+    timestamp_with_time_zone expires_at
+    timestamp_with_time_zone redeemed_at
+    timestamp_with_time_zone revoked_at
+    text _1_more_columns
+  }
+  t3a_d1_stage_consent_requirement {
+    text stage_or_act PK
+    text consent_type PK
+  }
+  t3a_d1_consent ||--o{ t3a_d1_consent : "superseded_by"
+  t3a_d1_consent_type ||--o{ t3a_d1_consent : "consent_type"
+  t3a_d1_consent ||--o{ t3a_d1_release_token : "consent_id"
+  t3a_d1_consent_type ||--o{ t3a_d1_stage_consent_requirement : "consent_type"

@@ -1,0 +1,39 @@
+erDiagram
+  t3a_d1_pilot_cohort {
+    uuid id PK
+    text code
+    text title
+    text purpose_note
+    integer cap
+    timestamp_with_time_zone entry_opens_at
+    timestamp_with_time_zone entry_closes_at
+    jsonb exit_criteria
+    t3a_d1_pilot_cohort_state state
+    timestamp_with_time_zone opened_at
+    uuid opened_by
+    timestamp_with_time_zone closed_at
+    text _3_more_columns
+  }
+  t3a_d1_pilot_enrollment {
+    uuid id PK
+    uuid cohort_id
+    uuid participant_id
+    t3a_d1_pilot_enrollment_state state
+    timestamp_with_time_zone invited_at
+    timestamp_with_time_zone activated_at
+    timestamp_with_time_zone withdrawn_at
+    timestamp_with_time_zone completed_at
+    text note
+  }
+  t3a_d1_pilot_event {
+    uuid id PK
+    uuid cohort_id
+    uuid participant_id
+    t3a_d1_pilot_event_kind kind
+    jsonb body
+    text prev_chain_hash
+    text chain_hash
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_pilot_cohort ||--o{ t3a_d1_pilot_enrollment : "cohort_id"
+  t3a_d1_pilot_cohort ||--o{ t3a_d1_pilot_event : "cohort_id"

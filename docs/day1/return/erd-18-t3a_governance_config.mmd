@@ -1,0 +1,13 @@
+erDiagram
+  t3a_governance_config {
+    uuid governance_config_id PK
+    text config_key
+    text version
+    jsonb value
+    text spec_citation
+    text approved_by
+    timestamp_with_time_zone approved_at
+    timestamp_with_time_zone effective_from
+    uuid superseded_by
+  }
+  t3a_governance_config ||--o{ t3a_governance_config : "superseded_by"

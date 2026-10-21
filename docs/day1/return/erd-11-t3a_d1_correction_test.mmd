@@ -1,0 +1,23 @@
+erDiagram
+  t3a_d1_correction_test {
+    text correction_test_id PK
+    text instrument
+    text test_name
+    text fixture
+    text required_result
+    text restated_by
+    text supersedes_fixture
+    text why_restated
+    timestamp_with_time_zone defined_at
+  }
+  t3a_d1_correction_test_outcome {
+    uuid outcome_id PK
+    text correction_test_id
+    text outcome
+    text actual_result
+    text build_version
+    text tester
+    timestamp_with_time_zone executed_at
+    text conflict_note
+  }
+  t3a_d1_correction_test ||--o{ t3a_d1_correction_test_outcome : "correction_test_id"

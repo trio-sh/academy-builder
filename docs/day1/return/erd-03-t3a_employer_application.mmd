@@ -1,0 +1,60 @@
+erDiagram
+  t3a_employer_application {
+    uuid application_id PK
+    uuid employer_profile_id
+    text organization_legal_name
+    text business_number
+    text work_email
+    text email_domain
+    timestamp_with_time_zone submitted_at
+    text creation_route
+    text approval_decision
+    text approved_by
+    timestamp_with_time_zone approved_at
+    text approval_basis
+    text _11_more_columns
+  }
+  t3a_employer_attestation {
+    uuid organization_id
+    uuid employer_attestation_id PK
+    timestamp_with_time_zone attested_at
+  }
+  t3a_employer_contact_request {
+    uuid organization_id
+    timestamp_with_time_zone requested_at
+    uuid contact_request_id PK
+    text contact_request_state
+  }
+  t3a_employer_organization {
+    uuid application_id
+    uuid organization_id PK
+    text verification_status
+    text liveworks_activation_state
+    text liveworks_activation_state_capture_state
+    boolean design_partner_flag
+    text design_partner_flag_capture_state
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+  }
+  t3a_employer_pool_query {
+    uuid organization_id
+    jsonb criteria
+    uuid pool_query_id PK
+    timestamp_with_time_zone queried_at
+  }
+  t3a_hire_record {
+    uuid organization_id
+    uuid hire_recorded_id PK
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_workspace_note {
+    uuid organization_id
+    uuid workspace_note_id PK
+    timestamp_with_time_zone noted_at
+  }
+  t3a_employer_organization ||--o{ t3a_employer_attestation : "organization_id"
+  t3a_employer_organization ||--o{ t3a_employer_contact_request : "organization_id"
+  t3a_employer_application ||--o{ t3a_employer_organization : "application_id"
+  t3a_employer_organization ||--o{ t3a_employer_pool_query : "organization_id"
+  t3a_employer_organization ||--o{ t3a_hire_record : "organization_id"
+  t3a_employer_organization ||--o{ t3a_workspace_note : "organization_id"

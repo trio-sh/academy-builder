@@ -1,0 +1,46 @@
+erDiagram
+  t3a_calibration_clearance {
+    uuid clearance_id PK
+    text dimension_id
+    text reference_set_version
+    text construct_version
+    text determination_version
+    text statement_version
+    ARRAY source_version_ids
+    uuid exercise_id
+    uuid recorded_by
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_d1_calibration_agreement {
+    uuid exercise_id PK
+    integer reviewer_count
+    integer submitted_count
+    jsonb agreement_body
+    timestamp_with_time_zone computed_at
+  }
+  t3a_d1_calibration_exercise {
+    uuid id PK
+    text title
+    text purpose_note
+    jsonb evidence_bundle
+    text reviewer_prompt
+    t3a_d1_calibration_state state
+    timestamp_with_time_zone opened_at
+    uuid opened_by
+    timestamp_with_time_zone closed_at
+    uuid closed_by
+    timestamp_with_time_zone created_at
+    uuid created_by
+    text _2_more_columns
+  }
+  t3a_d1_calibration_participation {
+    uuid id PK
+    uuid exercise_id
+    uuid reviewer_id
+    jsonb decision_body
+    timestamp_with_time_zone submitted_at
+    timestamp_with_time_zone created_at
+  }
+  t3a_d1_calibration_exercise ||--o{ t3a_calibration_clearance : "exercise_id"
+  t3a_d1_calibration_exercise ||--o{ t3a_d1_calibration_agreement : "exercise_id"
+  t3a_d1_calibration_exercise ||--o{ t3a_d1_calibration_participation : "exercise_id"
