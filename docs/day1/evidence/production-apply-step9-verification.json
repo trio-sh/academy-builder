@@ -1,0 +1,40 @@
+{
+ "migration": [],
+ "seals_before": [
+  {
+   "n": 0
+  }
+ ],
+ "already": [
+  {
+   "n": 0
+  }
+ ],
+ "create": [
+  {
+   "created": true
+  }
+ ],
+ "loaded": [
+  {
+   "key_is_64_hex": true,
+   "hmac_works": true
+  }
+ ],
+ "anon_exec": [
+  {
+   "a": false,
+   "b": false
+  }
+ ],
+ "secrets": [
+  {
+   "n": 1
+  }
+ ],
+ "seals_after": [
+  {
+   "n": 0
+  }
+ ]
+}

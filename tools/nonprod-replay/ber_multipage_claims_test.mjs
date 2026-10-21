@@ -24,10 +24,6 @@ const obsRow = async (stg, who) => (await run(`insert into t3a_observation_recor
 const o1 = await obsRow("S2", M1), o2 = await obsRow("S2", M2);
 const c1 = await compose(S2, 2, o1), c2 = await compose(S3, 2, o2);
 rec("claims-setup", "two synthetic committed D4 statements exist", c1.outcome === "composed" && c2.outcome === "composed", [c1.outcome ?? c1, c2.outcome ?? c2]);
-// the function reads real (non test) statements: make them readable for the test by marking them as not test mode
-await c.query(`alter table t3a_dimension_composed_statement disable trigger t3a_append_only`).catch(() => {});
-const flip = await c.query(`update t3a_dimension_composed_statement set test_mode=false where composed_statement_id in ('${c1.composed_statement_id}','${c2.composed_statement_id}')`).then(() => "ok").catch((e) => e.message);
-rec("claims-setup", "the test statements can be made visible to the read (append only stands: this is recorded if it refuses)", true, flip.slice(0, 80));
 const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D4','${st}','{}'::jsonb, false, 'ber', 'participant_review', array['D4']) returning ber_report_id r`))[0].r;
 const call = (uid = P, role = "authenticated") => asUser(uid, `select t3a_ber_multipage_claims('${rep}', ${role === "service_role"}) r`, role);
 const callSvc = () => call(P, "service_role");

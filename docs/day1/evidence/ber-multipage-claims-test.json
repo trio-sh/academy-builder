@@ -1,6 +1,6 @@
 {
- "passed": 12,
- "total": 12,
+ "passed": 11,
+ "total": 11,
  "failed": [],
  "results": [
   {
@@ -11,12 +11,6 @@
     "composed",
     "composed"
    ]
-  },
-  {
-   "id": "claims-setup",
-   "label": "the test statements can be made visible to the read (append only stands: this is recorded if it refuses)",
-   "pass": true,
-   "detail": "ok"
   },
   {
    "id": "claims",
@@ -63,19 +57,19 @@
     "ctx": [
      {
       "stage_code": "S2",
-      "context_instance_id": "CTX-d665babf"
+      "context_instance_id": "CTX-92f97e3f"
      },
      {
       "stage_code": "S2",
-      "context_instance_id": "CTX-d665babf"
+      "context_instance_id": "CTX-92f97e3f"
      },
      {
       "stage_code": "S2",
-      "context_instance_id": "CTX-fd23e04a"
+      "context_instance_id": "CTX-df0dcb7b"
      },
      {
       "stage_code": "S2",
-      "context_instance_id": "CTX-fd23e04a"
+      "context_instance_id": "CTX-df0dcb7b"
      }
     ]
    }
