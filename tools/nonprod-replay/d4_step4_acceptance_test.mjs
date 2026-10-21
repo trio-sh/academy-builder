@@ -123,12 +123,17 @@ prior("D4-31", "D4 Stage entry with only D1 mentor_observation consent: refused 
 prior("D4-32", "issuing a report that holds a D4 record on D1 consent alone: refused and logged consent_not_inherited", "step3m", "issuance written for that report");
 prior("D4-33", "pool availability needs employer_share for every dimension in the report", "step3m", "employer_share granted for d1 only");
 prior("D4-34", "an unloaded evidence currency value blocks issuance (checklist item 13)", "step3h", "unloaded evidence currency");
-notRun("D4-35", "the correction commitment text does not render when the response time is unloaded", "Participant correction screen (surface step). The value is not loaded and has no default in the database.");
+{ const un = (await run(`select t3a_correction_commitment() r`))[0].r;
+  await c.query("begin"); await c.query(`insert into t3a_configuration_value(configuration_key, configuration_value, configuration_version, set_by) values ('correction_response_time','synthetic test value','0.0','${IS}')`); const lo = (await run(`select t3a_correction_commitment() r`))[0].r; await c.query("rollback");
+  const anon = await c.query("begin").then(async () => { await c.query("set local role anon"); try { return (await c.query(`select t3a_correction_commitment() r`)).rows[0].r; } catch (e) { return { msg: e.message }; } finally { await c.query("rollback"); } });
+  pass("D4-35", "the correction commitment text does not render while the response time is unloaded: the route returns nothing to render and no default value appears; loaded, it returns the value as loaded (rolled back)", un.rendered === false && un.value === undefined && lo.rendered === true && lo.value === "synthetic test value" && anon.rendered === false, { unloaded: un, loaded: lo, anon }); }
 const ec = await run(`select count(*)::int n from t3a_configuration_value where configuration_key='correction_response_time' and btrim(configuration_value) <> ''`); void ec;
 prior("D4-36", "each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults", "step3m", "unloaded: the route fails closed");
 rcPass("D4-37", "a report with the permitted-use text unloaded: the render refuses and the block is never omitted", "permitted-use text unloaded");
 prior("D4-38", "a Stage 3 artifact with no tooling declaration is refused and logged", "step3j", "AI_USE_DECLARATION_REQUIRED");
-notRun("D4-39", "the Mentor Cockpit opened below 1280 by 800 refuses capture", "Cockpit screen (surface step).");
+{ const g = async (w, h, d = "desktop") => (await run(`select t3a_d1_s2_capture_permitted(${w},${h},'${d}') r`))[0].r;
+  const a = await g(1279, 800), b2 = await g(1280, 799), ok2 = await g(1280, 800), ph = await g(1920, 1080, "phone");
+  pass("D4-39", "the Mentor Cockpit below 1280 by 800 refuses capture (the route returns the refusal and the screen renders it in place of the six regions; it does not reflow); 1280 by 800 permits; a phone refuses", a.permitted === false && a.refusal_code === "VIEWPORT_BELOW_SUPPORTED_MINIMUM" && b2.permitted === false && ok2.permitted === true && ph.permitted === false, { a: a.refusal_code, b: b2.refusal_code, ok: ok2.permitted, phone: ph.refusal_code }); }
 prior("D4-40", "an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded", "step3m", "timing_not_comparable");
 prior("D4-41", "Stage 4 entry with no group participation record is refused", "step3j", "one missing permission among four still refuses");
 prior("D4-42", "capture or read of followup_contact or aggregate_regional is refused and logged disabled_consent_route", "step3m", "disabled_consent_route");

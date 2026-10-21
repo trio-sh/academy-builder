@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d4-acceptance-run.json`. The run re-reads the labelled results of the D4 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**82 of 84 identifiers PASS, 0 FAIL, 2 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
+**84 of 84 identifiers PASS, 0 FAIL, 0 NOT RUN.**
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -50,11 +50,11 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D4-32 | PASS | evidence | issuing a report that holds a D4 record on D1 consent alone: refused and logged consent_not_inherited |
 | D4-33 | PASS | evidence | pool availability needs employer_share for every dimension in the report |
 | D4-34 | PASS | evidence | an unloaded evidence currency value blocks issuance (checklist item 13) |
-| D4-35 | NOT RUN | surface | the correction commitment text does not render when the response time is unloaded — Participant correction screen (surface step). The value is not loaded and has no default in the database. |
+| D4-35 | PASS | run | the correction commitment text does not render while the response time is unloaded: the route returns nothing to render and no default value appears; loaded, it returns the value as loaded (rolled back) |
 | D4-36 | PASS | evidence | each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults |
 | D4-37 | PASS | evidence | a report with the permitted-use text unloaded: the render refuses and the block is never omitted |
 | D4-38 | PASS | evidence | a Stage 3 artifact with no tooling declaration is refused and logged |
-| D4-39 | NOT RUN | surface | the Mentor Cockpit opened below 1280 by 800 refuses capture — Cockpit screen (surface step). |
+| D4-39 | PASS | run | the Mentor Cockpit below 1280 by 800 refuses capture (the route returns the refusal and the screen renders it in place of the six regions; it does not reflow); 1280 by 800 permits; a phone refuses |
 | D4-40 | PASS | evidence | an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded |
 | D4-41 | PASS | evidence | Stage 4 entry with no group participation record is refused |
 | D4-42 | PASS | evidence | capture or read of followup_contact or aggregate_regional is refused and logged disabled_consent_route |

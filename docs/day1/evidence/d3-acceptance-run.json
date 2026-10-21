@@ -2,9 +2,9 @@
  "identifiers_required": 78,
  "identifiers_reported": 78,
  "missing": [],
- "pass": 76,
+ "pass": 78,
  "fail": 0,
- "not_run": 2,
+ "not_run": 0,
  "failed": [],
  "results": [
   {
@@ -623,13 +623,26 @@
   },
   {
    "id": "D3-35",
-   "status": "NOT_RUN",
+   "status": "PASS",
    "entries": [
     {
-     "label": "the correction commitment text does not render when the response time is unloaded",
-     "status": "NOT_RUN",
-     "how": "surface",
-     "detail": "Participant correction screen (surface step). The value is not loaded and has no default in the database."
+     "label": "the correction commitment text does not render while the response time is unloaded: the route returns nothing to render and no default value appears; loaded, it returns the value as loaded (rolled back)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "unloaded": {
+       "reason": "correction_response_time_unloaded",
+       "rendered": false
+      },
+      "loaded": {
+       "value": "synthetic test value",
+       "rendered": true
+      },
+      "anon": {
+       "reason": "correction_response_time_unloaded",
+       "rendered": false
+      }
+     }
     }
    ]
   },
@@ -682,13 +695,18 @@
   },
   {
    "id": "D3-39",
-   "status": "NOT_RUN",
+   "status": "PASS",
    "entries": [
     {
-     "label": "the Mentor Cockpit opened below 1280 by 800 refuses capture",
-     "status": "NOT_RUN",
-     "how": "surface",
-     "detail": "Cockpit screen (surface step)."
+     "label": "the Mentor Cockpit below 1280 by 800 refuses capture (the route returns the refusal and the screen renders it in place of the six regions; it does not reflow); 1280 by 800 permits; a phone refuses",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "a": "VIEWPORT_BELOW_SUPPORTED_MINIMUM",
+      "b": "VIEWPORT_BELOW_SUPPORTED_MINIMUM",
+      "ok": true,
+      "phone": "STAGE_2_LIVE_CAPTURE_NOT_AVAILABLE_ON_A_PHONE"
+     }
     }
    ]
   },
@@ -1150,18 +1168,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "290e8e2f-7ff2-459e-a794-a164ff767c8d"
+       "recipient_release_id": "b1a272f0-3db1-4029-a2a6-2cde2cbbcd23"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-21T05:17:30.705374+00:00"
+       "made_available_at": "2026-10-21T05:19:58.304459+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "290e8e2f-7ff2-459e-a794-a164ff767c8d"
+       "recipient_release_id": "b1a272f0-3db1-4029-a2a6-2cde2cbbcd23"
       },
       "after": {
        "w": true,
@@ -1213,8 +1231,8 @@
       "s1": "Q-D3-08",
       "s3": "Q-D3-08,Q-D3-09",
       "issued": [
-       19,
-       19
+       22,
+       22
       ]
      }
     }
