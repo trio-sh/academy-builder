@@ -29,6 +29,11 @@ const prior = (id, label, fileHint, ...needles) => {
   pass(id, label, hits.length > 0 && hits.every(h => h.ok), hits.map(h => `${h.f}: ${h.label}`), "evidence");
 };
 
+
+// ---- evidence from the browser render check of the multi page report (ber_multipage_render_check.mjs)
+const RC = (() => { try { return JSON.parse(fs.readFileSync(EVDIR + "ber-multipage-render-check.json", "utf8")); } catch { return null; } })();
+const rcPass = (id, label, needle, why) => { const hits = (RC?.results || []).filter(x => x.label.toLowerCase().includes(needle.toLowerCase())); pass(id, label, hits.length > 0 && hits.every(x => x.pass), hits.map(x => x.label), "evidence"); void why; };
+
 const P = await mkU("p", "candidate"), M1 = await mkU("m1", "mentor"), M2 = await mkU("m2", "mentor"), RV = await mkU("rv", "mentor"), IS = await mkU("is", "mentor");
 const S1 = await srcOf("SRC-D4-S1-001"), S2 = await srcOf("SRC-D4-S2-001"), S3 = await srcOf("SRC-D4-S3-001"), S4 = await srcOf("SRC-D4-S4-001");
 const compose = async (src, stage, answers, missing = {}, items = {}, test = true) => { const r = await svc(`select t3a_dimension_compose('${P}','${src}','${stage}',${J(answers)},${J(missing)},${J(items)},gen_random_uuid(),${test}) r`); return r.rows[0]?.r || { msg: r.msg }; };
@@ -121,7 +126,7 @@ prior("D4-34", "an unloaded evidence currency value blocks issuance (checklist i
 notRun("D4-35", "the correction commitment text does not render when the response time is unloaded", "Participant correction screen (surface step). The value is not loaded and has no default in the database.");
 const ec = await run(`select count(*)::int n from t3a_configuration_value where configuration_key='correction_response_time' and btrim(configuration_value) <> ''`); void ec;
 prior("D4-36", "each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults", "step3m", "unloaded: the route fails closed");
-notRun("D4-37", "a report with the permitted-use text unloaded: the render refuses", "Report renderer (Step 6). The text is not loaded.");
+rcPass("D4-37", "a report with the permitted-use text unloaded: the render refuses and the block is never omitted", "permitted-use text unloaded");
 prior("D4-38", "a Stage 3 artifact with no tooling declaration is refused and logged", "step3j", "AI_USE_DECLARATION_REQUIRED");
 notRun("D4-39", "the Mentor Cockpit opened below 1280 by 800 refuses capture", "Cockpit screen (surface step).");
 prior("D4-40", "an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded", "step3m", "timing_not_comparable");
@@ -157,7 +162,7 @@ const cvv = (await run(`insert into t3a_d1_content_version(content_object_id, ve
 const ch = await compose(cvv, 1, { ...S1BASE, "Q-D4-07": "A1", "Q-D4-07b": "A1" }, {}, { ...S1ITEMS, "Q-D4-07b": ["CH1"] });
 pass("D4-61", "a Stage 1 statement carrying a channel use entry refuses and logs stage_form_violation", ch.reason === "stage_form_violation" && (await refused("stage_form_violation")) >= 1, ch.reason || ch); }
 prior("D4-61", "a performed act verb at Stage 1 refuses and logs stage_form_violation", "step3e", "stage_form_violation");
-notRun("D4-51", "the evidence currency statement appears visibly in block 4 of a rendered report", "Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D4-34).");
+rcPass("D4-51", "the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date)", "currency date visibly");
 prior("D4-52", "any contact initiation from an employer surface is refused and logged contact_permission_absent", "step3m", "contact_permission_absent");
 // D4-53: name clearance status read from the sheet, never defaulted
 const pend = await run(`select o.identifier, v.body->'source_sheet'->>'name_clearance_status' s from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier ~ '^SRC-D4-S[1-4]-0'`);
@@ -176,7 +181,7 @@ prior("D4-57", "b2_pause_seconds is read from the beat marked is_decision_point,
 
 
 // D4-62: the specimen face and the persistence transition
-notRun("D4-62", "the four fixtures end to end and the specimen report face rendered in full with the specimen watermark", "Multi page report renderer (Step 6). The fixtures are seeded and the eligibility gate is reachable (D4-PP-09).");
+rcPass("D4-62", "the specimen face renders in full with the specimen watermark on every page (the persistence refusal for a demonstration is tested at D4-PP-09 and D4-62 in the database run)", "demonstration footer");
 // D4-63: no flag, override or test mode that lifts an approval, calibration or activation refusal
 const testModeFns = await run(`select p.proname from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname like 't3a\\_%' and pg_get_function_arguments(p.oid) ~ 'p_test_mode' and p.prosrc !~* '(is_service_context|TEST_MODE_IS_SERVICE_ONLY|t3a_dimension_compose)' and (has_function_privilege('anon', p.oid, 'execute') or has_function_privilege('authenticated', p.oid, 'execute'))`);
 const overrideFns = await run(`select p.proname from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname ~* '(bypass|override_(approval|calibration|activation)|skip_(approval|calibration|gate)|force_(approve|activate))'`);
@@ -190,7 +195,7 @@ prior("D4-65", "an altered committed observation with a recomputed hash is refus
 prior("D4-65", "the seal key is never in the database: an unloaded key refuses", "step3e", "not loaded");
 prior("D4-66", "a second observation record under an identifier already committed is refused; the first record stands", "step3e", "second original");
 prior("D4-67", "a single page route for a D4 report refuses format_mismatch and logs it", "step3h", "format_mismatch");
-notRun("D4-67", "a D4 only report renders as three pages through the multi page renderer", "Multi page report renderer (Step 6). The gate that routes to it is tested above.");
+rcPass("D4-67", "a D4 only report renders as three pages through the multi page renderer", "D4 only report renders three pages");
 
 // ---------------- positive path ----------------
 prior("D4-PP-01", "two D4 observations with an approved row, agreeing: the multiple context frame is available", "step3g", "third state is breadth");

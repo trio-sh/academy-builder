@@ -29,6 +29,11 @@ const prior = (id, label, fileHint, ...needles) => {
   pass(id, label, hits.length > 0 && hits.every(h => h.ok), hits.map(h => `${h.f}: ${h.label}`), "evidence");
 };
 
+
+// ---- evidence from the browser render check of the multi page report (ber_multipage_render_check.mjs)
+const RC = (() => { try { return JSON.parse(fs.readFileSync(EVDIR + "ber-multipage-render-check.json", "utf8")); } catch { return null; } })();
+const rcPass = (id, label, needle, why) => { const hits = (RC?.results || []).filter(x => x.label.toLowerCase().includes(needle.toLowerCase())); pass(id, label, hits.length > 0 && hits.every(x => x.pass), hits.map(x => x.label), "evidence"); void why; };
+
 const P = await mkU("p", "candidate"), M1 = await mkU("m1", "mentor"), M2 = await mkU("m2", "mentor"), RV = await mkU("rv", "mentor"), IS = await mkU("is", "mentor");
 const S1 = await srcOf("SRC-D2-S1-001"), S2 = await srcOf("SRC-D2-S2-001"), S3 = await srcOf("SRC-D2-S3-001"), S4 = await srcOf("SRC-D2-S4-001");
 const compose = async (src, stage, answers, missing = {}, items = {}, test = true) => { const r = await svc(`select t3a_dimension_compose('${P}','${src}','${stage}',${J(answers)},${J(missing)},${J(items)},gen_random_uuid(),${test}) r`); return r.rows[0]?.r || { msg: r.msg }; };
@@ -111,7 +116,7 @@ prior("D2-34", "an unloaded evidence currency value blocks issuance (checklist i
 notRun("D2-35", "the correction commitment text does not render when the response time is unloaded", "Participant correction screen (surface step). The value is not loaded and has no default in the database.");
 const ec = await run(`select count(*)::int n from t3a_configuration_value where configuration_key='correction_response_time' and btrim(configuration_value) <> ''`); void ec;
 prior("D2-36", "each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults", "step3m", "unloaded: the route fails closed");
-notRun("D2-37", "a report with the permitted-use text unloaded: the render refuses", "Report renderer (Step 6). The text is not loaded.");
+rcPass("D2-37", "a report with the permitted-use text unloaded: the render refuses and the block is never omitted", "permitted-use text unloaded");
 prior("D2-38", "a Stage 3 artifact with no tooling declaration is refused and logged", "step3j", "AI_USE_DECLARATION_REQUIRED");
 notRun("D2-39", "the Mentor Cockpit opened below 1280 by 800 refuses capture", "Cockpit screen (surface step).");
 prior("D2-40", "an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded", "step3m", "timing_not_comparable");
@@ -142,7 +147,7 @@ pass("D2-49", "Q-D2-06a A2 with a supported support-set item composes ST-D2-038;
 const n50 = await refused("selection_does_not_match_answer");
 const x50 = await compose(S2, 2, full, {}, { ...items, "Q-D2-02b": [] });
 pass("D2-50", "Q-D2-02 A1 with Q-D2-02b submitted with nothing selected is refused and logged; there is no none-of-the-listed option", x50.reason === "selection_does_not_match_answer" && (await refused("selection_does_not_match_answer")) > n50, x50);
-notRun("D2-51", "the evidence currency statement appears visibly in block 4 of a rendered report", "Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D2-34).");
+rcPass("D2-51", "the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date)", "currency date visibly");
 prior("D2-52", "any contact initiation from an employer surface is refused and logged contact_permission_absent", "step3m", "contact_permission_absent");
 // D2-53: name clearance status read from the sheet, never defaulted
 const pend = await run(`select o.identifier, v.body->'source_sheet'->>'name_clearance_status' s from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier like 'SRC-D2-S_-0%'`);

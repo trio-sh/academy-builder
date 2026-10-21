@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d3-acceptance-run.json`. The run re-reads the labelled results of the D3 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**74 of 78 identifiers PASS, 0 FAIL, 4 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
+**76 of 78 identifiers PASS, 0 FAIL, 2 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -52,7 +52,7 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D3-34 | PASS | evidence | an unloaded evidence currency value blocks issuance (checklist item 13) |
 | D3-35 | NOT RUN | surface | the correction commitment text does not render when the response time is unloaded — Participant correction screen (surface step). The value is not loaded and has no default in the database. |
 | D3-36 | PASS | evidence | each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults |
-| D3-37 | NOT RUN | surface | a report with the permitted-use text unloaded: the render refuses — Report renderer (Step 6). The text is not loaded. |
+| D3-37 | PASS | evidence | a report with the permitted-use text unloaded: the render refuses and the block is never omitted |
 | D3-38 | PASS | evidence | a Stage 3 artifact with no tooling declaration is refused and logged |
 | D3-39 | NOT RUN | surface | the Mentor Cockpit opened below 1280 by 800 refuses capture — Cockpit screen (surface step). |
 | D3-40 | PASS | evidence | an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded |
@@ -72,7 +72,7 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D3-60 | PASS | evidence | the demonstration fixtures and the full acceptance suite run with every question definition empty: the refusal sits on production approval and calibration only |
 | D3-61 | PASS | evidence | a Stage 1 statement for an action-bearing element resolves to the stated-plan variant |
 |  | PASS | evidence | a performed act verb at Stage 1 refuses and logs stage_form_violation |
-| D3-51 | NOT RUN | surface | the evidence currency statement appears visibly in block 4 of a rendered report — Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D3-34). |
+| D3-51 | PASS | evidence | the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date) |
 | D3-52 | PASS | evidence | any contact initiation from an employer surface is refused and logged contact_permission_absent |
 | D3-53 | PASS | run | every loaded source carries the clearance status from its own sheet, and none serves while the clearance is pending |
 | D3-54 | PASS | run | a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders |

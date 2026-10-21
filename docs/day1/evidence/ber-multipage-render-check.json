@@ -1,0 +1,111 @@
+{
+ "passed": 13,
+ "total": 13,
+ "failed": [],
+ "results": [
+  {
+   "id": "render-7",
+   "label": "seven represented dimensions render five pages: cover, three dimension pages (3, 3, 1 blocks), controls",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:3",
+    "dimensions:3",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "render-7",
+   "label": "every page is 612 by 792 points and no block passes the content box (x 576, y 744) on any page",
+   "pass": true,
+   "detail": [
+    [],
+    [
+     365,
+     633,
+     888
+    ],
+    [
+     365,
+     640,
+     909
+    ],
+    [
+     365
+    ],
+    []
+   ]
+  },
+  {
+   "id": "render-7",
+   "label": "every page states Page n of 5",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-7",
+   "label": "the cover carries the report contents with all fourteen dimensions, T-COVERAGE-001 and the scope panel",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-7",
+   "label": "the controls page carries the unrepresented strip, the evidence note, permitted use and the currency date visibly",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-7",
+   "label": "the demonstration footer is on every page and no issued claim is made",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-7",
+   "label": "a dimension with no recorded difference shows the controlled sentence, not a blank (D3 and D9)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-7",
+   "label": "no block is rendered for an unrepresented dimension (the strip and contents list them only)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "a D4 only report renders three pages: cover, one dimension page, controls; it is not refused for its count",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "render-1",
+   "label": "the contents list D4 as represented and thirteen dimensions as not represented",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-refuse",
+   "label": "a real report identifier produces no page (claim package source not built)",
+   "pass": true,
+   "detail": "REPORT NOT PRODUCED\nclaim_package_source_not_built\n\nA report's claim packages are not assembled from the evidence record yet (CR-162). Only the frozen specimen renders; nothing is guessed for a real report.\n\nNo page is produced for a manifest the Standard refuses."
+  },
+  {
+   "id": "render-refuse",
+   "label": "a manifest with no represented dimension refuses claim_package_absent and draws no page",
+   "pass": true,
+   "detail": "REPORT NOT PRODUCED\nclaim_package_absent\n\nno represented dimension\n\nNo page is produced for a manifest the Standard refuses."
+  },
+  {
+   "id": "render-refuse",
+   "label": "a report with the permitted-use text unloaded refuses controlled_text_absent and draws no page; the block is never omitted",
+   "pass": true,
+   "detail": "REPORT NOT PRODUCED\ncontrolled_text_absent\n\nT-USE-001\n\nNo page is produced for a manifest the Standard refuses."
+  }
+ ]
+}

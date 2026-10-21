@@ -2,9 +2,9 @@
  "identifiers_required": 78,
  "identifiers_reported": 78,
  "missing": [],
- "pass": 74,
+ "pass": 76,
  "fail": 0,
- "not_run": 4,
+ "not_run": 2,
  "failed": [],
  "results": [
   {
@@ -654,13 +654,15 @@
   },
   {
    "id": "D3-37",
-   "status": "NOT_RUN",
+   "status": "PASS",
    "entries": [
     {
-     "label": "a report with the permitted-use text unloaded: the render refuses",
-     "status": "NOT_RUN",
-     "how": "surface",
-     "detail": "Report renderer (Step 6). The text is not loaded."
+     "label": "a report with the permitted-use text unloaded: the render refuses and the block is never omitted",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "a report with the permitted-use text unloaded refuses controlled_text_absent and draws no page; the block is never omitted"
+     ]
     }
    ]
   },
@@ -931,13 +933,15 @@
   },
   {
    "id": "D3-51",
-   "status": "NOT_RUN",
+   "status": "PASS",
    "entries": [
     {
-     "label": "the evidence currency statement appears visibly in block 4 of a rendered report",
-     "status": "NOT_RUN",
-     "how": "surface",
-     "detail": "Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D3-34)."
+     "label": "the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "the controls page carries the unrepresented strip, the evidence note, permitted use and the currency date visibly"
+     ]
     }
    ]
   },
@@ -1146,18 +1150,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "9866e15f-0a3c-4276-a0c6-17d09f77943f"
+       "recipient_release_id": "290e8e2f-7ff2-459e-a794-a164ff767c8d"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-20T20:29:33.070842+00:00"
+       "made_available_at": "2026-10-21T05:17:30.705374+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "9866e15f-0a3c-4276-a0c6-17d09f77943f"
+       "recipient_release_id": "290e8e2f-7ff2-459e-a794-a164ff767c8d"
       },
       "after": {
        "w": true,
@@ -1209,8 +1213,8 @@
       "s1": "Q-D3-08",
       "s3": "Q-D3-08,Q-D3-09",
       "issued": [
-       13,
-       13
+       19,
+       19
       ]
      }
     }

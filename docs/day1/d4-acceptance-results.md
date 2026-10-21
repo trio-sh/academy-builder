@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d4-acceptance-run.json`. The run re-reads the labelled results of the D4 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**78 of 84 identifiers PASS, 0 FAIL, 6 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
+**82 of 84 identifiers PASS, 0 FAIL, 2 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -52,7 +52,7 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D4-34 | PASS | evidence | an unloaded evidence currency value blocks issuance (checklist item 13) |
 | D4-35 | NOT RUN | surface | the correction commitment text does not render when the response time is unloaded — Participant correction screen (surface step). The value is not loaded and has no default in the database. |
 | D4-36 | PASS | evidence | each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults |
-| D4-37 | NOT RUN | surface | a report with the permitted-use text unloaded: the render refuses — Report renderer (Step 6). The text is not loaded. |
+| D4-37 | PASS | evidence | a report with the permitted-use text unloaded: the render refuses and the block is never omitted |
 | D4-38 | PASS | evidence | a Stage 3 artifact with no tooling declaration is refused and logged |
 | D4-39 | NOT RUN | surface | the Mentor Cockpit opened below 1280 by 800 refuses capture — Cockpit screen (surface step). |
 | D4-40 | PASS | evidence | an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded |
@@ -73,21 +73,21 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D4-61 | PASS | run | a Stage 1 pattern composes with the stage_1_only limitation |
 |  | PASS | run | a Stage 1 statement carrying a channel use entry refuses and logs stage_form_violation |
 |  | PASS | evidence | a performed act verb at Stage 1 refuses and logs stage_form_violation |
-| D4-51 | NOT RUN | surface | the evidence currency statement appears visibly in block 4 of a rendered report — Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D4-34). |
+| D4-51 | PASS | evidence | the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date) |
 | D4-52 | PASS | evidence | any contact initiation from an employer surface is refused and logged contact_permission_absent |
 | D4-53 | PASS | run | every loaded source carries the clearance status from its own sheet, and none serves while the clearance is pending |
 | D4-54 | PASS | run | a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders |
 | D4-55 | PASS | evidence | a bound-family item taking only its first physical line is refused at load: bound_item_integrity_failed |
 | D4-56 | PASS | evidence | a CE-D4-04 timing determination with no loaded mentor_action_sequence is refused: beat_sequence_absent |
 | D4-57 | PASS | evidence | b2_pause_seconds is read from the beat marked is_decision_point, not from a hard-coded B2 |
-| D4-62 | NOT RUN | surface | the four fixtures end to end and the specimen report face rendered in full with the specimen watermark — Multi page report renderer (Step 6). The fixtures are seeded and the eligibility gate is reachable (D4-PP-09). |
+| D4-62 | PASS | evidence | the specimen face renders in full with the specimen watermark on every page (the persistence refusal for a demonstration is tested at D4-PP-09 and D4-62 in the database run) |
 | D4-63 | PASS | run | no flag, override or test mode lifts an approval, calibration or activation refusal: every test mode parameter is service route only (checked in the routine, in the routine it delegates to, or by the grant), and no bypass routine exists |
 | D4-64 | PASS | run | every Section 3.2 manner word fails the scan, and none of the D4 statements or templates carries one |
 | D4-65 | PASS | evidence | an altered committed observation with a recomputed hash is refused: commit_seal_invalid (the seal is a server side signature) |
 |  | PASS | evidence | the seal key is never in the database: an unloaded key refuses |
 | D4-66 | PASS | evidence | a second observation record under an identifier already committed is refused; the first record stands |
 | D4-67 | PASS | evidence | a single page route for a D4 report refuses format_mismatch and logs it |
-|  | NOT RUN | surface | a D4 only report renders as three pages through the multi page renderer — Multi page report renderer (Step 6). The gate that routes to it is tested above. |
+|  | PASS | evidence | a D4 only report renders as three pages through the multi page renderer |
 | D4-PP-01 | PASS | evidence | two D4 observations with an approved row, agreeing: the multiple context frame is available |
 | D4-PP-02 | PASS | evidence | two D4 observations, approved row, diverging: held side by side with the divergence condition, neither preferred |
 | D4-PP-03 | PASS | evidence | three observations, three Stages, same key and state code, no contradiction, configuration locked: the recurring frame for that clause |

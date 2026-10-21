@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 20 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d2-acceptance-run.json`. The run re-reads the labelled results of the D2 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**70 of 74 identifiers PASS, 0 FAIL, 4 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
+**72 of 74 identifiers PASS, 0 FAIL, 2 NOT RUN.** The identifiers not run need the report renderer or a screen, which are the next steps; each states why.
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -49,7 +49,7 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D2-34 | PASS | evidence | an unloaded evidence currency value blocks issuance (checklist item 13) |
 | D2-35 | NOT RUN | surface | the correction commitment text does not render when the response time is unloaded — Participant correction screen (surface step). The value is not loaded and has no default in the database. |
 | D2-36 | PASS | evidence | each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults |
-| D2-37 | NOT RUN | surface | a report with the permitted-use text unloaded: the render refuses — Report renderer (Step 6). The text is not loaded. |
+| D2-37 | PASS | evidence | a report with the permitted-use text unloaded: the render refuses and the block is never omitted |
 | D2-38 | PASS | evidence | a Stage 3 artifact with no tooling declaration is refused and logged |
 | D2-39 | NOT RUN | surface | the Mentor Cockpit opened below 1280 by 800 refuses capture — Cockpit screen (surface step). |
 | D2-40 | PASS | evidence | an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded |
@@ -64,7 +64,7 @@ Run against the throwaway database on 20 October 2026, under the Section 11 iden
 | D2-48a | PASS | evidence | a superseded release route invoked directly is refused and logged superseded_route_invoked with caller and route |
 | D2-49 | PASS | run | Q-D2-06a A2 with a supported support-set item composes ST-D2-038; ST-D2-036 is unreachable on A2 |
 | D2-50 | PASS | run | Q-D2-02 A1 with Q-D2-02b submitted with nothing selected is refused and logged; there is no none-of-the-listed option |
-| D2-51 | NOT RUN | surface | the evidence currency statement appears visibly in block 4 of a rendered report — Report renderer (Step 6). The gate blocks issuance while the value is unloaded (D2-34). |
+| D2-51 | PASS | evidence | the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date) |
 | D2-52 | PASS | evidence | any contact initiation from an employer surface is refused and logged contact_permission_absent |
 | D2-53 | PASS | run | every loaded source carries the clearance status from its own sheet, and none serves while the clearance is pending |
 | D2-54 | PASS | run | a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders |
