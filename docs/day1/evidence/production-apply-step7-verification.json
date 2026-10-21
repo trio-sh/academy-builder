@@ -1,0 +1,40 @@
+{
+ "records": [
+  {
+   "n": 30,
+   "d": 30,
+   "a": 0
+  }
+ ],
+ "flags": [
+  {
+   "a": false,
+   "b": false
+  }
+ ],
+ "anon": [
+  {
+   "a": false,
+   "f": false,
+   "l": false
+  }
+ ],
+ "probe_active_refused": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE rows=0\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "refusal_residue": [
+  {
+   "n": 0
+  }
+ ],
+ "rollback_dry_run": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE table=gone \\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "after_dry_run": [
+  {
+   "n": 30
+  }
+ ]
+}

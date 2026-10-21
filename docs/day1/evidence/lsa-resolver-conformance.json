@@ -1,0 +1,322 @@
+{
+ "passed": 47,
+ "total": 47,
+ "failed": [],
+ "results": [
+  {
+   "id": "resolve",
+   "label": "C01: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C02: documented_regression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C03: mixed_trajectory",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C04: consistent_recorded_conduct",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C05: different_no_direction",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C06: different_no_direction",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C07: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C08: undefined",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C09: undefined",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C10: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C25: undefined",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C11: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C12: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C13: comparison_not_established",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C14: comparison_not_established",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C15: LSA-R05",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C26: LSA-R08",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C16: LSA-R01",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C17: LSA-R06",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C18: LSA-R10",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C19: LSA-R04",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C20: comparison_not_established",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C21: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C22: undefined",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C23: undefined",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C24: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C28: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C29: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "C27: LSA-R14",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "load",
+   "label": "L01 overlapping families is rejected as specified",
+   "pass": true,
+   "detail": "overlap in families: P1"
+  },
+  {
+   "id": "load",
+   "label": "L02 ANY with exact entry is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 ANY overlaps exact entry"
+  },
+  {
+   "id": "load",
+   "label": "L03 contradictory transition is rejected as specified",
+   "pass": true,
+   "detail": "contradictory transition"
+  },
+  {
+   "id": "load",
+   "label": "L04 missing comparison basis is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 missing comparison basis"
+  },
+  {
+   "id": "load",
+   "label": "L05 absence state in a direction rule is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 absence state used in a direction rule"
+  },
+  {
+   "id": "load",
+   "label": "L06 cyclic direction rule is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 cyclic direction rule"
+  },
+  {
+   "id": "load",
+   "label": "L07 family without a state domain is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 family without an approved state domain"
+  },
+  {
+   "id": "dimension",
+   "label": "DM01 one element progressed plus undirected difference: dimension_pattern_only_direction",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_pattern_only_direction",
+    "entry_id": "DE-D1-dimension_pattern_only_direction",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM09 two elements progressed: dimension_progression",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_progression",
+    "entry_id": "DE-D1-dimension_progression",
+    "coverage": 3
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM02 one element below minimum: dimension_pattern_only_coverage",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "entry_id": "DE-D1-dimension_pattern_only_coverage",
+    "coverage": 1
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM03 progression and regression: dimension_mixed",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_mixed",
+    "entry_id": "DE-D1-dimension_mixed",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM04 one mixed element: dimension_mixed",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_mixed",
+    "entry_id": "DE-D1-dimension_mixed",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM05 all consistent: dimension_consistent",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_consistent",
+    "entry_id": "DE-D1-dimension_consistent",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM06 two propositions of one element: dimension_pattern_only_coverage",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "entry_id": "DE-D1-dimension_pattern_only_coverage",
+    "coverage": 1
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM07 nothing compared: dimension_insufficient",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_insufficient",
+    "entry_id": "DE-D1-dimension_insufficient",
+    "coverage": 0
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DM08 regression with no regression entry loaded: dimension_regression LSA-R13",
+   "pass": true,
+   "detail": {
+    "refusal": "LSA-R13",
+    "dimension_finding_code": "dimension_regression"
+   }
+  },
+  {
+   "id": "calendar",
+   "label": "calendar month subtraction clamps to the last valid day",
+   "pass": true
+  },
+  {
+   "id": "code",
+   "label": "2,000 verification codes are unique, 4-4-4, Crockford alphabet",
+   "pass": true
+  }
+ ]
+}
