@@ -1,0 +1,22 @@
+{
+ "domain": "L",
+ "migration": "20261115000000_day1_orders.sql",
+ "rows_before": {},
+ "apply": "ok",
+ "mapped": 17,
+ "dt01": {
+  "resolved": 427,
+  "unmapped": 95,
+  "passes": false
+ },
+ "rows_after": {},
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE access_before_refund=t after_refund=f lsa_write=relation \\\"public.t3a_lsa_snapshot\\\" does \\nCONTEXT:  PL/pgSQL function inline_code_block line 10 at RAISE\\n\"}"
+ },
+ "new_tables_rows": {
+  "t3a_order": 0,
+  "t3a_refund": 0,
+  "t3a_subscription_socket": 0
+ }
+}

@@ -1,0 +1,250 @@
+{
+ "passed": 28,
+ "total": 28,
+ "failed": [],
+ "results": [
+  {
+   "id": "A-sync",
+   "label": "profile insert creates the account root (email lower-cased, unverified until confirmed)",
+   "pass": true,
+   "detail": [
+    {
+     "account_id": "149b8849-ec75-431a-a82a-835920254299",
+     "email_address": "v-a472a8bd@t.local",
+     "email_verification_state": "verified",
+     "capture_gaps": [
+      "age_eligibility_attestation"
+     ]
+    },
+    {
+     "account_id": "46a7133b-ff68-46f8-afca-abe6eac221cc",
+     "email_address": "u4-a472a8bd@t.local",
+     "email_verification_state": "unverified",
+     "capture_gaps": [
+      "age_eligibility_attestation"
+     ]
+    },
+    {
+     "account_id": "a472a8bd-7a60-4239-80d6-16bfd57075df",
+     "email_address": "uv-a472a8bd@t.local",
+     "email_verification_state": "unverified",
+     "capture_gaps": [
+      "age_eligibility_attestation"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A-gap",
+   "label": "age attestation recorded as a capture gap, not invented",
+   "pass": true
+  },
+  {
+   "id": "A-role",
+   "label": "legacy candidate maps to participant with a pseudonym",
+   "pass": true,
+   "detail": [
+    {
+     "account_id": "a472a8bd-7a60-4239-80d6-16bfd57075df",
+     "role_code": "participant",
+     "role_grant_basis": "self_serve_individual",
+     "has_pseud": true
+    },
+    {
+     "account_id": "149b8849-ec75-431a-a82a-835920254299",
+     "role_code": "participant",
+     "role_grant_basis": "self_serve_individual",
+     "has_pseud": true
+    },
+    {
+     "account_id": "46a7133b-ff68-46f8-afca-abe6eac221cc",
+     "role_code": "participant",
+     "role_grant_basis": "self_serve_individual",
+     "has_pseud": true
+    }
+   ]
+  },
+  {
+   "id": "A-verify-sync",
+   "label": "confirming the email on auth.users verifies the account root",
+   "pass": true,
+   "detail": [
+    {
+     "email_verification_state": "verified",
+     "v": true
+    }
+   ]
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_stage_entry_event: unverified participant refused with the stated reason; verified passes the gate",
+   "pass": true,
+   "detail": {
+    "unverified": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag",
+    "verified": "STAGE_ENTRY_NAMES_NO_DIMENSION: dimensions_in_play carries 0 dimensions, so whic"
+   }
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_observation_path_gateway: unverified participant refused with the stated reason; verified passes the gate",
+   "pass": true,
+   "detail": {
+    "unverified": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag",
+    "verified": "null value in column \"session_identity_method\" of relation \"t3a_observation_path"
+   }
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_attempt: unverified participant refused with the stated reason; verified passes the gate",
+   "pass": true,
+   "detail": {
+    "unverified": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag",
+    "verified": "null value in column \"dimension_id\" of relation \"t3a_attempt\" violates not-null "
+   }
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_observation: unverified participant refused with the stated reason; verified passes the gate",
+   "pass": true,
+   "detail": {
+    "unverified": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag",
+    "verified": "null value in column \"stage_code\" of relation \"t3a_observation\" violates not-nul"
+   }
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_disclosure: unverified participant refused with the stated reason; verified passes the gate",
+   "pass": true,
+   "detail": {
+    "unverified": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag",
+    "verified": "null value in column \"ber_report_id\" of relation \"t3a_disclosure\" violates not-n"
+   }
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_observation_record: unverified participant refused (pre-existing guard)",
+   "pass": true,
+   "detail": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag"
+  },
+  {
+   "id": "DT-04",
+   "label": "t3a_d1_ber_report: unverified participant refused (pre-existing guard)",
+   "pass": true,
+   "detail": "EMAIL_VERIFICATION_REQUIRED_SUBJECT: no observation or report may be recorded ag"
+  },
+  {
+   "id": "DT-04",
+   "label": "mentor request by unverified participant refused",
+   "pass": true,
+   "detail": "EMAIL_VERIFICATION_REQUIRED: this account has not confirmed its email address. C"
+  },
+  {
+   "id": "DT-03",
+   "label": "signup asserting mentor: no profile created, refusal logged and kept",
+   "pass": true,
+   "detail": {
+    "n0": 4,
+    "n1": 5,
+    "noRow": true,
+    "msg": "ok"
+   }
+  },
+  {
+   "id": "DT-03",
+   "label": "participant promoting self to admin: role unchanged, refusal logged and kept",
+   "pass": true,
+   "detail": {
+    "roleNow": "candidate",
+    "n1": 5,
+    "n2": 6
+   }
+  },
+  {
+   "id": "DT-03",
+   "label": "ordinary signup as candidate still works",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-03",
+   "label": "client cannot grant a role through the grant function",
+   "pass": true,
+   "detail": "ROLE_SELF_ASSERTION_REFUSED: roles are granted server side only"
+  },
+  {
+   "id": "DT-03",
+   "label": "service context can grant (mentor, administrator_grant)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-03",
+   "label": "a basis that does not fit the role is refused by the table",
+   "pass": true,
+   "detail": "new row for relation \"t3a_role_assignment\" violates check constraint \"t3a_role_a"
+  },
+  {
+   "id": "A-revoke",
+   "label": "revocation is a separate row; assignment unchanged",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "A-append",
+   "label": "role assignment update refused",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "A-append",
+   "label": "revocation delete refused",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "A-immutable",
+   "label": "account creation facts cannot change",
+   "pass": true,
+   "detail": "T3A_IMMUTABLE_COLUMN: account_created_at cannot change after it is wri"
+  },
+  {
+   "id": "A-socket",
+   "label": "identity assurance socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_identity_assurance_socket is a SOCKET str"
+  },
+  {
+   "id": "A-hidden",
+   "label": "participant pseudonym column not readable by a signed-in user",
+   "pass": true,
+   "detail": "permission denied for table t3a_role_assignment"
+  },
+  {
+   "id": "A-rls",
+   "label": "a signed-in user reads only their own account row",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "A-rls",
+   "label": "anonymous caller cannot read the account root",
+   "pass": true,
+   "detail": "permission denied for table t3a_account"
+  },
+  {
+   "id": "A-rls",
+   "label": "signed-in users cannot write Domain A tables directly",
+   "pass": true,
+   "detail": "permission denied for table t3a_participant_profile"
+  },
+  {
+   "id": "DT-01(A)",
+   "label": "all 47 Domain A fields mapped to a physical column",
+   "pass": true,
+   "detail": {
+    "mapped": 47,
+    "dt01": "[{\"dictionary_version\":\"1.3\",\"fields_total\":600,\"fields_active_dormant\":522,\"resolved\":45,\"unmapped\":477,\"missing_capture_state_column\":114,\"dangling_physical\":0,\"passes\":false}]"
+   }
+  }
+ ]
+}

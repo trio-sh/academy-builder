@@ -1,0 +1,463 @@
+{
+ "tool": "check_forbidden_identifiers.py (T3A-DEV-DAY1-001 v1.3)",
+ "excluded": [
+  "dist/",
+  "docs/",
+  "e2e/",
+  "public/",
+  "scripts/",
+  "api/"
+ ],
+ "total_hits": 1990,
+ "by_rule": {
+  "score": 827,
+  "endorsement": 358,
+  "tier": 330,
+  "behavioral_score": 115,
+  "rating or rank or percentile": 105,
+  "skill_passport": 101,
+  "contains validate": 87,
+  "shortlist": 32,
+  "observation_level": 28,
+  "ordinal_anchor": 7
+ },
+ "by_file": {
+  "src/pages/dashboard/MentorDashboard.tsx": {
+   "score": 87,
+   "behavioral_score": 4,
+   "endorsement": 170,
+   "rating or rank or percentile": 1,
+   "tier": 20,
+   "skill_passport": 4
+  },
+  "src/pages/dashboard/CandidateDashboard.tsx": {
+   "skill_passport": 13,
+   "tier": 36,
+   "score": 126,
+   "behavioral_score": 14,
+   "rating or rank or percentile": 1,
+   "endorsement": 24,
+   "contains validate": 5
+  },
+  "src/pages/dashboard/AdminDashboard.tsx": {
+   "tier": 101,
+   "score": 22,
+   "skill_passport": 3,
+   "endorsement": 4,
+   "behavioral_score": 13
+  },
+  "src/types/database.types.ts": {
+   "endorsement": 15,
+   "tier": 32,
+   "score": 22,
+   "skill_passport": 4,
+   "rating or rank or percentile": 6,
+   "behavioral_score": 21,
+   "observation_level": 3
+  },
+  "src/lib/mentorMatching.ts": {
+   "score": 82,
+   "rating or rank or percentile": 11,
+   "endorsement": 7
+  },
+  "src/integrations/supabase/types.ts": {
+   "score": 22,
+   "tier": 16,
+   "skill_passport": 4,
+   "behavioral_score": 23,
+   "rating or rank or percentile": 6,
+   "endorsement": 9,
+   "observation_level": 4
+  },
+  "src/services/aiResponseAnalysis.ts": {
+   "score": 84
+  },
+  "src/test/candidate-employer-e2e-flow.test.ts": {
+   "endorsement": 29,
+   "tier": 23,
+   "skill_passport": 8,
+   "score": 12,
+   "behavioral_score": 2
+  },
+  "src/components/assessment/AssessmentViewer.tsx": {
+   "score": 68,
+   "behavioral_score": 1,
+   "rating or rank or percentile": 2
+  },
+  "supabase/migrations/002_complete_schema.sql": {
+   "tier": 10,
+   "endorsement": 18,
+   "skill_passport": 13,
+   "behavioral_score": 2,
+   "score": 1
+  },
+  "src/pages/dashboard/AIAgent.tsx": {
+   "skill_passport": 12,
+   "endorsement": 6,
+   "score": 7,
+   "tier": 7,
+   "rating or rank or percentile": 2,
+   "contains validate": 6
+  },
+  "src/components/assessment/InteractiveSkillAssessment.tsx": {
+   "score": 39
+  },
+  "supabase/migrations/002_actual_schema.sql": {
+   "tier": 11,
+   "endorsement": 13,
+   "skill_passport": 8,
+   "rating or rank or percentile": 3,
+   "behavioral_score": 2,
+   "score": 1
+  },
+  "src/data/interactiveSkillAssessment.ts": {
+   "rating or rank or percentile": 4,
+   "score": 30,
+   "contains validate": 1
+  },
+  "supabase/migrations/20260811083459_935cc976-55c4-43f4-9ae1-17910c6010ca.sql": {
+   "behavioral_score": 6,
+   "endorsement": 13,
+   "observation_level": 3,
+   "score": 3,
+   "tier": 3,
+   "skill_passport": 7
+  },
+  "src/lib/observationLoops.ts": {
+   "endorsement": 12,
+   "score": 7,
+   "observation_level": 14
+  },
+  "supabase/migrations/20260810190240_20cadeb7-ad8f-47f8-bfe8-e0e4e50cd36b.sql": {
+   "tier": 5,
+   "skill_passport": 7,
+   "endorsement": 3,
+   "rating or rank or percentile": 2,
+   "behavioral_score": 7,
+   "score": 7,
+   "observation_level": 2
+  },
+  "src/components/training/TrainingModuleViewer.tsx": {
+   "score": 29
+  },
+  "src/test/dashboard-queries.test.ts": {
+   "skill_passport": 5,
+   "endorsement": 11,
+   "tier": 4,
+   "rating or rank or percentile": 1,
+   "behavioral_score": 5,
+   "score": 2,
+   "contains validate": 1
+  },
+  "src/lib/notifications.ts": {
+   "endorsement": 5,
+   "tier": 14,
+   "score": 7
+  },
+  "src/pages/Employers.tsx": {
+   "rating or rank or percentile": 4,
+   "score": 4,
+   "tier": 18
+  },
+  "src/test/d1-surface-contracts.test.ts": {
+   "score": 13,
+   "rating or rank or percentile": 11,
+   "tier": 2
+  },
+  "src/pages/dashboard/SchoolDashboard.tsx": {
+   "behavioral_score": 6,
+   "score": 19
+  },
+  "supabase/migrations/20260926000000_t3a_d1_content_load.sql": {
+   "contains validate": 4,
+   "shortlist": 20
+  },
+  "src/test/database-types.test.ts": {
+   "skill_passport": 2,
+   "endorsement": 6,
+   "tier": 9,
+   "behavioral_score": 3,
+   "score": 1
+  },
+  "src/pages/VerifyPassport.tsx": {
+   "skill_passport": 4,
+   "score": 11,
+   "behavioral_score": 3,
+   "tier": 2
+  },
+  "supabase/migrations/20261064000000_t3a_d1_s1_provenance_acknowledged_and_old_library.sql": {
+   "score": 18,
+   "rating or rank or percentile": 1
+  },
+  "package-lock.json": {
+   "contains validate": 13
+  },
+  "src/test/auth-roles.test.ts": {
+   "endorsement": 2,
+   "score": 7,
+   "tier": 4
+  },
+  "src/data/interactiveAssessment.ts": {
+   "rating or rank or percentile": 2,
+   "score": 10
+  },
+  "src/data/interactiveTrainingModules.ts": {
+   "score": 11,
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20260130_platform_updates_fixed.sql": {
+   "skill_passport": 3,
+   "tier": 2,
+   "behavioral_score": 2,
+   "endorsement": 1,
+   "rating or rank or percentile": 1,
+   "score": 3
+  },
+  "pnpm-lock.yaml": {
+   "contains validate": 10
+  },
+  "src/lib/storage.ts": {
+   "contains validate": 10
+  },
+  "supabase/migrations/20261037000000_t3a_d1_corr003_sheet_reload.sql": {
+   "contains validate": 2,
+   "shortlist": 8
+  },
+  "supabase/migrations/20260811160000_t3a_spec_002_day1_capture_schema.sql": {
+   "contains validate": 3,
+   "ordinal_anchor": 4,
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/pages/dashboard/mentor/Cockpit.tsx": {
+   "score": 2,
+   "rating or rank or percentile": 4,
+   "tier": 1,
+   "endorsement": 1
+  },
+  "supabase/migrations/20261084000000_t3a_d1_corr006_section6_library_quarantine.sql": {
+   "tier": 2,
+   "skill_passport": 2,
+   "score": 4
+  },
+  "supabase/migrations/20260901000000_t3a_d1_content_registry.sql": {
+   "score": 3,
+   "rating or rank or percentile": 1,
+   "endorsement": 2,
+   "contains validate": 1
+  },
+  "src/lib/employerDeskText.ts": {
+   "score": 3,
+   "rating or rank or percentile": 3
+  },
+  "supabase/migrations/20260130_platform_updates.sql": {
+   "behavioral_score": 1,
+   "score": 4,
+   "skill_passport": 1
+  },
+  "supabase/migrations/20261009000000_t3a_d1_cockpit_stage2.sql": {
+   "score": 4,
+   "rating or rank or percentile": 2
+  },
+  "src/pages/Terms.tsx": {
+   "contains validate": 5
+  },
+  "src/pages/dashboard/candidate/BridgeFast.tsx": {
+   "score": 5
+  },
+  "supabase/migrations/20260929000000_t3a_d1_report_contract.sql": {
+   "rating or rank or percentile": 3,
+   "score": 2
+  },
+  "index.html": {
+   "contains validate": 4
+  },
+  "src/lib/observationIntegrity.ts": {
+   "score": 3,
+   "endorsement": 1
+  },
+  "src/pages/Press.tsx": {
+   "score": 2,
+   "rating or rank or percentile": 2
+  },
+  "src/test/employer-desk-boundaries.test.ts": {
+   "score": 2,
+   "rating or rank or percentile": 2
+  },
+  "supabase/functions/realtime-notify/index.ts": {
+   "endorsement": 3,
+   "contains validate": 1
+  },
+  "supabase/migrations/20260306_mentor_gated_observations.sql": {
+   "score": 4
+  },
+  "supabase/migrations/20260811200000_t3a_spec_002_legacy_deprecation.sql": {
+   "score": 1,
+   "skill_passport": 1,
+   "endorsement": 2
+  },
+  "supabase/migrations/20260907000000_t3a_d1_sufficiency.sql": {
+   "rating or rank or percentile": 2,
+   "score": 2
+  },
+  "supabase/migrations/20261093000000_rename_render_check.sql": {
+   "contains validate": 4
+  },
+  ".claude/settings.local.json": {
+   "rating or rank or percentile": 2,
+   "tier": 1
+  },
+  "src/components/Chatbot.tsx": {
+   "contains validate": 3
+  },
+  "src/components/home/ComponentsSection.tsx": {
+   "score": 1,
+   "endorsement": 1,
+   "tier": 1
+  },
+  "src/lib/documentExtractor.ts": {
+   "contains validate": 3
+  },
+  "src/lib/t3aConstants.ts": {
+   "score": 2,
+   "observation_level": 1
+  },
+  "src/pages/Help.tsx": {
+   "score": 1,
+   "tier": 2
+  },
+  "src/pages/dashboard/candidate/D1Pathway.tsx": {
+   "score": 2,
+   "rating or rank or percentile": 1
+  },
+  "src/services/resumeEnhancer.ts": {
+   "rating or rank or percentile": 2,
+   "contains validate": 1
+  },
+  "supabase/migrations/20260811180000_t3a_spec_002_service_endpoints.sql": {
+   "ordinal_anchor": 3
+  },
+  "supabase/migrations/20260811210000_t3a_spec_002_governance_values_and_d1_content.sql": {
+   "tier": 1,
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20260811220000_t3a_spec_002_resp002_closures.sql": {
+   "score": 1,
+   "tier": 2
+  },
+  "supabase/migrations/20261003000000_t3a_d1_mentor_reference_card.sql": {
+   "rating or rank or percentile": 2,
+   "score": 1
+  },
+  "supabase/migrations/20261010000000_t3a_d1_acceptance_evidence.sql": {
+   "score": 2,
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20261013000000_t3a_d1_s2_session_events.sql": {
+   "score": 1,
+   "rating or rank or percentile": 2
+  },
+  "supabase/migrations/20261092000000_rce_std_part_f_enforcement.sql": {
+   "contains validate": 3
+  },
+  "src/components/home/DifferentiatorSection.tsx": {
+   "score": 2
+  },
+  "src/components/home/HeroSection.tsx": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/components/home/JourneySection.tsx": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/lib/ber-pdf/ber-report-template.html": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/pages/About.tsx": {
+   "rating or rank or percentile": 1,
+   "score": 1
+  },
+  "src/pages/GetStarted.tsx": {
+   "score": 2
+  },
+  "src/pages/ResetPassword.tsx": {
+   "contains validate": 2
+  },
+  "src/pages/dashboard/candidate/Disclosures.tsx": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/pages/dashboard/employer/AvailableReports.tsx": {
+   "tier": 1,
+   "rating or rank or percentile": 1
+  },
+  "src/pages/dashboard/employer/EmployerFeedback.tsx": {
+   "contains validate": 2
+  },
+  "src/pages/dashboard/mentor/ReportFace.tsx": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20260911000000_t3a_d1_calibration_and_assurance.sql": {
+   "score": 2
+  },
+  "supabase/migrations/20260924000000_t3a_employer_desk_surfaces.sql": {
+   "rating or rank or percentile": 2
+  },
+  "supabase/migrations/20261006000000_t3a_d1_acceptance_tests.sql": {
+   "score": 1,
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20261046000000_t3a_d1_ra06_split_field_name.sql": {
+   "shortlist": 2
+  },
+  "supabase/migrations/20261076000000_t3a_d1_corr006_section4_annex_load.sql": {
+   "score": 2
+  },
+  "src/pages/Careers.tsx": {
+   "rating or rank or percentile": 1
+  },
+  "src/pages/Platform.tsx": {
+   "score": 1
+  },
+  "src/pages/Privacy.tsx": {
+   "contains validate": 1
+  },
+  "src/pages/Schools.tsx": {
+   "score": 1
+  },
+  "src/pages/VerifyBER.tsx": {
+   "rating or rank or percentile": 1
+  },
+  "src/pages/VerifyReportToken.tsx": {
+   "rating or rank or percentile": 1
+  },
+  "src/pages/dashboard/EmployerDashboard.tsx": {
+   "score": 1
+  },
+  "supabase/migrations/20260223_build_rules_9_11.sql": {
+   "observation_level": 1
+  },
+  "supabase/migrations/20260912000000_messages_missing_foreign_keys.sql": {
+   "contains validate": 1
+  },
+  "supabase/migrations/20260923000000_t3a_employer_desk_closure.sql": {
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20260925000000_t3a_employer_desk_refusals_commit.sql": {
+   "rating or rank or percentile": 1
+  },
+  "supabase/migrations/20261041000000_t3a_d1_corr004_sequences.sql": {
+   "contains validate": 1
+  },
+  "supabase/migrations/20261052000000_t3a_d1_issue3_phase2_stage2_parse.sql": {
+   "shortlist": 1
+  },
+  "supabase/migrations/20261071000000_t3a_d1_corr006_section7_stage4_assessments.sql": {
+   "shortlist": 1
+  }
+ }
+}

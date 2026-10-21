@@ -1,0 +1,118 @@
+{
+ "passed": 15,
+ "total": 15,
+ "failed": [],
+ "results": [
+  {
+   "id": "K-session",
+   "label": "a rehearsal session is stored with the new module fields; unfinished => completed_at capture state not captured",
+   "pass": true,
+   "detail": {
+    "i": "6c4ba6bb-7e86-4432-beee-c4087a7a34e5",
+    "s": "captured",
+    "e": "not_captured"
+   }
+  },
+  {
+   "id": "K-state",
+   "label": "setting the completion time fills its capture state",
+   "pass": true
+  },
+  {
+   "id": "K-enum",
+   "label": "a response modality outside the three listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_rehearsal_session\" violates check constraint \"t3a_rehe"
+  },
+  {
+   "id": "K-attempt",
+   "label": "rehearsal attempts are numbered in sequence whatever number is supplied",
+   "pass": true,
+   "detail": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "K-attempt",
+   "label": "a complete attempt without a completion time is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_rehearsal_attempt\" violates check constraint \"t3a_rehe"
+  },
+  {
+   "id": "K-attempt",
+   "label": "attempts cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding "
+  },
+  {
+   "id": "K-feedback",
+   "label": "feedback records its source type; unviewed => viewed state not captured",
+   "pass": true,
+   "detail": {
+    "s": "captured",
+    "v": "not_captured"
+   }
+  },
+  {
+   "id": "K-socket",
+   "label": "the aggregate telemetry socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_rehearsal_telemetry_aggregate is a SOCKET structure"
+  },
+  {
+   "id": "DT-29",
+   "label": "participant reads rehearsal sessions, attempts, feedback: own only",
+   "pass": true,
+   "detail": [
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "id": "DT-29",
+   "label": "mentor reads rehearsal sessions, attempts, feedback: nothing",
+   "pass": true,
+   "detail": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "DT-29",
+   "label": "employer reads rehearsal sessions, attempts, feedback: nothing",
+   "pass": true,
+   "detail": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "DT-32",
+   "label": "no foreign key joins the evidence store to the rehearsal store, in either direction",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "DT-32",
+   "label": "no database function mentions has_rehearsed",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-32",
+   "label": "no column is named has_rehearsed",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-01(K)",
+   "label": "all 40 Domain K fields mapped",
+   "pass": true,
+   "detail": 40
+  }
+ ]
+}

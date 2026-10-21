@@ -1,0 +1,23 @@
+{
+ "event_id": "c251d0b2-28c6-48cf-b4eb-0356d71be738",
+ "event_name": "calibration.pair_recorded",
+ "event_category": "OBSERVATION",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "observation",
+ "resource_id": "634fbb9e-b883-4858-bf1c-cfa26461c3ea",
+ "payload": {
+  "stimulus_unit_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_c4a5d3cacc76413ebb6f1460173b4ac5",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

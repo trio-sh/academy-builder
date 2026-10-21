@@ -1,0 +1,56 @@
+{
+ "before": [
+  {
+   "ri": 25,
+   "pf": 7,
+   "cd": 6,
+   "pv": 80,
+   "qo": 30,
+   "br": 16
+  }
+ ],
+ "after": [
+  {
+   "ri": 27,
+   "pf": 14,
+   "cd": 9,
+   "pv": 119,
+   "ph": 13,
+   "qd": 0
+  }
+ ],
+ "d2_coverage": [
+  {
+   "p": 552,
+   "g": 0,
+   "a": 0
+  }
+ ],
+ "d2_items_for": [
+  {
+   "a": 23,
+   "b": 25,
+   "c": 25
+  }
+ ],
+ "d2_bound_item_failures": [],
+ "anon_exec": [
+  {
+   "b": true
+  }
+ ],
+ "rls": [
+  {
+   "relname": "t3a_dimension_placeholder",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_question_definition",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_stage_form_verb",
+   "relrowsecurity": true
+  }
+ ]
+}

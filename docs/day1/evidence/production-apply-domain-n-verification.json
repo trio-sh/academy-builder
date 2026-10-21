@@ -1,0 +1,18 @@
+{
+ "domain": "N",
+ "migration": "20261117000000_day1_event_envelope_map.sql",
+ "rows_before": {
+  "t3a_event_log": 0
+ },
+ "apply": "ok",
+ "mapped": 29,
+ "dt01": {
+  "resolved": 458,
+  "unmapped": 64,
+  "passes": false
+ },
+ "rows_after": {
+  "t3a_event_log": 0
+ },
+ "new_tables_rows": {}
+}

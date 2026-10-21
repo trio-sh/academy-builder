@@ -187,7 +187,7 @@ const reportId = (uuid: string | undefined, issued: string | null | undefined): 
 // Part-F renderer this would be a server-generated QR; for now we draw a
 // placeholder that reads as a QR to a casual eye and prints at the right
 // size. Replace with a real QR when the verification endpoint is wired.
-function QrPlaceholder({ size = 64 }: { size?: number }) {
+export function QrPlaceholder({ size = 64 }: { size?: number }) {
   const cells = 25;
   const cs = size / cells;
   // Deterministic pseudo-random pattern from a small LCG so the view is stable.
@@ -224,7 +224,7 @@ function QrPlaceholder({ size = 64 }: { size?: number }) {
   );
 }
 
-function BarCode({ text, width = 180, height = 40 }: { text: string; width?: number; height?: number }) {
+export function BarCode({ text, width = 180, height = 40 }: { text: string; width?: number; height?: number }) {
   // Simple deterministic Code-128-looking bar pattern for layout. Replace
   // with a real Code-128 encoder when the verification endpoint lands.
   const chars = text.split("");
@@ -249,7 +249,7 @@ function BarCode({ text, width = 180, height = 40 }: { text: string; width?: num
 }
 
 // Part-F colors, Table 57.3
-const COLORS = {
+export const COLORS = {
   NAVY: "#1B3A5C",
   NAVYL: "#2E4E70",
   OX: "#6E1F2A",
@@ -661,7 +661,7 @@ body.ber-print-root {
 }
 `;
 
-const FONTS_HREF =
+export const FONTS_HREF =
   "https://fonts.googleapis.com/css2?family=Liberation+Sans:ital,wght@0,400;0,700;1,400&family=Liberation+Serif:ital,wght@0,400;0,700;1,400&display=swap";
 
 type DimensionBucket = {

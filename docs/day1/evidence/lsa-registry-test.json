@@ -1,0 +1,133 @@
+{
+ "passed": 17,
+ "total": 17,
+ "failed": [],
+ "results": [
+  {
+   "id": "LSA-flag",
+   "label": "both flags read off by default, and an unknown flag name reads off",
+   "pass": true
+  },
+  {
+   "id": "LSA-flag",
+   "label": "activation reads on only for the exact value 'on', and the deletion flag is separate (rolled back)",
+   "pass": true,
+   "detail": {
+    "a": true,
+    "b": false
+   }
+  },
+  {
+   "id": "LSA-flag",
+   "label": "any value other than 'on' (true, yes, 1) reads off",
+   "pass": true
+  },
+  {
+   "id": "LSA-flag",
+   "label": "the flag reader is not executable by anon or authenticated",
+   "pass": true
+  },
+  {
+   "id": "LSA-D4",
+   "label": "D4 content is loaded as 30 records, every one a draft with no approval and no effective date, none active",
+   "pass": true,
+   "detail": {
+    "n": 30,
+    "d": 30,
+    "a": 0
+   }
+  },
+  {
+   "id": "LSA-D4",
+   "label": "by registry: 2 families, 2 direction rules, 1 sufficiency rule, 14 entries, 1 history rule, 1 dimension rule, 7 dimension entries, 2 state mappings",
+   "pass": true,
+   "detail": {
+    "dimension_entries": 7,
+    "dimension_rules": 1,
+    "direction_rules": 2,
+    "entries": 14,
+    "families": 2,
+    "history_rules": 1,
+    "state_mapping": 2,
+    "sufficiency_rules": 1
+   }
+  },
+  {
+   "id": "LSA-D4",
+   "label": "the CE-D4-05 and CE-D4-08 propositions are the only ones carried",
+   "pass": true
+  },
+  {
+   "id": "LSA-D4",
+   "label": "the stored D4 records pass the registry load checks when treated as active (no overlap, states declared, no cycle, no absence state in a direction rule, required lines present)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "LSA-guard",
+   "label": "an active record is refused while activation is off: nothing written and the refusal is logged",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "LSA-guard",
+   "label": "an active record without a recorded approval and effective date violates the table check",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "LSA-guard",
+   "label": "a draft that carries an approval is refused by the table check",
+   "pass": true,
+   "detail": "new row for relation \"t3a_lsa_registry_record\" violates check constraint \"t3a_lsa_registry_record_check1\""
+  },
+  {
+   "id": "LSA-guard",
+   "label": "a registry record cannot be edited or deleted (supersede by a new version)",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "LSA-guard",
+   "label": "anon and authenticated can read and write nothing in the registry",
+   "pass": true
+  },
+  {
+   "id": "LSA-load",
+   "label": "the package loader is not executable by authenticated users",
+   "pass": true,
+   "detail": "permission denied for function t3a_lsa_load_package"
+  },
+  {
+   "id": "LSA-load",
+   "label": "a draft package loads as drafts (two records: one history rule and one state mapping)",
+   "pass": true,
+   "detail": {
+    "status": "draft_for_approval",
+    "outcome": "loaded",
+    "records": 2,
+    "package_id": "PK-7eb76933"
+   }
+  },
+  {
+   "id": "LSA-load",
+   "label": "a package carrying an active record refuses whole (record_not_a_draft) and writes nothing",
+   "pass": true,
+   "detail": {
+    "detail": "history_rules: active",
+    "reason": "record_not_a_draft",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "LSA-load",
+   "label": "a package record that names an approval refuses whole",
+   "pass": true,
+   "detail": {
+    "detail": "history_rules: draft_for_approval",
+    "reason": "record_not_a_draft",
+    "outcome": "refused"
+   }
+  }
+ ]
+}

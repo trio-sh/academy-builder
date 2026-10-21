@@ -1,0 +1,160 @@
+{
+ "passed": 21,
+ "total": 21,
+ "failed": [],
+ "results": [
+  {
+   "id": "J-own",
+   "label": "a participant writes a practice note; created_by is them; capture state captured",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "J-own",
+   "label": "a participant edits their note",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "J-own",
+   "label": "a participant cannot write a note as someone else",
+   "pass": true,
+   "detail": "new row violates row-level security policy for table \"t3a_growth_log_entry\""
+  },
+  {
+   "id": "J-own",
+   "label": "an entry kind outside practice_note and rehearsal_reference is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_growth_log_entry\" violates check constraint \"t3a_growt"
+  },
+  {
+   "id": "J-own",
+   "label": "the entry kind and author cannot change after writing",
+   "pass": true,
+   "detail": "permission denied for table t3a_growth_log_entry"
+  },
+  {
+   "id": "DT-29",
+   "label": "participant reads the Growth Log: sees only their own note",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "DT-29",
+   "label": "another participant reads the Growth Log: no content returned",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-29",
+   "label": "mentor reads the Growth Log: no content returned",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-29",
+   "label": "employer reads the Growth Log: no content returned",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-29",
+   "label": "administrator reads the Growth Log: no content returned",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "DT-29",
+   "label": "anonymous callers have no read path",
+   "pass": true,
+   "detail": "permission denied for table t3a_growth_log_entry"
+  },
+  {
+   "id": "DT-29",
+   "label": "mentor reading the older platform Growth Log table sees nothing",
+   "pass": true,
+   "detail": {
+    "n": 0
+   }
+  },
+  {
+   "id": "DT-29",
+   "label": "employer reading the older platform Growth Log table sees nothing",
+   "pass": true,
+   "detail": {
+    "n": 0
+   }
+  },
+  {
+   "id": "DT-29",
+   "label": "administrator reading the older platform Growth Log table sees nothing",
+   "pass": true,
+   "detail": {
+    "n": 0
+   }
+  },
+  {
+   "id": "DT-29",
+   "label": "another participant reading the older platform Growth Log table sees nothing",
+   "pass": true,
+   "detail": {
+    "n": 0
+   }
+  },
+  {
+   "id": "DT-63",
+   "label": "a platform insert into the older Growth Log is discarded without an error, and logged",
+   "pass": true,
+   "detail": {
+    "before": 2,
+    "after": 2,
+    "msg": "ok"
+   }
+  },
+  {
+   "id": "DT-63",
+   "label": "the platform function that used to write entries now writes none",
+   "pass": true,
+   "detail": {
+    "fn": "column \"event_type\" is of type growth_log_event_type but exp",
+    "after2": 2
+   }
+  },
+  {
+   "id": "DT-63",
+   "label": "after an observation is committed, no Growth Log row was written",
+   "pass": true,
+   "detail": {
+    "a": 2,
+    "b": 1
+   }
+  },
+  {
+   "id": "DT-63",
+   "label": "the participant's view shows the observation regenerated from the canonical record; another participant sees none",
+   "pass": true,
+   "detail": {
+    "own": 1,
+    "other": 0
+   }
+  },
+  {
+   "id": "DT-63",
+   "label": "the view carries no score, trend or progress column",
+   "pass": true,
+   "detail": [
+    "observation_id",
+    "participant_id",
+    "stage_code",
+    "dimension_id",
+    "committed_at"
+   ]
+  },
+  {
+   "id": "DT-01(J)",
+   "label": "all 8 Domain J fields mapped",
+   "pass": true,
+   "detail": 8
+  }
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "passed": 12,
+ "total": 12,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-14",
+   "label": "source lacking comparison fields is stored; every comparison field is not_authored",
+   "pass": true,
+   "detail": [
+    "not_authored",
+    "not_authored",
+    "not_authored",
+    "not_authored",
+    "not_authored",
+    "not_authored"
+   ]
+  },
+  {
+   "id": "DT-14",
+   "label": "longitudinal_use_status = not_eligible",
+   "pass": true,
+   "detail": "not_eligible"
+  },
+  {
+   "id": "DT-14",
+   "label": "other unauthored registry fields (content sensitivity, atlas ids, beats, situation context) are not_authored",
+   "pass": true
+  },
+  {
+   "id": "DT-14",
+   "label": "even with a comparison id supplied, the dormant status stays not_eligible",
+   "pass": true,
+   "detail": {
+    "cs": "captured",
+    "l": "not_eligible"
+   }
+  },
+  {
+   "id": "DT-14",
+   "label": "a source version with no min/max seconds is stored; capture state not_captured; live writer unaffected by new nullable columns",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D-enum",
+   "label": "source_status outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_source_version\" violates check constraint \"t3a_source_version_so"
+  },
+  {
+   "id": "D-served",
+   "label": "a served instance records all eight version and language fields",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D-served",
+   "label": "a served instance missing a version field is refused",
+   "pass": true,
+   "detail": "null value in column \"question_set_version\" of relation \"t3a_served_instance\" violates not"
+  },
+  {
+   "id": "D-socket",
+   "label": "AI provenance socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_ai_provenance_socket is a SOCKET structure; capture"
+  },
+  {
+   "id": "D-append",
+   "label": "served instances cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D-strict",
+   "label": "with the required-fields switch on, a missing required Domain D field is refused by name",
+   "pass": true,
+   "detail": "T3A_REQUIRED_FIELD_MISSING: source_status is required on t3a_source_version"
+  },
+  {
+   "id": "DT-01(D)",
+   "label": "all 63 Domain D fields mapped",
+   "pass": true,
+   "detail": 63
+  }
+ ]
+}

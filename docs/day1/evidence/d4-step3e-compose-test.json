@@ -1,0 +1,324 @@
+{
+ "passed": 37,
+ "total": 37,
+ "failed": [],
+ "results": [
+  {
+   "id": "D4-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement (fourteen served questions; Q-D4-06 is NOT SERVED on this source)",
+   "pass": true,
+   "detail": 14
+  },
+  {
+   "id": "D4-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant gave 2 of the designated items in a sequence the record preserves"
+   ]
+  },
+  {
+   "id": "D4-composed",
+   "label": "clause instance carries the dimension scoped key and the statement id",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D4-003",
+    "observation_id": "7bead5b4-f8d6-4c4d-b5dc-b019a33e9679",
+    "conduct_element_id": "CE-D4-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D4-001"
+   }
+  },
+  {
+   "id": "D4-24",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D4-24",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D4-04",
+   "label": "Q-D4-07 is NOT SERVED on the Stage 1 source: an answer refuses and nothing is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-07",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-04",
+   "label": "Q-D4-07b is NOT SERVED at Stage 1 as well",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-07b",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-04",
+   "label": "Q-D4-06 is NOT SERVED on this source: an answer refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-06",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-05",
+   "label": "Q-D4-02 A1 with no item selected at Q-D4-02b refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-05",
+   "label": "an answer that does not serve the child leaves the child unreached; sending its items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-02b follows Q-D4-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-06",
+   "label": "Q-D4-07 A3 (a channel not made available) resolves to ST-D4-036 alone, with no child",
+   "pass": true,
+   "detail": [
+    "ST-D4-003",
+    "ST-D4-005",
+    "ST-D4-008",
+    "ST-D4-011",
+    "ST-D4-013",
+    "ST-D4-016",
+    "ST-D4-018",
+    "ST-D4-022",
+    "ST-D4-024",
+    "ST-D4-028",
+    "ST-D4-036",
+    "ST-D4-040",
+    "ST-D4-044"
+   ]
+  },
+  {
+   "id": "D4-09",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-09",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-09",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D4-10",
+   "label": "not_applicable is refused as a missing state",
+   "pass": true,
+   "detail": "missing_state_not_postable"
+  },
+  {
+   "id": "D4-07",
+   "label": "an item not on this source version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-02b item not on material_items of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-07",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-03b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-49",
+   "label": "the same material item selected at Q-D4-02b and Q-D4-03b composes both as separate determinations",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D4-17",
+   "label": "ST-D4-010 and ST-D4-015 are the recurrence blockers",
+   "pass": true,
+   "detail": [
+    "ST-D4-010",
+    "ST-D4-015"
+   ]
+  },
+  {
+   "id": "D4-17",
+   "label": "no communication at all composes, and ST-D4-015 carries its key (ST-D4-010 is suppressed as the duplicated absence statement when Q-D4-01 records none) but is a recurrence blocker and never equivalent",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D4-015",
+    "observation_id": "4804700d-07a4-486b-b8f1-63dbbb3d07e3",
+    "conduct_element_id": "CE-D4-03",
+    "recurrence_blocker": true,
+    "recurrence_equivalence_key_id": "REK-D4-003"
+   }
+  },
+  {
+   "id": "D4-12",
+   "label": "two D4 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D4-12",
+   "label": "a D4 clause instance against a D3 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-61",
+   "label": "a Stage 1 pattern composes, carrying the stage_1_only limitation",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D4-61",
+   "label": "Stage 1 form has no performed channel use: Q-D4-07 is not even served",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-61",
+   "label": "a performed-act verb at Stage 1 refuses and logs stage_form_violation (verb added for the test, then removed)",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D4-01",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-01",
+   "label": "production composition refuses on this unapproved source",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-composed",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-65",
+   "label": "with the signing key not loaded the seal refuses as commit_seal_key_unloaded",
+   "pass": true,
+   "detail": "COMMIT_SEAL_KEY_UNLOADED"
+  },
+  {
+   "id": "D4-65",
+   "label": "with the key loaded the seal is written",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "D4-65",
+   "label": "exactly one seal row exists for the composed statement",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D4-65",
+   "label": "a seal cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D4-65",
+   "label": "a sealed statement verifies under the server key",
+   "pass": true,
+   "detail": {
+    "valid": true
+   }
+  },
+  {
+   "id": "D4-65",
+   "label": "under any other key the seal reads as invalid (commit_seal_invalid)",
+   "pass": true,
+   "detail": {
+    "valid": false,
+    "reason": "commit_seal_invalid"
+   }
+  },
+  {
+   "id": "D4-66",
+   "label": "a second original commit under the same observation identifier is refused by the store; the first record stands",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_dimension_composed_original_uq\""
+   }
+  },
+  {
+   "id": "D4-66",
+   "label": "a second original seal under the same identifier is refused as well",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_commit_seal_pkey\""
+   }
+  },
+  {
+   "id": "D4-66",
+   "label": "the production commit path checks the seal register for the identifier before it writes",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

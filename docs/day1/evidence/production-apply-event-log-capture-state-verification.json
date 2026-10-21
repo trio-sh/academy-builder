@@ -1,0 +1,30 @@
+{
+ "event_rows_before": [
+  {
+   "n": 0
+  }
+ ],
+ "apply": "ok",
+ "dt01": [
+  {
+   "dictionary_version": "1.3",
+   "fields_total": 600,
+   "fields_active_dormant": 522,
+   "resolved": 522,
+   "unmapped": 0,
+   "missing_capture_state_column": 0,
+   "dangling_physical": 0,
+   "passes": true
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE subject_id=<NULL> state=not_captured source_system=internal_job state=captured\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "event_rows_after": [
+  {
+   "n": 0
+  }
+ ],
+ "chain": []
+}

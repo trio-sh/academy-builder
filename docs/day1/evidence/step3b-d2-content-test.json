@@ -1,0 +1,136 @@
+{
+ "passed": 16,
+ "total": 16,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-reg",
+   "label": "15 question objects, 15 capture sets, 15 ruled mappings, 6 branch rules",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-reg",
+   "label": "61 statements, 14 refusal rules, 13 templates, 8 conditions, 21 retired words",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-reg",
+   "label": "34 sources loaded, plus the construct, determination and statement library objects",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-reg",
+   "label": "the six retired and six reserved source identifiers are not registered",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-off",
+   "label": "no D2 version is approved, no source is active, no source holds an approval record",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-off",
+   "label": "every D2 source body says serving_eligible false and every statement is build_only",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-int",
+   "label": "every mapped capture set exists and every question has exactly one mapping",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D2-int",
+   "label": "every statement points at an existing question and an answer line that exists",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-int",
+   "label": "every refusal rule names existing questions; every suppressed statement exists",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-int",
+   "label": "every branch rule names its child question",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-int",
+   "label": "every source carries its sheet and a 64 character digest",
+   "pass": true,
+   "detail": [
+    {
+     "n": 34
+    }
+   ]
+  },
+  {
+   "id": "D2-int",
+   "label": "every condition that names a template names an existing one",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-read",
+   "label": "the reader serves Q-D2-01 with its six D2 lines",
+   "pass": true,
+   "detail": 6
+  },
+  {
+   "id": "D2-read",
+   "label": "the reader serves all fifteen D2 questions",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D2-read",
+   "label": "the D2 coverage matrix runs; the gaps it reports are listed (condition templates for correction_open and stage_1_only)",
+   "pass": true,
+   "detail": [
+    [
+     "Completeness",
+     false
+    ],
+    [
+     "Uniqueness",
+     true
+    ],
+    [
+     "No shared output",
+     true
+    ],
+    [
+     "No impossible paths",
+     true
+    ],
+    [
+     "No unreachable statement",
+     false
+    ],
+    [
+     "No limitation leakage",
+     false
+    ],
+    [
+     "No absence language",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "D1-same",
+   "label": "D1 is untouched: 15 questions, 13 sets, 44 lines, 44 statements",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

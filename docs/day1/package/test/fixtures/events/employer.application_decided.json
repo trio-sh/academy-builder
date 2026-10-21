@@ -1,0 +1,25 @@
+{
+ "event_id": "be3bc5c9-788a-47c3-8dc2-51585c9428b9",
+ "event_name": "employer.application_decided",
+ "event_category": "EMPLOYER",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "employer_organization",
+ "resource_id": "b3c5f81f-b0e8-43cb-93f4-de2bb9e5663c",
+ "payload": {
+  "approval_decision": "approved",
+  "approver_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "decided_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_b7acf7b2eab44b12a03cd62cb1b362b5",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

@@ -1,0 +1,393 @@
+{
+ "admin_settings": [
+  [
+   "admin_settings_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "behavioral_consistency_index": [
+  [
+   "behavioral_consistency_index_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "bridgefast_content": [
+  [
+   "bridgefast_content_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "bridgefast_modules": [
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ],
+  [
+   "bridgefast_modules_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "bridgefast_progress": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ],
+  [
+   "bridgefast_progress_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "bridgefast_quiz_attempts": [
+  [
+   "bridgefast_quiz_attempts_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "bridgefast_quiz_questions": [
+  [
+   "bridgefast_quiz_questions_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "candidate_self_assessments": [
+  [
+   "candidate_self_assessments_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "conversations": [
+  [
+   "Users can create conversations",
+   "INSERT",
+   "public"
+  ],
+  [
+   "conversations_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "email_queue": [
+  [
+   "email_queue_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "employer_profiles": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ]
+ ],
+ "endorsements": [
+  [
+   "endorsements_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "endorsements_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "escrow_transactions": [
+  [
+   "escrow_transactions_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "growth_log_entries": [
+  [
+   "growth_log_entries_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "growth_logs": [
+  [
+   "growth_logs_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "liveworks_applications": [
+  [
+   "liveworks_applications_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "liveworks_applications_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "liveworks_milestones": [
+  [
+   "liveworks_milestones_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "liveworks_milestones_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "liveworks_projects": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ],
+  [
+   "liveworks_projects_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "mentor_assigned_dimensions": [
+  [
+   "mentor_assigned_dimensions_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "mentor_assignments": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ],
+  [
+   "mentor_assignments_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "mentor_availability": [
+  [
+   "mentor_availability_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "mentor_observations": [
+  [
+   "mentor_observations_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "mentor_observations_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "mentor_sessions": [
+  [
+   "mentor_sessions_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "messages": [
+  [
+   "messages_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "notifications": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ],
+  [
+   "notifications_insert_any",
+   "INSERT",
+   "authenticated"
+  ]
+ ],
+ "observation_feedback": [
+  [
+   "observation_feedback_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "observation_sessions": [
+  [
+   "observation_sessions_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "observation_synthesis": [
+  [
+   "observation_synthesis_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "scenario_selection_audit": [
+  [
+   "scenario_selection_audit_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "school_cohorts": [
+  [
+   "school_cohorts_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "self_assessments": [
+  [
+   "self_assessments_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "skill_passports": [
+  [
+   "skill_passports_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "skill_passports_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "t3x_connections": [
+  [
+   "Allow all delete",
+   "DELETE",
+   "public"
+  ],
+  [
+   "Allow all insert",
+   "INSERT",
+   "public"
+  ],
+  [
+   "Allow all update",
+   "UPDATE",
+   "public"
+  ]
+ ],
+ "talentvisa_nominations": [
+  [
+   "talentvisa_nominations_all",
+   "ALL",
+   "public"
+  ],
+  [
+   "talentvisa_nominations_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "talentvisa_quotas": [
+  [
+   "talentvisa_quotas_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "teacher_observations": [
+  [
+   "teacher_observations_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "training_certificates": [
+  [
+   "training_certificates_rw",
+   "ALL",
+   "authenticated"
+  ]
+ ],
+ "employer_feedback": [
+  [
+   "employer_feedback_all",
+   "ALL",
+   "public"
+  ]
+ ]
+}

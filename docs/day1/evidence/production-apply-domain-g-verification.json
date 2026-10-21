@@ -1,0 +1,40 @@
+{
+ "report_row_before": [
+  {
+   "ber_report_id": "f5828113-2d23-4356-a8d3-ed9c62641e59",
+   "participant_id": "40eefd0b-4010-4bba-9894-e1babe9b91d1",
+   "dimension_id": "D1",
+   "status": "ready_to_issue",
+   "assembled_at": "2026-10-08 18:40:27.537046+00"
+  }
+ ],
+ "mapped": [
+  {
+   "count": 37
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 329,
+   "unmapped": 193,
+   "passes": false
+  }
+ ],
+ "report_row_after": [
+  {
+   "ber_report_id": "f5828113-2d23-4356-a8d3-ed9c62641e59",
+   "status": "ready_to_issue",
+   "verification_code": null,
+   "ber_status": null
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE code_len=20 differs_from_id=t\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "count": 1
+  }
+ ]
+}

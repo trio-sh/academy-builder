@@ -1,0 +1,139 @@
+{
+ "passed": 18,
+ "total": 18,
+ "failed": [],
+ "results": [
+  {
+   "id": "F-inv",
+   "label": "redeeming without the agreement version is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "the mentor agreement version is recorded at signing",
+    "reason": "AGREEMENT_VERSION_REQUIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "F-inv",
+   "label": "a valid invitation is redeemed with the agreement version and time",
+   "pass": true,
+   "detail": {
+    "outcome": "redeemed",
+    "mentor_invitation_id": "3a183597-79c4-4b57-a11f-65367760b7a4"
+   }
+  },
+  {
+   "id": "F-inv",
+   "label": "a second redemption is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "an invitation is redeemed once",
+    "reason": "INVITATION_ALREADY_REDEEMED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "F-inv",
+   "label": "an expired invitation is refused and logged",
+   "pass": true,
+   "detail": {
+    "detail": "the invitation has expired",
+    "reason": "INVITATION_EXPIRED",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "F-inv",
+   "label": "redemption time cannot be cleared",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: invitation_redeemed_at was set at 2026-10-20T11:49:17.167273+00:00"
+  },
+  {
+   "id": "F-inv",
+   "label": "the expiry cannot be extended in place",
+   "pass": true,
+   "detail": "T3A_IMMUTABLE_COLUMN: invitation_expires_at cannot change after it is written"
+  },
+  {
+   "id": "F-auth",
+   "label": "an authorized mentor with no open conflict may observe",
+   "pass": true,
+   "detail": {
+    "authorized": true,
+    "conflict_open": false
+   }
+  },
+  {
+   "id": "F-auth",
+   "label": "an open conflict with the participant is reported",
+   "pass": true,
+   "detail": {
+    "authorized": true,
+    "conflict_open": true
+   }
+  },
+  {
+   "id": "F-auth",
+   "label": "authorization is per dimension: D2 is not authorized",
+   "pass": true,
+   "detail": {
+    "authorized": false,
+    "conflict_open": true
+   }
+  },
+  {
+   "id": "F-auth",
+   "label": "a status outside the five listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_mentor_authorization\" violates check constraint \"t3a_m"
+  },
+  {
+   "id": "F-auth",
+   "label": "a suspension extension without an independent approver is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_mentor_authorization\" violates check constraint \"t3a_mentor_auth"
+  },
+  {
+   "id": "F-auth",
+   "label": "with an independent approver the extension is accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "F-auth",
+   "label": "a sourcing channel outside the list is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_mentor_authorization\" violates check constraint \"t3a_m"
+  },
+  {
+   "id": "F-appeal",
+   "label": "an appeal decision time is set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: decided_at was set at 2026-10-20T11:49:18.688289+00:00 and cannot "
+  },
+  {
+   "id": "F-cal",
+   "label": "a calibration record is stored",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "F-socket",
+   "label": "mentor confidence socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_mentor_confidence_socket is a SOCKET structure; cap"
+  },
+  {
+   "id": "F-cycle",
+   "label": "a cycle function outside guide, observer, evidence_reviewer is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_d1_involvement\" violates check constraint \"t3a_d1_involvement_cy"
+  },
+  {
+   "id": "DT-01(F)",
+   "label": "all 48 Domain F fields mapped",
+   "pass": true,
+   "detail": 48
+  }
+ ]
+}

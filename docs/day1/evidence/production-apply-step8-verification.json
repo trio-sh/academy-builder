@@ -1,0 +1,26 @@
+{
+ "grants": [
+  {
+   "anon": false,
+   "auth": true
+  }
+ ],
+ "probe_unknown_report": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE BER_REPORT_NOT_FOUND\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "reports_issued_in_production": [
+  {
+   "n": 0
+  }
+ ],
+ "rollback_dry_run": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE fn=0\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "n": 1
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "manifest": "signed_test_manifest",
+ "purpose": "DT-41 fixture",
+ "dictionary_version": "1.3",
+ "files": [
+  {
+   "path": "T3A-DEV-DAY1-001_Field_Dictionary_v1.3.json"
+  }
+ X
+}

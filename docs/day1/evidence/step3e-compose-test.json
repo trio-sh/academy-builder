@@ -1,0 +1,273 @@
+{
+ "passed": 29,
+ "total": 29,
+ "failed": [],
+ "results": [
+  {
+   "id": "D2-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D2-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant performed 2 of the actions the situation made available",
+    "the participant named 2 of the items the situation identified when stating the shortfall"
+   ]
+  },
+  {
+   "id": "D2-composed",
+   "label": "clause instance = observation + element + recurrence key + state code (state code is the statement id)",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D2-001",
+    "observation_id": "92ef1a08-1767-4ebd-8013-2baa7c78dfab",
+    "conduct_element_id": "CE-D2-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D2-001"
+   }
+  },
+  {
+   "id": "D2-52",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D2-52",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D2-43",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-43",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-35",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D2-35",
+   "label": "a coined missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-09 no answer given",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-5.8",
+   "label": "technical_failure attaches the conditions-compromised limitation",
+   "pass": true,
+   "detail": [
+    "conditions_compromised"
+   ]
+  },
+  {
+   "id": "D2-40",
+   "label": "an answer for a question the source marks NOT SERVED refuses; no row is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-02b",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-41",
+   "label": "a parent that does not serve its child leaves the child out, and that is not a missing value",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D2-41",
+   "label": "a child answered although its parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-02b follows Q-D2-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-41",
+   "label": "a child answered under a missing parent refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-03b follows Q-D2-03a",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "an item not on this source version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-03b item not on material_disclosure_items of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "an item drawn from a D1 style list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-07b item not on accountable_actor_set of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-03b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "a listed answer with no items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-03b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-42",
+   "label": "an answer that takes no items refuses when items are sent",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-03b: this answer takes no items",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-34",
+   "label": "exactly one item for a support selection",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-06b: exactly one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-34",
+   "label": "an item cannot be both omitted and contradicted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D2-05b",
+    "reason": "item_marked_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-60",
+   "label": "Stage 1 cannot evidence an action performed (RR-D2-01)",
+   "pass": true,
+   "detail": {
+    "detail": "A written Stage 1 response cannot evidence an action performed",
+    "reason": "RR-D2-01",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-65",
+   "label": "Stage 1 rendered statements contain no took, began, completed, assigned, escalated or carried out",
+   "pass": true,
+   "detail": "[{\"entry_type\":\"conduct_bearing\",\"state_code\":\"ST-D2-001\",\"clause_text\":\"the participant stated that the item was theirs to carry\",\"question_code\":\"Q-D2-01\",\"conduct_element\":\"CE-D2-01\"},{\"entry_type\""
+  },
+  {
+   "id": "D2-47",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-26",
+   "label": "production composition needs a servable source and refuses on this unapproved one",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-31",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-49",
+   "label": "two D2 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D2-54",
+   "label": "a D2 clause instance against a D1 clause instance refuses (keys are dimension scoped)",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D2-49",
+   "label": "ST-D2-053 carries its key but is a recurrence blocker and never equivalent",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D2-053",
+    "observation_id": "6dc45c2e-efbe-4696-80cb-21dcbcf009dd",
+    "conduct_element_id": "CE-D2-09",
+    "recurrence_blocker": true,
+    "recurrence_equivalence_key_id": "REK-D2-009"
+   }
+  }
+ ]
+}

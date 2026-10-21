@@ -1,0 +1,18 @@
+erDiagram
+  t3a_d1_work_sample_submission {
+    uuid submission_id PK
+    uuid participant_id
+    uuid source_version_id
+    uuid stage_instance_id
+    text state
+    timestamp_with_time_zone assigned_at
+    timestamp_with_time_zone deadline_at
+    timestamp_with_time_zone submitted_at
+    boolean deadline_missed
+    text artifact_ref
+    boolean authorship_attestation
+    boolean assistance_declaration
+    text _7_more_columns
+  }
+  t3a_d1_work_sample_submission ||--o{ t3a_d1_work_sample_submission : "prior_version_ref"
+  t3a_d1_work_sample_submission ||--o{ t3a_d1_work_sample_submission : "superseded_by"

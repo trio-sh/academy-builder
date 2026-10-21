@@ -1,0 +1,120 @@
+{
+ "passed": 11,
+ "total": 11,
+ "failed": [],
+ "results": [
+  {
+   "id": "claims-setup",
+   "label": "two synthetic committed D4 statements exist",
+   "pass": true,
+   "detail": [
+    "composed",
+    "composed"
+   ]
+  },
+  {
+   "id": "claims",
+   "label": "a report that was never issued refuses report_not_issued: no face is produced for a real participant",
+   "pass": true,
+   "detail": {
+    "detail": "only an issued report is served; no specimen face is produced for a real participant",
+    "reason": "report_not_issued",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "claims",
+   "label": "another participant refuses not_the_participant",
+   "pass": true,
+   "detail": {
+    "reason": "not_the_participant",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "claims",
+   "label": "a value that is not a whole number of months refuses evidence_currency_unparseable",
+   "pass": true,
+   "detail": {
+    "detail": "the loaded value must be a whole number of months",
+    "reason": "evidence_currency_unparseable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "claims",
+   "label": "an issued report returns one claim package for D4, mode issued, release state released",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "claims",
+   "label": "the entry text is the resolved clause, the entry's disposition is the library's (build only), and the supporting contexts are Stage codes only",
+   "pass": true,
+   "detail": {
+    "entry": "ST-D4-003",
+    "disp": "build_only",
+    "ctx": [
+     {
+      "stage_code": "S2",
+      "context_instance_id": "CTX-92f97e3f"
+     },
+     {
+      "stage_code": "S2",
+      "context_instance_id": "CTX-92f97e3f"
+     },
+     {
+      "stage_code": "S2",
+      "context_instance_id": "CTX-df0dcb7b"
+     },
+     {
+      "stage_code": "S2",
+      "context_instance_id": "CTX-df0dcb7b"
+     }
+    ]
+   }
+  },
+  {
+   "id": "claims",
+   "label": "no differences are invented and the evidence currency date is the issue date plus the loaded months",
+   "pass": true,
+   "detail": [
+    "2026-10-21",
+    "2027-04-21"
+   ]
+  },
+  {
+   "id": "claims",
+   "label": "the participant's display name is the profile's, nothing else about the person is carried",
+   "pass": true,
+   "detail": "Pat Synthetic"
+  },
+  {
+   "id": "claims",
+   "label": "the test flag is the service route only",
+   "pass": true,
+   "detail": {
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "claims",
+   "label": "anon cannot call the route",
+   "pass": true,
+   "detail": {
+    "msg": "permission denied for function t3a_ber_multipage_claims"
+   }
+  },
+  {
+   "id": "claims",
+   "label": "a specimen flagged report refuses report_not_issued even when issued",
+   "pass": true,
+   "detail": {
+    "detail": "only an issued report is served; no specimen face is produced for a real participant",
+    "reason": "report_not_issued",
+    "outcome": "refused"
+   }
+  }
+ ]
+}

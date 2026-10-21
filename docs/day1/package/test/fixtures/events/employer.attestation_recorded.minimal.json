@@ -1,0 +1,23 @@
+{
+ "event_id": "ca30a63c-6363-49cd-a2f4-930a69c5c175",
+ "event_name": "employer.attestation_recorded",
+ "event_category": "EMPLOYER",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "employer_organization",
+ "resource_id": "7705eb38-4578-4352-b2f4-01fc2040ea32",
+ "payload": {
+  "employer_attestation_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_23b02f0648b4404bb828e5213fb84159",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

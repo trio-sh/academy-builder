@@ -1,0 +1,23 @@
+{
+ "event_id": "cddcbf33-e617-423b-88c3-b5b28e8153a5",
+ "event_name": "report.rendered",
+ "event_category": "REPORT",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "report",
+ "resource_id": "835b6878-04a1-481f-bc1c-ddbe77577927",
+ "payload": {
+  "specimen_render_flag": true
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_1be2fe6a93624cbda6c1e86c30ecce7c",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

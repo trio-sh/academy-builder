@@ -1,0 +1,29 @@
+{
+ "event_id": "849ee327-3335-4c0a-ad9d-0bb303656246",
+ "event_name": "mentor.authorization_changed",
+ "event_category": "MENTOR",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "mentor",
+ "resource_id": "8710064d-3eb0-48ec-a303-af5f7d4c9cae",
+ "payload": {
+  "authorization_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf",
+  "authorized_dimension_id": "D1",
+  "authorization_status": "authorized",
+  "effective_from": "2026-10-18T10:00:00Z",
+  "reviewer_authorization": true,
+  "issuer_authorization": true,
+  "effective_to": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_4112e39d47ad45e28a1517daf6229f4a",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

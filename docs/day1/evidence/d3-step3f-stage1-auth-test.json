@@ -1,0 +1,256 @@
+{
+ "passed": 26,
+ "total": 26,
+ "failed": [],
+ "results": [
+  {
+   "id": "D3-63",
+   "label": "no Stage 1 instance: s1_confirmation_absent / s1_instance_not_closed",
+   "pass": true,
+   "detail": {
+    "eligible": false,
+    "sub_reason": "s1_instance_not_closed",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "a Stage 1 instance that is not closed refuses with its own sub-reason",
+   "pass": true,
+   "detail": {
+    "eligible": false,
+    "sub_reason": "s1_instance_not_closed",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "closed but no confirmation: record absent",
+   "pass": true,
+   "detail": {
+    "detail": "absent",
+    "eligible": false,
+    "sub_reason": "s1_confirmation_record_absent_or_wrong_actor",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "a confirmation by someone other than the assigned mentor fails the gate as a wrong-actor control failure, distinct from absent",
+   "pass": true,
+   "detail": {
+    "detail": "wrong_actor",
+    "eligible": false,
+    "sub_reason": "s1_confirmation_record_absent_or_wrong_actor",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "assigned mentor confirmed, nothing committed: s1_observation_not_committed",
+   "pass": true,
+   "detail": {
+    "eligible": false,
+    "sub_reason": "s1_observation_not_committed",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "committed, no progression: s1_progression_absent_or_blocks",
+   "pass": true,
+   "detail": {
+    "detail": "absent",
+    "eligible": false,
+    "sub_reason": "s1_progression_absent_or_blocks",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "a redirect blocks continuation",
+   "pass": true,
+   "detail": {
+    "detail": "redirect",
+    "eligible": false,
+    "sub_reason": "s1_progression_absent_or_blocks",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-63",
+   "label": "the logged route refuses and the refusal persists",
+   "pass": true,
+   "detail": {
+    "detail": "redirect",
+    "eligible": false,
+    "sub_reason": "s1_progression_absent_or_blocks",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D3-57",
+   "label": "proceed permits Stage 2",
+   "pass": true,
+   "detail": {
+    "eligible": true
+   }
+  },
+  {
+   "id": "D3-18",
+   "label": "a redirect recorded on D1 leaves the D3 progression state unchanged",
+   "pass": true,
+   "detail": {
+    "eligible": true
+   }
+  },
+  {
+   "id": "D3-16",
+   "label": "a mentor holding only D1 authorization is refused for D3 and the refusal is logged",
+   "pass": true,
+   "detail": {
+    "detail": "the mentor is authorized for another dimension only; authorization never carries across",
+    "reason": "unauthorized_dimension",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-9",
+   "label": "D3 authorization resting on a clearance that names the version set authorizes (the version set is a required column, so an unnamed one cannot exist)",
+   "pass": true,
+   "detail": {
+    "outcome": "authorized"
+   }
+  },
+  {
+   "id": "D3-9",
+   "label": "D3 authorization resting on a named clearance authorizes",
+   "pass": true,
+   "detail": {
+    "outcome": "authorized"
+   }
+  },
+  {
+   "id": "D3-9",
+   "label": "and that D3 authorization does not authorize D1",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D3-17",
+   "label": "an actor who observed the D1 record of a two-dimension report may not evidence-review it",
+   "pass": true,
+   "detail": {
+    "detail": "evidence_review: actor observed a record in this report (all dimensions in it are counted)",
+    "reason": "involved_in_report",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-11",
+   "label": "an actor who observed the D3 record may not issue it either",
+   "pass": true,
+   "detail": {
+    "detail": "issue: actor observed a record in this report (all dimensions in it are counted)",
+    "reason": "involved_in_report",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-10",
+   "label": "the participant is not a reviewer of their own report",
+   "pass": true,
+   "detail": {
+    "detail": "evidence_review",
+    "reason": "participant_cannot_review_or_issue_own_report",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-11",
+   "label": "an actor with no part in any record is eligible to evidence-review",
+   "pass": true,
+   "detail": {
+    "outcome": "eligible"
+   }
+  },
+  {
+   "id": "D3-10",
+   "label": "the reviewer of a report may not issue it",
+   "pass": true,
+   "detail": {
+    "detail": "the reviewer of this report may not issue it",
+    "reason": "reviewer_cannot_issue",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-10",
+   "label": "a distinct uninvolved actor may issue",
+   "pass": true,
+   "detail": {
+    "outcome": "eligible"
+   }
+  },
+  {
+   "id": "D3-61",
+   "label": "with no confirmation record no note renders and the refusal logs",
+   "pass": true,
+   "detail": {
+    "detail": "no confirmation record: neither the statement nor a note renders",
+    "reason": "s1_confirmation_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-62",
+   "label": "the confirmation pins the exact source version and its hash",
+   "pass": true,
+   "detail": {
+    "v": "a0f3bbb7-f84a-4cca-aa81-6536d5b88518",
+    "h": "d08dbff798941bd4e85fb38f6860e463ee2a18b1281d54e4d87054443dc7dc29"
+   }
+  },
+  {
+   "id": "D3-61",
+   "label": "with the controlled text T-EVNOTE-001 not loaded the render refuses rather than omitting the block",
+   "pass": true,
+   "detail": {
+    "detail": "a mandatory controlled text is not loaded; the render refuses rather than omitting the block",
+    "reason": "controlled_text_not_loaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-59",
+   "label": "with a valid confirmation by an authorized actor and the text loaded, the note renders",
+   "pass": true,
+   "detail": {
+    "text": "SYNTHETIC TEST TEXT",
+    "outcome": "rendered",
+    "text_ref": "T-EVNOTE-001",
+    "source_version_id": "a0f3bbb7-f84a-4cca-aa81-6536d5b88518"
+   }
+  },
+  {
+   "id": "D3-62",
+   "label": "if the source version no longer matches the one confirmed the note refuses",
+   "pass": true,
+   "detail": {
+    "detail": "the source version no longer matches the one confirmed",
+    "reason": "source_altered_after_confirmation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D3-59",
+   "label": "a confirmer not authorized for D3 at the time voids the note",
+   "pass": true,
+   "detail": {
+    "detail": "the confirming actor was not authorized for D3 when confirming",
+    "reason": "confirmer_not_authorized_at_the_time",
+    "outcome": "refused"
+   }
+  }
+ ]
+}

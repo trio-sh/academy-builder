@@ -1,0 +1,23 @@
+{
+ "event_id": "0998ac03-4533-4ff5-a2a7-746b90c4a12c",
+ "event_name": "program.organization_registered",
+ "event_category": "PROGRAM",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "program",
+ "resource_id": "51430e06-9dc4-4b99-a0f9-7abdae1a3299",
+ "payload": {
+  "organization_type": "employer"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_3952aa9927e04ad8a146e88ad8f59657",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

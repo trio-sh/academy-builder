@@ -503,6 +503,16 @@ function ChallengeModal({
   onOpened: () => void;
 }) {
   const [ground, setGround] = useState<ChallengeGround | "">("");
+  // The response time commitment shows only when the founder's value is loaded. Unloaded: nothing renders, no default.
+  const [commitment, setCommitment] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    void supabase.rpc("t3a_correction_commitment").then(({ data }) => {
+      const d = data as { rendered?: boolean; value?: string } | null;
+      if (live) setCommitment(d?.rendered && d.value ? d.value : null);
+    });
+    return () => { live = false; };
+  }, []);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -581,6 +591,12 @@ function ChallengeModal({
             <p className="text-sm text-foreground whitespace-pre-wrap">{error}</p>
           </div>
         )}
+
+        {commitment ? (
+          <p className="text-sm text-foreground/80 mb-4" data-testid="correction-commitment">
+            Response time: {commitment}
+          </p>
+        ) : null}
 
         <p className="marginalia text-[0.75rem] text-foreground/60 mb-4">
           Raising a correction notifies the reviewer team and stamps a notification timestamp on the case. Per §8 + AC-16,

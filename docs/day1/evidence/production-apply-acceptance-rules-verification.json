@@ -1,0 +1,70 @@
+{
+ "before": [
+  {
+   "o": 0,
+   "i": 0,
+   "s": 0,
+   "se": 8
+  }
+ ],
+ "apply": "ok",
+ "triggers": [
+  {
+   "t": "t3a_consent_record",
+   "trigger_name": "t3a_1_consent_stales_preview_trg"
+  },
+  {
+   "t": "t3a_d1_report_issuance",
+   "trigger_name": "t3a_1_issuance_freshness_trg"
+  },
+  {
+   "t": "t3a_observation",
+   "trigger_name": "t3a_1_observation_subject_trg"
+  },
+  {
+   "t": "t3a_source",
+   "trigger_name": "t3a_1_source_bank_trg"
+  },
+  {
+   "t": "t3a_source",
+   "trigger_name": "t3a_1_source_bank_trg"
+  },
+  {
+   "t": "t3a_stage_entry_event",
+   "trigger_name": "t3a_2_entry_authority_trg"
+  },
+  {
+   "t": "t3a_observation",
+   "trigger_name": "t3a_9_observation_sidecar_trg"
+  },
+  {
+   "t": "t3a_source",
+   "trigger_name": "t3a_9_source_title_trg"
+  },
+  {
+   "t": "t3a_source",
+   "trigger_name": "t3a_9_source_title_trg"
+  },
+  {
+   "t": "t3a_participant_profile",
+   "trigger_name": "t3a_z_profile_withheld_trg"
+  }
+ ],
+ "flags": [
+  {
+   "enforce_required": false,
+   "enforce_sequence": false,
+   "enable_lsa_sidecar": false
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE legacy=LEGACY_CONSENT_DOES_NOT_COVER_PURPOSE s1=S1_CONTENT_NOT_DETERMINISTIC bank1=registered bank2=SECOND_SOURCE_BANK_REFUSED\\nCONTEXT:  PL/pgSQL function inline_code_block line 8 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "b": 0,
+   "r": 0
+  }
+ ]
+}

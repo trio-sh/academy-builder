@@ -1,0 +1,77 @@
+{
+ "applied_at": "2026-10-20",
+ "migration": "20261100000000_close_open_access_policies.sql",
+ "migrated_policies_present": 33,
+ "not_authenticated_only": [],
+ "growth_log_policies": [
+  {
+   "tablename": "growth_log_entries",
+   "policyname": "growth_log_entries_owner_delete",
+   "r": "{authenticated}",
+   "cmd": "DELETE",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": null
+  },
+  {
+   "tablename": "growth_log_entries",
+   "policyname": "growth_log_entries_owner_insert",
+   "r": "{authenticated}",
+   "cmd": "INSERT",
+   "qual": null,
+   "with_check": "(candidate_id = auth.uid())"
+  },
+  {
+   "tablename": "growth_log_entries",
+   "policyname": "growth_log_entries_owner_select",
+   "r": "{authenticated}",
+   "cmd": "SELECT",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": null
+  },
+  {
+   "tablename": "growth_log_entries",
+   "policyname": "growth_log_entries_owner_update",
+   "r": "{authenticated}",
+   "cmd": "UPDATE",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": "(candidate_id = auth.uid())"
+  },
+  {
+   "tablename": "growth_logs",
+   "policyname": "growth_logs_owner_delete",
+   "r": "{authenticated}",
+   "cmd": "DELETE",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": null
+  },
+  {
+   "tablename": "growth_logs",
+   "policyname": "growth_logs_owner_insert",
+   "r": "{authenticated}",
+   "cmd": "INSERT",
+   "qual": null,
+   "with_check": "(candidate_id = auth.uid())"
+  },
+  {
+   "tablename": "growth_logs",
+   "policyname": "growth_logs_owner_select",
+   "r": "{authenticated}",
+   "cmd": "SELECT",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": null
+  },
+  {
+   "tablename": "growth_logs",
+   "policyname": "growth_logs_owner_update",
+   "r": "{authenticated}",
+   "cmd": "UPDATE",
+   "qual": "(candidate_id = auth.uid())",
+   "with_check": "(candidate_id = auth.uid())"
+  }
+ ],
+ "anonymous_open_write_remaining": [
+  {
+   "n": 0
+  }
+ ]
+}

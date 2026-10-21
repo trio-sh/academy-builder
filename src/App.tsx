@@ -51,6 +51,7 @@ import AuthCallback from "./pages/AuthCallback";
 import VerifyPassport from "./pages/VerifyPassport";
 import VerifyBER from "./pages/VerifyBER";
 import BerPrintView from "./pages/print/BerPrintView";
+import BerMultiPrintView from "./pages/print/BerMultiPrintView";
 import RecipientReportAccess from "@/pages/RecipientReportAccess";
 import VerifyReportToken from "./pages/VerifyReportToken";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -109,6 +110,7 @@ const App = () => (
             <Route path="/verify/token" element={<VerifyReportToken />} />
             <Route path="/verify/token/:token" element={<VerifyReportToken />} />
             <Route path="/print/ber/:berId" element={<BerPrintView />} />
+            <Route path="/print/ber-multi/:berId" element={<BerMultiPrintView />} />
             <Route path="/verify/:code" element={<VerifyPassport />} />
 
             {/* Public only routes (redirect if logged in) */}

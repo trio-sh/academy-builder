@@ -1,0 +1,153 @@
+{
+ "passed": 21,
+ "total": 21,
+ "failed": [],
+ "results": [
+  {
+   "id": "D4-load",
+   "label": "D4 loads 15 questions, 15 capture sets, 47 capture lines, 6 branch rules, 47 statements, 19 numbered resolution rules, 13 templates, 33 sources",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "the source numbers the package does not carry (S1-007, S2-002, S2-003, S2-005, S4-008) are not registered",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "every branch rule has its parent, child and serving answers derived on load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "no D4 version is approved, no source is active, none holds an approval record",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "D1 and D2 content are untouched by the D4 load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "the placeholder grammar is data: D2 has 5 rows, D4 has 6",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-load",
+   "label": "every D4 source and one conduct element per question group (Q-D4-06 alone carries CE-D4-06)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "the register has one row per question and answer pair (47) with the structural fields populated",
+   "pass": true,
+   "detail": 47
+  },
+  {
+   "id": "D-05",
+   "label": "the five semantic fields are empty on every row; nothing in this build wrote one",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "every one of the 15 questions carries calibration_ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a structurally complete row is not mistaken for a ready one: statement_mapping populated, semantic fields empty, ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a dimension with no register (D2) is not subject to the rule",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-58",
+   "label": "with both drafting rows the next failing precondition is question_definition_incomplete",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-58",
+   "label": "a source whose served question has an empty definition cannot enter the production approval path; the refusal is logged",
+   "pass": true,
+   "detail": {
+    "detail": "a served question has empty semantic definition fields: Q-D4-01",
+    "reason": "question_definition_incomplete",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-58",
+   "label": "once every served question is complete the same source queues (Q-D4-08 is NOT SERVED on it and is not counted)",
+   "pass": true,
+   "detail": {
+    "outcome": "queued",
+    "source_version_id": "5d9ba5b1-0185-4359-9103-700bd461bd21"
+   }
+  },
+  {
+   "id": "D4-58",
+   "label": "clearing the definition closes the path again",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-60",
+   "label": "the real D4 sources hold no approval and the first failing precondition is named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D4-50",
+   "label": "a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D4-T-dbfa8bbc-2 names Q-D4-99",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-50",
+   "label": "a table whose rows all name real questions loads",
+   "pass": true,
+   "detail": {
+    "rows": 1,
+    "outcome": "loaded"
+   }
+  },
+  {
+   "id": "D4-50",
+   "label": "a suppress row naming a statement that does not exist is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D4-T-dbfa8bbc-1s suppresses unknown ST-D4-999",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-50",
+   "label": "the loader is the service route only",
+   "pass": true,
+   "detail": {
+    "msg": "permission denied for function t3a_load_resolution_rules"
+   }
+  }
+ ]
+}

@@ -32,3 +32,6 @@ playwright-report/
 screenshot-*.png
 login-snapshot.yml
 e2e/.fixture.json
+
+# local assistant settings may hold credentials
+.claude/settings.local.json

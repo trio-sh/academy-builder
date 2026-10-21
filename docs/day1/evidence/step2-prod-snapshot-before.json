@@ -1,0 +1,64 @@
+{
+ "golden_before": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "sets": 13,
+   "lines": 44,
+   "questions": 15
+  }
+ ],
+ "constraints_before": [
+  {
+   "t": "t3a_d1_capture_set",
+   "conname": "t3a_d1_capture_set_pkey",
+   "d": "PRIMARY KEY (capture_set_code)"
+  },
+  {
+   "t": "t3a_d1_capture_line",
+   "conname": "t3a_d1_capture_line_capture_set_code_fkey",
+   "d": "FOREIGN KEY (capture_set_code) REFERENCES t3a_d1_capture_set(capture_set_code) ON DELETE RESTRICT"
+  },
+  {
+   "t": "t3a_d1_capture_line",
+   "conname": "t3a_d1_capture_line_capture_set_code_line_order_key",
+   "d": "UNIQUE (capture_set_code, line_order)"
+  },
+  {
+   "t": "t3a_d1_capture_resolution",
+   "conname": "t3a_d1_capture_resolution_capture_set_code_capture_line_ord_key",
+   "d": "UNIQUE (capture_set_code, capture_line_order)"
+  },
+  {
+   "t": "t3a_d1_capture_resolution",
+   "conname": "t3a_d1_capture_resolution_capture_set_code_fkey",
+   "d": "FOREIGN KEY (capture_set_code) REFERENCES t3a_d1_capture_set(capture_set_code)"
+  },
+  {
+   "t": "t3a_d1_condition_precedence",
+   "conname": "t3a_d1_condition_precedence_pkey",
+   "d": "PRIMARY KEY (condition_code)"
+  },
+  {
+   "t": "t3a_d1_condition_precedence",
+   "conname": "t3a_d1_condition_precedence_precedence_order_key",
+   "d": "UNIQUE (precedence_order)"
+  },
+  {
+   "t": "t3a_d1_question_capture_map",
+   "conname": "t3a_d1_question_capture_map_capture_set_code_fkey",
+   "d": "FOREIGN KEY (capture_set_code) REFERENCES t3a_d1_capture_set(capture_set_code) ON DELETE RESTRICT"
+  },
+  {
+   "t": "t3a_d1_beat_capture_binding",
+   "conname": "t3a_d1_beat_capture_binding_capture_set_code_fkey",
+   "d": "FOREIGN KEY (capture_set_code) REFERENCES t3a_d1_capture_set(capture_set_code) ON DELETE RESTRICT"
+  },
+  {
+   "t": "t3a_d1_capture_selection",
+   "conname": "t3a_d1_capture_selection_capture_set_code_fkey",
+   "d": "FOREIGN KEY (capture_set_code) REFERENCES t3a_d1_capture_set(capture_set_code) ON DELETE RESTRICT"
+  }
+ ]
+}

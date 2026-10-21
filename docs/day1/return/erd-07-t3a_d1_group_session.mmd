@@ -1,0 +1,33 @@
+erDiagram
+  t3a_d1_group_session {
+    uuid group_session_id PK
+    uuid source_version_id
+    uuid stage_instance_id
+    uuid facilitator_id
+    uuid observed_participant_id
+    timestamp_with_time_zone composed_at
+    boolean accommodation_settled
+    timestamp_with_time_zone started_at
+    timestamp_with_time_zone ended_at
+    timestamp_with_time_zone paused_at
+  }
+  t3a_d1_group_session_member {
+    uuid member_id PK
+    uuid group_session_id
+    uuid participant_id
+    text member_role
+    text pre_brief_ref
+    timestamp_with_time_zone disconnected_at
+    timestamp_with_time_zone withdrew_at
+  }
+  t3a_s4_group_participation {
+    uuid participation_id PK
+    uuid group_session_id
+    uuid participant_id
+    text member_role
+    text notice_version
+    text notice_hash
+    timestamp_with_time_zone granted_at
+  }
+  t3a_d1_group_session ||--o{ t3a_d1_group_session_member : "group_session_id"
+  t3a_d1_group_session ||--o{ t3a_s4_group_participation : "group_session_id"

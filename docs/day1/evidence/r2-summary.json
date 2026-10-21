@@ -1,0 +1,403 @@
+{
+ "mapping_summary": {
+  "M5": 435,
+  "M1": 156,
+  "M3": 9
+ },
+ "m6_prohibited_present": {
+  "free-text notes/rationale": {
+   "behavioral_consistency_index": [
+    "mentor_notes"
+   ],
+   "t3a_change_classification": [
+    "rationale"
+   ],
+   "t3a_d1_change_classification": [
+    "rationale"
+   ],
+   "t3a_d1_conflict_declaration": [
+    "rationale"
+   ],
+   "t3a_d1_progression_decision": [
+    "rationale"
+   ],
+   "t3a_mentor_judgment": [
+    "decision_rationale"
+   ],
+   "t3a_observation": [
+    "evidence_notes"
+   ]
+  },
+  "score/rating/rank/percentile/BARS": {
+   "bridgefast_progress": [
+    "final_score"
+   ],
+   "bridgefast_quiz_attempts": [
+    "max_score",
+    "score"
+   ],
+   "candidate_self_assessments": [
+    "behavioral_scores"
+   ],
+   "mentor_observations": [
+    "behavioral_scores"
+   ],
+   "mentor_profiles": [
+    "avg_rating"
+   ],
+   "observation_feedback": [
+    "bars_score"
+   ],
+   "observation_loops": [
+    "bars_score"
+   ],
+   "observation_synthesis": [
+    "overall_bars_score"
+   ],
+   "self_assessments": [
+    "behavioral_scores"
+   ],
+   "skill_passports": [
+    "behavioral_scores",
+    "readiness_tier"
+   ],
+   "students": [
+    "avg_behavioral_score"
+   ],
+   "t3a_d1_co_participant_briefing": [
+    "co_participant_ordinal"
+   ],
+   "t3a_d1_mentor_action_sequence": [
+    "beat_ordinal"
+   ],
+   "t3a_d1_question_capture_map": [
+    "control_ordinal"
+   ],
+   "t3a_d1_s1_reveal_response": [
+    "reveal_ordinal"
+   ],
+   "t3a_observation": [
+    "ordinal_anchor"
+   ],
+   "teacher_observations": [
+    "behavioral_scores"
+   ],
+   "training_certificates": [
+    "score"
+   ]
+  },
+  "tier/band/match": {
+   "candidate_profiles": [
+    "current_tier"
+   ],
+   "employer_profiles": [
+    "subscription_tier"
+   ],
+   "skill_passports": [
+    "readiness_tier"
+   ],
+   "t3a_discovery_query_log": [
+    "pool_band_after",
+    "pool_band_before"
+   ],
+   "talentvisa_quotas": [
+    "tier"
+   ]
+  },
+  "skill_passport": {
+   "candidate_profiles": [
+    "has_skill_passport"
+   ],
+   "skill_passports": [
+    "(table/view name)"
+   ]
+  },
+  "endorsement": {
+   "mentor_profiles": [
+    "total_endorsements"
+   ],
+   "observation_loops": [
+    "endorsement_decision"
+   ],
+   "endorsements": [
+    "(table/view name)"
+   ]
+  },
+  "level_1..4 / observation_level": {
+   "observation_loops": [
+    "observation_level"
+   ],
+   "observation_sessions": [
+    "observation_level"
+   ]
+  },
+  "sensitive demographics": {
+   "t3a_d1_statement_trace": [
+    "trace_body",
+    "trace_id"
+   ]
+  },
+  "outcome claims": {
+   "t3a_employer_hire_record": [
+    "hired_on"
+   ]
+  },
+  "dimensions_flagged/scores": {
+   "t3a_mentor_judgment": [
+    "dimensions_flagged"
+   ]
+  },
+  "ai suggestion/override": {
+   "t3a_mentor_judgment": [
+    "ai_assist_notes_accepted",
+    "ai_assist_notes_ignored"
+   ]
+  },
+  "escalate": {
+   "t3a_safety_event": [
+    "escalated_at",
+    "escalated_to_safety_contact"
+   ]
+  }
+ },
+ "m7_extra_by_table_nonT3A": {
+  "admin_settings": 4,
+  "behavioral_consistency_index": 11,
+  "bridgefast_content": 8,
+  "bridgefast_modules": 8,
+  "bridgefast_progress": 8,
+  "bridgefast_quiz_attempts": 8,
+  "bridgefast_quiz_questions": 8,
+  "candidate_profiles": 13,
+  "candidate_self_assessments": 8,
+  "conversation_participants": 6,
+  "conversations": 5,
+  "email_queue": 8,
+  "employer_profiles": 11,
+  "endorsements": 7,
+  "escrow_transactions": 16,
+  "growth_log_entries": 7,
+  "growth_logs": 6,
+  "liveworks_applications": 5,
+  "liveworks_milestones": 14,
+  "liveworks_projects": 13,
+  "mentor_assigned_dimensions": 7,
+  "mentor_assignments": 6,
+  "mentor_availability": 6,
+  "mentor_observations": 10,
+  "mentor_profiles": 13,
+  "mentor_sessions": 13,
+  "messages": 10,
+  "notifications": 10,
+  "observation_feedback": 13,
+  "observation_loops": 16,
+  "observation_sessions": 12,
+  "observation_synthesis": 11,
+  "profiles": 12,
+  "scenario_selection_audit": 5,
+  "school_cohorts": 9,
+  "school_profiles": 9,
+  "self_assessments": 7,
+  "session_reminders": 6,
+  "skill_passports": 8,
+  "students": 9,
+  "t3x_connections": 7,
+  "talentvisa_nominations": 8,
+  "talentvisa_quotas": 7,
+  "teacher_observations": 9,
+  "training_certificates": 6
+ },
+ "m7_extra_by_table_t3a": {
+  "t3a_action_sequence_rule": 2,
+  "t3a_anonymization_event": 2,
+  "t3a_attempt": 4,
+  "t3a_authority_snapshot": 4,
+  "t3a_ber_report": 4,
+  "t3a_ber_statement": 5,
+  "t3a_challenge_case": 7,
+  "t3a_change_classification": 9,
+  "t3a_coaching_feedback": 3,
+  "t3a_composed_statement": 4,
+  "t3a_conflict_declaration": 4,
+  "t3a_consent_state": 3,
+  "t3a_content_load_event": 9,
+  "t3a_content_object": 10,
+  "t3a_content_version": 11,
+  "t3a_correction_case": 8,
+  "t3a_coverage_snapshot": 5,
+  "t3a_d1_acceptance_evidence": 8,
+  "t3a_d1_acceptance_test": 6,
+  "t3a_d1_ai_administration_confirmation": 6,
+  "t3a_d1_ai_administration_run": 11,
+  "t3a_d1_approval_audit_finding": 6,
+  "t3a_d1_approval_basis": 7,
+  "t3a_d1_approval_basis_kind": 4,
+  "t3a_d1_approval_refusal_log": 6,
+  "t3a_d1_assurance_check": 7,
+  "t3a_d1_authority_register": 4,
+  "t3a_d1_bank_session_window": 2,
+  "t3a_d1_beat_capture_binding": 4,
+  "t3a_d1_beat_timestamp": 3,
+  "t3a_d1_ber_report": 5,
+  "t3a_d1_branch_rule": 4,
+  "t3a_d1_build_conflict_register": 7,
+  "t3a_d1_calibration_agreement": 5,
+  "t3a_d1_calibration_exercise": 8,
+  "t3a_d1_calibration_participation": 4,
+  "t3a_d1_capture_line": 6,
+  "t3a_d1_capture_resolution": 6,
+  "t3a_d1_capture_selection": 6,
+  "t3a_d1_capture_set": 5,
+  "t3a_d1_change_classification": 9,
+  "t3a_d1_co_participant_briefing": 4,
+  "t3a_d1_composed_statement": 10,
+  "t3a_d1_condition_precedence": 5,
+  "t3a_d1_confidential_concern": 5,
+  "t3a_d1_conflict_declaration": 4,
+  "t3a_d1_consent": 10,
+  "t3a_d1_consent_notice_version": 6,
+  "t3a_d1_consent_type": 2,
+  "t3a_d1_content_identity_assertion": 8,
+  "t3a_d1_content_load_event": 9,
+  "t3a_d1_content_version": 11,
+  "t3a_d1_corr006_evidence_item": 6,
+  "t3a_d1_correction_test": 9,
+  "t3a_d1_correction_test_outcome": 8,
+  "t3a_d1_founder_reapproval": 5,
+  "t3a_d1_group_session": 8,
+  "t3a_d1_group_session_member": 6,
+  "t3a_d1_involvement": 4,
+  "t3a_d1_issuance_floor_config": 6,
+  "t3a_d1_language_template": 7,
+  "t3a_d1_lift_condition": 8,
+  "t3a_d1_live_session": 7,
+  "t3a_d1_live_session_event": 6,
+  "t3a_d1_mentor_action_sequence": 8,
+  "t3a_d1_participant_review_action": 5,
+  "t3a_d1_pathway_audit": 4,
+  "t3a_d1_pilot_cohort": 11,
+  "t3a_d1_pilot_enrollment": 7,
+  "t3a_d1_pilot_event": 5,
+  "t3a_d1_production_release": 10,
+  "t3a_d1_production_runbook_step": 9,
+  "t3a_d1_progression_decision": 7,
+  "t3a_d1_question_capture_gap": 3,
+  "t3a_d1_question_capture_map": 11,
+  "t3a_d1_question_object": 6,
+  "t3a_d1_release_token": 10,
+  "t3a_d1_rendered_instance": 2,
+  "t3a_d1_report_block": 6,
+  "t3a_d1_report_controlled_text": 4,
+  "t3a_d1_report_disclosure": 10,
+  "t3a_d1_report_issuance": 7,
+  "t3a_d1_report_refusal_log": 5,
+  "t3a_d1_report_verification_token": 5,
+  "t3a_d1_resolution_refusal": 6,
+  "t3a_d1_resolution_rule": 6,
+  "t3a_d1_review_checklist_item": 3,
+  "t3a_d1_review_result": 6,
+  "t3a_d1_s1_confirmation": 3,
+  "t3a_d1_s1_determination": 4,
+  "t3a_d1_s1_provenance_slot": 5,
+  "t3a_d1_s1_reveal_response": 9,
+  "t3a_d1_s1_routing": 6,
+  "t3a_d1_s1_time_window": 2,
+  "t3a_d1_s1_workbench_session": 5,
+  "t3a_d1_s2_administration_variance": 5,
+  "t3a_d1_s2_live_view_signal": 4,
+  "t3a_d1_s2_mentor_load_event": 3,
+  "t3a_d1_s2_session_event": 6,
+  "t3a_d1_s4_theme_line": 4,
+  "t3a_d1_session_attestation": 3,
+  "t3a_d1_source_approval": 3,
+  "t3a_d1_source_approval_history": 14,
+  "t3a_d1_source_approval_provenance": 5,
+  "t3a_d1_source_approval_standing": 8,
+  "t3a_d1_source_name_clearance": 4,
+  "t3a_d1_specification_cooldown": 4,
+  "t3a_d1_stage4_impact_assessment": 10,
+  "t3a_d1_stage4_impact_assessment_part": 5,
+  "t3a_d1_stage4_refusal": 5,
+  "t3a_d1_stage_claim": 5,
+  "t3a_d1_stage_consent_requirement": 1,
+  "t3a_d1_statement_coverage": 3,
+  "t3a_d1_statement_library": 8,
+  "t3a_d1_statement_trace": 3,
+  "t3a_d1_superseded_capture_label": 4,
+  "t3a_d1_traceability_field": 3,
+  "t3a_d1_version_lineage": 5,
+  "t3a_d1_welfare_withdrawal": 7,
+  "t3a_d1_welfare_withholding": 5,
+  "t3a_d1_work_sample_submission": 13,
+  "t3a_destruction_event": 3,
+  "t3a_determination_question": 4,
+  "t3a_dimension_evidence": 3,
+  "t3a_disclosure": 11,
+  "t3a_discoverability": 4,
+  "t3a_discovery_query_log": 5,
+  "t3a_employer_account_audit": 19,
+  "t3a_employer_application": 10,
+  "t3a_employer_desk_config": 3,
+  "t3a_employer_desk_config_change": 5,
+  "t3a_employer_desk_event": 5,
+  "t3a_employer_hire_record": 5,
+  "t3a_employer_pool_entry": 14,
+  "t3a_employer_product_feedback": 6,
+  "t3a_employer_report_view": 3,
+  "t3a_employer_saved_report": 3,
+  "t3a_employer_workspace_note": 3,
+  "t3a_employment_link": 8,
+  "t3a_env_capability": 4,
+  "t3a_followup_metadata": 4,
+  "t3a_governance_config": 6,
+  "t3a_identity_assurance": 5,
+  "t3a_mentor_assignment": 2,
+  "t3a_mentor_authorization": 4,
+  "t3a_mentor_judgment": 14,
+  "t3a_mentor_request": 9,
+  "t3a_moderation_sample": 4,
+  "t3a_observation": 10,
+  "t3a_observation_gateway": 4,
+  "t3a_observation_path_gateway": 1,
+  "t3a_observation_record": 5,
+  "t3a_oversight_account_request": 9,
+  "t3a_oversight_action_catalogue": 3,
+  "t3a_oversight_disclosure": 5,
+  "t3a_oversight_holder": 7,
+  "t3a_oversight_log": 11,
+  "t3a_oversight_protected_surface": 3,
+  "t3a_participant_contact_consent": 3,
+  "t3a_privileged_access_event": 5,
+  "t3a_provenance": 10,
+  "t3a_rce_controlled_text": 4,
+  "t3a_rce_controlled_text_register": 5,
+  "t3a_rce_pilot_authorization": 6,
+  "t3a_rce_prohibited_vocabulary": 3,
+  "t3a_rce_standing_defect": 10,
+  "t3a_reconsideration_assignment": 8,
+  "t3a_record_informed_decision": 6,
+  "t3a_rehearsal_activity_history": 1,
+  "t3a_rehearsal_artifact": 1,
+  "t3a_rehearsal_session": 3,
+  "t3a_rehearsal_telemetry_aggregate": 2,
+  "t3a_rendered_instance": 2,
+  "t3a_resolution_refusal": 6,
+  "t3a_retention_schedule": 3,
+  "t3a_retired_library_reach": 7,
+  "t3a_retired_participant_sentence": 5,
+  "t3a_role_authorization": 10,
+  "t3a_role_grant": 6,
+  "t3a_role_grant_attempt": 11,
+  "t3a_safety_contact": 8,
+  "t3a_safety_event": 10,
+  "t3a_source": 2,
+  "t3a_source_approval": 3,
+  "t3a_source_name_clearance": 4,
+  "t3a_source_version": 5,
+  "t3a_stage_entry_event": 6,
+  "t3a_stage_instance": 4,
+  "t3a_statement_library": 3,
+  "t3a_suppression_event": 3,
+  "t3a_version_lineage": 5
+ }
+}

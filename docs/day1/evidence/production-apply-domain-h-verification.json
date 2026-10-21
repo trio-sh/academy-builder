@@ -1,0 +1,35 @@
+{
+ "mapped": [
+  {
+   "count": 17
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 346,
+   "unmapped": 176,
+   "passes": false
+  }
+ ],
+ "counts": [
+  {
+   "c": 0,
+   "cr": 0,
+   "cp": 0
+  }
+ ],
+ "triggers": [
+  {
+   "t": "t3a_challenge_case",
+   "trigger_name": "t3a_1_second_check_trg"
+  },
+  {
+   "t": "t3a_challenge_case",
+   "trigger_name": "t3a_1_second_check_trg"
+  },
+  {
+   "t": "t3a_d1_report_issuance",
+   "trigger_name": "t3a_1_issuance_hold_trg"
+  }
+ ]
+}

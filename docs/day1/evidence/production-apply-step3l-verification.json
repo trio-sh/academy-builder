@@ -1,0 +1,71 @@
+{
+ "fixtures": [
+  {
+   "identifier": "DEMO-D2-S1-001",
+   "approval_status": "drafting",
+   "operational_state": "not_loaded",
+   "se": "false",
+   "demo": "true",
+   "q": 15
+  },
+  {
+   "identifier": "DEMO-D2-S2-001",
+   "approval_status": "drafting",
+   "operational_state": "not_loaded",
+   "se": "false",
+   "demo": "true",
+   "q": 15
+  },
+  {
+   "identifier": "DEMO-D2-S3-001",
+   "approval_status": "drafting",
+   "operational_state": "not_loaded",
+   "se": "false",
+   "demo": "true",
+   "q": 15
+  },
+  {
+   "identifier": "DEMO-D2-S4-001",
+   "approval_status": "drafting",
+   "operational_state": "not_loaded",
+   "se": "false",
+   "demo": "true",
+   "q": 15
+  }
+ ],
+ "approvals": [
+  {
+   "n": 0
+  }
+ ],
+ "name_clearance": [
+  {
+   "n": 0
+  }
+ ],
+ "rights": [
+  {
+   "n": 0
+  }
+ ],
+ "drafting_rows": [
+  {
+   "n": 8
+  }
+ ],
+ "real_sources_unchanged": [
+  {
+   "n": 34
+  }
+ ],
+ "precondition_s1": [
+  {
+   "c": "not_submitted_for_approval"
+  }
+ ],
+ "precondition_s3": [
+  {
+   "c": "rights_route_absent"
+  }
+ ]
+}

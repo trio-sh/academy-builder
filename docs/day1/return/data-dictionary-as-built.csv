@@ -1,0 +1,2617 @@
+table,column,type,nullable,primary_key,default
+t3a_account,account_id,uuid,NO,yes,
+t3a_account,account_created_at,timestamp with time zone,NO,,now()
+t3a_account,account_creation_route,text,YES,,
+t3a_account,account_creation_route_capture_state,text,NO,,'not_captured'::text
+t3a_account,email_address,text,NO,,
+t3a_account,email_verification_state,text,NO,,'unverified'::text
+t3a_account,email_verification_sent_at,timestamp with time zone,YES,,
+t3a_account,email_verification_sent_at_capture_state,text,NO,,'not_captured'::text
+t3a_account,email_verified_at,timestamp with time zone,YES,,
+t3a_account,email_verified_at_capture_state,text,NO,,'not_captured'::text
+t3a_account,identity_assurance_method,text,NO,,'account_authentication'::text
+t3a_account,age_eligibility_attestation,text,YES,,
+t3a_account,record_property,text,NO,,'real'::text
+t3a_account,pilot_cohort_id,uuid,YES,,
+t3a_account,pilot_cohort_id_capture_state,text,NO,,'not_captured'::text
+t3a_account,account_state,text,NO,,'active'::text
+t3a_account,identity_link_status,text,NO,,'unverified'::text
+t3a_account,participant_lifecycle_state,text,YES,,
+t3a_account,participant_lifecycle_state_capture_state,text,NO,,'not_captured'::text
+t3a_account,capture_gaps,ARRAY,NO,,'{}'::text[]
+t3a_account,dictionary_version,text,NO,,'1.3'::text
+t3a_account,updated_at,timestamp with time zone,NO,,now()
+t3a_action_sequence_rule,rule_id,uuid,NO,yes,gen_random_uuid()
+t3a_action_sequence_rule,stage_code,text,NO,,
+t3a_action_sequence_rule,ordered_authorities,ARRAY,NO,,
+t3a_administration_form,stage_code,text,NO,yes,
+t3a_administration_form,administration_form_id,text,NO,,
+t3a_aggregate_dataset_socket,aggregate_dataset_definition_id,uuid,YES,,
+t3a_aggregate_dataset_socket,suppression_floor_k,integer,YES,,
+t3a_aggregate_dataset_socket,output_id,uuid,YES,,
+t3a_aggregate_dataset_socket,framing_disclaimer_version,text,YES,,
+t3a_aggregate_dataset_socket,delivered_at,timestamp with time zone,YES,,
+t3a_aggregate_dataset_socket,metric_definition_id,uuid,YES,,
+t3a_aggregate_dataset_socket,metric_definition_version,text,YES,,
+t3a_aggregate_dataset_socket,metric_allowed_use_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,analysis_population_rule_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,analysis_time_window_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,aggregate_source_snapshot_digest,character,YES,,
+t3a_aggregate_dataset_socket,aggregate_denominator_count,integer,YES,,
+t3a_aggregate_dataset_socket,aggregate_unknown_count,integer,YES,,
+t3a_aggregate_dataset_socket,source_version_mix_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,stage_mix_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,reidentification_review_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,publication_authorization_ref,uuid,YES,,
+t3a_aggregate_dataset_socket,public_trend_count_series,jsonb,YES,,
+t3a_aggregate_dataset_socket,concentration_risk_result,jsonb,YES,,
+t3a_ai_provenance_socket,served_instance_id,uuid,YES,,
+t3a_ai_provenance_socket,ai_model_deployment_id,uuid,YES,,
+t3a_ai_provenance_socket,ai_prompt_hash,character,YES,,
+t3a_ai_provenance_socket,ai_system_message_version,text,YES,,
+t3a_ai_provenance_socket,ai_output_schema_version,text,YES,,
+t3a_anonymization_event,anonymization_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_anonymization_event,retention_class,t3a_retention_class,NO,,
+t3a_anonymization_event,resource_type,text,NO,,
+t3a_anonymization_event,resource_id,uuid,NO,,
+t3a_anonymization_event,executed_at,timestamp with time zone,NO,,now()
+t3a_attempt,attempt_id,uuid,NO,yes,gen_random_uuid()
+t3a_attempt,participant_id,uuid,NO,,
+t3a_attempt,dimension_id,text,NO,,
+t3a_attempt,stage_code,t3a_stage_code,NO,,
+t3a_attempt,stage_entry_event_id,uuid,YES,,
+t3a_attempt,outcome,text,NO,,'initiated'::text
+t3a_attempt,counted,boolean,NO,,true
+t3a_attempt,created_at,timestamp with time zone,NO,,now()
+t3a_attempt,ended_at,timestamp with time zone,YES,,
+t3a_attempt,attempt_no,integer,YES,,
+t3a_attempt,attempt_event_class,text,YES,,
+t3a_attempt,attempt_rules_version,text,YES,,
+t3a_attempt,cooldown_class,text,YES,,
+t3a_attempt,cooldown_class_capture_state,text,NO,,'not_captured'::text
+t3a_attempt,cooldown_ends_at,timestamp with time zone,YES,,
+t3a_attempt,cooldown_ends_at_capture_state,text,NO,,'not_captured'::text
+t3a_attempt,attempt_reason,text,YES,,
+t3a_attempt,attempt_reason_capture_state,text,NO,,'not_captured'::text
+t3a_attempt,prior_progression_decision_ref,uuid,YES,,
+t3a_attempt,prior_progression_decision_ref_capture_state,text,NO,,'not_captured'::text
+t3a_attempt,cooldown_completed_at,timestamp with time zone,YES,,
+t3a_attempt,cooldown_completed_at_capture_state,text,NO,,'not_captured'::text
+t3a_attempt,s1_not_required_ruleset_id,uuid,YES,,
+t3a_attempt,s1_not_required_ruleset_id_capture_state,text,NO,,'not_captured'::text
+t3a_authority_snapshot,authority_snapshot_id,uuid,NO,yes,gen_random_uuid()
+t3a_authority_snapshot,actor_id,uuid,NO,,
+t3a_authority_snapshot,authority,t3a_authority,NO,,
+t3a_authority_snapshot,dimension_id,text,YES,,
+t3a_authority_snapshot,stage_code,text,YES,,
+t3a_authority_snapshot,role_authorization_id,uuid,YES,,
+t3a_authority_snapshot,snapshot,jsonb,NO,,
+t3a_authority_snapshot,captured_at,timestamp with time zone,NO,,now()
+t3a_ber_report,ber_report_id,uuid,NO,yes,gen_random_uuid()
+t3a_ber_report,participant_id,uuid,NO,,
+t3a_ber_report,version,integer,NO,,1
+t3a_ber_report,status,t3a_ber_status,NO,,'not_eligible'::t3a_ber_status
+t3a_ber_report,issue_metadata,jsonb,YES,,
+t3a_ber_report,supersedes,uuid,YES,,
+t3a_ber_report,permitted_use_version,text,YES,,
+t3a_ber_report,current_until,date,YES,,
+t3a_ber_report,created_at,timestamp with time zone,NO,,now()
+t3a_ber_statement,ber_statement_id,uuid,NO,yes,gen_random_uuid()
+t3a_ber_statement,ber_report_id,uuid,NO,,
+t3a_ber_statement,dimension_id,t3a_dimension_code,NO,,
+t3a_ber_statement,composed_statement_id,uuid,NO,,
+t3a_ber_statement,contributing_observation_ids,ARRAY,NO,,
+t3a_ber_statement,stages_contributing,ARRAY,NO,,
+t3a_ber_statement,recurrence_note,text,YES,,
+t3a_calibration_clearance,clearance_id,uuid,NO,yes,gen_random_uuid()
+t3a_calibration_clearance,dimension_id,text,NO,,
+t3a_calibration_clearance,reference_set_version,text,NO,,
+t3a_calibration_clearance,construct_version,text,NO,,
+t3a_calibration_clearance,determination_version,text,NO,,
+t3a_calibration_clearance,statement_version,text,NO,,
+t3a_calibration_clearance,source_version_ids,ARRAY,NO,,
+t3a_calibration_clearance,exercise_id,uuid,YES,,
+t3a_calibration_clearance,recorded_by,uuid,YES,,
+t3a_calibration_clearance,recorded_at,timestamp with time zone,NO,,now()
+t3a_calibration_participant,actor_id,uuid,NO,yes,
+t3a_calibration_participant,dimension_id,text,NO,yes,
+t3a_calibration_participant,status,text,NO,,'provisional'::text
+t3a_calibration_participant,recorded_at,timestamp with time zone,NO,,now()
+t3a_calibration_record,mentor_id,uuid,NO,,
+t3a_calibration_record,calibration_record_id,uuid,NO,yes,gen_random_uuid()
+t3a_calibration_record,stimulus_unit_id,uuid,YES,,
+t3a_calibration_record,stimulus_unit_id_capture_state,text,NO,,'not_captured'::text
+t3a_calibration_record,paired_determination_set_id,uuid,YES,,
+t3a_calibration_record,paired_determination_set_id_capture_state,text,NO,,'not_captured'::text
+t3a_calibration_record,agreement_statistic_inputs,jsonb,YES,,
+t3a_calibration_record,agreement_statistic_inputs_capture_state,text,NO,,'not_captured'::text
+t3a_calibration_record,agreement_threshold_version,text,YES,,
+t3a_calibration_record,agreement_threshold_version_capture_state,text,NO,,'not_captured'::text
+t3a_calibration_record,moderation_sample_flag,boolean,YES,,
+t3a_calibration_record,moderation_sample_flag_capture_state,text,NO,,'not_captured'::text
+t3a_calibration_record,recorded_at,timestamp with time zone,NO,,now()
+t3a_capture_config,singleton,boolean,NO,yes,true
+t3a_capture_config,enforce_required,boolean,NO,,false
+t3a_capture_config,updated_at,timestamp with time zone,NO,,now()
+t3a_capture_config,enforce_sequence,boolean,NO,,false
+t3a_capture_config,enable_lsa_sidecar,boolean,NO,,false
+t3a_capture_refusal,refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_capture_refusal,route,text,NO,,
+t3a_capture_refusal,reason_code,text,NO,,
+t3a_capture_refusal,subject_ref,text,YES,,
+t3a_capture_refusal,detail,text,YES,,
+t3a_capture_refusal,refused_at,timestamp with time zone,NO,,now()
+t3a_challenge_case,challenge_case_id,uuid,NO,yes,gen_random_uuid()
+t3a_challenge_case,ber_report_id,uuid,NO,,
+t3a_challenge_case,participant_id,uuid,NO,,
+t3a_challenge_case,disputed_statement_id,uuid,YES,,
+t3a_challenge_case,disputed_observation_id,uuid,YES,,
+t3a_challenge_case,challenge_ground,t3a_challenge_ground,NO,,
+t3a_challenge_case,status,t3a_challenge_status,NO,,'open'::t3a_challenge_status
+t3a_challenge_case,reviewer_assignment,uuid,YES,,
+t3a_challenge_case,evidence_disclosed_at,timestamp with time zone,YES,,
+t3a_challenge_case,outcome,text,YES,,
+t3a_challenge_case,outcome_reasoning,text,YES,,
+t3a_challenge_case,observation_notification_timestamp,timestamp with time zone,YES,,
+t3a_challenge_case,response_time_committed,interval,YES,,
+t3a_challenge_case,created_at,timestamp with time zone,NO,,now()
+t3a_challenge_case,evidence_disclosed_at_capture_state,text,NO,,'not_captured'::text
+t3a_challenge_case,opened_by,uuid,YES,,
+t3a_challenge_case,challenge_target_ref,uuid,YES,,
+t3a_challenge_case,second_check_actor_id,uuid,YES,,
+t3a_challenge_case,challenge_outcome,text,YES,,
+t3a_challenge_case,outcome_reason_code,text,YES,,
+t3a_challenge_case,resolved_at,timestamp with time zone,YES,,
+t3a_challenge_case,response_time_committed_version,text,YES,,
+t3a_challenge_case,issuance_hold,boolean,YES,,
+t3a_challenge_case,d1_ber_report_id,uuid,YES,,
+t3a_change_classification,change_classification_id,uuid,NO,yes,gen_random_uuid()
+t3a_change_classification,content_version_id,uuid,NO,,
+t3a_change_classification,kind,t3a_change_kind,NO,,
+t3a_change_classification,calibration_clearance_affecting,boolean,NO,,false
+t3a_change_classification,prior_clearance_carries_over,boolean,NO,,false
+t3a_change_classification,supersedes_change_id,uuid,YES,,
+t3a_change_classification,actor,uuid,YES,,
+t3a_change_classification,effective_date,timestamp with time zone,NO,,now()
+t3a_change_classification,rationale,text,YES,,
+t3a_change_request,asset_id,uuid,NO,,
+t3a_change_request,change_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_change_request,changed_by,uuid,NO,,
+t3a_change_request,changed_at,timestamp with time zone,NO,,now()
+t3a_change_request,compatibility_class,text,NO,,
+t3a_change_request,version_change_reason,text,NO,,
+t3a_change_request,approval_authority,text,NO,,
+t3a_change_request,version_hash,character,NO,,
+t3a_coaching_feedback,coaching_feedback_id,uuid,NO,yes,gen_random_uuid()
+t3a_coaching_feedback,rehearsal_session_id,uuid,NO,,
+t3a_coaching_feedback,feedback_body,text,NO,,
+t3a_coaching_feedback,acknowledged_at,timestamp with time zone,YES,,
+t3a_coaching_feedback,created_at,timestamp with time zone,NO,,now()
+t3a_coaching_feedback,feedback_acknowledged_at_capture_state,text,NO,,'not_captured'::text
+t3a_coaching_feedback,feedback_source_type,text,YES,,
+t3a_coaching_feedback,feedback_source_type_capture_state,text,NO,,'not_captured'::text
+t3a_coaching_feedback,feedback_viewed_at,timestamp with time zone,YES,,
+t3a_coaching_feedback,feedback_viewed_at_capture_state,text,NO,,'not_captured'::text
+t3a_cohort,created_at,timestamp with time zone,NO,,now()
+t3a_cohort,cohort_id,uuid,NO,yes,gen_random_uuid()
+t3a_cohort,cohort_type,text,NO,,
+t3a_cohort,cohort_definition_version,text,NO,,
+t3a_cohort,operating_jurisdiction_code,text,NO,,
+t3a_cohort,jurisdiction_rule_version,text,NO,,
+t3a_commit_seal,composed_statement_id,uuid,NO,yes,
+t3a_commit_seal,observation_ref,uuid,NO,,
+t3a_commit_seal,participant_id,uuid,NO,,
+t3a_commit_seal,dimension_id,text,NO,,
+t3a_commit_seal,is_superseding,boolean,NO,,false
+t3a_commit_seal,payload_hash,text,NO,,
+t3a_commit_seal,seal,text,NO,,
+t3a_commit_seal,key_version,text,NO,,'k1'::text
+t3a_commit_seal,sealed_at,timestamp with time zone,NO,,now()
+t3a_complaint,participant_id,uuid,NO,,
+t3a_complaint,raised_at,timestamp with time zone,NO,,now()
+t3a_complaint,complaint_id,uuid,NO,yes,gen_random_uuid()
+t3a_complaint,complaint_acknowledged_at,timestamp with time zone,YES,,
+t3a_composed_statement,composed_statement_id,uuid,NO,yes,gen_random_uuid()
+t3a_composed_statement,statement_id,uuid,NO,,
+t3a_composed_statement,rendered_body,text,NO,,
+t3a_composed_statement,composed_at,timestamp with time zone,NO,,now()
+t3a_composed_statement,statement_library_version,text,YES,,
+t3a_composed_statement,answer_key,jsonb,YES,,
+t3a_composed_statement,statement_version,text,YES,,
+t3a_composed_statement,statement_digest,character,YES,,
+t3a_configuration_value,configuration_key,text,NO,,
+t3a_configuration_value,configuration_value,text,NO,,
+t3a_configuration_value,configuration_version,text,NO,,
+t3a_configuration_value,set_by,uuid,NO,,
+t3a_configuration_value,set_at,timestamp with time zone,NO,,now()
+t3a_configuration_value,configuration_seq,bigint,NO,yes,
+t3a_conflict_declaration,conflict_declaration_id,uuid,NO,yes,gen_random_uuid()
+t3a_conflict_declaration,mentor_id,uuid,NO,,
+t3a_conflict_declaration,participant_id,uuid,YES,,
+t3a_conflict_declaration,employer_org_id,uuid,YES,,
+t3a_conflict_declaration,reason_class,text,NO,,
+t3a_conflict_declaration,declared_at,timestamp with time zone,NO,,now()
+t3a_conflict_declaration,cleared_at,timestamp with time zone,YES,,
+t3a_conflict_declaration,declared_entity_refs,ARRAY,YES,,
+t3a_conflict_declaration,recusal_id,uuid,YES,,
+t3a_consent_config,singleton,boolean,NO,yes,true
+t3a_consent_config,enforce_gate,boolean,NO,,false
+t3a_consent_config,updated_at,timestamp with time zone,NO,,now()
+t3a_consent_record,account_id,uuid,NO,,
+t3a_consent_record,consent_id,uuid,NO,yes,gen_random_uuid()
+t3a_consent_record,consent_type,text,NO,,
+t3a_consent_record,consent_status,text,NO,,
+t3a_consent_record,consent_timestamp,timestamp with time zone,NO,,now()
+t3a_consent_record,consent_copy_version,text,NO,,
+t3a_consent_record,consent_copy_hash,character,NO,,
+t3a_consent_record,consent_method,text,NO,,
+t3a_consent_record,consent_language,text,NO,,
+t3a_consent_record,consent_scope_dimension_id,text,YES,,
+t3a_consent_record,consent_scope_dimension_id_capture_state,text,NO,,'not_captured'::text
+t3a_consent_record,consent_scope_stage_code,text,YES,,
+t3a_consent_record,consent_scope_stage_code_capture_state,text,NO,,'not_captured'::text
+t3a_consent_record,consequence_displayed,boolean,YES,,
+t3a_consent_record,ip_address_hash,character,YES,,
+t3a_consent_record,ip_address_hash_capture_state,text,NO,,'not_captured'::text
+t3a_consent_record,processing_purpose_id,text,NO,,
+t3a_consent_record,authorization_basis_type,text,NO,,
+t3a_consent_record,consent_actor_id,uuid,NO,,
+t3a_consent_record,consent_effective_at,timestamp with time zone,YES,,
+t3a_consent_record,consent_effective_at_capture_state,text,NO,,'not_captured'::text
+t3a_consent_record,consent_expires_at,timestamp with time zone,YES,,
+t3a_consent_record,consent_expires_at_capture_state,text,NO,,'not_captured'::text
+t3a_consent_record,historical_reuse_scope,text,NO,,'future_only'::text
+t3a_consent_record,recorded_seq,bigint,NO,,
+t3a_consent_refusal,refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_consent_refusal,account_id,uuid,YES,,
+t3a_consent_refusal,consent_type,text,YES,,
+t3a_consent_refusal,reason_code,text,NO,,
+t3a_consent_refusal,detail,text,YES,,
+t3a_consent_refusal,refused_at,timestamp with time zone,NO,,now()
+t3a_consent_state,consent_state_id,uuid,NO,yes,gen_random_uuid()
+t3a_consent_state,participant_id,uuid,NO,,
+t3a_consent_state,consent_type,text,NO,,
+t3a_consent_state,consent_status,text,NO,,
+t3a_consent_state,consent_timestamp,timestamp with time zone,NO,,now()
+t3a_consent_state,consent_copy_version,text,NO,,
+t3a_consent_state,consent_method,text,NO,,
+t3a_consent_state,language_preference,text,YES,,
+t3a_consent_state,jurisdiction_code,text,YES,,
+t3a_consent_state,created_at,timestamp with time zone,NO,,now()
+t3a_consent_state_ref,account_id,uuid,NO,,
+t3a_consent_state_ref,consent_state_ref,uuid,NO,yes,gen_random_uuid()
+t3a_consent_state_ref,consent_ids,ARRAY,NO,,'{}'::uuid[]
+t3a_consent_state_ref,created_at,timestamp with time zone,NO,,now()
+t3a_consent_supersession,consent_id,uuid,NO,yes,
+t3a_consent_supersession,superseded_by,uuid,NO,,
+t3a_contact_consent,contact_consent_id,uuid,NO,yes,gen_random_uuid()
+t3a_contact_consent,account_id,uuid,NO,,
+t3a_contact_consent,contact_consent_status,text,YES,,
+t3a_contact_consent,contact_consent_status_capture_state,text,NO,,'not_captured'::text
+t3a_contact_consent,contact_consent_at,timestamp with time zone,YES,,
+t3a_contact_consent,contact_consent_at_capture_state,text,NO,,'not_captured'::text
+t3a_contact_consent,recorded_at,timestamp with time zone,NO,,now()
+t3a_contact_permission,contact_permission_id,uuid,NO,yes,gen_random_uuid()
+t3a_contact_permission,participant_id,uuid,NO,,
+t3a_contact_permission,granted_state,text,NO,,
+t3a_contact_permission,granted_at,timestamp with time zone,NO,,now()
+t3a_contact_permission,notice_version,text,NO,,
+t3a_contact_permission,notice_hash,text,NO,,
+t3a_content_load_event,content_load_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_content_load_event,env_state,t3a_env_state,NO,,
+t3a_content_load_event,content_object_id,uuid,NO,,
+t3a_content_load_event,content_version_id,uuid,NO,,
+t3a_content_load_event,governed_status,t3a_governed_config_status,NO,,
+t3a_content_load_event,loaded_by,uuid,YES,,
+t3a_content_load_event,loaded_at,timestamp with time zone,NO,,now()
+t3a_content_load_event,manifest_id,uuid,YES,,
+t3a_content_load_event,notes,text,YES,,
+t3a_content_object,content_object_id,uuid,NO,yes,gen_random_uuid()
+t3a_content_object,identifier,text,NO,,
+t3a_content_object,family,t3a_content_family,NO,,
+t3a_content_object,title,text,NO,,
+t3a_content_object,dimension_id,text,YES,,
+t3a_content_object,current_version_id,uuid,YES,,
+t3a_content_object,current_operational_state,t3a_operational_state,NO,,'not_applicable'::t3a_operational_state
+t3a_content_object,created_at,timestamp with time zone,NO,,now()
+t3a_content_object,created_by,uuid,YES,,
+t3a_content_object,updated_at,timestamp with time zone,NO,,now()
+t3a_content_object,updated_by,uuid,YES,,
+t3a_content_object,retired_at,timestamp with time zone,YES,,
+t3a_content_object,retired_by,uuid,YES,,
+t3a_content_object,retired_reason,text,YES,,
+t3a_content_version,content_version_id,uuid,NO,yes,gen_random_uuid()
+t3a_content_version,content_object_id,uuid,NO,,
+t3a_content_version,version_no,text,NO,,
+t3a_content_version,approval_status,t3a_approval_status,NO,,'drafting'::t3a_approval_status
+t3a_content_version,operational_state,t3a_operational_state,NO,,'not_applicable'::t3a_operational_state
+t3a_content_version,approved_by,uuid,YES,,
+t3a_content_version,approved_at,timestamp with time zone,YES,,
+t3a_content_version,effective_at,timestamp with time zone,YES,,
+t3a_content_version,superseded_by,uuid,YES,,
+t3a_content_version,retired_at,timestamp with time zone,YES,,
+t3a_content_version,retired_reason,text,YES,,
+t3a_content_version,body,jsonb,NO,,'{}'::jsonb
+t3a_content_version,body_hash,text,YES,,
+t3a_content_version,created_at,timestamp with time zone,NO,,now()
+t3a_content_version,created_by,uuid,YES,,
+t3a_control_run,control_code,text,NO,,
+t3a_control_run,result,text,NO,,
+t3a_control_run,control_run_id,uuid,NO,yes,gen_random_uuid()
+t3a_control_run,run_at,timestamp with time zone,NO,,now()
+t3a_correction_case,correction_case_id,uuid,NO,yes,gen_random_uuid()
+t3a_correction_case,raised_by,uuid,NO,,
+t3a_correction_case,participant_id,uuid,NO,,
+t3a_correction_case,ground,text,NO,,
+t3a_correction_case,narrative,text,YES,,
+t3a_correction_case,status,text,NO,,'open'::text
+t3a_correction_case,raised_at,timestamp with time zone,NO,,now()
+t3a_correction_case,resolved_at,timestamp with time zone,YES,,
+t3a_correction_case,challenge_status,t3a_d1_challenge_case_status,NO,,'open'::t3a_d1_challenge_case_status
+t3a_correction_case,terminal_outcome,t3a_d1_challenge_case_status,YES,,
+t3a_correction_case,ber_report_id,uuid,YES,,
+t3a_correction_request,ber_report_id,uuid,YES,,
+t3a_correction_request,participant_id,uuid,NO,,
+t3a_correction_request,requested_at,timestamp with time zone,NO,,now()
+t3a_correction_request,correction_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_correction_request,correction_outcome,text,YES,,
+t3a_coverage_snapshot,snapshot_id,uuid,NO,yes,gen_random_uuid()
+t3a_coverage_snapshot,published_at,timestamp with time zone,NO,,now()
+t3a_coverage_snapshot,reports_available,integer,NO,,
+t3a_coverage_snapshot,areas_in_service,ARRAY,NO,,ARRAY[]::text[]
+t3a_coverage_snapshot,previous_snapshot_id,uuid,YES,,
+t3a_cross_context_relationship,dimension_id,text,NO,yes,
+t3a_cross_context_relationship,source_version_a,uuid,NO,yes,
+t3a_cross_context_relationship,source_version_b,uuid,NO,yes,
+t3a_cross_context_relationship,approved_by,uuid,NO,,
+t3a_cross_context_relationship,approved_at,timestamp with time zone,NO,,now()
+t3a_cross_dimension_pattern_map,dimension_a,text,NO,yes,
+t3a_cross_dimension_pattern_map,pattern_a,text,NO,yes,
+t3a_cross_dimension_pattern_map,dimension_b,text,NO,yes,
+t3a_cross_dimension_pattern_map,pattern_b,text,NO,yes,
+t3a_cross_dimension_pattern_map,approved_by,uuid,NO,,
+t3a_cross_dimension_pattern_map,approved_at,timestamp with time zone,NO,,now()
+t3a_d1_acceptance_evidence,evidence_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_acceptance_evidence,test_id,text,NO,,
+t3a_d1_acceptance_evidence,outcome,t3a_d1_acceptance_outcome,NO,,
+t3a_d1_acceptance_evidence,actual_result,text,NO,,
+t3a_d1_acceptance_evidence,build_version,text,NO,,
+t3a_d1_acceptance_evidence,tester,text,NO,,
+t3a_d1_acceptance_evidence,executed_at,timestamp with time zone,NO,,now()
+t3a_d1_acceptance_evidence,conflict_note,text,YES,,
+t3a_d1_acceptance_test,test_id,text,NO,yes,
+t3a_d1_acceptance_test,section_ref,text,NO,,
+t3a_d1_acceptance_test,section_title,text,NO,,
+t3a_d1_acceptance_test,test_name,text,NO,,
+t3a_d1_acceptance_test,required_result,text,NO,,
+t3a_d1_acceptance_test,display_order,integer,NO,,
+t3a_d1_ai_administration_confirmation,ai_administration_confirmation_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_ai_administration_confirmation,ai_administration_run_id,uuid,NO,,
+t3a_d1_ai_administration_confirmation,stage_entry_event_id,uuid,NO,,
+t3a_d1_ai_administration_confirmation,source_version_id,uuid,NO,,
+t3a_d1_ai_administration_confirmation,confirmed_by,uuid,NO,,
+t3a_d1_ai_administration_confirmation,authority_snapshot_id,uuid,YES,,
+t3a_d1_ai_administration_confirmation,confirmed_at,timestamp with time zone,NO,,now()
+t3a_d1_ai_administration_confirmation,confirmation_note,text,YES,,
+t3a_d1_ai_administration_run,ai_administration_run_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_ai_administration_run,stage_entry_event_id,uuid,NO,,
+t3a_d1_ai_administration_run,participant_id,uuid,NO,,
+t3a_d1_ai_administration_run,dimension_id,text,NO,,
+t3a_d1_ai_administration_run,source_version_id,uuid,NO,,
+t3a_d1_ai_administration_run,model_ref_version_id,uuid,NO,,
+t3a_d1_ai_administration_run,prompt_ref_version_id,uuid,NO,,
+t3a_d1_ai_administration_run,admin_config_version_id,uuid,NO,,
+t3a_d1_ai_administration_run,safety_config_version_id,uuid,NO,,
+t3a_d1_ai_administration_run,rendered_body,text,NO,,
+t3a_d1_ai_administration_run,rendered_body_hash,text,YES,,
+t3a_d1_ai_administration_run,env_state_at_run,t3a_env_state,NO,,
+t3a_d1_ai_administration_run,run_started_at,timestamp with time zone,NO,,now()
+t3a_d1_ai_administration_run,run_completed_at,timestamp with time zone,YES,,
+t3a_d1_ai_administration_run,status,text,NO,,'in_progress'::text
+t3a_d1_approval_audit_finding,approval_audit_finding_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_approval_audit_finding,source_approval_id,uuid,NO,,
+t3a_d1_approval_audit_finding,finding,text,NO,,
+t3a_d1_approval_audit_finding,established,jsonb,NO,,
+t3a_d1_approval_audit_finding,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_approval_audit_finding,recorded_by,text,NO,,
+t3a_d1_approval_basis,source_approval_id,uuid,NO,yes,
+t3a_d1_approval_basis,basis_kind,text,NO,,
+t3a_d1_approval_basis,referenced_identifier,text,YES,,
+t3a_d1_approval_basis,basis_text,text,YES,,
+t3a_d1_approval_basis,basis_entered_on,date,NO,,
+t3a_d1_approval_basis,recorded_under,text,NO,,
+t3a_d1_approval_basis,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_approval_basis_kind,basis_kind,text,NO,yes,
+t3a_d1_approval_basis_kind,records,text,NO,,
+t3a_d1_approval_basis_kind,requires_referenced_identifier,boolean,NO,,
+t3a_d1_approval_basis_kind,closed_list_under,text,NO,,
+t3a_d1_approval_refusal_log,approval_refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_approval_refusal_log,source_id,uuid,YES,,
+t3a_d1_approval_refusal_log,source_version_id,uuid,YES,,
+t3a_d1_approval_refusal_log,attempted_status,text,YES,,
+t3a_d1_approval_refusal_log,refusal_code,text,NO,,
+t3a_d1_approval_refusal_log,standing_at_refusal,text,YES,,
+t3a_d1_approval_refusal_log,attempted_by,uuid,YES,,
+t3a_d1_approval_refusal_log,refused_at,timestamp with time zone,NO,,now()
+t3a_d1_assurance_check,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_assurance_check,sweep_id,uuid,NO,,
+t3a_d1_assurance_check,kind,t3a_d1_assurance_check_kind,NO,,
+t3a_d1_assurance_check,target_id,uuid,NO,,
+t3a_d1_assurance_check,result,t3a_d1_assurance_result,NO,,
+t3a_d1_assurance_check,observation,text,YES,,
+t3a_d1_assurance_check,checked_at,timestamp with time zone,NO,,now()
+t3a_d1_authority_register,key,text,NO,yes,
+t3a_d1_authority_register,category,text,NO,,
+t3a_d1_authority_register,state,t3a_d1_authority_state,NO,,'UNSET'::t3a_d1_authority_state
+t3a_d1_authority_register,payload,jsonb,YES,,
+t3a_d1_authority_register,set_by,uuid,YES,,
+t3a_d1_authority_register,set_at,timestamp with time zone,YES,,
+t3a_d1_authority_register,note,text,YES,,
+t3a_d1_authority_register,updated_at,timestamp with time zone,NO,,now()
+t3a_d1_bank_session_window,stage_code,t3a_stage_code,NO,yes,
+t3a_d1_bank_session_window,min_seconds,integer,NO,,
+t3a_d1_bank_session_window,max_seconds,integer,NO,,
+t3a_d1_bank_session_window,issued_under,text,NO,,
+t3a_d1_bank_session_window,note,text,NO,,
+t3a_d1_beat_capture_binding,source_identifier,text,NO,yes,
+t3a_d1_beat_capture_binding,beat_code,text,NO,yes,
+t3a_d1_beat_capture_binding,capture_set_code,text,NO,yes,
+t3a_d1_beat_capture_binding,revisable,boolean,NO,,false
+t3a_d1_beat_capture_binding,qualifier_as_written,text,YES,,
+t3a_d1_beat_capture_binding,dimension_id,text,NO,,
+t3a_d1_beat_timestamp,stage_entry_event_id,uuid,NO,yes,
+t3a_d1_beat_timestamp,beat_code,text,NO,yes,
+t3a_d1_beat_timestamp,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_beat_timestamp,duration_seconds,integer,YES,,
+t3a_d1_beat_timestamp,recorded_by,uuid,NO,,auth.uid()
+t3a_d1_ber_report,ber_report_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_ber_report,participant_id,uuid,NO,,
+t3a_d1_ber_report,dimension_id,text,NO,,
+t3a_d1_ber_report,status,t3a_d1_ber_status,NO,,'participant_review'::t3a_d1_ber_status
+t3a_d1_ber_report,version_set,jsonb,NO,,'{}'::jsonb
+t3a_d1_ber_report,supersedes,uuid,YES,,
+t3a_d1_ber_report,assembled_at,timestamp with time zone,NO,,now()
+t3a_d1_ber_report,review_completed_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,issued_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,amended_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,withdrawn_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,ber_version,text,YES,,
+t3a_d1_ber_report,ber_standard_version,text,YES,,
+t3a_d1_ber_report,permitted_use_version,text,YES,,
+t3a_d1_ber_report,represented_dimension_ids,ARRAY,YES,,
+t3a_d1_ber_report,observer_multiplicity_statement_code,text,YES,,
+t3a_d1_ber_report,source_link,jsonb,YES,,
+t3a_d1_ber_report,ber_status,text,YES,,
+t3a_d1_ber_report,participant_review_opened_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,participant_review_opened_at_capture_state,text,NO,,'not_captured'::text
+t3a_d1_ber_report,participant_review_completed_at,timestamp with time zone,YES,,
+t3a_d1_ber_report,participant_review_completed_at_capture_state,text,NO,,'not_captured'::text
+t3a_d1_ber_report,specimen_render_flag,boolean,YES,,
+t3a_d1_ber_report,report_type,text,YES,,
+t3a_d1_ber_report,report_preview_digest,character,YES,,
+t3a_d1_ber_report,preview_state,text,YES,,
+t3a_d1_ber_report,report_content_digest,character,YES,,
+t3a_d1_ber_report,verification_code,text,YES,,
+t3a_d1_branch_rule,rule_code,text,NO,yes,
+t3a_d1_branch_rule,rule_condition,text,NO,,
+t3a_d1_branch_rule,rule_effect,text,NO,,
+t3a_d1_branch_rule,rule_order,integer,NO,,
+t3a_d1_branch_rule,dimension_id,text,NO,,
+t3a_d1_branch_rule,parent_question,text,YES,,
+t3a_d1_branch_rule,child_question,text,YES,,
+t3a_d1_branch_rule,serving_answers,ARRAY,YES,,
+t3a_d1_build_conflict_register,entry_id,text,NO,yes,
+t3a_d1_build_conflict_register,opened_by,text,NO,,
+t3a_d1_build_conflict_register,scope,text,NO,,
+t3a_d1_build_conflict_register,classification,text,NO,,
+t3a_d1_build_conflict_register,status,text,NO,,
+t3a_d1_build_conflict_register,blocked_on,text,YES,,
+t3a_d1_build_conflict_register,amended_by,text,YES,,
+t3a_d1_build_conflict_register,note,text,NO,,
+t3a_d1_build_conflict_register,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_calibration_agreement,exercise_id,uuid,NO,yes,
+t3a_d1_calibration_agreement,reviewer_count,integer,NO,,0
+t3a_d1_calibration_agreement,submitted_count,integer,NO,,0
+t3a_d1_calibration_agreement,agreement_body,jsonb,NO,,'{}'::jsonb
+t3a_d1_calibration_agreement,computed_at,timestamp with time zone,NO,,now()
+t3a_d1_calibration_exercise,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_calibration_exercise,title,text,NO,,
+t3a_d1_calibration_exercise,purpose_note,text,YES,,
+t3a_d1_calibration_exercise,evidence_bundle,jsonb,NO,,'[]'::jsonb
+t3a_d1_calibration_exercise,reviewer_prompt,text,NO,,
+t3a_d1_calibration_exercise,state,t3a_d1_calibration_state,NO,,'draft'::t3a_d1_calibration_state
+t3a_d1_calibration_exercise,opened_at,timestamp with time zone,YES,,
+t3a_d1_calibration_exercise,opened_by,uuid,YES,,
+t3a_d1_calibration_exercise,closed_at,timestamp with time zone,YES,,
+t3a_d1_calibration_exercise,closed_by,uuid,YES,,
+t3a_d1_calibration_exercise,created_at,timestamp with time zone,NO,,now()
+t3a_d1_calibration_exercise,created_by,uuid,YES,,
+t3a_d1_calibration_exercise,dimension_id,text,NO,,
+t3a_d1_calibration_exercise,question_codes,ARRAY,NO,,'{}'::text[]
+t3a_d1_calibration_participation,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_calibration_participation,exercise_id,uuid,NO,,
+t3a_d1_calibration_participation,reviewer_id,uuid,NO,,
+t3a_d1_calibration_participation,decision_body,jsonb,NO,,'{}'::jsonb
+t3a_d1_calibration_participation,submitted_at,timestamp with time zone,YES,,
+t3a_d1_calibration_participation,created_at,timestamp with time zone,NO,,now()
+t3a_d1_capture_line,capture_line_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_capture_line,capture_set_code,text,NO,,
+t3a_d1_capture_line,line_text,text,NO,,
+t3a_d1_capture_line,line_order,integer,NO,,
+t3a_d1_capture_line,branch_code,text,YES,,
+t3a_d1_capture_line,is_whole_session_answer,boolean,NO,,false
+t3a_d1_capture_line,dimension_id,text,NO,,
+t3a_d1_capture_resolution,resolution_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_capture_resolution,question_code,text,NO,,
+t3a_d1_capture_resolution,capture_set_code,text,NO,,
+t3a_d1_capture_resolution,capture_line_order,integer,NO,,
+t3a_d1_capture_resolution,statement_key,text,NO,,
+t3a_d1_capture_resolution,conduct_element,text,NO,,
+t3a_d1_capture_resolution,dimension_id,text,NO,,
+t3a_d1_capture_selection,capture_selection_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_capture_selection,stage_entry_event_id,uuid,NO,,
+t3a_d1_capture_selection,question_code,text,NO,,
+t3a_d1_capture_selection,capture_set_code,text,NO,,
+t3a_d1_capture_selection,beat_code,text,NO,,
+t3a_d1_capture_selection,line_order,integer,NO,,
+t3a_d1_capture_selection,selected_by,uuid,YES,,
+t3a_d1_capture_selection,selected_at,timestamp with time zone,NO,,now()
+t3a_d1_capture_selection,dimension_id,text,NO,,
+t3a_d1_capture_set,capture_set_code,text,NO,yes,
+t3a_d1_capture_set,title,text,NO,,
+t3a_d1_capture_set,applicability_note,text,YES,,
+t3a_d1_capture_set,display_order,integer,NO,,
+t3a_d1_capture_set,records_first_occurrence,boolean,NO,,false
+t3a_d1_capture_set,dimension_id,text,NO,yes,
+t3a_d1_change_classification,change_classification_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_change_classification,content_version_id,uuid,NO,,
+t3a_d1_change_classification,kind,t3a_change_kind,NO,,
+t3a_d1_change_classification,calibration_clearance_affecting,boolean,NO,,false
+t3a_d1_change_classification,prior_clearance_carries_over,boolean,NO,,false
+t3a_d1_change_classification,supersedes_change_id,uuid,YES,,
+t3a_d1_change_classification,actor,uuid,YES,,
+t3a_d1_change_classification,effective_date,timestamp with time zone,NO,,now()
+t3a_d1_change_classification,rationale,text,YES,,
+t3a_d1_co_participant_briefing,source_identifier,text,NO,yes,
+t3a_d1_co_participant_briefing,co_participant_ordinal,integer,NO,yes,
+t3a_d1_co_participant_briefing,stated_at_beat,text,NO,,
+t3a_d1_co_participant_briefing,position_text,text,NO,,
+t3a_d1_composed_statement,composed_statement_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_composed_statement,observation_record_id,uuid,NO,,
+t3a_d1_composed_statement,statement_library_id,uuid,NO,,
+t3a_d1_composed_statement,resolution_rule_id,uuid,NO,,
+t3a_d1_composed_statement,composed_body,text,NO,,
+t3a_d1_composed_statement,answer_pattern_snapshot,jsonb,NO,,
+t3a_d1_composed_statement,bound_variable_values,jsonb,NO,,'{}'::jsonb
+t3a_d1_composed_statement,supersedes,uuid,YES,,
+t3a_d1_composed_statement,version_set,jsonb,NO,,'{}'::jsonb
+t3a_d1_composed_statement,composed_at,timestamp with time zone,NO,,now()
+t3a_d1_composed_statement,composed_by,uuid,YES,,
+t3a_d1_condition_precedence,condition_code,text,NO,yes,
+t3a_d1_condition_precedence,precedence_order,integer,NO,,
+t3a_d1_condition_precedence,language_template_id,text,YES,,
+t3a_d1_condition_precedence,renders_before_conduct,boolean,NO,,
+t3a_d1_condition_precedence,effect,text,NO,,
+t3a_d1_condition_precedence,dimension_id,text,NO,yes,
+t3a_d1_confidential_concern,concern_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_confidential_concern,participant_id,uuid,NO,,
+t3a_d1_confidential_concern,dimension_id,text,YES,,
+t3a_d1_confidential_concern,narrative,text,NO,,
+t3a_d1_confidential_concern,status,text,NO,,'open'::text
+t3a_d1_confidential_concern,routed_to,uuid,YES,,
+t3a_d1_confidential_concern,raised_at,timestamp with time zone,NO,,now()
+t3a_d1_confidential_concern,resolved_at,timestamp with time zone,YES,,
+t3a_d1_conflict_declaration,conflict_declaration_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_conflict_declaration,actor_id,uuid,NO,,
+t3a_d1_conflict_declaration,target_kind,text,NO,,
+t3a_d1_conflict_declaration,target_ref,text,NO,,
+t3a_d1_conflict_declaration,declared_at,timestamp with time zone,NO,,now()
+t3a_d1_conflict_declaration,rationale,text,YES,,
+t3a_d1_conflict_declaration,revoked_at,timestamp with time zone,YES,,
+t3a_d1_consent,consent_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_consent,participant_id,uuid,NO,,
+t3a_d1_consent,consent_type,text,NO,,
+t3a_d1_consent,notice_version_id,text,NO,,
+t3a_d1_consent,notice_version_hash,text,NO,,
+t3a_d1_consent,stage_class,text,YES,,
+t3a_d1_consent,stage_instance_id,uuid,YES,,
+t3a_d1_consent,source_version_id,uuid,YES,,
+t3a_d1_consent,state,text,NO,,'NOT_REQUESTED'::text
+t3a_d1_consent,granted_at,timestamp with time zone,YES,,
+t3a_d1_consent,declined_at,timestamp with time zone,YES,,
+t3a_d1_consent,withdrawn_at,timestamp with time zone,YES,,
+t3a_d1_consent,capture_channel,text,YES,,
+t3a_d1_consent,capture_actor,uuid,YES,,
+t3a_d1_consent,superseded_by,uuid,YES,,
+t3a_d1_consent,audit_ref,uuid,YES,,
+t3a_d1_consent,created_at,timestamp with time zone,NO,,now()
+t3a_d1_consent_notice_version,notice_version_id,text,NO,yes,
+t3a_d1_consent_notice_version,notice_version_hash,text,NO,,
+t3a_d1_consent_notice_version,names_google_meet,boolean,NO,,false
+t3a_d1_consent_notice_version,states_no_recording,boolean,NO,,false
+t3a_d1_consent_notice_version,approved_at,timestamp with time zone,YES,,
+t3a_d1_consent_notice_version,approved_by_as_signed,text,YES,,
+t3a_d1_consent_notice_version,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_consent_type,consent_type,text,NO,yes,
+t3a_d1_consent_type,covers,text,NO,,
+t3a_d1_consent_type,available,boolean,NO,,
+t3a_d1_content_identity_assertion,source_identifier,text,NO,yes,
+t3a_d1_content_identity_assertion,superseded_version_id,uuid,NO,yes,
+t3a_d1_content_identity_assertion,current_version_id,uuid,NO,,
+t3a_d1_content_identity_assertion,field_name,text,NO,yes,
+t3a_d1_content_identity_assertion,previous_value,text,YES,,
+t3a_d1_content_identity_assertion,corrected_value,text,YES,,
+t3a_d1_content_identity_assertion,is_superset,boolean,NO,,
+t3a_d1_content_identity_assertion,asserted_at,timestamp with time zone,NO,,now()
+t3a_d1_content_load_event,content_load_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_content_load_event,env_state,t3a_env_state,NO,,
+t3a_d1_content_load_event,content_object_id,uuid,NO,,
+t3a_d1_content_load_event,content_version_id,uuid,NO,,
+t3a_d1_content_load_event,governed_status,t3a_governed_config_status,NO,,
+t3a_d1_content_load_event,loaded_by,uuid,YES,,
+t3a_d1_content_load_event,loaded_at,timestamp with time zone,NO,,now()
+t3a_d1_content_load_event,manifest_id,uuid,YES,,
+t3a_d1_content_load_event,notes,text,YES,,
+t3a_d1_content_version,content_version_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_content_version,content_object_id,uuid,NO,,
+t3a_d1_content_version,version_no,text,NO,,
+t3a_d1_content_version,approval_status,t3a_approval_status,NO,,'drafting'::t3a_approval_status
+t3a_d1_content_version,operational_state,t3a_operational_state,NO,,'not_applicable'::t3a_operational_state
+t3a_d1_content_version,approved_by,uuid,YES,,
+t3a_d1_content_version,approved_at,timestamp with time zone,YES,,
+t3a_d1_content_version,effective_at,timestamp with time zone,YES,,
+t3a_d1_content_version,superseded_by,uuid,YES,,
+t3a_d1_content_version,retired_at,timestamp with time zone,YES,,
+t3a_d1_content_version,retired_reason,text,YES,,
+t3a_d1_content_version,body,jsonb,NO,,'{}'::jsonb
+t3a_d1_content_version,body_hash,text,YES,,
+t3a_d1_content_version,created_at,timestamp with time zone,NO,,now()
+t3a_d1_content_version,created_by,uuid,YES,,
+t3a_d1_corr006_evidence_item,item,text,NO,yes,
+t3a_d1_corr006_evidence_item,asked_for,text,NO,,
+t3a_d1_corr006_evidence_item,expected,text,NO,,
+t3a_d1_corr006_evidence_item,verdict,text,NO,,
+t3a_d1_corr006_evidence_item,measured,text,NO,,
+t3a_d1_corr006_evidence_item,where_proved,text,YES,,
+t3a_d1_correction_test,correction_test_id,text,NO,yes,
+t3a_d1_correction_test,instrument,text,NO,,
+t3a_d1_correction_test,test_name,text,NO,,
+t3a_d1_correction_test,fixture,text,NO,,
+t3a_d1_correction_test,required_result,text,NO,,
+t3a_d1_correction_test,restated_by,text,YES,,
+t3a_d1_correction_test,supersedes_fixture,text,YES,,
+t3a_d1_correction_test,why_restated,text,YES,,
+t3a_d1_correction_test,defined_at,timestamp with time zone,NO,,now()
+t3a_d1_correction_test_outcome,outcome_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_correction_test_outcome,correction_test_id,text,NO,,
+t3a_d1_correction_test_outcome,outcome,text,NO,,
+t3a_d1_correction_test_outcome,actual_result,text,NO,,
+t3a_d1_correction_test_outcome,build_version,text,NO,,
+t3a_d1_correction_test_outcome,tester,text,NO,,
+t3a_d1_correction_test_outcome,executed_at,timestamp with time zone,NO,,now()
+t3a_d1_correction_test_outcome,conflict_note,text,YES,,
+t3a_d1_founder_reapproval,source_identifier,text,NO,yes,
+t3a_d1_founder_reapproval,source_version_id,uuid,NO,yes,
+t3a_d1_founder_reapproval,basis,text,NO,,
+t3a_d1_founder_reapproval,approver_as_signed,text,NO,,
+t3a_d1_founder_reapproval,signed_on,date,NO,,
+t3a_d1_founder_reapproval,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_group_session,group_session_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_group_session,source_version_id,uuid,YES,,
+t3a_d1_group_session,stage_instance_id,uuid,YES,,
+t3a_d1_group_session,facilitator_id,uuid,NO,,
+t3a_d1_group_session,observed_participant_id,uuid,NO,,
+t3a_d1_group_session,composed_at,timestamp with time zone,NO,,now()
+t3a_d1_group_session,accommodation_settled,boolean,NO,,false
+t3a_d1_group_session,started_at,timestamp with time zone,YES,,
+t3a_d1_group_session,ended_at,timestamp with time zone,YES,,
+t3a_d1_group_session,paused_at,timestamp with time zone,YES,,
+t3a_d1_group_session_member,member_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_group_session_member,group_session_id,uuid,NO,,
+t3a_d1_group_session_member,participant_id,uuid,NO,,
+t3a_d1_group_session_member,member_role,text,NO,,
+t3a_d1_group_session_member,pre_brief_ref,text,YES,,
+t3a_d1_group_session_member,disconnected_at,timestamp with time zone,YES,,
+t3a_d1_group_session_member,withdrew_at,timestamp with time zone,YES,,
+t3a_d1_involvement,involvement_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_involvement,actor_id,uuid,NO,,
+t3a_d1_involvement,participant_id,uuid,NO,,
+t3a_d1_involvement,dimension_id,text,NO,,
+t3a_d1_involvement,involving_action,t3a_d1_involving_action,NO,,
+t3a_d1_involvement,contributing_record_kind,text,NO,,
+t3a_d1_involvement,contributing_record_id,uuid,YES,,
+t3a_d1_involvement,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_involvement,evidence_cycle_id,uuid,YES,,
+t3a_d1_involvement,cycle_function,text,YES,,
+t3a_d1_involvement,s1_exposure_flag,boolean,YES,,
+t3a_d1_issuance_floor_config,singleton,smallint,NO,yes,1
+t3a_d1_issuance_floor_config,status,text,NO,,'not_approved'::text
+t3a_d1_issuance_floor_config,minimum_committed_observations,integer,YES,,
+t3a_d1_issuance_floor_config,minimum_distinct_observers,integer,YES,,
+t3a_d1_issuance_floor_config,minimum_distinct_stages,integer,YES,,
+t3a_d1_issuance_floor_config,approved_by,uuid,YES,,
+t3a_d1_issuance_floor_config,approved_at,timestamp with time zone,YES,,
+t3a_d1_issuance_floor_config,set_at,timestamp with time zone,NO,,now()
+t3a_d1_language_template,language_template_id,text,NO,yes,
+t3a_d1_language_template,dimension_id,text,NO,,'D1'::text
+t3a_d1_language_template,template_body,text,NO,,
+t3a_d1_language_template,bound_variables,ARRAY,NO,,'{}'::text[]
+t3a_d1_language_template,eligible_states,ARRAY,NO,,
+t3a_d1_language_template,precedence,integer,NO,,100
+t3a_d1_language_template,content_version_id,uuid,YES,,
+t3a_d1_language_template,retired,boolean,NO,,false
+t3a_d1_language_template,created_at,timestamp with time zone,NO,,now()
+t3a_d1_lift_condition,lift_condition_id,text,NO,yes,
+t3a_d1_lift_condition,scope,text,NO,,
+t3a_d1_lift_condition,step_order,integer,NO,,
+t3a_d1_lift_condition,condition_text,text,NO,,
+t3a_d1_lift_condition,owner,text,NO,,
+t3a_d1_lift_condition,satisfied,boolean,NO,,false
+t3a_d1_lift_condition,satisfied_by,text,YES,,
+t3a_d1_lift_condition,set_by,text,NO,,
+t3a_d1_lift_condition,supersedes,text,YES,,
+t3a_d1_lift_condition,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_live_session,stage_entry_event_id,uuid,NO,yes,
+t3a_d1_live_session,channel,text,NO,,'google_meet'::text
+t3a_d1_live_session,host_account_email,text,YES,,
+t3a_d1_live_session,meet_link,text,YES,,
+t3a_d1_live_session,link_status,text,NO,,'not_issued'::text
+t3a_d1_live_session,link_released_at,timestamp with time zone,YES,,
+t3a_d1_live_session,visual_confirmation_recorded_at,timestamp with time zone,YES,,
+t3a_d1_live_session,e3_rests_on_attestation_alone,boolean,NO,,true
+t3a_d1_live_session,created_at,timestamp with time zone,NO,,now()
+t3a_d1_live_session_event,live_session_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_live_session_event,stage_entry_event_id,uuid,NO,,
+t3a_d1_live_session_event,event_kind,text,NO,,
+t3a_d1_live_session_event,beat_code,text,YES,,
+t3a_d1_live_session_event,reported_by,uuid,NO,,
+t3a_d1_live_session_event,reported_at,timestamp with time zone,NO,,now()
+t3a_d1_live_session_event,rec10_classification,text,YES,,
+t3a_d1_live_session_event,narrative,text,YES,,
+t3a_d1_mentor_action_sequence,source_identifier,text,NO,yes,
+t3a_d1_mentor_action_sequence,beat_ordinal,integer,NO,yes,
+t3a_d1_mentor_action_sequence,beat_code,text,YES,,
+t3a_d1_mentor_action_sequence,action_type,text,NO,,
+t3a_d1_mentor_action_sequence,content_verbatim,text,NO,,
+t3a_d1_mentor_action_sequence,is_decision_point,boolean,NO,,false
+t3a_d1_mentor_action_sequence,pause_seconds_min,integer,YES,,
+t3a_d1_mentor_action_sequence,pause_seconds_max,integer,YES,,
+t3a_d1_mentor_action_sequence,role_label,text,YES,,
+t3a_d1_participant_review_action,review_action_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_participant_review_action,ber_report_id,uuid,NO,,
+t3a_d1_participant_review_action,participant_id,uuid,NO,,
+t3a_d1_participant_review_action,action,t3a_d1_review_action,NO,,
+t3a_d1_participant_review_action,correction_case_id,uuid,YES,,
+t3a_d1_participant_review_action,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_participant_review_action,actor_context,jsonb,NO,,'{}'::jsonb
+t3a_d1_pathway_audit,pathway_audit_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_pathway_audit,event,t3a_d1_pathway_event,NO,,
+t3a_d1_pathway_audit,actor_id,uuid,YES,,
+t3a_d1_pathway_audit,participant_id,uuid,YES,,
+t3a_d1_pathway_audit,dimension_id,text,YES,,
+t3a_d1_pathway_audit,stage_instance_id,uuid,YES,,
+t3a_d1_pathway_audit,served_instance_id,uuid,YES,,
+t3a_d1_pathway_audit,sub_reason,t3a_d1_s2_refusal_sub_reason,YES,,
+t3a_d1_pathway_audit,body,jsonb,NO,,'{}'::jsonb
+t3a_d1_pathway_audit,occurred_at,timestamp with time zone,NO,,now()
+t3a_d1_pilot_cohort,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_pilot_cohort,code,text,NO,,
+t3a_d1_pilot_cohort,title,text,NO,,
+t3a_d1_pilot_cohort,purpose_note,text,YES,,
+t3a_d1_pilot_cohort,cap,integer,NO,,
+t3a_d1_pilot_cohort,entry_opens_at,timestamp with time zone,YES,,
+t3a_d1_pilot_cohort,entry_closes_at,timestamp with time zone,YES,,
+t3a_d1_pilot_cohort,exit_criteria,jsonb,NO,,'{}'::jsonb
+t3a_d1_pilot_cohort,state,t3a_d1_pilot_cohort_state,NO,,'draft'::t3a_d1_pilot_cohort_state
+t3a_d1_pilot_cohort,opened_at,timestamp with time zone,YES,,
+t3a_d1_pilot_cohort,opened_by,uuid,YES,,
+t3a_d1_pilot_cohort,closed_at,timestamp with time zone,YES,,
+t3a_d1_pilot_cohort,closed_by,uuid,YES,,
+t3a_d1_pilot_cohort,created_at,timestamp with time zone,NO,,now()
+t3a_d1_pilot_cohort,created_by,uuid,YES,,
+t3a_d1_pilot_enrollment,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_pilot_enrollment,cohort_id,uuid,NO,,
+t3a_d1_pilot_enrollment,participant_id,uuid,NO,,
+t3a_d1_pilot_enrollment,state,t3a_d1_pilot_enrollment_state,NO,,'invited'::t3a_d1_pilot_enrollment_state
+t3a_d1_pilot_enrollment,invited_at,timestamp with time zone,NO,,now()
+t3a_d1_pilot_enrollment,activated_at,timestamp with time zone,YES,,
+t3a_d1_pilot_enrollment,withdrawn_at,timestamp with time zone,YES,,
+t3a_d1_pilot_enrollment,completed_at,timestamp with time zone,YES,,
+t3a_d1_pilot_enrollment,note,text,YES,,
+t3a_d1_pilot_event,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_pilot_event,cohort_id,uuid,NO,,
+t3a_d1_pilot_event,participant_id,uuid,YES,,
+t3a_d1_pilot_event,kind,t3a_d1_pilot_event_kind,NO,,
+t3a_d1_pilot_event,body,jsonb,NO,,'{}'::jsonb
+t3a_d1_pilot_event,prev_chain_hash,text,YES,,
+t3a_d1_pilot_event,chain_hash,text,NO,,
+t3a_d1_pilot_event,created_at,timestamp with time zone,NO,,now()
+t3a_d1_production_release,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_production_release,state,t3a_d1_release_state,NO,,'evaluating'::t3a_d1_release_state
+t3a_d1_production_release,gate_result,jsonb,YES,,
+t3a_d1_production_release,evaluated_at,timestamp with time zone,YES,,
+t3a_d1_production_release,released_at,timestamp with time zone,YES,,
+t3a_d1_production_release,released_by,uuid,YES,,
+t3a_d1_production_release,rolled_back_at,timestamp with time zone,YES,,
+t3a_d1_production_release,rolled_back_by,uuid,YES,,
+t3a_d1_production_release,rollback_target,t3a_env_state,YES,,
+t3a_d1_production_release,rollback_reason,text,YES,,
+t3a_d1_production_release,created_at,timestamp with time zone,NO,,now()
+t3a_d1_production_release,created_by,uuid,YES,,
+t3a_d1_production_runbook_step,id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_production_runbook_step,release_id,uuid,NO,,
+t3a_d1_production_runbook_step,step_no,integer,NO,,
+t3a_d1_production_runbook_step,title,text,NO,,
+t3a_d1_production_runbook_step,detail,text,YES,,
+t3a_d1_production_runbook_step,state,t3a_d1_runbook_step_state,NO,,'pending'::t3a_d1_runbook_step_state
+t3a_d1_production_runbook_step,completed_at,timestamp with time zone,YES,,
+t3a_d1_production_runbook_step,completed_by,uuid,YES,,
+t3a_d1_production_runbook_step,note,text,YES,,
+t3a_d1_progression_decision,progression_decision_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_progression_decision,participant_id,uuid,NO,,
+t3a_d1_progression_decision,dimension_id,text,NO,,
+t3a_d1_progression_decision,decision,t3a_progression_value,NO,,
+t3a_d1_progression_decision,recorded_by,uuid,NO,,
+t3a_d1_progression_decision,authority_snapshot_id,uuid,YES,,
+t3a_d1_progression_decision,observation_record_id,uuid,YES,,
+t3a_d1_progression_decision,cleared_from,uuid,YES,,
+t3a_d1_progression_decision,cleared_at,timestamp with time zone,YES,,
+t3a_d1_progression_decision,cleared_by,uuid,YES,,
+t3a_d1_progression_decision,rationale,text,YES,,
+t3a_d1_progression_decision,created_at,timestamp with time zone,NO,,now()
+t3a_d1_progression_decision,decided_by,uuid,YES,,
+t3a_d1_progression_decision,decided_at,timestamp with time zone,YES,,
+t3a_d1_progression_decision,decision_scope,jsonb,YES,,
+t3a_d1_progression_decision,decision_rationale_code,text,YES,,
+t3a_d1_progression_decision,decision_rationale_code_capture_state,text,NO,,'not_captured'::text
+t3a_d1_progression_decision,corrected_decision_ref,uuid,YES,,
+t3a_d1_progression_decision,original_decision_date,timestamp with time zone,YES,,
+t3a_d1_progression_decision,correction_effective_date,timestamp with time zone,YES,,
+t3a_d1_progression_decision,welfare_stop_ref,uuid,YES,,
+t3a_d1_question_capture_map,question_code,text,NO,yes,
+t3a_d1_question_capture_map,capture_set_code,text,NO,,
+t3a_d1_question_capture_map,source_bound_family,text,YES,,
+t3a_d1_question_capture_map,ruling_reference,text,NO,,
+t3a_d1_question_capture_map,ruled_by,text,NO,,
+t3a_d1_question_capture_map,ruled_at,timestamp with time zone,NO,,now()
+t3a_d1_question_capture_map,note,text,YES,,
+t3a_d1_question_capture_map,conduct_element,text,YES,,
+t3a_d1_question_capture_map,answer_type,text,YES,,
+t3a_d1_question_capture_map,applicability_rule,text,YES,,
+t3a_d1_question_capture_map,control_ordinal,integer,YES,,
+t3a_d1_question_capture_map,dimension_id,text,NO,,
+t3a_d1_question_object,question_code,text,NO,yes,
+t3a_d1_question_object,conduct_element,text,NO,,
+t3a_d1_question_object,answer_type,text,NO,,
+t3a_d1_question_object,applicability,text,NO,,
+t3a_d1_question_object,missing_state_eligible,boolean,NO,,
+t3a_d1_question_object,display_order,integer,NO,,
+t3a_d1_question_object,dimension_id,text,NO,,
+t3a_d1_release_token,release_token_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_release_token,consent_id,uuid,NO,,
+t3a_d1_release_token,ber_report_id,uuid,NO,,
+t3a_d1_release_token,report_version,text,NO,,
+t3a_d1_release_token,recipient_name,text,NO,,
+t3a_d1_release_token,recipient_org,text,YES,,
+t3a_d1_release_token,recipient_address,text,NO,,
+t3a_d1_release_token,token_hash,text,NO,,
+t3a_d1_release_token,issued_at,timestamp with time zone,NO,,now()
+t3a_d1_release_token,expires_at,timestamp with time zone,NO,,
+t3a_d1_release_token,redeemed_at,timestamp with time zone,YES,,
+t3a_d1_release_token,revoked_at,timestamp with time zone,YES,,
+t3a_d1_release_token,superseded_at,timestamp with time zone,YES,,
+t3a_d1_rendered_instance,rendered_instance_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_rendered_instance,source_version_id,uuid,NO,,
+t3a_d1_rendered_instance,canonical_source_hash,text,NO,,
+t3a_d1_rendered_instance,presentation_variant_values,jsonb,NO,,'{}'::jsonb
+t3a_d1_rendered_instance,rendered_instance_hash,text,NO,,
+t3a_d1_rendered_instance,created_at,timestamp with time zone,NO,,now()
+t3a_d1_report_block,block_no,integer,NO,yes,
+t3a_d1_report_block,block_name,text,NO,,
+t3a_d1_report_block,render_behaviour,text,NO,,
+t3a_d1_report_block,controlled_text_ref,text,YES,,
+t3a_d1_report_block,renders_always,boolean,NO,,
+t3a_d1_report_block,render_target,text,NO,,'report_face'::text
+t3a_d1_report_controlled_text,text_ref,text,NO,yes,
+t3a_d1_report_controlled_text,block_no,integer,YES,,
+t3a_d1_report_controlled_text,body,text,NO,,
+t3a_d1_report_controlled_text,verbatim,boolean,NO,,true
+t3a_d1_report_disclosure,disclosure_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_report_disclosure,issuance_id,uuid,NO,,
+t3a_d1_report_disclosure,ber_report_id,uuid,NO,,
+t3a_d1_report_disclosure,participant_id,uuid,NO,,
+t3a_d1_report_disclosure,recipient_kind,text,NO,,
+t3a_d1_report_disclosure,recipient_email,text,NO,,
+t3a_d1_report_disclosure,recipient_display,text,YES,,
+t3a_d1_report_disclosure,purpose,text,YES,,
+t3a_d1_report_disclosure,state,t3a_d1_disclosure_state,NO,,'released'::t3a_d1_disclosure_state
+t3a_d1_report_disclosure,released_at,timestamp with time zone,NO,,now()
+t3a_d1_report_disclosure,revoked_at,timestamp with time zone,YES,,
+t3a_d1_report_disclosure,expires_at,timestamp with time zone,YES,,
+t3a_d1_report_issuance,issuance_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_report_issuance,ber_report_id,uuid,NO,,
+t3a_d1_report_issuance,participant_id,uuid,NO,,
+t3a_d1_report_issuance,dimension_id,text,NO,,
+t3a_d1_report_issuance,issued_by,uuid,NO,,
+t3a_d1_report_issuance,authority_snapshot_id,uuid,YES,,
+t3a_d1_report_issuance,version_set_at_issuance,jsonb,NO,,'{}'::jsonb
+t3a_d1_report_issuance,rendered_body_hash,text,NO,,
+t3a_d1_report_issuance,state,t3a_d1_issuance_state,NO,,'issued'::t3a_d1_issuance_state
+t3a_d1_report_issuance,supersedes,uuid,YES,,
+t3a_d1_report_issuance,issued_at,timestamp with time zone,NO,,now()
+t3a_d1_report_issuance,superseded_at,timestamp with time zone,YES,,
+t3a_d1_report_issuance,withdrawn_at,timestamp with time zone,YES,,
+t3a_d1_report_refusal_log,report_refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_report_refusal_log,participant_id,uuid,NO,,
+t3a_d1_report_refusal_log,dimension_id,text,NO,,
+t3a_d1_report_refusal_log,requested_template_id,text,YES,,
+t3a_d1_report_refusal_log,reason,t3a_d1_report_refusal_reason,NO,,
+t3a_d1_report_refusal_log,detail,text,YES,,
+t3a_d1_report_refusal_log,refused_at,timestamp with time zone,NO,,now()
+t3a_d1_report_verification_token,verification_token_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_report_verification_token,disclosure_id,uuid,NO,,
+t3a_d1_report_verification_token,token_hash,text,NO,,
+t3a_d1_report_verification_token,token_prefix,text,NO,,
+t3a_d1_report_verification_token,created_at,timestamp with time zone,NO,,now()
+t3a_d1_report_verification_token,last_used_at,timestamp with time zone,YES,,
+t3a_d1_resolution_refusal,resolution_refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_resolution_refusal,observation_record_id,uuid,NO,,
+t3a_d1_resolution_refusal,reason,t3a_resolution_refusal_reason,NO,,
+t3a_d1_resolution_refusal,detail,text,YES,,
+t3a_d1_resolution_refusal,answer_pattern_snapshot,jsonb,NO,,
+t3a_d1_resolution_refusal,refused_at,timestamp with time zone,NO,,now()
+t3a_d1_resolution_rule,resolution_rule_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_resolution_rule,dimension_id,text,NO,,
+t3a_d1_resolution_rule,question_set_version,text,NO,,
+t3a_d1_resolution_rule,stage_code,t3a_stage_code,NO,,
+t3a_d1_resolution_rule,answer_pattern,jsonb,NO,,
+t3a_d1_resolution_rule,answer_pattern_key,text,YES,,
+t3a_d1_resolution_rule,statement_library_id,uuid,NO,,
+t3a_d1_resolution_rule,precedence,integer,NO,,100
+t3a_d1_resolution_rule,active,boolean,NO,,true
+t3a_d1_resolution_rule,created_at,timestamp with time zone,NO,,now()
+t3a_d1_review_checklist_item,item_no,integer,NO,yes,
+t3a_d1_review_checklist_item,requirement,text,NO,,
+t3a_d1_review_checklist_item,rule_reference,text,YES,,
+t3a_d1_review_result,review_result_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_review_result,ber_report_id,uuid,NO,,
+t3a_d1_review_result,item_no,integer,NO,,
+t3a_d1_review_result,outcome,text,NO,,
+t3a_d1_review_result,detail,text,YES,,
+t3a_d1_review_result,reviewed_by,uuid,YES,,
+t3a_d1_review_result,reviewed_at,timestamp with time zone,NO,,now()
+t3a_d1_s1_confirmation,s1_confirmation_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s1_confirmation,stage_instance_id,uuid,NO,,
+t3a_d1_s1_confirmation,participant_id,uuid,NO,,
+t3a_d1_s1_confirmation,dimension_id,text,NO,,
+t3a_d1_s1_confirmation,confirmed_by,uuid,NO,,
+t3a_d1_s1_confirmation,s1_closed_at,timestamp with time zone,YES,,
+t3a_d1_s1_confirmation,captured_at,timestamp with time zone,NO,,now()
+t3a_d1_s1_confirmation,source_version_id,uuid,YES,,
+t3a_d1_s1_confirmation,source_version_hash,text,YES,,
+t3a_d1_s1_determination,s1_determination_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s1_determination,stage_instance_id,uuid,NO,,
+t3a_d1_s1_determination,participant_id,uuid,NO,,
+t3a_d1_s1_determination,dimension_id,text,NO,,
+t3a_d1_s1_determination,captured_by,uuid,NO,,
+t3a_d1_s1_determination,question_id,text,NO,,
+t3a_d1_s1_determination,selection,jsonb,YES,,
+t3a_d1_s1_determination,captured_at,timestamp with time zone,NO,,now()
+t3a_d1_s1_determination,missing_state,t3a_missing_state,YES,,
+t3a_d1_s1_provenance_slot,slot_column,text,NO,yes,
+t3a_d1_s1_provenance_slot,holds,text,NO,,
+t3a_d1_s1_provenance_slot,issued_identifier,text,YES,,
+t3a_d1_s1_provenance_slot,supplied_by,text,NO,,
+t3a_d1_s1_provenance_slot,issued_under,text,NO,,
+t3a_d1_s1_reveal_response,reveal_response_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s1_reveal_response,ai_administration_run_id,uuid,NO,,
+t3a_d1_s1_reveal_response,reveal_ordinal,integer,NO,,
+t3a_d1_s1_reveal_response,reveal_label,text,NO,,
+t3a_d1_s1_reveal_response,reveal_verbatim_hash,text,NO,,
+t3a_d1_s1_reveal_response,shown_at,timestamp with time zone,NO,,
+t3a_d1_s1_reveal_response,submitted_at,timestamp with time zone,YES,,
+t3a_d1_s1_reveal_response,response_text,text,YES,,
+t3a_d1_s1_reveal_response,outcome,text,NO,,
+t3a_d1_s1_routing,s1_routing_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s1_routing,stage_instance_id,uuid,NO,,
+t3a_d1_s1_routing,participant_id,uuid,NO,,
+t3a_d1_s1_routing,dimension_id,text,NO,,
+t3a_d1_s1_routing,assigned_mentor_id,uuid,NO,,
+t3a_d1_s1_routing,routed_at,timestamp with time zone,NO,,now()
+t3a_d1_s1_routing,cleared_at,timestamp with time zone,YES,,
+t3a_d1_s1_routing,previous_mentor_id,uuid,YES,,
+t3a_d1_s1_routing,reassignment_reason,text,YES,,
+t3a_d1_s1_time_window,source_identifier,text,NO,yes,
+t3a_d1_s1_time_window,min_seconds,integer,NO,,
+t3a_d1_s1_time_window,max_seconds,integer,NO,,
+t3a_d1_s1_time_window,issued_under,text,NO,,
+t3a_d1_s1_workbench_session,workbench_session_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s1_workbench_session,ai_administration_run_id,uuid,NO,,
+t3a_d1_s1_workbench_session,participant_id,uuid,NO,,
+t3a_d1_s1_workbench_session,captured_by,uuid,NO,,
+t3a_d1_s1_workbench_session,opened_at,timestamp with time zone,NO,,now()
+t3a_d1_s1_workbench_session,captured_at,timestamp with time zone,YES,,
+t3a_d1_s1_workbench_session,administration_ended_at,timestamp with time zone,YES,,
+t3a_d1_s1_workbench_session,confirmed_at,timestamp with time zone,YES,,
+t3a_d1_s2_administration_variance,variance_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s2_administration_variance,stage_instance_id,uuid,NO,,
+t3a_d1_s2_administration_variance,beat_code,text,NO,,
+t3a_d1_s2_administration_variance,variance_kind,text,NO,,
+t3a_d1_s2_administration_variance,narrative,text,NO,,
+t3a_d1_s2_administration_variance,recorded_by,uuid,NO,,
+t3a_d1_s2_administration_variance,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_s2_live_view_signal,signal_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s2_live_view_signal,stage_instance_id,uuid,NO,,
+t3a_d1_s2_live_view_signal,from_actor,uuid,NO,,
+t3a_d1_s2_live_view_signal,to_actor,uuid,NO,,
+t3a_d1_s2_live_view_signal,kind,text,NO,,
+t3a_d1_s2_live_view_signal,payload,jsonb,NO,,
+t3a_d1_s2_live_view_signal,created_at,timestamp with time zone,NO,,now()
+t3a_d1_s2_mentor_load_event,load_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s2_mentor_load_event,stage_instance_id,uuid,NO,,
+t3a_d1_s2_mentor_load_event,measure,text,NO,,
+t3a_d1_s2_mentor_load_event,delay_seconds,numeric,YES,,
+t3a_d1_s2_mentor_load_event,observed_at,timestamp with time zone,NO,,now()
+t3a_d1_s2_session_event,session_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_s2_session_event,stage_instance_id,uuid,NO,,
+t3a_d1_s2_session_event,event_kind,t3a_d1_s2_session_event_kind,NO,,
+t3a_d1_s2_session_event,beat_code,text,YES,,
+t3a_d1_s2_session_event,reason,text,NO,,
+t3a_d1_s2_session_event,recorded_by,uuid,NO,,
+t3a_d1_s2_session_event,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_s2_session_event,event_seq,bigint,NO,,
+t3a_d1_s4_theme_line,source_identifier,text,NO,yes,
+t3a_d1_s4_theme_line,theme_line,text,NO,,
+t3a_d1_s4_theme_line,theme_line_hash,text,NO,,
+t3a_d1_s4_theme_line,issued_under,text,NO,,
+t3a_d1_session_attestation,stage_entry_event_id,uuid,NO,yes,
+t3a_d1_session_attestation,attestation_code,text,NO,yes,
+t3a_d1_session_attestation,attested_by,uuid,NO,,
+t3a_d1_session_attestation,attested_at,timestamp with time zone,NO,,now()
+t3a_d1_source_approval,source_approval_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_source_approval,source_id,uuid,NO,,
+t3a_d1_source_approval,source_version_id,uuid,NO,,
+t3a_d1_source_approval,status,text,NO,,'pending'::text
+t3a_d1_source_approval,approved_by,uuid,YES,,
+t3a_d1_source_approval,approved_at,timestamp with time zone,YES,,
+t3a_d1_source_approval_provenance,source_approval_id,uuid,NO,yes,
+t3a_d1_source_approval_provenance,carry_forward_basis,text,NO,,
+t3a_d1_source_approval_provenance,carried_from_version_id,uuid,NO,,
+t3a_d1_source_approval_provenance,identity_assertion_passed,boolean,NO,,
+t3a_d1_source_approval_provenance,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_source_name_clearance,name_clearance_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_source_name_clearance,source_version_id,uuid,NO,,
+t3a_d1_source_name_clearance,presentation_variant_values,jsonb,NO,,'{}'::jsonb
+t3a_d1_source_name_clearance,status,text,NO,,'pending'::text
+t3a_d1_source_name_clearance,cleared_at,timestamp with time zone,YES,,
+t3a_d1_source_name_clearance,cleared_by,uuid,YES,,
+t3a_d1_specification_cooldown,completed_observations,integer,NO,yes,
+t3a_d1_specification_cooldown,wait_days,integer,YES,,
+t3a_d1_specification_cooldown,issued_under,text,NO,,
+t3a_d1_specification_cooldown,note,text,NO,,
+t3a_d1_specification_cooldown,dimension_id,text,NO,yes,
+t3a_d1_stage4_impact_assessment,source_identifier,text,NO,yes,
+t3a_d1_stage4_impact_assessment,source_version_id,uuid,NO,,
+t3a_d1_stage4_impact_assessment,title,text,NO,,
+t3a_d1_stage4_impact_assessment,situation_class,text,NO,,
+t3a_d1_stage4_impact_assessment,bearing_interest,text,NO,,
+t3a_d1_stage4_impact_assessment,welfare_attention,text,NO,,
+t3a_d1_stage4_impact_assessment,welfare_basis,text,YES,,
+t3a_d1_stage4_impact_assessment,theme_line,text,YES,,
+t3a_d1_stage4_impact_assessment,result,text,NO,,
+t3a_d1_stage4_impact_assessment,instrument,text,NO,,
+t3a_d1_stage4_impact_assessment,completed_by,text,NO,,
+t3a_d1_stage4_impact_assessment,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_stage4_impact_assessment_part,source_identifier,text,NO,yes,
+t3a_d1_stage4_impact_assessment_part,part_no,integer,NO,yes,
+t3a_d1_stage4_impact_assessment_part,part_name,text,NO,,
+t3a_d1_stage4_impact_assessment_part,finding,text,NO,,
+t3a_d1_stage4_impact_assessment_part,controls,text,NO,,
+t3a_d1_stage4_refusal,refusal_code,text,NO,yes,
+t3a_d1_stage4_refusal,rule,text,NO,,
+t3a_d1_stage4_refusal,enforced_by,text,NO,,
+t3a_d1_stage4_refusal,enforcement_kind,text,NO,,
+t3a_d1_stage4_refusal,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_stage_claim,scope,text,NO,yes,
+t3a_d1_stage_claim,test_id,text,NO,,
+t3a_d1_stage_claim,status,text,NO,,
+t3a_d1_stage_claim,reason,text,NO,,
+t3a_d1_stage_claim,set_by,text,NO,,
+t3a_d1_stage_claim,supersedes,text,YES,,
+t3a_d1_stage_claim,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_stage_consent_requirement,stage_or_act,text,NO,yes,
+t3a_d1_stage_consent_requirement,consent_type,text,NO,yes,
+t3a_d1_statement_library,statement_library_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_statement_library,content_version_id,uuid,NO,,
+t3a_d1_statement_library,dimension_id,text,NO,,
+t3a_d1_statement_library,question_set_version,text,NO,,
+t3a_d1_statement_library,stage_code,t3a_stage_code,NO,,
+t3a_d1_statement_library,statement_key,text,NO,,
+t3a_d1_statement_library,statement_body,text,NO,,
+t3a_d1_statement_library,bound_variables,ARRAY,NO,,'{}'::text[]
+t3a_d1_statement_library,bound_condition_renderings,jsonb,NO,,'{}'::jsonb
+t3a_d1_statement_library,supersedes,uuid,YES,,
+t3a_d1_statement_library,retired,boolean,NO,,false
+t3a_d1_statement_library,created_at,timestamp with time zone,NO,,now()
+t3a_d1_statement_library,use_disposition,text,NO,,'build_only'::text
+t3a_d1_statement_library,question_code,text,YES,,
+t3a_d1_statement_library,answer_code,text,YES,,
+t3a_d1_statement_library,applicable_stages,ARRAY,YES,,
+t3a_d1_statement_library,given_condition,text,YES,,
+t3a_d1_statement_library,entry_type,text,YES,,
+t3a_d1_statement_library,recurrence_blocker,boolean,NO,,false
+t3a_d1_statement_trace,trace_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_statement_trace,ber_report_id,uuid,NO,,
+t3a_d1_statement_trace,sentence_ref,text,NO,,
+t3a_d1_statement_trace,trace_body,jsonb,NO,,
+t3a_d1_statement_trace,created_at,timestamp with time zone,NO,,now()
+t3a_d1_statement_trace,dimension_id,text,YES,,
+t3a_d1_superseded_capture_label,label,text,NO,yes,
+t3a_d1_superseded_capture_label,superseded_into,ARRAY,NO,,
+t3a_d1_superseded_capture_label,basis,text,NO,,
+t3a_d1_superseded_capture_label,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_traceability_field,field_no,integer,NO,yes,
+t3a_d1_traceability_field,field_name,text,NO,,
+t3a_d1_traceability_field,records,text,NO,,
+t3a_d1_version_lineage,version_lineage_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_version_lineage,child_version_id,uuid,NO,,
+t3a_d1_version_lineage,parent_version_id,uuid,NO,,
+t3a_d1_version_lineage,parent_family,t3a_content_family,NO,,
+t3a_d1_version_lineage,relation,text,NO,,'binds'::text
+t3a_d1_version_lineage,created_at,timestamp with time zone,NO,,now()
+t3a_d1_welfare_withdrawal,welfare_withdrawal_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_welfare_withdrawal,attempt_id,uuid,NO,,
+t3a_d1_welfare_withdrawal,stopped_by,text,NO,,
+t3a_d1_welfare_withdrawal,stopped_by_actor,uuid,YES,,
+t3a_d1_welfare_withdrawal,stage_code,t3a_stage_code,NO,,
+t3a_d1_welfare_withdrawal,observation_had_begun,boolean,NO,,true
+t3a_d1_welfare_withdrawal,recorded_at,timestamp with time zone,NO,,now()
+t3a_d1_welfare_withdrawal,recorded_under,text,NO,,"'T3A-D1-EXEC-CORR-006 Section 8, CX-28'::text"
+t3a_d1_welfare_withholding,welfare_withholding_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_welfare_withholding,stage_instance_id,uuid,NO,,
+t3a_d1_welfare_withholding,participant_id,uuid,NO,,
+t3a_d1_welfare_withholding,dimension_id,text,NO,,
+t3a_d1_welfare_withholding,stage_code,t3a_stage_code,NO,,
+t3a_d1_welfare_withholding,safety_event_id,uuid,YES,,
+t3a_d1_welfare_withholding,withheld_by,uuid,NO,,
+t3a_d1_welfare_withholding,withheld_at,timestamp with time zone,NO,,now()
+t3a_d1_welfare_withholding,recorded_under,text,NO,,"'T3A-D1-EXEC-CORR-006 Section 8, CX-29'::text"
+t3a_d1_work_sample_submission,submission_id,uuid,NO,yes,gen_random_uuid()
+t3a_d1_work_sample_submission,participant_id,uuid,NO,,
+t3a_d1_work_sample_submission,source_version_id,uuid,YES,,
+t3a_d1_work_sample_submission,stage_instance_id,uuid,YES,,
+t3a_d1_work_sample_submission,state,text,NO,,'ASSIGNED'::text
+t3a_d1_work_sample_submission,assigned_at,timestamp with time zone,NO,,now()
+t3a_d1_work_sample_submission,deadline_at,timestamp with time zone,YES,,
+t3a_d1_work_sample_submission,submitted_at,timestamp with time zone,YES,,
+t3a_d1_work_sample_submission,deadline_missed,boolean,NO,,false
+t3a_d1_work_sample_submission,artifact_ref,text,YES,,
+t3a_d1_work_sample_submission,authorship_attestation,boolean,YES,,
+t3a_d1_work_sample_submission,assistance_declaration,boolean,YES,,
+t3a_d1_work_sample_submission,assistance_detail,text,YES,,
+t3a_d1_work_sample_submission,tooling_declaration,boolean,YES,,
+t3a_d1_work_sample_submission,tooling_detail,text,YES,,
+t3a_d1_work_sample_submission,prior_version_ref,uuid,YES,,
+t3a_d1_work_sample_submission,superseded_by,uuid,YES,,
+t3a_d1_work_sample_submission,declined_at,timestamp with time zone,YES,,
+t3a_d1_work_sample_submission,dimension_id,text,YES,,
+t3a_data_access_request,account_id,uuid,NO,,
+t3a_data_access_request,requested_at,timestamp with time zone,NO,,now()
+t3a_data_access_request,resolved_at,timestamp with time zone,YES,,
+t3a_data_access_request,data_access_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_data_correction_request,account_id,uuid,NO,,
+t3a_data_correction_request,requested_at,timestamp with time zone,NO,,now()
+t3a_data_correction_request,resolved_at,timestamp with time zone,YES,,
+t3a_data_correction_request,data_correction_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_deployment_config,singleton,boolean,NO,yes,true
+t3a_deployment_config,hosting_region,text,YES,,
+t3a_deployment_config,backup_region,text,YES,,
+t3a_deployment_config,verification_link_ttl,integer,YES,,
+t3a_deployment_config,verification_resend_cooldown,integer,YES,,
+t3a_deployment_config,mentor_invitation_ttl,integer,YES,,
+t3a_deployment_config,recipient_release_token_ttl,integer,YES,,
+t3a_deployment_config,recipient_passcode_ttl,integer,YES,,
+t3a_deployment_config,stage_entry_hold_ttl,integer,YES,,
+t3a_deployment_config,retention_policy_version,text,YES,,
+t3a_deployment_config,retention_review_at,timestamp with time zone,YES,,
+t3a_deployment_config,updated_at,timestamp with time zone,NO,,now()
+t3a_destruction_event,destruction_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_destruction_event,retention_class,t3a_retention_class,NO,,
+t3a_destruction_event,resource_type,text,NO,,
+t3a_destruction_event,resource_id,uuid,NO,,
+t3a_destruction_event,executed_at,timestamp with time zone,NO,,now()
+t3a_destruction_event,reason,text,YES,,
+t3a_determination,observation_id,uuid,NO,,
+t3a_determination,determination_id,uuid,NO,yes,gen_random_uuid()
+t3a_determination,question_id,uuid,NO,,
+t3a_determination,answer_option_id,uuid,YES,,
+t3a_determination,list_selection_ids,ARRAY,YES,,
+t3a_determination,determination_missing_state,text,YES,,
+t3a_determination,determination_missing_state_capture_state,text,NO,,'not_captured'::text
+t3a_determination,determined_by,uuid,NO,,
+t3a_determination,determined_at,timestamp with time zone,NO,,now()
+t3a_determination,clause_instance_id,uuid,NO,,
+t3a_determination,conduct_element_id,uuid,NO,,
+t3a_determination,recurrence_equivalence_key_id,uuid,NO,,
+t3a_determination,state_code,text,NO,,
+t3a_determination_question,question_id,uuid,NO,yes,gen_random_uuid()
+t3a_determination_question,dimension_id,t3a_dimension_code,NO,,
+t3a_determination_question,question_set_version,text,NO,,
+t3a_determination_question,order_index,integer,NO,,
+t3a_determination_question,question_body,text,NO,,
+t3a_determination_question,answer_schema,jsonb,NO,,
+t3a_determination_question,approved_at,timestamp with time zone,YES,,
+t3a_determination_question,approved_by,uuid,YES,,
+t3a_determination_question,created_at,timestamp with time zone,NO,,now()
+t3a_dimension_composed_statement,composed_statement_id,uuid,NO,yes,gen_random_uuid()
+t3a_dimension_composed_statement,dimension_id,text,NO,,
+t3a_dimension_composed_statement,observation_ref,uuid,NO,,
+t3a_dimension_composed_statement,participant_id,uuid,NO,,
+t3a_dimension_composed_statement,stage_code,text,NO,,
+t3a_dimension_composed_statement,source_version_id,uuid,NO,,
+t3a_dimension_composed_statement,answers,jsonb,NO,,
+t3a_dimension_composed_statement,missing,jsonb,NO,,'{}'::jsonb
+t3a_dimension_composed_statement,selections,jsonb,NO,,'{}'::jsonb
+t3a_dimension_composed_statement,clauses,jsonb,NO,,
+t3a_dimension_composed_statement,clause_instances,jsonb,NO,,
+t3a_dimension_composed_statement,conditions,jsonb,NO,,'[]'::jsonb
+t3a_dimension_composed_statement,test_mode,boolean,NO,,false
+t3a_dimension_composed_statement,composed_at,timestamp with time zone,NO,,now()
+t3a_dimension_composed_statement,supersedes_composed_statement_id,uuid,YES,,
+t3a_dimension_evidence,dimension_evidence_id,uuid,NO,yes,gen_random_uuid()
+t3a_dimension_evidence,participant_id,uuid,NO,,
+t3a_dimension_evidence,dimension_id,t3a_dimension_code,NO,,
+t3a_dimension_evidence,evidence_state,t3a_dimension_evidence_state,NO,,'not_observed'::t3a_dimension_evidence_state
+t3a_dimension_evidence,insufficiency_reason,text,YES,,
+t3a_dimension_evidence,sufficiency_rules_version,text,NO,,
+t3a_dimension_evidence,derived_at,timestamp with time zone,NO,,now()
+t3a_dimension_evidence,insufficiency_reason_capture_state,text,NO,,'not_captured'::text
+t3a_dimension_evidence,dimension_evidence_state,text,YES,,
+t3a_dimension_evidence,cross_cutting_condition_flags,ARRAY,YES,,
+t3a_dimension_evidence,cross_cutting_condition_flags_capture_state,text,NO,,'not_captured'::text
+t3a_dimension_placeholder,dimension_id,text,NO,yes,
+t3a_dimension_placeholder,placeholder_name,text,NO,yes,
+t3a_dimension_placeholder,kind,text,NO,,
+t3a_dimension_placeholder,bound_to,text,NO,,
+t3a_dimension_placeholder,grammar,text,NO,,
+t3a_dimension_review_item,item_no,integer,NO,yes,
+t3a_dimension_review_item,dimension_id,text,YES,,
+t3a_dimension_review_item,requirement,text,NO,,
+t3a_dimension_review_item,display_no,integer,YES,,
+t3a_dimension_review_result,ber_report_id,uuid,NO,yes,
+t3a_dimension_review_result,dimension_id,text,NO,yes,
+t3a_dimension_review_result,item_no,integer,NO,yes,
+t3a_dimension_review_result,outcome,text,NO,,
+t3a_dimension_review_result,reviewer_id,uuid,NO,,
+t3a_dimension_review_result,version_set_hash,character,NO,,
+t3a_dimension_review_result,recorded_at,timestamp with time zone,NO,yes,now()
+t3a_dimension_statement_withdrawal,composed_statement_id,uuid,NO,yes,
+t3a_dimension_statement_withdrawal,reason,text,NO,,
+t3a_dimension_statement_withdrawal,withdrawn_at,timestamp with time zone,NO,,now()
+t3a_disclosure,disclosure_id,uuid,NO,yes,gen_random_uuid()
+t3a_disclosure,ber_report_id,uuid,NO,,
+t3a_disclosure,participant_id,uuid,NO,,
+t3a_disclosure,recipient_org_id,uuid,YES,,
+t3a_disclosure,recipient_email,text,YES,,
+t3a_disclosure,access_scope,text,NO,,
+t3a_disclosure,access_period_starts,timestamp with time zone,NO,,
+t3a_disclosure,access_period_ends,timestamp with time zone,NO,,
+t3a_disclosure,identity_released_at,timestamp with time zone,YES,,
+t3a_disclosure,report_released_at,timestamp with time zone,YES,,
+t3a_disclosure,revoked_at,timestamp with time zone,YES,,
+t3a_disclosure,status,t3a_disclosure_status,NO,,'requested'::t3a_disclosure_status
+t3a_disclosure,recipient_binding_token_hash,text,YES,,
+t3a_disclosure,created_at,timestamp with time zone,NO,,now()
+t3a_discoverability,participant_id,uuid,NO,yes,
+t3a_discoverability,discovery_consent,boolean,NO,,false
+t3a_discoverability,accepts_access_requests,boolean,NO,,false
+t3a_discoverability,discoverability_confirmed_at,timestamp with time zone,YES,,
+t3a_discoverability,discoverability_confirm_interval,interval,YES,,
+t3a_discoverability,updated_at,timestamp with time zone,NO,,now()
+t3a_discovery_query_log,query_log_id,uuid,NO,yes,gen_random_uuid()
+t3a_discovery_query_log,employer_id,uuid,NO,,
+t3a_discovery_query_log,criteria,jsonb,NO,,
+t3a_discovery_query_log,pool_band_before,text,YES,,
+t3a_discovery_query_log,pool_band_after,text,YES,,
+t3a_discovery_query_log,occurred_at,timestamp with time zone,NO,,now()
+t3a_employer_account_audit,audit_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_account_audit,account_profile_id,uuid,NO,,
+t3a_employer_account_audit,employer_profile_id,uuid,YES,,
+t3a_employer_account_audit,organization_record_exists,boolean,NO,,false
+t3a_employer_account_audit,audited_at,timestamp with time zone,NO,,now()
+t3a_employer_account_audit,check_work_email_domain,text,NO,,
+t3a_employer_account_audit,check_free_provider,text,NO,,
+t3a_employer_account_audit,check_legal_entity,text,NO,,
+t3a_employer_account_audit,check_domain_age_flag,text,NO,,
+t3a_employer_account_audit,creation_route,text,NO,,
+t3a_employer_account_audit,approval_record_exists,boolean,NO,,
+t3a_employer_account_audit,approver,text,YES,,
+t3a_employer_account_audit,approval_basis,text,YES,,
+t3a_employer_account_audit,name_matches_address,boolean,YES,,
+t3a_employer_account_audit,finding_public_signup_route,boolean,NO,,false
+t3a_employer_account_audit,finding_approved_without_basis,boolean,NO,,false
+t3a_employer_account_audit,previous_state,text,YES,,
+t3a_employer_account_audit,new_state,text,NO,,
+t3a_employer_account_audit,produced_by_check,text,NO,,
+t3a_employer_application,application_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_application,employer_profile_id,uuid,NO,,
+t3a_employer_application,organization_legal_name,text,YES,,
+t3a_employer_application,business_number,text,YES,,
+t3a_employer_application,work_email,text,YES,,
+t3a_employer_application,email_domain,text,YES,,
+t3a_employer_application,submitted_at,timestamp with time zone,NO,,now()
+t3a_employer_application,creation_route,text,NO,,'unknown'::text
+t3a_employer_application,approval_decision,text,YES,,
+t3a_employer_application,approved_by,text,YES,,
+t3a_employer_application,approved_at,timestamp with time zone,YES,,
+t3a_employer_application,approval_basis,text,YES,,
+t3a_employer_application,withdrawn_at,timestamp with time zone,YES,,
+t3a_employer_application,application_status,text,YES,,
+t3a_employer_application,free_provider_refused,boolean,YES,,
+t3a_employer_application,free_provider_refused_capture_state,text,NO,,'not_captured'::text
+t3a_employer_application,domain_age_flag,boolean,YES,,
+t3a_employer_application,domain_age_flag_capture_state,text,NO,,'not_captured'::text
+t3a_employer_application,accepting_person_name,text,YES,,
+t3a_employer_application,accepting_person_title,text,YES,,
+t3a_employer_application,record_use_terms_version,text,YES,,
+t3a_employer_application,terms_accepted_at,timestamp with time zone,YES,,
+t3a_employer_application,approver_id,uuid,YES,,
+t3a_employer_attestation,organization_id,uuid,NO,,
+t3a_employer_attestation,employer_attestation_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_attestation,attested_at,timestamp with time zone,NO,,now()
+t3a_employer_contact_request,organization_id,uuid,NO,,
+t3a_employer_contact_request,requested_at,timestamp with time zone,NO,,now()
+t3a_employer_contact_request,contact_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_contact_request,contact_request_state,text,NO,,'requested'::text
+t3a_employer_desk_config,config_key,text,NO,yes,
+t3a_employer_desk_config,config_value,jsonb,NO,,
+t3a_employer_desk_config,updated_at,timestamp with time zone,NO,,now()
+t3a_employer_desk_config,updated_by,uuid,YES,,
+t3a_employer_desk_config_change,change_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_desk_config_change,config_key,text,NO,,
+t3a_employer_desk_config_change,previous_value,jsonb,YES,,
+t3a_employer_desk_config_change,new_value,jsonb,NO,,
+t3a_employer_desk_config_change,changed_at,timestamp with time zone,NO,,now()
+t3a_employer_desk_config_change,changed_by,uuid,YES,,
+t3a_employer_desk_config_change,actor_name,text,YES,,
+t3a_employer_desk_event,event_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_desk_event,event_seq,bigint,NO,,nextval('t3a_employer_desk_event_event_seq_seq'::regclass)
+t3a_employer_desk_event,occurred_at,timestamp with time zone,NO,,now()
+t3a_employer_desk_event,actor_id,uuid,YES,,
+t3a_employer_desk_event,event_code,text,NO,,
+t3a_employer_desk_event,route,text,YES,,
+t3a_employer_desk_event,subject_kind,text,YES,,
+t3a_employer_desk_event,subject_id,text,YES,,
+t3a_employer_desk_event,detail,jsonb,NO,,'{}'::jsonb
+t3a_employer_free_provider,domain,text,NO,yes,
+t3a_employer_hire_record,hire_record_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_hire_record,employer_profile_id,uuid,NO,,
+t3a_employer_hire_record,role_title,text,YES,,
+t3a_employer_hire_record,hired_on,date,YES,,
+t3a_employer_hire_record,recorded_at,timestamp with time zone,NO,,now()
+t3a_employer_organization,application_id,uuid,YES,,
+t3a_employer_organization,organization_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_organization,verification_status,text,NO,,'pending'::text
+t3a_employer_organization,liveworks_activation_state,text,YES,,
+t3a_employer_organization,liveworks_activation_state_capture_state,text,NO,,'not_captured'::text
+t3a_employer_organization,design_partner_flag,boolean,YES,,
+t3a_employer_organization,design_partner_flag_capture_state,text,NO,,'not_captured'::text
+t3a_employer_organization,created_at,timestamp with time zone,NO,,now()
+t3a_employer_organization,updated_at,timestamp with time zone,NO,,now()
+t3a_employer_pool_entry,pool_entry_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_pool_entry,participant_id,uuid,NO,,
+t3a_employer_pool_entry,stated_full_name,text,NO,,
+t3a_employer_pool_entry,stated_role_or_field,text,YES,,
+t3a_employer_pool_entry,work_location_preference,text,YES,,
+t3a_employer_pool_entry,availability_to_start,text,YES,,
+t3a_employer_pool_entry,work_authorization_jurisdiction,text,YES,,
+t3a_employer_pool_entry,open_to_liveworks,boolean,YES,,
+t3a_employer_pool_entry,ber_report_id,uuid,YES,,
+t3a_employer_pool_entry,observation_period_start,date,YES,,
+t3a_employer_pool_entry,observation_period_end,date,YES,,
+t3a_employer_pool_entry,report_status,text,YES,,
+t3a_employer_pool_entry,current_through,date,YES,,
+t3a_employer_pool_entry,correction_open,boolean,NO,,false
+t3a_employer_pool_entry,made_available_at,timestamp with time zone,NO,,now()
+t3a_employer_pool_entry,visibility_withdrawn_at,timestamp with time zone,YES,,
+t3a_employer_pool_query,organization_id,uuid,NO,,
+t3a_employer_pool_query,criteria,jsonb,NO,,
+t3a_employer_pool_query,pool_query_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_pool_query,queried_at,timestamp with time zone,NO,,now()
+t3a_employer_product_feedback,feedback_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_product_feedback,employer_profile_id,uuid,YES,,
+t3a_employer_product_feedback,submitted_by,uuid,YES,,
+t3a_employer_product_feedback,category,text,NO,,
+t3a_employer_product_feedback,body,text,NO,,
+t3a_employer_product_feedback,submitted_at,timestamp with time zone,NO,,now()
+t3a_employer_report_view,view_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_report_view,employer_profile_id,uuid,NO,,
+t3a_employer_report_view,participant_id,uuid,NO,,
+t3a_employer_report_view,viewed_at,timestamp with time zone,NO,,now()
+t3a_employer_saved_report,saved_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_saved_report,employer_profile_id,uuid,NO,,
+t3a_employer_saved_report,participant_id,uuid,NO,,
+t3a_employer_saved_report,saved_at,timestamp with time zone,NO,,now()
+t3a_employer_workspace_note,note_id,uuid,NO,yes,gen_random_uuid()
+t3a_employer_workspace_note,employer_profile_id,uuid,NO,,
+t3a_employer_workspace_note,participant_id,uuid,NO,,
+t3a_employer_workspace_note,note_body,text,NO,,
+t3a_employer_workspace_note,created_at,timestamp with time zone,NO,,now()
+t3a_employment_link,employment_link_id,uuid,NO,yes,gen_random_uuid()
+t3a_employment_link,participant_id,uuid,NO,,
+t3a_employment_link,employer_org_id,uuid,YES,,
+t3a_employment_link,opportunity_id,uuid,YES,,
+t3a_employment_link,linkage_route,text,YES,,
+t3a_employment_link,ber_version_released_at_linkage,uuid,YES,,
+t3a_employment_link,respondent_id,uuid,YES,,
+t3a_employment_link,respondent_role,text,YES,,
+t3a_employment_link,relationship_to_participant,text,YES,,
+t3a_employment_link,followup_due_dates,ARRAY,YES,,
+t3a_employment_link,question_set_version,text,YES,,
+t3a_employment_link,created_at,timestamp with time zone,NO,,now()
+t3a_employment_linkage_socket,employment_linkage_id,uuid,YES,,
+t3a_employment_linkage_socket,linked_participant_id,uuid,YES,,
+t3a_employment_linkage_socket,linked_organization_id,uuid,YES,,
+t3a_employment_linkage_socket,linked_role_code,text,YES,,
+t3a_employment_linkage_socket,employment_start_date,timestamp with time zone,YES,,
+t3a_employment_linkage_socket,employer_respondent_id,uuid,YES,,
+t3a_employment_linkage_socket,respondent_role,text,YES,,
+t3a_employment_linkage_socket,ats_hris_integration_ref,uuid,YES,,
+t3a_env_capability,singleton,smallint,NO,yes,1
+t3a_env_capability,env_state,t3a_env_state,NO,,'design_only'::t3a_env_state
+t3a_env_capability,set_by,uuid,YES,,
+t3a_env_capability,set_at,timestamp with time zone,NO,,now()
+t3a_env_capability,note,text,YES,,
+t3a_env_capability,identity_assurance_mode,text,NO,,'UNAVAILABLE'::text
+t3a_error_journal,event_name,text,NO,,
+t3a_error_journal,error_detail,text,YES,,
+t3a_error_journal,parent_ref,text,YES,,
+t3a_error_journal,error_journal_id,uuid,NO,yes,gen_random_uuid()
+t3a_error_journal,error_journal_written_at,timestamp with time zone,YES,,now()
+t3a_error_journal,reconciled_event_id,uuid,YES,,
+t3a_event_config,key,text,NO,yes,
+t3a_event_config,value,text,NO,,
+t3a_event_config,updated_at,timestamp with time zone,NO,,now()
+t3a_event_idempotency,idempotency_key,text,NO,yes,
+t3a_event_idempotency,payload_sha256,character,NO,,
+t3a_event_idempotency,source_system,text,NO,,
+t3a_event_idempotency,first_accepted_at,timestamp with time zone,NO,,now()
+t3a_event_idempotency,event_id,uuid,NO,,
+t3a_event_log,event_id,uuid,NO,yes,gen_random_uuid()
+t3a_event_log,event_name,text,NO,,
+t3a_event_log,event_category,t3a_event_category,NO,,
+t3a_event_log,occurred_at,timestamp with time zone,NO,,clock_timestamp()
+t3a_event_log,ingested_at,timestamp with time zone,NO,,now()
+t3a_event_log,actor_type,text,NO,,
+t3a_event_log,actor_id,uuid,NO,,
+t3a_event_log,subject_id,uuid,YES,,
+t3a_event_log,session_id,uuid,YES,,
+t3a_event_log,correlation_id,uuid,YES,,
+t3a_event_log,resource_type,text,YES,,
+t3a_event_log,resource_id,uuid,YES,,
+t3a_event_log,payload,jsonb,NO,,'{}'::jsonb
+t3a_event_log,artifact_ref_id,text,YES,,
+t3a_event_log,integrity_status,t3a_integrity_status,NO,,'ok'::t3a_integrity_status
+t3a_event_log,integrity_hash,text,NO,,
+t3a_event_log,supersedes_event_id,uuid,YES,,
+t3a_event_log,source_system,text,YES,,
+t3a_event_log,schema_version,text,NO,,'1.0'::text
+t3a_event_log,dictionary_version,text,NO,,'1.3'::text
+t3a_event_log,previous_hash,character,YES,,
+t3a_event_log,record_property,text,NO,,'real'::text
+t3a_event_log,event_idempotency_key,text,YES,,
+t3a_event_log,event_sequence_no,integer,YES,,
+t3a_event_log,event_processing_state,text,NO,,'accepted'::text
+t3a_event_log,actor_role_code,text,YES,,
+t3a_event_log,policy_decision_ref,uuid,YES,,
+t3a_event_log,change_request_ref,text,YES,,
+t3a_event_log,application_session_id,uuid,YES,,
+t3a_event_log,actor_ref,text,YES,,
+t3a_event_log,stream_key,text,YES,,
+t3a_event_log,subject_id_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,session_id_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,correlation_id_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,source_system_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,event_sequence_no_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,policy_decision_ref_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,change_request_ref_capture_state,text,NO,,'not_captured'::text
+t3a_event_log,application_session_id_capture_state,text,NO,,'not_captured'::text
+t3a_event_name_alias,alias,text,NO,yes,
+t3a_event_name_alias,dictionary_version,text,NO,,
+t3a_event_name_alias,event_name,text,NO,,
+t3a_event_name_alias,confidence,text,NO,,
+t3a_event_name_alias,note,text,YES,,
+t3a_event_reference_rule,payload_key,text,NO,yes,
+t3a_event_reference_rule,ref_table,text,NO,,
+t3a_event_reference_rule,ref_column,text,NO,,
+t3a_event_reference_rule,note,text,YES,,
+t3a_event_registry,dictionary_version,text,NO,yes,
+t3a_event_registry,event_name,text,NO,yes,
+t3a_event_registry,event_category,text,NO,,
+t3a_event_registry,status,text,NO,,
+t3a_event_registry,trigger_text,text,YES,,
+t3a_event_registry,required_payload,ARRAY,NO,,
+t3a_event_registry,optional_payload,ARRAY,NO,,
+t3a_event_registry,conditional,jsonb,NO,,'[]'::jsonb
+t3a_event_registry,payload_schema,jsonb,NO,,
+t3a_event_registry,worst_case_payload_bytes,integer,YES,,
+t3a_event_rejection,rejection_id,uuid,NO,yes,gen_random_uuid()
+t3a_event_rejection,attempted_name,text,YES,,
+t3a_event_rejection,resolved_name,text,YES,,
+t3a_event_rejection,reason_code,text,NO,,
+t3a_event_rejection,detail,text,YES,,
+t3a_event_rejection,payload_sha256,character,YES,,
+t3a_event_rejection,actor_ref,text,YES,,
+t3a_event_rejection,record_property,text,YES,,
+t3a_event_rejection,source_system,text,YES,,
+t3a_event_rejection,occurred_at,timestamp with time zone,YES,,
+t3a_event_rejection,rejected_at,timestamp with time zone,NO,,now()
+t3a_evidence_review,ber_report_id,uuid,NO,,
+t3a_evidence_review,evidence_review_id,uuid,NO,yes,gen_random_uuid()
+t3a_evidence_review,reviewer_id,uuid,NO,,
+t3a_evidence_review,review_completed_at,timestamp with time zone,NO,,now()
+t3a_evidence_review,version_set_hash,character,NO,,
+t3a_evidence_review,review_checklist_results,jsonb,NO,,
+t3a_field_physical_map,dictionary_version,text,NO,yes,
+t3a_field_physical_map,qualified_name,text,NO,yes,
+t3a_field_physical_map,mapping_class,text,NO,,
+t3a_field_physical_map,physical_table,text,YES,,
+t3a_field_physical_map,physical_column,text,YES,,
+t3a_field_physical_map,payload_path,text,YES,,
+t3a_field_physical_map,capture_state_column,text,YES,,
+t3a_field_physical_map,confirmed_by,text,YES,,
+t3a_field_physical_map,confirmed_at,timestamp with time zone,YES,,
+t3a_field_physical_map,note,text,YES,,
+t3a_field_physical_map,created_at,timestamp with time zone,NO,,now()
+t3a_field_physical_map,updated_at,timestamp with time zone,NO,,now()
+t3a_field_prohibited_item,dictionary_version,text,NO,yes,
+t3a_field_prohibited_item,item_no,integer,NO,yes,
+t3a_field_prohibited_item,item,text,NO,,
+t3a_field_prohibited_item,reason,text,NO,,
+t3a_field_prohibited_item,use_instead,text,NO,,
+t3a_field_registry,dictionary_version,text,NO,yes,
+t3a_field_registry,qualified_name,text,NO,yes,
+t3a_field_registry,domain,text,NO,,
+t3a_field_registry,field,text,NO,,
+t3a_field_registry,canonical_type,text,NO,,
+t3a_field_registry,enum_values,jsonb,YES,,
+t3a_field_registry,type_values,text,YES,,
+t3a_field_registry,source,text,NO,,
+t3a_field_registry,trigger,text,YES,,
+t3a_field_registry,owner,text,NO,,
+t3a_field_registry,store,text,NO,,
+t3a_field_registry,status,text,NO,,
+t3a_field_registry,irreversible,boolean,NO,,
+t3a_field_registry,if_absent,text,NO,,
+t3a_field_registry,capture_state_field,text,YES,,
+t3a_field_registry_version,dictionary_version,text,NO,yes,
+t3a_field_registry_version,identifier,text,NO,,
+t3a_field_registry_version,dictionary_date,date,NO,,
+t3a_field_registry_version,source_sha256,character,NO,,
+t3a_field_registry_version,field_count,integer,NO,,
+t3a_field_registry_version,event_count,integer,NO,,
+t3a_field_registry_version,prohibited_count,integer,NO,,
+t3a_field_registry_version,test_count,integer,NO,,
+t3a_field_registry_version,loaded_at,timestamp with time zone,NO,,now()
+t3a_followup_metadata,followup_id,uuid,NO,yes,gen_random_uuid()
+t3a_followup_metadata,employment_link_id,uuid,YES,,
+t3a_followup_metadata,followup_window,text,NO,,
+t3a_followup_metadata,followup_sent_timestamp,timestamp with time zone,YES,,
+t3a_followup_metadata,followup_response_status,text,NO,,'unknown'::text
+t3a_followup_metadata,question_set_version,text,NO,,
+t3a_followup_metadata,followup_response_structured,jsonb,YES,,
+t3a_followup_metadata,verification_level,text,YES,,
+t3a_followup_metadata,delivery_channel,text,YES,,
+t3a_followup_metadata,created_at,timestamp with time zone,NO,,now()
+t3a_followup_socket,followup_window,text,YES,,
+t3a_followup_socket,followup_sent_at,timestamp with time zone,YES,,
+t3a_followup_socket,followup_response_status,text,YES,,
+t3a_followup_socket,question_set_version,text,YES,,
+t3a_followup_socket,verification_level,text,YES,,
+t3a_followup_socket,delivery_channel,text,YES,,
+t3a_governance_config,governance_config_id,uuid,NO,yes,gen_random_uuid()
+t3a_governance_config,config_key,text,NO,,
+t3a_governance_config,version,text,NO,,
+t3a_governance_config,value,jsonb,NO,,
+t3a_governance_config,spec_citation,text,NO,,
+t3a_governance_config,approved_by,text,NO,,
+t3a_governance_config,approved_at,timestamp with time zone,NO,,now()
+t3a_governance_config,effective_from,timestamp with time zone,NO,,now()
+t3a_governance_config,superseded_by,uuid,YES,,
+t3a_group_participation_socket,account_id,uuid,NO,,
+t3a_group_participation_socket,group_participation_record_id,uuid,YES,,
+t3a_growth_log_entry,entry_id,uuid,NO,yes,gen_random_uuid()
+t3a_growth_log_entry,created_by,uuid,NO,,auth.uid()
+t3a_growth_log_entry,entry_kind,text,NO,,
+t3a_growth_log_entry,text,text,YES,,
+t3a_growth_log_entry,text_capture_state,text,NO,,'not_captured'::text
+t3a_growth_log_entry,module_reference,text,YES,,
+t3a_growth_log_entry,module_reference_capture_state,text,NO,,'not_captured'::text
+t3a_growth_log_entry,created_at,timestamp with time zone,NO,,now()
+t3a_growth_log_entry,updated_at,timestamp with time zone,NO,,now()
+t3a_growth_log_entry,schema_version,text,NO,,'1.0'::text
+t3a_hire_record,organization_id,uuid,NO,,
+t3a_hire_record,hire_recorded_id,uuid,NO,yes,gen_random_uuid()
+t3a_hire_record,recorded_at,timestamp with time zone,NO,,now()
+t3a_identity_assurance,identity_assurance_id,uuid,NO,yes,gen_random_uuid()
+t3a_identity_assurance,participant_id,uuid,NO,,
+t3a_identity_assurance,identity_assurance_method,text,NO,,
+t3a_identity_assurance,identity_assurance_evidence_ref,text,YES,,
+t3a_identity_assurance,registration_jurisdiction,text,NO,,
+t3a_identity_assurance,country_code,text,NO,,
+t3a_identity_assurance,sub_jurisdiction,text,YES,,
+t3a_identity_assurance,language_preference,text,NO,,
+t3a_identity_assurance,timezone,text,NO,,
+t3a_identity_assurance,occupational_classification_version,text,NO,,
+t3a_identity_assurance,captured_at,timestamp with time zone,NO,,now()
+t3a_identity_assurance_socket,account_id,uuid,NO,,
+t3a_identity_assurance_socket,identity_assurance_provider_ref,uuid,YES,,
+t3a_identity_assurance_socket,identity_assurance_evidence_ref,text,YES,,
+t3a_incident,opened_at,timestamp with time zone,NO,,now()
+t3a_incident,incident_id,uuid,NO,yes,gen_random_uuid()
+t3a_incident,severity,text,YES,,
+t3a_incident,affected_record_count,integer,YES,,
+t3a_incident,notified_at,timestamp with time zone,YES,,
+t3a_institutional_socket,institutional_tenant_id,uuid,YES,,
+t3a_institutional_socket,institutional_export_purpose_id,uuid,YES,,
+t3a_interaction_pattern_family,dimension_id,text,NO,yes,
+t3a_interaction_pattern_family,situation_class,text,NO,yes,
+t3a_interaction_pattern_family,interaction_pattern_family_id,text,NO,,
+t3a_job_family_socket,ber_report_id,uuid,YES,,
+t3a_job_family_socket,job_family,text,YES,,
+t3a_legacy_consent_coverage,legacy_consent_id,uuid,NO,yes,
+t3a_legacy_consent_coverage,purpose,text,NO,yes,
+t3a_legacy_consent_coverage,confirmed_by,text,NO,,
+t3a_legacy_consent_coverage,confirmed_at,timestamp with time zone,NO,,now()
+t3a_legacy_draft_retirement,retirement_id,uuid,NO,yes,gen_random_uuid()
+t3a_legacy_draft_retirement,source_table,text,NO,,
+t3a_legacy_draft_retirement,source_key,text,NO,,
+t3a_legacy_draft_retirement,dimension_id,text,NO,,
+t3a_legacy_draft_retirement,superseded_by,text,NO,,
+t3a_legacy_draft_retirement,reason,text,NO,,
+t3a_legacy_draft_retirement,retired_at,timestamp with time zone,NO,,now()
+t3a_legal_hold,resource_type,text,NO,,
+t3a_legal_hold,resource_id,uuid,NO,,
+t3a_legal_hold,placed_at,timestamp with time zone,NO,,now()
+t3a_legal_hold,released_at,timestamp with time zone,YES,,
+t3a_legal_hold,legal_hold_ref,uuid,NO,yes,gen_random_uuid()
+t3a_licensee_socket,licensee_id,uuid,YES,,
+t3a_licensee_socket,license_terms_version,text,YES,,
+t3a_licensee_socket,misuse_termination_at,timestamp with time zone,YES,,
+t3a_longitudinal_case,account_id,uuid,YES,,
+t3a_longitudinal_case,longitudinal_case_id,uuid,YES,,
+t3a_longitudinal_case,comparison_scope_id,uuid,YES,,
+t3a_longitudinal_case,included_observation_refs,ARRAY,YES,,
+t3a_longitudinal_case,excluded_observation_refs,ARRAY,YES,,
+t3a_longitudinal_case,exclusion_reason_codes,ARRAY,YES,,
+t3a_longitudinal_case,counterevidence_refs,ARRAY,YES,,
+t3a_longitudinal_case,transition_rule_version,text,YES,,
+t3a_longitudinal_case,lsa_sufficiency_rule_version,text,YES,,
+t3a_longitudinal_case,resolution_trace_ref,uuid,YES,,
+t3a_longitudinal_case,finding_code,text,YES,,
+t3a_lsa_consent,account_id,uuid,NO,,
+t3a_lsa_consent,lsa_consent_state,text,YES,,
+t3a_lsa_consent,lsa_consent_state_capture_state,text,NO,,'not_captured'::text
+t3a_lsa_consent,lsa_consent_text_version,text,YES,,
+t3a_lsa_consent,lsa_consent_text_version_capture_state,text,NO,,'not_captured'::text
+t3a_lsa_consent,lsa_consent_timestamp,timestamp with time zone,YES,,
+t3a_lsa_consent,lsa_consent_timestamp_capture_state,text,NO,,'not_captured'::text
+t3a_lsa_consent,lsa_withdrawal_timestamp,timestamp with time zone,YES,,
+t3a_lsa_consent,lsa_withdrawal_timestamp_capture_state,text,NO,,'not_captured'::text
+t3a_lsa_registry_record,lsa_registry_record_id,uuid,NO,yes,gen_random_uuid()
+t3a_lsa_registry_record,registry,text,NO,,
+t3a_lsa_registry_record,record_key,text,NO,,
+t3a_lsa_registry_record,version,integer,NO,,
+t3a_lsa_registry_record,dimension_id,text,YES,,
+t3a_lsa_registry_record,status,text,NO,,'draft_for_approval'::text
+t3a_lsa_registry_record,effective_from,date,YES,,
+t3a_lsa_registry_record,effective_to,date,YES,,
+t3a_lsa_registry_record,approved_by,text,YES,,
+t3a_lsa_registry_record,approved_at,timestamp with time zone,YES,,
+t3a_lsa_registry_record,package_id,text,YES,,
+t3a_lsa_registry_record,body,jsonb,NO,,
+t3a_lsa_registry_record,loaded_at,timestamp with time zone,NO,,now()
+t3a_lsa_report,account_id,uuid,YES,,
+t3a_lsa_report,lsa_report_id,uuid,YES,,
+t3a_lsa_report,lsa_verification_code,text,YES,,
+t3a_lsa_sidecar,account_id,uuid,YES,,
+t3a_lsa_sidecar,lsa_sidecar_id,uuid,YES,,
+t3a_lsa_sidecar,lsa_sidecar_id_capture_state,text,NO,,'not_captured'::text
+t3a_lsa_snapshot,account_id,uuid,YES,,
+t3a_lsa_snapshot,lsa_snapshot_id,uuid,YES,,
+t3a_lsa_snapshot,snapshot_at,timestamp with time zone,YES,,
+t3a_lsa_snapshot,pinned_version_set,jsonb,YES,,
+t3a_lsa_snapshot,lsa_comparison_result,jsonb,YES,,
+t3a_manifest_verification,manifest_ref,text,NO,,
+t3a_manifest_verification,verification_result,text,NO,,
+t3a_manifest_verification,manifest_signature,text,NO,,
+t3a_manifest_verification,manifest_verified_at,timestamp with time zone,NO,,now()
+t3a_manifest_verification,verification_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_appeal,mentor_id,uuid,NO,,
+t3a_mentor_appeal,mentor_appeal_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_appeal,opened_at,timestamp with time zone,NO,,now()
+t3a_mentor_appeal,decided_at,timestamp with time zone,YES,,
+t3a_mentor_assignment,mentor_assignment_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_assignment,mentor_id,uuid,NO,,
+t3a_mentor_assignment,participant_id,uuid,NO,,
+t3a_mentor_assignment,stage_instance_id,uuid,NO,,
+t3a_mentor_assignment,assignment_method,t3a_assignment_method,NO,,
+t3a_mentor_assignment,prior_allocation_count,integer,NO,,0
+t3a_mentor_assignment,conflict_declaration_ref,uuid,YES,,
+t3a_mentor_assignment,created_at,timestamp with time zone,NO,,now()
+t3a_mentor_assignment,guidance_between_stages_received,boolean,YES,,
+t3a_mentor_assignment,guidance_between_stages_received_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_assignment,guide_account_id,uuid,YES,,
+t3a_mentor_assignment,guide_account_id_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,mentor_authorization_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_authorization,mentor_id,uuid,NO,,
+t3a_mentor_authorization,dimension_id,t3a_dimension_code,NO,,
+t3a_mentor_authorization,authorized_from,timestamp with time zone,NO,,
+t3a_mentor_authorization,authorized_until,timestamp with time zone,YES,,
+t3a_mentor_authorization,calibration_status,text,NO,,
+t3a_mentor_authorization,reference_set_version,text,NO,,
+t3a_mentor_authorization,created_at,timestamp with time zone,NO,,now()
+t3a_mentor_authorization,reference_set_version_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,authorization_status,text,YES,,
+t3a_mentor_authorization,reviewer_authorization,boolean,YES,,
+t3a_mentor_authorization,issuer_authorization,boolean,YES,,
+t3a_mentor_authorization,supervised_sessions_completed,integer,YES,,
+t3a_mentor_authorization,supervised_sessions_completed_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,supervised_status_started_at,timestamp with time zone,YES,,
+t3a_mentor_authorization,supervised_status_started_at_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,supervision_finding_code,text,YES,,
+t3a_mentor_authorization,supervision_finding_code_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,suspension_started_at,timestamp with time zone,YES,,
+t3a_mentor_authorization,suspension_extension_count,integer,YES,,
+t3a_mentor_authorization,independent_approver_id,uuid,YES,,
+t3a_mentor_authorization,observations_per_month_commitment,integer,YES,,
+t3a_mentor_authorization,observations_per_month_commitment_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,engagement_started_at,timestamp with time zone,YES,,
+t3a_mentor_authorization,engagement_started_at_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,sourcing_channel,text,YES,,
+t3a_mentor_authorization,sourcing_channel_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,sourcing_employer_ref,uuid,YES,,
+t3a_mentor_authorization,sourcing_employer_ref_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,observer_qualification_record_ref,uuid,YES,,
+t3a_mentor_authorization,observer_qualification_record_ref_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,observer_specialty_domain_codes,ARRAY,YES,,
+t3a_mentor_authorization,observer_specialty_domain_codes_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_authorization,qualification_reviewed_at,timestamp with time zone,YES,,
+t3a_mentor_authorization,qualification_reviewed_at_capture_state,text,NO,,'not_captured'::text
+t3a_mentor_confidence_socket,determination_id,uuid,YES,,
+t3a_mentor_confidence_socket,mentor_confidence_per_determination,text,YES,,
+t3a_mentor_invitation,invitee_email,text,NO,,
+t3a_mentor_invitation,mentor_invitation_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_invitation,invited_by,uuid,NO,,
+t3a_mentor_invitation,invitation_sent_at,timestamp with time zone,NO,,now()
+t3a_mentor_invitation,invitation_expires_at,timestamp with time zone,NO,,
+t3a_mentor_invitation,invitation_redeemed_at,timestamp with time zone,YES,,
+t3a_mentor_invitation,mentor_agreement_version,text,YES,,
+t3a_mentor_invitation,mentor_agreement_signed_at,timestamp with time zone,YES,,
+t3a_mentor_judgment,mentor_judgment_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_judgment,stage_instance_id,uuid,NO,,
+t3a_mentor_judgment,observation_id,uuid,YES,,
+t3a_mentor_judgment,human_confirmation_actor_id,uuid,YES,,
+t3a_mentor_judgment,human_confirmation_at,timestamp with time zone,YES,,
+t3a_mentor_judgment,confirmation_role,text,YES,,
+t3a_mentor_judgment,authorization_snapshot_ref,jsonb,YES,,
+t3a_mentor_judgment,progression_decision,t3a_progression_decision,YES,,
+t3a_mentor_judgment,progression_dimension_id,t3a_dimension_code,YES,,
+t3a_mentor_judgment,decision_rationale,text,YES,,
+t3a_mentor_judgment,dimensions_flagged,ARRAY,YES,,
+t3a_mentor_judgment,confidence_per_dimension,jsonb,YES,,
+t3a_mentor_judgment,key_moment_markers,jsonb,YES,,
+t3a_mentor_judgment,ai_assist_notes_accepted,integer,YES,,0
+t3a_mentor_judgment,ai_assist_notes_ignored,integer,YES,,0
+t3a_mentor_judgment,ai_anchor_override,boolean,YES,,false
+t3a_mentor_judgment,ai_anchor_original_value,integer,YES,,
+t3a_mentor_judgment,session_technical_issues,text,YES,,
+t3a_mentor_judgment,created_at,timestamp with time zone,NO,,now()
+t3a_mentor_request,mentor_request_id,uuid,NO,yes,gen_random_uuid()
+t3a_mentor_request,requester_id,uuid,NO,,
+t3a_mentor_request,area_of_work,text,YES,,
+t3a_mentor_request,current_work_context,text,YES,,
+t3a_mentor_request,availability,text,YES,,
+t3a_mentor_request,time_zone,text,YES,,
+t3a_mentor_request,additional_context,text,YES,,
+t3a_mentor_request,status,text,NO,,'received'::text
+t3a_mentor_request,assigned_mentor_id,uuid,YES,,
+t3a_mentor_request,created_at,timestamp with time zone,NO,,now()
+t3a_mentor_request,updated_at,timestamp with time zone,NO,,now()
+t3a_moderation_sample,moderation_sample_id,uuid,NO,yes,gen_random_uuid()
+t3a_moderation_sample,observation_id,uuid,NO,,
+t3a_moderation_sample,sampling_plan_version,text,NO,,
+t3a_moderation_sample,sampled_at,timestamp with time zone,NO,,now()
+t3a_moderation_sample,paired_anchor_by_mentor,uuid,YES,,
+t3a_moderation_sample,paired_anchor_value,integer,YES,,
+t3a_moderation_sample,sampling_plan_version_capture_state,text,NO,,'not_captured'::text
+t3a_observation,observation_id,uuid,NO,yes,gen_random_uuid()
+t3a_observation,participant_id,uuid,NO,,
+t3a_observation,stage_code,t3a_stage_code,NO,,
+t3a_observation,dimension_id,t3a_dimension_code,NO,,
+t3a_observation,source_version_id,uuid,NO,,
+t3a_observation,attempt_no,integer,NO,,
+t3a_observation,occurred_at,timestamp with time zone,NO,,now()
+t3a_observation,stage_instance_id,uuid,NO,,
+t3a_observation,response_sequence,jsonb,YES,,
+t3a_observation,submission_origin,jsonb,YES,,
+t3a_observation,assistance_declaration,jsonb,YES,,
+t3a_observation,abandonment_state,text,YES,,
+t3a_observation,abandonment_reason,text,YES,,
+t3a_observation,contemporaneity,t3a_contemporaneity,NO,,
+t3a_observation,late_entry_delay_seconds,integer,YES,,
+t3a_observation,observer_id,uuid,YES,,
+t3a_observation,observer_authorization_at_date,jsonb,YES,,
+t3a_observation,ordinal_anchor,integer,YES,,
+t3a_observation,descriptor_version,text,NO,,
+t3a_observation,determination_answers,jsonb,YES,,
+t3a_observation,composed_statement_id,uuid,YES,,
+t3a_observation,relevance_basis,jsonb,YES,,
+t3a_observation,evidence_class,t3a_evidence_class,NO,,
+t3a_observation,administration_conditions,jsonb,YES,,
+t3a_observation,administration_variance,jsonb,YES,,
+t3a_observation,accommodation_class,t3a_accommodation_class,YES,,
+t3a_observation,comparability_class,t3a_comparability_class,NO,,'directly_comparable'::t3a_comparability_class
+t3a_observation,evidence_notes,text,YES,,
+t3a_observation,integrity_status,t3a_integrity_status,NO,,'ok'::t3a_integrity_status
+t3a_observation,supersedes,uuid,YES,,
+t3a_observation,superseded_by,uuid,YES,,
+t3a_observation,created_at,timestamp with time zone,NO,,now()
+t3a_observation,accommodation_class_capture_state,text,NO,,'not_captured'::text
+t3a_observation,assistance_declaration_capture_state,text,NO,,'not_captured'::text
+t3a_observation,abandonment_state_capture_state,text,NO,,'not_captured'::text
+t3a_observation,accommodation_applied,boolean,YES,,
+t3a_observation,accommodation_applied_capture_state,text,NO,,'not_captured'::text
+t3a_observation,administration_variance_capture_state,text,NO,,'not_captured'::text
+t3a_observation,comparability_class_capture_state,text,NO,,'not_captured'::text
+t3a_observation,submission_origin_capture_state,text,NO,,'not_captured'::text
+t3a_observation,served_instance_id,uuid,YES,,
+t3a_observation,captured_at,timestamp with time zone,YES,,
+t3a_observation,capture_delay_seconds,integer,YES,,
+t3a_observation,observer_role,text,YES,,
+t3a_observation,observer_authorization_snapshot_ref,uuid,YES,,
+t3a_observation,s1_human_confirmation_actor_id,uuid,YES,,
+t3a_observation,s1_human_confirmation_at,timestamp with time zone,YES,,
+t3a_observation,response_artifact_ref,uuid,YES,,
+t3a_observation,response_artifact_ref_capture_state,text,NO,,'not_captured'::text
+t3a_observation,response_sequence_number,integer,YES,,
+t3a_observation,response_sequence_number_capture_state,text,NO,,'not_captured'::text
+t3a_observation,response_submitted_at,timestamp with time zone,YES,,
+t3a_observation,response_submitted_at_capture_state,text,NO,,'not_captured'::text
+t3a_observation,s3_submission_provenance,jsonb,YES,,
+t3a_observation,beat_code,text,YES,,
+t3a_observation,beat_code_capture_state,text,NO,,'not_captured'::text
+t3a_observation,beat_started_at,timestamp with time zone,YES,,
+t3a_observation,beat_started_at_capture_state,text,NO,,'not_captured'::text
+t3a_observation,data_source,text,YES,,
+t3a_observation,record_snapshot_hash,character,YES,,
+t3a_observation,evidence_currency_expires_at,timestamp with time zone,YES,,
+t3a_observation,session_started_at,timestamp with time zone,YES,,
+t3a_observation,session_started_at_capture_state,text,NO,,'not_captured'::text
+t3a_observation,session_ended_at,timestamp with time zone,YES,,
+t3a_observation,session_ended_at_capture_state,text,NO,,'not_captured'::text
+t3a_observation,session_serving_state,text,YES,,
+t3a_observation,session_admin_state,text,YES,,
+t3a_observation,question_serving_state,text,YES,,
+t3a_observation,branch_trigger_ref,uuid,YES,,
+t3a_observation,prompt_material_sequence,jsonb,YES,,
+t3a_observation,prompt_material_sequence_capture_state,text,NO,,'not_captured'::text
+t3a_observation,observed_opportunity_ref,uuid,YES,,
+t3a_observation,observed_opportunity_ref_capture_state,text,NO,,'not_captured'::text
+t3a_observation,observation_authorization_ref,uuid,YES,,
+t3a_observation,prior_exposure_known_state,text,YES,,
+t3a_observation,prior_exposure_known_state_capture_state,text,NO,,'not_captured'::text
+t3a_observation,observer_calibration_version,text,YES,,
+t3a_observation,observer_independence_state,text,YES,,
+t3a_observation,reviewer_independence_state,text,YES,,
+t3a_observation,capture_edit_history_ref,uuid,YES,,
+t3a_observation,technical_issue_codes,ARRAY,YES,,
+t3a_observation,technical_issue_codes_capture_state,text,NO,,'not_captured'::text
+t3a_observation,observer_disagreement_refs,ARRAY,YES,,
+t3a_observation_gateway,observation_gateway_id,uuid,NO,yes,gen_random_uuid()
+t3a_observation_gateway,participant_id,uuid,NO,,
+t3a_observation_gateway,dimension_id,text,NO,,
+t3a_observation_gateway,initial_route,text,NO,,
+t3a_observation_gateway,registration_identity_assurance_ref,text,YES,,
+t3a_observation_gateway,env_state_at_creation,t3a_env_state,NO,,
+t3a_observation_gateway,created_at,timestamp with time zone,NO,,now()
+t3a_observation_path_gateway,observation_path_gateway_id,uuid,NO,yes,gen_random_uuid()
+t3a_observation_path_gateway,participant_id,uuid,NO,,
+t3a_observation_path_gateway,session_identity_method,text,NO,,
+t3a_observation_path_gateway,observation_consent_version,text,NO,,
+t3a_observation_path_gateway,assistance_rules_version,text,NO,,
+t3a_observation_path_gateway,coaching_terminated_at,timestamp with time zone,NO,,
+t3a_observation_path_gateway,created_at,timestamp with time zone,NO,,now()
+t3a_observation_path_gateway,observation_notification_timestamp,timestamp with time zone,YES,,
+t3a_observation_path_gateway,observation_path_completed_at,timestamp with time zone,YES,,
+t3a_observation_record,observation_record_id,uuid,NO,yes,gen_random_uuid()
+t3a_observation_record,participant_id,uuid,NO,,
+t3a_observation_record,dimension_id,text,NO,,
+t3a_observation_record,stage_code,text,NO,,
+t3a_observation_record,observer_id,uuid,YES,,
+t3a_observation_record,confirmer_id,uuid,YES,,
+t3a_observation_record,authority_snapshot_id,uuid,YES,,
+t3a_observation_record,version_set,jsonb,NO,,'{}'::jsonb
+t3a_observation_record,is_committed,boolean,NO,,false
+t3a_observation_record,committed_at,timestamp with time zone,YES,,
+t3a_observation_record,created_at,timestamp with time zone,NO,,now()
+t3a_observation_record,updated_at,timestamp with time zone,NO,,now()
+t3a_observation_timing_flag,observation_record_id,uuid,NO,yes,
+t3a_observation_timing_flag,timing_not_comparable,boolean,NO,,
+t3a_observation_timing_flag,response_channel_changed,boolean,NO,,false
+t3a_observation_timing_flag,pause_window_changed,boolean,NO,,false
+t3a_observation_timing_flag,recorded_by,uuid,YES,,
+t3a_observation_timing_flag,recorded_at,timestamp with time zone,NO,,now()
+t3a_order,order_id,uuid,NO,yes,gen_random_uuid()
+t3a_order,account_id,uuid,NO,,
+t3a_order,product_code,text,NO,,
+t3a_order,package_code,text,NO,,
+t3a_order,package_entitlements,ARRAY,NO,,
+t3a_order,purchased_at,timestamp with time zone,NO,,now()
+t3a_order,access_starts_at,timestamp with time zone,NO,,
+t3a_order,access_ends_at,timestamp with time zone,NO,,
+t3a_order,price_amount,numeric,NO,,
+t3a_order,currency,text,NO,,
+t3a_order,tax_jurisdiction,text,NO,,
+t3a_order,founding_member_flag,boolean,NO,,
+t3a_order,payment_provider_ref,text,NO,,
+t3a_oversight_account_request,request_id,uuid,NO,yes,gen_random_uuid()
+t3a_oversight_account_request,requested_by,uuid,NO,,
+t3a_oversight_account_request,email,text,NO,,
+t3a_oversight_account_request,first_name,text,YES,,
+t3a_oversight_account_request,last_name,text,YES,,
+t3a_oversight_account_request,basis,text,NO,,
+t3a_oversight_account_request,requested_at,timestamp with time zone,NO,,now()
+t3a_oversight_account_request,fulfilled_at,timestamp with time zone,YES,,
+t3a_oversight_account_request,fulfilled_profile_id,uuid,YES,,
+t3a_oversight_action_catalogue,action_code,text,NO,yes,
+t3a_oversight_action_catalogue,description,text,NO,,
+t3a_oversight_action_catalogue,basis_required,boolean,NO,,
+t3a_oversight_disclosure,disclosure_id,uuid,NO,yes,gen_random_uuid()
+t3a_oversight_disclosure,draft_text,text,NO,,
+t3a_oversight_disclosure,drafted_at,timestamp with time zone,NO,,now()
+t3a_oversight_disclosure,counsel_cleared,boolean,NO,,false
+t3a_oversight_disclosure,cleared_by,text,YES,,
+t3a_oversight_disclosure,effective_from,timestamp with time zone,YES,,
+t3a_oversight_holder,holder_id,uuid,NO,yes,
+t3a_oversight_holder,holder_name,text,NO,,
+t3a_oversight_holder,holder_email,text,NO,,
+t3a_oversight_holder,granted_by,uuid,YES,,
+t3a_oversight_holder,granted_at,timestamp with time zone,NO,,now()
+t3a_oversight_holder,revoked_at,timestamp with time zone,YES,,
+t3a_oversight_holder,revocation_basis,text,YES,,
+t3a_oversight_log,entry_id,uuid,NO,yes,gen_random_uuid()
+t3a_oversight_log,entry_seq,bigint,NO,,nextval('t3a_oversight_log_entry_seq_seq'::regclass)
+t3a_oversight_log,holder_id,uuid,YES,,
+t3a_oversight_log,holder_name,text,NO,,
+t3a_oversight_log,holder_email,text,NO,,
+t3a_oversight_log,occurred_at,timestamp with time zone,NO,,now()
+t3a_oversight_log,entry_kind,text,NO,,
+t3a_oversight_log,action_code,text,NO,,
+t3a_oversight_log,subject_kind,text,NO,,
+t3a_oversight_log,subject_id,text,YES,,
+t3a_oversight_log,subject_person,uuid,YES,,
+t3a_oversight_log,basis,text,YES,,
+t3a_oversight_log,detail,jsonb,NO,,'{}'::jsonb
+t3a_oversight_log,prev_hash,text,YES,,
+t3a_oversight_log,entry_hash,text,NO,,
+t3a_oversight_protected_surface,table_name,text,NO,yes,
+t3a_oversight_protected_surface,category,text,NO,,
+t3a_oversight_protected_surface,registered_at,timestamp with time zone,NO,,now()
+t3a_participant_contact_consent,participant_id,uuid,NO,yes,
+t3a_participant_contact_consent,contact_open,boolean,NO,,false
+t3a_participant_contact_consent,notice_version,text,YES,,
+t3a_participant_contact_consent,consent_timestamp,timestamp with time zone,YES,,
+t3a_participant_contact_consent,withdrawn_at,timestamp with time zone,YES,,
+t3a_participant_contact_consent,updated_at,timestamp with time zone,NO,,now()
+t3a_participant_document,document_id,uuid,NO,yes,gen_random_uuid()
+t3a_participant_document,account_id,uuid,NO,,
+t3a_participant_document,profile_document_ref,text,NO,,
+t3a_participant_document,uploaded_at,timestamp with time zone,NO,,now()
+t3a_participant_enrollment,account_id,uuid,NO,,
+t3a_participant_enrollment,enrollment_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_participant_enrollment,enrollment_scope,text,NO,,
+t3a_participant_enrollment,enrolled_at,timestamp with time zone,NO,,now()
+t3a_participant_profile,account_id,uuid,NO,yes,
+t3a_participant_profile,legal_name,text,YES,,
+t3a_participant_profile,legal_name_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,display_name,text,YES,,
+t3a_participant_profile,display_name_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,country_of_residence,text,YES,,
+t3a_participant_profile,country_of_residence_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,subdivision_of_residence,text,YES,,
+t3a_participant_profile,subdivision_of_residence_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,city_of_residence,text,YES,,
+t3a_participant_profile,city_of_residence_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,privacy_jurisdiction_code,text,YES,,
+t3a_participant_profile,privacy_jurisdiction_code_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,preferred_language,text,YES,,
+t3a_participant_profile,preferred_language_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,timezone,text,YES,,
+t3a_participant_profile,timezone_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,occupation_interest,ARRAY,YES,,
+t3a_participant_profile,occupation_interest_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,occupational_classification_version,text,NO,,'NOC 2021 Version 1.0'::text
+t3a_participant_profile,profile_field_source,jsonb,YES,,
+t3a_participant_profile,profile_field_source_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,notification_channel_preference,text,YES,,
+t3a_participant_profile,notification_channel_preference_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,target_industry_code,text,YES,,
+t3a_participant_profile,target_industry_code_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,role_seniority_context_code,text,YES,,
+t3a_participant_profile,role_seniority_context_code_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,recruitment_channel_code,text,YES,,
+t3a_participant_profile,recruitment_channel_code_capture_state,text,NO,,'not_captured'::text
+t3a_participant_profile,updated_at,timestamp with time zone,NO,,now()
+t3a_partner_organization,partner_organization_id,uuid,NO,yes,gen_random_uuid()
+t3a_partner_organization,created_at,timestamp with time zone,NO,,now()
+t3a_partner_organization,organization_type,text,NO,,
+t3a_partner_organization,organization_industry_code,text,YES,,
+t3a_partner_organization,organization_industry_code_capture_state,text,NO,,'not_captured'::text
+t3a_partner_organization,partner_relationship_effective_at,timestamp with time zone,YES,,
+t3a_partner_organization,partner_relationship_ended_at,timestamp with time zone,YES,,
+t3a_partner_organization,data_use_agreement_ref,uuid,YES,,
+t3a_pilot_stop,pilot_stop_id,uuid,NO,yes,gen_random_uuid()
+t3a_pilot_stop,stop_level,text,NO,,
+t3a_pilot_stop,dimension_id,text,NO,,
+t3a_pilot_stop,participant_id,uuid,YES,,
+t3a_pilot_stop,reason_code,text,NO,,
+t3a_pilot_stop,set_by,uuid,YES,,
+t3a_pilot_stop,set_at,timestamp with time zone,NO,,now()
+t3a_pilot_stop,lifted_at,timestamp with time zone,YES,,
+t3a_pilot_stop,lifted_by,uuid,YES,,
+t3a_privacy_notice_acknowledgement,acknowledgement_id,uuid,NO,yes,gen_random_uuid()
+t3a_privacy_notice_acknowledgement,account_id,uuid,NO,,
+t3a_privacy_notice_acknowledgement,privacy_notice_version,text,NO,,
+t3a_privacy_notice_acknowledgement,privacy_notice_hash,character,NO,,
+t3a_privacy_notice_acknowledgement,acknowledged_at,timestamp with time zone,NO,,now()
+t3a_privileged_access,actor_id,uuid,NO,,
+t3a_privileged_access,access_basis,text,NO,,
+t3a_privileged_access,privileged_access_id,uuid,NO,yes,gen_random_uuid()
+t3a_privileged_access,accessed_at,timestamp with time zone,NO,,now()
+t3a_privileged_access_event,privileged_access_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_privileged_access_event,actor_id,uuid,NO,,
+t3a_privileged_access_event,target_type,text,NO,,
+t3a_privileged_access_event,target_id,uuid,YES,,
+t3a_privileged_access_event,occurred_at,timestamp with time zone,NO,,now()
+t3a_privileged_access_event,justification,text,YES,,
+t3a_privileged_access_event,alert_raised,boolean,NO,,false
+t3a_program,partner_organization_id,uuid,NO,,
+t3a_program,created_at,timestamp with time zone,NO,,now()
+t3a_program,organization_program_id,uuid,NO,yes,gen_random_uuid()
+t3a_program,program_version,text,NO,,
+t3a_program_membership,account_id,uuid,NO,,
+t3a_program_membership,organization_program_id,uuid,NO,,
+t3a_program_membership,program_membership_id,uuid,NO,yes,gen_random_uuid()
+t3a_program_membership,program_enrolled_at,timestamp with time zone,YES,,now()
+t3a_program_membership,program_exit_at,timestamp with time zone,YES,,
+t3a_program_membership,membership_basis_ref,uuid,YES,,
+t3a_provenance,provenance_id,uuid,NO,yes,gen_random_uuid()
+t3a_provenance,resource_type,text,NO,,
+t3a_provenance,resource_id,uuid,NO,,
+t3a_provenance,data_source,t3a_data_source,NO,,
+t3a_provenance,entered_by,uuid,NO,,
+t3a_provenance,entered_at,timestamp with time zone,NO,,now()
+t3a_provenance,scenario_version,text,YES,,
+t3a_provenance,rubric_version,text,YES,,
+t3a_provenance,schema_version,text,NO,,
+t3a_provenance,dimension_schema_version,text,NO,,
+t3a_provenance,ai_model_version,text,YES,,
+t3a_provenance,ai_prompt_version,text,YES,,
+t3a_provenance,ai_config_version,text,YES,,
+t3a_provenance,ai_model_deployment_id,text,YES,,
+t3a_provenance,ai_prompt_hash,text,YES,,
+t3a_provenance,ai_system_message_version,text,YES,,
+t3a_provenance,ai_output_schema_version,text,YES,,
+t3a_provenance,consequential_config_values,jsonb,YES,,
+t3a_provenance,version_change_reason,text,YES,,
+t3a_provenance,approval_authority,text,YES,,
+t3a_provenance,consent_status_at_capture,text,YES,,
+t3a_provenance,sufficiency_rules_version,text,YES,,
+t3a_provenance,permitted_use_version,text,YES,,
+t3a_quality_event,quality_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_quality_event,severity,text,NO,,
+t3a_quality_event,kind,text,NO,,
+t3a_quality_event,detail,jsonb,NO,,'{}'::jsonb
+t3a_quality_event,event_id,uuid,YES,,
+t3a_quality_event,created_at,timestamp with time zone,NO,,now()
+t3a_question_definition,dimension_id,text,NO,yes,
+t3a_question_definition,question_id,text,NO,yes,
+t3a_question_definition,answer_id,text,NO,yes,
+t3a_question_definition,version,text,NO,yes,'1.0'::text
+t3a_question_definition,exact_stem,text,YES,,
+t3a_question_definition,stage_applicability,text,YES,,
+t3a_question_definition,required_or_conditional,text,YES,,
+t3a_question_definition,operational_definition,text,YES,,
+t3a_question_definition,minimum_observable_evidence,text,YES,,
+t3a_question_definition,inclusion_example,text,YES,,
+t3a_question_definition,exclusion_example,text,YES,,
+t3a_question_definition,ambiguity_rule,text,YES,,
+t3a_question_definition,missing_state_route,text,YES,,
+t3a_question_definition,child_branch_rule,text,YES,,
+t3a_question_definition,statement_mapping,text,YES,,
+t3a_question_definition,effective_date,date,YES,,
+t3a_question_definition,retirement_state,text,NO,,'active'::text
+t3a_rce_controlled_text,text_id,text,NO,yes,
+t3a_rce_controlled_text,version,text,NO,yes,
+t3a_rce_controlled_text,body,jsonb,NO,,
+t3a_rce_controlled_text,retired,boolean,NO,,false
+t3a_rce_controlled_text,created_at,timestamp with time zone,NO,,now()
+t3a_rce_controlled_text_register,version,text,NO,yes,
+t3a_rce_controlled_text_register,sha256_digest,text,NO,,
+t3a_rce_controlled_text_register,sealed_at,timestamp with time zone,NO,,now()
+t3a_rce_controlled_text_register,sealed_by,uuid,YES,,
+t3a_rce_controlled_text_register,note,text,YES,,
+t3a_rce_pilot_authorization,authorization_id,uuid,NO,yes,gen_random_uuid()
+t3a_rce_pilot_authorization,authorized_by,uuid,NO,,
+t3a_rce_pilot_authorization,authorization_scope,jsonb,NO,,'{}'::jsonb
+t3a_rce_pilot_authorization,granted_at,timestamp with time zone,NO,,now()
+t3a_rce_pilot_authorization,expires_at,timestamp with time zone,YES,,
+t3a_rce_pilot_authorization,revoked_at,timestamp with time zone,YES,,
+t3a_rce_pilot_authorization,note,text,YES,,
+t3a_rce_prohibited_vocabulary,dimension_id,text,NO,yes,
+t3a_rce_prohibited_vocabulary,word,text,NO,yes,
+t3a_rce_prohibited_vocabulary,version,text,NO,yes,
+t3a_rce_prohibited_vocabulary,reason,text,YES,,
+t3a_rce_prohibited_vocabulary,created_at,timestamp with time zone,NO,,now()
+t3a_rce_standing_defect,defect_id,uuid,NO,yes,gen_random_uuid()
+t3a_rce_standing_defect,defect_serial,integer,NO,,
+t3a_rce_standing_defect,entry_or_item,text,NO,,
+t3a_rce_standing_defect,dimension_id,text,YES,,
+t3a_rce_standing_defect,defect_description,text,NO,,
+t3a_rce_standing_defect,classification,text,NO,,
+t3a_rce_standing_defect,section_breached,text,YES,,
+t3a_rce_standing_defect,use_disposition,text,NO,,
+t3a_rce_standing_defect,recorded_at,timestamp with time zone,NO,,now()
+t3a_rce_standing_defect,recorded_by,uuid,YES,,
+t3a_rce_standing_defect,notes,text,YES,,
+t3a_reconsideration_assignment,reconsideration_assignment_id,uuid,NO,yes,gen_random_uuid()
+t3a_reconsideration_assignment,correction_case_id,uuid,NO,,
+t3a_reconsideration_assignment,observation_record_id,uuid,NO,,
+t3a_reconsideration_assignment,reconsiderer_id,uuid,YES,,
+t3a_reconsideration_assignment,status,t3a_reconsideration_status,NO,,'assigned'::t3a_reconsideration_status
+t3a_reconsideration_assignment,reason_if_held_open,t3a_involvement_reason,YES,,
+t3a_reconsideration_assignment,outcome,text,YES,,
+t3a_reconsideration_assignment,created_at,timestamp with time zone,NO,,now()
+t3a_reconsideration_assignment,updated_at,timestamp with time zone,NO,,now()
+t3a_reconsideration_assignment,ins006_state,t3a_d1_reconsideration_assignment_state,NO,,'assigned'::t3a_d1_reconsideration_assignment_state
+t3a_reconsideration_assignment,awaiting_information_since,timestamp with time zone,YES,,
+t3a_record_informed_decision,attestation_id,uuid,NO,yes,gen_random_uuid()
+t3a_record_informed_decision,employer_profile_id,uuid,NO,,
+t3a_record_informed_decision,ber_report_id,uuid,NO,,
+t3a_record_informed_decision,statement,text,NO,,'This record informed our decision.'::text
+t3a_record_informed_decision,interaction_context,text,YES,,
+t3a_record_informed_decision,stated_at,timestamp with time zone,NO,,now()
+t3a_record_informed_decision,is_employer_statement,boolean,NO,,true
+t3a_refund,order_id,uuid,NO,,
+t3a_refund,refund_id,uuid,NO,yes,gen_random_uuid()
+t3a_refund,refunded_at,timestamp with time zone,NO,,now()
+t3a_registry_asset,asset_id,uuid,NO,yes,gen_random_uuid()
+t3a_registry_asset,asset_type,text,NO,,
+t3a_registry_asset,current_version,text,NO,,
+t3a_registry_asset,previous_version,text,YES,,
+t3a_registry_asset,deployment_status,text,NO,,
+t3a_registry_asset,updated_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_activity_history,activity_history_id,uuid,NO,yes,gen_random_uuid()
+t3a_rehearsal_activity_history,rehearsal_session_id,uuid,NO,,
+t3a_rehearsal_activity_history,event_name,text,NO,,
+t3a_rehearsal_activity_history,occurred_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_activity_history,payload,jsonb,YES,,
+t3a_rehearsal_artifact,rehearsal_artifact_id,uuid,NO,yes,gen_random_uuid()
+t3a_rehearsal_artifact,rehearsal_session_id,uuid,NO,,
+t3a_rehearsal_artifact,payload,jsonb,NO,,
+t3a_rehearsal_artifact,created_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_attempt,participant_id,uuid,NO,,
+t3a_rehearsal_attempt,rehearsal_session_id,uuid,NO,,
+t3a_rehearsal_attempt,rehearsal_attempt_id,uuid,NO,yes,gen_random_uuid()
+t3a_rehearsal_attempt,rehearsal_attempt_no,integer,NO,,
+t3a_rehearsal_attempt,module_completion_state,text,YES,,
+t3a_rehearsal_attempt,module_completion_state_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_attempt,module_completion_at,timestamp with time zone,YES,,
+t3a_rehearsal_attempt,module_completion_at_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_attempt,rehearsal_decision_path_ref,uuid,YES,,
+t3a_rehearsal_attempt,participant_artifact_ref,uuid,YES,,
+t3a_rehearsal_attempt,participant_artifact_version,text,YES,,
+t3a_rehearsal_attempt,participant_reflection_ref,uuid,YES,,
+t3a_rehearsal_attempt,reflection_prompt_id,uuid,YES,,
+t3a_rehearsal_attempt,reflection_prompt_version,text,YES,,
+t3a_rehearsal_attempt,final_personal_sentence_ref,uuid,YES,,
+t3a_rehearsal_attempt,reference_examples_viewed_refs,ARRAY,YES,,
+t3a_rehearsal_attempt,consequence_horizons_displayed,jsonb,YES,,
+t3a_rehearsal_attempt,retention_check_instance_id,uuid,YES,,
+t3a_rehearsal_attempt,retention_check_instance_id_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_attempt,retention_check_status,text,YES,,
+t3a_rehearsal_attempt,retention_check_status_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_attempt,recorded_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_module,module_id,uuid,NO,yes,
+t3a_rehearsal_module,module_slug,text,NO,,
+t3a_rehearsal_module,registered_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_session,rehearsal_session_id,uuid,NO,yes,gen_random_uuid()
+t3a_rehearsal_session,participant_id,uuid,NO,,
+t3a_rehearsal_session,scenario_class,t3a_scenario_class,NO,,
+t3a_rehearsal_session,source_version_id,uuid,YES,,
+t3a_rehearsal_session,started_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_session,ended_at,timestamp with time zone,YES,,
+t3a_rehearsal_session,abandoned,boolean,NO,,false
+t3a_rehearsal_session,created_at,timestamp with time zone,NO,,now()
+t3a_rehearsal_session,rehearsal_started_at_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,rehearsal_completed_at_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,module_id,uuid,YES,,
+t3a_rehearsal_session,module_version,text,YES,,
+t3a_rehearsal_session,workplace_moment_id,uuid,YES,,
+t3a_rehearsal_session,rehearsal_completion_state,text,YES,,
+t3a_rehearsal_session,rehearsal_completion_state_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,rehearsal_choice_record_id,uuid,YES,,
+t3a_rehearsal_session,module_dimension_id,uuid,YES,,
+t3a_rehearsal_session,module_dimension_id_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,module_segment_id,uuid,YES,,
+t3a_rehearsal_session,module_segment_id_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,private_scenario_id,uuid,YES,,
+t3a_rehearsal_session,private_scenario_id_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,private_scenario_version,text,YES,,
+t3a_rehearsal_session,private_scenario_version_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,variant_tuple,jsonb,YES,,
+t3a_rehearsal_session,variant_tuple_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,response_modality,text,YES,,
+t3a_rehearsal_session,response_modality_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_session,voice_transcript_ref,uuid,YES,,
+t3a_rehearsal_session,voice_transcript_ref_capture_state,text,NO,,'not_captured'::text
+t3a_rehearsal_telemetry_aggregate,telemetry_id,uuid,NO,yes,gen_random_uuid()
+t3a_rehearsal_telemetry_aggregate,cohort_period,text,NO,,
+t3a_rehearsal_telemetry_aggregate,sessions_started,integer,NO,,0
+t3a_rehearsal_telemetry_aggregate,sessions_completed,integer,NO,,0
+t3a_rehearsal_telemetry_aggregate,feedback_generated_count,integer,NO,,0
+t3a_rehearsal_telemetry_aggregate,feedback_acknowledged_count,integer,NO,,0
+t3a_rehearsal_telemetry_aggregate,retake_within_window_count,integer,NO,,0
+t3a_rehearsal_telemetry_aggregate,retake_window_days,integer,NO,,30
+t3a_rehearsal_telemetry_aggregate,duration_distribution,jsonb,NO,,'{}'::jsonb
+t3a_rehearsal_telemetry_aggregate,scenario_class,t3a_scenario_class,NO,,
+t3a_rehearsal_telemetry_aggregate,suppression_reason,text,YES,,
+t3a_rehearsal_telemetry_aggregate,created_at,timestamp with time zone,NO,,now()
+t3a_rendered_instance,rendered_instance_id,uuid,NO,yes,gen_random_uuid()
+t3a_rendered_instance,source_version_id,uuid,NO,,
+t3a_rendered_instance,canonical_source_hash,text,NO,,
+t3a_rendered_instance,presentation_variant_values,jsonb,NO,,'{}'::jsonb
+t3a_rendered_instance,rendered_instance_hash,text,NO,,
+t3a_rendered_instance,created_at,timestamp with time zone,NO,,now()
+t3a_report_access,ber_report_id,uuid,NO,,
+t3a_report_access,accessor_id,uuid,YES,,
+t3a_report_access,report_access_id,uuid,NO,yes,gen_random_uuid()
+t3a_report_access,accessed_at,timestamp with time zone,NO,,now()
+t3a_report_release,ber_report_id,uuid,NO,,
+t3a_report_release,recipient_release_id,uuid,NO,yes,gen_random_uuid()
+t3a_report_release,release_mode,text,NO,,
+t3a_report_release,recipient_address_hash,character,YES,,
+t3a_report_release,token_state,text,NO,,'active'::text
+t3a_report_release,employer_visibility_state,text,NO,,'not_available'::text
+t3a_report_release,availability_changed_at,timestamp with time zone,NO,,now()
+t3a_report_release,talentvisa_active,boolean,YES,,
+t3a_report_release,talentvisa_active_capture_state,text,NO,,'not_captured'::text
+t3a_report_release,created_at,timestamp with time zone,NO,,now()
+t3a_research_socket,research_protocol_id,uuid,YES,,
+t3a_research_socket,ethics_approval_ref,uuid,YES,,
+t3a_research_socket,consented_attribute_record,jsonb,YES,,
+t3a_resolution_refusal,resolution_refusal_id,uuid,NO,yes,gen_random_uuid()
+t3a_resolution_refusal,observation_record_id,uuid,NO,,
+t3a_resolution_refusal,reason,t3a_resolution_refusal_reason,NO,,
+t3a_resolution_refusal,detail,text,YES,,
+t3a_resolution_refusal,answer_pattern_snapshot,jsonb,NO,,
+t3a_resolution_refusal,refused_at,timestamp with time zone,NO,,now()
+t3a_resolution_refusal_rule,dimension_id,text,NO,yes,
+t3a_resolution_refusal_rule,rule_code,text,NO,yes,
+t3a_resolution_refusal_rule,pattern_text,text,NO,,
+t3a_resolution_refusal_rule,pattern,jsonb,NO,,
+t3a_resolution_refusal_rule,outcome,text,NO,,
+t3a_resolution_refusal_rule,reason,text,NO,,
+t3a_resolution_refusal_rule,suppress_statement_key,text,YES,,
+t3a_retention_run_socket,destruction_run_id,uuid,YES,,
+t3a_retention_run_socket,anonymization_run_id,uuid,YES,,
+t3a_retention_schedule,retention_class,t3a_retention_class,NO,yes,
+t3a_retention_schedule,retention_period,interval,YES,,
+t3a_retention_schedule,updated_at,timestamp with time zone,NO,,now()
+t3a_retention_schedule,counsel_ratified_at,timestamp with time zone,YES,,
+t3a_retention_schedule,rule_expression,jsonb,YES,,
+t3a_retention_schedule,participant_deletable,boolean,NO,,false
+t3a_retention_schedule,counsel_ratified_at_capture_state,text,NO,,'not_captured'::text
+t3a_retention_schedule,retention_period_value,integer,YES,,
+t3a_retention_schedule,retention_period_value_capture_state,text,NO,,'not_captured'::text
+t3a_retired_library_reach,reach_id,text,NO,yes,
+t3a_retired_library_reach,kind,text,NO,,
+t3a_retired_library_reach,what_it_is,text,NO,,
+t3a_retired_library_reach,reaches,text,NO,,
+t3a_retired_library_reach,state_now,text,NO,,
+t3a_retired_library_reach,why,text,NO,,
+t3a_retired_library_reach,recorded_under,text,NO,,"'T3A-D1-EXEC-CORR-006 Section 6, CX-19'::text"
+t3a_retired_participant_sentence,sentence_hash,text,NO,yes,
+t3a_retired_participant_sentence,retired_text,text,NO,,
+t3a_retired_participant_sentence,replaced_by,text,NO,,
+t3a_retired_participant_sentence,retired_under,text,NO,,
+t3a_retired_participant_sentence,why,text,NO,,
+t3a_role_assignment,account_id,uuid,NO,,
+t3a_role_assignment,role_assignment_id,uuid,NO,yes,gen_random_uuid()
+t3a_role_assignment,role_code,text,NO,,
+t3a_role_assignment,role_grant_basis,text,NO,,
+t3a_role_assignment,role_granted_by,uuid,NO,,
+t3a_role_assignment,role_granted_at,timestamp with time zone,NO,,now()
+t3a_role_assignment,role_effective_from,timestamp with time zone,NO,,now()
+t3a_role_assignment,role_rules_version,text,NO,,
+t3a_role_assignment,role_effective_until,timestamp with time zone,YES,,
+t3a_role_assignment,participant_pseudonym_ref,uuid,YES,,
+t3a_role_assignment_revocation,role_assignment_id,uuid,NO,yes,
+t3a_role_assignment_revocation,role_revoked_by,uuid,NO,,
+t3a_role_assignment_revocation,role_revoked_at,timestamp with time zone,NO,,now()
+t3a_role_assignment_revocation,role_revocation_basis,text,NO,,
+t3a_role_authorization,role_authorization_id,uuid,NO,yes,gen_random_uuid()
+t3a_role_authorization,actor_id,uuid,NO,,
+t3a_role_authorization,authority,t3a_authority,NO,,
+t3a_role_authorization,dimension_id,text,YES,,
+t3a_role_authorization,stage_codes,ARRAY,NO,,'{}'::text[]
+t3a_role_authorization,status,t3a_authorization_status,NO,,'granted'::t3a_authorization_status
+t3a_role_authorization,granted_by,uuid,YES,,
+t3a_role_authorization,granted_at,timestamp with time zone,NO,,now()
+t3a_role_authorization,effective_from,timestamp with time zone,NO,,now()
+t3a_role_authorization,effective_to,timestamp with time zone,YES,,
+t3a_role_authorization,suspended_at,timestamp with time zone,YES,,
+t3a_role_authorization,withdrawn_at,timestamp with time zone,YES,,
+t3a_role_authorization,calibration_clearance_ref,uuid,YES,,
+t3a_role_authorization,notes,text,YES,,
+t3a_role_grant,role_grant_id,uuid,NO,yes,gen_random_uuid()
+t3a_role_grant,user_id,uuid,NO,,
+t3a_role_grant,spec_role,t3a_spec_role,NO,,
+t3a_role_grant,granted_at,timestamp with time zone,NO,,now()
+t3a_role_grant,granted_by,uuid,YES,,
+t3a_role_grant,revoked_at,timestamp with time zone,YES,,
+t3a_role_grant_attempt,attempt_id,uuid,NO,yes,gen_random_uuid()
+t3a_role_grant_attempt,target_profile_id,uuid,YES,,
+t3a_role_grant_attempt,attempted_by,uuid,YES,,
+t3a_role_grant_attempt,from_role,text,YES,,
+t3a_role_grant_attempt,to_role,text,YES,,
+t3a_role_grant_attempt,operation,text,NO,,
+t3a_role_grant_attempt,outcome,t3a_role_grant_outcome,NO,,
+t3a_role_grant_attempt,reason_code,text,YES,,
+t3a_role_grant_attempt,basis,text,YES,,
+t3a_role_grant_attempt,service_context,boolean,NO,,false
+t3a_role_grant_attempt,attempted_at,timestamp with time zone,NO,,now()
+t3a_s4_entry_attempt,attempt_id,uuid,NO,yes,gen_random_uuid()
+t3a_s4_entry_attempt,group_session_id,uuid,YES,,
+t3a_s4_entry_attempt,actor_id,uuid,YES,,
+t3a_s4_entry_attempt,result,text,NO,,
+t3a_s4_entry_attempt,reason_code,text,YES,,
+t3a_s4_entry_attempt,attempted_at,timestamp with time zone,NO,,now()
+t3a_s4_group_participation,participation_id,uuid,NO,yes,gen_random_uuid()
+t3a_s4_group_participation,group_session_id,uuid,NO,,
+t3a_s4_group_participation,participant_id,uuid,NO,,
+t3a_s4_group_participation,member_role,text,NO,,
+t3a_s4_group_participation,notice_version,text,NO,,
+t3a_s4_group_participation,notice_hash,text,NO,,
+t3a_s4_group_participation,granted_at,timestamp with time zone,NO,,now()
+t3a_safety_contact,safety_contact_id,uuid,NO,yes,gen_random_uuid()
+t3a_safety_contact,designated_person,uuid,YES,,
+t3a_safety_contact,designated_name,text,YES,,
+t3a_safety_contact,designated_by,text,NO,,
+t3a_safety_contact,designated_at,timestamp with time zone,NO,,now()
+t3a_safety_contact,awaiting_designation,boolean,NO,,false
+t3a_safety_contact,issued_under,text,NO,,
+t3a_safety_contact,note,text,NO,,
+t3a_safety_event,safety_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_safety_event,occurred_at,timestamp with time zone,NO,,
+t3a_safety_event,stage_code,t3a_stage_code,NO,,
+t3a_safety_event,source_version_id,uuid,YES,,
+t3a_safety_event,acted_by,uuid,NO,,
+t3a_safety_event,acted_as,text,NO,,
+t3a_safety_event,stopped,boolean,NO,,false
+t3a_safety_event,signposted,boolean,NO,,false
+t3a_safety_event,escalated_to_safety_contact,boolean,NO,,false
+t3a_safety_event,emergency_services_contacted,boolean,NO,,false
+t3a_safety_event,escalated_at,timestamp with time zone,YES,,
+t3a_safety_event,concerns_person,uuid,NO,,
+t3a_safety_event,recorded_at,timestamp with time zone,NO,,now()
+t3a_served_instance,participant_id,uuid,NO,,
+t3a_served_instance,source_version_id,uuid,NO,,
+t3a_served_instance,stage_entry_event_id,uuid,YES,,
+t3a_served_instance,rendered_instance_id,uuid,YES,,
+t3a_served_instance,served_instance_id,uuid,NO,yes,gen_random_uuid()
+t3a_served_instance,served_at,timestamp with time zone,NO,,now()
+t3a_served_instance,question_set_version,text,NO,,
+t3a_served_instance,statement_library_version,text,NO,,
+t3a_served_instance,answer_key_version,text,NO,,
+t3a_served_instance,recurrence_key_version,text,NO,,
+t3a_served_instance,template_register_version,text,NO,,
+t3a_served_instance,stage1_engine_version,text,NO,,
+t3a_served_instance,stage1_script_version,text,NO,,
+t3a_served_instance,served_language,text,NO,,
+t3a_session_archive_tab,singleton,boolean,NO,yes,true
+t3a_session_archive_tab,session_archive_tab_state,text,NO,,'frozen'::text
+t3a_session_archive_tab,updated_at,timestamp with time zone,NO,,now()
+t3a_source,source_id,uuid,NO,yes,gen_random_uuid()
+t3a_source,content_object_id,uuid,NO,,
+t3a_source,dimension_id,text,NO,,
+t3a_source,stage_code,t3a_stage_code,NO,,
+t3a_source,interaction_pattern_family,text,NO,,
+t3a_source,created_at,timestamp with time zone,NO,,now()
+t3a_source,updated_at,timestamp with time zone,NO,,now()
+t3a_source,source_bank_id,uuid,YES,,
+t3a_source,source_display_title,text,YES,,
+t3a_source,source_created_by,uuid,YES,,
+t3a_source,source_effective_from,timestamp with time zone,YES,,
+t3a_source,source_effective_until,timestamp with time zone,YES,,
+t3a_source,source_material_manifest_ref,uuid,YES,,
+t3a_source,situation_class,text,YES,,
+t3a_source,secondary_situation_class,text,YES,,
+t3a_source,interaction_pattern_family_id,uuid,YES,,
+t3a_source,administration_form_id,uuid,YES,,
+t3a_source,name_clearance_status,text,YES,,
+t3a_source,serving_eligible,boolean,YES,,
+t3a_source,content_sensitivity,text,YES,,
+t3a_source,content_sensitivity_capture_state,text,NO,,'not_captured'::text
+t3a_source,atlas_moment_id,uuid,YES,,
+t3a_source,atlas_moment_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,atlas_terrain_id,uuid,YES,,
+t3a_source,atlas_terrain_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,beat_sequence,jsonb,YES,,
+t3a_source,beat_sequence_capture_state,text,NO,,'not_captured'::text
+t3a_source,situation_context,jsonb,YES,,
+t3a_source,situation_context_capture_state,text,NO,,'not_captured'::text
+t3a_source,comparison_family_id,uuid,YES,,
+t3a_source,comparison_family_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,comparison_demand_id,uuid,YES,,
+t3a_source,comparison_demand_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,observation_opportunity_id,uuid,YES,,
+t3a_source,observation_opportunity_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,demand_conditions_version,text,YES,,
+t3a_source,demand_conditions_version_capture_state,text,NO,,'not_captured'::text
+t3a_source,form_relationship_id,uuid,YES,,
+t3a_source,form_relationship_id_capture_state,text,NO,,'not_captured'::text
+t3a_source,variation_intent,text,YES,,
+t3a_source,variation_intent_capture_state,text,NO,,'not_captured'::text
+t3a_source,longitudinal_use_status,text,YES,,
+t3a_source,longitudinal_use_status_capture_state,text,NO,,'not_captured'::text
+t3a_source,capture_catalog_version,text,YES,,
+t3a_source,resolution_rule_version,text,YES,,
+t3a_source,delivery_script_version,text,YES,,
+t3a_source_approval,source_approval_id,uuid,NO,yes,gen_random_uuid()
+t3a_source_approval,source_id,uuid,NO,,
+t3a_source_approval,source_version_id,uuid,NO,,
+t3a_source_approval,status,text,NO,,'pending'::text
+t3a_source_approval,approved_by,uuid,YES,,
+t3a_source_approval,approved_at,timestamp with time zone,YES,,
+t3a_source_approval_request,request_id,uuid,NO,yes,gen_random_uuid()
+t3a_source_approval_request,source_version_id,uuid,NO,,
+t3a_source_approval_request,requested_by,uuid,YES,,
+t3a_source_approval_request,requested_at,timestamp with time zone,NO,,now()
+t3a_source_authorship,source_version_id,uuid,NO,yes,
+t3a_source_authorship,source_author_identity,ARRAY,NO,,
+t3a_source_authorship,recorded_at,timestamp with time zone,NO,,now()
+t3a_source_bank,module_code,text,NO,yes,
+t3a_source_bank,source_bank_id,uuid,NO,,gen_random_uuid()
+t3a_source_bank,registered_at,timestamp with time zone,NO,,now()
+t3a_source_drafting_test,source_version_id,uuid,NO,yes,
+t3a_source_drafting_test,test_no,integer,NO,yes,
+t3a_source_drafting_test,outcome,text,NO,,
+t3a_source_drafting_test,reviewer_identity,text,NO,,
+t3a_source_drafting_test,tested_on,date,NO,,
+t3a_source_drafting_test,version_tested_ref,text,NO,,
+t3a_source_drafting_test,recorded_at,timestamp with time zone,NO,,now()
+t3a_source_name_clearance,name_clearance_id,uuid,NO,yes,gen_random_uuid()
+t3a_source_name_clearance,source_version_id,uuid,NO,,
+t3a_source_name_clearance,presentation_variant_values,jsonb,NO,,'{}'::jsonb
+t3a_source_name_clearance,status,text,NO,,'pending'::text
+t3a_source_name_clearance,cleared_at,timestamp with time zone,YES,,
+t3a_source_name_clearance,cleared_by,uuid,YES,,
+t3a_source_rights_record,source_version_id,uuid,NO,yes,
+t3a_source_rights_record,rights_basis,text,NO,,
+t3a_source_rights_record,confidentiality_basis,text,NO,,
+t3a_source_rights_record,permitted_use_basis,text,NO,,
+t3a_source_rights_record,authorship_provenance_basis,text,NO,,
+t3a_source_rights_record,approver_id,uuid,NO,,
+t3a_source_rights_record,approved_on,date,NO,,
+t3a_source_rights_record,recorded_at,timestamp with time zone,NO,,now()
+t3a_source_title_history,title_seq,bigint,NO,yes,
+t3a_source_title_history,source_id,uuid,NO,,
+t3a_source_title_history,source_display_title,text,NO,,
+t3a_source_title_history,effective_from,timestamp with time zone,NO,,now()
+t3a_source_version,source_version_id,uuid,NO,yes,gen_random_uuid()
+t3a_source_version,scenario_class,t3a_scenario_class,NO,,
+t3a_source_version,version_label,text,NO,,
+t3a_source_version,source_version_hash,text,NO,,
+t3a_source_version,compatibility_class,text,NO,,
+t3a_source_version,min_seconds,integer,YES,,
+t3a_source_version,max_seconds,integer,YES,,
+t3a_source_version,dimensions_in_play,jsonb,NO,,
+t3a_source_version,relevant_conduct,jsonb,YES,,
+t3a_source_version,irrelevant_conduct,jsonb,YES,,
+t3a_source_version,stated_standard,text,YES,,
+t3a_source_version,permitted_administration_variance,text,YES,,
+t3a_source_version,unsupported_inferences,jsonb,YES,,
+t3a_source_version,cross_context_map,jsonb,YES,,
+t3a_source_version,ai_model_reference,text,YES,,
+t3a_source_version,ai_prompt_text_ref,text,YES,,
+t3a_source_version,approved_at,timestamp with time zone,YES,,
+t3a_source_version,approved_by,uuid,YES,,
+t3a_source_version,retired_at,timestamp with time zone,YES,,
+t3a_source_version,created_at,timestamp with time zone,NO,,now()
+t3a_source_version,min_seconds_capture_state,text,NO,,'not_captured'::text
+t3a_source_version,max_seconds_capture_state,text,NO,,'not_captured'::text
+t3a_source_version,source_status,text,YES,,
+t3a_source_version,approval_record_id,uuid,YES,,
+t3a_source_version,approval_authority,text,YES,,
+t3a_source_version,version_change_reason,text,YES,,
+t3a_stage_entry_event,stage_entry_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_stage_entry_event,observation_path_gateway_id,uuid,NO,,
+t3a_stage_entry_event,stage_instance_id,uuid,NO,,
+t3a_stage_entry_event,stage_code,t3a_stage_code,NO,,
+t3a_stage_entry_event,dimensions_in_play,ARRAY,NO,,
+t3a_stage_entry_event,session_identity,text,NO,,
+t3a_stage_entry_event,assistance_rules_version,text,NO,,
+t3a_stage_entry_event,administration_conditions,jsonb,NO,,'{}'::jsonb
+t3a_stage_entry_event,created_at,timestamp with time zone,NO,,now()
+t3a_stage_entry_event,participant_id,uuid,YES,,
+t3a_stage_entry_event,dimension_id,text,YES,,
+t3a_stage_entry_event,source_version_id,uuid,YES,,
+t3a_stage_entry_event,randomization_seed,bigint,YES,,
+t3a_stage_entry_event,presentation_variant_seed,bigint,YES,,
+t3a_stage_entry_event,administration_conditions_snapshot,jsonb,NO,,'{}'::jsonb
+t3a_stage_entry_event,session_identity_receipt_id,text,YES,,
+t3a_stage_entry_event,env_state_at_entry,t3a_env_state,YES,,
+t3a_stage_entry_event,entered_at,timestamp with time zone,NO,,now()
+t3a_stage_entry_event,administration_conditions_capture_state,text,NO,,'not_captured'::text
+t3a_stage_entry_event,session_id,uuid,YES,,
+t3a_stage_entry_event,entry_authority_actor_id,uuid,YES,,
+t3a_stage_entry_event,entry_authority_actor_id_capture_state,text,NO,,'not_captured'::text
+t3a_stage_entry_event,observation_mode,text,YES,,
+t3a_stage_entry_event,live_media_provider,text,YES,,
+t3a_stage_entry_event,live_media_provider_capture_state,text,NO,,'not_captured'::text
+t3a_stage_entry_event,stage_entry_hold_expires_at,timestamp with time zone,YES,,
+t3a_stage_form_question,dimension_id,text,NO,yes,
+t3a_stage_form_question,question_code,text,NO,yes,
+t3a_stage_form_question,reason,text,NO,,
+t3a_stage_form_verb,verb,text,NO,yes,
+t3a_stage_instance,stage_instance_id,uuid,NO,yes,gen_random_uuid()
+t3a_stage_instance,participant_id,uuid,NO,,
+t3a_stage_instance,stage_code,t3a_stage_code,NO,,
+t3a_stage_instance,dimension_id,t3a_dimension_code,NO,,
+t3a_stage_instance,attempt_no,integer,NO,,
+t3a_stage_instance,state,t3a_stage_instance_state,NO,,'eligible'::t3a_stage_instance_state
+t3a_stage_instance,scheduled_at,timestamp with time zone,YES,,
+t3a_stage_instance,activated_at,timestamp with time zone,YES,,
+t3a_stage_instance,completed_at,timestamp with time zone,YES,,
+t3a_stage_instance,created_at,timestamp with time zone,NO,,now()
+t3a_stage_sequence,stage_instance_id,uuid,NO,yes,
+t3a_stage_sequence,participant_id,uuid,NO,,
+t3a_stage_sequence,dimension_id,text,NO,,
+t3a_stage_sequence,s1_outcome_delivered_to_mentor_at,timestamp with time zone,YES,,
+t3a_stage_sequence,s2_determinations_locked_at,timestamp with time zone,YES,,
+t3a_stage_sequence,s1_output_unmasked_at,timestamp with time zone,YES,,
+t3a_stage_sequence,created_at,timestamp with time zone,NO,,now()
+t3a_statement_library,statement_id,uuid,NO,yes,gen_random_uuid()
+t3a_statement_library,dimension_id,t3a_dimension_code,NO,,
+t3a_statement_library,question_set_version,text,NO,,
+t3a_statement_library,answer_key,jsonb,NO,,
+t3a_statement_library,statement_body,text,NO,,
+t3a_statement_library,approved_at,timestamp with time zone,YES,,
+t3a_statement_library,approved_by,uuid,YES,,
+t3a_statement_library,created_at,timestamp with time zone,NO,,now()
+t3a_subscription_socket,order_id,uuid,YES,,
+t3a_subscription_socket,subscription_plan,text,YES,,
+t3a_subscription_socket,renewal_at,timestamp with time zone,YES,,
+t3a_subscription_socket,cancellation_reason_code,text,YES,,
+t3a_suppression,suppression_id,uuid,NO,yes,gen_random_uuid()
+t3a_suppression,suppression_reason,text,NO,,
+t3a_suppression,applied_at,timestamp with time zone,NO,,now()
+t3a_suppression_event,suppression_event_id,uuid,NO,yes,gen_random_uuid()
+t3a_suppression_event,reason_code,text,NO,,
+t3a_suppression_event,context,jsonb,YES,,
+t3a_suppression_event,occurred_at,timestamp with time zone,NO,,now()
+t3a_verification_check,ber_report_id,uuid,YES,,
+t3a_verification_check,outcome,text,NO,,
+t3a_verification_check,verification_check_id,uuid,NO,yes,gen_random_uuid()
+t3a_verification_check,checked_at,timestamp with time zone,NO,,now()
+t3a_version_lineage,version_lineage_id,uuid,NO,yes,gen_random_uuid()
+t3a_version_lineage,child_version_id,uuid,NO,,
+t3a_version_lineage,parent_version_id,uuid,NO,,
+t3a_version_lineage,parent_family,t3a_content_family,NO,,
+t3a_version_lineage,relation,text,NO,,'binds'::text
+t3a_version_lineage,created_at,timestamp with time zone,NO,,now()
+t3a_workspace_note,organization_id,uuid,NO,,
+t3a_workspace_note,workspace_note_id,uuid,NO,yes,gen_random_uuid()
+t3a_workspace_note,noted_at,timestamp with time zone,NO,,now()

@@ -1,0 +1,23 @@
+{
+ "event_id": "273b23a1-3612-4af1-a1cf-15e7a0dd98cc",
+ "event_name": "lsa.snapshot_built",
+ "event_category": "OBSERVATION",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "observation",
+ "resource_id": "6ed6fe89-0bec-493b-bf42-b6282752570c",
+ "payload": {
+  "lsa_snapshot_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_1e0c8318ea39477ebc5b9e3d3be32a4c",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

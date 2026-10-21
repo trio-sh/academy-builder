@@ -1,0 +1,237 @@
+{
+ "grants": [
+  {
+   "grantee": "authenticated",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "authenticated",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  }
+ ],
+ "constraints": [
+  {
+   "conname": "t3a_event_log_actor_type_check",
+   "d": "CHECK ((actor_type = ANY (ARRAY['PARTICIPANT'::text, 'MENTOR'::text, 'EMPLOYER'::text, 'REVIEWER'::text, 'AI_ENGINE'::text, 'SYSTEM'::text, 'ADMIN'::text])))"
+  },
+  {
+   "conname": "t3a_event_log_pkey",
+   "d": "PRIMARY KEY (event_id)"
+  },
+  {
+   "conname": "t3a_event_log_source_system_check",
+   "d": "CHECK ((source_system = ANY (ARRAY['web'::text, 'mobile'::text, 'api'::text, 'internal_job'::text])))"
+  },
+  {
+   "conname": "t3a_event_log_supersedes_event_id_fkey",
+   "d": "FOREIGN KEY (supersedes_event_id) REFERENCES t3a_event_log(event_id)"
+  }
+ ],
+ "columns": [
+  {
+   "column_name": "event_id",
+   "data_type": "uuid",
+   "is_nullable": "NO",
+   "column_default": "gen_random_uuid()"
+  },
+  {
+   "column_name": "event_name",
+   "data_type": "text",
+   "is_nullable": "NO",
+   "column_default": null
+  },
+  {
+   "column_name": "event_category",
+   "data_type": "USER-DEFINED",
+   "is_nullable": "NO",
+   "column_default": null
+  },
+  {
+   "column_name": "occurred_at",
+   "data_type": "timestamp with time zone",
+   "is_nullable": "NO",
+   "column_default": "clock_timestamp()"
+  },
+  {
+   "column_name": "ingested_at",
+   "data_type": "timestamp with time zone",
+   "is_nullable": "NO",
+   "column_default": "now()"
+  },
+  {
+   "column_name": "actor_type",
+   "data_type": "text",
+   "is_nullable": "NO",
+   "column_default": null
+  },
+  {
+   "column_name": "actor_id",
+   "data_type": "uuid",
+   "is_nullable": "NO",
+   "column_default": null
+  },
+  {
+   "column_name": "subject_id",
+   "data_type": "uuid",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "session_id",
+   "data_type": "uuid",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "correlation_id",
+   "data_type": "uuid",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "resource_type",
+   "data_type": "text",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "resource_id",
+   "data_type": "uuid",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "payload",
+   "data_type": "jsonb",
+   "is_nullable": "NO",
+   "column_default": "'{}'::jsonb"
+  },
+  {
+   "column_name": "artifact_ref_id",
+   "data_type": "text",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "integrity_status",
+   "data_type": "USER-DEFINED",
+   "is_nullable": "NO",
+   "column_default": "'ok'::t3a_integrity_status"
+  },
+  {
+   "column_name": "integrity_hash",
+   "data_type": "text",
+   "is_nullable": "NO",
+   "column_default": null
+  },
+  {
+   "column_name": "supersedes_event_id",
+   "data_type": "uuid",
+   "is_nullable": "YES",
+   "column_default": null
+  },
+  {
+   "column_name": "source_system",
+   "data_type": "text",
+   "is_nullable": "YES",
+   "column_default": null
+  }
+ ],
+ "triggers": [
+  {
+   "tgname": "t3a_event_log_no_delete"
+  },
+  {
+   "tgname": "t3a_event_log_no_update"
+  }
+ ],
+ "indexes": [
+  {
+   "indexname": "t3a_event_log_category_name_idx"
+  },
+  {
+   "indexname": "t3a_event_log_correlation_idx"
+  },
+  {
+   "indexname": "t3a_event_log_occurred_idx"
+  },
+  {
+   "indexname": "t3a_event_log_pkey"
+  },
+  {
+   "indexname": "t3a_event_log_session_idx"
+  },
+  {
+   "indexname": "t3a_event_log_subject_idx"
+  }
+ ],
+ "enum": [
+  {
+   "v": "OBSERVATION,MENTOR,PARTICIPANT,EMPLOYER,SYSTEM,GOVERNANCE,CONSENT"
+  }
+ ]
+}

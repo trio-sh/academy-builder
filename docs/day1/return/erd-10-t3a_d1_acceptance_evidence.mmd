@@ -1,0 +1,20 @@
+erDiagram
+  t3a_d1_acceptance_evidence {
+    uuid evidence_id PK
+    text test_id
+    t3a_d1_acceptance_outcome outcome
+    text actual_result
+    text build_version
+    text tester
+    timestamp_with_time_zone executed_at
+    text conflict_note
+  }
+  t3a_d1_acceptance_test {
+    text test_id PK
+    text section_ref
+    text section_title
+    text test_name
+    text required_result
+    integer display_order
+  }
+  t3a_d1_acceptance_test ||--o{ t3a_d1_acceptance_evidence : "test_id"

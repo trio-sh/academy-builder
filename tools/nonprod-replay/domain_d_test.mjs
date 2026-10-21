@@ -1,0 +1,40 @@
+// Day 1 step 11.1.7 probes (DT-14, Domain D structure). Throwaway database only.
+import { Client, neonConfig } from "@neondatabase/serverless";
+import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import fs from "node:fs"; import { randomUUID } from "node:crypto";
+const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
+const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
+await c.query("set search_path to public, extensions");
+const run = async (sql) => (await c.query(sql)).rows;
+async function tryq(sql) { await c.query("begin"); let msg = "ok", rows = []; try { rows = (await c.query(sql)).rows; } catch (e) { msg = e.message; } await c.query("rollback"); return { msg, rows }; }
+const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass: !!pass, detail });
+const H = "b".repeat(64), RUN = randomUUID().slice(0, 8);
+const ob = await run(`select (enum_range(null::t3a_content_family))[1] fam, (select enum_range(null::t3a_operational_state))[1] st`).catch(() => run(`select (enum_range(null::t3a_content_family))[1] fam`));
+const coId = (await run(`insert into t3a_content_object(identifier, family, title) values ('D-${RUN}', '${ob[0].fam}', 'probe') returning content_object_id i`).catch(async () => run(`insert into t3a_content_object(identifier, family, title, current_operational_state) values ('D-${RUN}', '${ob[0].fam}', 'probe', (enum_range(null::${"t3a_operational_state"}))[1]) returning content_object_id i`)))[0].i;
+const src = (await run(`insert into t3a_source(content_object_id, dimension_id, stage_code, interaction_pattern_family) values ('${coId}','D1','S1','x') returning *`))[0];
+// DT-14
+const states = ["comparison_family_id", "comparison_demand_id", "observation_opportunity_id", "demand_conditions_version", "form_relationship_id", "variation_intent"].map(f => src[f + "_capture_state"]);
+rec("DT-14", "source lacking comparison fields is stored; every comparison field is not_authored", states.every(x => x === "not_authored"), states);
+rec("DT-14", "longitudinal_use_status = not_eligible", src.longitudinal_use_status === "not_eligible" && src.longitudinal_use_status_capture_state === "captured", src.longitudinal_use_status);
+rec("DT-14", "other unauthored registry fields (content sensitivity, atlas ids, beats, situation context) are not_authored", ["content_sensitivity", "atlas_moment_id", "atlas_terrain_id", "beat_sequence", "situation_context"].every(f => src[f + "_capture_state"] === "not_authored"));
+const upd = await run(`update t3a_source set comparison_family_id = gen_random_uuid(), longitudinal_use_status = 'eligible' where source_id='${src.source_id}' returning comparison_family_id_capture_state cs, longitudinal_use_status l`);
+rec("DT-14", "even with a comparison id supplied, the dormant status stays not_eligible", upd[0].l === "not_eligible" && upd[0].cs === "captured", upd[0]);
+const v = await tryq(`insert into t3a_source_version(scenario_class, version_label, source_version_hash, compatibility_class, dimensions_in_play) values ('instructional','1','${H}','A','["D1"]') returning source_version_id, min_seconds_capture_state m, source_status`);
+rec("DT-14", "a source version with no min/max seconds is stored; capture state not_captured; live writer unaffected by new nullable columns", v.msg === "ok" && v.rows[0].m === "not_captured", v.msg.slice(0, 100) || v.rows[0]);
+const bad = await tryq(`insert into t3a_source_version(scenario_class, version_label, source_version_hash, compatibility_class, dimensions_in_play, source_status) values ('instructional','1','${H}','A','["D1"]','bogus')`);
+rec("D-enum", "source_status outside the four listed values is refused", /check|violat/i.test(bad.msg), bad.msg.slice(0, 90));
+const svId = (await run(`insert into t3a_source_version(scenario_class, version_label, source_version_hash, compatibility_class, dimensions_in_play, source_status) values ('instructional','2','${H}','A','["D1"]','authored_not_approved') returning source_version_id i`))[0].i;
+const P = randomUUID();
+const si = await tryq(`insert into t3a_served_instance(participant_id, source_version_id, question_set_version, statement_library_version, answer_key_version, recurrence_key_version, template_register_version, stage1_engine_version, stage1_script_version, served_language) values ('${P}','${svId}','1.0','1.0','1.0','1.0','1.0','1.0','1.0','en-CA') returning served_instance_id, served_at`);
+rec("D-served", "a served instance records all eight version and language fields", si.msg === "ok" && si.rows.length === 1, si.msg.slice(0, 100));
+const sinc = await tryq(`insert into t3a_served_instance(participant_id, source_version_id) values ('${P}','${svId}')`);
+rec("D-served", "a served instance missing a version field is refused", sinc.msg !== "ok", sinc.msg.slice(0, 90));
+const sock = await tryq(`insert into t3a_ai_provenance_socket(ai_prompt_hash) values ('${H}')`); rec("D-socket", "AI provenance socket refuses every write", /SOCKET_ROUTE_CLOSED/.test(sock.msg), sock.msg.slice(0, 80));
+const ap = await tryq(`update t3a_served_instance set served_language='fr' where participant_id='${P}'`); rec("D-append", "served instances are insert only", true, "table is empty in a rolled-back probe; see structure test"); 
+await c.query(`insert into t3a_served_instance(participant_id, source_version_id, question_set_version, statement_library_version, answer_key_version, recurrence_key_version, template_register_version, stage1_engine_version, stage1_script_version, served_language) values ('${P}','${svId}','1.0','1.0','1.0','1.0','1.0','1.0','1.0','en-CA')`);
+const ap2 = await tryq(`update t3a_served_instance set served_language='fr' where participant_id='${P}'`); R.pop(); rec("D-append", "served instances cannot be edited", /APPEND_ONLY/.test(ap2.msg), ap2.msg.slice(0, 80));
+const req = await run("update t3a_capture_config set enforce_required = true"); const strict = await tryq(`insert into t3a_source_version(scenario_class, version_label, source_version_hash, compatibility_class, dimensions_in_play) values ('instructional','9','${H}','A','["D1"]')`);
+await run("update t3a_capture_config set enforce_required = false"); rec("D-strict", "with the required-fields switch on, a missing required Domain D field is refused by name", /T3A_REQUIRED_FIELD_MISSING/.test(strict.msg), strict.msg.slice(0, 100));
+const mapD = (await run(`select count(*)::int n from t3a_field_physical_map where qualified_name like 'D.%'`))[0].n; rec("DT-01(D)", "all 63 Domain D fields mapped", mapD === 63, mapD);
+console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
+await c.end(); process.exit(0);

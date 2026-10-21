@@ -1,0 +1,1136 @@
+{
+ "families": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "family_id": "F1",
+   "proposition_id": "P1",
+   "conduct_element_id": "CE-02",
+   "members": [
+    {
+     "source_version_id": "SV1",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV2",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV3",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV4",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV5",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV6",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV7",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV8",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    }
+   ],
+   "administration_profile": {
+    "observation_mode": "live_conversation",
+    "assistance_declaration": "none"
+   },
+   "states": [
+    "A",
+    "B",
+    "C"
+   ]
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "family_id": "F2",
+   "proposition_id": "P2",
+   "conduct_element_id": "CE-02",
+   "members": [
+    {
+     "source_version_id": "SV1",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV2",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV3",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV4",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV5",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV6",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV7",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV8",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    }
+   ],
+   "administration_profile": {
+    "observation_mode": "live_conversation",
+    "assistance_declaration": "none"
+   },
+   "states": [
+    "A",
+    "B",
+    "C"
+   ]
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "family_id": "F3",
+   "proposition_id": "P3",
+   "conduct_element_id": "CE-02",
+   "members": [
+    {
+     "source_version_id": "SV1",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV2",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV3",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV4",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV5",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV6",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV7",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV8",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    }
+   ],
+   "administration_profile": {
+    "observation_mode": "live_conversation",
+    "assistance_declaration": "none"
+   },
+   "states": [
+    "A",
+    "B",
+    "C"
+   ]
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "family_id": "F4",
+   "proposition_id": "P4",
+   "conduct_element_id": "CE-02",
+   "members": [
+    {
+     "source_version_id": "SV1",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV2",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV3",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV4",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV5",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV6",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV7",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    },
+    {
+     "source_version_id": "SV8",
+     "approved_by": "methodology",
+     "approved_at": "2027-01-01"
+    }
+   ],
+   "administration_profile": {
+    "observation_mode": "live_conversation",
+    "assistance_declaration": "none"
+   },
+   "states": [
+    "A",
+    "B",
+    "C"
+   ]
+  }
+ ],
+ "direction_rules": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "DR1",
+   "family_id": "F1",
+   "family_version": 1,
+   "transitions": [
+    {
+     "from_state": "A",
+     "to_state": "B",
+     "direction": "forward"
+    },
+    {
+     "from_state": "B",
+     "to_state": "A",
+     "direction": "backward"
+    }
+   ],
+   "justification_ref": "J1"
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "DR3",
+   "family_id": "F3",
+   "family_version": 1,
+   "transitions": [
+    {
+     "from_state": "A",
+     "to_state": "B",
+     "direction": "forward"
+    }
+   ],
+   "justification_ref": "J3"
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "DR4",
+   "family_id": "F4",
+   "family_version": 1,
+   "transitions": [
+    {
+     "from_state": "A",
+     "to_state": "B",
+     "direction": "forward"
+    }
+   ],
+   "justification_ref": "J4"
+  }
+ ],
+ "sufficiency_rules": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "S1",
+   "applies_to": "D1",
+   "min_eligible": 2,
+   "min_comparable": 2,
+   "min_after_first": 1,
+   "require_completed_cooldown": false
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "S2",
+   "applies_to": "P4",
+   "min_eligible": 2,
+   "min_comparable": 2,
+   "min_after_first": 1,
+   "require_completed_cooldown": true
+  }
+ ],
+ "entries": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-insufficient_evidence",
+   "proposition_id": "P1",
+   "finding_code": "insufficient_evidence",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-comparison_not_established",
+   "proposition_id": "P1",
+   "finding_code": "comparison_not_established",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-consistent_recorded_conduct",
+   "proposition_id": "P1",
+   "finding_code": "consistent_recorded_conduct",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-different_no_direction",
+   "proposition_id": "P1",
+   "finding_code": "different_no_direction",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-mixed_trajectory",
+   "proposition_id": "P1",
+   "finding_code": "mixed_trajectory",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P2-insufficient_evidence",
+   "proposition_id": "P2",
+   "finding_code": "insufficient_evidence",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P2-comparison_not_established",
+   "proposition_id": "P2",
+   "finding_code": "comparison_not_established",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P2-consistent_recorded_conduct",
+   "proposition_id": "P2",
+   "finding_code": "consistent_recorded_conduct",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P2-different_no_direction",
+   "proposition_id": "P2",
+   "finding_code": "different_no_direction",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P2-mixed_trajectory",
+   "proposition_id": "P2",
+   "finding_code": "mixed_trajectory",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P3-insufficient_evidence",
+   "proposition_id": "P3",
+   "finding_code": "insufficient_evidence",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P3-comparison_not_established",
+   "proposition_id": "P3",
+   "finding_code": "comparison_not_established",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P3-consistent_recorded_conduct",
+   "proposition_id": "P3",
+   "finding_code": "consistent_recorded_conduct",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P3-different_no_direction",
+   "proposition_id": "P3",
+   "finding_code": "different_no_direction",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P3-mixed_trajectory",
+   "proposition_id": "P3",
+   "finding_code": "mixed_trajectory",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-insufficient_evidence",
+   "proposition_id": "P4",
+   "finding_code": "insufficient_evidence",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-comparison_not_established",
+   "proposition_id": "P4",
+   "finding_code": "comparison_not_established",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-consistent_recorded_conduct",
+   "proposition_id": "P4",
+   "finding_code": "consistent_recorded_conduct",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-different_no_direction",
+   "proposition_id": "P4",
+   "finding_code": "different_no_direction",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-mixed_trajectory",
+   "proposition_id": "P4",
+   "finding_code": "mixed_trajectory",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P9-insufficient_evidence",
+   "proposition_id": "P9",
+   "finding_code": "insufficient_evidence",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P9-comparison_not_established",
+   "proposition_id": "P9",
+   "finding_code": "comparison_not_established",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P9-consistent_recorded_conduct",
+   "proposition_id": "P9",
+   "finding_code": "consistent_recorded_conduct",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P9-different_no_direction",
+   "proposition_id": "P9",
+   "finding_code": "different_no_direction",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P9-mixed_trajectory",
+   "proposition_id": "P9",
+   "finding_code": "mixed_trajectory",
+   "sequence_pattern": "ANY",
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-prog-ABB",
+   "proposition_id": "P1",
+   "finding_code": "documented_progression",
+   "sequence_pattern": [
+    "A",
+    "B",
+    "B"
+   ],
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "Compared on matched conditions.",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-prog-AB",
+   "proposition_id": "P1",
+   "finding_code": "documented_progression",
+   "sequence_pattern": [
+    "A",
+    "B"
+   ],
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "Compared on matched conditions.",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P1-reg-BAA",
+   "proposition_id": "P1",
+   "finding_code": "documented_regression",
+   "sequence_pattern": [
+    "B",
+    "A",
+    "A"
+   ],
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "Compared on matched conditions.",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "E-P4-prog-AB",
+   "proposition_id": "P4",
+   "finding_code": "documented_progression",
+   "sequence_pattern": [
+    "A",
+    "B"
+   ],
+   "element_title": "Synthetic element",
+   "wording": "Synthetic approved wording.",
+   "display_label": null,
+   "state_labels": {
+    "A": "when asked",
+    "B": "before asked",
+    "C": "other"
+   },
+   "comparison_basis_line": "Compared on matched conditions.",
+   "work_process_line": "Synthetic work process.",
+   "local_limit_line": "Synthetic limit."
+  }
+ ],
+ "history_rules": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "H-ALL",
+   "applies_to": "all",
+   "max_age_months": 36
+  }
+ ],
+ "dimension_rules": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "rule_id": "DMR1",
+   "dimension_id": "D1",
+   "min_elements": 2,
+   "min_directional_elements": 2
+  }
+ ],
+ "dimension_entries": [
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_insufficient",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_insufficient",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_pattern_only_coverage",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_pattern_only_coverage",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_pattern_only_direction",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_pattern_only_direction",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_consistent",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_consistent",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_progression",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_progression",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  },
+  {
+   "status": "active",
+   "version": 1,
+   "effective_from": "2027-01-01",
+   "effective_to": null,
+   "approved_by": "founder",
+   "approved_at": "2027-01-01",
+   "entry_id": "DE-D1-dimension_mixed",
+   "dimension_id": "D1",
+   "dimension_finding_code": "dimension_mixed",
+   "wording": "Synthetic dimension wording.",
+   "display_label": null
+  }
+ ]
+}

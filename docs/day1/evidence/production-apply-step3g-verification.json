@@ -1,0 +1,26 @@
+{
+ "apply": [],
+ "d2_vocabulary_rows": [
+  {
+   "c": 60
+  }
+ ],
+ "d2_statements_failing_output_check": [
+  {
+   "c": 0
+  }
+ ],
+ "empty_state": [
+  {
+   "s": {
+    "frame": "FR-D2-0",
+    "state": "not_observed",
+    "blocked": [],
+    "conditions": [],
+    "recurrence": [],
+    "dimension_id": "D2",
+    "observations": 0
+   }
+  }
+ ]
+}

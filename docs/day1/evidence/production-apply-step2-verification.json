@@ -1,0 +1,46 @@
+{
+ "apply": [],
+ "golden_before": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "sets": 13,
+   "lines": 44,
+   "questions": 15
+  }
+ ],
+ "golden_after": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "sets": 13,
+   "lines": 44,
+   "questions": 15
+  }
+ ],
+ "identical": true,
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"retired_drafts\\\": 325, \\\"cross_dimension_line\\\": \\\"refused\\\", \\\"c1_lines_across_dimensions\\\": 4}\\nCONTEXT:  PL/pgSQL function inline_code_block line 6 at RAISE\\n\"}"
+ },
+ "residue": [
+  {
+   "sets": 0,
+   "lines": 0
+  }
+ ],
+ "golden_after_part2": [
+  {
+   "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+   "coverage": "1c629db937a75ad89d0fd31e828c7712",
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d",
+   "sets": 13,
+   "lines": 44,
+   "questions": 15
+  }
+ ],
+ "identical_to_before": true,
+ "part2_apply": []
+}

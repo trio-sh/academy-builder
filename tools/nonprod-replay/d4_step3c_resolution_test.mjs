@@ -1,0 +1,54 @@
+// Step 3c: D3 resolution service (INS-003 rules 045 to 054). Throwaway database only.
+import { Client, neonConfig } from "@neondatabase/serverless";
+import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import fs from "node:fs";
+const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
+const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
+await c.query("set search_path to public, extensions");
+const run = async (sql) => (await c.query(sql)).rows;
+async function as(role, sql) { await c.query("begin"); let msg = "ok", rows = []; try { if (role) { await c.query(`set local role ${role}`); await c.query(`select set_config('request.jwt.claims', json_build_object('role','${role}')::text, true)`); } rows = (await c.query(sql)).rows; } catch (e) { msg = e.message; } await c.query("commit"); return { msg, rows }; }
+const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass: !!pass, detail });
+const core = async (stage, answers, bound = {}) => (await run(`select t3a_resolve_core('D4','${stage}','${JSON.stringify(answers)}'::jsonb,'${JSON.stringify(bound)}'::jsonb,true) r`))[0].r;
+const B = { addressed_role_count: 1, contained_item_count: 2, ordered_item_count: 2, answer_content_count: 1, unconfirmed_identified_count: 1, used_channel_count: 1, affected_party_label: "the client" };
+
+const cov = await run(`select * from t3a_resolution_coverage('D4')`);
+const tot = cov.reduce((a, r) => a + Number(r.patterns), 0), gaps = cov.reduce((a, r) => a + Number(r.gap_refusals), 0), amb = cov.reduce((a, r) => a + Number(r.ambiguous), 0);
+rec("D4-cov", "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)", tot > 300 && gaps === 0, { patterns: tot, gaps });
+rec("D4-cov", "coverage: no pattern resolves to two statements", amb === 0, amb);
+const a1 = await core(2, { "Q-D4-01": "A2", "Q-D4-01b": "A2" }, B), a2 = await core(2, { "Q-D4-01": "A2", "Q-D4-01b": "A2" }, B);
+rec("D4-res", "same inputs, same output", JSON.stringify(a1) === JSON.stringify(a2) && a1.outcome === "resolved" && a1.statements.length === 2, a1);
+rec("D4-res", "statements come back in the fixed question order", JSON.stringify(a1.statements.map(s => s.question_code)) === JSON.stringify(["Q-D4-01", "Q-D4-01b"]), a1.statements.map(s => s.question_code));
+const cnt = await core(2, { "Q-D4-02": "A1", "Q-D4-02b": "A1" }, B); rec("D4-res", "a count placeholder is filled from the bound value, never typed", /gave 2 of the items/.test(cnt.statements?.[1]?.text), cnt.statements?.[1]?.text);
+const unm = await core(2, { "Q-D4-01": "A9" }, B); rec("D4-res", "an unmapped pattern refuses and nothing is substituted", unm.outcome === "refused" && unm.reason === "no_approved_statement", unm);
+const ft = await core(2, { "Q-D4-01": "they spoke up" }, B); rec("D4-res", "free text in place of an answer code refuses", ft.reason === "free_text_or_unknown_value", ft);
+const prod = await as("service_role", `select t3a_resolve_observation('D4','2','{"Q-D4-01":"A4"}'::jsonb) r`);
+rec("D4-res", "production mode resolves nothing while no statement is approved (fail closed)", prod.rows[0]?.r?.outcome === "refused" && prod.rows[0].r.reason === "no_approved_statement", prod.rows[0]?.r);
+const tm = await as("authenticated", `select t3a_resolve_observation('D4','2','{"Q-D4-01":"A4"}'::jsonb,'{}'::jsonb,true) r`); rec("D4-res", "test mode is the service route only", tm.rows[0]?.r?.reason === "TEST_MODE_IS_SERVICE_ONLY", tm.rows[0]?.r || tm.msg);
+const iso = await core(2, { "Q-D3-01": "A1" }, B); rec("D4-res", "a D3 question in a D4 resolution refuses as a dimension isolation violation", iso.reason === "dimension_isolation_violation", iso);
+const child = await core(2, { "Q-D4-02b": "A1" }, B); rec("D4-res", "an answer on a child whose parent did not serve it refuses", child.reason === "child_not_served", child);
+const ms = await core(2, { "Q-D4-01": "missing:declined", "Q-D4-09": "A4" }, B); rec("D4-res", "a posted missing state composes nothing and does not block the rest", ms.outcome === "resolved" && ms.statements.length === 1, ms.statements?.map(s => s.question_code));
+const na = await core(2, { "Q-D4-01": "missing:not_applicable" }, B); rec("D4-res", "not_applicable is never posted", na.reason === "missing_state_not_postable", na);
+const bv = await core(2, { "Q-D4-02": "A1", "Q-D4-02b": "A1" }, { contained_item_count: 0 }); rec("D4-res", "a count outside the grammar refuses", bv.reason === "bound_variable_invalid", bv);
+const t07 = await core(2, { "Q-D4-07": "A3" }, B); rec("D4-06", "Q-D4-07 A3 resolves to ST-D4-036 alone", t07.outcome === "resolved" && t07.statements.length === 1 && t07.statements[0].statement_key === "ST-D4-036", t07.statements?.map(s => s.statement_key));
+const s1 = await core(1, { "Q-D4-07": "A1" }, B); rec("D4-04", "a Stage 1 channel answer is refused by the resolution rules (a written response cannot evidence a channel used)", s1.outcome === "refused", s1);
+const sup = await core(2, { "Q-D4-01": "A4", "Q-D4-02": "A3" }, B); rec("D4-17", "with Q-D4-01 recording no communication, the duplicated absence ST-D4-010 is suppressed", sup.outcome === "resolved" && !sup.statements.some(s => s.statement_key === "ST-D4-010"), sup.statements?.map(s => s.statement_key) || sup);
+const contra = await core(2, { "Q-D4-01": "A3", "Q-D4-01b": "A1", "Q-D4-02": "A3" }, B); rec("D4-RR", "RR-D4-18: no communication recorded at Q-D4-02 while a party is recorded as addressed refuses", contra.rule === "RR-D4-18" || contra.reason === "RR-D4-18", contra);
+const contra2 = await core(2, { "Q-D4-01": "A4", "Q-D4-02": "A3", "Q-D4-03": "A1", "Q-D4-03b": "A1" }, B); rec("D4-RR", "RR-D4-12: an order asserted when no communication was made refuses", contra2.reason === "RR-D4-12" || contra2.rule === "RR-D4-12", contra2);
+const before = (await run(`select count(*)::int n from t3a_capture_refusal where reason_code='no_approved_statement'`))[0].n;
+await as("service_role", `select t3a_resolve_observation('D4','2','{"Q-D4-01":"A4"}'::jsonb) r`);
+rec("D4-res", "a refusal on the logged route persists in the refusal log", (await run(`select count(*)::int n from t3a_capture_refusal where reason_code='no_approved_statement'`))[0].n === before + 1, before);
+// prohibited output
+const chk = async (t) => (await run(`select t3a_prohibited_output_check('D4', $1) r`.replace("$1", `'${t.replace(/'/g, "''")}'`)))[0].r;
+let r = await chk("<p>the participant addressed the party the situation named as the recipient</p>"); rec("D4-64", "a clean statement passes", r.passed === true, r);
+r = await chk("the participant spoke confidently and clearly"); rec("D4-64", "a manner word fails (confidently)", r.passed === false, r);
+r = await chk("the participant gave a strong response"); rec("D4-64", "a closed-list evaluative phrase fails (strong response)", r.passed === false, r);
+r = await chk("the participant escalated the issue and verified the fix"); rec("D4-64", "a word that belongs to another dimension fails as cross_dimension_assertion", r.passed === false && r.findings.some(f => f.rule === "cross_dimension_assertion"), r);
+r = await chk("<span>★★★☆☆</span>"); rec("D4-63", "stars fail", r.passed === false, r);
+r = await chk("the participant gave a red flag"); rec("D4-63", "a flag wording is rejected (red flag)", r.passed === false, r);
+r = await chk("the candidate attended"); rec("D4-63", "a retired term fails (candidate)", r.passed === false, r);
+const bad = await run(`select statement_key from t3a_d1_statement_library where dimension_id='D4' and (t3a_prohibited_output_check('D4', statement_body) ->> 'passed')::boolean is not true`);
+rec("D4-64", "every D4 Recorded Conduct Entry passes the prohibited-output check", bad.length === 0, bad.slice(0, 5));
+const tpl = await run(`select language_template_id from t3a_d1_language_template where dimension_id='D4' and (t3a_prohibited_output_check('D4', template_body) ->> 'passed')::boolean is not true`);
+rec("D4-64", "every D4 template passes the prohibited-output check", tpl.length === 0, tpl);
+console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
+await c.end(); process.exit(0);

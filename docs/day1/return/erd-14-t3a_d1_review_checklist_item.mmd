@@ -1,0 +1,16 @@
+erDiagram
+  t3a_d1_review_checklist_item {
+    integer item_no PK
+    text requirement
+    text rule_reference
+  }
+  t3a_d1_review_result {
+    uuid review_result_id PK
+    uuid ber_report_id
+    integer item_no
+    text outcome
+    text detail
+    uuid reviewed_by
+    timestamp_with_time_zone reviewed_at
+  }
+  t3a_d1_review_checklist_item ||--o{ t3a_d1_review_result : "item_no"

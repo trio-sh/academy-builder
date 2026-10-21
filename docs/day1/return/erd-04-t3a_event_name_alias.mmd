@@ -1,0 +1,72 @@
+erDiagram
+  t3a_event_name_alias {
+    text alias PK
+    text dictionary_version
+    text event_name
+    text confidence
+    text note
+  }
+  t3a_event_registry {
+    text dictionary_version PK
+    text event_name PK
+    text event_category
+    text status
+    text trigger_text
+    ARRAY required_payload
+    ARRAY optional_payload
+    jsonb conditional
+    jsonb payload_schema
+    integer worst_case_payload_bytes
+  }
+  t3a_field_physical_map {
+    text dictionary_version PK
+    text qualified_name PK
+    text mapping_class
+    text physical_table
+    text physical_column
+    text payload_path
+    text capture_state_column
+    text confirmed_by
+    timestamp_with_time_zone confirmed_at
+    text note
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+  }
+  t3a_field_prohibited_item {
+    text dictionary_version PK
+    integer item_no PK
+    text item
+    text reason
+    text use_instead
+  }
+  t3a_field_registry {
+    text dictionary_version PK
+    text qualified_name PK
+    text domain
+    text field
+    text canonical_type
+    jsonb enum_values
+    text type_values
+    text source
+    text trigger
+    text owner
+    text store
+    text status
+    text _3_more_columns
+  }
+  t3a_field_registry_version {
+    text dictionary_version PK
+    text identifier
+    date dictionary_date
+    character source_sha256
+    integer field_count
+    integer event_count
+    integer prohibited_count
+    integer test_count
+    timestamp_with_time_zone loaded_at
+  }
+  t3a_event_registry ||--o{ t3a_event_name_alias : "dictionary_version"
+  t3a_field_registry_version ||--o{ t3a_event_registry : "dictionary_version"
+  t3a_field_registry ||--o{ t3a_field_physical_map : "dictionary_version"
+  t3a_field_registry_version ||--o{ t3a_field_prohibited_item : "dictionary_version"
+  t3a_field_registry_version ||--o{ t3a_field_registry : "dictionary_version"

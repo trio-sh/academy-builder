@@ -1,0 +1,50 @@
+{
+ "apply": [],
+ "coverage": [
+  {
+   "rows": 32,
+   "patterns": 552,
+   "resolved": 353,
+   "designed": 199,
+   "gaps": 0,
+   "amb": 0
+  }
+ ],
+ "production_mode_example": [
+  {
+   "r": {
+    "detail": "Q-D2-01 A1 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  }
+ ],
+ "test_mode_example": [
+  {
+   "r": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant stated that the item was theirs to carry",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D2-01",
+      "statement_key": "ST-D2-001"
+     },
+     {
+      "text": "when asked when they knew, the participant stated a later point than the situation records",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A2",
+      "question_code": "Q-D2-09",
+      "statement_key": "ST-D2-050"
+     }
+    ]
+   }
+  }
+ ],
+ "d1_by_question_md5": [
+  {
+   "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d"
+  }
+ ]
+}

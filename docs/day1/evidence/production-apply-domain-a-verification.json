@@ -1,0 +1,99 @@
+{
+ "counts": [
+  {
+   "accounts": 15,
+   "verified": 15,
+   "roles": 15,
+   "pseud": 6
+  }
+ ],
+ "by_role": [
+  {
+   "role_code": "coordinator",
+   "role_grant_basis": "administrator_grant",
+   "count": 1
+  },
+  {
+   "role_code": "employer_user",
+   "role_grant_basis": "administrator_grant",
+   "count": 2
+  },
+  {
+   "role_code": "mentor",
+   "role_grant_basis": "administrator_grant",
+   "count": 5
+  },
+  {
+   "role_code": "oversight_administrator",
+   "role_grant_basis": "administrator_grant",
+   "count": 1
+  },
+  {
+   "role_code": "participant",
+   "role_grant_basis": "self_serve_individual",
+   "count": 6
+  }
+ ],
+ "mapped": [
+  {
+   "count": 47
+  }
+ ],
+ "triggers": [
+  {
+   "t": "profiles",
+   "trigger_name": "t3a_account_sync_trg"
+  },
+  {
+   "t": "t3a_attempt",
+   "trigger_name": "t3a_0_verify_gate_subject_trg"
+  },
+  {
+   "t": "t3a_disclosure",
+   "trigger_name": "t3a_0_verify_gate_actor_trg"
+  },
+  {
+   "t": "t3a_disclosure",
+   "trigger_name": "t3a_0_verify_gate_subject_trg"
+  },
+  {
+   "t": "t3a_observation",
+   "trigger_name": "t3a_0_verify_gate_subject_trg"
+  },
+  {
+   "t": "t3a_observation_path_gateway",
+   "trigger_name": "t3a_0_verify_gate_subject_trg"
+  },
+  {
+   "t": "t3a_stage_entry_event",
+   "trigger_name": "t3a_0_verify_gate_subject_trg"
+  },
+  {
+   "t": "users",
+   "trigger_name": "t3a_account_sync_auth"
+  }
+ ],
+ "dt01": [
+  {
+   "dictionary_version": "1.3",
+   "fields_total": 600,
+   "fields_active_dormant": 522,
+   "resolved": 45,
+   "unmapped": 477,
+   "missing_capture_state_column": 114,
+   "dangling_physical": 0,
+   "passes": false
+  }
+ ],
+ "dt03_probe_zero_residue": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE_RESULT profile_rows=0 refused_logged=1\\nCONTEXT:  PL/pgSQL function inline_code_block line 11 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "p": 15,
+   "u": 15,
+   "a": 15
+  }
+ ]
+}

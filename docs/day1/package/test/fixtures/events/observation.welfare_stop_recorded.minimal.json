@@ -1,0 +1,23 @@
+{
+ "event_id": "4ee1f1ee-1b78-41e4-b7da-cabea4771791",
+ "event_name": "observation.welfare_stop_recorded",
+ "event_category": "OBSERVATION",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "observation",
+ "resource_id": "677b3baf-c018-4bbe-91f5-bb2a34c40bd7",
+ "payload": {
+  "welfare_stop_ref": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_a4dcb98965f342ebb72087c6ddcdfe4c",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

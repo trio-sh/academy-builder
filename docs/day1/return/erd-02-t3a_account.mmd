@@ -1,0 +1,235 @@
+erDiagram
+  t3a_account {
+    uuid account_id PK
+    timestamp_with_time_zone account_created_at
+    text account_creation_route
+    text account_creation_route_capture_state
+    text email_address
+    text email_verification_state
+    timestamp_with_time_zone email_verification_sent_at
+    text email_verification_sent_at_capture_state
+    timestamp_with_time_zone email_verified_at
+    text email_verified_at_capture_state
+    text identity_assurance_method
+    text age_eligibility_attestation
+    text _10_more_columns
+  }
+  t3a_coaching_feedback {
+    uuid coaching_feedback_id PK
+    uuid rehearsal_session_id
+    text feedback_body
+    timestamp_with_time_zone acknowledged_at
+    timestamp_with_time_zone created_at
+    text feedback_acknowledged_at_capture_state
+    text feedback_source_type
+    text feedback_source_type_capture_state
+    timestamp_with_time_zone feedback_viewed_at
+    text feedback_viewed_at_capture_state
+  }
+  t3a_consent_record {
+    uuid account_id
+    uuid consent_id PK
+    text consent_type
+    text consent_status
+    timestamp_with_time_zone consent_timestamp
+    text consent_copy_version
+    character consent_copy_hash
+    text consent_method
+    text consent_language
+    text consent_scope_dimension_id
+    text consent_scope_dimension_id_capture_state
+    text consent_scope_stage_code
+    text _13_more_columns
+  }
+  t3a_consent_state_ref {
+    uuid account_id
+    uuid consent_state_ref PK
+    ARRAY consent_ids
+    timestamp_with_time_zone created_at
+  }
+  t3a_consent_supersession {
+    uuid consent_id PK
+    uuid superseded_by
+  }
+  t3a_contact_consent {
+    uuid contact_consent_id PK
+    uuid account_id
+    text contact_consent_status
+    text contact_consent_status_capture_state
+    timestamp_with_time_zone contact_consent_at
+    text contact_consent_at_capture_state
+    timestamp_with_time_zone recorded_at
+  }
+  t3a_growth_log_entry {
+    uuid entry_id PK
+    uuid created_by
+    text entry_kind
+    text text
+    text text_capture_state
+    text module_reference
+    text module_reference_capture_state
+    timestamp_with_time_zone created_at
+    timestamp_with_time_zone updated_at
+    text schema_version
+  }
+  t3a_order {
+    uuid order_id PK
+    uuid account_id
+    text product_code
+    text package_code
+    ARRAY package_entitlements
+    timestamp_with_time_zone purchased_at
+    timestamp_with_time_zone access_starts_at
+    timestamp_with_time_zone access_ends_at
+    numeric price_amount
+    text currency
+    text tax_jurisdiction
+    boolean founding_member_flag
+    text _1_more_columns
+  }
+  t3a_participant_document {
+    uuid document_id PK
+    uuid account_id
+    text profile_document_ref
+    timestamp_with_time_zone uploaded_at
+  }
+  t3a_participant_enrollment {
+    uuid account_id
+    uuid enrollment_event_id PK
+    text enrollment_scope
+    timestamp_with_time_zone enrolled_at
+  }
+  t3a_participant_profile {
+    uuid account_id PK
+    text legal_name
+    text legal_name_capture_state
+    text display_name
+    text display_name_capture_state
+    text country_of_residence
+    text country_of_residence_capture_state
+    text subdivision_of_residence
+    text subdivision_of_residence_capture_state
+    text city_of_residence
+    text city_of_residence_capture_state
+    text privacy_jurisdiction_code
+    text _19_more_columns
+  }
+  t3a_partner_organization {
+    uuid partner_organization_id PK
+    timestamp_with_time_zone created_at
+    text organization_type
+    text organization_industry_code
+    text organization_industry_code_capture_state
+    timestamp_with_time_zone partner_relationship_effective_at
+    timestamp_with_time_zone partner_relationship_ended_at
+    uuid data_use_agreement_ref
+  }
+  t3a_privacy_notice_acknowledgement {
+    uuid acknowledgement_id PK
+    uuid account_id
+    text privacy_notice_version
+    character privacy_notice_hash
+    timestamp_with_time_zone acknowledged_at
+  }
+  t3a_program {
+    uuid partner_organization_id
+    timestamp_with_time_zone created_at
+    uuid organization_program_id PK
+    text program_version
+  }
+  t3a_program_membership {
+    uuid account_id
+    uuid organization_program_id
+    uuid program_membership_id PK
+    timestamp_with_time_zone program_enrolled_at
+    timestamp_with_time_zone program_exit_at
+    uuid membership_basis_ref
+  }
+  t3a_refund {
+    uuid order_id
+    uuid refund_id PK
+    timestamp_with_time_zone refunded_at
+  }
+  t3a_rehearsal_activity_history {
+    uuid activity_history_id PK
+    uuid rehearsal_session_id
+    text event_name
+    timestamp_with_time_zone occurred_at
+    jsonb payload
+  }
+  t3a_rehearsal_artifact {
+    uuid rehearsal_artifact_id PK
+    uuid rehearsal_session_id
+    jsonb payload
+    timestamp_with_time_zone created_at
+  }
+  t3a_rehearsal_attempt {
+    uuid participant_id
+    uuid rehearsal_session_id
+    uuid rehearsal_attempt_id PK
+    integer rehearsal_attempt_no
+    text module_completion_state
+    text module_completion_state_capture_state
+    timestamp_with_time_zone module_completion_at
+    text module_completion_at_capture_state
+    uuid rehearsal_decision_path_ref
+    uuid participant_artifact_ref
+    text participant_artifact_version
+    uuid participant_reflection_ref
+    text _10_more_columns
+  }
+  t3a_rehearsal_session {
+    uuid rehearsal_session_id PK
+    uuid participant_id
+    t3a_scenario_class scenario_class
+    uuid source_version_id
+    timestamp_with_time_zone started_at
+    timestamp_with_time_zone ended_at
+    boolean abandoned
+    timestamp_with_time_zone created_at
+    text rehearsal_started_at_capture_state
+    text rehearsal_completed_at_capture_state
+    uuid module_id
+    text module_version
+    text _18_more_columns
+  }
+  t3a_role_assignment {
+    uuid account_id
+    uuid role_assignment_id PK
+    text role_code
+    text role_grant_basis
+    uuid role_granted_by
+    timestamp_with_time_zone role_granted_at
+    timestamp_with_time_zone role_effective_from
+    text role_rules_version
+    timestamp_with_time_zone role_effective_until
+    uuid participant_pseudonym_ref
+  }
+  t3a_role_assignment_revocation {
+    uuid role_assignment_id PK
+    uuid role_revoked_by
+    timestamp_with_time_zone role_revoked_at
+    text role_revocation_basis
+  }
+  t3a_rehearsal_session ||--o{ t3a_coaching_feedback : "rehearsal_session_id"
+  t3a_account ||--o{ t3a_consent_record : "account_id"
+  t3a_account ||--o{ t3a_consent_state_ref : "account_id"
+  t3a_consent_record ||--o{ t3a_consent_supersession : "consent_id"
+  t3a_consent_record ||--o{ t3a_consent_supersession : "superseded_by"
+  t3a_account ||--o{ t3a_contact_consent : "account_id"
+  t3a_account ||--o{ t3a_growth_log_entry : "created_by"
+  t3a_account ||--o{ t3a_order : "account_id"
+  t3a_account ||--o{ t3a_participant_document : "account_id"
+  t3a_account ||--o{ t3a_participant_enrollment : "account_id"
+  t3a_account ||--o{ t3a_participant_profile : "account_id"
+  t3a_account ||--o{ t3a_privacy_notice_acknowledgement : "account_id"
+  t3a_partner_organization ||--o{ t3a_program : "partner_organization_id"
+  t3a_account ||--o{ t3a_program_membership : "account_id"
+  t3a_program ||--o{ t3a_program_membership : "organization_program_id"
+  t3a_order ||--o{ t3a_refund : "order_id"
+  t3a_rehearsal_session ||--o{ t3a_rehearsal_activity_history : "rehearsal_session_id"
+  t3a_rehearsal_session ||--o{ t3a_rehearsal_artifact : "rehearsal_session_id"
+  t3a_account ||--o{ t3a_rehearsal_attempt : "participant_id"
+  t3a_rehearsal_session ||--o{ t3a_rehearsal_attempt : "rehearsal_session_id"
+  t3a_account ||--o{ t3a_role_assignment : "account_id"
+  t3a_role_assignment ||--o{ t3a_role_assignment_revocation : "role_assignment_id"

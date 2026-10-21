@@ -1,0 +1,19 @@
+{
+ "domain": "Q",
+ "migration": "20261120000000_day1_aggregate_sockets.sql",
+ "rows_before": {},
+ "apply": "ok",
+ "mapped": 31,
+ "dt01": {
+  "resolved": 506,
+  "unmapped": 16,
+  "passes": false
+ },
+ "rows_after": {},
+ "new_tables_rows": {
+  "t3a_aggregate_dataset_socket": 0,
+  "t3a_licensee_socket": 0,
+  "t3a_research_socket": 0,
+  "t3a_followup_socket": 0
+ }
+}

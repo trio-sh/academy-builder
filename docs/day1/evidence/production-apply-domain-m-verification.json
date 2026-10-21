@@ -1,0 +1,20 @@
+{
+ "domain": "M",
+ "migration": "20261116000000_day1_session_archive_dormant.sql",
+ "rows_before": {},
+ "apply": "ok",
+ "mapped": 18,
+ "dt01": {
+  "resolved": 429,
+  "unmapped": 93,
+  "passes": false
+ },
+ "rows_after": {},
+ "new_tables_rows": {
+  "t3a_lsa_snapshot": 0,
+  "t3a_lsa_report": 0,
+  "t3a_longitudinal_case": 0,
+  "t3a_lsa_sidecar": 0,
+  "t3a_session_archive_tab": 1
+ }
+}

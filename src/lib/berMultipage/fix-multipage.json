@@ -1,0 +1,636 @@
+{
+ "fixture_id": "FIX-MULTIPAGE",
+ "standard": "T3A-RCE-STD-001 Part F",
+ "note": "Frozen clean room package for the MULTI PAGE report. Seven represented dimensions. The D2 to D5, D8 and D9 entries are TEST ONLY: they carry build_only disposition and identifiers outside the approved library format, so an attempt to issue this report refuses. They exist to exercise pagination, not to state conduct about any person.",
+ "versions": {
+  "controlled_text_register": "CTR-1.0",
+  "entry_library": "D1-LIB-1.0",
+  "visual_token_map": "VTM-1.0",
+  "dimension_register": "DIM-1.0",
+  "prohibited_vocabulary": "PV-D1-1.0"
+ },
+ "render_manifest": {
+  "report_id": "BER-2027-000184",
+  "report_version": "1.0",
+  "participant_display_name": "James Carter",
+  "participant_status": "current",
+  "issue_date": "2027-06-18",
+  "evidence_currency_date": "2027-12-18",
+  "release_state": "released",
+  "review_state": "reviewed",
+  "correction_state": "none_open",
+  "entry_library_version": "D1-LIB-1.0",
+  "controlled_text_versions": {
+   "*": "CTR-1.0"
+  },
+  "presentation_version": "VTM-1.0",
+  "output_mode": "demonstration",
+  "verification_display_address": "verify.the3rdacademy.com/BER-2027-000184",
+  "verification_reference": "BER-2027-000184",
+  "participant_photo": null,
+  "claim_packages": [
+   {
+    "dimension_id": "D1",
+    "entry_id": "ST-D1-011",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "bounded_recurrence",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S1-01",
+      "stage_code": "S1"
+     },
+     {
+      "context_instance_id": "CTX-000184-S2-01",
+      "stage_code": "S2"
+     },
+     {
+      "context_instance_id": "CTX-000184-S4-01",
+      "stage_code": "S4"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-TIMING-001",
+    "differences": [
+     {
+      "difference_id": "DIF-000184-01",
+      "context_instance_id": "CTX-000184-S1-01",
+      "condition": "timing",
+      "body": "the issue was raised before enquiry."
+     },
+     {
+      "difference_id": "DIF-000184-02",
+      "context_instance_id": "CTX-000184-S2-01",
+      "condition": "timing",
+      "body": "the issue was raised in response to enquiry."
+     }
+    ],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D2",
+    "entry_id": "ST-D2-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "multiple_contexts",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S2-02",
+      "stage_code": "S2"
+     },
+     {
+      "context_instance_id": "CTX-000184-S4-02",
+      "stage_code": "S4"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-MODE-001",
+    "differences": [
+     {
+      "difference_id": "DIF-000184-03",
+      "context_instance_id": "CTX-000184-S2-02",
+      "condition": "mode",
+      "body": "the step was named in speech."
+     },
+     {
+      "difference_id": "DIF-000184-04",
+      "context_instance_id": "CTX-000184-S4-02",
+      "condition": "mode",
+      "body": "the step was named in writing to the group."
+     }
+    ],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D3",
+    "entry_id": "ST-D3-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "single_context",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S1-03",
+      "stage_code": "S1"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-HEADING-001",
+    "differences": [],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D4",
+    "entry_id": "ST-D4-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "multiple_contexts",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S2-4",
+      "stage_code": "S2"
+     },
+     {
+      "context_instance_id": "CTX-000184-S4-4",
+      "stage_code": "S4"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-MODE-001",
+    "differences": [
+     {
+      "difference_id": "DIF-000184-D4-1",
+      "context_instance_id": "CTX-000184-S2-4",
+      "condition": "mode",
+      "body": "the question was restated in speech."
+     },
+     {
+      "difference_id": "DIF-000184-D4-2",
+      "context_instance_id": "CTX-000184-S4-4",
+      "condition": "mode",
+      "body": "the question was restated to the group."
+     }
+    ],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D5",
+    "entry_id": "ST-D5-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "bounded_recurrence",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S1-05",
+      "stage_code": "S1"
+     },
+     {
+      "context_instance_id": "CTX-000184-S2-05",
+      "stage_code": "S2"
+     },
+     {
+      "context_instance_id": "CTX-000184-S3-05",
+      "stage_code": "S3"
+     },
+     {
+      "context_instance_id": "CTX-000184-S4-05",
+      "stage_code": "S4"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-TIMING-001",
+    "differences": [
+     {
+      "difference_id": "DIF-000184-D5-1",
+      "context_instance_id": "CTX-000184-S1-05",
+      "condition": "timing",
+      "body": "the points were separated in the written answer."
+     },
+     {
+      "difference_id": "DIF-000184-D5-2",
+      "context_instance_id": "CTX-000184-S2-05",
+      "condition": "timing",
+      "body": "the points were separated during the exchange."
+     },
+     {
+      "difference_id": "DIF-000184-D5-3",
+      "context_instance_id": "CTX-000184-S3-05",
+      "condition": "timing",
+      "body": "the points were separated in the submitted work."
+     },
+     {
+      "difference_id": "DIF-000184-D5-4",
+      "context_instance_id": "CTX-000184-S4-05",
+      "condition": "timing",
+      "body": "the points were separated after the group spoke."
+     }
+    ],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D8",
+    "entry_id": "ST-D8-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "multiple_contexts",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S2-8",
+      "stage_code": "S2"
+     },
+     {
+      "context_instance_id": "CTX-000184-S4-8",
+      "stage_code": "S4"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-MODE-001",
+    "differences": [
+     {
+      "difference_id": "DIF-000184-D8-1",
+      "context_instance_id": "CTX-000184-S2-8",
+      "condition": "mode",
+      "body": "the return was stated aloud."
+     },
+     {
+      "difference_id": "DIF-000184-D8-2",
+      "context_instance_id": "CTX-000184-S4-8",
+      "condition": "mode",
+      "body": "the return was stated to the group."
+     }
+    ],
+    "context_dependencies": []
+   },
+   {
+    "dimension_id": "D9",
+    "entry_id": "ST-D9-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "evidence_state": "single_context",
+    "supporting_contexts": [
+     {
+      "context_instance_id": "CTX-000184-S1-9",
+      "stage_code": "S1"
+     }
+    ],
+    "bound_values": {},
+    "heading_id": "T-DIFF-HEADING-001",
+    "differences": [],
+    "context_dependencies": []
+   }
+  ]
+ },
+ "entry_library": {
+  "version": "D1-LIB-1.0",
+  "entries": {
+   "ST-D1-011": {
+    "entry_id": "ST-D1-011",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D1",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant stated that a specific issue existed and identified what it was",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D2-TEST-001": {
+    "entry_id": "ST-D2-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D2",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant named the step that had not been completed and identified who was assigned to it",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D3-TEST-001": {
+    "entry_id": "ST-D3-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D3",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant restated the agreed sequence before beginning the task",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D4-TEST-001": {
+    "entry_id": "ST-D4-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D4",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant restated the question that had been asked before answering it",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D5-TEST-001": {
+    "entry_id": "ST-D5-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D5",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant set out the point of disagreement and the point of agreement separately",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D8-TEST-001": {
+    "entry_id": "ST-D8-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D8",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant returned to the task after the interruption and stated what had already been completed",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   },
+   "ST-D9-TEST-001": {
+    "entry_id": "ST-D9-TEST-001",
+    "entry_version": "D1-LIB-1.0",
+    "dimension_id": "D9",
+    "entry_type": "conduct_bearing",
+    "composed_text": "the participant repeated the revised instruction back and asked which part to do differently",
+    "placeholder_grammar": {},
+    "context_dependencies": [],
+    "use_disposition": "build_only"
+   }
+  }
+ },
+ "prohibited_vocabulary": {
+  "version": "PV-D1-1.0",
+  "D1": [
+   "honest",
+   "dishonest",
+   "integrity",
+   "ethical",
+   "unethical",
+   "trustworthy",
+   "untrustworthy",
+   "character",
+   "principled",
+   "moral",
+   "immoral",
+   "candid",
+   "transparent",
+   "deceptive",
+   "will",
+   "would",
+   "tends to",
+   "reliable",
+   "always",
+   "never"
+  ],
+  "D2": [
+   "accountable",
+   "ownership",
+   "responsible",
+   "dependable",
+   "mature",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ],
+  "D3": [
+   "reliable",
+   "unreliable",
+   "consistent",
+   "thorough",
+   "diligent",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ],
+  "D4": [
+   "calm",
+   "composed",
+   "unflappable",
+   "poised",
+   "handles",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ],
+  "D5": [
+   "collaborative",
+   "team player",
+   "diplomatic",
+   "cooperative",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ],
+  "D8": [
+   "resilient",
+   "bounces back",
+   "tough",
+   "persistent",
+   "determined",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ],
+  "D9": [
+   "quick learner",
+   "adaptable",
+   "agile",
+   "curious",
+   "bright",
+   "teachable",
+   "will",
+   "would",
+   "tends to",
+   "always",
+   "never"
+  ]
+ },
+ "dimension_register": {
+  "version": "DIM-1.0",
+  "dimensions": [
+   {
+    "dimension_id": "D1",
+    "full_name": "Integrity and Ethics"
+   },
+   {
+    "dimension_id": "D2",
+    "full_name": "Accountability and Ownership"
+   },
+   {
+    "dimension_id": "D3",
+    "full_name": "Execution Reliability"
+   },
+   {
+    "dimension_id": "D4",
+    "full_name": "Communication Under Pressure"
+   },
+   {
+    "dimension_id": "D5",
+    "full_name": "Collaboration and Conflict Resolution"
+   },
+   {
+    "dimension_id": "D6",
+    "full_name": "Workplace Adaptability"
+   },
+   {
+    "dimension_id": "D7",
+    "full_name": "Prioritization and Time Management"
+   },
+   {
+    "dimension_id": "D8",
+    "full_name": "Resilience and Recovery"
+   },
+   {
+    "dimension_id": "D9",
+    "full_name": "Learning Agility"
+   },
+   {
+    "dimension_id": "D10",
+    "full_name": "Professional Boundaries"
+   },
+   {
+    "dimension_id": "D11",
+    "full_name": "Creative Problem Solving"
+   },
+   {
+    "dimension_id": "D12",
+    "full_name": "Customer and Service Focus"
+   },
+   {
+    "dimension_id": "D13",
+    "full_name": "Influence and Persuasion"
+   },
+   {
+    "dimension_id": "D14",
+    "full_name": "Relationship Building"
+   }
+  ]
+ },
+ "stage_descriptions": {
+  "S1": "Stage 1 written situation",
+  "S2": "Stage 2 live interaction",
+  "S3": "Stage 3 submitted work",
+  "S4": "Stage 4 group setting"
+ },
+ "evidence_states": {
+  "bounded_recurrence": {
+   "display_label": "BOUNDED RECURRENCE",
+   "frame_text_id": "T-FRAME-REC"
+  },
+  "single_context": {
+   "display_label": "SINGLE RECORDED CONTEXT",
+   "frame_text_id": "T-FRAME-ONE"
+  },
+  "multiple_contexts": {
+   "display_label": "MULTIPLE RECORDED CONTEXTS",
+   "frame_text_id": "T-FRAME-MULTI"
+  },
+  "divergent": {
+   "display_label": "DIVERGENT ACROSS CONTEXTS",
+   "frame_text_id": "T-FRAME-DIV"
+  }
+ },
+ "controlled_texts": {
+  "T-PURPOSE-001": "A record documenting selected conduct observed in defined workplace situations. The participant controls whether this report is available to approved employers through The 3rd Academy and may withdraw future availability at any time.",
+  "T-VERIFCAP-001": "Verify the authoritative status before relying on this copy.",
+  "T-SCOPE-001": [
+   "Scope and limits.",
+   "This report contains recorded conduct for represented dimensions only. It is not a complete account of the participant's workplace conduct. Dimensions not represented are listed below; their absence is not a conclusion about the participant. This report records selected conduct in defined situations and does not state whether a participant should be selected, placed, promoted, preferred, or otherwise chosen for an opportunity."
+  ],
+  "T-FRAME-REC": "Recorded in each of the {context_count} Stage contexts identified for this entry:",
+  "T-LIMIT-001": "This statement is limited to the recorded contexts. It is not a statement about character, general tendency, suitability, or future behavior.",
+  "T-ILLUS-001": "Illustrative only. An approved Recorded Conduct Entry renders here.",
+  "T-DIFF-SEP": "These observations remain separate. Neither is preferred, averaged, or used to broaden the recurrence statement.",
+  "T-DIFFSHOWN-001": [
+   "How differences are shown.",
+   "The recurring clause stays in Observed conduct. The adjacent Differences across settings field preserves context specific variation. A difference does not erase recurrence of a separate clause, and recurrence does not erase the difference."
+  ],
+  "T-AVAIL-001": "Made available to approved employers through the participant controlled process. Evidence current until: {d}. Verification reference: {r}.",
+  "T-STUB-001": "No recorded conduct for these dimensions is carried here. Their absence is not a conclusion about the participant.",
+  "T-EVNOTE-001": "Stage 1 written situations are administered through an AI system. A Stage 1 observation enters the evidence record only after authorized human confirmation. Source linked statements remain subject to participant review, correction, amendment and evidence currency controls.",
+  "T-USE-001": [
+   "Permitted use:",
+   "This report provides supplementary behavioral evidence from defined workplace situations. It may be considered as one source of information in an employer's independent employment judgment. It does not recommend or determine an employment decision and must not be used as the sole basis for adverse employment action. It is not a prediction of job performance, retention or probation outcome."
+  ],
+  "T-DISC-001": [
+   "Disclosure limits:",
+   "This report was made available at the participant's discretion and covers only the evidence window stated above. Withdrawal ends availability for subsequent access through The 3rd Academy; it does not recall a copy already read. Earlier or later reports may exist; this page is not the complete observation history."
+  ],
+  "T-INTEG-001": [
+   "Record integrity:",
+   "Statements are source linked and subject to participant review, correction, amendment and evidence currency controls. Withdrawal is governed separately and applies to employer availability, not to the evidence record."
+  ],
+  "T-VERIF-001": [
+   "Verification:",
+   "A verification check confirms authenticity and current status; it does not disclose report content or participant identity."
+  ],
+  "T-DIFF-HEADING-001": "DIFFERENCES ACROSS SETTINGS",
+  "T-DIFF-TIMING-001": "TIMING DIFFERED BY SETTING",
+  "T-DIFF-MODE-001": "MODE DIFFERED BY SETTING",
+  "T-DIFF-PROMPT-001": "PROMPTING DIFFERED BY SETTING",
+  "T-NOTREP-ALL": "Every dimension in the catalogue is represented in this report.",
+  "T-DEMO-001": "This page is a layout specimen. It is not an issued report and records no conduct by any person.",
+  "T-PILOT-MARK": "PILOT OUTPUT — NOT AN ISSUED REPORT",
+  "T-FRAME-ONE": "In one situation, recorded in the Stage context identified for this entry:",
+  "T-FRAME-MULTI": "Recorded in {context_count} Stage contexts identified for this entry:",
+  "T-FRAME-DIV": "Recorded in {context_count} Stage contexts identified for this entry, with the differences shown alongside:",
+  "T-COLOPHON-001": "Issued under a published evidence standard. Version and governing rules at verify.the3rdacademy.com",
+  "T-COVERAGE-001": "Representation states that recorded conduct for a dimension is carried in this report. It is not a score, a rating, a ranking or an endorsement. The number of represented dimensions reflects what was observed and approved, not how the participant performed, and a report with few represented dimensions is not a weaker report.",
+  "T-NODIFF-001": "No difference across settings is recorded for this entry."
+ },
+ "state_maps": {
+  "T-STATUS-MAP": {
+   "current": "Current",
+   "prior": "Prior"
+  },
+  "T-VISIBILITY-MAP": {
+   "active": [
+    "Employer visibility: Participant controlled",
+    "Available to approved employers while participant visibility is active."
+   ],
+   "withdrawn": [
+    "Employer visibility: Withdrawn",
+    "This report is not available to approved employers."
+   ],
+   "not_released": [
+    "Employer visibility: Not released",
+    "This version has not been issued and is not available to any employer."
+   ]
+  },
+  "T-REVIEW-MAP": {
+   "reviewed": "The participant reviewed this report before issuance.",
+   "not_reviewed": "This report was issued without a recorded participant review."
+  },
+  "T-CORRECTION-MAP": {
+   "none_open": "Correction status: No correction open.",
+   "open": "Correction status: A correction is open.",
+   "resolved": "Correction status: A correction was made and resolved."
+  },
+  "T-FOOTER-MAP": {
+   "issued": "The 3rd Academy Inc.",
+   "demonstration": "LAYOUT SPECIMEN — NOT AN ISSUED REPORT",
+   "pilot": "PILOT OUTPUT — NOT AN ISSUED REPORT"
+  },
+  "T-REFMARK-MAP": {
+   "issued": null,
+   "demonstration": "SAMPLE REFERENCE",
+   "pilot": "PILOT REFERENCE"
+  }
+ },
+ "fixed_strings": {
+  "institution": "THE 3RD ACADEMY INC.",
+  "title": "Behavioral Evidence Report",
+  "id_labels": [
+   "PARTICIPANT",
+   "REPORT ID",
+   "ISSUED",
+   "EVIDENCE CURRENT UNTIL"
+  ],
+  "status_label": "STATUS",
+  "verify_heading": "VERIFY AUTHENTICITY AND CURRENT STATUS",
+  "recorded_conduct": "RECORDED CONDUCT",
+  "columns": [
+   "DIMENSION",
+   "RECORDED CONTEXTS",
+   "OBSERVED CONDUCT",
+   "DIFFERENCES ACROSS SETTINGS"
+  ],
+  "how_differences": "HOW DIFFERENCES ARE SHOWN",
+  "participant_review": "PARTICIPANT REVIEW",
+  "availability": "AVAILABILITY AND STATUS",
+  "evidence_note": "EVIDENCE NOTE",
+  "strip_heading": "NOT REPRESENTED IN THIS REPORT",
+  "photo_label": "PHOTO PLACEHOLDER",
+  "page_number": "Page 1 of 1"
+ },
+ "controlled_text_digest": "97bb37e29ee80f987eebfdf44983989e6d8c6ad3ac5462b596db33d7438d055e",
+ "institution_mark": {
+  "format": "png",
+  "width_pt": 19.0,
+  "height_pt": 21.2,
+  "x": 36.0,
+  "y_top": 19.8,
+  "y_bottom": 41.0,
+  "note": "The mark is drawn from /logo.png in the web renderer; the embedded bytes are not carried in this copy.",
+  "sha256": "a8fabc8c04f48174e379a66731a092614e9fd681b734e02e31c2645eb25a5722"
+ }
+}

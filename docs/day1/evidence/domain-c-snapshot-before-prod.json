@@ -1,0 +1,99 @@
+{
+ "t3a_observation_path_gateway": [
+  {
+   "n": 7
+  }
+ ],
+ "t3a_stage_entry_event": [
+  {
+   "n": 8
+  }
+ ],
+ "t3a_attempt": [
+  {
+   "n": 4
+  }
+ ],
+ "t3a_mentor_assignment": [
+  {
+   "n": 3
+  }
+ ],
+ "t3a_observation": [
+  {
+   "n": 0
+  }
+ ],
+ "attempts": [
+  {
+   "attempt_id": "b635fbed-bf42-472c-ab2b-46460a410ffe",
+   "participant_id": "40eefd0b-4010-4bba-9894-e1babe9b91d1",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "outcome": "initiated",
+   "counted": true,
+   "created_at": "2026-10-08 18:13:11.997134+00"
+  },
+  {
+   "attempt_id": "f637bf02-4c1f-42d1-98dd-7d3a750dc634",
+   "participant_id": "40eefd0b-4010-4bba-9894-e1babe9b91d1",
+   "dimension_id": "D1",
+   "stage_code": "S4",
+   "outcome": "initiated",
+   "counted": true,
+   "created_at": "2026-10-08 18:29:38.934327+00"
+  },
+  {
+   "attempt_id": "1a8cddda-3471-418e-8639-c7c93b625737",
+   "participant_id": "40eefd0b-4010-4bba-9894-e1babe9b91d1",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "outcome": "initiated",
+   "counted": true,
+   "created_at": "2026-10-08 18:39:03.026827+00"
+  },
+  {
+   "attempt_id": "af309707-0106-4ec2-bf50-a042e1cd62cf",
+   "participant_id": "40eefd0b-4010-4bba-9894-e1babe9b91d1",
+   "dimension_id": "D1",
+   "stage_code": "S2",
+   "outcome": "initiated",
+   "counted": true,
+   "created_at": "2026-10-08 18:39:45.574175+00"
+  }
+ ],
+ "stage_entry_cs": [
+  {
+   "stage_entry_event_id": "52d5febf-0774-4f36-80d8-adf498261018",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "37ca43cd-8687-41e0-b98b-19c1fc530f54",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "95677104-d287-41b2-b122-eabaeb504c80",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "2f657cd6-8f65-464c-9992-bb76c496e349",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "f162b213-c644-41f1-8032-bf8a07b8405f",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "ade53dba-18a5-4d15-9adb-96107a1cced6",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "8d3c6c86-b035-48e8-928a-ee91253cd1a2",
+   "has_ac": true
+  },
+  {
+   "stage_entry_event_id": "9b371b91-4868-40b8-a880-4494a398472c",
+   "has_ac": true
+  }
+ ]
+}

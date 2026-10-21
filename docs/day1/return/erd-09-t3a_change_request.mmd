@@ -1,0 +1,20 @@
+erDiagram
+  t3a_change_request {
+    uuid asset_id
+    uuid change_request_id PK
+    uuid changed_by
+    timestamp_with_time_zone changed_at
+    text compatibility_class
+    text version_change_reason
+    text approval_authority
+    character version_hash
+  }
+  t3a_registry_asset {
+    uuid asset_id PK
+    text asset_type
+    text current_version
+    text previous_version
+    text deployment_status
+    timestamp_with_time_zone updated_at
+  }
+  t3a_registry_asset ||--o{ t3a_change_request : "asset_id"

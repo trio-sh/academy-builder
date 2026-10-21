@@ -1,0 +1,336 @@
+{
+ "passed": 28,
+ "total": 28,
+ "failed": [],
+ "results": [
+  {
+   "id": "D-04",
+   "label": "issuing a named recipient token is refused and returns a code",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "issued": false,
+       "refusal_code": "NAMED_RECIPIENT_RELEASE_RETIRED"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the refusal is logged (persisted, not rolled back)",
+   "pass": true,
+   "detail": 26
+  },
+  {
+   "id": "D-04",
+   "label": "no token row exists",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D-04",
+   "label": "redeeming returns the migration state and no content",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "state": "PLATFORM_RELEASE_MIGRATION_REQUIRES_GOVERNED_RECORD",
+       "content": false
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the report face route also returns no content",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "state": "PLATFORM_RELEASE_MIGRATION_REQUIRES_GOVERNED_RECORD",
+       "content": false
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "creating a disclosure returns nothing and creates nothing",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": null
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a direct named recipient release row is refused and skipped",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-04",
+   "label": "someone else cannot make the report available",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "nobody releases a report for the participant",
+       "reason": "ONLY_THE_PARTICIPANT_RELEASES_THEIR_REPORT",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "an unissued report cannot be made available",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "only an issued report can be made available",
+       "reason": "REPORT_NOT_ISSUED",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "without employer_share consent for the dimension, making it available is refused and logged",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "employer_share consent for dimension D1 is not granted",
+       "reason": "EMPLOYER_SHARE_CONSENT_REQUIRED",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "employer_share consent for D1 is recorded",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "event": "consent.granted",
+       "outcome": "recorded",
+       "consent_id": "50c6d5ef-c50b-46b8-a0a5-302209631729"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the participant makes their issued report available",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "outcome": "available",
+       "recipient_release_id": "e1f18ea6-5825-4acc-947e-0d4a1c7872bb"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a pool entry exists with the stated name and no dimension, stage or conduct field",
+   "pass": true,
+   "detail": {
+    "stated_full_name": "Pat Test",
+    "report_status": "issued",
+    "visibility_withdrawn_at": null,
+    "leaks": false
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a release record in pool mode exists",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-04",
+   "label": "making it available twice is refused",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "this report is already available to approved employers",
+       "reason": "ALREADY_AVAILABLE",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a participant cannot write a pool entry directly",
+   "pass": true,
+   "detail": "permission denied for table t3a_employer_pool_entry"
+  },
+  {
+   "id": "D-04",
+   "label": "a participant cannot edit the report fields of an entry",
+   "pass": true,
+   "detail": "permission denied for table t3a_employer_pool_entry"
+  },
+  {
+   "id": "D-04",
+   "label": "a participant can edit what they state",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "?column?": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the participant reads their pool state",
+   "pass": true,
+   "detail": {
+    "r": {
+     "available": true,
+     "withdrawn_at": null,
+     "report_status": "issued",
+     "correction_open": false,
+     "made_available_at": "2026-10-20T20:04:15.333122+00:00"
+    }
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the participant withdraws",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "outcome": "withdrawn",
+       "recipient_release_id": "e1f18ea6-5825-4acc-947e-0d4a1c7872bb"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "the entry leaves the pool and the release record shows it",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-04",
+   "label": "withdrawing again is refused",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "this report is not currently available to approved employers",
+       "reason": "NOT_AVAILABLE",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a withdrawn entry blocks a fresh entry for the same report (one entry per report)",
+   "pass": true,
+   "detail": "duplicate key value violates unique constraint \"t3a_employer_pool_entry_report_u"
+  },
+  {
+   "id": "D-04",
+   "label": "an amended report is flagged for correction in the pool",
+   "pass": true,
+   "detail": {
+    "report_status": "amended",
+    "correction_open": true,
+    "visibility_withdrawn_at": null
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "a withdrawn report leaves the pool",
+   "pass": true,
+   "detail": {
+    "report_status": "withdrawn",
+    "w": true
+   }
+  },
+  {
+   "id": "D-04",
+   "label": "withdrawing employer_share consent takes every entry for that dimension out of the pool",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D-04",
+   "label": "a withdrawn report cannot be made available",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "r": {
+       "detail": "a withdrawn report cannot be made available",
+       "reason": "REPORT_WITHDRAWN",
+       "outcome": "refused"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "DT-50",
+   "label": "the report face assembles identically before and after the pool actions (same input, same output)",
+   "pass": true,
+   "detail": "8dc0b829f186ca1ec0a7d452e2d6d29b"
+  }
+ ]
+}

@@ -1,0 +1,93 @@
+{
+ "before": [
+  {
+   "cv": 172,
+   "cr": 0,
+   "ma": 0
+  }
+ ],
+ "new_objects": [
+  {
+   "proname": "t3a_bound_item_integrity"
+  },
+  {
+   "proname": "t3a_consent_read"
+  },
+  {
+   "proname": "t3a_contact_initiation_attempt"
+  },
+  {
+   "proname": "t3a_decision_point_pause"
+  },
+  {
+   "proname": "t3a_dimension_consent_check"
+  },
+  {
+   "proname": "t3a_dimension_consent_state"
+  },
+  {
+   "proname": "t3a_record_timing_comparability"
+  },
+  {
+   "proname": "t3a_security_timing"
+  },
+  {
+   "proname": "t3a_security_timing_gate"
+  },
+  {
+   "proname": "t3a_superseded_route_log"
+  }
+ ],
+ "anon_exec": [
+  {
+   "b": false
+  }
+ ],
+ "bound_item_failures_in_real_sources": [],
+ "real_sources_checked": [
+  {
+   "n": 34
+  }
+ ],
+ "table_rls": [
+  {
+   "relname": "t3a_contact_permission",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_observation_timing_flag",
+   "relrowsecurity": true
+  }
+ ],
+ "probe_consent_absent": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE consent_absent\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_contact": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE contact_permission_absent\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_beat_sequence": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE beat_sequence_absent\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_timing_unloaded": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE timing_value_unloaded\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_followup_read": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE disabled_consent_route\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_pattern": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE cross_dimension_mapping_absent\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "cv": 172,
+   "cr": 0,
+   "ma": 0
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "passed": 17,
+ "total": 17,
+ "failed": [],
+ "results": [
+  {
+   "id": "C-gw",
+   "label": "gateway row accepts the new nullable columns; opened_at maps to created_at",
+   "pass": true
+  },
+  {
+   "id": "DT-10",
+   "label": "Stage entry with no gateway is refused",
+   "pass": true,
+   "detail": "null value in column \"observation_path_gateway_id\" of relation \"t3a_stage_entry_event\" violates not-"
+  },
+  {
+   "id": "DT-10",
+   "label": "Stage entry with a gateway that does not exist is refused",
+   "pass": true,
+   "detail": "insert or update on table \"t3a_stage_entry_event\" violates foreign key constraint \"t3a_stage_entry_e"
+  },
+  {
+   "id": "DT-10",
+   "label": "Stage entry with the participant's gateway is accepted",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "C-state",
+   "label": "administration_conditions capture state filled by the trigger",
+   "pass": true,
+   "detail": {
+    "stage_entry_event_id": "d9113e90-9a6d-431d-ae29-a38cc0830810",
+    "entered_at": "2026-10-20T11:08:27.548Z",
+    "cs": "captured"
+   }
+  },
+  {
+   "id": "DT-11",
+   "label": "allocate a mentor, wait, enter the Stage: entry time is the entry action, later than the allocation",
+   "pass": true,
+   "detail": {
+    "alloc": {
+     "created_at": "2026-10-20T11:08:27.717Z"
+    },
+    "entry": {
+     "entered_at": "2026-10-20T11:08:29.383Z"
+    }
+   }
+  },
+  {
+   "id": "DT-11",
+   "label": "a backdated entry time is refused",
+   "pass": true,
+   "detail": "T3A_STAGE_ENTRY_BACKDATED: the Stage entry event is created at the entry action, not at allocation o"
+  },
+  {
+   "id": "DT-12",
+   "label": "three counted attempts numbered 1, 2, 3",
+   "pass": true,
+   "detail": [
+    {
+     "attempt_id": "1df9a662-4218-4bfd-926e-6c7022cda5ce",
+     "attempt_no": 1,
+     "counted": true
+    },
+    {
+     "attempt_id": "5cc2737c-bb9c-43d9-b83c-04f3adb4ea2e",
+     "attempt_no": 2,
+     "counted": true
+    },
+    {
+     "attempt_id": "15914c7a-2e49-4a48-8345-06b676b770a9",
+     "attempt_no": 3,
+     "counted": true
+    }
+   ]
+  },
+  {
+   "id": "DT-12",
+   "label": "attempt_no cannot be lowered or reset (owner route)",
+   "pass": true,
+   "detail": "T3A_ATTEMPT_NO_IMMUTABLE: attempt_no cannot be changed, lowered or reset"
+  },
+  {
+   "id": "DT-12",
+   "label": "attempt_no cannot be reset through the service role either",
+   "pass": true,
+   "detail": "T3A_ATTEMPT_NO_IMMUTABLE: attempt_no cannot be changed, lowered or reset"
+  },
+  {
+   "id": "DT-12",
+   "label": "attempts cannot be deleted",
+   "pass": true,
+   "detail": "T3A_ATTEMPT_NO_DELETE: attempts are never deleted; the sequence never decreases"
+  },
+  {
+   "id": "DT-12",
+   "label": "fourth counted attempt refuses under the loaded rule",
+   "pass": true,
+   "detail": {
+    "remedy": "CX-27: there is no cooldown after the third completed observation because there is no fourth attempt.",
+    "permitted": false,
+    "refusal_code": "ATTEMPT_CAP_REACHED",
+    "completed_observations": 3
+   }
+  },
+  {
+   "id": "DT-13",
+   "label": "welfare stop: attempt_counted false, cooldown_class none, even when supplied counted",
+   "pass": true,
+   "detail": {
+    "cc": "none",
+    "counted": false
+   }
+  },
+  {
+   "id": "C-live",
+   "label": "with the required-fields switch off, the live writers' inserts still pass",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "C-strict",
+   "label": "with the switch on, a missing required Domain C field is refused by name",
+   "pass": true,
+   "detail": "T3A_REQUIRED_FIELD_MISSING: attempt_event_class is required on t3a_attempt"
+  },
+  {
+   "id": "DT-01(C)",
+   "label": "all 36 Domain C fields mapped",
+   "pass": true,
+   "detail": 36
+  },
+  {
+   "id": "C-cols",
+   "label": "new attempt columns exist",
+   "pass": true
+  }
+ ]
+}

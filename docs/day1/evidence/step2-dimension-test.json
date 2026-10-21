@@ -1,0 +1,232 @@
+{
+ "passed": 29,
+ "total": 29,
+ "failed": [],
+ "results": [
+  {
+   "id": "B-col",
+   "label": "t3a_d1_question_object carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_capture_set carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_capture_line carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_beat_capture_binding carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_capture_resolution carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_question_capture_map carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_capture_selection carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_branch_rule carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_condition_precedence carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_specification_cooldown carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-col",
+   "label": "t3a_d1_calibration_exercise carries dimension_id, not null, no default, existing rows are D1",
+   "pass": true,
+   "detail": {
+    "is_nullable": "NO",
+    "column_default": null
+   }
+  },
+  {
+   "id": "B-key",
+   "label": "a D2 capture set may reuse the code C1 beside D1's",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-key",
+   "label": "a capture set with no dimension is refused",
+   "pass": true,
+   "detail": "null value in column \"dimension_id\" of relation \"t3a_d1_capture_set\" violates not-null con"
+  },
+  {
+   "id": "B-key",
+   "label": "the same code twice in one dimension is refused",
+   "pass": true,
+   "detail": "duplicate key value violates unique constraint \"t3a_d1_capture_set_pkey\""
+  },
+  {
+   "id": "B-key",
+   "label": "a D2 line at (C1, 1) is accepted although D1 already has one there",
+   "pass": true,
+   "detail": [
+    "ok",
+    1
+   ]
+  },
+  {
+   "id": "B-key",
+   "label": "a capture line cannot point at another dimension's set",
+   "pass": true,
+   "detail": "insert or update on table \"t3a_d1_capture_line\" violates foreign key constraint \"t3a_d1_capture_line"
+  },
+  {
+   "id": "B-key",
+   "label": "a question code that names another dimension is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_d1_question_object\" violates check constraint \"t3a_d1_question_object_code"
+  },
+  {
+   "id": "B-key",
+   "label": "precedence order may repeat across dimensions",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-key",
+   "label": "a second line can be added to the D2 set",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-key",
+   "label": "a D2 condition may reuse a D1 condition code",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-key",
+   "label": "a D2 cooldown ladder may reuse D1's step counts",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-iso",
+   "label": "an attempt for D2 pointing at a D1 Stage entry is skipped and logged",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": []
+   }
+  },
+  {
+   "id": "B-iso",
+   "label": "an attempt for D1 pointing at the D1 Stage entry is accepted",
+   "pass": true,
+   "detail": {
+    "msg": "ok",
+    "rows": [
+     {
+      "attempt_id": "6863a429-fca9-4ac7-90dc-6d55a16f2ce1"
+     }
+    ]
+   }
+  },
+  {
+   "id": "B-iso",
+   "label": "a D2 capture selection against a D1 Stage entry is skipped and logged",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "B-ret",
+   "label": "August 2026 drafts for D2 to D14 are listed as retired",
+   "pass": true,
+   "detail": {
+    "n": 325,
+    "d": 13
+   }
+  },
+  {
+   "id": "B-ret",
+   "label": "a retired draft question cannot be approved",
+   "pass": true,
+   "detail": {
+    "approved_at": null
+   }
+  },
+  {
+   "id": "B-ret",
+   "label": "the retirement list is append only",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "B-auth",
+   "label": "a D1 authorization does not authorize D2",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "B-auth",
+   "label": "the same mentor, dimension and start twice is refused",
+   "pass": true,
+   "detail": "duplicate key value violates unique constraint \"t3a_mentor_authorization_dim_uq\""
+  }
+ ]
+}

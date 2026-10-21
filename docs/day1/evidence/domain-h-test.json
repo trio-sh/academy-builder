@@ -1,0 +1,77 @@
+{
+ "passed": 12,
+ "total": 12,
+ "failed": [],
+ "results": [
+  {
+   "id": "H-case",
+   "label": "a challenge is opened with its ground, opener and issuance hold",
+   "pass": true
+  },
+  {
+   "id": "H-hold",
+   "label": "an open challenge with issuance_hold blocks issuance of the report",
+   "pass": true,
+   "detail": "ISSUANCE_HELD: an open challenge holds this report until it is resolved"
+  },
+  {
+   "id": "H-outcome",
+   "label": "an outcome without a reason code and a resolution time is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_challenge_case\" violates check constraint \"t3a_challenge_case_re"
+  },
+  {
+   "id": "H-outcome",
+   "label": "an outcome that changes the report needs a second check",
+   "pass": true,
+   "detail": "SECOND_CHECK_REQUIRED: an outcome that changes the report needs a second check"
+  },
+  {
+   "id": "H-outcome",
+   "label": "the second check is not the person who opened the challenge",
+   "pass": true,
+   "detail": "SECOND_CHECK_NOT_INDEPENDENT: the second check is done by someone other than the reconside"
+  },
+  {
+   "id": "H-outcome",
+   "label": "a not-upheld outcome with reason code and time is accepted",
+   "pass": true
+  },
+  {
+   "id": "H-hold",
+   "label": "once the challenge is resolved the hold is released (any other refusal is a later check)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "H-outcome",
+   "label": "an outcome outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_challenge_case\" violates check constraint \"t3a_challen"
+  },
+  {
+   "id": "H-correction",
+   "label": "a correction outcome is a controlled code set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: correction_outcome was set at corrected and cannot change"
+  },
+  {
+   "id": "H-correction",
+   "label": "a free text outcome is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_correction_request\" violates check constraint \"t3a_cor"
+  },
+  {
+   "id": "H-complaint",
+   "label": "the complaint acknowledgement time is set once",
+   "pass": true,
+   "detail": "T3A_SET_ONCE: complaint_acknowledged_at was set at 2026-10-20T11:52:48.073978+00"
+  },
+  {
+   "id": "DT-01(H)",
+   "label": "all 17 Domain H fields mapped",
+   "pass": true,
+   "detail": 17
+  }
+ ]
+}

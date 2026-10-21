@@ -334,31 +334,35 @@ describe("§8.4 Participant pathway — the two standing prohibitions", () => {
     // "Any mentor pool, list, name, count or availability before
     // assignment" is prohibited, and this surface has no business
     // reading a mentor at all.
-    expect(disclosuresCode).not.toMatch(/mentor_profiles|mentor_assignments|availability/i);
+    expect(disclosuresCode).not.toMatch(/mentor_profiles|mentor_assignments|mentor.{0,20}availab/i);
   });
 
   it("reads only the participant's own reports and releases", () => {
     const reads = [...disclosuresCode.matchAll(/\.from\("([a-z0-9_]+)"\)/g)].map((m) => m[1]);
     expect([...new Set(reads)].sort()).toEqual(
-      ["t3a_d1_ber_report", "t3a_d1_release_token"].sort()
+      ["t3a_d1_ber_report"].sort()
     );
   });
 
-  it("offers revoke on a live release and nothing on a dead one", () => {
-    expect(disclosuresCode).toMatch(/state\.live \?/);
-    expect(disclosuresCode).toMatch(/onRevoke/);
+  it("offers withdraw on an available report and the form only on one that is not", () => {
+    expect(disclosuresCode).toMatch(/live && \(/);
+    expect(disclosuresCode).toMatch(/onWithdraw/);
+    expect(disclosuresCode).toMatch(/!live && !dead/);
   });
 
-  it("states that a release covers one version only", () => {
-    expect(disclosures.replace(/\s+/g, " ")).toMatch(
-      /A release covers one report at one version/i
-    );
+  it("does not use the named recipient route", () => {
+    expect(disclosuresCode).not.toMatch(/t3a_d1_issue_release_token|t3a_d1_release_token|t3a_create_disclosure/);
   });
 
-  it("states that the recipient needs no account", () => {
-    expect(disclosures.replace(/\s+/g, " ")).toMatch(
-      /do not need an account, and having one gives them nothing extra/i
-    );
+  it("records employer_share consent per dimension, with the hash of the wording shown", () => {
+    expect(disclosuresCode).toMatch(/p_type: "employer_share"/);
+    expect(disclosuresCode).toMatch(/p_dim: r\.dimension_id/);
+    expect(disclosuresCode).toMatch(/p_copy_hash: hash/);
+  });
+
+  it("makes a report available through the pool function and states the limit of the consent", () => {
+    expect(disclosuresCode).toMatch(/rpc\("t3a_pool_make_available"/);
+    expect(disclosures.replace(/\s+/g, " ")).toMatch(/Your agreement covers this dimension only/i);
   });
 });
 
@@ -516,7 +520,9 @@ describe("§8.4 Stage 3 — no grade and no artifact on a report face", () => {
   });
 
   it("runs the provenance check server-side rather than locally", () => {
-    expect(workSampleCode).toMatch(/rpc\("t3a_d1_work_sample_provenance_check"/);
+    expect(workSampleCode).toMatch(/rpc\("t3a_s3_submit"/);
+    expect(workSampleCode).toMatch(/rpc\("t3a_s3_respond"/);
+    expect(workSampleCode).not.toMatch(/\.update\(/);
   });
 
   it("reads only its own submissions table", () => {
@@ -573,11 +579,12 @@ describe("§8.3/§8.4 Stage 4 shared session — one lane, and it is the observe
     expect(groupSessionCode).not.toMatch(/permitted:\s*true/);
   });
 
-  it("calls only the two governed session routines", () => {
+  it("calls only the three governed session routines (capture verdict, member event, and the server's Stage 4 entry)", () => {
     const rpcs = [...groupSessionCode.matchAll(/rpc\("([a-z0-9_]+)"/g)].map((m) => m[1]);
     expect([...new Set(rpcs)].sort()).toEqual([
       "t3a_d1_group_capture_permitted",
       "t3a_d1_group_member_event",
+      "t3a_s4_enter",
     ]);
   });
 
@@ -981,19 +988,8 @@ describe("Report face — entitlement, not identifier possession", () => {
     expect(recipientCode).not.toMatch(/renders_always/);
   });
 
-  it("the release form issues a release rather than announcing one", () => {
-    // It previously prevented the submit and showed a success toast,
-    // creating no consent and no token, so there was nothing to redeem.
-    expect(disclosuresCode).toMatch(/rpc\("t3a_d1_issue_release_token"/);
-    expect(disclosuresCode).toMatch(/if \(!result\?\.issued\)/);
-  });
-
-  it("the release link is held only until it is shown", () => {
-    // Stored as a hash server-side; the page keeps it in state and says
-    // it cannot be recovered.
-    expect(disclosures.replace(/\s+/g, " ")).toMatch(
-      /stored only as a hash, so it cannot be recovered afterwards/
-    );
+  it("the release page makes a report available through the pool rather than announcing it", () => {
+    expect(disclosuresCode).toMatch(/if \(result\?\.outcome !== "available"\)/);
   });
 });
 

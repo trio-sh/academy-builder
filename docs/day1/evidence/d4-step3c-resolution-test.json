@@ -1,0 +1,317 @@
+{
+ "passed": 29,
+ "total": 29,
+ "failed": [],
+ "results": [
+  {
+   "id": "D4-cov",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 1744,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D4-cov",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D4-res",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant addressed a party other than the one the situation named as the recipient",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A2",
+      "question_code": "Q-D4-01",
+      "statement_key": "ST-D4-002"
+     },
+     {
+      "text": "the participant addressed a role the situation did not list",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A2",
+      "question_code": "Q-D4-01b",
+      "statement_key": "ST-D4-006"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D4-01",
+    "Q-D4-01b"
+   ]
+  },
+  {
+   "id": "D4-res",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the participant gave 2 of the items the situation designated as material"
+  },
+  {
+   "id": "D4-res",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 A4 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "a D3 question in a D4 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D3-01 is not a D4 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-02b follows Q-D4-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D4-09"
+   ]
+  },
+  {
+   "id": "D4-res",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D4-011 contained_item_count",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-06",
+   "label": "Q-D4-07 A3 resolves to ST-D4-036 alone",
+   "pass": true,
+   "detail": [
+    "ST-D4-036"
+   ]
+  },
+  {
+   "id": "D4-04",
+   "label": "a Stage 1 channel answer is refused by the resolution rules (a written response cannot evidence a channel used)",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D4-08",
+    "detail": "A listed channel is recorded as used and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-17",
+   "label": "with Q-D4-01 recording no communication, the duplicated absence ST-D4-010 is suppressed",
+   "pass": true,
+   "detail": [
+    "ST-D4-004"
+   ]
+  },
+  {
+   "id": "D4-RR",
+   "label": "RR-D4-18: no communication recorded at Q-D4-02 while a party is recorded as addressed refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D4-18",
+    "detail": "A party is recorded as addressed, so a communication was made",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-RR",
+   "label": "RR-D4-12: an order asserted when no communication was made refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D4-12",
+    "detail": "No communication was made, so no item can carry an order",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D4-res",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 21
+  },
+  {
+   "id": "D4-64",
+   "label": "a clean statement passes",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D4-64",
+   "label": "a manner word fails (confidently)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "clearly"
+     },
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "confidently"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-64",
+   "label": "a closed-list evaluative phrase fails (strong response)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "strong response"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "escalated"
+     },
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "verified"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-63",
+   "label": "stars fail",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_glyph",
+      "detail": "dot, bar, star, marker or traffic-light glyph"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-63",
+   "label": "a flag wording is rejected (red flag)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "red flag"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-63",
+   "label": "a retired term fails (candidate)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "candidate"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D4-64",
+   "label": "every D4 Recorded Conduct Entry passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D4-64",
+   "label": "every D4 template passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}

@@ -1,0 +1,883 @@
+{
+ "package_id": "T3A-D4-LSA-CONTENT-001",
+ "dimension_id": "D4",
+ "version": "1.0",
+ "status": "Draft for founder approval; loads as inactive records",
+ "state_mapping": {
+  "REK-D4-005": {
+   "C5 A1": "UN_ALL_IDENTIFIED",
+   "C5 A2": "UN_SOME_IDENTIFIED",
+   "C5 A3": "UN_NONE_IDENTIFIED",
+   "C5 A4": "UN_NONE_STATED"
+  },
+  "REK-D4-008": {
+   "C8 A1": "FC_RECIPIENT_AND_TIME",
+   "C8 A2": "FC_RECIPIENT_ONLY",
+   "C8 A3": "FC_NO_RECIPIENT",
+   "C8 A4": "FC_NONE"
+  }
+ },
+ "registries": {
+  "families": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "family_id": "FAM-D4-REK005",
+    "proposition_id": "REK-D4-005",
+    "conduct_element_id": "CE-D4-05",
+    "members": [
+     {
+      "source_version_id": "SRC-D4-S2-001@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-004@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-006@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-008@2.2",
+      "approved_by": null,
+      "approved_at": null
+     }
+    ],
+    "administration_profile": {
+     "observation_mode": "structured_live_session",
+     "assistance_declaration": "none"
+    },
+    "states": [
+     "UN_NONE_IDENTIFIED",
+     "UN_SOME_IDENTIFIED",
+     "UN_ALL_IDENTIFIED"
+    ],
+    "absence_states": [
+     "UN_NONE_STATED"
+    ]
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "family_id": "FAM-D4-REK008",
+    "proposition_id": "REK-D4-008",
+    "conduct_element_id": "CE-D4-08",
+    "members": [
+     {
+      "source_version_id": "SRC-D4-S2-001@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-004@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-006@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-007@2.2",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D4-S2-008@2.2",
+      "approved_by": null,
+      "approved_at": null
+     }
+    ],
+    "administration_profile": {
+     "observation_mode": "structured_live_session",
+     "assistance_declaration": "none"
+    },
+    "states": [
+     "FC_NO_RECIPIENT",
+     "FC_RECIPIENT_ONLY",
+     "FC_RECIPIENT_AND_TIME"
+    ],
+    "absence_states": [
+     "FC_NONE"
+    ]
+   }
+  ],
+  "direction_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DR-D4-005",
+    "family_id": "FAM-D4-REK005",
+    "family_version": 1,
+    "transitions": [
+     {
+      "from_state": "UN_NONE_IDENTIFIED",
+      "to_state": "UN_SOME_IDENTIFIED",
+      "direction": "forward"
+     },
+     {
+      "from_state": "UN_SOME_IDENTIFIED",
+      "to_state": "UN_ALL_IDENTIFIED",
+      "direction": "forward"
+     },
+     {
+      "from_state": "UN_NONE_IDENTIFIED",
+      "to_state": "UN_ALL_IDENTIFIED",
+      "direction": "forward"
+     },
+     {
+      "from_state": "UN_SOME_IDENTIFIED",
+      "to_state": "UN_NONE_IDENTIFIED",
+      "direction": "backward"
+     },
+     {
+      "from_state": "UN_ALL_IDENTIFIED",
+      "to_state": "UN_SOME_IDENTIFIED",
+      "direction": "backward"
+     },
+     {
+      "from_state": "UN_ALL_IDENTIFIED",
+      "to_state": "UN_NONE_IDENTIFIED",
+      "direction": "backward"
+     }
+    ],
+    "justification_ref": "J-D4-005, held by the founder",
+    "forward_label": "toward identifying unconfirmed items as unconfirmed",
+    "backward_label": "away from identifying unconfirmed items as unconfirmed"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DR-D4-008",
+    "family_id": "FAM-D4-REK008",
+    "family_version": 1,
+    "transitions": [
+     {
+      "from_state": "FC_NO_RECIPIENT",
+      "to_state": "FC_RECIPIENT_ONLY",
+      "direction": "forward"
+     },
+     {
+      "from_state": "FC_RECIPIENT_ONLY",
+      "to_state": "FC_RECIPIENT_AND_TIME",
+      "direction": "forward"
+     },
+     {
+      "from_state": "FC_NO_RECIPIENT",
+      "to_state": "FC_RECIPIENT_AND_TIME",
+      "direction": "forward"
+     },
+     {
+      "from_state": "FC_RECIPIENT_ONLY",
+      "to_state": "FC_NO_RECIPIENT",
+      "direction": "backward"
+     },
+     {
+      "from_state": "FC_RECIPIENT_AND_TIME",
+      "to_state": "FC_RECIPIENT_ONLY",
+      "direction": "backward"
+     },
+     {
+      "from_state": "FC_RECIPIENT_AND_TIME",
+      "to_state": "FC_NO_RECIPIENT",
+      "direction": "backward"
+     }
+    ],
+    "justification_ref": "J-D4-008, held by the founder",
+    "forward_label": "toward naming the recipient and the time of a further communication",
+    "backward_label": "away from naming the recipient and the time of a further communication"
+   }
+  ],
+  "sufficiency_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "SR-D4",
+    "applies_to": "D4",
+    "min_eligible": 2,
+    "min_comparable": 2,
+    "min_after_first": 1,
+    "require_completed_cooldown": true
+   }
+  ],
+  "entries": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-insufficient_evidence",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "insufficient_evidence",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "Too few comparable observations were recorded in this period for a comparison.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-comparison_not_established",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "comparison_not_established",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-consistent_recorded_conduct",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "consistent_recorded_conduct",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "Each included observation recorded the same response.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-different_no_direction",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "different_no_direction",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "The included observations recorded different responses. No direction is set between these responses.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-documented_progression",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "documented_progression",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "Across the included observations, the recorded conduct moved toward identifying unconfirmed items as unconfirmed, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified, toward identifying unconfirmed items as unconfirmed"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-documented_regression",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "documented_regression",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "Across the included observations, the recorded conduct moved away from identifying unconfirmed items as unconfirmed, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified, away from identifying unconfirmed items as unconfirmed"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-005-mixed_trajectory",
+    "proposition_id": "REK-D4-005",
+    "finding_code": "mixed_trajectory",
+    "sequence_pattern": "ANY",
+    "element_title": "Separating what is known from what is not yet known",
+    "element_short": "Unconfirmed items identified",
+    "wording": "Across the included observations, the recorded conduct moved in both directions.",
+    "display_label": null,
+    "state_labels": {
+     "UN_NONE_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified none of them as unconfirmed",
+      "short": "none identified"
+     },
+     "UN_SOME_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified some of them as unconfirmed and not others",
+      "short": "some identified"
+     },
+     "UN_ALL_IDENTIFIED": {
+      "full": "Stated unconfirmed items and identified each of them as unconfirmed",
+      "short": "all identified"
+     },
+     "UN_NONE_STATED": {
+      "full": "No unconfirmed item stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Giving information that is partly unconfirmed, in a call, a briefing, an update or a written note",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "unconfirmed items identified"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-insufficient_evidence",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "insufficient_evidence",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "Too few comparable observations were recorded in this period for a comparison.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-comparison_not_established",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "comparison_not_established",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-consistent_recorded_conduct",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "consistent_recorded_conduct",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "Each included observation recorded the same response.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-different_no_direction",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "different_no_direction",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "The included observations recorded different responses. No direction is set between these responses.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-documented_progression",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "documented_progression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "Across the included observations, the recorded conduct moved toward naming the recipient and the time of a further communication, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated, toward naming the recipient and the time of a further communication"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-documented_regression",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "documented_regression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "Across the included observations, the recorded conduct moved away from naming the recipient and the time of a further communication, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated, away from naming the recipient and the time of a further communication"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D4-008-mixed_trajectory",
+    "proposition_id": "REK-D4-008",
+    "finding_code": "mixed_trajectory",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating the further communication, its recipient and its time",
+    "element_short": "Further communication stated",
+    "wording": "Across the included observations, the recorded conduct moved in both directions.",
+    "display_label": null,
+    "state_labels": {
+     "FC_NO_RECIPIENT": {
+      "full": "Stated a further communication without naming its recipient",
+      "short": "no recipient"
+     },
+     "FC_RECIPIENT_ONLY": {
+      "full": "Stated who a further communication would go to and not when",
+      "short": "recipient only"
+     },
+     "FC_RECIPIENT_AND_TIME": {
+      "full": "Stated who a further communication would go to and when",
+      "short": "recipient and time"
+     },
+     "FC_NONE": {
+      "full": "No further communication stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a call, a meeting or a message where something further must follow",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "further communication stated"
+   }
+  ],
+  "history_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "HR-D4",
+    "applies_to": "D4",
+    "max_age_months": 36
+   }
+  ],
+  "dimension_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DMR-D4",
+    "dimension_id": "D4",
+    "min_elements": 2,
+    "min_directional_elements": 2
+   }
+  ],
+  "dimension_entries": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-01",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_insufficient",
+    "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+    "display_label": "Dimension not summarized"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-02",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+    "display_label": "Dimension direction not stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-03",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_pattern_only_direction",
+    "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+    "display_label": "Dimension direction not stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-04",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_consistent",
+    "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+    "display_label": "Consistent conduct across compared elements"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-05",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_progression",
+    "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+    "display_label": "Progression in compared conduct"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-06",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_regression",
+    "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+    "display_label": "Regression in compared conduct"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D4-07",
+    "dimension_id": "D4",
+    "dimension_finding_code": "dimension_mixed",
+    "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+    "display_label": "Mixed across compared conduct"
+   }
+  ]
+ }
+}

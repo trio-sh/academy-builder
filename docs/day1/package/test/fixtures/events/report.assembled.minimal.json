@@ -1,0 +1,24 @@
+{
+ "event_id": "c1e2850d-f95c-4cc1-a92a-58b9526e98ee",
+ "event_name": "report.assembled",
+ "event_category": "REPORT",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "report",
+ "resource_id": "abbe4b84-0e7f-47bd-b7c3-6e89955529bb",
+ "payload": {
+  "dimension_evidence_state": "C1",
+  "report_type": "ber"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_c84ca5c3f82a44b7a7c64e1117d70174",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

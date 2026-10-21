@@ -1,0 +1,131 @@
+{
+ "passed": 9,
+ "total": 9,
+ "failed": [],
+ "results": [
+  {
+   "id": "R-d1",
+   "label": "D1 capture groups are identical with D2 rows loaded",
+   "pass": true,
+   "detail": [
+    "9ca7784c1e84815f5fbc2e65eee64d27",
+    "9ca7784c1e84815f5fbc2e65eee64d27"
+   ]
+  },
+  {
+   "id": "R-d1",
+   "label": "D1 coverage matrix is identical with D2 rows loaded",
+   "pass": true,
+   "detail": [
+    "9a926551ef7040658ff9cec01bb987f7",
+    "9a926551ef7040658ff9cec01bb987f7"
+   ]
+  },
+  {
+   "id": "R-d1",
+   "label": "D1 capture output for every question is identical with D2 rows loaded",
+   "pass": true,
+   "detail": [
+    "0aa16e51f4d1d49bd8cf52b74b0de77d",
+    "0aa16e51f4d1d49bd8cf52b74b0de77d"
+   ]
+  },
+  {
+   "id": "R-d1",
+   "label": "a D1 question still returns exactly the D1 lines of C1",
+   "pass": true,
+   "detail": [
+    "Named the specific issue and what it was.",
+    "Said something was wrong without identifying what.",
+    "Made no reference to an issue."
+   ]
+  },
+  {
+   "id": "R-d2",
+   "label": "a D2 question returns the D2 lines of its own C1 and none of D1's",
+   "pass": true,
+   "detail": {
+    "lines": [
+     {
+      "line_text": "D2 line one",
+      "line_order": 1
+     },
+     {
+      "line_text": "D2 line two",
+      "line_order": 2
+     }
+    ],
+    "permitted": true,
+    "answer_type": null,
+    "question_code": "Q-D2-01",
+    "group_controls": [
+     {
+      "question_code": "Q-D2-01",
+      "control_ordinal": null
+     }
+    ],
+    "conduct_element": null,
+    "control_ordinal": null,
+    "capture_set_code": "C1",
+    "source_bound_family": null
+   }
+  },
+  {
+   "id": "R-d2",
+   "label": "the coverage matrix runs for D2 on its own rows and reports the D2 gaps",
+   "pass": true,
+   "detail": [
+    {
+     "property": "Completeness",
+     "passed": false
+    },
+    {
+     "property": "Uniqueness",
+     "passed": true
+    },
+    {
+     "property": "No shared output",
+     "passed": true
+    },
+    {
+     "property": "No impossible paths",
+     "passed": true
+    },
+    {
+     "property": "No unreachable statement",
+     "passed": true
+    },
+    {
+     "property": "No limitation leakage",
+     "passed": true
+    },
+    {
+     "property": "No absence language",
+     "passed": true
+    }
+   ]
+  },
+  {
+   "id": "R-fn",
+   "label": "the dimension helpers resolve (default D1 for an unknown source)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "R-fn",
+   "label": "a capture selection fills its dimension from its Stage entry",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "R-d1",
+   "label": "after the D2 rows are removed D1 output is unchanged",
+   "pass": true,
+   "detail": {
+    "groups": "9ca7784c1e84815f5fbc2e65eee64d27",
+    "coverage": "9a926551ef7040658ff9cec01bb987f7",
+    "by_question": "0aa16e51f4d1d49bd8cf52b74b0de77d"
+   }
+  }
+ ]
+}

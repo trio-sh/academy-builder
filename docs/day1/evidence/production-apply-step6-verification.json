@@ -1,0 +1,24 @@
+{
+ "unloaded": [
+  {
+   "r": {
+    "reason": "correction_response_time_unloaded",
+    "rendered": false
+   }
+  }
+ ],
+ "anon_exec": [
+  {
+   "a": true
+  }
+ ],
+ "probe_loaded_rolled_back": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE {\\\"value\\\": \\\"synthetic probe\\\", \\\"rendered\\\": true}\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "after_probe": [
+  {
+   "n": 0
+  }
+ ]
+}

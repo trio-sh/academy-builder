@@ -1,0 +1,49 @@
+{
+ "tables": [
+  {
+   "relname": "t3a_s4_entry_attempt",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "t3a_s4_group_participation",
+   "relrowsecurity": true
+  }
+ ],
+ "grants_to_anon_authenticated": [
+  {
+   "n": 0
+  }
+ ],
+ "anon_exec": [
+  {
+   "a": false,
+   "b": false,
+   "c": false
+  }
+ ],
+ "s4_state": [
+  {
+   "s": null
+  }
+ ],
+ "work_sample_rows": [
+  {
+   "n": 0
+  }
+ ],
+ "probe_s4_enter_unknown_session": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE session_not_found\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "probe_group_participation": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE NOT_A_MEMBER_OF_THIS_SESSION\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\\n\"}"
+ },
+ "residue": [
+  {
+   "attempts": 0,
+   "participations": 0,
+   "sessions": 0
+  }
+ ]
+}

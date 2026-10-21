@@ -1,0 +1,226 @@
+{
+ "note": "Policies with role PUBLIC (includes anonymous callers) and USING true on t3a_* tables. Decision needed per CR-016; not changed.",
+ "count": 44,
+ "tables": [
+  {
+   "table": "t3a_coverage_snapshot",
+   "policy": "t3a_coverage_snapshot_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_d1_approval_audit_finding",
+   "policy": "t3a_d1_approval_audit_finding_read",
+   "rows": 11
+  },
+  {
+   "table": "t3a_d1_approval_refusal_log",
+   "policy": "t3a_d1_approval_refusal_log_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_d1_beat_capture_binding",
+   "policy": "t3a_d1_beat_capture_binding_read",
+   "rows": 312
+  },
+  {
+   "table": "t3a_d1_branch_rule",
+   "policy": "t3a_d1_branch_rule_read",
+   "rows": 10
+  },
+  {
+   "table": "t3a_d1_build_conflict_register",
+   "policy": "t3a_d1_build_conflict_register_read",
+   "rows": 41
+  },
+  {
+   "table": "t3a_d1_capture_line",
+   "policy": "t3a_d1_capture_line_read",
+   "rows": 44
+  },
+  {
+   "table": "t3a_d1_capture_resolution",
+   "policy": "t3a_d1_capture_resolution_read",
+   "rows": 44
+  },
+  {
+   "table": "t3a_d1_capture_set",
+   "policy": "t3a_d1_capture_set_read",
+   "rows": 13
+  },
+  {
+   "table": "t3a_d1_co_participant_briefing",
+   "policy": "t3a_d1_co_participant_briefing_read",
+   "rows": 30
+  },
+  {
+   "table": "t3a_d1_condition_precedence",
+   "policy": "t3a_d1_condition_precedence_read",
+   "rows": 6
+  },
+  {
+   "table": "t3a_d1_consent_notice_version",
+   "policy": "t3a_d1_consent_notice_version_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_d1_consent_type",
+   "policy": "t3a_d1_consent_type_read",
+   "rows": 6
+  },
+  {
+   "table": "t3a_d1_content_identity_assertion",
+   "policy": "t3a_d1_content_identity_assertion_read",
+   "rows": 755
+  },
+  {
+   "table": "t3a_d1_correction_test_outcome",
+   "policy": "t3a_d1_correction_test_outcome_read",
+   "rows": 19
+  },
+  {
+   "table": "t3a_d1_founder_reapproval",
+   "policy": "t3a_d1_founder_reapproval_read",
+   "rows": 3
+  },
+  {
+   "table": "t3a_d1_lift_condition",
+   "policy": "t3a_d1_lift_condition_read",
+   "rows": 8
+  },
+  {
+   "table": "t3a_d1_live_session",
+   "policy": "t3a_d1_live_session_read",
+   "rows": 3
+  },
+  {
+   "table": "t3a_d1_live_session_event",
+   "policy": "t3a_d1_live_session_event_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_d1_mentor_action_sequence",
+   "policy": "t3a_d1_mentor_action_sequence_read",
+   "rows": 210
+  },
+  {
+   "table": "t3a_d1_question_capture_map",
+   "policy": "t3a_d1_question_capture_map_read",
+   "rows": 15
+  },
+  {
+   "table": "t3a_d1_question_object",
+   "policy": "t3a_d1_question_object_read",
+   "rows": 15
+  },
+  {
+   "table": "t3a_d1_report_block",
+   "policy": "t3a_d1_report_block_read",
+   "rows": 11
+  },
+  {
+   "table": "t3a_d1_report_controlled_text",
+   "policy": "t3a_d1_report_controlled_text_read",
+   "rows": 8
+  },
+  {
+   "table": "t3a_d1_review_checklist_item",
+   "policy": "t3a_d1_review_checklist_item_read",
+   "rows": 21
+  },
+  {
+   "table": "t3a_d1_session_attestation",
+   "policy": "t3a_d1_session_attestation_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_d1_source_approval_provenance",
+   "policy": "t3a_d1_source_approval_provenance_read",
+   "rows": 39
+  },
+  {
+   "table": "t3a_d1_stage4_impact_assessment",
+   "policy": "t3a_d1_stage4_impact_assessment_read",
+   "rows": 10
+  },
+  {
+   "table": "t3a_d1_stage4_impact_assessment_part",
+   "policy": "t3a_d1_stage4_impact_assessment_part_read",
+   "rows": 70
+  },
+  {
+   "table": "t3a_d1_stage4_refusal",
+   "policy": "t3a_d1_stage4_refusal_read",
+   "rows": 6
+  },
+  {
+   "table": "t3a_d1_stage_claim",
+   "policy": "t3a_d1_stage_claim_read",
+   "rows": 6
+  },
+  {
+   "table": "t3a_d1_stage_consent_requirement",
+   "policy": "t3a_d1_stage_consent_requirement_read",
+   "rows": 9
+  },
+  {
+   "table": "t3a_d1_superseded_capture_label",
+   "policy": "t3a_d1_superseded_capture_label_read",
+   "rows": 3
+  },
+  {
+   "table": "t3a_d1_traceability_field",
+   "policy": "t3a_d1_traceability_field_read",
+   "rows": 15
+  },
+  {
+   "table": "t3a_employer_desk_config",
+   "policy": "t3a_employer_desk_config_read",
+   "rows": 1
+  },
+  {
+   "table": "t3a_governance_config",
+   "policy": "t3a_governance_config_read",
+   "rows": 11
+  },
+  {
+   "table": "t3a_oversight_action_catalogue",
+   "policy": "t3a_oversight_action_catalogue_read",
+   "rows": 7
+  },
+  {
+   "table": "t3a_oversight_disclosure",
+   "policy": "t3a_oversight_disclosure_read",
+   "rows": 1
+  },
+  {
+   "table": "t3a_oversight_protected_surface",
+   "policy": "t3a_oversight_protected_surface_read",
+   "rows": 25
+  },
+  {
+   "table": "t3a_rce_controlled_text",
+   "policy": "t3a_rce_controlled_text_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_rce_controlled_text_register",
+   "policy": "t3a_rce_ctr_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_rce_pilot_authorization",
+   "policy": "t3a_rce_pa_read",
+   "rows": 0
+  },
+  {
+   "table": "t3a_rce_prohibited_vocabulary",
+   "policy": "t3a_rce_pv_read",
+   "rows": 20
+  },
+  {
+   "table": "t3a_rce_standing_defect",
+   "policy": "t3a_rce_standing_defect_read",
+   "rows": 5
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "event_id": "7644d22c-0bc9-4ae1-8f3a-287feaac6632",
+ "event_name": "mentor.agreement_signed",
+ "event_category": "MENTOR",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "mentor",
+ "resource_id": "c7341b88-d680-4418-8a2a-5e974b307b55",
+ "payload": {
+  "mentor_agreement_version": "1.0.0",
+  "mentor_agreement_signed_at": "2026-10-18T10:00:00Z"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_4547c4d9d11a4da3a62a4874f38f9bef",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

@@ -1,0 +1,23 @@
+{
+ "event_id": "0e2d7db3-72b2-4579-a6ca-5775ea2ebdf4",
+ "event_name": "employer.contact_requested",
+ "event_category": "EMPLOYER",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "employer_organization",
+ "resource_id": "41864164-d8c6-4b5c-81c7-8a91049841a8",
+ "payload": {
+  "contact_request_id": "5ba6cebe-7b1c-5b88-8ac5-8d417e696dcf"
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_857ad45b5e32494eae4cecc133ecb331",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

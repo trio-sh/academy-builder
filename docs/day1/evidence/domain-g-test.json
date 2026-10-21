@@ -1,0 +1,112 @@
+{
+ "passed": 17,
+ "total": 17,
+ "failed": [],
+ "results": [
+  {
+   "id": "DT-28",
+   "label": "a specimen gets a verification code on issue",
+   "pass": true,
+   "detail": "ABB9AEAF4D7458765BE9"
+  },
+  {
+   "id": "DT-28",
+   "label": "the code is not derivable from ber_report_id (not the id, its hash, or a prefix of either)",
+   "pass": true,
+   "detail": {
+    "code": "ABB9AEAF4D7458765BE9"
+   }
+  },
+  {
+   "id": "DT-28",
+   "label": "three reports get three different codes",
+   "pass": true
+  },
+  {
+   "id": "DT-28",
+   "label": "two reports cannot share a verification code",
+   "pass": true,
+   "detail": "duplicate key value violates unique constraint \"t3a_d1_ber_report_verification_c"
+  },
+  {
+   "id": "DT-27",
+   "label": "issuing a report with issued_by = reviewer_id is refused",
+   "pass": true,
+   "detail": "REVIEWER_IS_ISSUER: the person who reviewed the evidence for this report cannot issue it"
+  },
+  {
+   "id": "DT-27",
+   "label": "a different issuer passes this rule (any other refusal is a later check)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-27",
+   "label": "the issuer cannot be recorded as the reviewer afterwards",
+   "pass": true,
+   "detail": "REVIEWER_IS_ISSUER: the issuer of this report cannot also be its reviewer"
+  },
+  {
+   "id": "G-release",
+   "label": "a named recipient release needs a recipient address hash; a pool release has none",
+   "pass": true,
+   "detail": "new row for relation \"t3a_report_release\" violates check constraint \"t3a_report_"
+  },
+  {
+   "id": "G-release",
+   "label": "withdrawing availability is accepted and stamps the change time",
+   "pass": true
+  },
+  {
+   "id": "G-release",
+   "label": "a withdrawal of future availability cannot be reversed in place",
+   "pass": true,
+   "detail": "T3A_VISIBILITY_WITHDRAWN: a withdrawal of future availability cannot be reversed"
+  },
+  {
+   "id": "G-release",
+   "label": "release mode is fixed after creation",
+   "pass": true,
+   "detail": "T3A_IMMUTABLE_COLUMN: release_mode cannot change after it is written"
+  },
+  {
+   "id": "G-release",
+   "label": "a token state outside the four listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_report_release\" violates check constraint \"t3a_report_"
+  },
+  {
+   "id": "G-status",
+   "label": "ber_status outside the eleven listed values is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_d1_ber_report\" violates check constraint \"t3a_d1_ber_r"
+  },
+  {
+   "id": "G-access",
+   "label": "report access and verification check records are stored",
+   "pass": true,
+   "detail": [
+    "ok",
+    "ok"
+   ]
+  },
+  {
+   "id": "G-socket",
+   "label": "job family socket refuses every write",
+   "pass": true,
+   "detail": "T3A_SOCKET_ROUTE_CLOSED: t3a_job_family_socket is a SOCKET structure; capture is"
+  },
+  {
+   "id": "G-evidence",
+   "label": "dimension evidence accepts the new state and flags",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "DT-01(G)",
+   "label": "all 37 Domain G fields mapped",
+   "pass": true,
+   "detail": 37
+  }
+ ]
+}

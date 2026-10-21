@@ -1,0 +1,30 @@
+{
+ "before": [
+  {
+   "a": 0,
+   "chk": "CHECK ((approval_decision = ANY (ARRAY['approved'::text, 'withdrawn'::text])))"
+  }
+ ],
+ "mapped": [
+  {
+   "count": 34
+  }
+ ],
+ "dt01": [
+  {
+   "resolved": 372,
+   "unmapped": 150,
+   "passes": false
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE pending=EMPLOYER_NOT_VERIFIED observed_criterion=POOL_CRITERION_NOT_ALLOWED\\nCONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "o": 0,
+   "r": 0
+  }
+ ]
+}

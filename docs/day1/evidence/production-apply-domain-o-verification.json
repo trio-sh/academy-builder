@@ -1,0 +1,27 @@
+{
+ "domain": "O",
+ "migration": "20261118000000_day1_governance_registry.sql",
+ "rows_before": {
+  "t3a_provenance": 0
+ },
+ "apply": "ok",
+ "mapped": 20,
+ "dt01": {
+  "resolved": 478,
+  "unmapped": 44,
+  "passes": false
+ },
+ "rows_after": {
+  "t3a_provenance": 0
+ },
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE unset=CONFIGURATION_UNSET previous_kept=1\\nCONTEXT:  PL/pgSQL function inline_code_block line 7 at RAISE\\n\"}"
+ },
+ "new_tables_rows": {
+  "t3a_registry_asset": 0,
+  "t3a_change_request": 0,
+  "t3a_configuration_value": 0,
+  "t3a_manifest_verification": 0
+ }
+}

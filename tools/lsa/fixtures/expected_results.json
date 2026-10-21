@@ -1,0 +1,141 @@
+{
+ "C01": {
+  "finding_code": "documented_progression",
+  "entry_id": "E-P1-prog-ABB",
+  "included": 3
+ },
+ "C02": {
+  "finding_code": "documented_regression",
+  "included": 3
+ },
+ "C03": {
+  "finding_code": "mixed_trajectory"
+ },
+ "C04": {
+  "finding_code": "consistent_recorded_conduct"
+ },
+ "C05": {
+  "finding_code": "different_no_direction"
+ },
+ "C06": {
+  "finding_code": "different_no_direction"
+ },
+ "C07": {
+  "finding_code": "documented_progression",
+  "included": 3,
+  "considered": 4,
+  "exclusions": [
+   {
+    "date": "2027-02-01",
+    "code": "EX01"
+   }
+  ]
+ },
+ "C08": {
+  "exclusions": [
+   {
+    "date": "2027-02-01",
+    "code": "EX07"
+   }
+  ]
+ },
+ "C09": {
+  "exclusions": [
+   {
+    "date": "2027-02-01",
+    "code": "EX05"
+   }
+  ]
+ },
+ "C10": {
+  "finding_code": "documented_progression",
+  "included": 3,
+  "considered": 4,
+  "exclusions": [
+   {
+    "date": "2027-07-10",
+    "code": "EX08"
+   }
+  ]
+ },
+ "C25": {
+  "exclusions": [
+   {
+    "date": "2027-07-10",
+    "code": "EX08"
+   }
+  ]
+ },
+ "C11": {
+  "finding_code": "documented_progression",
+  "considered": 4,
+  "exclusions": [
+   {
+    "date": "2027-02-01",
+    "code": "EX06"
+   }
+  ]
+ },
+ "C12": {
+  "finding_code": "insufficient_evidence"
+ },
+ "C13": {
+  "finding_code": "comparison_not_established"
+ },
+ "C14": {
+  "finding_code": "comparison_not_established",
+  "included": 1
+ },
+ "C15": {
+  "refusal": "LSA-R05"
+ },
+ "C26": {
+  "refusal": "LSA-R08"
+ },
+ "C16": {
+  "refusal": "LSA-R01"
+ },
+ "C17": {
+  "refusal": "LSA-R06"
+ },
+ "C18": {
+  "refusal": "LSA-R10"
+ },
+ "C19": {
+  "refusal": "LSA-R04"
+ },
+ "C20": {
+  "finding_code": "comparison_not_established"
+ },
+ "C21": {
+  "finding_code": "documented_progression",
+  "entry_id": "E-P1-prog-AB",
+  "considered": 2,
+  "exclusions": []
+ },
+ "C22": {
+  "observer_count": 2
+ },
+ "C23": {
+  "retake_after_redirect_or_pause": true
+ },
+ "C24": {
+  "finding_code": "documented_progression",
+  "entry_id": "E-P4-prog-AB"
+ },
+ "C28": {
+  "finding_code": "documented_progression",
+  "entry_id": "E-P1-prog-AB",
+  "included": 2,
+  "considered": 2
+ },
+ "C29": {
+  "finding_code": "documented_progression",
+  "entry_id": "E-P1-prog-AB",
+  "included": 2,
+  "considered": 2
+ },
+ "C27": {
+  "refusal": "LSA-R14"
+ }
+}

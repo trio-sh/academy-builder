@@ -1,0 +1,32 @@
+{
+ "observation_rows_before": [
+  {
+   "n": 0
+  }
+ ],
+ "apply": "ok",
+ "triggers": [
+  {
+   "t": "t3a_event_log",
+   "trigger_name": "t3a_0_record_property_inherit_trg"
+  },
+  {
+   "t": "t3a_observation",
+   "trigger_name": "t3a_0_observation_strict_append_only_trg"
+  },
+  {
+   "t": "t3a_observation",
+   "trigger_name": "t3a_0_observation_strict_append_only_trg"
+  }
+ ],
+ "probe": {
+  "HTTP_ERROR": 400,
+  "body": "{\"message\":\"Failed to run sql query: ERROR:  P0001: PROBE conversion=RECORD_PROPERTY_CONVERSION_REFUSED\\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE\\n\"}"
+ },
+ "after": [
+  {
+   "o": 0,
+   "r": 0
+  }
+ ]
+}

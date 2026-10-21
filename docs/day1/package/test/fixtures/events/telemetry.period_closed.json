@@ -1,0 +1,28 @@
+{
+ "event_id": "8a33a79e-965c-4b20-a2fd-a2f2ce8ea06c",
+ "event_name": "telemetry.period_closed",
+ "event_category": "REHEARSAL",
+ "occurred_at": "2026-10-18T10:00:00Z",
+ "ingested_at": "2026-10-18T10:00:01Z",
+ "actor_type": "SYSTEM_SERVICE",
+ "actor_id": "svc_platform",
+ "actor_role_code": "system_service",
+ "resource_type": "rehearsal_session",
+ "resource_id": "e93525cf-8826-4663-a6e5-753dfb841c92",
+ "payload": {
+  "cohort_period": "C1",
+  "sessions_started": 1,
+  "sessions_completed": 1,
+  "feedback_generated_count": 1,
+  "feedback_acknowledged_count": 1,
+  "retake_within_window_count": 1
+ },
+ "schema_version": "1.3.0",
+ "dictionary_version": "1.3",
+ "integrity_status": "ok",
+ "integrity_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "event_idempotency_key": "key_a8e2630b25af40e2aa34e5825e3a6141",
+ "event_processing_state": "accepted",
+ "record_property": "synthetic_test",
+ "event_sequence_no": 0
+}

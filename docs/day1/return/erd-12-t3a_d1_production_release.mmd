@@ -1,0 +1,27 @@
+erDiagram
+  t3a_d1_production_release {
+    uuid id PK
+    t3a_d1_release_state state
+    jsonb gate_result
+    timestamp_with_time_zone evaluated_at
+    timestamp_with_time_zone released_at
+    uuid released_by
+    timestamp_with_time_zone rolled_back_at
+    uuid rolled_back_by
+    t3a_env_state rollback_target
+    text rollback_reason
+    timestamp_with_time_zone created_at
+    uuid created_by
+  }
+  t3a_d1_production_runbook_step {
+    uuid id PK
+    uuid release_id
+    integer step_no
+    text title
+    text detail
+    t3a_d1_runbook_step_state state
+    timestamp_with_time_zone completed_at
+    uuid completed_by
+    text note
+  }
+  t3a_d1_production_release ||--o{ t3a_d1_production_runbook_step : "release_id"
