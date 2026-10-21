@@ -79,6 +79,14 @@ const ALLOWLIST = new Set([
   // removes, nothing else.
   "supabase/migrations/20261093000000_rename_render_check.sql",
 
+  // Dimension build (D2 to D4): the prohibited vocabulary lists are stored as data so the
+  // prohibited-output check can refuse them. Naming a retired term in a row that prohibits it
+  // is not a use of it (same reasoning as the field registry below).
+  "supabase/migrations/20261210000000_step3_evidence_state.sql",
+  // D3 content load: the word is prose inside a quoted source sheet value ("invalidates"),
+  // loaded verbatim from the approved package text; it names no mentor action or identifier.
+  "supabase/migrations/20261219000000_d3_content_registry.sql",
+
   // Day 1 CR-004: closes anonymous access on retired legacy tables. The
   // file must name those tables (including the retired skill passport
   // table) to re-target their policies; it adds no new use of the term.
