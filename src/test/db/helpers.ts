@@ -1,3 +1,4 @@
+// `pg` is installed for test runs only: npm i --no-save pg (see CLAUDE.md).
 import pg from "pg";
 import { randomUUID } from "node:crypto";
 
