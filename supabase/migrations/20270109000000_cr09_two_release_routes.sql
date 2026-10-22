@@ -103,6 +103,20 @@ begin
 end $fn$;
 revoke all on function public.t3a_cr09_head(uuid), public.t3a_cr09_ga_on(uuid) from public, anon, authenticated;
 
+-- Withdrawing employer_share consent for any dimension the report represents ends pool access at once (read time check).
+create or replace function public.t3a_cr09_consent_ok(p_report uuid) returns boolean language plpgsql stable security definer set search_path = public as $fn$
+declare r public.t3a_d1_ber_report; v_dim text;
+begin
+  select * into r from public.t3a_d1_ber_report where ber_report_id = p_report;
+  if r.ber_report_id is null then return false; end if;
+  foreach v_dim in array coalesce(r.represented_dimension_ids, array[r.dimension_id::text]) loop
+    if public.t3a_consent_current(r.participant_id, 'employer_share', v_dim) is distinct from 'granted' then return false; end if;
+  end loop;
+  return true;
+end $fn$;
+revoke all on function public.t3a_cr09_consent_ok(uuid) from public, anon, authenticated;
+
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- 3. Route 1: general availability
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -160,7 +174,7 @@ begin
   end if;
   v_head := public.t3a_cr09_head(p_ber_report_id);
   select * into r from public.t3a_d1_ber_report where ber_report_id = v_head;
-  if r.ber_report_id is null or r.issued_at is null or r.withdrawn_at is not null or not public.t3a_cr09_ga_on(v_head) then
+  if r.ber_report_id is null or r.issued_at is null or r.withdrawn_at is not null or not public.t3a_cr09_ga_on(v_head) or not public.t3a_cr09_consent_ok(v_head) then
     return public.t3a_capture_refuse('release.ga_read', 'REPORT_NOT_AVAILABLE', v_actor::text, 'this report is not available to approved employers');
   end if;
   v_prof := public.t3a_current_employer_profile();
@@ -196,7 +210,7 @@ begin
             from public.t3a_cr09_ga_event e where e.event = 'on' order by public.t3a_cr09_head(e.ber_report_id), e.event_seq) h
       join public.t3a_d1_ber_report b on b.ber_report_id = h.head and b.issued_at is not null and b.withdrawn_at is null
       join public.profiles p on p.id = h.participant_id left join public.t3a_participant_profile pp on pp.account_id = p.id
-    where public.t3a_cr09_ga_on(h.head)
+    where public.t3a_cr09_ga_on(h.head) and public.t3a_cr09_consent_ok(h.head)
     order by h.on_seq offset (v_page - 1) * v_size limit v_size) t;
   return jsonb_build_object('outcome', 'listed', 'page', v_page, 'page_size', v_size, 'items', items);
 end $fn$;

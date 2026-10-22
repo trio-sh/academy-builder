@@ -86,6 +86,14 @@ describe("CR-09 route 1: general availability", () => {
     expect((await gaOn(p, rep)).r.outcome).toBe("on");
     expect((await gaOn(p, rep)).r.reason).toBe("GA_ALREADY_ON");
   });
+  it("withdrawing the employer_share consent ends employer reads and the listing at once", async () => {
+    const p = await mkParticipant(c, "cr09-w"); const e = await mkEmployer("cr09-we"); const rep = await mkReport(p); await consent(p); await gaOn(p, rep);
+    expect((await gaRead(e, rep)).r.outcome).toBe("read");
+    await asService(c, `select t3a_record_consent('${p}','employer_share','withdrawn','D1',null,'1.2','${HASH}','checkbox','en-CA','report_release','future_only',true) r`);
+    expect((await gaRead(e, rep)).r.reason).toBe("REPORT_NOT_AVAILABLE");
+    const ids = (await as(e, `select t3a_available_reports_list('{"page_size":100}'::jsonb) r`)).r.items.map((i: any) => i.ber_report_id);
+    expect(ids).not.toContain(rep);
+  });
   it("an employer cannot turn it on, and an anonymous caller reads nothing", async () => {
     const p = await mkParticipant(c, "cr09-pa"); const e = await mkEmployer("cr09-ea"); const rep = await mkReport(p); await consent(p);
     expect((await gaOn(e, rep)).r.reason).toBe("ONLY_THE_PARTICIPANT_RELEASES_THEIR_REPORT");
