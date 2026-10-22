@@ -42,7 +42,7 @@ revoke all on function public.t3a_correction_commitment() from public;
 grant execute on function public.t3a_correction_commitment() to anon, authenticated, service_role;
 
 -- The text the one question permission screen shows, with the version and hash recorded on the answer.
-create or replace function public.t3a_s4_group_notice() returns jsonb language sql stable security definer set search_path = public as $fn$
+create or replace function public.t3a_group_participation_notice() returns jsonb language sql stable security definer set search_path = public as $fn$
   select case when v is null or h is null or t is null
               then jsonb_build_object('rendered', false, 'reason', 'group_notice_unloaded')
               else jsonb_build_object('rendered', true, 'notice_version', v, 'notice_hash', h, 'text', t) end
@@ -51,5 +51,5 @@ create or replace function public.t3a_s4_group_notice() returns jsonb language s
     (select nullif(configuration_value, '') from public.t3a_configuration_value where configuration_key = 's4_group_notice_hash' order by configuration_seq desc limit 1) as h,
     (select nullif(configuration_value, '') from public.t3a_configuration_value where configuration_key = 's4_group_notice_text' order by configuration_seq desc limit 1) as t) x
 $fn$;
-revoke all on function public.t3a_s4_group_notice() from public;
-grant execute on function public.t3a_s4_group_notice() to authenticated, service_role;
+revoke all on function public.t3a_group_participation_notice() from public;
+grant execute on function public.t3a_group_participation_notice() to authenticated, service_role;

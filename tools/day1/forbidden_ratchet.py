@@ -28,7 +28,9 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql",
             "supabase/migrations/20261223000000_d4_content_registry.sql", "supabase/migrations/20261224000000_d4_demonstration_fixtures.sql",
             # the frozen multi page specimen carries controlled text T-COVERAGE-001 verbatim ("not a score, a rating, a ranking or an endorsement"), which states what the report is not (CR-162)
-            "src/lib/berMultipage/fix-multipage.json"]
+            "src/lib/berMultipage/fix-multipage.json",
+            # carries Section 2 of the Participant Consent and Privacy Notice v1.2 word for word as authored text (CR-181); the notice says what the report is not
+            "supabase/migrations/20270101000000_consent_notice_v1_2.sql"]
 
 def scan():
     r = subprocess.run([sys.executable, "-I", str(CHECK), str(ROOT), "--exclude", *EXCLUDES], capture_output=True, text=True)

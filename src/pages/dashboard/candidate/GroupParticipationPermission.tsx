@@ -1,7 +1,7 @@
 /**
  * The Stage 4 group participation permission: one question, the founder's text, Yes or No.
  *
- * The text, its version and its hash are read from t3a_s4_group_notice(); nothing is written here.
+ * The text, its version and its hash are read from t3a_group_participation_notice(); nothing is written here.
  * Yes records the permission through t3a_s4_record_group_participation, bound to that version and hash.
  * No records nothing and is not held against the participant. Unloaded text renders no question.
  */
@@ -17,7 +17,7 @@ export default function GroupParticipationPermission({ groupSessionId, onDone }:
 
   useEffect(() => {
     let live = true;
-    void supabase.rpc("t3a_s4_group_notice").then(({ data }) => { if (live) setNotice((data as Notice) ?? null); });
+    void supabase.rpc("t3a_group_participation_notice").then(({ data }) => { if (live) setNotice((data as Notice) ?? null); });
     return () => { live = false; };
   }, []);
 
