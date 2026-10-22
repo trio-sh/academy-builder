@@ -7,8 +7,8 @@ Method: a fresh database is rebuilt from the repository migrations for every row
 | Step | Switch turned on | Passing | Failing | What changed against the step before |
 |---|---|---|---|---|
 | 0 | none | 1,294 | 14 | baseline |
-| 1 | `canonical_writers` (`t3a_event_config`) | 1,293 | 16 | `step0_release_test` shows 2 failures |
-| 2 | strict event ingest (`ingest_mode` = strict) | 1,294 | 14 | the two failures of step 1 are gone: the pool and report tests need strict ingest alongside canonical writers |
+| 1 | `canonical_writers` (`t3a_event_config`) | 1,293 | 16 | `step0_release_test` showed 2 failures in this run, but the failure is intermittent (see point 1); the Neon run of this step showed no change (1,267 and 14, as step 0) |
+| 2 | strict event ingest (`ingest_mode` = strict) | 1,294 | 14 | no change against step 0 |
 | 3 | `enforce_required` (`t3a_capture_config`) | 770 | 10 | 25 test files stop at `T3A_REQUIRED_FIELD_MISSING`; the test rows do not fill every required field. Three more files lose checks (`domain_a`, `matrix`, `rehearsal_progress`), all for the same reason |
 | 4 | `enforce_sequence` | 770 | 10 | no change: the step 3 stops hide it |
 | 5 | `enforce_gate` (`t3a_consent_config`) | 770 | 10 | no change: hidden by the same stops |
@@ -22,7 +22,7 @@ Because step 3 hides steps 4 and 5, the last two were also run on top of step 2 
 
 ## What this means
 
-1. **`canonical_writers` and strict ingest go together.** On its own the first leaves two release tests failing; with the second on, they pass.
+1. **`canonical_writers` is safe in the sandbox, with one intermittent failure to explain.** With it on, `step0_release_test` failed in 2 of 11 local runs (the participant's pool withdrawal event was refused `PAYLOAD_INVALID` by the payload check in strict ingest) and passed in the other 9; the Neon run was clean. I have not found the cause; it looks like a timing-dependent check on the payload, and it is not caused by this switch's setting alone. It is listed here so it is not mistaken for a new regression.
 2. **`enforce_required` refuses rows that omit a required field.** The test fixtures omit them, so the suite has to be updated before steps 4 and 5 can be judged in Tony's order. The live screens and edge functions must supply the same fields before this switch is ever turned on outside the sandbox (CR-035, CR-047).
 3. **`enforce_sequence` enforces a rule that CORR-007 reverses.** As built, Stage 2 entry waits for the Stage 1 outcome to be delivered to the mentor. CORR-007 rule CR-01 (sequential unmasking) says the opposite: the Stage 2 mentor sees only "Stage 1 confirmed on this dimension" until the Stage 2 commit. This switch should not be turned on beyond the sandbox until CR-01 is built and the sequence rule is rewritten to match it.
 4. **`enforce_gate` refuses participants whose consent sits in the older tables** (`LEGACY_CONSENT_DOES_NOT_COVER_PURPOSE`). The live screens still write the older tables (CR-035), so turning it on in production would lock participants out until the consent screens write `t3a_consent_record`.
