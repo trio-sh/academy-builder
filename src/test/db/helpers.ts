@@ -42,10 +42,10 @@ export async function run(c: pg.Client, sql: string) {
 }
 
 /** A synthetic participant with a verified email. */
-export async function mkParticipant(c: pg.Client, tag: string): Promise<string> {
+export async function mkParticipant(c: pg.Client, tag: string, role = "candidate"): Promise<string> {
   const u = randomUUID();
   await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','${tag}-${RUN}@t.local',now())`);
-  await c.query(`insert into profiles(id,email,role) values ('${u}','${tag}-${RUN}@t.local','candidate')`);
+  await c.query(`insert into profiles(id,email,role) values ('${u}','${tag}-${RUN}@t.local','${role}')`);
   return u;
 }
 
