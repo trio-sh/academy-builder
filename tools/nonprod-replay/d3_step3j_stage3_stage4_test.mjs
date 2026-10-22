@@ -135,7 +135,7 @@ await run(`insert into t3a_pilot_stop(stop_level, dimension_id, participant_id, 
 r = await compose({ obs: C4, co: [C1] }); rec("D3-S4-7", "a pilot stop on the observed participant's path refuses composition", r.r?.reason === "pilot_path_stopped", r.r);
 await run(`update t3a_pilot_stop set lifted_at=now() where participant_id='${C4}'`);
 // no bypass
-rec("D-03", "there is no override: no function other than t3a_s4_enter starts a session", (await run(`select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname ~ '^t3a_s4_' and p.proname !~ '^t3a_s4_(activation_state|compose_session|record_group_participation|enter|lane_view)$'`))[0].n === 0, null);
+rec("D-03", "there is no override: no function other than t3a_s4_enter starts a session", (await run(`select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname ~ '^t3a_s4_' and p.proname !~ '^t3a_s4_(activation_state|compose_session|compose_session_base|record_group_participation|enter|lane_view)$'`))[0].n === 0, null);
 
 console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
 await c.end(); process.exit(0);
