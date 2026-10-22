@@ -86,7 +86,7 @@ rec("D4-28", "a cross-dimension pattern comparison refuses and logs while the ma
 rec("D4-28", "the mapping table is empty", (await run(`select count(*)::int n from t3a_cross_dimension_pattern_map`))[0].n === 0, null);
 const gx = await svc(`select t3a_source_serving_gate('${s1.v}','S1','${P}') r`); rec("D4-28", "the serving gate applies the exposure exclusion", gx.rows[0]?.r?.reason === "prior_exposure_exclusion", gx.rows[0]?.r);
 // 024, 029 independent attempt counters
-const att = (dim, n) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${P}','${dim}','S2','completed',true,now() - interval '300 days','completed_observation') returning attempt_no`;
+const att = (dim, n) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${P}','${dim}','S2','completed',true,now() - interval '150 days','completed_observation') returning attempt_no`;
 const a = []; for (let i = 0; i < 3; i++) a.push((await tryq(att("D4"))).msg);
 const d1a = await tryq(att("D1"));
 const perm = async (dim) => (await run(`select t3a_d1_next_attempt_permitted('${P}','${dim}','S2') r`))[0].r;
