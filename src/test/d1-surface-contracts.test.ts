@@ -1348,3 +1348,13 @@ describe("Growth Log (Day 1 Domain J, DT-30)", () => {
     expect(page).not.toContain(["skill", "passports"].join("_"));
   });
 });
+
+describe("Stage 4 group participation permission", () => {
+  const perm = read("src/pages/dashboard/candidate/GroupParticipationPermission.tsx");
+  it("asks one question with Yes and No, nothing preselected, text read from the loaded notice", () => {
+    expect(perm).toContain("t3a_s4_group_notice");
+    expect(perm).toContain("t3a_s4_record_group_participation");
+    expect(perm).not.toMatch(/defaultChecked|checked=|type="checkbox"|<textarea|<input/);
+    expect(perm).not.toContain("Do you agree");
+  });
+});

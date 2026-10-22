@@ -594,7 +594,7 @@ function ChallengeModal({
 
         {commitment ? (
           <p className="text-sm text-foreground/80 mb-4" data-testid="correction-commitment">
-            Response time: {commitment}
+            {commitment}
           </p>
         ) : null}
 
