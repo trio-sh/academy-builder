@@ -72,6 +72,7 @@ let nt = (await run(`select t3a_s1_evidence_note('${s1c}') r`))[0].r; rec("D2-61
 await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by) values ('${s1c}','${P}','D2','${M2}')`);
 const pinned = (await run(`select source_version_id v, source_version_hash h from t3a_d1_s1_confirmation where stage_instance_id='${s1c}'`))[0];
 rec("D2-62", "the confirmation pins the exact source version and its hash", pinned.v === srcV && /^[0-9a-f]{64}$/.test(pinned.h), pinned);
+const evKeep = (await run(`select block_no, body, verbatim from t3a_d1_report_controlled_text where text_ref='T-EVNOTE-001'`))[0]; await run(`delete from t3a_d1_report_controlled_text where text_ref='T-EVNOTE-001'`); // the migration loads the real text; this test starts from not loaded and restores it
 nt = (await run(`select t3a_s1_evidence_note('${s1c}') r`))[0].r; rec("D2-61", "with the controlled text T-EVNOTE-001 not loaded the render refuses rather than omitting the block", nt.reason === "controlled_text_not_loaded", nt);
 await run(`insert into t3a_d1_report_controlled_text(text_ref, block_no, body, verbatim) values ('T-EVNOTE-001', 2, 'SYNTHETIC TEST TEXT', true)`);
 nt = (await run(`select t3a_s1_evidence_note('${s1c}') r`))[0].r; rec("D2-59", "with a valid confirmation by an authorized actor and the text loaded, the note renders", nt.outcome === "rendered", nt);
@@ -84,5 +85,6 @@ await run(`insert into t3a_stage_entry_event(participant_id, dimension_id, stage
 await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by) values ('${s1e}','${P}','D2','${RV}')`);
 nt = (await run(`select t3a_s1_evidence_note('${s1e}') r`))[0].r; rec("D2-59", "a confirmer not authorized for D2 at the time voids the note", nt.reason === "confirmer_not_authorized_at_the_time", nt);
 await run(`delete from t3a_d1_report_controlled_text where text_ref='T-EVNOTE-001'`);
+if (evKeep) await run(`insert into t3a_d1_report_controlled_text(text_ref, block_no, body, verbatim) values ('T-EVNOTE-001', ${evKeep.block_no ?? 'null'}, '${evKeep.body.replace(/'/g, "''")}', ${evKeep.verbatim})`);
 console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
 await c.end(); process.exit(0);

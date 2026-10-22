@@ -2,7 +2,7 @@
 // the loader is the service route, D4 content loads as 30 inactive drafts that pass the registry load checks. Throwaway database only.
 import { Client, neonConfig } from "@neondatabase/serverless";
 import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import fs from "node:fs"; import { randomUUID } from "node:crypto";
-import { loadRegistries } from "../lsa/resolver.mjs";
+const { loadRegistries } = await import((process.env.T3A_REPO_ROOT ? process.env.T3A_REPO_ROOT + "/tools/lsa/resolver.mjs" : new URL("../lsa/resolver.mjs", import.meta.url).href));
 const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
 neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
 const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();

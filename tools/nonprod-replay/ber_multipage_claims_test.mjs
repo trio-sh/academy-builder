@@ -43,7 +43,7 @@ const anon = await asUser(P, `select t3a_ber_multipage_claims('${rep}', false) r
 rec("claims", "anon cannot call the route", /permission denied/.test(anon?.msg || ""), anon);
 await run(`update t3a_d1_ber_report set specimen_render_flag = true where ber_report_id='${rep}'`).catch(() => {});
 r = await callSvc(); rec("claims", "a specimen flagged report refuses report_not_issued even when issued", r?.reason === "report_not_issued", r);
-fs.writeFileSync(new URL("../../docs/day1/evidence/ber-multipage-claims-sample.json", import.meta.url), JSON.stringify(await (async () => { await run(`update t3a_d1_ber_report set specimen_render_flag = false where ber_report_id='${rep}'`).catch(() => {}); return callSvc(); })(), null, 1));
+fs.writeFileSync(((process.env.EVIDENCE_DIR || new URL("../../docs/day1/evidence/", import.meta.url).pathname) + "ber-multipage-claims-sample.json"), JSON.stringify(await (async () => { await run(`update t3a_d1_ber_report set specimen_render_flag = false where ber_report_id='${rep}'`).catch(() => {}); return callSvc(); })(), null, 1));
 const out = { passed: R.filter((x) => x.pass).length, total: R.length, failed: R.filter((x) => !x.pass), results: R };
-fs.writeFileSync(new URL("../../docs/day1/evidence/ber-multipage-claims-test.json", import.meta.url), JSON.stringify(out, null, 1));
+fs.writeFileSync(((process.env.EVIDENCE_DIR || new URL("../../docs/day1/evidence/", import.meta.url).pathname) + "ber-multipage-claims-test.json"), JSON.stringify(out, null, 1));
 console.log(JSON.stringify({ passed: out.passed, total: out.total, failed: out.failed }, null, 1)); await c.end(); process.exit(0);

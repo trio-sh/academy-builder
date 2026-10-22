@@ -1,0 +1,19 @@
+{
+  "_note": "Checks that fail today, recorded so a NEW failure fails the gate and a fix lowers the number. Every entry is a defect or a stale test to be fixed, not an accepted state. Keep this list shrinking.",
+  "step3h_report_gate_test.mjs": {
+    "failed": 2,
+    "why": "D2-91: the issuance gate now requires commit seals (commit_seal_absent) and an uninvolved issuer; the fixtures create neither"
+  },
+  "d3_step3h_report_gate_test.mjs": {
+    "failed": 2,
+    "why": "same as step3h_report_gate_test.mjs for D3"
+  },
+  "domain_g_test.mjs": {
+    "failed": 1,
+    "why": "G-release: the named recipient release route is closed (NAMED_RECIPIENT_RELEASE_RETIRED, release model step); the test still expects a hash check on it. Superseded when CORR-007 CR-09 rebuilds direct release"
+  },
+  "live_writers_canonical_test.mjs": {
+    "failed": 2,
+    "why": "CR-069: creating and revoking a disclosure expect the retired named recipient route to emit events; superseded when CORR-007 CR-09 rebuilds direct release"
+  }
+}
