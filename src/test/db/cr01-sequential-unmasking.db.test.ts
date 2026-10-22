@@ -115,8 +115,15 @@ describe("CR-01 the Stage 2 commit and after", () => {
     expect((await run(c, `select is_committed from t3a_observation_record where observation_record_id='${rec.observation_record_id}'`))[0].is_committed).toBe(true);
   });
   it("T3: Stage 2 determinations are append-only", async () => {
-    await expect(c.query(`update t3a_determination set determined_by = determined_by`)).rejects.toThrow(/append|T3A_/i);
-    await expect(c.query(`delete from t3a_determination`)).rejects.toThrow(/append|T3A_/i);
+    // a row of its own: with an empty table an update touches nothing and cannot be refused, so the test would pass or fail on what ran before it
+    await c.query("begin");
+    await c.query("set local session_replication_role = replica");
+    const obs = randomUUID();
+    await c.query(`insert into t3a_determination(observation_id, question_id, determined_by, clause_instance_id, conduct_element_id, recurrence_equivalence_key_id, state_code) values ('${obs}','${randomUUID()}','${randomUUID()}','${randomUUID()}','${randomUUID()}','${randomUUID()}','X')`);
+    await c.query("commit");
+    await expect(c.query(`update t3a_determination set determined_by = determined_by where observation_id='${obs}'`)).rejects.toThrow(/append|T3A_/i);
+    await expect(c.query(`delete from t3a_determination where observation_id='${obs}'`)).rejects.toThrow(/append|T3A_/i);
+    expect((await run(c, `select count(*)::int n from t3a_determination where observation_id='${obs}'`))[0].n).toBe(1);
   });
   it("the older opener answers from the lock event", async () => {
     const w = await stage1World("j");
