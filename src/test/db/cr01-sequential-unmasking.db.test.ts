@@ -91,6 +91,11 @@ describe("CR-01 the Stage 2 commit and after", () => {
     const r = await read(w.stage2Mentor, w.participant);
     expect(r.r.outcome).toBe("read");
     expect(r.r.basis).toBe("stage2_committed");
+    // CR-02 audit: every successful read of a Stage 1 record is written down by reader and dimension; a refused read writes nothing
+    const audit = await run(c, `select reader_id, dimension_id, basis from t3a_s1_access_audit where participant_id='${w.participant}'`);
+    expect(audit).toEqual([{ reader_id: w.stage2Mentor, dimension_id: "D2", basis: "stage2_committed" }]);
+    expect((await read(w.otherMentor, w.participant)).r.reason).toBe("S1_READ_NOT_AUTHORIZED");
+    expect((await run(c, `select count(*)::int n from t3a_s1_access_audit where participant_id='${w.participant}'`))[0].n).toBe(1);
     expect(r.r.responses).toHaveLength(1);
     expect(r.r.responses[0].response_text).toBe("the participant wrote this");
     expect(r.r.determinations).toHaveLength(1);
