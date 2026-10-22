@@ -10,10 +10,12 @@ set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"; REPO="$(cd "$HERE/../../.." && pwd)"
 P="psql -h ${PGL_HOST:-${PGL_SOCK:-/tmp/pgl}} -p ${PGL_PORT:-5433} -U ${PGL_USER:-neondb_owner} -d t3a -q"
 $P -f "$HERE/reset.sql" >/dev/null 2>&1; $P -f "$HERE/shim.sql" >/dev/null 2>&1; $P -f "$HERE/wrappers.sql" >/dev/null 2>&1
+LOG="${T3A_BUILD_LOG:-${TMPDIR:-/tmp}/t3a_build.log}"; : > "$LOG"
 for pass in 1 2; do
-  for f in $(ls "$REPO"/supabase/migrations/*.sql | sort); do
+  for f in $(ls "$REPO"/supabase/migrations/*.sql | LC_ALL=C sort); do
     (echo "set search_path to public, extensions;"; cat "$f") > "${TMPDIR:-/tmp}/t3a_cur.sql"
-    $P -v ON_ERROR_STOP=0 -f "${TMPDIR:-/tmp}/t3a_cur.sql" >/dev/null 2>&1
+    n=$($P -v ON_ERROR_STOP=0 -f "${TMPDIR:-/tmp}/t3a_cur.sql" 2>&1 | grep -c "ERROR")
+    echo "pass$pass $(basename "$f") errors=$n" >> "$LOG"
   done
 done
 echo built
