@@ -70,5 +70,11 @@ for (const [cls, oc] of [["welfare_stop", "participant_withdrew"], ["technical_f
 // the three argument question still answers
 u = await mkU("h"); await done(u, "D2", new Date(Date.now() - 86400e3 * 2).toISOString());
 const old = (await run(`select t3a_d1_next_attempt_permitted('${u}','D2','S2') r`))[0].r; rec("CR-12-Q", "the existing three argument route asks the same rule", old.refusal_code === "SPECIFICATION_COOLDOWN_IN_FORCE" && !!old.earliest_eligible_at, old);
+// the older entry path's status text reads the same rule
+{ const st = async (u0, stage = "S2") => (await run(`select t3a_cooldown_status('${u0}','D2','${stage}') s`))[0].s;
+  const w = await mkU("w"); rec("CR-12-C1", "no attempts: AVAILABLE", (await st(w)) === "AVAILABLE", null);
+  await done(w, "D2", new Date(Date.now() - 2 * 86400e3).toISOString()); const s1 = await st(w); rec("CR-12-C1", "two days after a first completion: ON_COOLDOWN with the instant", /^ON_COOLDOWN\(until=\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\)$/.test(s1), s1);
+  const w3 = await mkU("w3"); for (const d of [150, 120, 90]) await done(w3, "D2", new Date(Date.now() - d * 86400e3).toISOString()); rec("CR-12-C1", "three completions in the window: ATTEMPTS_EXCEEDED", (await st(w3)) === "ATTEMPTS_EXCEEDED", await st(w3));
+  const wi = await mkU("wi"); await run(`insert into t3a_attempt(participant_id, dimension_id, stage_code) values ('${wi}','D2','S2')`); rec("CR-12-C1", "an attempt that never finished counts nothing", (await st(wi)) === "AVAILABLE", await st(wi)); }
 const failed = R.filter(x => !x.pass);
 console.log(JSON.stringify({ failed, results: R }, null, 1)); await c.end(); process.exit(0);
