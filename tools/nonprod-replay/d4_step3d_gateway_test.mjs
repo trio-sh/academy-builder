@@ -75,9 +75,9 @@ const ex0 = (await run(`select t3a_prior_exposure('${P}','${s1.v}') r`))[0].r; r
 await si(s1.v);
 const ex1 = (await run(`select t3a_prior_exposure('${P}','${s1.v}') r`))[0].r; rec("D4-28", "the exact version already met excludes", ex1.reasons.includes("source_version_met"), ex1);
 const s1b = await mk("SRC-D4-T-S1B-" + RUN, "D4", "S1", { d4_situation_class: "SC-D4-1" });
-const ex2 = (await run(`select t3a_prior_exposure('${P}','${s1b.v}') r`))[0].r; rec("D4-28", "the same situation pattern family in D4 excludes a different version", ex2.reasons.includes("pattern_family_met") && ex2.reasons.includes("administration_form_met"), ex2);
+const ex2 = (await run(`select t3a_prior_exposure('${P}','${s1b.v}') r`))[0].r; rec("D4-28", "the same situation pattern family in D4 excludes a different version, and a same dimension retake is not a form reuse", ex2.reasons.includes("pattern_family_met") && !ex2.reasons.includes("administration_form_met"), ex2);
 const s1c = await mk("SRC-D4-T-S1C-" + RUN, "D4", "S1", { d4_situation_class: "SC-D4-2" });
-const ex3 = (await run(`select t3a_prior_exposure('${P}','${s1c.v}') r`))[0].r; rec("D4-28", "a different pattern in the same form still meets the form exclusion but not the pattern one", ex3.reasons.includes("administration_form_met") && !ex3.reasons.includes("pattern_family_met"), ex3);
+const ex3 = (await run(`select t3a_prior_exposure('${P}','${s1c.v}') r`))[0].r; rec("D4-28", "a different pattern in the same form and dimension meets neither exclusion (CORR-007 CR-14: the form exclusion is for another dimension; a retake in the same dimension is not a reuse)", !ex3.reasons.includes("administration_form_met") && !ex3.reasons.includes("pattern_family_met"), ex3);
 const d1s2 = await mk("SRC-D1-T-S2-" + RUN, "D1", "S2", {}); await si(d1s2.v);
 const d2s2 = await mk("SRC-D4-T-S2-" + RUN, "D4", "S2", { d4_situation_class: "SC-D4-3" });
 const ex4 = (await run(`select t3a_prior_exposure('${P}','${d2s2.v}') r`))[0].r; rec("D4-28", "having sat the Stage 2 seven-beat form under D1 excludes the D4 Stage 2 form (the form crosses)", ex4.reasons.includes("administration_form_met") && !ex4.reasons.includes("pattern_family_met"), ex4);
