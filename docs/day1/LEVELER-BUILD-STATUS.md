@@ -16,4 +16,5 @@ Status words: **loaded** = built and tested here; **not assessed** = I have not 
 | Consent notice 1.2 Section 2 | Word for word, hash on every consent | Loaded (CR-181). Notice Section 4 rules 4.1 to 4.8 not assessed |
 | CR-01 to CR-05, CR-07 to CR-09, CR-11 to CR-26 | Platform rules | Not assessed |
 | D1 v2.0 rebuild, D5, D8, D9 builds, retake pool maps, D4 v2.2 archive package | Packages | Not started; staging needs the six base packages (`verify_baselines.py`) |
+| Specification check (the packages themselves) | Passes on all seven staged dimensions (CR-183) |
 | Reviewer signature, 104 cases, `check_build_complete.py` | Acceptance | Not started; needs a reviewer other than Hans |
