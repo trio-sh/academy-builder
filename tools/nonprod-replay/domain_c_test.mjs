@@ -37,7 +37,7 @@ const e2 = await run(entry(`'${GW}'`, si2.i || randomUUID()).replace("'D1','S1'"
 rec("DT-11", "allocate a mentor, wait, enter the Stage: entry time is the entry action, later than the allocation", a1[0].created_at && e2[0].entered_at && new Date(e2[0].entered_at) - new Date(a1[0].created_at) >= 1000, { alloc: a1[0], entry: e2[0] });
 const back = await as(null, null, entry(`'${GW}'`, randomUUID(), `entered_at=now() - interval '1 hour'`), false); rec("DT-11", "a backdated entry time is refused", /BACKDATED/.test(back.msg), back.msg.slice(0, 100));
 // DT-12
-const ins = (outcome, cls = "null", counted = true) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${P}','D1','S1','${outcome}',${counted},now() - interval '200 days',${cls === "null" ? "null" : `'${cls}'`}) returning attempt_id, attempt_no, counted`;
+const ins = (outcome, cls = "null", counted = true) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${P}','D1','S1','${outcome}',${counted},now() - interval '150 days',${cls === "null" ? "null" : `'${cls}'`}) returning attempt_id, attempt_no, counted`;
 const at = []; for (let i = 0; i < 3; i++) at.push((await run(ins("completed", "completed_observation")))[0]);
 rec("DT-12", "three counted attempts numbered 1, 2, 3", at.map(a => a.attempt_no).join() === "1,2,3", at);
 const reset = await as(null, null, `update t3a_attempt set attempt_no = 1 where attempt_id='${at[2].attempt_id}'`); rec("DT-12", "attempt_no cannot be lowered or reset (owner route)", /IMMUTABLE/.test(reset.msg), reset.msg.slice(0, 90));

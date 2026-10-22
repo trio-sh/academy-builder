@@ -1,0 +1,34 @@
+{
+ "pre": [
+  {
+   "cfg": 0,
+   "consent": 0,
+   "evnote": 0,
+   "g": false,
+   "c": false,
+   "trg": 0
+  }
+ ],
+ "20261231000000_founder_texts_rec03_evnote_s4notice.sql": [],
+ "20270101000000_consent_notice_v1_2.sql": [],
+ "post": [
+  {
+   "cfg": 8,
+   "evnote": 1,
+   "commit": {
+    "value": "We will acknowledge your correction within 5 business days and aim to give you the decision within 20 business days. If a case needs longer, we will tell you why and when to expect it.",
+    "rendered": true,
+    "acknowledge_business_days": 5,
+    "decision_target_business_days": 20
+   },
+   "s4v": "1.0",
+   "s4hash_ok": true,
+   "consent_hash_ok": true,
+   "consent_len": 9308,
+   "s4_act_rows": 0,
+   "anon_consent": true,
+   "anon_s4": false,
+   "consent": 0
+  }
+ ]
+}
