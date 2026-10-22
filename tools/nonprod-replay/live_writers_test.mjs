@@ -24,6 +24,8 @@ rec("CR-068", "the event is accepted (not quarantined), chained and carries the 
 const chain = await run(`select count(*)::int n from t3a_event_chain_findings()`); rec("CR-068", "the event chain verifies", chain[0].n === 0, chain[0].n);
 const si = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${P}','S2','D1',1,'active') returning stage_instance_id i`))[0].i;
 await run(`insert into t3a_role_grant(user_id, spec_role) values ('${M}','mentor')`).catch(e => console.log('rg', e.message));
+// CR-18: a progression decision follows the commit, so the participant's Stage 2 observation is committed before any decision is recorded
+await run(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${P}','D1','S2', true, now())`);
 const free = await as("authenticated", M, `select t3a_record_progression_decision('${si}','D1','proceed','They handled the pressure well and stayed calm throughout the session.') r`, false);
 rec("DT-20", "a progression decision sent with free text is refused by the live endpoint", /FREE_TEXT_REFUSED/.test(free.msg), free.msg.slice(0, 120));
 const pd = await as("authenticated", M, `select t3a_record_progression_decision(p_stage_instance_id => '${si}', p_dimension_id => 'D1', p_decision => 'proceed') r`, true);
