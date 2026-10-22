@@ -56,9 +56,9 @@ const gw = await run(`select observation_path_gateway_id from t3a_observation_pa
 if (!gw.length) await run(`insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${P}','account_authentication','1.0','1.0',now())`);
 const gwid = (await run(`select observation_path_gateway_id g from t3a_observation_path_gateway where participant_id='${P}' limit 1`))[0].g;
 const entry = (stage, inst) => `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot) values ('${P}','D1','${stage}','${gwid}','${inst}','x','1.0','{}','{D1}','{}')`;
-const early2 = await tryq(entry("S2", s2)); rec("DT-19", "S2 entry before the S1 outcome is delivered to the mentor is refused", /S1_OUTCOME_NOT_DELIVERED/.test(early2.msg), early2.msg.slice(0, 100));
-await run(`insert into t3a_stage_sequence(stage_instance_id, participant_id, dimension_id, s1_outcome_delivered_to_mentor_at) values ('${s1}','${P}','D1', now())`);
-const ok2 = await tryq(entry("S2", s2)); rec("DT-19", "after delivery the S2 entry passes this gate (any other refusal is a later check)", !/S1_OUTCOME_NOT_DELIVERED/.test(ok2.msg), ok2.msg.slice(0, 100));
+const early2 = await tryq(entry("S2", s2)); rec("DT-19", "S2 entry with Stage 1 not confirmed on the dimension is refused (CORR-007 CR-01 replaces delivery of the outcome to the mentor)", /S1_NOT_CONFIRMED/.test(early2.msg), early2.msg.slice(0, 100));
+await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${s1}','${P}','D1','${P}',now())`);
+const ok2 = await tryq(entry("S2", s2)); rec("DT-19", "once Stage 1 is confirmed the S2 entry passes this gate (any other refusal is a later check)", !/S1_NOT_CONFIRMED|S1_OUTCOME_NOT_DELIVERED/.test(ok2.msg), ok2.msg.slice(0, 100));
 await run("update t3a_capture_config set enforce_sequence = false");
 // DT-20 / DT-21
 const g = async (route, obj) => (await run(`select t3a_mentor_input_guard('${route}', '${JSON.stringify(obj)}'::jsonb) r`))[0].r;
