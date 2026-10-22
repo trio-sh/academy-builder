@@ -4,7 +4,7 @@ import type { TestSpecification } from "vitest/node";
 // Fixed order: the older scripts count rows in a freshly built database, so they run before the tests that create sources.
 export default class DbSequencer extends BaseSequencer {
   async sort(files: TestSpecification[]) {
-    const rank = (f: TestSpecification) => (f.moduleId.includes("legacy-scripts") ? 0 : 1);
-    return [...files].sort((a, b) => rank(a) - rank(b) || a.moduleId.localeCompare(b.moduleId));
+    const first = (f: TestSpecification) => (f.moduleId.includes("legacy-scripts") ? 0 : 1);
+    return [...files].sort((a, b) => first(a) - first(b) || a.moduleId.localeCompare(b.moduleId));
   }
 }
