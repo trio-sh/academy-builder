@@ -1,0 +1,50 @@
+name: CI
+# Nothing merges untested: unit and component tests, the vocabulary and name checks, the build, and the database integration tests
+# against a throwaway Postgres built from supabase/migrations. Add this workflow's jobs as required checks on main.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run check:vocabulary
+      - run: npm run check:names
+      - run: python3 tools/day1/forbidden_ratchet.py
+      - run: npm test
+      - run: npx vite build
+
+  database:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: ci }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGPASSWORD: ci
+      PGL_HOST: localhost
+      PGL_PORT: "5432"
+      PGL_USER: neondb_owner
+      T3A_TEST_DB_URL: postgresql://neondb_owner:ci@localhost:5432/t3a
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm i --no-save pg
+      - name: Create the throwaway database
+        run: |
+          psql -h localhost -U postgres -c "create role neondb_owner superuser login password 'ci'"
+          psql -h localhost -U postgres -c "create database t3a owner neondb_owner"
+      - name: Build it from the migrations
+        run: bash tools/nonprod-replay/local_pg/build.sh
+      - run: npm run test:db

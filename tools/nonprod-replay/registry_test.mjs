@@ -36,14 +36,14 @@ for (const role of ["anon", "authenticated"]) {
   await c.query("rollback"); add(role === "anon" ? "R9a" : "R9b", `${role} cannot read the registry`, ok, d);
 }
 // 5 DT-01 negative and positive paths
+await c.query("begin"); await c.query("alter table t3a_field_physical_map disable trigger user"); await c.query("delete from t3a_field_physical_map"); // later migrations map the fields; this check starts from an empty map
 const dt = (await q("select * from t3a_field_registry_dt01()"))[0];
 add("D1", "DT-01 reports every ACTIVE/DORMANT field unmapped and does not pass", dt.passes === false && dt.unmapped === dt.fields_active_dormant && dt.resolved === 0, JSON.stringify(dt));
-await c.query("begin");
 await c.query("insert into t3a_field_physical_map(dictionary_version,qualified_name,mapping_class,physical_table,physical_column) values ('1.3','A.account_id','M5','profiles','id')");
 const d2 = (await q("select resolved, dangling_physical from t3a_field_registry_dt01()"))[0];
 await c.query("rollback");
 add("D2", "DT-01 counts a mapping to a real column as resolved", d2.resolved === 1 && d2.dangling_physical === 0, JSON.stringify(d2));
-await c.query("begin");
+await c.query("begin"); await c.query("alter table t3a_field_physical_map disable trigger user"); await c.query("delete from t3a_field_physical_map");
 await c.query("insert into t3a_field_physical_map(dictionary_version,qualified_name,mapping_class,physical_table,physical_column) values ('1.3','A.account_id','M5','profiles','no_such_column')");
 const d3 = (await q("select resolved, dangling_physical, passes from t3a_field_registry_dt01()"))[0];
 await c.query("rollback");
