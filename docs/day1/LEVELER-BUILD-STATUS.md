@@ -6,11 +6,11 @@ Status words: **loaded** = built and tested here; **not assessed** = I have not 
 
 | Rule | Subject | Status |
 |---|---|---|
-| CR-06 | Correction commitment (REC-03, paragraph 2.21) | Loaded and rendered from configuration; refuses to render when a value is unloaded. Participant surface tested only by the contract test |
-| CR-27 | T-EVNOTE-001 version 2 | Loaded (CR-180) |
+| CR-06 | Correction commitment (REC-03, paragraph 2.21); participant review of every committed observation | Built and tested on the throwaway database (migration 20270125, `cr06-cr10-cr27.db.test.ts`, CR-06-T1 and T2): the route (`t3a_cr06_observation_review`, `t3a_cr06_raise_correction`) opens any committed observation of the participant, whether or not a report contains it; a correction is keyed to the observation, renders the commitment word for word with 5 and 20 business days from configuration, and with any of the three values unloaded nothing is raised and the render refuses; an open correction on an observation blocks a report of that dimension. The participant screen that calls these routes is part of the screens work. See CR-209 |
+| CR-27 | T-EVNOTE-001 version 2 | Built and tested (migration 20270125, CR-27-T1): controlled texts are held by version; T-EVNOTE-001 version 1 stays as superseded with its exact text, version 2 is current word for word, and the Stage 1 evidence note renders version 2 and carries its version; the phrase "an AI system" appears nowhere in it. See CR-209 |
 | CR-30 | Stage 4 permission | Screen component and notice loaded; not yet routed (no participant-side session list exists); joining with the consent record open (CR-180) |
 | CR-31 | Five enforcement switches | Authorised by Tony, not yet started |
-| CR-10 | Multi page renderer only | Built earlier (D-07, `berMultipage`) |
+| CR-10 | One page rendering passages | Built and tested (migration 20270125, CR-10-T1): the render gate refuses the single page form with `format_mismatch` for every report that is not a specimen; the multi page form is renderable; a specimen still renders on one page (several dimensions overflow, D4 closed). The issuing screen has still to be pointed at the multi page renderer (screens work). See CR-209 |
 | CR-28 | One claim package per dimension | Reader function built earlier; rule version config, participant review of the chosen entry and issue record still to build |
 | CR-29 | Commit seal key | Vault key in place (sandbox arrangement); key-pair signature still to build |
 | Consent notice 1.2 Section 2 | Word for word, hash on every consent | Loaded (CR-181). Notice Section 4 rules 4.1 to 4.8 not assessed |
