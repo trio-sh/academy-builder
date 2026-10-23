@@ -25,6 +25,8 @@ afterAll(() => rmSync(OUT, { recursive: true, force: true }));
 
 // The handlers are run in a separate Node process, as ESM, the way the server runs them (the bracketed file name of the dynamic route is not resolved through vite).
 const RUNNER = `
+// the server runs Node 22 or later, which has a native WebSocket (the Supabase client wants one); the CI runner may be older, so stand one in
+globalThis.WebSocket ??= class {};
 const mod = await import(process.argv[2]);
 const out = [];
 for (const c of JSON.parse(process.argv[3])) {
