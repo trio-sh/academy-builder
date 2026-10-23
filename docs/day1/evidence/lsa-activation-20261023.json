@@ -1,0 +1,10 @@
+{
+ "date": "2026-10-23",
+ "what": "Key pair seal migrations 20270129-20270130 applied to live (verification: live-apply-20270129-30-verification.json, rollback: live-apply-20270129-30-rollback.sql); Ed25519 key version kp1 registered as current (public key 890030d3...3017); private seed stored only in Vercel production env T3A_SEAL_SIGNING_KEY (sensitive); lsa_activation set on by set_by=b62888d2-9a66-4872-94ab-2c1e3ca1762d (Hans) on the founder's relayed word that Tony said to enable it",
+ "rollback": "tools/day1/lsa_activation_rollback.sql (append-only: a new 'off' row)",
+ "left_off": "enforce_required, enforce_sequence, enforce_gate, canonical_writers, ingest_mode, s4_activation_state: no rows set / unchanged",
+ "caveats": [
+  "activation instruction was relayed by Hans, not received from Tony directly",
+  "key pair generated in the build session; rotate for a key no builder held"
+ ]
+}

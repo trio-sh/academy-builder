@@ -1,7 +1,7 @@
 # CORR-007 Rev 1.6 progress checklist (as of 23 October 2026, main at the merge of PR #387)
 
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
-Not ticked = not finished. The database migrations are applied to the live project (see below); every production switch and `lsa_activation` is still OFF.
+Not ticked = not finished. The database migrations are applied to the live project (see below); every production enforcement switch is still OFF; `lsa_activation` was switched ON on 23 October (founder relaying Tony's word; see `evidence/lsa-activation-20261023.json`, rollback `tools/day1/lsa_activation_rollback.sql`).
 
 Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests for the screens (the database calls are answered by the test, so nothing is written to the live project), forbidden-word ratchet and vocabulary check clean.
 
@@ -63,5 +63,5 @@ Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests
 - [ ] The 104 CORR-007 cases recorded and signed. The package's own gate (`check_build_complete.py --platform-only`, run on Python 3.12) reports PLATFORM EVIDENCE NOT COMPLETE: 322 items, because no case is recorded yet and the matrix wants each case recorded on each dimension it applies to (D1 to D9). Recording them with `record_case.py` and the reviewer's signature is the remaining acceptance step
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases. This needs a named person from outside the founders and the builder
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)
-- [ ] Production activation of the Session Archive switch (`lsa_activation`): scripts and rollback ready and tested in the sandbox; waits on the founder's word
+- [x] Production activation of the Session Archive switch (`lsa_activation`): ON in production on 23 October after the key pair seal (migrations 20270129 and 20270130, key version kp1) was applied; evidence `lsa-activation-20261023.json`; reversible by `lsa_activation_rollback.sql`. The instruction came to the builder through Hans, not from Tony directly
 - [x] Consent notice T3A-LEG-001 Part A v1.2 loaded on the live project (CR-207); counsel is out of the chain (CR-206). The notice is shown to participants at `/dashboard/candidate/notice` and linked from the release warning; the sign-up consent screens that should present it at the moment of consent are not part of CORR-007 and are not changed
