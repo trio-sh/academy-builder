@@ -1,6 +1,6 @@
 -- CR-30 (Rev 1.6): the Stage 4 participation permission. One question, Yes or No.
 -- Yes by the observed participant is recorded as the Stage 4 observation grant (consent type mentor_observation, stage S4)
--- bound to the version and fingerprint of the text shown, then the session permission is recorded as before.
+-- bound to the version and hash of the text shown, then the session permission is recorded as before.
 -- Yes by a co-participant records the session permission only (they are not observed). No records nothing and offers no session.
 -- Stage 4 entry stays refused with s4_not_activated until the founder's activation decision, whatever the answer (t3a_s4_enter, unchanged).
 create or replace function public.t3a_cr30_answer(p_group_session uuid, p_answer text) returns jsonb
@@ -36,7 +36,7 @@ revoke all on function public.t3a_cr30_answer(uuid, text) from public, anon;
 grant execute on function public.t3a_cr30_answer(uuid, text) to authenticated, service_role;
 
 -- The consent stamp binds a consent row to the notice the person saw. The Stage 4 grant saw the group session text, not the consent notice,
--- so a mentor_observation row scoped to S4 is stamped with the loaded group session text version and fingerprint.
+-- so a mentor_observation row scoped to S4 is stamped with the loaded group session text version and hash.
 create or replace function public.t3a_consent_stamp_notice() returns trigger language plpgsql security definer set search_path = public as $fn$
 declare n jsonb; sv text; sh text;
 begin

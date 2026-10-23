@@ -35,7 +35,7 @@ beforeAll(async () => {
 afterAll(async () => { await c.end(); });
 
 describe("CR-30 the Stage 4 permission", () => {
-  it("the loaded text is the CR-30 text word for word, and its fingerprint is its sha256", async () => {
+  it("the loaded text is the CR-30 text word for word, and its hash is its sha256", async () => {
     const t = (await run(c, `select configuration_value v from t3a_configuration_value where configuration_key='s4_group_notice_text' order by configuration_seq desc limit 1`))[0].v as string;
     expect(t.replace(/\s+/g, " ").trim()).toBe(CR30_TEXT);
     const h = (await run(c, `select configuration_value v from t3a_configuration_value where configuration_key='s4_group_notice_hash' order by configuration_seq desc limit 1`))[0].v as string;
@@ -53,7 +53,7 @@ describe("CR-30 the Stage 4 permission", () => {
     expect((await run(c, `select started_at from t3a_d1_group_session where group_session_id='${gs}'`))[0].started_at).toBeNull();
   });
 
-  it("T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and fingerprint; No records nothing adverse and offers no session", async () => {
+  it("T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session", async () => {
     const g2 = await world(); const p2 = await mkParticipant(c, `cr30-no-${RUN}`);
     await c.query("begin"); await c.query("set local session_replication_role = replica");
     await c.query(`insert into t3a_d1_group_session_member(group_session_id, participant_id, member_role) values ('${g2}','${p2}','co_participant')`); await c.query("commit");
