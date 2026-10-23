@@ -14,6 +14,8 @@ LOG="${T3A_BUILD_LOG:-${TMPDIR:-/tmp}/t3a_build.log}"; : > "$LOG"
 RETRY="${TMPDIR:-/tmp}/t3a_retry.lst"; : > "$RETRY"
 for pass in 1 2; do
   for f in $(ls "$REPO"/supabase/migrations/*.sql | LC_ALL=C sort); do
+    # T3A_BUILD_UPTO=<14 digit version> builds only the migrations up to and including it (the live baseline rehearsal)
+    if [ -n "${T3A_BUILD_UPTO:-}" ] && [ "$(basename "$f" | cut -c1-14)" \> "$T3A_BUILD_UPTO" ]; then continue; fi
     # second pass only for files that errored the first time: a file that applied cleanly is never run twice (re-running double loads content rows)
     if [ "$pass" = 2 ] && ! grep -qxF "$f" "$RETRY"; then continue; fi
     (echo "set search_path to public, extensions;"; cat "$f") > "${TMPDIR:-/tmp}/t3a_cur.sql"

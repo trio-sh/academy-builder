@@ -1,6 +1,6 @@
 # CORR-007 Rev 1.6 leveler: build status
 
-Source: the folder `T3A-Leveler-CORR-007-Rev1_6-21Oct2026` (Drive, file 12), downloaded 22 October 2026. Build instruction: `T3A-LEVELER-BUILD-001` (31 rules, 104 worked cases, one test `check_build_complete.py`). Everything is built and tested on the throwaway database; nothing further goes to the live Supabase project until Hans confirms (CR-177).
+Source: the folder `T3A-Leveler-CORR-007-Rev1_6-21Oct2026` (Drive, file 12), downloaded 22 October 2026. Build instruction: `T3A-LEVELER-BUILD-001` (31 rules, 104 worked cases, one test `check_build_complete.py`). Everything is built and tested on the throwaway database first. The migrations 20270102 to 20270124 were applied to the live Supabase project on 23 October 2026 with a tested rollback and a verification record (CR-206); every enforcement switch and `lsa_activation` is still off.
 
 Status words: **loaded** = built and tested here; **not assessed** = I have not yet compared the rule with what already exists, so I make no claim.
 

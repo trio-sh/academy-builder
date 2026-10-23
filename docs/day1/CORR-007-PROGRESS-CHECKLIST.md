@@ -48,11 +48,11 @@ Test totals on main: 342 database tests, 442 unit tests, forbidden-word ratchet 
 
 ## Still open
 
-- [ ] Service key set in Vercel (`SUPABASE_SERVICE_ROLE_KEY`): without it the four routes answer "service unavailable"
-- [ ] CORR-007 migrations applied to the live project, with rollback script and verification record
+- [x] Service key set in Vercel (`SUPABASE_SERVICE_ROLE_KEY`, Production and Preview, sensitive): the routes use it from the next deploy
+- [x] CORR-007 migrations 20270102 to 20270124 applied to the live project, with tested rollback script and verification record (`docs/day1/evidence/live-apply-cr12-to-cr23-*`)
 - [ ] Screens: participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report (Playwright)
 - [ ] The 104 CORR-007 cases with signed results and the build-complete check
-- [ ] Independent CORR-007 reviewer named (not Hans, not the builder)
+- [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)
 - [ ] Production activation of the Session Archive switch (`lsa_activation`): scripts and rollback ready and tested in the sandbox; waits on the founder's word
-- [ ] Consent notice shown to real participants: waits on counsel's review
+- [ ] Consent notice shown to real participants: counsel is out of the chain (CR-206); the notice text still has to be drafted, approved by Hans and loaded
