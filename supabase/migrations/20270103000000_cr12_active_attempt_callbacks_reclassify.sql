@@ -54,6 +54,15 @@ drop trigger if exists t3a_append_only on public.t3a_attempt_request; create tri
 drop trigger if exists t3a_append_only on public.t3a_attempt_callback; create trigger t3a_append_only before update or delete on public.t3a_attempt_callback for each row execute function public.t3a_deny_mutation();
 
 -- Backstop at write: one active attempt per participant, Stage and dimension, whatever route inserts it.
+-- Live data found when this was applied to the live project (23 October 2026): one account had three attempts left "initiated" for the same
+-- participant, dimension and Stage (Stage 2 entries made before the one-active-attempt rule). The older ones are marked as replaced by the
+-- newest; no row is deleted and no other field changes. On a database without such duplicates this changes nothing.
+update public.t3a_attempt a set superseded_by = l.attempt_id
+  from (select distinct on (participant_id, dimension_id, stage_code) participant_id, dimension_id, stage_code, attempt_id
+          from public.t3a_attempt where outcome = 'initiated' and superseded_by is null
+         order by participant_id, dimension_id, stage_code, created_at desc, attempt_id) l
+ where a.outcome = 'initiated' and a.superseded_by is null and a.participant_id = l.participant_id and a.dimension_id = l.dimension_id
+   and a.stage_code = l.stage_code and a.attempt_id <> l.attempt_id;
 create unique index if not exists t3a_attempt_one_active on public.t3a_attempt (participant_id, dimension_id, stage_code) where outcome = 'initiated' and superseded_by is null;
 
 -- A superseding row keeps the number of the row it supersedes; every other insert still takes the next number.

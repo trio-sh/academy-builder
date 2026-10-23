@@ -1,0 +1,314 @@
+{
+ "title": "Live apply of the CORR-007 migrations 20270102 to 20270124 to the Supabase project the-3rd-academy",
+ "date": "2026-10-23",
+ "project_ref": "tnjyywtulpdyackmwnca",
+ "authority": "Hans Ade (co-founder), 23 October 2026: apply to the live project and continue; counsel review removed from the chain (CR-206). CR-182 records that the live project is the working environment.",
+ "method": "Each migration file sent as one request (one transaction); stop on first failure. Pre-change catalog snapshot, post-change snapshot, rollback generated from the difference. Rehearsed first on a throwaway database built at the live baseline (everything up to 20270101): apply, run the rollback, compare; the database came back identical, including with the duplicate-attempt data found on live.",
+ "baseline": "all migrations up to 20270101 were already live; 20270102 and later were not",
+ "first_run": {
+  "result": "20270102 applied; 20270103 FAILED and changed nothing (one transaction): live had three attempts left 'initiated' for one candidate account, dimension D1, Stage S2, which the new one-active-attempt unique index refused. Applying stopped there.",
+  "records": [
+   {
+    "file": "20270102000000_cr12_attempt_window_and_cooldowns.sql",
+    "sha256": "b7eff62bf536792587344a0eef2108a879bfc0a1f81f4059e85617e87963353d",
+    "ok": true,
+    "error": null,
+    "seconds": 0.66
+   },
+   {
+    "file": "20270103000000_cr12_active_attempt_callbacks_reclassify.sql",
+    "sha256": "7b0929c38da084acb9d063f367beb27e774f96403fa748f5016ff9f10ebacf33",
+    "ok": false,
+    "error": "{\"message\":\"Failed to run sql query: ERROR:  23505: could not create unique index \\\"t3a_attempt_one_active\\\"\\nDETAIL:  Key (participant_id, dimension_id, stage_code)=(40eefd0b-4010-4bba-9894-e1babe9b91d1, D1, S2) is duplicated.\\n\"}",
+    "seconds": 0.32
+   }
+  ]
+ },
+ "fix": "20270103 now marks older duplicate 'initiated' attempts as superseded by the newest before it creates the index. No row deleted, no other field changed. On live this marked 2 of 4 attempt rows. The rollback removes the superseded_by column, which undoes it.",
+ "second_run": {
+  "result": "20270103 to 20270124 all applied",
+  "records": [
+   {
+    "file": "20270103000000_cr12_active_attempt_callbacks_reclassify.sql",
+    "sha256": "2639d2a07f725bfa9c68041e0eab27878ad6e2bbb1fae15c76d83609dfae503f",
+    "ok": true,
+    "error": null,
+    "seconds": 0.33
+   },
+   {
+    "file": "20270104000000_cr12_wire_stage_entry.sql",
+    "sha256": "05cee8863b14f4a4887c3528a11b908acda288f7e3c43b2b5a92ebc5b9af9407",
+    "ok": true,
+    "error": null,
+    "seconds": 0.27
+   },
+   {
+    "file": "20270105000000_required_setting_blank_is_unset.sql",
+    "sha256": "23bbea8dec500cf0e0c80c07994c9ad8b28724faa0f28beada7b0211179aafe1",
+    "ok": true,
+    "error": null,
+    "seconds": 0.28
+   },
+   {
+    "file": "20270106000000_cr17_retake_pools_and_source_selection.sql",
+    "sha256": "51a4b9d0046378e35ab45cb1ec2a67eadf6758ed1f6da00d6c6ef3713ecb6abe",
+    "ok": true,
+    "error": null,
+    "seconds": 0.29
+   },
+   {
+    "file": "20270107000000_cr14_form_reuse_design_review.sql",
+    "sha256": "eb7baa0e810da6590ce6d966cd6f2e42143b894347164ae9d64fc2f0afd678c6",
+    "ok": true,
+    "error": null,
+    "seconds": 0.26
+   },
+   {
+    "file": "20270108000000_cr01_sequential_unmasking.sql",
+    "sha256": "534248460864b2525a32e361fe1362b0f810a06d32aba900090962bf543d8308",
+    "ok": true,
+    "error": null,
+    "seconds": 0.3
+   },
+   {
+    "file": "20270109000000_cr09_two_release_routes.sql",
+    "sha256": "670b91881b1c56a02812e051ede12ce9a18afa2bc2d8e7a24a853d568221164c",
+    "ok": true,
+    "error": null,
+    "seconds": 0.36
+   },
+   {
+    "file": "20270110000000_cr02_prior_access_and_rotation.sql",
+    "sha256": "62a546a0e828c08b8d2a8cfa5c3206e779f39d532da3bde83a3bc415f96f04f0",
+    "ok": true,
+    "error": null,
+    "seconds": 0.26
+   },
+   {
+    "file": "20270111000000_cr13_involvement_identity_reconsideration.sql",
+    "sha256": "173b63af8b81b10b879bae12a14fcdf94724caabc853354ba9dda15aea8231f6",
+    "ok": true,
+    "error": null,
+    "seconds": 0.31
+   },
+   {
+    "file": "20270112000000_cr03_welfare_stop_cr15_second_observer.sql",
+    "sha256": "ab391d56828af7e2efcc96fd99e69603424e2815e8b9e5d62bace1579f3871af",
+    "ok": true,
+    "error": null,
+    "seconds": 0.35
+   },
+   {
+    "file": "20270113000000_cr25_accessible_report_copy.sql",
+    "sha256": "976d424f14f84083217545d14d70a066198de0f23e465c6f53298b6f339818f3",
+    "ok": true,
+    "error": null,
+    "seconds": 0.39
+   },
+   {
+    "file": "20270114000000_cr04_identity_at_entry_cr05_progression_challenge.sql",
+    "sha256": "baace875819d8159a8d0b6a79f9e1df96244bf8b4e5ae37b5bbea63228a15ea7",
+    "ok": true,
+    "error": null,
+    "seconds": 0.4
+   },
+   {
+    "file": "20270115000000_cr07_disputed_clauses.sql",
+    "sha256": "eee8ccfb5f77710033ac6a006c323cceeb1307092418f2acdb20f14b1cbc0b72",
+    "ok": true,
+    "error": null,
+    "seconds": 0.45
+   },
+   {
+    "file": "20270116000000_cr08_consent_revocation_commit_point.sql",
+    "sha256": "925f2f51ff21552c7e378ac52e8efbf4253a218916a1bc4a8c80cfca4cd95307",
+    "ok": true,
+    "error": null,
+    "seconds": 0.34
+   },
+   {
+    "file": "20270117000000_cr18_progression_after_commit_cr19_mentor_context.sql",
+    "sha256": "99659e362d26204aa76b5be9ad58ca76dd8c17ee22814221ffbeff09152fbaed",
+    "ok": true,
+    "error": null,
+    "seconds": 0.34
+   },
+   {
+    "file": "20270118000000_cr26_eligibility_entry_reservation.sql",
+    "sha256": "747afa52b4cf5a24ad02879877efeaa56b9562aedbe04888b2acac297a97e2d6",
+    "ok": true,
+    "error": null,
+    "seconds": 0.29
+   },
+   {
+    "file": "20270119000000_cr21_recovery_suspension_cr22_stage4_interruptions.sql",
+    "sha256": "cc52f87f0dcb36cff1416db89aeded792645bd342efadbe285f4a0b06c830799",
+    "ok": true,
+    "error": null,
+    "seconds": 0.34
+   },
+   {
+    "file": "20270120000000_cr17_comparison_gate.sql",
+    "sha256": "df19fdd806e59814892af5383964ee062cbedccb87f487243af84ee5b6b68f19",
+    "ok": true,
+    "error": null,
+    "seconds": 0.26
+   },
+   {
+    "file": "20270121000000_cr21_commit_for_actor.sql",
+    "sha256": "c3046ed8a4994504a53d37306bf7440e92afb0d0a14b3c905b26e6e6b587aa0c",
+    "ok": true,
+    "error": null,
+    "seconds": 0.25
+   },
+   {
+    "file": "20270122000000_cr21_cr22_staff_callers.sql",
+    "sha256": "e26a29f36cb3b1d3de7b30c5e926271019d8d12f1e1971ce7dd5cc6f0aa4b69c",
+    "ok": true,
+    "error": null,
+    "seconds": 0.26
+   },
+   {
+    "file": "20270123000000_cr16_per_dimension_prohibited_vocabulary.sql",
+    "sha256": "aae88406a24c05894f2376952b2e414156e9adb77044bde37fbc0c80d2172fe3",
+    "ok": true,
+    "error": null,
+    "seconds": 2.17
+   },
+   {
+    "file": "20270124000000_cr23_stage1_toward_recurrence.sql",
+    "sha256": "2216a4914e8bf411e40eef44db410a977810d409ca133ee46ebaad0648ade8f8",
+    "ok": true,
+    "error": null,
+    "seconds": 0.27
+   }
+  ]
+ },
+ "snapshots": {
+  "pre_sha256": "bb6e700f83860a47e09fd57f22c617740db4a9b6b1cc2e5ebe80d19df8a9fd3f",
+  "post_sha256": "9c52000ed990cceed09c2480042aec83c623f22cefe7b456c4cf005bc0517970",
+  "note": "full catalog snapshots (functions with bodies and grants, tables, columns, indexes, triggers, policies, constraints, views, enums, a row-hash per table) are 2 MB each and are kept by the builder; the hashes identify them"
+ },
+ "rollback": {
+  "file": "docs/day1/evidence/live-apply-cr12-to-cr23-rollback.sql",
+  "sha256": "c5d31e6c71c7df846b814a09cbfd694cf9fd1068c048dc3ccac6570ae6444bdc",
+  "lines": 1045,
+  "tested": "generated and run on the rehearsal database; compare reported identical to the baseline"
+ },
+ "checks_after": {
+  "functions_before_after": [
+   536,
+   658
+  ],
+  "tables_before_after": [
+   360,
+   417
+  ],
+  "new_tables": 40,
+  "new_tables_without_rls": [],
+  "switches": [],
+  "capture_config": [
+   {
+    "singleton": true,
+    "enforce_required": false,
+    "updated_at": "2026-10-20 11:41:17.060154+00",
+    "enforce_sequence": false,
+    "enable_lsa_sidecar": false
+   }
+  ],
+  "consent_config": [
+   {
+    "singleton": true,
+    "enforce_gate": false,
+    "updated_at": "2026-10-20 11:05:02.888666+00"
+   }
+  ],
+  "lsa_flag": [
+   {
+    "lsa_activation": false,
+    "lsa_retention_sweep": false
+   }
+  ],
+  "attempts": [
+   {
+    "total": 4,
+    "active": 2,
+    "superseded": 2
+   }
+  ],
+  "d9_vocabulary_words": [
+   {
+    "n": 88
+   }
+  ],
+  "d2_scan_default_version": [
+   {
+    "hits": [
+     "deflected"
+    ]
+   }
+  ],
+  "service_only_not_executable_by_app_roles": [
+   {
+    "fn": "t3a_attempt_begin(uuid,text,t3a_stage_code,text,timestamp with time zone)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr17_comparison_gate(uuid)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr21_commit_for(uuid,uuid,text,uuid)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr21_commit_once(uuid,text,uuid)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr21_suspend_source_for(uuid,uuid,text)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr22_interrupt(uuid,text,uuid,boolean,boolean)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr22_interrupt_for(uuid,uuid,text,uuid,boolean,boolean)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_cr26_request_entry(uuid,text,t3a_stage_code,text,bigint)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_s4_compose_session_base(uuid,uuid,uuid,uuid[],boolean)",
+    "anon": false,
+    "authenticated": false
+   },
+   {
+    "fn": "t3a_source_select(uuid,text,text,bigint)",
+    "anon": false,
+    "authenticated": false
+   }
+  ],
+  "rows_unchanged_counts": {
+   "profiles": 15,
+   "t3a_observation_record": 6
+  }
+ },
+ "smoke": "40 read queries as a real candidate, mentor and admin account on 8 tables the app reads, inside rolled-back transactions: 0 errors; the mentor dashboard function t3a_d1_s1_pending_for_mentor() ran",
+ "not_done": [
+  "no enforcement switch turned on (enforce_required, enforce_sequence, enforce_gate all false)",
+  "lsa_activation off",
+  "the server routes need a deploy of main to pick up the Vercel service key"
+ ]
+}
