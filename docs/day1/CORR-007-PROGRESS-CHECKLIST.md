@@ -3,9 +3,9 @@
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
 Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 322 database tests, 442 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 342 database tests, 442 unit tests, forbidden-word ratchet and vocabulary check clean.
 
-## The 31 rules: 20 built and tested, 11 partly built
+## The 31 rules: 24 built and tested, 7 partly built
 
 - [x] CR-01 Sequential unmasking at Stage 2
 - [x] CR-02 Prior access bar and mentor rotation
@@ -17,20 +17,20 @@ Test totals on main: 322 database tests, 442 unit tests, forbidden-word ratchet 
 - [x] CR-08 Consent revocation against the commit point
 - [x] CR-09 Two release routes
 - [ ] CR-10 Multi-page renderer (built earlier; not re-checked against Rev 1.6)
-- [ ] CR-11 Checklist lists (related machinery exists; not compared)
+- [x] CR-11 Checklist lists (platform items and the dimension's own items)
 - [x] CR-12 Attempts and cooldowns
 - [x] CR-13 Involvement, review, issue and reconsideration
 - [x] CR-14 Reuse of a form across dimensions
 - [x] CR-15 Second independent observer in the pilot
-- [ ] CR-16 Per-dimension prohibited vocabulary (related machinery exists; not compared)
+- [x] CR-16 Per-dimension prohibited vocabulary (D9 list loaded)
 - [x] CR-17 Retake pools, source selection and the comparison gate
 - [x] CR-18 Progression decision only after commit
 - [x] CR-19 Minimum observation context for the mentor
 - [x] CR-20 Stage 2 and 4 timing and capture refusals
 - [x] CR-21 Recovery and source suspension
 - [x] CR-22 Stage 4 interruptions
-- [ ] CR-23 Stage 1 toward recurrence (related machinery exists; not compared)
-- [ ] CR-24 Second evidence state (related machinery exists; not compared)
+- [x] CR-23 Stage 1 toward recurrence
+- [x] CR-24 Second evidence state
 - [x] CR-25 Accessible tagged report copy
 - [x] CR-26 Eligibility before entry
 - [ ] CR-27 T-EVNOTE-001 version 2 (loaded)
