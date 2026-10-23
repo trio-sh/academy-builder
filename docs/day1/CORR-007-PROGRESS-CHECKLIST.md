@@ -52,7 +52,8 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] CORR-007 migrations 20270102 to 20270125 applied to the live project, each with a rollback script and verification record (`docs/day1/evidence/live-apply-*`); 20270126 to 20270128 (CR-28, CR-29, CR-30) applied the same way
 - [x] Screen: Stage 4 permission page at `/dashboard/candidate/group-session/:id` (`e2e/candidate-stage4-permission.spec.ts`, 4 Playwright tests, the two server calls answered by the test; broken on purpose and caught)
 - [x] Screen: participant release controls at `/dashboard/candidate/release/:reportId` (`e2e/candidate-release-controls.spec.ts`, 4 Playwright tests; the employer warning is shown before general availability turns on, the two controls are shown as independent, the direct release link is shown once and opens the recipient page at `/report#code=`; 3 breaks caught)
-- [ ] Screens still to build and test (Playwright): Available Reports, notices, accessible report, observation review and challenge (CR-06), claim package review (CR-28), issuing through the multi page renderer (CR-10)
+- [x] Screens: employer Available Reports list (page only, no search, sort or filter) and the report reader at `/dashboard/employer/report/:id` (`e2e/employer-available-reports.spec.ts`, 5 Playwright tests; 3 breaks caught). The old "Read report" link on this page had no page behind it
+- [ ] Screens still to build and test (Playwright): notices, accessible report, observation review and challenge (CR-06), claim package review (CR-28), issuing through the multi page renderer (CR-10)
 - [ ] The 104 CORR-007 cases with signed results and the build-complete check
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)

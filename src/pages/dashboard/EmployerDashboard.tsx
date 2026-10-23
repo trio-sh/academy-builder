@@ -10,6 +10,7 @@ import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/file
 import AIAgent from "@/pages/dashboard/AIAgent";
 import T3XDiscovery from "@/pages/dashboard/employer/T3XDiscovery";
 import AvailableReports from "@/pages/dashboard/employer/AvailableReports";
+import EmployerReportReader from "@/pages/dashboard/employer/EmployerReportReader";
 import EmployerFeedbackPage from "@/pages/dashboard/employer/EmployerFeedback";
 import {
   controlledText,
@@ -2536,6 +2537,7 @@ const EmployerDashboard = () => {
       <Routes>
         <Route index element={<Overview />} />
         <Route path="reports" element={<AvailableReports />} />
+        <Route path="report/:berReportId" element={<EmployerReportReader />} />
         {/* Item 8 step 5.2 — the retired pool names redirect through the
             transition and are then removed. Never two working names. */}
         <Route path="search" element={<Navigate to="/dashboard/employer/reports" replace />} />
