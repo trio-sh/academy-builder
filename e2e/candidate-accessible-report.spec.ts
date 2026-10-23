@@ -29,6 +29,7 @@ test.describe("Candidate - accessible report", () => {
     const doc = page.getByTestId("accessible-report");
     await expect(doc).toBeVisible({ timeout: 15000 });
     await expect(doc).toHaveAttribute("lang", "en");
+    await expect(doc.getByTestId("test-tag")).toHaveText("TEST");
     await expect(doc.getByRole("heading", { level: 1 })).toHaveText("Behavioral Evidence Report");
     await expect(doc.getByRole("heading", { level: 2 })).toHaveText(["What this report is", "Observed conduct"]);
     await expect(doc.getByText("A record of what the participant did.")).toBeVisible();

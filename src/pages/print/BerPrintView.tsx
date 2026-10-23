@@ -41,6 +41,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import TestTag from "@/components/TestTag";
 
 type ConductRow = {
   dimension_id: string;
@@ -307,6 +308,7 @@ body.ber-print-root {
 .ber-toolbar button:hover { background: var(--ber-gold); border-color: var(--ber-gold); color: #fff; }
 
 .ber-page {
+  position: relative;
   background: var(--ber-parch);
   width: 816px;
   max-width: 100%;
@@ -860,6 +862,7 @@ export default function BerPrintView() {
       </div>
 
       <div className="ber-page">
+        <TestTag />
         {/* Masthead */}
         <div className="ber-mast">
           <div className="ber-mast-left">

@@ -22,6 +22,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
+import TestTag from "@/components/TestTag";
 
 type Redemption = {
   content: boolean;
@@ -207,6 +208,7 @@ const RecipientReportAccess = () => {
             traceability sheet, no other report, no other participant. */}
         {result?.content && (
           <article className="mb-16">
+            <TestTag inline />
             <header className="border-y-2 border-foreground py-6 mb-10">
               <p className="mono-label text-foreground/55 mb-2">
                 Behavioral Evidence Report&trade; · version {result.report_version}

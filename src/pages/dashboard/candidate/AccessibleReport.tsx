@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import TestTag from "@/components/TestTag";
 
 interface Child { tag: string; text?: string; caption?: string; header?: string[]; rows?: string[][] }
 interface Section { tag: string; block_no: number; heading: { tag: string; text: string }; children: Child[] }
@@ -37,6 +38,7 @@ export default function AccessibleReport() {
   const t = res.tagged;
   return (
     <article lang={t.lang ?? "en"} data-testid="accessible-report" className="space-y-8 max-w-3xl">
+      <div><TestTag inline /></div>
       <h1 className="text-2xl font-semibold">{t.title}</h1>
       {(t.children ?? []).map((s) => (
         <section key={s.block_no} aria-labelledby={`acc-h-${s.block_no}`}>
