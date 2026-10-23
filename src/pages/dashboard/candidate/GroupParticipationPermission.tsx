@@ -29,6 +29,7 @@ export default function GroupParticipationPermission({ groupSessionId, onDone }:
     setBusy(false);
     const outcome = (data as { outcome?: string } | null)?.outcome;
     if (error || outcome === "refused") { setMessage("Your answer could not be saved. Please try again."); return; }
+    setMessage("Thank you. Your permission is recorded.");
     onDone?.("yes");
   };
   const answerNo = () => { onDone?.("no"); setMessage("Thank you. Nothing has been recorded."); };
