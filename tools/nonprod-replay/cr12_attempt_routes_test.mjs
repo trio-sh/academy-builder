@@ -27,7 +27,7 @@ rec("CR-12-T4", "two start requests at once: one active attempt, the other refus
 const winKey = (s1.r?.outcome === "started" ? "K1" : "K2") + RUN; const rep = await svc(begin(u, winKey, "2027-04-01T09:00:05Z"));
 rec("CR-12-T4", "the same idempotency key again returns the existing attempt", rep.r?.outcome === "existing" && rep.r.attempt_id === (s1.r?.attempt_id || s2.r?.attempt_id), rep.r);
 const nokey = await svc(`select t3a_attempt_begin('${u}','D2','S2','', now()) r`); rec("CR-12-T4", "a start with no idempotency key is refused", nokey.r?.reason_code === "IDEMPOTENCY_KEY_MISSING" || nokey.r?.refused === true || /IDEMPOTENCY/.test(JSON.stringify(nokey.r)), nokey.r);
-let dbIdx = "ok"; try { await c.query(`insert into t3a_attempt(participant_id, dimension_id, stage_code) values ('${u}','D2','S2')`); } catch (e) { dbIdx = e.message; }
+let dbIdx = "ok"; try { await c.query(`insert into t3a_attempt(participant_id, dimension_id, stage_code, attempt_rules_version, attempt_event_class) values ('${u}','D2','S2', '1.0', 'completed_observation')`); } catch (e) { dbIdx = e.message; }
 rec("CR-12-T4", "the database itself refuses a second active attempt from any route", /t3a_attempt_one_active|duplicate key/.test(dbIdx), dbIdx.slice(0, 90));
 // T5: the same completion callback delivered twice, and two racing
 const e1 = await svc(end(u, "completed_observation", "cb-" + RUN)); const e2 = await svc(end(u, "completed_observation", "cb-" + RUN));

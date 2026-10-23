@@ -14,7 +14,7 @@ async function world(comparison: "by_family" | "not_eligible" | null) {
   const src = await mkApprovedSource(c, { dimension: "D2", stage: "S1", situationClass: `SC-D2-${(seq % 6) + 1}`, reviewer });
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${p}','S1','D2',1,'active') returning stage_instance_id i`))[0].i;
   const rec = (await run(c, `insert into t3a_observation_record(participant_id, dimension_id, stage_code, stage_instance_id) values ('${p}','D2','S1','${inst}') returning observation_record_id r`))[0].r;
-  await fx(`insert into t3a_stage_entry_event(observation_path_gateway_id, stage_instance_id, stage_code, dimensions_in_play, session_identity, assistance_rules_version, participant_id, dimension_id, source_version_id) values (gen_random_uuid(),'${inst}','S1',array['D2']::t3a_dimension_code[],'s','v1','${p}','D2','${src.version}')`);
+  await fx(`insert into t3a_stage_entry_event(observation_path_gateway_id, stage_instance_id, stage_code, dimensions_in_play, session_identity, assistance_rules_version, participant_id, dimension_id, source_version_id, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values (gen_random_uuid(),'${inst}','S1',array['D2']::t3a_dimension_code[],'s','v1','${p}','D2','${src.version}', gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid())`);
   if (comparison) await fx(`insert into t3a_source_selection_log(participant_id, dimension_id, stage_code, attempt_number, selected_source_version_id, policy_receipt, seed, selected_pool, comparison) values ('${p}','D2','S1',2,'${src.version}','r',1,'retake_1','${comparison}')`);
   return { p, rec };
 }

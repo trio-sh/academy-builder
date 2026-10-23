@@ -18,7 +18,7 @@ const record = (ber: string, d: string, item: number, outcome: string) =>
 const passAll = async (ber: string, d: string) => { for (const i of await items(d)) await record(ber, d, i, "pass"); };
 async function report(dims: string[]) {
   const p = await mkParticipant(c, `cr11-p-${++seq}-${RUN}`);
-  const ber = (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[]) returning ber_report_id b`))[0].b;
+  const ber = (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false) returning ber_report_id b`))[0].b;
   return ber as string;
 }
 

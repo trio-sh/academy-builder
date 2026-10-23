@@ -37,7 +37,7 @@ Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests
 - [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue, and the review screen)
 - [x] CR-29 Commit seal key (key version on every seal, rotation keeps earlier seals valid, activation refuses while the shared Vault key is current; the key pair seal is built: the database checks Ed25519 signatures, the private key is held only by the commit service, CR-216)
 - [x] CR-30 Stage 4 permission (rule, grant and refusals; and its participant page)
-- [x] CR-31 Five enforcement switches rehearsed in the sandbox in order, each with a full test run, logged (`switch-rehearsal.json`); all stay OFF in production (tested). Finding: switches 1 and 2 are clean, switches 3 to 5 fail 222 of 364 database tests because test fixtures do not yet fill every required field. That fix is a pre-activation job, see CR-213
+- [x] CR-31 Five enforcement switches rehearsed in the sandbox in order, each with a full test run, logged (`switch-rehearsal.json`); all stay OFF in production (tested). `enforce_required` is now closed in the sandbox: all 388 database tests pass with it off and with it on for the whole run (CR-218, migration 20270131, `cr31-enforce-required-completions.db.test.ts` with ten guards each broken and caught); the CI database job runs both. `enforce_sequence` (9 older scripts need a Stage 1 confirmation) and `enforce_gate` (47 consent fixtures) are not proven and stay off
 
 ## Server routes that call the new rules
 

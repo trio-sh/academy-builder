@@ -66,11 +66,11 @@ const s4 = await mk("SRC-D2-T-S4-" + RUN, "D2", "S4", { d2_situation_class: "SC-
 n0 = await refused("s4_not_activated"); const g4 = await svc(`select t3a_source_serving_gate('${s4.v}','S4') r`);
 rec("D-03", "Stage 4 entry refuses and logs s4_not_activated while the value is unloaded", g4.rows[0]?.r?.reason === "s4_not_activated" && (await refused("s4_not_activated")) === n0 + 1, g4.rows[0]?.r || g4.msg);
 // exposure
-const GW = (await run(`insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${P}','account_authentication','1.0','1.0',now()) returning observation_path_gateway_id g`))[0].g;
+const GW = (await run(`insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${P}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
 let attemptNo = 0;
 const si = async (v) => { const st = (await run(`select body->>'stage_code' s, o.dimension_id d from t3a_d1_content_version cv join t3a_content_object o using (content_object_id) where cv.content_version_id='${v}'`))[0]; attemptNo++;
   const inst = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${P}','${st.s}','${st.d}',${attemptNo},'scheduled') returning stage_instance_id i`))[0].i;
-  return run(`insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id) values ('${P}','${st.d}','${st.s}','${GW}','${inst}','x','1.0','{}','{${st.d}}','{}','${v}')`); };
+  return run(`insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id, entry_authority_actor_id, stage_entry_hold_expires_at) values ('${P}','${st.d}','${st.s}','${GW}','${inst}','x','1.0','{}','{${st.d}}','{}','${v}', gen_random_uuid(), now() + interval '1 hour')`); };
 const ex0 = (await run(`select t3a_prior_exposure('${P}','${s1.v}') r`))[0].r; rec("D2-28", "a participant with no history is not excluded", ex0.excluded === false, ex0);
 await si(s1.v);
 const ex1 = (await run(`select t3a_prior_exposure('${P}','${s1.v}') r`))[0].r; rec("D2-28", "the exact version already met excludes", ex1.reasons.includes("source_version_met"), ex1);
@@ -86,7 +86,7 @@ rec("D2-28", "a cross-dimension pattern comparison refuses and logs while the ma
 rec("D2-28", "the mapping table is empty", (await run(`select count(*)::int n from t3a_cross_dimension_pattern_map`))[0].n === 0, null);
 const gx = await svc(`select t3a_source_serving_gate('${s1.v}','S1','${P}') r`); rec("D2-28", "the serving gate applies the exposure exclusion", gx.rows[0]?.r?.reason === "prior_exposure_exclusion", gx.rows[0]?.r);
 // 024, 029 independent attempt counters
-const att = (dim, n) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${P}','${dim}','S2','completed',true,now() - interval '150 days','completed_observation') returning attempt_no`;
+const att = (dim, n) => `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class, attempt_rules_version) values ('${P}','${dim}','S2','completed',true,now() - interval '150 days','completed_observation', '1.0') returning attempt_no`;
 const a = []; for (let i = 0; i < 3; i++) a.push((await tryq(att("D2"))).msg);
 const d1a = await tryq(att("D1"));
 const perm = async (dim) => (await run(`select t3a_d1_next_attempt_permitted('${P}','${dim}','S2') r`))[0].r;

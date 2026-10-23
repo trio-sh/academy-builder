@@ -11,7 +11,7 @@ const refused = async (code: string) => (await run(c, `select count(*)::int n fr
 let seq = 0;
 async function mentor(tag: string) {
   const m = await mkParticipant(c, `cr15-${tag}-${++seq}`, "mentor");
-  await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status) values ('${m}','${DIM}', now() - interval '1 day','current','1.0','authorized')`);
+  await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status, reviewer_authorization, issuer_authorization) values ('${m}','${DIM}', now() - interval '1 day','current','1.0','authorized', true, true)`);
   return m;
 }
 /** A session of a participant; pilot = enrolled and active in an open cohort. */
@@ -75,7 +75,7 @@ describe("CR-15 adding a second observer", () => {
     const w = await ready();
     expect(await asService(c, `select t3a_cr13_involvement('${w.b}','${w.p}', array['${DIM}'], false) r`).then((r) => r.r)).toBe("involved_observed");
     const rep = randomUUID();
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids) values ('${rep}','${w.p}','${DIM}', array['${DIM}'])`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${w.p}','${DIM}', array['${DIM}'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     expect((await asService(c, `select t3a_report_actor_gate('${w.b}','${rep}','evidence_review') r`)).r.reason).toBe("involved_in_report");
   });
   it("adding an observer is a service route", async () => {

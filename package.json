@@ -19,6 +19,7 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "check:names": "node scripts/check-undefined-names.mjs",
     "test:db": "vitest run -c vitest.db.config.ts",
+    "test:db:enforced": "vitest run -c vitest.db.enforced.config.ts",
     "test:all": "npm run test && npm run test:db"
   },
   "dependencies": {

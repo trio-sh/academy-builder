@@ -11,7 +11,7 @@ const R = []; const rec = (id, label, pass, detail) => R.push({ id, label, pass:
 const P = randomUUID(), RV = randomUUID(), IS = randomUUID(), RUN = P.slice(0, 8), H = "e".repeat(64);
 for (const [u, e, r] of [[P, "p", "candidate"], [RV, "r", "mentor"], [IS, "i", "admin"]]) { await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','g${e}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role) values ('${u}','g${e}-${RUN}@t.local','${r}')`); }
 const st = (await run(`select (enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1] s`))[0].s;
-const mk = async () => (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status) values ('${P}','D1','${st}','{}', true, 'ber', 'assembling') returning ber_report_id, verification_code`))[0];
+const mk = async () => (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, preview_state, report_preview_digest, report_content_digest, verification_code) values ('${P}','D1','${st}','{}', true, 'ber', 'assembling', '1.0', '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text) returning ber_report_id, verification_code`))[0];
 const b1 = await mk(), b2 = await mk(), b3 = await mk();
 // DT-28
 const sha = createHash("sha256").update(b1.ber_report_id).digest("hex");

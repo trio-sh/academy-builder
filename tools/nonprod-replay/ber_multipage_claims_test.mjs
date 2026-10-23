@@ -24,7 +24,7 @@ const obsRow = async (stg, who) => (await run(`insert into t3a_observation_recor
 const o1 = await obsRow("S2", M1), o2 = await obsRow("S2", M2);
 const c1 = await compose(S2, 2, o1), c2 = await compose(S3, 2, o2);
 rec("claims-setup", "two synthetic committed D4 statements exist", c1.outcome === "composed" && c2.outcome === "composed", [c1.outcome ?? c1, c2.outcome ?? c2]);
-const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D4','${st}','{}'::jsonb, false, 'ber', 'participant_review', array['D4']) returning ber_report_id r`))[0].r;
+const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, preview_state, report_preview_digest, report_content_digest, verification_code) values ('${P}','D4','${st}','{}'::jsonb, false, 'ber', 'participant_review', array['D4'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text) returning ber_report_id r`))[0].r;
 const call = (uid = P, role = "authenticated") => asUser(uid, `select t3a_ber_multipage_claims('${rep}', ${role === "service_role"}) r`, role);
 const callSvc = () => call(P, "service_role");
 let r = await call(); rec("claims", "a report that was never issued refuses report_not_issued: no face is produced for a real participant", r?.reason === "report_not_issued", r);

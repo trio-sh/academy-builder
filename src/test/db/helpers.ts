@@ -84,17 +84,17 @@ export async function mkApprovedSource(
 /** The participant has met this source: a Stage entry event on it. */
 export async function meet(c: pg.Client, participant: string, sourceVersion: string): Promise<void> {
   const st = (await run(c, `select body->>'stage_code' s, o.dimension_id d from t3a_d1_content_version cv join t3a_content_object o using (content_object_id) where cv.content_version_id='${sourceVersion}'`))[0];
-  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${participant}','account_authentication','1.0','1.0',now()) returning observation_path_gateway_id g`))[0].g;
+  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${participant}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
   const no = (await run(c, `select coalesce(max(attempt_no),0)+1 n from t3a_stage_instance where participant_id='${participant}' and stage_code='${st.s}' and dimension_id='${st.d}'`))[0].n;
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${participant}','${st.s}','${st.d}',${no},'scheduled') returning stage_instance_id i`))[0].i;
-  await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id) values ('${participant}','${st.d}','${st.s}','${gw}','${inst}','x','1.0','{}','{${st.d}}','{}','${sourceVersion}')`);
+  await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values ('${participant}','${st.d}','${st.s}','${gw}','${inst}','x','1.0','{}','{${st.d}}','{}','${sourceVersion}', gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid())`);
 }
 
 /** The participant has `n` counted completed attempts on the Stage and dimension, all long enough ago to be past every wait. */
 export async function completedAttempts(c: pg.Client, participant: string, dimension: string, stage: string, n: number): Promise<void> {
   for (let i = 0; i < n; i++) {
     const at = new Date(Date.now() - (150 - i * 40) * 86400e3).toISOString();
-    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${participant}','${dimension}','${stage}','completed',true,'${at}','completed_observation')`);
+    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class, attempt_rules_version) values ('${participant}','${dimension}','${stage}','completed',true,'${at}','completed_observation', '1.0')`);
   }
 }
 

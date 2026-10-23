@@ -15,7 +15,7 @@ const P = await mk("p", "candidate"), M1 = await mk("m1", "mentor"), M2 = await 
 const st = (await run(`select (enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1] s`))[0].s;
 const vs = { d1: "v1", d2: "v2" };
 const vsHash = (await run(`select encode(extensions.digest('${JSON.stringify(vs)}'::jsonb::text, 'sha256'), 'hex') h`))[0].h;
-const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D3','${st}','${JSON.stringify(vs)}'::jsonb, true, 'ber', 'participant_review', array['D1','D3']) returning ber_report_id r`))[0].r;
+const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, preview_state, report_preview_digest, report_content_digest, verification_code) values ('${P}','D3','${st}','${JSON.stringify(vs)}'::jsonb, true, 'ber', 'participant_review', array['D1','D3'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text) returning ber_report_id r`))[0].r;
 const gate = async (rv = "null", is = "null") => (await run(`select t3a_report_issuance_gate('${rep}', ${rv}, ${is}) g`))[0].g;
 const has = (g, code) => g.blockers.some(b => b.code === code);
 
