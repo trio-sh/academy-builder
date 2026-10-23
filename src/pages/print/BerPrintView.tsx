@@ -706,6 +706,7 @@ export default function BerPrintView() {
   const [face, setFace] = useState<Face | null>(null);
   const [renderCheck, setRenderCheck] = useState<RenderCheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [gateRefusal, setGateRefusal] = useState<{ code: string; detail: string } | null>(null);
   const docIdRef = useRef<string>("");
 
   useEffect(() => {
@@ -718,7 +719,19 @@ export default function BerPrintView() {
   useEffect(() => {
     const load = async () => {
       if (!berId) return;
-      // Part F render check runs first. The face only renders if the
+      // CR-10 and D-07: the single page form is for the specimen only. Every other report renders through the multi page renderer, and
+      // the database says so; this page shows its answer and a way to the multi page form instead of drawing a single page.
+      const { data: gdata, error: gErr } = await supabase.rpc("t3a_report_render_gate", { p_ber_report_id: berId, p_form: "one_page" });
+      if (gErr) {
+        setError(gErr.message);
+        return;
+      }
+      const gate = (gdata ?? {}) as { outcome?: string; reason?: string; refusal_code?: string; detail?: string };
+      if (gate.outcome !== "renderable") {
+        setGateRefusal({ code: gate.reason ?? gate.refusal_code ?? "render_refused", detail: gate.detail ?? "" });
+        return;
+      }
+      // Part F render check runs next. The face only renders if the
       // Standard approves this serve — the output mode is live, the pilot
       // authorization table (if any) is honored, the controlled text
       // register has not diverged, each composed statement's use
@@ -767,6 +780,15 @@ export default function BerPrintView() {
   );
 
   if (!berId) return frame(<div className="ber-loading">Missing report identifier.</div>);
+  if (gateRefusal) {
+    return frame(
+      <div className="ber-refused" data-testid="gate-refused" style={{ textAlign: "left", maxWidth: 720, margin: "60px auto" }}>
+        <h2 style={{ fontFamily: "'Liberation Serif', Georgia, serif", color: COLORS.NAVY, fontSize: "22pt", margin: "6px 0 10px 0" }}>{gateRefusal.code}</h2>
+        <p style={{ fontSize: "10pt", color: COLORS.BODY, lineHeight: 1.4 }}>{gateRefusal.detail}</p>
+        <p style={{ fontSize: "10pt", marginTop: 12 }}><a href={`/print/ber-multi/${berId}`} data-testid="open-multi">Open the multi page report</a></p>
+      </div>,
+    );
+  }
   if (error) return frame(<div className="ber-refused">Could not assemble this report. {error}</div>);
   if (renderCheck && !renderCheck.ok) {
     return frame(
