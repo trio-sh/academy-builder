@@ -1,9 +1,9 @@
-# CORR-007 Rev 1.6 progress checklist (as of 23 October 2026, main at the merge of PR #368)
+# CORR-007 Rev 1.6 progress checklist (as of 23 October 2026, main at the merge of PR #387)
 
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
-Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
+Not ticked = not finished. The database migrations are applied to the live project (see below); every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests for the screens (the database calls are answered by the test, so nothing is written to the live project), forbidden-word ratchet and vocabulary check clean.
 
 ## The 31 rules: 31 built and tested (switches 3 to 5 do not yet pass the full suite, see the last rule)
 
@@ -59,8 +59,9 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] Screen: accessible report at `/dashboard/candidate/report-accessible/:id` (`e2e/candidate-accessible-report.spec.ts`, 4 Playwright tests; language, title, a heading for each section, a captioned table with header cells, a missing copy invents nothing; 3 breaks caught)
 - [x] Screens: the Participant Consent and Privacy Notice at `/dashboard/candidate/notice` (version shown, text word for word, nothing in its place when unloaded), a link to it from the employer warning on the release controls, and the amendment notice on the notifications page with a link to that report's release controls (`e2e/candidate-notices.spec.ts`, 4 Playwright tests; 3 breaks caught)
 - [x] All CORR-007 screens now built and tested
-- [ ] The 104 CORR-007 cases with signed results and the build-complete check
-- [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
+- [x] The 104 worked cases are mapped to the automated tests that exercise them (`docs/day1/CORR-007-CASE-MAP.md`, made by `tools/day1/case_map.py`): 83 by a test title that names the case, 21 by rule file only (a reviewer confirms). This is a map, not a result.
+- [ ] The 104 CORR-007 cases recorded and signed. The package's own gate (`check_build_complete.py --platform-only`, run on Python 3.12) reports PLATFORM EVIDENCE NOT COMPLETE: 322 items, because no case is recorded yet and the matrix wants each case recorded on each dimension it applies to (D1 to D9). Recording them with `record_case.py` and the reviewer's signature is the remaining acceptance step
+- [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases. This needs a named person from outside the founders and the builder
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)
 - [ ] Production activation of the Session Archive switch (`lsa_activation`): scripts and rollback ready and tested in the sandbox; waits on the founder's word
 - [x] Consent notice T3A-LEG-001 Part A v1.2 loaded on the live project (CR-207); counsel is out of the chain (CR-206). The notice is shown to participants at `/dashboard/candidate/notice` and linked from the release warning; the sign-up consent screens that should present it at the moment of consent are not part of CORR-007 and are not changed

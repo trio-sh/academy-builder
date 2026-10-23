@@ -1,23 +1,21 @@
-Hi Tony, update on the T3A Leveler (CORR-007 Rev 1.6) from Hans.
+Hi Tony, it's Hans. The T3A Leveler (CORR-007 Rev 1.6) is built and on main. Here is exactly where it stands.
 
-DONE and merged to main, every piece tested by automated tests before it was merged (database tests, unit tests, forbidden-word and vocabulary checks all green):
-- All 31 CORR-007 rules are built and tested (details below on switches 3 to 5): two release routes, mentor rotation and prior access, involvement and identity checks, welfare stop and second observer, accessible report copy, identity at entry, progression challenge, disputed clauses, consent revocation at the commit point, progression after commit, minimum mentor context, eligibility before entry, retake pools and source selection, once-only commit with safe restart, source suspension with impact review, Stage 4 interruptions, the comparison gate, and the Stage 2 and 4 timing and capture refusals, the review checklist as two lists, per-dimension prohibited vocabulary (the D9 list is loaded), Stage 1 toward recurrence, and the second evidence state. One real gap was found and fixed on the way: the prohibited-word check used one dimension's list for all, so D2 to D4 entries were being checked against no words under the default setting. The ticked list is docs/day1/CORR-007-PROGRESS-CHECKLIST.md. Also built: the commit seal key versioning with rotation (activation refuses until a real key pair is in place), the Stage 4 permission (Yes records the grant with the text version and hash, No records nothing), and the claim package selection rule.
-- Four server routes now call the new rules (entry, commit, interrupt, suspend).
-- Each rule's guards were broken on purpose to prove its tests catch the failure.
+DONE, every piece tested by automated tests before it was merged:
+- All 31 CORR-007 rules are built. Each rule's guards were broken on purpose to prove its tests catch the failure.
+- Every screen is built and tested: the Stage 4 permission page, the participant's release controls, the employer's Available Reports list and report reader, observation review and challenge, claim package review, the single page report closed to real reports, the accessible report, and the privacy notice with the amendment notice.
+- The database changes are live on the Supabase project, each with a rollback script and a verification record (docs/day1/evidence). The four server routes (entry, commit, interrupt, suspend) work on the live site.
+- Totals on main: 365 database tests, 450 unit tests and 33 screen tests all pass. The ticked list to read is docs/day1/CORR-007-PROGRESS-CHECKLIST.md.
+- Nothing is switched on. Every production enforcement switch and lsa_activation are OFF.
 
-NOT done yet, so you are not surprised:
-- The new rules are applied to the live Supabase project, each migration with a rollback script and a verification record in docs/day1/evidence. Nothing was switched on.
-- I ran the five enforcement switches in the sandbox in order with the full tests after each. The first two are clean. The third (enforce_required) stops 222 of 364 database tests because the test setups do not yet fill every required field (no live route failed, but they are not proven under it yet). That must be fixed before any activation; production keeps every switch off.
-- The key pair for the commit seal (CR-29) is not provisioned; activation stays refused until it is.
-- The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) that call the four routes are still to build and test.
-- The 104 CORR-007 cases with signed results are not run yet.
-- Nothing is switched on. Production enforcement and lsa_activation stay OFF until your activation decision.
+NOT done, so you are not surprised:
+1. The 104 CORR-007 cases are not recorded or signed. I mapped each one to the test that covers it (docs/day1/CORR-007-CASE-MAP.md), but the package's own gate still says "platform evidence not complete", and it needs a named independent reviewer, not me and not you.
+2. The five enforcement switches: I ran them in the sandbox in order. The first two are clean. The third (enforce_required) stops 222 of 364 database tests because the test setups do not fill every required field. No live route failed, but they are not proven under it. This must be fixed before any activation.
+3. The commit seal key pair (CR-29) is not set up. Activation stays refused until it is.
 
-I need from you:
-1. Your yes/no on the open items in the conflict register (CR-182 to CR-203). CR-199 asks you to confirm how each Stage 4 interruption maps to an attempt ending.
-2. A named independent reviewer for CORR-007 (it cannot be Hans or the builder).
-3. Your OK on tidying: abandoned attempts on the live candidate account (CR-206).
-4. A one-line yes if you want the Session Archive switch (lsa_activation) turned on in production. It is ready and tested in the sandbox with a rollback; I will not switch it on without your word.
-5. The consent notice v1.2 is loaded live; counsel is out of the chain by Hans's decision (CR-206). Please confirm you agree.
+What I need from you:
+1. A named independent reviewer for the 104 cases.
+2. Your yes/no on the open items in the conflict register (CR-182 to CR-214). Two worth a look: CR-199 (how each Stage 4 interruption maps to an attempt ending) and CR-214 (the employer reports list now has no search, sort or filter, as CR-09 says; the old stated-field filters and saved list are gone from that page).
+3. Your word on lsa_activation. It is ready and tested with a rollback; I will not turn it on without you.
+4. Your OK that counsel is out of the chain (I decided that, CR-206), and on tidying abandoned attempts on the live candidate account.
 
-I will keep building and testing and report again as each piece lands.
+Housekeeping: the two access tokens I shared in chat (Supabase and Vercel) need rotating.
