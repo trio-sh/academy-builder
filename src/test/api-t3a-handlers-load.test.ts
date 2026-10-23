@@ -11,7 +11,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 const ROOT = process.cwd();
 const OUT = resolve(ROOT, "node_modules/.cache/t3a-handler-load");
-const ROUTES = ["entry", "commit", "interrupt", "suspend"];
+const ROUTES = ["entry", "commit", "interrupt", "suspend", "seal"];
 
 beforeAll(() => {
   rmSync(OUT, { recursive: true, force: true }); mkdirSync(OUT, { recursive: true });
@@ -35,18 +35,19 @@ describe("the /api/t3a handlers load and answer under Node ESM", () => {
 
   it.each(ROUTES)("%s: loads, refuses with 503 when the Supabase settings are missing, and with 401 when there is no sign-in", async (route) => {
     const mod = await import(pathToFileURL(resolve(OUT, `out/api/t3a/${route}.js`)).href);
-    const saved = { u: process.env.SUPABASE_URL, v: process.env.VITE_SUPABASE_URL, k: process.env.SUPABASE_SERVICE_ROLE_KEY };
+    const saved = { u: process.env.SUPABASE_URL, v: process.env.VITE_SUPABASE_URL, k: process.env.SUPABASE_SERVICE_ROLE_KEY, s: process.env.T3A_SEAL_SIGNING_KEY };
     try {
       delete process.env.SUPABASE_URL; delete process.env.VITE_SUPABASE_URL; delete process.env.SUPABASE_SERVICE_ROLE_KEY;
       const a = res(); await mod.default({ method: "POST", headers: {}, body: {} }, a);
       expect(a.code).toBe(503);
-      process.env.SUPABASE_URL = "http://127.0.0.1:9"; process.env.SUPABASE_SERVICE_ROLE_KEY = "x".repeat(40);
+      process.env.SUPABASE_URL = "http://127.0.0.1:9"; process.env.SUPABASE_SERVICE_ROLE_KEY = "x".repeat(40); process.env.T3A_SEAL_SIGNING_KEY = Buffer.alloc(32, 7).toString("base64");
       const b = res(); await mod.default({ method: "POST", headers: {}, body: {} }, b);
       expect(b.code).toBe(401); expect(b.body).toEqual({ error: "sign_in_required" });
       const c = res(); await mod.default({ method: "GET", headers: {} }, c);
-      expect(c.code).toBe(405);
+      // the sealing job is also called with GET by the scheduler, so it answers GET like POST: no sign-in is still refused
+      if (route === "seal") expect(c.code).toBe(401); else expect(c.code).toBe(405);
     } finally {
-      for (const [k, v] of [["SUPABASE_URL", saved.u], ["VITE_SUPABASE_URL", saved.v], ["SUPABASE_SERVICE_ROLE_KEY", saved.k]] as const) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+      for (const [k, v] of [["SUPABASE_URL", saved.u], ["VITE_SUPABASE_URL", saved.v], ["SUPABASE_SERVICE_ROLE_KEY", saved.k], ["T3A_SEAL_SIGNING_KEY", saved.s]] as const) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
     }
   }, 60_000);
 });
