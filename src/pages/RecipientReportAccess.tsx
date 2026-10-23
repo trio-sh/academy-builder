@@ -77,7 +77,8 @@ const STATE_COPY: Record<string, { heading: string; body: string }> = {
 };
 
 const RecipientReportAccess = () => {
-  const [token, setToken] = useState("");
+  // the participant's link carries the token after the # (never sent to a server); the address is still asked for, so the link alone opens nothing
+  const [token, setToken] = useState(() => (typeof window === "undefined" ? "" : window.location.hash.replace(/^#code=/, "")));
   const [address, setAddress] = useState("");
   const [result, setResult] = useState<Redemption | null>(null);
   const [isWorking, setIsWorking] = useState(false);
