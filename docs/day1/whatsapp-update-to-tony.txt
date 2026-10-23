@@ -1,0 +1,19 @@
+Hi Tony, update on the T3A Leveler (CORR-007 Rev 1.6) from Hans.
+
+DONE and merged to main, every piece tested by automated tests before it was merged (database tests, unit tests, forbidden-word and vocabulary checks all green):
+- The database side of all 31 CORR-007 rules is built: two release routes, mentor rotation and prior access, involvement and identity checks, welfare stop and second observer, accessible report copy, identity at entry, progression challenge, disputed clauses, consent revocation at the commit point, progression after commit, minimum mentor context, eligibility before entry, retake pools and source selection, once-only commit with safe restart, source suspension with impact review, Stage 4 interruptions, and the comparison gate.
+- Each rule's guards were broken on purpose to prove its tests catch the failure.
+
+NOT done yet, so you are not surprised:
+- The new rules are built and tested on a throwaway database. They are NOT yet applied to the live Supabase project. I will apply them with a rollback script and a verification record once you say go.
+- The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) and the wiring that calls the new routes are still to build and test.
+- The 104 CORR-007 cases with signed results are not run yet.
+- Nothing is switched on. Production enforcement and lsa_activation stay OFF until your activation decision.
+
+I need from you:
+1. Your yes/no on the open items in the conflict register (CR-182 to CR-200). CR-199 asks you to confirm how each Stage 4 interruption maps to an attempt ending.
+2. A named independent reviewer for CORR-007 (it cannot be Hans or the builder).
+3. Your decision on applying the migrations to the live project.
+4. The consent notice stays hidden from real participants until counsel has reviewed it.
+
+I will keep building and testing and report again as each piece lands.
