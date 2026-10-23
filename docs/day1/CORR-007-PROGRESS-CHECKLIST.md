@@ -55,4 +55,4 @@ Test totals on main: 342 database tests, 442 unit tests, forbidden-word ratchet 
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)
 - [ ] Production activation of the Session Archive switch (`lsa_activation`): scripts and rollback ready and tested in the sandbox; waits on the founder's word
-- [ ] Consent notice shown to real participants: counsel is out of the chain (CR-206); the notice text still has to be drafted, approved by Hans and loaded
+- [x] Consent notice T3A-LEG-001 Part A v1.2 loaded on the live project (CR-207); counsel is out of the chain (CR-206). Whether the consent screens show it to participants is part of the screens work below
