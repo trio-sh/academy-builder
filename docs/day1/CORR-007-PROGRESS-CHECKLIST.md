@@ -56,7 +56,8 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] Screen: observation review and challenge at `/dashboard/candidate/observation/:id` (`e2e/candidate-observation-review.spec.ts`, 5 Playwright tests; the correction commitment is shown word for word from the database, six grounds, no correction when the commitment cannot render; 3 breaks caught)
 - [x] Screen: claim package review at `/dashboard/candidate/claim-package/:reportId` (`e2e/candidate-claim-package.spec.ts`, 4 Playwright tests; the chosen entry per dimension, the rule version, every other entry, nothing to change the choice; 3 breaks caught)
 - [x] Screens: single page print view now asks the database first and refuses a real report with `format_mismatch`, pointing to the multi page form (before this the print page never called the gate); the multi page form shows its refusal and draws no page (`e2e/candidate-report-issuing-forms.spec.ts`, 3 Playwright tests; 2 breaks caught)
-- [ ] Screens still to build and test (Playwright): notices, accessible report
+- [x] Screen: accessible report at `/dashboard/candidate/report-accessible/:id` (`e2e/candidate-accessible-report.spec.ts`, 4 Playwright tests; language, title, a heading for each section, a captioned table with header cells, a missing copy invents nothing; 3 breaks caught)
+- [ ] Screens still to build and test (Playwright): notices
 - [ ] The 104 CORR-007 cases with signed results and the build-complete check
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)

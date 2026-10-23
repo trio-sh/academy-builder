@@ -21,6 +21,7 @@ import Stage4Permission from "@/pages/dashboard/candidate/Stage4Permission";
 import ReleaseControls from "@/pages/dashboard/candidate/ReleaseControls";
 import ObservationReview from "@/pages/dashboard/candidate/ObservationReview";
 import ClaimPackageReview from "@/pages/dashboard/candidate/ClaimPackageReview";
+import AccessibleReport from "@/pages/dashboard/candidate/AccessibleReport";
 import WorkSample from "@/pages/dashboard/candidate/WorkSample";
 import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
@@ -5957,6 +5958,7 @@ const CandidateDashboard = () => {
  <Route path="release/:berReportId" element={<ReleaseControls />} />
  <Route path="observation/:observationId" element={<ObservationReview />} />
  <Route path="claim-package/:berReportId" element={<ClaimPackageReview />} />
+ <Route path="report-accessible/:berReportId" element={<AccessibleReport />} />
  {/* §8.2 and §8.4 — Stage 3 work sample: brief, the three declarations, history. */}
  <Route path="work-sample" element={<WorkSample />} />
  <Route path="connections" element={<Connections />} />
