@@ -2,7 +2,7 @@
  * The Stage 4 group participation permission: one question, the founder's text, Yes or No.
  *
  * The text, its version and its hash are read from t3a_group_participation_notice(); nothing is written here.
- * Yes records the permission through t3a_s4_record_group_participation, bound to that version and hash.
+ * Yes records the permission through t3a_cr30_answer: the Stage 4 observation grant (observed participant) and the session permission, bound to that version and hash.
  * No records nothing and is not held against the participant. Unloaded text renders no question.
  */
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ export default function GroupParticipationPermission({ groupSessionId, onDone }:
 
   const answerYes = async () => {
     setBusy(true);
-    const { data, error } = await supabase.rpc("t3a_s4_record_group_participation", { p_group_session: groupSessionId });
+    const { data, error } = await supabase.rpc("t3a_cr30_answer", { p_group_session: groupSessionId, p_answer: "yes" });
     setBusy(false);
     const outcome = (data as { outcome?: string } | null)?.outcome;
     if (error || outcome === "refused") { setMessage("Your answer could not be saved. Please try again."); return; }

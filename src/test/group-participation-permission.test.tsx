@@ -40,7 +40,7 @@ describe("Stage 4 group participation permission", () => {
     render(<GroupParticipationPermission groupSessionId="gs-9" onDone={onDone} />);
     fireEvent.click(await screen.findByRole("button", { name: "Yes" }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith("yes"));
-    expect(rpc).toHaveBeenLastCalledWith("t3a_s4_record_group_participation", { p_group_session: "gs-9" });
+    expect(rpc).toHaveBeenLastCalledWith("t3a_cr30_answer", { p_group_session: "gs-9", p_answer: "yes" });
   });
 
   it("No records nothing", async () => {
