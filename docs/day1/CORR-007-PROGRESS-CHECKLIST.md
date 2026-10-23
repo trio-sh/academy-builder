@@ -3,9 +3,9 @@
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
 Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 309 database tests, 442 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 322 database tests, 442 unit tests, forbidden-word ratchet and vocabulary check clean.
 
-## The 31 rules: 19 built and tested, 12 partly built
+## The 31 rules: 20 built and tested, 11 partly built
 
 - [x] CR-01 Sequential unmasking at Stage 2
 - [x] CR-02 Prior access bar and mentor rotation
@@ -26,7 +26,7 @@ Test totals on main: 309 database tests, 442 unit tests, forbidden-word ratchet 
 - [x] CR-17 Retake pools, source selection and the comparison gate
 - [x] CR-18 Progression decision only after commit
 - [x] CR-19 Minimum observation context for the mentor
-- [ ] CR-20 Stage 2 and 4 timing and capture refusals (some codes exist; FC-02, FC-06 and the recording attestation still to build)
+- [x] CR-20 Stage 2 and 4 timing and capture refusals
 - [x] CR-21 Recovery and source suspension
 - [x] CR-22 Stage 4 interruptions
 - [ ] CR-23 Stage 1 toward recurrence (related machinery exists; not compared)
