@@ -31,3 +31,7 @@ Because step 3 hides steps 4 and 5, the last two were also run on top of step 2 
 ## Update after CORR-007 CR-01 (22 October, later)
 
 Point 3 above is resolved. `enforce_sequence` now enforces CR-01: Stage 2 entry needs Stage 1 confirmed on the dimension (`S1_NOT_CONFIRMED`), and the Stage 1 outcome is no longer delivered to the Stage 2 mentor first. Rerun on the new code: steps 0 to 2 are unchanged (1,416 passing, the same 14 old failures); step 3 (`enforce_required`) still stops the old fixtures; with `enforce_required` left off, `enforce_sequence` refuses the Stage 2 entries of five old test files because their participants have no Stage 1 confirmation. That is the rule working. Those fixtures need a confirmation row before the switch can be judged against the full suite.
+
+## Update 23 October: `lsa_activation` on in the sandbox only
+
+On a freshly built throwaway database (all 300 database tests pass with the flag off), the flag was set on (`t3a_lsa_flag('lsa_activation')` = true) and the full database suite rerun: 299 pass and 1 fails, `lsa_registry_test.mjs`, the test that asserts an active registry record is refused while activation is off. That is the rule working, not a regression. Production is untouched and the flag stays off there. `tools/day1/lsa_activation_on.sql` and `lsa_activation_rollback.sql` are ready, tested on the throwaway database (on, then off, then on again), and have not been run anywhere else. Turning the flag on in production waits for the founder's word (CLAUDE.md rule 5).

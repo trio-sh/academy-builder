@@ -14,6 +14,7 @@ I need from you:
 1. Your yes/no on the open items in the conflict register (CR-182 to CR-200). CR-199 asks you to confirm how each Stage 4 interruption maps to an attempt ending.
 2. A named independent reviewer for CORR-007 (it cannot be Hans or the builder).
 3. Your decision on applying the migrations to the live project.
-4. The consent notice stays hidden from real participants until counsel has reviewed it.
+4. A one-line yes if you want the Session Archive switch (lsa_activation) turned on in production. It is ready and tested in the sandbox with a rollback; I will not switch it on without your word.
+5. The consent notice stays hidden from real participants until counsel has reviewed it.
 
 I will keep building and testing and report again as each piece lands.
