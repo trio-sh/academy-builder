@@ -1,0 +1,28 @@
+{
+ "title": "Live apply of migration 20270128 (CR-30) to the Supabase project the-3rd-academy",
+ "date": "2026-10-23",
+ "authority": "Hans Ade, co-founder, 23 October 2026 (CR-206); merged to main as 2c29b99 (#377) after unit, database and Vercel checks",
+ "method": "pre snapshot, one request (one transaction), post snapshot, rollback generated from the difference (no local rehearsal this time: the migration was tested on the throwaway database and adds one function and replaces one trigger function)",
+ "apply": [
+  {
+   "file": "20270128000000_cr30_stage4_permission_grant.sql",
+   "sha256": "63f1b6b18cba0089bf79241153bd1abbadaabda5be7eeb9559d950bb1552b020",
+   "ok": true,
+   "error": null,
+   "seconds": 0.4
+  }
+ ],
+ "snapshots": {
+  "pre_sha256": "15fdf04b63d9cacf7f72680e869d88c4aaf96da89b6a649f8164f759fe9f9444",
+  "post_sha256": "50eaaf088a43a02d7b450bf182c15e017e1cd683072f9dea6940214031dc0e3d"
+ },
+ "rollback": {
+  "file": "docs/day1/evidence/live-apply-20270128-rollback.sql",
+  "sha256": "0f932cd199c7fb1cef255c1a1ca740708a08022d03df0e8f9c6d02b47b9719f2"
+ },
+ "checks_after": [
+  "t3a_cr30_answer exists, not executable by anon",
+  "lsa_activation false, s4_activation_state not activated: Stage 4 entry still refuses with s4_not_activated",
+  "no switch changed"
+ ]
+}

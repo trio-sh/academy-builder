@@ -1,12 +1,14 @@
 Hi Tony, update on the T3A Leveler (CORR-007 Rev 1.6) from Hans.
 
 DONE and merged to main, every piece tested by automated tests before it was merged (database tests, unit tests, forbidden-word and vocabulary checks all green):
-- 30 of the 31 CORR-007 rules are fully built and tested: two release routes, mentor rotation and prior access, involvement and identity checks, welfare stop and second observer, accessible report copy, identity at entry, progression challenge, disputed clauses, consent revocation at the commit point, progression after commit, minimum mentor context, eligibility before entry, retake pools and source selection, once-only commit with safe restart, source suspension with impact review, Stage 4 interruptions, the comparison gate, and the Stage 2 and 4 timing and capture refusals, the review checklist as two lists, per-dimension prohibited vocabulary (the D9 list is loaded), Stage 1 toward recurrence, and the second evidence state. One real gap was found and fixed on the way: the prohibited-word check used one dimension's list for all, so D2 to D4 entries were being checked against no words under the default setting. The other 1 is partly built; each is listed in docs/day1/CORR-007-PROGRESS-CHECKLIST.md.
+- All 31 CORR-007 rules are built and tested (details below on switches 3 to 5): two release routes, mentor rotation and prior access, involvement and identity checks, welfare stop and second observer, accessible report copy, identity at entry, progression challenge, disputed clauses, consent revocation at the commit point, progression after commit, minimum mentor context, eligibility before entry, retake pools and source selection, once-only commit with safe restart, source suspension with impact review, Stage 4 interruptions, the comparison gate, and the Stage 2 and 4 timing and capture refusals, the review checklist as two lists, per-dimension prohibited vocabulary (the D9 list is loaded), Stage 1 toward recurrence, and the second evidence state. One real gap was found and fixed on the way: the prohibited-word check used one dimension's list for all, so D2 to D4 entries were being checked against no words under the default setting. The ticked list is docs/day1/CORR-007-PROGRESS-CHECKLIST.md. Also built: the commit seal key versioning with rotation (activation refuses until a real key pair is in place), the Stage 4 permission (Yes records the grant with the text version and hash, No records nothing), and the claim package selection rule.
 - Four server routes now call the new rules (entry, commit, interrupt, suspend).
 - Each rule's guards were broken on purpose to prove its tests catch the failure.
 
 NOT done yet, so you are not surprised:
-- The new rules are built and tested on a throwaway database. They are NOT yet applied to the live Supabase project. I will apply them with a rollback script and a verification record once you say go.
+- The new rules are applied to the live Supabase project, each migration with a rollback script and a verification record in docs/day1/evidence. Nothing was switched on.
+- I ran the five enforcement switches in the sandbox in order with the full tests after each. The first two are clean. The third (enforce_required) stops 222 of 364 database tests because some writers do not yet fill every required field. That must be fixed before any activation; production keeps every switch off.
+- The key pair for the commit seal (CR-29) is not provisioned; activation stays refused until it is.
 - The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) that call the four routes are still to build and test.
 - The 104 CORR-007 cases with signed results are not run yet.
 - Nothing is switched on. Production enforcement and lsa_activation stay OFF until your activation decision.
@@ -14,8 +16,8 @@ NOT done yet, so you are not surprised:
 I need from you:
 1. Your yes/no on the open items in the conflict register (CR-182 to CR-203). CR-199 asks you to confirm how each Stage 4 interruption maps to an attempt ending.
 2. A named independent reviewer for CORR-007 (it cannot be Hans or the builder).
-3. Your decision on applying the migrations to the live project.
+3. Your OK on tidying: abandoned attempts on the live candidate account (CR-206).
 4. A one-line yes if you want the Session Archive switch (lsa_activation) turned on in production. It is ready and tested in the sandbox with a rollback; I will not switch it on without your word.
-5. The consent notice stays hidden from real participants until counsel has reviewed it.
+5. The consent notice v1.2 is loaded live; counsel is out of the chain by Hans's decision (CR-206). Please confirm you agree.
 
 I will keep building and testing and report again as each piece lands.

@@ -35,3 +35,18 @@ Point 3 above is resolved. `enforce_sequence` now enforces CR-01: Stage 2 entry 
 ## Update 23 October: `lsa_activation` on in the sandbox only
 
 On a freshly built throwaway database (all 300 database tests pass with the flag off), the flag was set on (`t3a_lsa_flag('lsa_activation')` = true) and the full database suite rerun: 299 pass and 1 fails, `lsa_registry_test.mjs`, the test that asserts an active registry record is refused while activation is off. That is the rule working, not a regression. Production is untouched and the flag stays off there. `tools/day1/lsa_activation_on.sql` and `lsa_activation_rollback.sql` are ready, tested on the throwaway database (on, then off, then on again), and have not been run anywhere else. Turning the flag on in production waits for the founder's word (CLAUDE.md rule 5).
+
+## Rerun on the final CORR-007 build: 23 October 2026 (CR-31)
+
+Run by `tools/day1/switch_rehearsal.py` on the build that includes CR-01 to CR-30 (main at the merge of #377). A fresh database is rebuilt from the migrations for every step; the switches are turned on cumulatively, in the stated order; after each step the full database suite (364 tests) and the full unit suite (447 tests) run. The result is `docs/day1/evidence/switch-rehearsal.json`. `lsa_activation` stays off at every step. Production was not touched.
+
+| Step | Switches on | Database suite (failed / total) | Unit suite |
+|---|---|---|---|
+| 0 | none | 0 / 364 | 447 pass |
+| 1 | `canonical_writers` | 0 / 364 | 447 pass |
+| 2 | + strict event ingest | 0 / 364 | 447 pass |
+| 3 | + `enforce_required` | 222 / 364 (40 distinct tests) | 447 pass |
+| 4 | + `enforce_sequence` | 222 / 364 | 447 pass |
+| 5 | + `enforce_gate` | 228 / 364 | 447 pass |
+
+Finding. The first two switches are safe on this build. `enforce_required` is not: the writers and the test fixtures do not fill every required field (seen: `ber_standard_version` and `ber_version` on the report row, `attempt_rules_version` on an attempt, `application_status` on an employer application, `decided_by` on a progression decision), so the writes stop at `T3A_REQUIRED_FIELD_MISSING`. The later two steps add nothing beyond step 3 except six more failures at `enforce_gate`. This is the same shape as the 22 October run. Nothing here is wrong in production because production keeps every switch off. Job left for the builder before any activation decision: make each writer supply its required fields, then rerun this script until step 3 to 5 are clean. Tests CR-31-T1 (the log shows five switches on in order, each with a full run, lsa_activation off) and CR-31-T2 (a database built from the migrations reads every switch and lsa_activation off) are `src/test/cr31-switch-log.test.ts` and `src/test/db/cr31-production-defaults.db.test.ts`; both were broken on purpose and caught it.

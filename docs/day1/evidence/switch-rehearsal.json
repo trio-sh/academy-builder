@@ -1,0 +1,287 @@
+{
+ "date": "2026-10-23",
+ "method": "fresh throwaway database from the repository migrations for each step; switches cumulative in the stated order; lsa_activation never touched",
+ "steps": [
+  {
+   "step": "baseline_all_off",
+   "switches_on": [],
+   "state_after_turning_on": {
+    "canonical_writers": "off",
+    "ingest_mode": "legacy_tolerant",
+    "enforce_required": "f",
+    "enforce_sequence": "f",
+    "enforce_gate": "f",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 0,
+    "passed": 364,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": []
+  },
+  {
+   "step": "canonical_writers",
+   "switches_on": [
+    "canonical_writers"
+   ],
+   "state_after_turning_on": {
+    "canonical_writers": "on",
+    "ingest_mode": "legacy_tolerant",
+    "enforce_required": "f",
+    "enforce_sequence": "f",
+    "enforce_gate": "f",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 0,
+    "passed": 364,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": []
+  },
+  {
+   "step": "strict_event_ingest",
+   "switches_on": [
+    "canonical_writers",
+    "strict_event_ingest"
+   ],
+   "state_after_turning_on": {
+    "canonical_writers": "on",
+    "ingest_mode": "strict",
+    "enforce_required": "f",
+    "enforce_sequence": "f",
+    "enforce_gate": "f",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 0,
+    "passed": 364,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": []
+  },
+  {
+   "step": "enforce_required",
+   "switches_on": [
+    "canonical_writers",
+    "strict_event_ingest",
+    "enforce_required"
+   ],
+   "state_after_turning_on": {
+    "canonical_writers": "on",
+    "ingest_mode": "strict",
+    "enforce_required": "t",
+    "enforce_sequence": "f",
+    "enforce_gate": "f",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 222,
+    "passed": 142,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": [
+    "CR-01 Stage 2 entry needs Stage 1 confirmed, not delivered > with the sequence switch on, entry without a confirmation is refused S1_NOT_CONFIRMED; with one it is admitted",
+    "CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner",
+    "CR-02 Stage 4 composition > T7: a Stage 4 attempt with no composition record is refused before entry",
+    "CR-02 Stage 4 composition > the rotation check itself reports a missing Stage 4 composition",
+    "CR-02 planner and records > a mentor with an open conflict, no authorization or a different dimension is never proposed; the participant is never their own observer",
+    "CR-02 planner and records > assignments and the Stage 1 access audit are append-only",
+    "CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused",
+    "CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension",
+    "CR-02 prior Stage 1 access at Stage 2 > the bar is Stage 2 only: a confirmer may observe Stage 3 of the same participant",
+    "CR-02 prior Stage 1 access at Stage 2 > three Stage 2 attempts need three mentors",
+    "CR-02 rotation at every Stage > T1: the same mentor twice in a row at any Stage is refused",
+    "CR-02 rotation at every Stage > T2: mentor A then B is admitted",
+    "CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies",
+    "CR-02 rotation at every Stage > rotation is per participant, per dimension and per Stage",
+    "CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown",
+    "CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding",
+    "CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing",
+    "CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted",
+    "CR-04 declarations, the join link and a mentor's concern > a mentor's concrete concern ends the session as an administration matter, goes to the integrity route and is never recorded as conduct",
+    "CR-04 declarations, the join link and a mentor's concern > authorship and assistance are recorded as declarations by the account, in a controlled set",
+    "CR-04 declarations, the join link and a mentor's concern > the join link is released only to the participant's own account",
+    "CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted",
+    "CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies",
+    "CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait",
+    "CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry",
+    "CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased",
+    "CR-05 a progression challenge pauses nothing > a participant challenges only a decision about themselves, one at a time per dimension; challenge records are append-only",
+    "CR-05 a progression challenge pauses nothing > a repeat attempt made while the challenge was open stays recorded and counted after the correction",
+    "CR-05 a progression challenge pauses nothing > an open challenge never holds a cooldown that is already running, and never starts one",
+    "CR-05 a progression challenge pauses nothing > upheld and withdrawn outcomes correct nothing; the route is governed and resolves once",
+    "CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added",
+    "CR-07 a clause that cannot be established > a clause may be restricted rather than withdrawn, and every clause may go while the observation stays",
+    "CR-07 a clause that cannot be established > nothing changes unless the reconsideration is final and did not uphold the record",
+    "CR-07 a clause that cannot be established > only a clause of this observation and statement can be restricted, once, in a controlled set; the route is governed",
+    "CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered",
+    "CR-07 the session was not validly administered > withdrawal needs a final reconsideration that withdrew; it happens once; the route is governed",
+    "CR-07 what the reconsiderer reviews > a second observer's capture is withheld from the bundle until both are locked",
+    "CR-07 what the reconsiderer reviews > the reserved people read the served source, delivery events, capture history with corrections, the participant's material and a second observer's record; the observer does not",
+    "CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through",
+    "CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition"
+   ]
+  },
+  {
+   "step": "enforce_sequence",
+   "switches_on": [
+    "canonical_writers",
+    "strict_event_ingest",
+    "enforce_required",
+    "enforce_sequence"
+   ],
+   "state_after_turning_on": {
+    "canonical_writers": "on",
+    "ingest_mode": "strict",
+    "enforce_required": "t",
+    "enforce_sequence": "t",
+    "enforce_gate": "f",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 222,
+    "passed": 142,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": [
+    "CR-01 Stage 2 entry needs Stage 1 confirmed, not delivered > with the sequence switch on, entry without a confirmation is refused S1_NOT_CONFIRMED; with one it is admitted",
+    "CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner",
+    "CR-02 Stage 4 composition > T7: a Stage 4 attempt with no composition record is refused before entry",
+    "CR-02 Stage 4 composition > the rotation check itself reports a missing Stage 4 composition",
+    "CR-02 planner and records > a mentor with an open conflict, no authorization or a different dimension is never proposed; the participant is never their own observer",
+    "CR-02 planner and records > assignments and the Stage 1 access audit are append-only",
+    "CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused",
+    "CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension",
+    "CR-02 prior Stage 1 access at Stage 2 > the bar is Stage 2 only: a confirmer may observe Stage 3 of the same participant",
+    "CR-02 prior Stage 1 access at Stage 2 > three Stage 2 attempts need three mentors",
+    "CR-02 rotation at every Stage > T1: the same mentor twice in a row at any Stage is refused",
+    "CR-02 rotation at every Stage > T2: mentor A then B is admitted",
+    "CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies",
+    "CR-02 rotation at every Stage > rotation is per participant, per dimension and per Stage",
+    "CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown",
+    "CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding",
+    "CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing",
+    "CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted",
+    "CR-04 declarations, the join link and a mentor's concern > a mentor's concrete concern ends the session as an administration matter, goes to the integrity route and is never recorded as conduct",
+    "CR-04 declarations, the join link and a mentor's concern > authorship and assistance are recorded as declarations by the account, in a controlled set",
+    "CR-04 declarations, the join link and a mentor's concern > the join link is released only to the participant's own account",
+    "CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted",
+    "CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies",
+    "CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait",
+    "CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry",
+    "CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased",
+    "CR-05 a progression challenge pauses nothing > a participant challenges only a decision about themselves, one at a time per dimension; challenge records are append-only",
+    "CR-05 a progression challenge pauses nothing > a repeat attempt made while the challenge was open stays recorded and counted after the correction",
+    "CR-05 a progression challenge pauses nothing > an open challenge never holds a cooldown that is already running, and never starts one",
+    "CR-05 a progression challenge pauses nothing > upheld and withdrawn outcomes correct nothing; the route is governed and resolves once",
+    "CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added",
+    "CR-07 a clause that cannot be established > a clause may be restricted rather than withdrawn, and every clause may go while the observation stays",
+    "CR-07 a clause that cannot be established > nothing changes unless the reconsideration is final and did not uphold the record",
+    "CR-07 a clause that cannot be established > only a clause of this observation and statement can be restricted, once, in a controlled set; the route is governed",
+    "CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered",
+    "CR-07 the session was not validly administered > withdrawal needs a final reconsideration that withdrew; it happens once; the route is governed",
+    "CR-07 what the reconsiderer reviews > a second observer's capture is withheld from the bundle until both are locked",
+    "CR-07 what the reconsiderer reviews > the reserved people read the served source, delivery events, capture history with corrections, the participant's material and a second observer's record; the observer does not",
+    "CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through",
+    "CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition"
+   ]
+  },
+  {
+   "step": "enforce_gate",
+   "switches_on": [
+    "canonical_writers",
+    "strict_event_ingest",
+    "enforce_required",
+    "enforce_sequence",
+    "enforce_gate"
+   ],
+   "state_after_turning_on": {
+    "canonical_writers": "on",
+    "ingest_mode": "strict",
+    "enforce_required": "t",
+    "enforce_sequence": "t",
+    "enforce_gate": "t",
+    "lsa_activation": "f"
+   },
+   "database_suite": {
+    "failed": 228,
+    "passed": 136,
+    "total": 364
+   },
+   "unit_suite": {
+    "failed": 0,
+    "passed": 447,
+    "total": 447
+   },
+   "failing_database_tests": [
+    "CR-01 Stage 2 entry needs Stage 1 confirmed, not delivered > with the sequence switch on, entry without a confirmation is refused S1_NOT_CONFIRMED; with one it is admitted",
+    "CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner",
+    "CR-02 Stage 4 composition > T7: a Stage 4 attempt with no composition record is refused before entry",
+    "CR-02 Stage 4 composition > the rotation check itself reports a missing Stage 4 composition",
+    "CR-02 planner and records > a mentor with an open conflict, no authorization or a different dimension is never proposed; the participant is never their own observer",
+    "CR-02 planner and records > assignments and the Stage 1 access audit are append-only",
+    "CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused",
+    "CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension",
+    "CR-02 prior Stage 1 access at Stage 2 > the bar is Stage 2 only: a confirmer may observe Stage 3 of the same participant",
+    "CR-02 prior Stage 1 access at Stage 2 > three Stage 2 attempts need three mentors",
+    "CR-02 rotation at every Stage > T1: the same mentor twice in a row at any Stage is refused",
+    "CR-02 rotation at every Stage > T2: mentor A then B is admitted",
+    "CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies",
+    "CR-02 rotation at every Stage > rotation is per participant, per dimension and per Stage",
+    "CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown",
+    "CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding",
+    "CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing",
+    "CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted",
+    "CR-04 declarations, the join link and a mentor's concern > a mentor's concrete concern ends the session as an administration matter, goes to the integrity route and is never recorded as conduct",
+    "CR-04 declarations, the join link and a mentor's concern > authorship and assistance are recorded as declarations by the account, in a controlled set",
+    "CR-04 declarations, the join link and a mentor's concern > the join link is released only to the participant's own account",
+    "CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted",
+    "CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies",
+    "CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait",
+    "CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry",
+    "CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased",
+    "CR-05 a progression challenge pauses nothing > a participant challenges only a decision about themselves, one at a time per dimension; challenge records are append-only",
+    "CR-05 a progression challenge pauses nothing > a repeat attempt made while the challenge was open stays recorded and counted after the correction",
+    "CR-05 a progression challenge pauses nothing > an open challenge never holds a cooldown that is already running, and never starts one",
+    "CR-05 a progression challenge pauses nothing > upheld and withdrawn outcomes correct nothing; the route is governed and resolves once",
+    "CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added",
+    "CR-07 a clause that cannot be established > a clause may be restricted rather than withdrawn, and every clause may go while the observation stays",
+    "CR-07 a clause that cannot be established > nothing changes unless the reconsideration is final and did not uphold the record",
+    "CR-07 a clause that cannot be established > only a clause of this observation and statement can be restricted, once, in a controlled set; the route is governed",
+    "CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered",
+    "CR-07 the session was not validly administered > withdrawal needs a final reconsideration that withdrew; it happens once; the route is governed",
+    "CR-07 what the reconsiderer reviews > a second observer's capture is withheld from the bundle until both are locked",
+    "CR-07 what the reconsiderer reviews > the reserved people read the served source, delivery events, capture history with corrections, the participant's material and a second observer's record; the observer does not",
+    "CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through",
+    "CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition"
+   ]
+  }
+ ]
+}
