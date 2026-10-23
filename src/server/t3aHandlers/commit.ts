@@ -1,14 +1,14 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { handleInterruptRequest } from "../../src/server/t3aStaffRoutes.js";
+import { handleCommitRequest } from "../t3aCommitRoute.js";
 
-/** POST /api/t3a/interrupt with Authorization: Bearer <staff token>. See src/server/t3aStaffRoutes.ts. */
+/** POST /api/t3a/commit  { stage_instance_id, observation_record_id, key }  with Authorization: Bearer <observer token>. See src/server/t3aCommitRoute.ts. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) return res.status(503).json({ error: "service_unavailable" });
   const svc = createClient(url, key, { auth: { persistSession: false } });
-  const out = await handleInterruptRequest(
+  const out = await handleCommitRequest(
     { method: req.method ?? "", authorization: req.headers.authorization, body: req.body },
     {
       verifyToken: async (t) => (await svc.auth.getUser(t)).data.user?.id ?? null,

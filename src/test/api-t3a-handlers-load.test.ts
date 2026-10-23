@@ -18,12 +18,30 @@ beforeAll(() => {
   writeFileSync(resolve(OUT, "package.json"), JSON.stringify({ type: "module" }));
   writeFileSync(resolve(OUT, "tsconfig.json"), JSON.stringify({
     compilerOptions: { target: "es2022", module: "nodenext", moduleResolution: "nodenext", outDir: resolve(OUT, "out"), rootDir: ROOT, skipLibCheck: true, esModuleInterop: true, types: ["node"], typeRoots: [resolve(ROOT, "node_modules/@types")] },
-    files: ROUTES.map((r) => resolve(ROOT, `api/t3a/${r}.ts`)),
+    files: [resolve(ROOT, "api/t3a/[route].ts")],
   }));
 }, 120_000);
 afterAll(() => rmSync(OUT, { recursive: true, force: true }));
 
-const res = () => { const r: { code?: number; body?: unknown; status: (c: number) => typeof r; json: (b: unknown) => typeof r } = { status(c) { r.code = c; return r; }, json(b) { r.body = b; return r; } }; return r; };
+// The handlers are run in a separate Node process, as ESM, the way the server runs them (the bracketed file name of the dynamic route is not resolved through vite).
+const RUNNER = `
+const mod = await import(process.argv[2]);
+const out = [];
+for (const c of JSON.parse(process.argv[3])) {
+  for (const k of ["SUPABASE_URL", "VITE_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "T3A_SEAL_SIGNING_KEY"]) delete process.env[k];
+  Object.assign(process.env, c.env ?? {});
+  const r = { code: undefined, body: undefined, status(x) { r.code = x; return r; }, json(b) { r.body = b; return r; } };
+  await mod.default({ method: c.method, headers: {}, body: {}, query: { route: c.route } }, r);
+  out.push({ code: r.code, body: r.body });
+}
+console.log(JSON.stringify(out));
+`;
+type Case = { route?: string; method: string; env?: Record<string, string> };
+function runCases(cases: Case[]): { code: number; body: unknown }[] {
+  writeFileSync(resolve(OUT, "run.mjs"), RUNNER);
+  const url = pathToFileURL(resolve(OUT, "out/api/t3a/[route].js")).href;
+  return JSON.parse(execFileSync("node", [resolve(OUT, "run.mjs"), url, JSON.stringify(cases)], { encoding: "utf8" }));
+}
 
 describe("the /api/t3a handlers load and answer under Node ESM", () => {
   it("compiles with no errors", () => {
@@ -33,21 +51,22 @@ describe("the /api/t3a handlers load and answer under Node ESM", () => {
     writeFileSync(resolve(OUT, "out/package.json"), JSON.stringify({ type: "module" }));
   }, 120_000);
 
-  it.each(ROUTES)("%s: loads, refuses with 503 when the Supabase settings are missing, and with 401 when there is no sign-in", async (route) => {
-    const mod = await import(pathToFileURL(resolve(OUT, `out/api/t3a/${route}.js`)).href);
-    const saved = { u: process.env.SUPABASE_URL, v: process.env.VITE_SUPABASE_URL, k: process.env.SUPABASE_SERVICE_ROLE_KEY, s: process.env.T3A_SEAL_SIGNING_KEY };
-    try {
-      delete process.env.SUPABASE_URL; delete process.env.VITE_SUPABASE_URL; delete process.env.SUPABASE_SERVICE_ROLE_KEY;
-      const a = res(); await mod.default({ method: "POST", headers: {}, body: {} }, a);
-      expect(a.code).toBe(503);
-      process.env.SUPABASE_URL = "http://127.0.0.1:9"; process.env.SUPABASE_SERVICE_ROLE_KEY = "x".repeat(40); process.env.T3A_SEAL_SIGNING_KEY = Buffer.alloc(32, 7).toString("base64");
-      const b = res(); await mod.default({ method: "POST", headers: {}, body: {} }, b);
-      expect(b.code).toBe(401); expect(b.body).toEqual({ error: "sign_in_required" });
-      const c = res(); await mod.default({ method: "GET", headers: {} }, c);
-      // the sealing job is also called with GET by the scheduler, so it answers GET like POST: no sign-in is still refused
-      if (route === "seal") expect(c.code).toBe(401); else expect(c.code).toBe(405);
-    } finally {
-      for (const [k, v] of [["SUPABASE_URL", saved.u], ["VITE_SUPABASE_URL", saved.v], ["SUPABASE_SERVICE_ROLE_KEY", saved.k], ["T3A_SEAL_SIGNING_KEY", saved.s]] as const) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
-    }
+  it("is one function for all the routes (the Hobby plan allows twelve in a deployment), and an unknown route is 404", async () => {
+    const { readdirSync } = await import("node:fs");
+    expect(readdirSync(resolve(ROOT, "api/t3a"))).toEqual(["[route].ts"]);
+    const count = (dir: string): number => readdirSync(resolve(ROOT, dir), { withFileTypes: true }).reduce((n, e) => n + (e.isDirectory() ? count(`${dir}/${e.name}`) : /\.ts$/.test(e.name) ? 1 : 0), 0);
+    expect(count("api")).toBeLessThanOrEqual(12);
+    const odd = [undefined, "nope", "__proto__", "constructor", "toString", "entry/../seal"];
+    const out = runCases(odd.map((route) => ({ route, method: "POST" })));
+    out.forEach((o, i) => expect(o.code, String(odd[i])).toBe(404));
+  }, 60_000);
+
+  it.each(ROUTES)("%s: loads, refuses with 503 when the Supabase settings are missing, and with 401 when there is no sign-in", (route) => {
+    const set = { SUPABASE_URL: "http://127.0.0.1:9", SUPABASE_SERVICE_ROLE_KEY: "x".repeat(40), T3A_SEAL_SIGNING_KEY: Buffer.alloc(32, 7).toString("base64") };
+    const [a, b, c] = runCases([{ route, method: "POST" }, { route, method: "POST", env: set }, { route, method: "GET", env: set }]);
+    expect(a.code).toBe(503);
+    expect(b.code).toBe(401); expect(b.body).toEqual({ error: "sign_in_required" });
+    // the sealing job is also called with GET by a scheduler, so it answers GET like POST: no sign-in is still refused
+    expect(c.code).toBe(route === "seal" ? 401 : 405);
   }, 60_000);
 });

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { handleSealRequest, signerFromSeed } from "../../src/server/t3aSealRoute.js";
+import { handleSealRequest, signerFromSeed } from "../t3aSealRoute.js";
 
 /**
  * POST /api/t3a/seal  with Authorization: Bearer <scheduled job secret or staff sign-in token>.
