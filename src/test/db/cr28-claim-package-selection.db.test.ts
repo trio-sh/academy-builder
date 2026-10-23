@@ -22,10 +22,10 @@ async function stmt(dim: string, p: string, stage: string, s: SourceFixture, obs
     values ('${dim}','${o}','${p}','${stage}','${s.version}','{}'::jsonb,${j(clauses.map((x) => ({ state_code: x.code, clause_text: x.text, entry_type: "conduct_bearing" })))},${j(clauses.map((x) => ({ conduct_element_id: x.ce, recurrence_equivalence_key_id: x.key, state_code: x.code, recurrence_blocker: false })))},'[]'::jsonb, now() - interval '${ago} seconds') returning composed_statement_id i`))[0].i as string;
 }
 const select = (p: string, d: string) => asService(c, `select t3a_cr28_select_entry('${p}','${d}',false) r`).then((x) => x.r);
-const ber = async (p: string, dims: string[], extra = "") => (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids ${extra ? "," + extra.split("=")[0] : ""}) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[] ${extra ? "," + extra.split("=")[1] : ""}) returning ber_report_id b`))[0].b as string;
+const ber = async (p: string, dims: string[], extra = "") => (await (extra.includes("issued_at") ? run(c, `insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids ${extra ? "," + extra.split("=")[0] : ""}) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[] ${extra ? "," + extra.split("=")[1] : ""}) returning ber_report_id b`) : fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[]) returning ber_report_id b`)))[0].b as string;
 
-beforeAll(async () => { c = await connect(); await retireFixtureSources(c); reviewer = await mkParticipant(c, `cr28-rev-${RUN}`); await setCfg("recurrence_config_locked", "locked"); });
-afterAll(async () => { await setCfg("claim_package_rule_version", "1.0"); await setCfg("recurrence_config_locked", "unlocked"); await c.end(); });
+beforeAll(async () => { c = await connect(); await retireFixtureSources(c); reviewer = await mkParticipant(c, `cr28-rev-${RUN}`); await setCfg("recurrence_config_locked", "locked"); await setCfg("evidence_currency", "6"); });
+afterAll(async () => { await setCfg("evidence_currency", ""); await setCfg("claim_package_rule_version", "1.0"); await setCfg("recurrence_config_locked", "unlocked"); await c.end(); });
 
 describe("CR-28 the selection rule", () => {
   async function recurrenceWorld() {
@@ -44,7 +44,7 @@ describe("CR-28 the selection rule", () => {
     expect(r.other_entries.length).toBeGreaterThanOrEqual(3);
     expect(r.other_entries.filter((x: any) => x.k.startsWith("REK-SINGLE")).map((x: any) => x.rec)).toEqual([false, false, false]);
     const rep = await ber(p, ["D2"]);
-    await fx(`update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`);
+    await run(c, `update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`);
     expect((await run(c, `select claim_package_rule_version v from t3a_d1_ber_report where ber_report_id='${rep}'`))[0].v).toBe("1.0");
     await setCfg("claim_package_rule_version", "1.1");
     const rep2 = await ber(p, ["D2"], "issued_at=now()");
@@ -86,8 +86,10 @@ describe("CR-28 the selection rule", () => {
     await run(c, `update t3a_d1_ber_report set status = 'issued' where ber_report_id='${rep}'`).catch(() => null);
     const sel = (await asService(c, `select t3a_cr28_review('${rep}') r`)).r.dimensions[0].selected;
     const claims = (await asService(c, `select t3a_ber_multipage_claims('${rep}', false) r`)).r;
-    if (claims.outcome === "ok") expect(claims.render_manifest.claim_packages[0]).toMatchObject({ dimension_id: "D2", entry_id: sel.state_code });
-    else expect(["claim_package_absent", "evidence_currency_unloaded", "layout_overflow", "format_mismatch", "render_gate_refused"]).toContain(claims.reason);
+    expect(claims).toMatchObject({ outcome: "ok" });
+    expect(claims.render_manifest.claim_packages).toHaveLength(1);
+    expect(claims.render_manifest.claim_packages[0]).toMatchObject({ dimension_id: "D2", entry_id: sel.state_code, evidence_state: "bounded_recurrence" });
+    expect(claims.entries[sel.state_code].composed_text).toBe(sel.clause_text);
   });
 });
 
