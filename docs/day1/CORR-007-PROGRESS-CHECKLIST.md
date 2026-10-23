@@ -35,7 +35,7 @@ Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests
 - [x] CR-26 Eligibility before entry
 - [x] CR-27 T-EVNOTE-001 version 2
 - [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue, and the review screen)
-- [x] CR-29 Commit seal key (key version on every seal, rotation keeps earlier seals valid, activation refuses while the shared Vault key is current; the production key pair itself is a pre-activation job, see CR-211)
+- [x] CR-29 Commit seal key (key version on every seal, rotation keeps earlier seals valid, activation refuses while the shared Vault key is current; the key pair seal is built: the database checks Ed25519 signatures, the private key is held only by the commit service, CR-216)
 - [x] CR-30 Stage 4 permission (rule, grant and refusals; and its participant page)
 - [x] CR-31 Five enforcement switches rehearsed in the sandbox in order, each with a full test run, logged (`switch-rehearsal.json`); all stay OFF in production (tested). Finding: switches 1 and 2 are clean, switches 3 to 5 fail 222 of 364 database tests because test fixtures do not yet fill every required field. That fix is a pre-activation job, see CR-213
 

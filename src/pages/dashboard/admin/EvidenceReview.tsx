@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, ShieldCheck, FileText, AlertCircle, ArrowLeft, Lock } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { sealPendingBeforeIssue } from "@/lib/t3aSeal";
 import { Button } from "@/components/ui/button";
 import {
   DashboardPageHeader,
@@ -281,6 +282,8 @@ function ReportDetail({
     setIssuing(true);
     setIssueError(null);
     try {
+      // the commit seals are signed by the commit service; ask it to run first (it never blocks issuing: a seal still waiting is reported by the issue check)
+      await sealPendingBeforeIssue(async () => (await supabase.auth.getSession()).data.session?.access_token ?? null);
       const { error: rpcErr } = await supabase.rpc("t3a_issue_report", { p_ber_report_id: report.ber_report_id });
       if (rpcErr) {
         setIssueError(rpcErr.message);
