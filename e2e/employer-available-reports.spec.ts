@@ -54,6 +54,7 @@ test.describe("Employer - Available Reports", () => {
     await page.goto("/dashboard/employer/reports");
     await page.getByRole("link", { name: "Read report" }).click();
     await expect(page.getByTestId("reader")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId("reader").getByTestId("test-tag")).toHaveText("TEST");
     await expect(page.getByTestId("reader")).toContainText("A record of what the participant did.");
     await expect(page.getByTestId("reader")).toContainText("Named the problem early.");
     await expect(page.getByTestId("reader")).not.toContainText("must not show");

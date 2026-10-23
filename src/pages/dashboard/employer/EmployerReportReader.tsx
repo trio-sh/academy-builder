@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { LedgerLoading } from "@/components/dashboard/primitives";
+import TestTag from "@/components/TestTag";
 
 interface FaceBlock {
   block_no: number; block_name: string; renders: boolean; controlled_text: string | null;
@@ -37,6 +38,7 @@ export default function EmployerReportReader() {
   return (
     <article className="space-y-8 max-w-3xl" data-testid="reader">
       {back}
+      <div><TestTag inline /></div>
       {res.superseded_version_requested ? <p role="status" data-testid="reader-superseded">This report was corrected. You are reading the corrected version.</p> : null}
       {(res.face.blocks ?? []).filter((b) => b.renders).map((b) => (
         <section key={b.block_no}>

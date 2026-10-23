@@ -21,6 +21,7 @@ import {
 } from "@/lib/berMultipage";
 import { BarCode, COLORS, FONTS_HREF, QrPlaceholder } from "./BerPrintView";
 import { supabase } from "@/lib/supabase";
+import TestTag from "@/components/TestTag";
 
 const C = COLORS;
 const PT = (n: number) => `${n}pt`;
@@ -280,6 +281,7 @@ function Controls({ pkg, r }: { pkg: Package; r: Resolved }) {
 function PageView({ pkg, r, layout, page }: { pkg: Package; r: Resolved; layout: Layout; page: Page }) {
   return (
     <section className="mp-page" data-page={page.number} data-kind={page.kind}>
+      <TestTag />
       {page.kind === "cover" ? <Cover pkg={pkg} r={r} layout={layout} /> : null}
       {page.kind === "dimensions" ? (
         <>

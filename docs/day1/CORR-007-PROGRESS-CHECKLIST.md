@@ -65,3 +65,5 @@ Test totals on main: 365 database tests, 450 unit tests, 33 new Playwright tests
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)
 - [x] Production activation of the Session Archive switch (`lsa_activation`): ON in production on 23 October after the key pair seal (migrations 20270129 and 20270130, key version kp1) was applied; evidence `lsa-activation-20261023.json`; reversible by `lsa_activation_rollback.sql`. The instruction came to the builder through Hans, not from Tony directly
 - [x] Consent notice T3A-LEG-001 Part A v1.2 loaded on the live project (CR-207); counsel is out of the chain (CR-206). The notice is shown to participants at `/dashboard/candidate/notice` and linked from the release warning; the sign-up consent screens that should present it at the moment of consent are not part of CORR-007 and are not changed
+- [x] The founder's written approval of 23 October (CR-219) and his one condition: every Behavioral Evidence Report carries a visible "TEST" tag. Done on all five faces (one page, multi page, accessible, employer reader, recipient page); the unit test and two screen tests fail if one loses it.
+
