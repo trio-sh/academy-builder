@@ -1,0 +1,31 @@
+{
+ "title": "Live apply of migration 20270125 (CR-06, CR-10, CR-27) to the Supabase project the-3rd-academy",
+ "date": "2026-10-23",
+ "authority": "Hans Ade, co-founder, 23 October 2026 (CR-206); merged to main as 571904d after unit, database and Vercel checks",
+ "method": "pre snapshot, one request (one transaction), post snapshot, rollback generated from the difference (same tooling as CR-206)",
+ "apply": [
+  {
+   "file": "20270125000000_cr06_cr10_cr27_review_render_evnote.sql",
+   "sha256": "add1815c1871654984c54677f56836d3e3ce2fc1fb21fe715f2c8e487e13df0c",
+   "ok": true,
+   "error": null,
+   "seconds": 0.72
+  }
+ ],
+ "snapshots": {
+  "pre_sha256": "cddd14bb027c2912ee54f7bc63dd00115e5cd2108100b82473682eaa1677170e",
+  "post_sha256": "02bd6e7cc3ae76c7258ab60c4ee81834b6e6abd5b49c1fc30f08bfc91a8bfd26"
+ },
+ "rollback": {
+  "file": "docs/day1/evidence/live-apply-20270125-rollback.sql",
+  "sha256": "4da10a3fa58759523d266ce69de7b2c1656cf1978f87c018853a0ee49ecff7cd"
+ },
+ "checks_after": [
+  "t3a_controlled_text_version holds T-EVNOTE-001 version 1 (superseded) and version 2 (current)",
+  "t3a_controlled_text_current('T-EVNOTE-001') returns version 2",
+  "t3a_correction_commitment() renders with 5 and 20 business days",
+  "t3a_report_render_gate(existing report,'one_page') refuses format_mismatch",
+  "three new functions and the observation_record_id column present",
+  "enforce_gate false, lsa_activation false: no switch changed"
+ ]
+}
