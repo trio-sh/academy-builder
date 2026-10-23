@@ -1,0 +1,39 @@
+{
+ "title": "Live apply of migrations 20270126 (CR-28) and 20270127 (CR-29) to the Supabase project the-3rd-academy",
+ "date": "2026-10-23",
+ "authority": "Hans Ade, co-founder, 23 October 2026 (CR-206); merged to main as 6d68f86 (#375) and 96e6efd (#376) after unit, database and Vercel checks",
+ "method": "pre snapshot, one request per file (one transaction each), post snapshot, rollback generated from the difference; rehearsed first on a local database at the live baseline (apply, run rollback, compare identical apart from the append only configuration row noted below)",
+ "apply": [
+  {
+   "file": "20270126000000_cr28_claim_package_selection_rule.sql",
+   "sha256": "2c70c261f4514a87c47060bcd8ce151992fdabdf50402b360978f89ce7d83aa0",
+   "ok": true,
+   "error": null,
+   "seconds": 0.42
+  },
+  {
+   "file": "20270127000000_cr29_commit_seal_key_versions.sql",
+   "sha256": "5a9ab8cf43a96a5ef227a9721113fb51a27cedf581b9186e7459b9a32dec6acf",
+   "ok": true,
+   "error": null,
+   "seconds": 0.39
+  }
+ ],
+ "snapshots": {
+  "pre_sha256": "5856eacb3e590ceb1be743cb1c4e6e5f83d4dd6e606f73b9f5bd0f9ddcecb9cb",
+  "post_sha256": "15fdf04b63d9cacf7f72680e869d88c4aaf96da89b6a649f8164f759fe9f9444"
+ },
+ "rollback": {
+  "file": "docs/day1/evidence/live-apply-20270126-27-rollback.sql",
+  "sha256": "82e4bed0be18063fa237e6ce5dbb3fa8e614da850c1d32dd4d3ade3d478cfa89"
+ },
+ "data_changes": "t3a_configuration_value gains the claim_package_rule_version 1.0 row (append only table: a rollback cannot remove it, it is unread once the functions are gone); t3a_commit_seal_key_version gains k1 (vault_shared, current); t3a_d1_ber_report gains the claim_package_rule_version column",
+ "checks_after": [
+  "t3a_commit_seal_key_version holds k1 vault_shared current and no key_pair version",
+  "no existing seal carries a version other than k1",
+  "lsa_activation reads false: activation is refused by the new guard and was already off",
+  "the CR-28 stamp trigger and the CR-29 activation guard trigger exist",
+  "claim_package_rule_version reads 1.0",
+  "enforce_gate false, lsa_activation false: no switch changed"
+ ]
+}
