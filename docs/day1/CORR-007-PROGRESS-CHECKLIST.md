@@ -3,9 +3,9 @@
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
 Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 356 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 361 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
 
-## The 31 rules: 28 built and tested, 3 partly built
+## The 31 rules: 29 built and tested, 2 partly built
 
 - [x] CR-01 Sequential unmasking at Stage 2
 - [x] CR-02 Prior access bar and mentor rotation
@@ -35,7 +35,7 @@ Test totals on main: 356 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] CR-26 Eligibility before entry
 - [x] CR-27 T-EVNOTE-001 version 2
 - [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue; the screen is in the screens item)
-- [ ] CR-29 Commit seal key (vault key in place; key-pair signature still to build)
+- [x] CR-29 Commit seal key (key version on every seal, rotation keeps earlier seals valid, activation refuses while the shared Vault key is current; the production key pair itself is a pre-activation job, see CR-211)
 - [ ] CR-30 Stage 4 permission (screen and notice loaded; not routed)
 - [ ] CR-31 Five enforcement switches (run in the sandbox in order; all stay OFF in production)
 
