@@ -72,7 +72,7 @@ test.describe("Candidate - release controls", () => {
     await page.getByLabel("Email address").fill("ana@corp.example");
     await page.getByLabel("Link works until").fill("2027-01-31");
     await page.getByRole("button", { name: "Send", exact: true }).click();
-    await expect(page.getByTestId("release-link")).toContainText("/report?code=tok123");
+    await expect(page.getByTestId("release-link")).toContainText("/report#code=tok123");
     await expect(page.getByTestId("direct-list")).toContainText("Ana Cruz");
     expect(calls.find((c) => c.name === "t3a_direct_release_create")!.body).toMatchObject({ p_ber_report_id: REP, p_recipient_name: "Ana Cruz", p_recipient_address: "ana@corp.example" });
     await page.getByRole("button", { name: "End", exact: true }).click();

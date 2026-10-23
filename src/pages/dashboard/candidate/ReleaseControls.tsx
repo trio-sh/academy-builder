@@ -81,7 +81,7 @@ export default function ReleaseControls() {
     setBusy(false);
     const d = data as { outcome?: string; token?: string } | null;
     if (d?.outcome === "released" && d.token) {
-      setLink(`${window.location.origin}/report?code=${d.token}`);
+      setLink(`${window.location.origin}/report#code=${d.token}`);
       setMessage("Sent. The link is shown once below.");
       setForm({ name: "", org: "", address: "", expires: "" });
     } else setMessage("The release was not created. Check the name, address and date.");
