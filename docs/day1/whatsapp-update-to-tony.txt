@@ -7,7 +7,7 @@ DONE and merged to main, every piece tested by automated tests before it was mer
 
 NOT done yet, so you are not surprised:
 - The new rules are built and tested on a throwaway database. They are NOT yet applied to the live Supabase project. I will apply them with a rollback script and a verification record once you say go.
-- The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) and the wiring that calls the new routes are still to build and test.
+- The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) that call the four routes are still to build and test.
 - The 104 CORR-007 cases with signed results are not run yet.
 - Nothing is switched on. Production enforcement and lsa_activation stay OFF until your activation decision.
 
