@@ -8,7 +8,7 @@
  * The two are independent and the page says so. Every rule is enforced in the database; this page only asks and reports.
  */
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
 interface DirectRelease { direct_release_id: string; recipient_name: string; recipient_org: string | null; expires_at: string; revoked: boolean }
@@ -108,6 +108,7 @@ export default function ReleaseControls() {
           <button type="button" className="rounded border px-4 py-2 text-sm" disabled={busy} onClick={gaOff}>Turn off</button>
         ) : warningOpen ? (
           <div className="space-y-3" data-testid="ga-warning">
+            <p className="text-sm"><Link to="/dashboard/candidate/notice" className="underline" data-testid="read-notice">Read the full notice</Link></p>
             {(warning ?? "").split("\n").filter(Boolean).map((l, i) => (<p key={i} className="text-sm">{l.replace(/\*\*/g, "")}</p>))}
             <div className="flex gap-2">
               <button type="button" className="rounded border px-4 py-2 text-sm" disabled={busy} onClick={gaOn}>I understand, turn on</button>
