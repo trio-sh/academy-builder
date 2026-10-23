@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { handleCommitRequest } from "../../src/server/t3aCommitRoute";
+import { handleCommitRequest } from "../../src/server/t3aCommitRoute.js";
 
 /** POST /api/t3a/commit  { stage_instance_id, observation_record_id, key }  with Authorization: Bearer <observer token>. See src/server/t3aCommitRoute.ts. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

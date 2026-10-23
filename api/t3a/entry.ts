@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import { randomInt } from "node:crypto";
-import { handleEntryRequest } from "../../src/server/t3aEntryRoute";
+import { handleEntryRequest } from "../../src/server/t3aEntryRoute.js";
 
 /** POST /api/t3a/entry  { dimension, stage, key }  with Authorization: Bearer <participant token>. See src/server/t3aEntryRoute.ts. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { handleInterruptRequest } from "../../src/server/t3aStaffRoutes";
+import { handleInterruptRequest } from "../../src/server/t3aStaffRoutes.js";
 
 /** POST /api/t3a/interrupt with Authorization: Bearer <staff token>. See src/server/t3aStaffRoutes.ts. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

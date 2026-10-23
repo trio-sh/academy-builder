@@ -3,7 +3,7 @@
  * may commit this record; a refusal, a missing session and a failure all reach the browser as the same fixed answer. A repeat of the same key
  * gets the same answer, a new key after the commit is the refusal "already committed" (which the session's own mentor may be told).
  */
-import type { EntryDeps } from "./t3aEntryRoute";
+import type { EntryDeps } from "./t3aEntryRoute.js";
 export type CommitDeps = Pick<EntryDeps, "verifyToken" | "rpc">;
 export interface CommitResponse { status: number; body: Record<string, unknown> }
 

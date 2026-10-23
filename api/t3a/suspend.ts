@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { handleSuspendRequest } from "../../src/server/t3aStaffRoutes";
+import { handleSuspendRequest } from "../../src/server/t3aStaffRoutes.js";
 
 /** POST /api/t3a/suspend with Authorization: Bearer <staff token>. See src/server/t3aStaffRoutes.ts. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

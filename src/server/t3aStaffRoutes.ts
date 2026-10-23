@@ -3,7 +3,7 @@
  * whether that account may act (the session's facilitator or staff for an interruption, staff for a suspension). A refusal, a missing target and
  * a failure all reach the browser as the same fixed answer, and only a short list of result fields is passed on.
  */
-import type { EntryDeps } from "./t3aEntryRoute";
+import type { EntryDeps } from "./t3aEntryRoute.js";
 export type StaffDeps = Pick<EntryDeps, "verifyToken" | "rpc">;
 export interface StaffResponse { status: number; body: Record<string, unknown> }
 interface Req { method: string; authorization?: string | null; body: unknown }
