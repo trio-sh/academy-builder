@@ -1,0 +1,16 @@
+[
+ {
+  "file": "20270129000000_ed25519_verify.sql",
+  "sha256": "db7e43091bfc430c7562322da954854582577bc9a8df089541629cf066ff0e42",
+  "ok": true,
+  "error": null,
+  "seconds": 0.41
+ },
+ {
+  "file": "20270130000000_cr29_key_pair_seal.sql",
+  "sha256": "5d77f70c8c495a9cef8d63a795537d49a53c96020ef88b1cd320ed6a76bcf680",
+  "ok": true,
+  "error": null,
+  "seconds": 0.46
+ }
+]
