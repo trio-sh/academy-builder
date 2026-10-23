@@ -3,9 +3,9 @@
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
 Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 350 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 356 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
 
-## The 31 rules: 27 built and tested, 4 partly built
+## The 31 rules: 28 built and tested, 3 partly built
 
 - [x] CR-01 Sequential unmasking at Stage 2
 - [x] CR-02 Prior access bar and mentor rotation
@@ -34,7 +34,7 @@ Test totals on main: 350 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] CR-25 Accessible tagged report copy
 - [x] CR-26 Eligibility before entry
 - [x] CR-27 T-EVNOTE-001 version 2
-- [ ] CR-28 One claim package per dimension (reader built; review and issue record still to build)
+- [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue; the screen is in the screens item)
 - [ ] CR-29 Commit seal key (vault key in place; key-pair signature still to build)
 - [ ] CR-30 Stage 4 permission (screen and notice loaded; not routed)
 - [ ] CR-31 Five enforcement switches (run in the sandbox in order; all stay OFF in production)
@@ -49,7 +49,7 @@ Test totals on main: 350 database tests, 447 unit tests, forbidden-word ratchet 
 ## Still open
 
 - [x] Service key set in Vercel (`SUPABASE_SERVICE_ROLE_KEY`, Production and Preview, sensitive): the routes use it from the next deploy
-- [x] CORR-007 migrations 20270102 to 20270124 applied to the live project, with tested rollback script and verification record (`docs/day1/evidence/live-apply-cr12-to-cr23-*`)
+- [x] CORR-007 migrations 20270102 to 20270125 applied to the live project, each with a rollback script and verification record (`docs/day1/evidence/live-apply-*`); 20270126 (CR-28) follows its merge
 - [ ] Screens: participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report (Playwright)
 - [ ] The 104 CORR-007 cases with signed results and the build-complete check
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
