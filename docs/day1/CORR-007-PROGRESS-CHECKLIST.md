@@ -3,20 +3,20 @@
 Ticked = built on the throwaway database, covered by automated tests that pass in CI (unit, database, Vercel), with the guards broken on purpose to prove the tests catch the failure.
 Not ticked = not finished. Nothing here is applied to the live project, and every production switch and `lsa_activation` is still OFF.
 
-Test totals on main: 342 database tests, 442 unit tests, forbidden-word ratchet and vocabulary check clean.
+Test totals on main: 350 database tests, 447 unit tests, forbidden-word ratchet and vocabulary check clean.
 
-## The 31 rules: 24 built and tested, 7 partly built
+## The 31 rules: 27 built and tested, 4 partly built
 
 - [x] CR-01 Sequential unmasking at Stage 2
 - [x] CR-02 Prior access bar and mentor rotation
 - [x] CR-03 Welfare stop
 - [x] CR-04 Identity at Stage entry
 - [x] CR-05 Progression challenge
-- [ ] CR-06 Correction commitment (loaded and rendered from configuration; participant screen tested only by a contract test)
+- [x] CR-06 Correction commitment and participant review of every committed observation (route and rules; the screen is in the screens item)
 - [x] CR-07 Disputed clauses that cannot be established
 - [x] CR-08 Consent revocation against the commit point
 - [x] CR-09 Two release routes
-- [ ] CR-10 Multi-page renderer (built earlier; not re-checked against Rev 1.6)
+- [x] CR-10 One page rendering passages (render gate; the issuing screen is in the screens item)
 - [x] CR-11 Checklist lists (platform items and the dimension's own items)
 - [x] CR-12 Attempts and cooldowns
 - [x] CR-13 Involvement, review, issue and reconsideration
@@ -33,7 +33,7 @@ Test totals on main: 342 database tests, 442 unit tests, forbidden-word ratchet 
 - [x] CR-24 Second evidence state
 - [x] CR-25 Accessible tagged report copy
 - [x] CR-26 Eligibility before entry
-- [ ] CR-27 T-EVNOTE-001 version 2 (loaded)
+- [x] CR-27 T-EVNOTE-001 version 2
 - [ ] CR-28 One claim package per dimension (reader built; review and issue record still to build)
 - [ ] CR-29 Commit seal key (vault key in place; key-pair signature still to build)
 - [ ] CR-30 Stage 4 permission (screen and notice loaded; not routed)

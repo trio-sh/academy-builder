@@ -100,9 +100,13 @@ prior("D4-22", "no participant response to the pre-issue review notice: issuance
 prior("D4-23", "a correction against a D4 sentence blocks the report; the D4 record is in reconsideration and D1 is untouched", "step3h", "correction against a d4 record");
 prior("D4-24", "an in-place edit of a composed statement is refused; supersession only", "step3e", "editing a composed statement");
 { const stx = (await run(`select (enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1] s`))[0].s;
-const r2 = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D1','${stx}','{}'::jsonb, false, 'ber', 'participant_review', array['D1','D3']) returning ber_report_id r`))[0].r;
+const r2 = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${P}','D1','${stx}','{}'::jsonb, true, 'ber', 'participant_review', array['D1','D3']) returning ber_report_id r`))[0].r;
 const lo = (await run(`select t3a_report_render_gate('${r2}','one_page') r`))[0].r; const mp = (await run(`select t3a_report_render_gate('${r2}','multi_page') r`))[0].r;
-pass("D4-25", "a two-dimension report on one page fails and logs layout_overflow; the multi page form renders it without expanding or compressing the single page", lo.reason === "layout_overflow" && mp.outcome === "renderable", [lo.reason, mp.outcome]); }
+pass("D4-25", "a two-dimension specimen on one page fails and logs layout_overflow; the multi page form renders it without expanding or compressing the single page", lo.reason === "layout_overflow" && mp.outcome === "renderable", [lo.reason, mp.outcome]);
+// CORR-007 CR-10: the single page form is for the specimen only, so a report that is not a specimen is refused format_mismatch
+await run(`update t3a_d1_ber_report set specimen_render_flag = false where ber_report_id = '${r2}'`);
+const lo2 = (await run(`select t3a_report_render_gate('${r2}','one_page') r`))[0].r;
+pass("CR-10", "a report that is not a specimen routed to the single page renderer is refused format_mismatch", lo2.reason === "format_mismatch", lo2.reason); }
 
 // ---------------- D4-26 .. D4-28 : rendered output scans (on the 61 statements, the 13 templates and constructed renders) ----------------
 const bad = await run(`select count(*)::int n from t3a_d1_statement_library l where l.dimension_id='D4' and (t3a_prohibited_output_check('D4', l.statement_body)->>'passed')::boolean is not true`);
