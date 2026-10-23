@@ -17,6 +17,7 @@ import type { Database } from "@/types/database.types";
 import AIAgent from "@/pages/dashboard/AIAgent";
 import ReportReview from "@/pages/dashboard/candidate/ReportReview";
 import Disclosures from "@/pages/dashboard/candidate/Disclosures";
+import Stage4Permission from "@/pages/dashboard/candidate/Stage4Permission";
 import WorkSample from "@/pages/dashboard/candidate/WorkSample";
 import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
@@ -5949,6 +5950,7 @@ const CandidateDashboard = () => {
  <Route path="mentors" element={<FindMentor />} />
  {/* §8.4 participant pathway — disclosures you have released, with release and revoke. */}
  <Route path="disclosures" element={<Disclosures />} />
+ <Route path="group-session/:groupSessionId" element={<Stage4Permission />} />
  {/* §8.2 and §8.4 — Stage 3 work sample: brief, the three declarations, history. */}
  <Route path="work-sample" element={<WorkSample />} />
  <Route path="connections" element={<Connections />} />
