@@ -12,11 +12,11 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] CR-03 Welfare stop
 - [x] CR-04 Identity at Stage entry
 - [x] CR-05 Progression challenge
-- [x] CR-06 Correction commitment and participant review of every committed observation (route and rules; the screen is in the screens item)
+- [x] CR-06 Correction commitment and participant review of every committed observation (route, rules and the review screen)
 - [x] CR-07 Disputed clauses that cannot be established
 - [x] CR-08 Consent revocation against the commit point
 - [x] CR-09 Two release routes
-- [x] CR-10 One page rendering passages (render gate; the issuing screen is in the screens item)
+- [x] CR-10 One page rendering passages (render gate and the print view that asks it)
 - [x] CR-11 Checklist lists (platform items and the dimension's own items)
 - [x] CR-12 Attempts and cooldowns
 - [x] CR-13 Involvement, review, issue and reconsideration
@@ -34,9 +34,9 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] CR-25 Accessible tagged report copy
 - [x] CR-26 Eligibility before entry
 - [x] CR-27 T-EVNOTE-001 version 2
-- [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue; the screen is in the screens item)
+- [x] CR-28 One claim package per dimension (selection rule, version stamped at issue, review before issue, and the review screen)
 - [x] CR-29 Commit seal key (key version on every seal, rotation keeps earlier seals valid, activation refuses while the shared Vault key is current; the production key pair itself is a pre-activation job, see CR-211)
-- [x] CR-30 Stage 4 permission (rule, grant and refusals; the screen component calls it, routing it into a participant page is in the screens item)
+- [x] CR-30 Stage 4 permission (rule, grant and refusals; and its participant page)
 - [x] CR-31 Five enforcement switches rehearsed in the sandbox in order, each with a full test run, logged (`switch-rehearsal.json`); all stay OFF in production (tested). Finding: switches 1 and 2 are clean, switches 3 to 5 fail 222 of 364 database tests because test fixtures do not yet fill every required field. That fix is a pre-activation job, see CR-213
 
 ## Server routes that call the new rules
@@ -57,7 +57,8 @@ Test totals on main: 366 database tests, 447 unit tests, forbidden-word ratchet 
 - [x] Screen: claim package review at `/dashboard/candidate/claim-package/:reportId` (`e2e/candidate-claim-package.spec.ts`, 4 Playwright tests; the chosen entry per dimension, the rule version, every other entry, nothing to change the choice; 3 breaks caught)
 - [x] Screens: single page print view now asks the database first and refuses a real report with `format_mismatch`, pointing to the multi page form (before this the print page never called the gate); the multi page form shows its refusal and draws no page (`e2e/candidate-report-issuing-forms.spec.ts`, 3 Playwright tests; 2 breaks caught)
 - [x] Screen: accessible report at `/dashboard/candidate/report-accessible/:id` (`e2e/candidate-accessible-report.spec.ts`, 4 Playwright tests; language, title, a heading for each section, a captioned table with header cells, a missing copy invents nothing; 3 breaks caught)
-- [ ] Screens still to build and test (Playwright): notices
+- [x] Screens: the Participant Consent and Privacy Notice at `/dashboard/candidate/notice` (version shown, text word for word, nothing in its place when unloaded), a link to it from the employer warning on the release controls, and the amendment notice on the notifications page with a link to that report's release controls (`e2e/candidate-notices.spec.ts`, 4 Playwright tests; 3 breaks caught)
+- [x] All CORR-007 screens now built and tested
 - [ ] The 104 CORR-007 cases with signed results and the build-complete check
 - [ ] Independent CORR-007 reviewer named (not Hans, not the builder) for the 104 cases
 - [ ] Tony's answers on the open items in the conflict register (CR-182 to CR-203)

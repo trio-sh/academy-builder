@@ -22,6 +22,7 @@ import ReleaseControls from "@/pages/dashboard/candidate/ReleaseControls";
 import ObservationReview from "@/pages/dashboard/candidate/ObservationReview";
 import ClaimPackageReview from "@/pages/dashboard/candidate/ClaimPackageReview";
 import AccessibleReport from "@/pages/dashboard/candidate/AccessibleReport";
+import PrivacyNotice from "@/pages/dashboard/candidate/PrivacyNotice";
 import WorkSample from "@/pages/dashboard/candidate/WorkSample";
 import ParticipantLiveSession from "@/pages/dashboard/candidate/LiveSession";
 import D1PathwayPane from "@/pages/dashboard/candidate/D1Pathway";
@@ -5764,6 +5765,11 @@ const NotificationsPage = () => {
  {notification.title}
  </p>
  <p className="text-sm text-foreground/60 mt-1">{notification.message}</p>
+ {notification.type === "report_amended_general_availability" && (notification.metadata as { ber_report_id?: string } | null)?.ber_report_id ? (
+ <Link to={`/dashboard/candidate/release/${(notification.metadata as { ber_report_id: string }).ber_report_id}`} className="text-sm underline mt-2 inline-block" data-testid="amend-link">
+ See who can read your report
+ </Link>
+ ) : null}
  </div>
  {!notification.is_read && (
  <div className="w-2 h-2 rounded-full bg-foreground/10 flex-shrink-0 mt-2" />
@@ -5959,6 +5965,7 @@ const CandidateDashboard = () => {
  <Route path="observation/:observationId" element={<ObservationReview />} />
  <Route path="claim-package/:berReportId" element={<ClaimPackageReview />} />
  <Route path="report-accessible/:berReportId" element={<AccessibleReport />} />
+ <Route path="notice" element={<PrivacyNotice />} />
  {/* §8.2 and §8.4 — Stage 3 work sample: brief, the three declarations, history. */}
  <Route path="work-sample" element={<WorkSample />} />
  <Route path="connections" element={<Connections />} />
