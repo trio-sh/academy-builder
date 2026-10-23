@@ -17,9 +17,9 @@ async function mentor(tag: string) {
   return m;
 }
 async function session(participant: string, stage: string, dim = "D1") {
-  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${participant}','account_authentication','1.0','1.0',now()) returning observation_path_gateway_id g`))[0].g;
+  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${participant}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${participant}','${stage}','${dim}',1,'scheduled') returning stage_instance_id i`))[0].i;
-  const entry = (await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot) values ('${participant}','${dim}','${stage}','${gw}','${inst}','x','1.0','{}','{${dim}}','{"room":"quiet","interruptions":0}'::jsonb) returning stage_entry_event_id e`))[0].e;
+  const entry = (await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values ('${participant}','${dim}','${stage}','${gw}','${inst}','x','1.0','{}','{${dim}}','{"room":"quiet","interruptions":0}'::jsonb, gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid()) returning stage_entry_event_id e`))[0].e;
   return { inst, entry };
 }
 const decide = (m: string, inst: string, d = "proceed") => as(m, `select t3a_record_progression_decision('${inst}','D1','${d}') r`);
@@ -65,13 +65,13 @@ describe("CR-18 a progression decision follows the commit", () => {
   });
   it("the older progression table follows the sequence switch: off by default, and when on a decision with no commit behind it is not stored", async () => {
     const p = await mkParticipant(c, `cr18-t-${++seq}`); const rec = await mkParticipant(c, `cr18-r-${seq}`, "mentor");
-    const insert = () => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by) values ('${p}','D1','proceed','${rec}')`);
+    const insert = () => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at, decision_scope) values ('${p}','D1','proceed','${rec}','${rec}', now(), '{}'::jsonb)`);
     expect((await run(c, `select enforce_sequence s from t3a_capture_config`))[0].s).toBe(false);
     await insert(); expect((await run(c, `select count(*)::int n from t3a_d1_progression_decision where participant_id='${p}'`))[0].n).toBe(1);
     await run(c, `update t3a_capture_config set enforce_sequence = true`);
     try {
       const q = await mkParticipant(c, `cr18-q-${++seq}`);
-      const ins = (who: string) => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by) values ('${who}','D1','proceed','${rec}')`);
+      const ins = (who: string) => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at, decision_scope) values ('${who}','D1','proceed','${rec}','${rec}', now(), '{}'::jsonb)`);
       await ins(q); expect((await run(c, `select count(*)::int n from t3a_d1_progression_decision where participant_id='${q}'`))[0].n).toBe(0);
       await commitObs(q, "S2"); await ins(q); expect((await run(c, `select count(*)::int n from t3a_d1_progression_decision where participant_id='${q}'`))[0].n).toBe(1);
       // a decision that names its observation: refused while that record is uncommitted, stored once it is committed (even when the participant has another committed record)
@@ -79,7 +79,7 @@ describe("CR-18 a progression decision follows the commit", () => {
       await commitObs(r, "S1");
       await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code) values ('${pending}','${r}','D1','S2')`);
       await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${done}','${r}','D1','S3', true, now())`);
-      const named = (rec: string) => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, observation_record_id) values ('${r}','D1','proceed','${rec2}','${rec}')`);
+      const named = (rec: string) => run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, observation_record_id, decided_at, decision_scope) values ('${r}','D1','proceed','${rec2}','${rec2}','${rec}', now(), '{}'::jsonb)`);
       const rec2 = await mkParticipant(c, `cr18-rr-${seq}`, "mentor");
       await named(pending); expect((await run(c, `select count(*)::int n from t3a_d1_progression_decision where participant_id='${r}'`))[0].n).toBe(0);
       await named(done); expect((await run(c, `select count(*)::int n from t3a_d1_progression_decision where participant_id='${r}'`))[0].n).toBe(1);

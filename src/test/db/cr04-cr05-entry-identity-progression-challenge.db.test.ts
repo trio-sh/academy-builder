@@ -14,9 +14,9 @@ const elig = async (p: string, stage: string) => (await asService(c, `select t3a
 const entryId = (p: string, stage: string, authenticated: boolean, svcFail = false) => asService(c, `select t3a_cr04_entry_identity('${p}','${DIM}','${stage}', ${authenticated}, ${svcFail}) r`);
 const refused = async (code: string) => (await run(c, `select count(*)::int n from t3a_capture_refusal where reason_code='${code}'`))[0].n;
 async function session(participant: string, stage: string) {
-  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at) values ('${participant}','account_authentication','1.0','1.0',now()) returning observation_path_gateway_id g`))[0].g;
+  const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${participant}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${participant}','${stage}','${DIM}',1,'scheduled') returning stage_instance_id i`))[0].i;
-  const entry = (await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot) values ('${participant}','${DIM}','${stage}','${gw}','${inst}','x','1.0','{}','{${DIM}}','{}') returning stage_entry_event_id e`))[0].e;
+  const entry = (await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values ('${participant}','${DIM}','${stage}','${gw}','${inst}','x','1.0','{}','{${DIM}}','{}', gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid()) returning stage_entry_event_id e`))[0].e;
   return { inst, entry };
 }
 
@@ -138,7 +138,7 @@ describe("CR-04 declarations, the join link and a mentor's concern", () => {
 describe("CR-05 a progression challenge pauses nothing", () => {
   async function decided(daysAgo: number, decision = "redirect") {
     const p = await mkParticipant(c, `cr05-p-${++seq}`); const rec = await mkParticipant(c, `cr05-rec-${seq}`, "mentor");
-    const id = (await run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_at, created_at) values ('${p}','${DIM}','${decision}','${rec}', now() - interval '${daysAgo} days', now() - interval '${daysAgo} days') returning progression_decision_id i`))[0].i;
+    const id = (await run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at, created_at, decision_scope) values ('${p}','${DIM}','${decision}','${rec}','${rec}', now() - interval '${daysAgo} days', now() - interval '${daysAgo} days', '{}'::jsonb) returning progression_decision_id i`))[0].i;
     return { p, rec, id };
   }
   const openCh = (p: string, id: string) => as(p, `select t3a_progression_challenge_open('${id}') r`);

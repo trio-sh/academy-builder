@@ -10,12 +10,12 @@ const HASH = "a".repeat(64);
 async function mkEmployer(tag: string, decision: "approved" | "withdrawn" | null = "approved"): Promise<string> {
   const u = await mkParticipant(c, tag, "employer");
   const ep = (await run(c, `insert into employer_profiles(profile_id) values ('${u}') returning id`))[0].id;
-  await run(c, `insert into t3a_employer_application(employer_profile_id, approval_decision, approved_by, approved_at) values ('${ep}', ${decision ? `'${decision}'` : "null"}, 'synthetic approver', now())`);
+  await run(c, `insert into t3a_employer_application(employer_profile_id, approval_decision, approved_by, approved_at, application_status, accepting_person_name, accepting_person_title, record_use_terms_version, terms_accepted_at, approver_id) values ('${ep}', ${decision ? `'${decision}'` : "null"}, 'synthetic approver', now(), '${decision ?? "pending"}', 'Synthetic Person', 'Director', '1.0', now(), gen_random_uuid())`);
   return u;
 }
 async function mkReport(participant: string, supersedes: string | null = null): Promise<string> {
   const id = randomUUID();
-  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, issued_at, ber_version, verification_code, supersedes) values ('${id}','${participant}','D1',now(),'1.0','V-${RUN}-${id.slice(0, 6)}', ${supersedes ? `'${supersedes}'` : "null"})`);
+  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, issued_at, ber_version, verification_code, supersedes, ber_standard_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, specimen_render_flag) values ('${id}','${participant}','D1',now(),'1.0','V-${RUN}-${id.slice(0, 6)}', ${supersedes ? `'${supersedes}'` : "null"}, '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), false)`);
   return id;
 }
 const consent = (p: string) => asService(c, `select t3a_record_consent('${p}','employer_share','granted','D1',null,'1.2','${HASH}','checkbox','en-CA','report_release','future_only',true) r`);
@@ -81,7 +81,7 @@ describe("CR-09 route 1: general availability", () => {
     await consent(p);
     expect((await gaOn(other, rep)).r.reason).toBe("ONLY_THE_PARTICIPANT_RELEASES_THEIR_REPORT");
     const unissued = randomUUID();
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id) values ('${unissued}','${p}','D1')`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${unissued}','${p}','D1', '1.0', '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     expect((await gaOn(p, unissued)).r.reason).toBe("REPORT_NOT_ISSUED");
     expect((await gaOn(p, rep)).r.outcome).toBe("on");
     expect((await gaOn(p, rep)).r.reason).toBe("GA_ALREADY_ON");

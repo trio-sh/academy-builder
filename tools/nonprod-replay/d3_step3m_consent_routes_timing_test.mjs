@@ -52,7 +52,7 @@ await grant(P, "mentor_observation", "D3");
 // ---- issuance and pool
 const stRep = (await run(`select (enum_range(null::${(await run(`select udt_name u from information_schema.columns where table_name='t3a_d1_ber_report' and column_name='status'`))[0].u}))[1] s`))[0].s;
 const PI = await mkU("pi", "candidate"); await grant(PI, "scenario_logging", "D1"); await grant(PI, "mentor_observation", "D1");
-const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids) values ('${PI}','D3','${stRep}','{}'::jsonb, false, 'ber', 'participant_review', array['D1','D3']) returning ber_report_id r`))[0].r;
+const rep = (await run(`insert into t3a_d1_ber_report(participant_id, dimension_id, status, version_set, specimen_render_flag, report_type, ber_status, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, preview_state, report_preview_digest, report_content_digest, verification_code) values ('${PI}','D3','${stRep}','{}'::jsonb, false, 'ber', 'participant_review', array['D1','D3'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text) returning ber_report_id r`))[0].r;
 let g = (await run(`select t3a_report_issuance_gate('${rep}') g`))[0].g;
 rec("D3-32", "a report carrying a D3 record with only D1 consent is blocked with consent_not_inherited", g.blockers.some(b => b.code === "consent_not_inherited" && b.dimension_id === "D3"), g.blockers.map(b => b.code));
 n0 = await refused("consent_not_inherited");

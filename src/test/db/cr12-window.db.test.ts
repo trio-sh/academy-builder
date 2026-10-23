@@ -12,9 +12,9 @@ beforeAll(async () => { c = await connect(); });
 afterAll(async () => { await c.end(); });
 
 const done = (u: string, d: string, at: string, stage = "S2") =>
-  run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${u}','${d}','${stage}','completed',true,'${at}','completed_observation')`);
+  run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class, attempt_rules_version) values ('${u}','${d}','${stage}','completed',true,'${at}','completed_observation', '1.0')`);
 const ending = (u: string, cls: string, at: string, outcome = "participant_withdrew", d = "D2", stage = "S2") =>
-  run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class) values ('${u}','${d}','${stage}','${outcome}',false,'${at}','${cls}')`);
+  run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, attempt_event_class, attempt_rules_version) values ('${u}','${d}','${stage}','${outcome}',false,'${at}','${cls}', '1.0')`);
 const elig = async (u: string, at: string, d = "D2", stage = "S2") =>
   (await run(c, `select t3a_attempt_eligibility('${u}','${d}','${stage}','${at}') r`))[0].r;
 
@@ -150,7 +150,7 @@ describe("CR-12: the older questions read the same rule", () => {
     for (const d of [150, 120, 90]) await done(w3, "D2", new Date(Date.now() - d * 86400e3).toISOString());
     expect(await st(w3)).toBe("ATTEMPTS_EXCEEDED");
     const wi = await mkParticipant(c, "w-k");
-    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code) values ('${wi}','D2','S2')`);
+    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, attempt_rules_version, attempt_event_class) values ('${wi}','D2','S2', '1.0', 'completed_observation')`);
     expect(await st(wi)).toBe("AVAILABLE");
   });
 });

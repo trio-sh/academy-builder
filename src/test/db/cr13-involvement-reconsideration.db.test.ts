@@ -17,7 +17,7 @@ const person = (tag: string) => mkParticipant(c, `cr13-${tag}-${++seq}`, "mentor
 const link = (canonical: string, account: string) => asService(c, `select t3a_cr13_link_identity('${canonical}','${account}',null) r`);
 async function report(participant: string, dims = ["D1"]) {
   const id = randomUUID();
-  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, issued_at) values ('${id}','${participant}','${dims[0]}', array[${dims.map((d) => `'${d}'`).join(",")}]::text[], null)`);
+  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, issued_at, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${id}','${participant}','${dims[0]}', array[${dims.map((d) => `'${d}'`).join(",")}]::text[], null, '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
   return id;
 }
 async function observed(participant: string, observer: string, dim = "D1", stage = "S2") {
@@ -68,7 +68,7 @@ describe("CR-13 involvement across versions and accounts", () => {
       const canon = randomUUID(); await link(canon, a); await link(canon, b); return b;
     };
     const confirmer = await mk("cf", (a) => `insert into t3a_observation_record(participant_id, dimension_id, stage_code, confirmer_id) values ('${p}','D1','S1','${a}')`);
-    const progress = await mk("pg", (a) => `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by) values ('${p}','D1','proceed','${a}')`);
+    const progress = await mk("pg", (a) => `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at, decision_scope) values ('${p}','D1','proceed','${a}','${a}', now(), '{}'::jsonb)`);
     for (const [name, who] of [["confirmer", confirmer], ["progression", progress]] as const) {
       expect((await actorGate(who, rep, "evidence_review")).r.reason, name).toBe("involved_in_report");
     }

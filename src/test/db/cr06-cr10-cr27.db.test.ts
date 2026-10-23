@@ -57,7 +57,7 @@ describe("CR-06 a participant reads and challenges any committed observation", (
   it("a correction open on an observation of a dimension in a report blocks that report; it does not touch a report of another dimension", async () => {
     const p = await mkParticipant(c, `cr06-p-${++seq}-${RUN}`);
     const d2 = await obs(p, "D2");
-    const ber = async (d: string) => (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids) values ('${p}','${d}',array['${d}']::text[]) returning ber_report_id b`))[0].b as string;
+    const ber = async (d: string) => (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${p}','${d}',array['${d}']::text[], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false) returning ber_report_id b`))[0].b as string;
     const rD2 = await ber("D2"); const rD3 = await ber("D3");
     const state = async (r: string) => (await run(c, `select t3a_report_correction_state('${r}') s`))[0].s;
     expect((await state(rD2)).open).toBe(false);
@@ -72,7 +72,7 @@ describe("CR-06 a participant reads and challenges any committed observation", (
 describe("CR-10 every issued report renders through the multi page renderer", () => {
   const gate = (r: string, form: string) => run(c, `select t3a_report_render_gate('${r}','${form}') g`).then((x) => x[0].g);
   const report = async (dims: string[], specimen: boolean) => { const p = await mkParticipant(c, `cr10-p-${++seq}-${RUN}`);
-    return (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids, specimen_render_flag) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[], ${specimen}) returning ber_report_id b`))[0].b as string; };
+    return (await fx(`insert into t3a_d1_ber_report(participant_id, dimension_id, represented_dimension_ids, specimen_render_flag, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code) values ('${p}','${dims[0]}',array[${dims.map((d) => `'${d}'`).join(",")}]::text[], ${specimen}, '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text) returning ber_report_id b`))[0].b as string; };
   it("T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable", async () => {
     for (const dims of [["D1"], ["D2"], ["D2", "D3"], ["D4"]]) {
       const r = await report(dims, false);
@@ -95,7 +95,7 @@ describe("CR-27 the Stage 1 evidence note, version 2", () => {
   async function s1World() {
     const mentor = await mkParticipant(c, `cr27-m-${++seq}-${RUN}`, "mentor"); const p = await mkParticipant(c, `cr27-p-${seq}-${RUN}`);
     const src = await mkApprovedSource(c, { dimension: "D2", stage: "S1", situationClass: "SC-D2-1", reviewer });
-    await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status) values ('${mentor}','D2', now() - interval '1 day','current','1.0','authorized')`);
+    await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status, reviewer_authorization, issuer_authorization) values ('${mentor}','D2', now() - interval '1 day','current','1.0','authorized', true, true)`);
     const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${p}','S1','D2',1,'active') returning stage_instance_id i`))[0].i as string;
     const h = (await run(c, `select body_hash h from t3a_d1_content_version where content_version_id='${src.version}'`))[0].h;
     await fx(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, source_version_id, source_version_hash) values ('${inst}','${p}','D2','${mentor}','${src.version}','${h}')`);

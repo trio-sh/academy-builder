@@ -39,8 +39,8 @@ describe("CR-12 T4: one active attempt, idempotent start", () => {
   });
   it("the database itself refuses a second active attempt from any route", async () => {
     const u = await mkParticipant(c, "r-c");
-    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code) values ('${u}','D2','S2')`);
-    await expect(c.query(`insert into t3a_attempt(participant_id, dimension_id, stage_code) values ('${u}','D2','S2')`)).rejects.toThrow(/t3a_attempt_one_active|duplicate key/);
+    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, attempt_rules_version, attempt_event_class) values ('${u}','D2','S2', '1.0', 'completed_observation')`);
+    await expect(c.query(`insert into t3a_attempt(participant_id, dimension_id, stage_code, attempt_rules_version, attempt_event_class) values ('${u}','D2','S2', '1.0', 'completed_observation')`)).rejects.toThrow(/t3a_attempt_one_active|duplicate key/);
   });
 });
 

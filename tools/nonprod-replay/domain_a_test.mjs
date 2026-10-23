@@ -39,8 +39,10 @@ for (const t of ["t3a_stage_entry_event", "t3a_observation_path_gateway", "t3a_a
   const v = await as(null, null, `insert into ${t}(participant_id) values ('${V}')`);
   rec("DT-04", `${t}: unverified participant refused with the stated reason; verified passes the gate`, gate(u.msg) && !gate(v.msg), { unverified: u.msg.slice(0, 80), verified: v.msg.slice(0, 80) });
 }
+const BER_FIELDS = "dimension_id, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag";
+const BER_VALUES = "'D1', '1.0', '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false";
 for (const t of ["t3a_observation_record", "t3a_d1_ber_report"]) {
-  const u = await as(null, null, `insert into ${t}(participant_id) values ('${UV}')`);
+  const u = await as(null, null, t === "t3a_d1_ber_report" ? `insert into ${t}(participant_id, ${BER_FIELDS}) values ('${UV}', ${BER_VALUES})` : `insert into ${t}(participant_id) values ('${UV}')`);
   rec("DT-04", `${t}: unverified participant refused (pre-existing guard)`, gate(u.msg), u.msg.slice(0, 80));
 }
 const mr = await as("authenticated", UV, `insert into t3a_mentor_request(requester_id) values ('${UV}')`);

@@ -14,7 +14,7 @@ async function fx(sql: string) {
 async function entry(dimension: string, body: string) {
   const p = await mkParticipant(c, `cr16-p-${++seq}-${RUN}`);
   const lib = randomUUID(); const cs = randomUUID(); const rec = randomUUID(); const ber = randomUUID();
-  await fx(`insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, status) values ('${ber}','${p}','${dimension}','issued')`);
+  await fx(`insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, status, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${ber}','${p}','${dimension}','issued', '1.0', '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
   await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${rec}','${p}','${dimension}','S2', true, now())`);
   await fx(`insert into t3a_d1_statement_library(statement_library_id, content_version_id, dimension_id, question_set_version, stage_code, statement_key, statement_body, use_disposition) values ('${lib}','${randomUUID()}','${dimension}','q1','S2','ST-${dimension}-${seq}-${RUN}','x','production')`);
   await fx(`insert into t3a_d1_composed_statement(composed_statement_id, observation_record_id, statement_library_id, resolution_rule_id, composed_body, answer_pattern_snapshot) values ('${cs}','${rec}','${lib}','${randomUUID()}', $b$${body}$b$, '{}'::jsonb)`);

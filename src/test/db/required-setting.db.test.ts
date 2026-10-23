@@ -26,9 +26,10 @@ describe("t3a_required_setting: a blank value is unset", () => {
     expect(r.v).toBeUndefined();
   });
   it("a blank row falls back to the deployment configuration column of the same name", async () => {
+    const before = (await run(c, `select stage_entry_hold_ttl t from t3a_deployment_config where singleton`))[0].t;
     await put("stage_entry_hold_ttl", "");
     await run(c, `update t3a_deployment_config set stage_entry_hold_ttl = 777`);
     expect((await read("stage_entry_hold_ttl")).v).toBe("777");
-    await run(c, `update t3a_deployment_config set stage_entry_hold_ttl = null`);
+    await run(c, `update t3a_deployment_config set stage_entry_hold_ttl = ${before === null ? "null" : before}`);
   });
 });

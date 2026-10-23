@@ -20,7 +20,7 @@ async function issued(rows: string[] = []) {
     await fx(`insert into t3a_d1_composed_statement(observation_record_id, statement_library_id, resolution_rule_id, composed_body, answer_pattern_snapshot) values ('${o}','${randomUUID()}','${randomUUID()}', '${text.replace(/'/g, "''")}', '{}'::jsonb)`);
   }
   const rep = randomUUID();
-  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_version) values ('${rep}','${p}','D1', array['D1'], '1.0')`);
+  await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_version, ber_standard_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D1', array['D1'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
   await reviewed(rep);
   await run(c, `update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`);
   return { p, rep };
@@ -82,13 +82,13 @@ describe("CR-25 the accessible equivalent", () => {
   });
   it("a report issued by a later update gets its equivalent too, and an amended report has its own", async () => {
     const p = await mkParticipant(c, `cr25-upd-${RUN}`); const rep = randomUUID();
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids) values ('${rep}','${p}','D1', array['D1'])`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D1', array['D1'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     expect((await asService(c, `select t3a_report_accessible_state('${rep}') r`)).r.state).toBe("not_issued");
     await reviewed(rep);
     await run(c, `update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`);
     expect((await asService(c, `select t3a_report_accessible_state('${rep}') r`)).r.state).toBe("present");
     const rep2 = randomUUID();
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, supersedes) values ('${rep2}','${p}','D1', array['D1'], '${rep}')`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, supersedes, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep2}','${p}','D1', array['D1'], '${rep}', '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     await reviewed(rep2);
     await run(c, `update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep2}'`);
     await run(c, `update t3a_d1_ber_report set amended_at = now() where ber_report_id='${rep}'`);
@@ -97,7 +97,7 @@ describe("CR-25 the accessible equivalent", () => {
   });
   it("a report that is not issued has no equivalent, and an unknown report is not found", async () => {
     const p = await mkParticipant(c, `cr25-no-${RUN}`); const rep = randomUUID();
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id) values ('${rep}','${p}','D1')`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, represented_dimension_ids, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D1', '1.0', '1.0', '1.0', 'M5', array['D1']::text[], '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     expect((await run(c, `select count(*)::int n from t3a_report_accessible_copy where ber_report_id='${rep}'`))[0].n).toBe(0);
     expect((await as(p, `select t3a_report_accessible_read('${rep}') r`)).r.refusal_code).toBe("ACCESSIBLE_COPY_MISSING");
     expect((await asService(c, `select t3a_report_accessible_state('${randomUUID()}') r`)).r.state).toBe("report_not_found");
@@ -108,7 +108,7 @@ describe("CR-25 when the face cannot assemble, nothing is invented", () => {
   it("an issued report whose review is open has no face and so no equivalent; the refusal is logged", async () => {
     const p = await mkParticipant(c, `cr25-open-${RUN}`); const rep = randomUUID();
     const n = (await run(c, `select count(*)::int n from t3a_capture_refusal where reason_code='ACCESSIBLE_COPY_NOT_BUILT'`))[0].n;
-    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, issued_at) values ('${rep}','${p}','D1', array['D1'], now())`);
+    await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, issued_at, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D1', array['D1'], now(), '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
     expect((await asService(c, `select t3a_report_accessible_state('${rep}') r`)).r.state).toBe("missing");
     expect((await run(c, `select count(*)::int n from t3a_capture_refusal where reason_code='ACCESSIBLE_COPY_NOT_BUILT'`))[0].n).toBe(n + 1);
   });
@@ -120,7 +120,7 @@ describe("CR-25 when the face cannot assemble, nothing is invented", () => {
       await c.query(`delete from t3a_d1_report_controlled_text where text_ref='6.2.1'`);
       const p = await mkParticipant(c, `cr25-miss-${RUN}`); const rep = randomUUID();
       const n = (await c.query(`select count(*)::int n from t3a_capture_refusal where reason_code='ACCESSIBLE_COPY_NOT_BUILT'`)).rows[0].n;
-      await c.query(`insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids) values ('${rep}','${p}','D1', array['D1'])`);
+      await c.query(`insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D1', array['D1'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
       await c.query(`insert into t3a_d1_review_result(ber_report_id, item_no, outcome, reviewed_by) select '${rep}', item_no, 'pass', '${p}' from t3a_d1_review_checklist_item`);
       await c.query(`update t3a_d1_ber_report set issued_at = now() where ber_report_id='${rep}'`);
       expect((await c.query(`select count(*)::int n from t3a_report_accessible_copy where ber_report_id='${rep}'`)).rows[0].n).toBe(0);
@@ -137,7 +137,7 @@ describe("CR-25 the equivalent travels with the face", () => {
     const own = (await as(w.p, `select t3a_report_accessible_read('${w.rep}') r`)).r.tagged;
     const employer = await mkParticipant(c, `cr25-emp-${RUN}`, "employer");
     const ep = (await run(c, `insert into employer_profiles(profile_id) values ('${employer}') returning id`))[0].id;
-    await run(c, `insert into t3a_employer_application(employer_profile_id, approval_decision, approved_by, approved_at) values ('${ep}','approved','synthetic',now())`);
+    await run(c, `insert into t3a_employer_application(employer_profile_id, approval_decision, approved_by, approved_at, application_status, accepting_person_name, accepting_person_title, record_use_terms_version, terms_accepted_at, approver_id) values ('${ep}','approved','synthetic',now(),'approved', 'Synthetic Person', 'Director', '1.0', now(), gen_random_uuid())`);
     await asService(c, `select t3a_record_consent('${w.p}','employer_share','granted','D1',null,'1.2','${"a".repeat(64)}','checkbox','en-CA','report_release','future_only',true) r`);
     const warn = (await run(c, `select t3a_cr09_warning_version() v`))[0].v;
     expect((await as(w.p, `select t3a_ga_set('${w.rep}', true, '${warn}') r`)).r.outcome).toBe("on");

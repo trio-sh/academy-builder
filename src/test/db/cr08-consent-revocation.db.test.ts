@@ -58,7 +58,7 @@ describe("CR-08 each consequential act checks the permission", () => {
   });
   it("T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition", async () => {
     const w = await world({ committed: true });
-    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class) values ('${w.p}','${DIM}','${STAGE}','completed',true, now(), now(),'completed_observation')`);
+    await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class, attempt_rules_version) values ('${w.p}','${DIM}','${STAGE}','completed',true, now(), now(),'completed_observation', '1.0')`);
     expect((await act(w.p, "commit", w.rec)).outcome).toBe("allowed");
     expect(await standing(w.p)).toBe(1);
     await consent(w.p, "withdrawn");

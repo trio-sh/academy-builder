@@ -86,8 +86,8 @@ describe("CR-21 suspending a source opens an impact review", () => {
       const rec = randomUUID(); const rep = randomUUID();
       await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${rec}','${p}','D2','S1', true, now())`);
       await fx(`insert into t3a_dimension_composed_statement(dimension_id, observation_ref, participant_id, stage_code, source_version_id, answers, clauses, clause_instances) values ('D2','${rec}','${p}','S1','${src.version}','{}'::jsonb,'[]'::jsonb,'[]'::jsonb)`);
-      await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids) values ('${rep}','${p}','D2', array['D2'])`);
-      await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class) values ('${p}','D2','S1','completed',true, now(), now(),'completed_observation')`);
+      await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${rep}','${p}','D2', array['D2'], '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
+      await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class, attempt_rules_version) values ('${p}','D2','S1','completed',true, now(), now(),'completed_observation', '1.0')`);
       return { p, rec, rep };
     };
     const ws = [await world(), await world()];
@@ -198,7 +198,7 @@ describe("CR-22 Stage 4 interruptions", () => {
     await expect(c.query(`delete from t3a_s4_return_constraint`)).rejects.toThrow(/append/i);
   });
   it("T1: the return after an interruption is on a new group and a new source where the interruption said so; a technical disconnection may come back to the same group", async () => {
-    const authFac = async (f: string) => run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status) values ('${f}','D1', now() - interval '1 day','current','1.0','authorized')`);
+    const authFac = async (f: string) => run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status, reviewer_authorization, issuer_authorization) values ('${f}','D1', now() - interval '1 day','current','1.0','authorized', true, true)`);
     // a withdrawal: same group and same source are refused, a new group on the same source is refused, a new source with the same group is refused, both new composes
     const w = await groupWorld(d1a); await authFac(w.fac); await interrupt(w, "observed_withdraws", w.observed);
     const compose = (src: string, co: string[]) => asService(c, `select t3a_s4_compose_session('${src}','${w.fac}','${w.observed}', array[${co.map((x) => `'${x}'::uuid`).join(",")}]::uuid[], true) r`).then((x) => x.r);

@@ -14,7 +14,7 @@ const refused = async (code: string) => (await run(c, `select count(*)::int n fr
 /** A mentor authorized on D1; the assignment history is per participant, so mentors may be shared across the tests of one participant only. */
 async function mkMentor(tag: string): Promise<string> {
   const m = await mkParticipant(c, tag, "mentor");
-  await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status) values ('${m}','${DIM}', now() - interval '1 day','current','1.0','authorized')`);
+  await run(c, `insert into t3a_mentor_authorization(mentor_id, dimension_id, authorized_from, calibration_status, reference_set_version, authorization_status, reviewer_authorization, issuer_authorization) values ('${m}','${DIM}', now() - interval '1 day','current','1.0','authorized', true, true)`);
   return m;
 }
 /** Records a mentor's access to a participant's Stage 1: as confirmer, through the real trigger. */
@@ -135,7 +135,7 @@ describe("CR-02 planner and records", () => {
   });
   it("a mentor with an open conflict, no authorization or a different dimension is never proposed; the participant is never their own observer", async () => {
     const a = await mkMentor("cr02-c1"); const p = await mkParticipant(c, "cr02-c1p"); await onlyMentors(a);
-    await run(c, `insert into t3a_conflict_declaration(mentor_id, participant_id, reason_class) values ('${a}','${p}','family')`);
+    await run(c, `insert into t3a_conflict_declaration(mentor_id, participant_id, reason_class, declared_entity_refs) values ('${a}','${p}','family', '{}'::uuid[])`);
     expect((await plan(p, "S3")).r.reason).toBe("NO_ELIGIBLE_OBSERVER");
     const b = await mkMentor("cr02-c2"); await onlyMentors(a, b);
     expect((await plan(p, "S3")).r.mentor_id).toBe(b);

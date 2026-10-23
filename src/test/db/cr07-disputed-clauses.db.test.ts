@@ -29,7 +29,7 @@ async function observed(src: SourceFixture) {
   const clauses = ["CE-1", "CE-2", "CE-3"].map((e) => ({ conduct_element: e, question_code: `Q-${e}`, state_code: "ST", entry_type: "x", clause_text: `Clause ${e}` }));
   const ci = ["CE-1", "CE-2", "CE-3"].map((e) => ({ observation_id: rec, conduct_element_id: e, recurrence_equivalence_key_id: `REK-${e}`, state_code: "ST", recurrence_blocker: false }));
   await fx(`insert into t3a_dimension_composed_statement(composed_statement_id, dimension_id, observation_ref, participant_id, stage_code, source_version_id, answers, clauses, clause_instances) values ('${cs}','${DIM}','${rec}','${p}','${STAGE}','${src.version}','{}'::jsonb,'${JSON.stringify(clauses)}'::jsonb,'${JSON.stringify(ci)}'::jsonb)`);
-  await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class) values ('${p}','${DIM}','${STAGE}','completed',true, now() - interval '3 days', now() - interval '3 days','completed_observation')`);
+  await run(c, `insert into t3a_attempt(participant_id, dimension_id, stage_code, outcome, counted, ended_at, commit_at, attempt_event_class, attempt_rules_version) values ('${p}','${DIM}','${STAGE}','completed',true, now() - interval '3 days', now() - interval '3 days','completed_observation', '1.0')`);
   return { p, obs, rec, cs };
 }
 async function retireAuthorizations() { await fx(`update t3a_role_authorization set status='withdrawn', withdrawn_at=now() where status='granted'`).catch(() => null); }

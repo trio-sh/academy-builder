@@ -13,7 +13,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 STEPS = [
     ("canonical_writers", "update public.t3a_event_config set value = 'on', updated_at = now() where key = 'canonical_writers'"),
     ("strict_event_ingest", "update public.t3a_event_config set value = 'strict', updated_at = now() where key = 'ingest_mode'"),
-    ("enforce_required", "update public.t3a_capture_config set enforce_required = true, updated_at = now()"),
+    ("enforce_required", "update public.t3a_deployment_config set stage_entry_hold_ttl = 1800 where singleton; update public.t3a_capture_config set enforce_required = true, updated_at = now()"),
     ("enforce_sequence", "update public.t3a_capture_config set enforce_sequence = true, updated_at = now()"),
     ("enforce_gate", "update public.t3a_consent_config set enforce_gate = true, updated_at = now()"),
 ]
