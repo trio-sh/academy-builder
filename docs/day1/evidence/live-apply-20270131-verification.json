@@ -1,0 +1,9 @@
+[
+ {
+  "file": "20270131000000_cr31_enforce_required_completions.sql",
+  "sha256": "f5fabb7604e48d88e515616ede31493ec2be094bee5eb4c0231d1e8dc76dd476",
+  "ok": true,
+  "error": null,
+  "seconds": 0.38
+ }
+]
