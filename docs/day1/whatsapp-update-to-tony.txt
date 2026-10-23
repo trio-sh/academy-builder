@@ -7,7 +7,7 @@ DONE and merged to main, every piece tested by automated tests before it was mer
 
 NOT done yet, so you are not surprised:
 - The new rules are applied to the live Supabase project, each migration with a rollback script and a verification record in docs/day1/evidence. Nothing was switched on.
-- I ran the five enforcement switches in the sandbox in order with the full tests after each. The first two are clean. The third (enforce_required) stops 222 of 364 database tests because some writers do not yet fill every required field. That must be fixed before any activation; production keeps every switch off.
+- I ran the five enforcement switches in the sandbox in order with the full tests after each. The first two are clean. The third (enforce_required) stops 222 of 364 database tests because the test setups do not yet fill every required field (no live route failed, but they are not proven under it yet). That must be fixed before any activation; production keeps every switch off.
 - The key pair for the commit seal (CR-29) is not provisioned; activation stays refused until it is.
 - The screens (participant release controls, Available Reports, Stage 4 permission screen, notices, accessible report) that call the four routes are still to build and test.
 - The 104 CORR-007 cases with signed results are not run yet.
