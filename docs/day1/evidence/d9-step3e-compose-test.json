@@ -1,0 +1,729 @@
+{
+ "passed": 78,
+ "total": 78,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement (sixteen served questions, sixteen clauses)",
+   "pass": true,
+   "detail": 16
+  },
+  {
+   "id": "D9-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant stated 2 of the sources of knowledge the situation made available"
+   ]
+  },
+  {
+   "id": "D9-composed",
+   "label": "clause instance carries the dimension scoped key and the statement id",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D9-001",
+    "observation_id": "c6f35919-a916-43ed-a73d-ba7b4f1f391c",
+    "conduct_element_id": "CE-D9-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D9-001"
+   }
+  },
+  {
+   "id": "D9-composed",
+   "label": "the nine elements map to nine dimension scoped keys, REK-D9-001 to REK-D9-009",
+   "pass": true,
+   "detail": [
+    "REK-D9-001",
+    "REK-D9-002",
+    "REK-D9-003",
+    "REK-D9-004",
+    "REK-D9-005",
+    "REK-D9-006",
+    "REK-D9-007",
+    "REK-D9-008",
+    "REK-D9-009"
+   ]
+  },
+  {
+   "id": "D9-24",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D9-24",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D9-04",
+   "label": "Stage 3: a complete pattern composes fifteen clauses and nothing at all for Q-D9-09 (no row, no null, no not observed sentence)",
+   "pass": true,
+   "detail": 15
+  },
+  {
+   "id": "D9-04",
+   "label": "Q-D9-09 is NOT SERVED on a Stage 3 source: an answer refuses and no row is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-09",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-04",
+   "label": "and a missing state for it refuses as well: not even a missing state row exists for a question that is not served",
+   "pass": true,
+   "detail": "answer_for_question_not_served"
+  },
+  {
+   "id": "D9-04",
+   "label": "a source whose trial_steps is empty marks Q-D9-06 and Q-D9-06b NOT SERVED: an answer to either refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-06",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-04",
+   "label": "and the same source composes without them: no row for Q-D9-06 or Q-D9-06b",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-01 A1 with nothing selected at Q-D9-01b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-02 A1 with nothing selected at Q-D9-02b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-03 A1 with nothing selected at Q-D9-03b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-03b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-04 A1 with nothing selected at Q-D9-04b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-04b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-05 A1 with nothing selected at Q-D9-05b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-05b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-06 A1 with nothing selected at Q-D9-06b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-06b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-07 A1 with nothing selected at Q-D9-07b refuses: the parent asserts a listed answer and the child identifies none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-07b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "an answer that does not serve the child leaves the child unreached; sending its items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b follows Q-D9-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "Q-D9-02 A3 (no change stated) with its child absent composes: the child is never reached",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-06",
+   "label": "Q-D9-03 A3 (a ground named that the situation does not set out is A2; A3 is no ground named) resolves to ST-D9-013 alone, with no child clause",
+   "pass": true,
+   "detail": [
+    "ST-D9-001",
+    "ST-D9-004",
+    "ST-D9-006",
+    "ST-D9-009",
+    "ST-D9-013",
+    "ST-D9-017",
+    "ST-D9-020",
+    "ST-D9-022",
+    "ST-D9-025",
+    "ST-D9-027",
+    "ST-D9-030",
+    "ST-D9-032",
+    "ST-D9-036",
+    "ST-D9-038",
+    "ST-D9-041"
+   ]
+  },
+  {
+   "id": "D9-06",
+   "label": "Q-D9-03 A4 (nothing stated about keeping the approach) composes the record status entry ST-D9-014 and no adverse clause",
+   "pass": true,
+   "detail": [
+    "ST-D9-001",
+    "ST-D9-004",
+    "ST-D9-006",
+    "ST-D9-009",
+    "ST-D9-014",
+    "ST-D9-017",
+    "ST-D9-020",
+    "ST-D9-022",
+    "ST-D9-025",
+    "ST-D9-027",
+    "ST-D9-030",
+    "ST-D9-032",
+    "ST-D9-036",
+    "ST-D9-038",
+    "ST-D9-041"
+   ]
+  },
+  {
+   "id": "D9-09",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-09",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-09",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-10",
+   "label": "not_applicable and not_yet_observed are refused as missing states",
+   "pass": true,
+   "detail": [
+    "missing_state_not_postable",
+    "missing_state_not_postable"
+   ]
+  },
+  {
+   "id": "D9-09",
+   "label": "a parent missing state means the child is never reached: no child row and no child missing state",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-07",
+   "label": "an item not on this source version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b item not on approach_changes of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-07",
+   "label": "an item that exists on another source (AC3 is on this source but KS4 and NW3 are on others) is refused when this version does not list it",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-07",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-04b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-08",
+   "label": "an item from a source of another dimension (a D4 material item) is refused",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b item not on approach_changes of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-08",
+   "label": "an item from a D1 source is refused",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b item not on approach_changes of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-49",
+   "label": "Q-D9-02 A1 and Q-D9-03 A1 in one observation: BOTH compose as separate clauses (ST-D9-006, ST-D9-009 and ST-D9-011, ST-D9-015); neither is suppressed, subordinated or worded as the conclusion",
+   "pass": true,
+   "detail": [
+    "ST-D9-001",
+    "ST-D9-004",
+    "ST-D9-006",
+    "ST-D9-009",
+    "ST-D9-011",
+    "ST-D9-015",
+    "ST-D9-017",
+    "ST-D9-020",
+    "ST-D9-022",
+    "ST-D9-025",
+    "ST-D9-027",
+    "ST-D9-030",
+    "ST-D9-032",
+    "ST-D9-036",
+    "ST-D9-038",
+    "ST-D9-041"
+   ]
+  },
+  {
+   "id": "D9-49",
+   "label": "the two clauses carry the same shape: the same keys, the same entry type, and no clause text joins them",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-49",
+   "label": "a kept approach with no change stated composes with no adverse clause: the clauses for Q-D9-03 and Q-D9-03b are the same two entries as when a change is stated",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-17",
+   "label": "no D9 entry carries the recurrence_blocker flag in the library (Section 5.7), and the conduct bearing clause instances of a full pattern carry none",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-17",
+   "label": "nothing stated at all composes nine record status entries; each clause instance carries its key and is a recurrence blocker (an entry describing the record carries no conduct toward recurrence), never equivalent to another",
+   "pass": true,
+   "detail": [
+    "ST-D9-003",
+    "ST-D9-008",
+    "ST-D9-014",
+    "ST-D9-019",
+    "ST-D9-024",
+    "ST-D9-029",
+    "ST-D9-035",
+    "ST-D9-040",
+    "ST-D9-044"
+   ]
+  },
+  {
+   "id": "D9-12",
+   "label": "two D9 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D9-12",
+   "label": "a D9 clause instance against a D3 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-12",
+   "label": "a D9 clause instance against a D4 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"took\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"acted\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"sought\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"performed\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"applied\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"carried out\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"tried\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"tested\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"adopted\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"changed\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"adjusted\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act verb \"switched\" in a D9 entry is a stage_form_violation at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "violation",
+    "violation",
+    "violation",
+    "violation"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "the same verbs in a D4 entry are not refused at Stage 2: the every Stage check is registered for D9 alone",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-61",
+   "label": "the platform's own Stage 1 verbs still apply to D9 at Stage 1 and to nothing else",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-61",
+   "label": "no D9 entry in the library carries a registered verb at any Stage (checked on all 44 entries at all four Stages)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-61",
+   "label": "composing a D9 entry that carries a registered verb refuses and logs stage_form_violation at Stages 1, 2, 3 and 4, naming the Stage (verb added for the test, then removed)",
+   "pass": true,
+   "detail": [
+    "ST-D9-006 uses the performed act verb stated at Stage 4",
+    "ST-D9-006 uses the performed act verb stated at Stage 3",
+    "ST-D9-006 uses the performed act verb stated at Stage 2",
+    "ST-D9-006 uses the performed act verb stated at Stage 1"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "with the test verb removed the same patterns compose again at all four Stages",
+   "pass": true,
+   "detail": [
+    "composed",
+    "composed",
+    "composed",
+    "composed"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "a platform Stage 1 verb present in an entry still refuses at Stage 1 and only there (verb added for the test, then removed)",
+   "pass": true,
+   "detail": [
+    "stage_form_violation",
+    "composed"
+   ]
+  },
+  {
+   "id": "D9-61",
+   "label": "a Stage 1 pattern composes, carrying the stage_1_only limitation, with all sixteen answers: every element is carried at Stage 1",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-61",
+   "label": "Stages 2, 3 and 4 do not carry the Stage 1 limitation",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-64",
+   "label": "a composed entry whose subject is not a statement of the participant refuses and logs capacity_observation (the subject registry is narrowed for the test, then restored)",
+   "pass": true,
+   "detail": "capacity_observation"
+  },
+  {
+   "id": "D9-64",
+   "label": "with the subject registry restored the same pattern composes",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-27",
+   "label": "a composed entry that carries a word belonging to another dimension refuses and logs cross_dimension_assertion (word added for the test, then removed)",
+   "pass": true,
+   "detail": "cross_dimension_assertion"
+  },
+  {
+   "id": "D9-64",
+   "label": "a composed entry that carries any other listed word refuses and logs prohibited_vocabulary (word added for the test, then removed)",
+   "pass": true,
+   "detail": "prohibited_vocabulary"
+  },
+  {
+   "id": "D9-27",
+   "label": "with the test words removed the same pattern composes",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-01",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-01",
+   "label": "production composition refuses on this unapproved source",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-composed",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-65",
+   "label": "with the signing key not loaded the seal refuses as commit_seal_key_unloaded",
+   "pass": true,
+   "detail": "COMMIT_SEAL_KEY_UNLOADED"
+  },
+  {
+   "id": "D9-65",
+   "label": "with the key loaded the seal is written",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "D9-65",
+   "label": "exactly one seal row exists for the composed statement",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D9-65",
+   "label": "a seal cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D9-65",
+   "label": "a sealed statement verifies under the server key",
+   "pass": true,
+   "detail": {
+    "valid": true,
+    "key_version": "k1"
+   }
+  },
+  {
+   "id": "D9-65",
+   "label": "under any other key the seal reads as invalid (commit_seal_invalid)",
+   "pass": true,
+   "detail": {
+    "valid": false,
+    "reason": "commit_seal_invalid"
+   }
+  },
+  {
+   "id": "D9-65",
+   "label": "a committed record whose captures were altered, with the hash recomputed, is refused on resubmission as commit_seal_invalid and the refusal is logged",
+   "pass": true,
+   "detail": {
+    "detail": "the commit record does not carry a valid server seal",
+    "reason": "commit_seal_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-66",
+   "label": "a second original commit under the same observation identifier is refused by the store; the first record stands",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_dimension_composed_original_uq\""
+   }
+  },
+  {
+   "id": "D9-66",
+   "label": "a second original seal under the same identifier is refused as well",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_commit_seal_pkey\""
+   }
+  },
+  {
+   "id": "D9-66",
+   "label": "the production commit path checks the seal register for the identifier before it writes, and logs observation_id_not_unique",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

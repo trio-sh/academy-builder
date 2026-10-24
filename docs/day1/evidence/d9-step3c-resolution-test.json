@@ -1,0 +1,1282 @@
+{
+ "passed": 102,
+ "total": 102,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-cov",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 220,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D9-cov",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D9-cov",
+   "label": "coverage: the eight resolution rules are the only designed refusals, in the parent child groups of Q-D9-01 to Q-D9-07",
+   "pass": true,
+   "detail": [
+    "Q-D9-01,Q-D9-01b",
+    "Q-D9-01,Q-D9-01b",
+    "Q-D9-01,Q-D9-01b",
+    "Q-D9-01,Q-D9-01b",
+    "Q-D9-02,Q-D9-02b",
+    "Q-D9-02,Q-D9-02b",
+    "Q-D9-02,Q-D9-02b",
+    "Q-D9-02,Q-D9-02b",
+    "Q-D9-03,Q-D9-03b",
+    "Q-D9-03,Q-D9-03b",
+    "Q-D9-03,Q-D9-03b",
+    "Q-D9-03,Q-D9-03b",
+    "Q-D9-04,Q-D9-04b",
+    "Q-D9-04,Q-D9-04b",
+    "Q-D9-04,Q-D9-04b",
+    "Q-D9-04,Q-D9-04b",
+    "Q-D9-05,Q-D9-05b",
+    "Q-D9-05,Q-D9-05b",
+    "Q-D9-05,Q-D9-05b",
+    "Q-D9-05,Q-D9-05b",
+    "Q-D9-06,Q-D9-06b",
+    "Q-D9-06,Q-D9-06b",
+    "Q-D9-06,Q-D9-06b",
+    "Q-D9-06,Q-D9-06b",
+    "Q-D9-07,Q-D9-07b",
+    "Q-D9-07,Q-D9-07b",
+    "Q-D9-07,Q-D9-07b",
+    "Q-D9-07,Q-D9-07b"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant named one or more of the indications the situation set out",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D9-01",
+      "statement_key": "ST-D9-001"
+     },
+     {
+      "text": "the participant named 1 of the indications the situation set out",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D9-01b",
+      "statement_key": "ST-D9-004"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D9-01",
+    "Q-D9-01b"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the participant stated 2 of the changes to the approach the situation made available"
+  },
+  {
+   "id": "D9-res",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01 A3 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "a D4 question in a D9 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 is not a D9 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "a D1 question in a D9 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D1-01 is not a D9 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b follows Q-D9-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "an answer on a child whose parent recorded a change outside the list refuses (only A1 serves Q-D9-02b)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-02b follows Q-D9-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D9-08"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "not_yet_observed is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D9-01 missing:not_yet_observed",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D9-004 named_indication_count",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-06",
+   "label": "Q-D9-03 A3 resolves to ST-D9-013 alone; the unserved child contributes no negative sentence",
+   "pass": true,
+   "detail": [
+    "ST-D9-013"
+   ]
+  },
+  {
+   "id": "D9-49",
+   "label": "Q-D9-02 A1 and Q-D9-03 A1 in one observation: both compose as separate entries, neither suppressed, and nothing joins them",
+   "pass": true,
+   "detail": [
+    "ST-D9-006",
+    "ST-D9-009",
+    "ST-D9-011",
+    "ST-D9-015"
+   ]
+  },
+  {
+   "id": "D9-49",
+   "label": "Q-D9-02 A3 with Q-D9-03 A4 is permitted: a participant may state neither, and no adverse clause composes",
+   "pass": true,
+   "detail": [
+    "ST-D9-008",
+    "ST-D9-014"
+   ]
+  },
+  {
+   "id": "D9-49",
+   "label": "a kept approach with no change stated composes the kept entries and nothing for the change beyond its absence record",
+   "pass": true,
+   "detail": [
+    "ST-D9-008",
+    "ST-D9-011",
+    "ST-D9-015"
+   ]
+  },
+  {
+   "id": "D9-49",
+   "label": "the composition order is the register order (CE-D9-02 before CE-D9-03) and that order carries no preference: the same two answers in the other order of submission compose identically",
+   "pass": true,
+   "detail": [
+    "Q-D9-02",
+    "Q-D9-02b",
+    "Q-D9-03",
+    "Q-D9-03b"
+   ]
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-01: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-01",
+    "detail": "The parent records a listed indication named and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-02: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-02",
+    "detail": "The parent records a listed change to the approach stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-03: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-03",
+    "detail": "The parent records a listed ground for keeping the approach named and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-04: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-04",
+    "detail": "The parent records a listed source of knowledge stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-05: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-05",
+    "detail": "The parent records a question about a listed open point stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-06: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-06",
+    "detail": "The parent records a listed trial step stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-07: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-07",
+    "detail": "The parent records work ahead named and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-05",
+   "label": "RR-D9-08: the parent records a listed answer and the child identifies none: refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D9-08",
+    "detail": "The parent records work ahead named and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "Q-D9-07 A3 (approach applies to work ahead, none named) resolves to ST-D9-034 alone",
+   "pass": true,
+   "detail": [
+    "ST-D9-034"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "Q-D9-07 A1 with Q-D9-07b A2 resolves to ST-D9-032 and ST-D9-037",
+   "pass": true,
+   "detail": [
+    "ST-D9-032",
+    "ST-D9-037"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "one entry serves every Stage: the same answers compose the same entries at Stages 1, 2, 3 and 4",
+   "pass": true,
+   "detail": [
+    "[\"ST-D9-006\",\"ST-D9-009\",\"ST-D9-039\"]",
+    "[\"ST-D9-006\",\"ST-D9-009\",\"ST-D9-039\"]",
+    "[\"ST-D9-006\",\"ST-D9-009\",\"ST-D9-039\"]",
+    "[\"ST-D9-006\",\"ST-D9-009\",\"ST-D9-039\"]"
+   ]
+  },
+  {
+   "id": "D9-res",
+   "label": "a Stage 1 answer to a work-ahead question and the account test resolves: no D9 question is barred at Stage 1 (every element is carried at Stage 1)",
+   "pass": true,
+   "detail": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant named work ahead that the stated approach applies to and stated when it applies",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D9-07",
+      "statement_key": "ST-D9-032"
+     },
+     {
+      "text": "the participant named 1 of the items of work ahead the situation set out",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D9-07b",
+      "statement_key": "ST-D9-036"
+     },
+     {
+      "text": "when an earlier statement was put back to them, the participant stated content that corresponds to what the situation records",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D9-09",
+      "statement_key": "ST-D9-041"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-res",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D9-64",
+   "label": "a clean statement passes",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"learned\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "learned"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"realized\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "realized"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"understood\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "understood"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"picked up\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "picked up"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"mastered\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "mastered"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"grew\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "grew"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"improved\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "improved"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"agile\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "agile"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"adaptable\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "adaptable"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"coachable\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "coachable"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"receptive\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "receptive"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"open minded\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "open minded"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"curious\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "curious"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"resistant\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "resistant"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"rigid\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "rigid"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"stubborn\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "stubborn"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"defensive\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "defensive"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"slow\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "slow"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"quick\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "quick"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"fast\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "fast"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"readily\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "readily"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"easily\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "easily"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"struggled\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "struggled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"capable\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "capable"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"competent\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "competent"
+     },
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "competent"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"beginner\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "beginner"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the Section 3.2 word \"novice\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "novice"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the modal \"will\" fails the scan even inside reported speech (Section 5.7)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "will"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "the modal \"would\" fails the scan even inside reported speech (Section 5.7)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "would"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"took\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "took"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"acted\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "acted"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"sought\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "sought"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"performed\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "performed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"applied\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "applied"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"carried out\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "carried out"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"tried\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "tried"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"tested\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "tested"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"adopted\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "adopted"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"changed\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "changed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"adjusted\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "adjusted"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-61",
+   "label": "the performed act word \"switched\" fails the scan",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "switched"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"owned\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "owned"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"caused\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "caused"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"blamed\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "blamed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"prioritized\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "prioritized"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"verified\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "verified"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"proposed\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "proposed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"agreed\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "agreed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"disclosed\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "disclosed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"recovered\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "recovered"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"resumed\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "resumed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "the word \"persuaded\", which another dimension owns, fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "persuaded"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-63",
+   "label": "stars fail",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_glyph",
+      "detail": "dot, bar, star, marker or traffic-light glyph"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-63",
+   "label": "a flag wording is rejected (red flag)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "red flag"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-63",
+   "label": "a retired term fails (candidate)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "candidate"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "a closed-list evaluative phrase fails (strong response)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "strong response"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "an entry that begins as a statement of the participant has a statement as its subject",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-64",
+   "label": "a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation: \"the participant is a fast learner\"",
+   "pass": true,
+   "detail": {
+    "rule": "capacity_observation",
+    "outcome": "violation"
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation: \"the participant has good knowledge of the new system\"",
+   "pass": true,
+   "detail": {
+    "rule": "capacity_observation",
+    "outcome": "violation"
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation: \"the participant seemed keen to change\"",
+   "pass": true,
+   "detail": {
+    "rule": "capacity_observation",
+    "outcome": "violation"
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation: \"a capable participant\"",
+   "pass": true,
+   "detail": {
+    "rule": "capacity_observation",
+    "outcome": "violation"
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation: \"the participant lacks experience with the tool\"",
+   "pass": true,
+   "detail": {
+    "rule": "capacity_observation",
+    "outcome": "violation"
+   }
+  },
+  {
+   "id": "D9-64",
+   "label": "every D9 Recorded Conduct Entry (44) passes the prohibited-output check and has a statement as its subject",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-64",
+   "label": "every D9 template (13) passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-70",
+   "label": "no entry and no template joins a change and a kept approach with but, however, although or instead",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}

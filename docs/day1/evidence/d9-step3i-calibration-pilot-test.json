@@ -1,0 +1,323 @@
+{
+ "passed": 33,
+ "total": 33,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-106",
+   "label": "a provisional calibration participant cannot be the observer of a real record; the refusal is logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-106",
+   "label": "an ordinary mentor is not affected",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-106",
+   "label": "the boundary is installed on five tables (observation, progression, evidence review, reconsideration, issuance)",
+   "pass": true,
+   "detail": [
+    {
+     "n": 5
+    }
+   ]
+  },
+  {
+   "id": "D9-108",
+   "label": "D1 authorization needs no new clearance (D1 rows are not re-judged)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-102",
+   "label": "a D1 clearance confers nothing: D9 authorization with no D9 clearance is refused and logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-59",
+   "label": "a calibration run on a question with an empty definition does not open; the refusal is logged question_definition_incomplete",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-59",
+   "label": "a calibration run that names no question does not open either",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-107",
+   "label": "before locking their own selections a participant sees nothing of anyone else's, and the attempt is logged",
+   "pass": true,
+   "detail": {
+    "detail": "another participant's selections are not visible until your own are locked",
+    "reason": "selections_not_locked",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-107",
+   "label": "locking B does not open the view for A",
+   "pass": true,
+   "detail": {
+    "detail": "another participant's selections are not visible until your own are locked",
+    "reason": "selections_not_locked",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-107",
+   "label": "after A locks, A sees B's selections only",
+   "pass": true,
+   "detail": {
+    "outcome": "visible",
+    "selections": [
+     {
+      "reviewer_id": "9c8b4dea-67bc-4b9e-967b-da96ac244824",
+      "decision_body": {
+       "units": [
+        {
+         "answer": "A1",
+         "unit_id": "a12aa272-fff8-4d80-94f0-310423bb131d-0",
+         "question_code": "Q-D9-01",
+         "source_version_id": "a12aa272-fff8-4d80-94f0-310423bb131d"
+        },
+        {
+         "answer": "A1",
+         "unit_id": "a12aa272-fff8-4d80-94f0-310423bb131d-1",
+         "question_code": "Q-D9-01",
+         "source_version_id": "a12aa272-fff8-4d80-94f0-310423bb131d"
+        },
+        {
+         "answer": "A2",
+         "unit_id": "a12aa272-fff8-4d80-94f0-310423bb131d-2",
+         "question_code": "Q-D9-01",
+         "source_version_id": "a12aa272-fff8-4d80-94f0-310423bb131d"
+        },
+        {
+         "answer": "A1",
+         "unit_id": "0f9c2247-d3e7-48b5-9384-483b711d2444-0",
+         "question_code": "Q-D9-01",
+         "source_version_id": "0f9c2247-d3e7-48b5-9384-483b711d2444"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-103",
+   "label": "with the minimum unloaded nothing is calculated",
+   "pass": true,
+   "detail": {
+    "detail": "the approved per-source minimum is not loaded; nothing is calculated",
+    "reason": "minimum_unit_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-103",
+   "label": "agreement is computed within a source: source one has three units and is calculated, with 2 of 3 units agreeing",
+   "pass": true,
+   "detail": {
+    "note": "agreement and statement concordance are separate figures and are not combined",
+    "units": 3,
+    "status": "CALCULATED",
+    "question_code": "Q-D9-01",
+    "source_version_id": "a12aa272-fff8-4d80-94f0-310423bb131d",
+    "question_agreement_units": 2,
+    "statement_concordance_units": 2
+   }
+  },
+  {
+   "id": "D9-104",
+   "label": "below the per source minimum the status is NOT_CALCULATED and the question stays uncleared for that source",
+   "pass": true,
+   "detail": {
+    "units": 1,
+    "status": "NOT_CALCULATED",
+    "minimum": 3,
+    "question_code": "Q-D9-01",
+    "source_version_id": "0f9c2247-d3e7-48b5-9384-483b711d2444",
+    "question_remains_uncleared_for_this_source": true
+   }
+  },
+  {
+   "id": "D9-105",
+   "label": "statement concordance is a separate figure and no combined figure exists",
+   "pass": true,
+   "detail": [
+    "note",
+    "units",
+    "status",
+    "question_code",
+    "source_version_id",
+    "question_agreement_units",
+    "statement_concordance_units"
+   ]
+  },
+  {
+   "id": "D9-102",
+   "label": "the clearance route refuses with the approved minimum unloaded",
+   "pass": true,
+   "detail": {
+    "detail": "the approved per-source minimum is not loaded",
+    "reason": "clearance_parameters_unloaded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-102",
+   "label": "no signed in role may call the clearance function",
+   "pass": true,
+   "detail": [
+    {
+     "p": false
+    }
+   ]
+  },
+  {
+   "id": "D9-104",
+   "label": "with the minimum loaded but a source below it, the clearance still refuses (questions_uncleared)",
+   "pass": true,
+   "detail": {
+    "detail": "at least one question is not calculated for at least one source",
+    "reason": "questions_uncleared",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-102",
+   "label": "when every question of every source is calculated the service route records the clearance (synthetic)",
+   "pass": true,
+   "detail": {
+    "outcome": "recorded"
+   }
+  },
+  {
+   "id": "D9-108",
+   "label": "D9 authorization now succeeds because a D9 clearance names this version set",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-102",
+   "label": "a clearance record cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D9-110",
+   "label": "no stop in force: every path is open",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-110",
+   "label": "an affected path stop is recorded",
+   "pass": true,
+   "detail": {
+    "outcome": "stopped",
+    "pilot_stop_id": "fc15223c-38c0-46a6-b211-a24a4a820008"
+   }
+  },
+  {
+   "id": "D9-110",
+   "label": "the stopped participant's D9 entry is refused with pilot_path_stopped",
+   "pass": true,
+   "detail": {
+    "eligible": false,
+    "sub_reason": "pilot_stop_in_force",
+    "refusal_code": "pilot_path_stopped"
+   }
+  },
+  {
+   "id": "D9-111",
+   "label": "another participant is not halted by it",
+   "pass": true,
+   "detail": {
+    "eligible": false,
+    "sub_reason": "s1_instance_not_closed",
+    "refusal_code": "s1_confirmation_absent"
+   }
+  },
+  {
+   "id": "D9-111",
+   "label": "the stopped participant's D1 path is not halted",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-114",
+   "label": "pausing new scheduling stops new starts but leaves a session already under way open",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-114",
+   "label": "a pilot wide stop closes every D9 path",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-110",
+   "label": "an affected path stop must name the participant",
+   "pass": true,
+   "detail": "new row for relation \"t3a_pilot_stop\" violates check constraint \"t3a_pilot_stop_"
+  },
+  {
+   "id": "D9-110",
+   "label": "a participant cannot set a stop",
+   "pass": true,
+   "detail": "{\"detail\":\"a stop is set by a person with standing\",\"reason\":\"APPROVER_LACKS_STANDING\",\"outcome\":\"refused\"}"
+  },
+  {
+   "id": "D9-112",
+   "label": "each employer route attempt is refused and recorded with its result",
+   "pass": true,
+   "detail": {
+    "detail": "employer access, verification, invitation and release are disabled during the pilot",
+    "reason": "employer_route_disabled_in_pilot",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-115",
+   "label": "a trace for an unknown observation is incomplete and names every missing link instead of filling it",
+   "pass": true,
+   "detail": [
+    "observation_record",
+    "composed_statement",
+    "stage_entry_event",
+    "served_instance",
+    "audit_chain"
+   ]
+  },
+  {
+   "id": "D9-115",
+   "label": "a real observation with no composed statement reports exactly that gap",
+   "pass": true,
+   "detail": [
+    "composed_statement",
+    "stage_entry_event",
+    "served_instance",
+    "audit_chain"
+   ]
+  },
+  {
+   "id": "D9-115",
+   "label": "the trace is service only",
+   "pass": true,
+   "detail": [
+    {
+     "p": false
+    }
+   ]
+  }
+ ]
+}

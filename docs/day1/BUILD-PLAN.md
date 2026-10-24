@@ -18,6 +18,7 @@ Rule from every package: do not stop on a decision. Apply the stated default, lo
 | 6 | Multi page BER, beside (not replacing) the single page face. Same fonts and colour theme | Step 2 | Not started |
 | 7 | Behavioral Trajectory Report (Session Archive, code `lsa`): capture structures, resolver, admission boundary, tab, all dormant | Step 1 | Not started |
 | 8 | Return report: ERD, data dictionary as built, acceptance results with evidence, conflict register | All | Not started |
+| 9 | D9 (Learning Agility) pathway on the same machinery, from the D9 handover (T3A-D9-EXEC-001 v1.1): five migrations 20270221 to 20270225, the `d9_` test scripts, `d9-acceptance-results.md` | Steps 3 to 5 and 7 | Built and tested on the throwaway database on branch `claude/build-d9` (24 Oct 2026): 88 of 89 acceptance identifiers PASS, 1 NOT RUN (D9-71 request log, CR-285), package checks run (CR-287), CR-270 to CR-289; not applied to any live project, nothing approved or served |
 
 ## Day 1 detail (Step 1)
 
