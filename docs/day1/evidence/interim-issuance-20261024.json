@@ -1,0 +1,14 @@
+{
+ "date": "2026-10-24",
+ "what": "Migration 20270132 (interim evidence review authority, CR-220) applied to live; floor approved for the test pilot at 1 committed observation / 1 observer / 1 Stage; Hans (b62888d2-9a66-4872-94ab-2c1e3ca1762d) granted on the interim list",
+ "verification": {
+  "authority_events": 1,
+  "floor": "approved",
+  "env": "pilot_active",
+  "lsa_activation": true,
+  "enforce_required": false,
+  "can_issue_for_hans_on_the_8_oct_test_report": "NON_RESPONSE_BLOCKS_ISSUANCE (the participant's own review is not on record; every earlier gate passes, so the next gate is the one that stops it)"
+ },
+ "rollback": "tools/day1/interim_issuance_rollback.sql (revokes Hans by a new row, floor back to not approved) and evidence/live-apply-20270132-rollback.sql for the migration",
+ "not_issued": "the 8 Oct report f5828113-2d23-4356-a8d3-ed9c62641e59 stays ready_to_issue"
+}
