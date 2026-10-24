@@ -1,0 +1,598 @@
+{
+ "passed": 62,
+ "total": 62,
+ "failed": [],
+ "results": [
+  {
+   "id": "D8-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement (sixteen served questions: every D8 question is served on this source)",
+   "pass": true,
+   "detail": 16
+  },
+  {
+   "id": "D8-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant named 2 of the facts about the setback the situation set out"
+   ]
+  },
+  {
+   "id": "D8-composed",
+   "label": "clause instance carries the dimension scoped key and the statement id",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D8-001",
+    "observation_id": "1326ba91-ae64-451c-a315-8059f0110562",
+    "conduct_element_id": "CE-D8-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D8-001"
+   }
+  },
+  {
+   "id": "D8-24",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D8-24",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D8-composed",
+   "label": "every D8 element is composed at Stage 1: all sixteen clauses on the Stage 1 source, each recording what was stated or named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-composed",
+   "label": "the Stage 3 source composes fifteen clauses and Q-D8-09 writes no row at all",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-composed",
+   "label": "the Stage 4 source composes sixteen clauses",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-04",
+   "label": "Q-D8-09 is NOT SERVED on the Stage 3 source: an answer refuses and nothing is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-09",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-04",
+   "label": "a missing state for Q-D8-09 at Stage 3 refuses too: no answer row and no missing state code",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-09",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-04",
+   "label": "no composed statement at Stage 3 holds a Q-D8-09 row",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D8-04",
+   "label": "on a source whose recurrence_measures is empty Q-D8-07 and Q-D8-07b are NOT SERVED: an answer refuses, and without one the rest composes with no recurrence row",
+   "pass": true,
+   "detail": [
+    "answer_for_question_not_served",
+    "composed"
+   ]
+  },
+  {
+   "id": "D8-54",
+   "label": "a source that serves Q-D8-07 while its list is empty cannot compose: BOUND_FAMILY_ABSENT_OR_EMPTY is logged and nothing is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-07 is served but recurrence_measures is absent or empty on this source",
+    "reason": "BOUND_FAMILY_ABSENT_OR_EMPTY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-54",
+   "label": "the refusal does not wait for the child: an answer that would never reach Q-D8-07b (A3) on the same source with an empty list is refused too",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-07 is served but recurrence_measures is absent or empty on this source",
+    "reason": "BOUND_FAMILY_ABSENT_OR_EMPTY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-54",
+   "label": "a list that is absent from the sheet refuses the same way, and no empty selection slot is served",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-04 is served but available_supports is absent or empty on this source",
+    "reason": "BOUND_FAMILY_ABSENT_OR_EMPTY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-05",
+   "label": "Q-D8-02 A1 with no item selected at Q-D8-02b refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-05",
+   "label": "an answer that does not serve the child leaves the child unreached; sending its items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-02b follows Q-D8-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-05",
+   "label": "Q-D8-05 A2 (every commitment named) does not reach Q-D8-05b: no selection is needed",
+   "pass": true,
+   "detail": [
+    "ST-D8-001",
+    "ST-D8-004",
+    "ST-D8-006",
+    "ST-D8-009",
+    "ST-D8-011",
+    "ST-D8-014",
+    "ST-D8-016",
+    "ST-D8-019",
+    "ST-D8-022",
+    "ST-D8-026",
+    "ST-D8-030",
+    "ST-D8-032",
+    "ST-D8-036",
+    "ST-D8-038",
+    "ST-D8-041"
+   ]
+  },
+  {
+   "id": "D8-05",
+   "label": "Q-D8-06 A2 (work named, no point stated) reaches Q-D8-06b as well as A1 does",
+   "pass": true,
+   "detail": [
+    "ST-D8-001",
+    "ST-D8-004",
+    "ST-D8-006",
+    "ST-D8-009",
+    "ST-D8-011",
+    "ST-D8-014",
+    "ST-D8-016",
+    "ST-D8-019",
+    "ST-D8-021",
+    "ST-D8-024",
+    "ST-D8-027",
+    "ST-D8-030",
+    "ST-D8-032",
+    "ST-D8-036",
+    "ST-D8-038",
+    "ST-D8-041"
+   ]
+  },
+  {
+   "id": "D8-05",
+   "label": "Q-D8-06 A3 (work to continue, none named) leaves the child unreached",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D8-06",
+   "label": "Q-D8-07 A3 (the condition can arise again, no measure named) resolves to ST-D8-034 alone, with no child and no negative sentence",
+   "pass": true,
+   "detail": [
+    "ST-D8-001",
+    "ST-D8-004",
+    "ST-D8-006",
+    "ST-D8-009",
+    "ST-D8-011",
+    "ST-D8-014",
+    "ST-D8-016",
+    "ST-D8-019",
+    "ST-D8-021",
+    "ST-D8-024",
+    "ST-D8-026",
+    "ST-D8-030",
+    "ST-D8-034",
+    "ST-D8-038",
+    "ST-D8-041"
+   ]
+  },
+  {
+   "id": "D8-09",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-09",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-09",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D8-10",
+   "label": "not_applicable is refused as a missing state",
+   "pass": true,
+   "detail": "missing_state_not_postable"
+  },
+  {
+   "id": "D8-10",
+   "label": "not_yet_observed is refused as a missing state",
+   "pass": true,
+   "detail": "missing_state_not_postable"
+  },
+  {
+   "id": "D8-07",
+   "label": "an item not on this source version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-02b item not on designated_facts of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-07",
+   "label": "an item that is on another source version (CM3 of SRC-D8-S1-001) but not on this one refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-05b item not on standing_commitments of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-08",
+   "label": "an item of a D1 source (M1) is refused",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01b item not on containment_actions of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-07",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-02b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-49",
+   "label": "the same action selected at Q-D8-01b and at Q-D8-03b composes both as separate determinations; neither is suppressed as a duplicate",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D8-49",
+   "label": "the two controls draw on two lists of the source: the same action text is in containment_actions and corrective_actions of SRC-D8-S1-001",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-17",
+   "label": "no D8 entry carries recurrence_blocker (Section 5.10)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D8-17",
+   "label": "a record status entry (ST-D8-003) carries its key but is marked as never counting toward recurrence, and is never equivalent to another",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D8-003",
+    "observation_id": "0868c30e-2c6c-4814-846c-40781fab30d9",
+    "conduct_element_id": "CE-D8-01",
+    "recurrence_blocker": true,
+    "recurrence_equivalence_key_id": "REK-D8-001"
+   }
+  },
+  {
+   "id": "D8-17",
+   "label": "every record status entry of the pattern is marked the same way and no conduct bearing entry is (nine record status clauses, none conduct bearing)",
+   "pass": true,
+   "detail": [
+    [
+     "ST-D8-003",
+     true
+    ],
+    [
+     "ST-D8-008",
+     true
+    ],
+    [
+     "ST-D8-013",
+     true
+    ],
+    [
+     "ST-D8-018",
+     true
+    ],
+    [
+     "ST-D8-023",
+     true
+    ],
+    [
+     "ST-D8-029",
+     true
+    ],
+    [
+     "ST-D8-035",
+     true
+    ],
+    [
+     "ST-D8-040",
+     true
+    ],
+    [
+     "ST-D8-044",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "D8-12",
+   "label": "two D8 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D8-12",
+   "label": "a D8 clause instance against a D3 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-12",
+   "label": "a D8 clause instance against a D4 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-61",
+   "label": "each of took, acted, sought, performed, applied and carried out is refused by the stage form check at every Stage (24 of 24)",
+   "pass": true,
+   "detail": 24
+  },
+  {
+   "id": "D8-61",
+   "label": "a statement of what the participant stated or named passes at every Stage",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-61",
+   "label": "the verbs of instruction 060 (began, completed, assigned, escalated) are refused at Stage 3 for D8",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-61",
+   "label": "the rule is D8's: a D4 statement with took at Stage 3 is not refused (D1 to D4 keep the Stage 1 rule)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-61",
+   "label": "composing at Stage 1, 2, 3 and 4 with a performed-act verb in the entry refuses and logs stage_form_violation (a verb found in a real entry is added for the test, then removed)",
+   "pass": true,
+   "detail": 4
+  },
+  {
+   "id": "D8-61",
+   "label": "with the test verb removed the same Stage 2 pattern composes again",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-64",
+   "label": "a composed entry matching a state_observation pattern refuses and logs state_observation, and nothing is written (pattern added for the test, then removed)",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D8-001 has the participant's state as its subject",
+    "reason": "state_observation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a composed entry carrying a word that belongs to another dimension refuses and logs cross_dimension_assertion (word added for the test, then removed)",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D8-001 carries \"situation\"",
+    "reason": "cross_dimension_assertion",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a composed entry carrying a word that describes how the participant bore the setback refuses and logs state_observation (word added for the test, then removed)",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D8-001 carries \"situation\"",
+    "reason": "state_observation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "the gate is D8's own: the same word flagged for D4 does not refuse a D4 composition (checked on the gate function)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-64",
+   "label": "sentences whose subject is the participant's state, and sentences asserting the absence of a reaction, are all refused by the gate (seven of seven)",
+   "pass": true,
+   "detail": [
+    "the participant was calm",
+    "the participant seemed untroubled",
+    "the participant showed no sign of being affected",
+    "the participant appeared to take it in stride",
+    "the participant remained composed",
+    "without apparent difficulty the participant named a fact",
+    "the participant visibly stated a support"
+   ]
+  },
+  {
+   "id": "D8-01",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-01",
+   "label": "production composition refuses on this unapproved source",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-composed",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-65",
+   "label": "with the signing key not loaded the seal refuses as commit_seal_key_unloaded",
+   "pass": true,
+   "detail": "COMMIT_SEAL_KEY_UNLOADED"
+  },
+  {
+   "id": "D8-65",
+   "label": "with the key loaded the seal is written",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "D8-65",
+   "label": "exactly one seal row exists for the composed statement",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D8-65",
+   "label": "a seal cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D8-65",
+   "label": "a sealed statement verifies under the server key",
+   "pass": true,
+   "detail": {
+    "valid": true,
+    "key_version": "k1"
+   }
+  },
+  {
+   "id": "D8-65",
+   "label": "under any other key the seal reads as invalid (commit_seal_invalid)",
+   "pass": true,
+   "detail": {
+    "valid": false,
+    "reason": "commit_seal_invalid"
+   }
+  },
+  {
+   "id": "D8-66",
+   "label": "a second original commit under the same observation identifier is refused by the store; the first record stands",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_dimension_composed_original_uq\""
+   }
+  },
+  {
+   "id": "D8-66",
+   "label": "a second original seal under the same identifier is refused as well",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_commit_seal_pkey\""
+   }
+  },
+  {
+   "id": "D8-66",
+   "label": "the production commit path checks the seal register for the identifier before it writes",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-65",
+   "label": "a committed record whose captures were altered and whose content hash was recomputed to match is refused: the resubmission check returns commit_seal_invalid and logs it",
+   "pass": true,
+   "detail": {
+    "before": {
+     "valid": true,
+     "key_version": "k1"
+    },
+    "hash_matches_altered_record": true,
+    "check": {
+     "detail": "the commit record does not carry a valid server seal",
+     "reason": "commit_seal_invalid",
+     "outcome": "refused"
+    }
+   }
+  }
+ ]
+}

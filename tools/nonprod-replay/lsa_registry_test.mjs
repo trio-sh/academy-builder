@@ -33,6 +33,17 @@ const reg = {}; for (const r of recs) (reg[r.registry] ||= []).push({ ...r.body,
 let loadErr = null; try { loadRegistries(reg); } catch (e) { loadErr = e.message; }
 rec("LSA-D4", "the stored D4 records pass the registry load checks when treated as active (no overlap, states declared, no cycle, no absence state in a direction rule, required lines present)", loadErr === null, loadErr);
 
+// D8 content (T3A-D8-LSA-CONTENT-001): thirty drafts for CE-D8-06 and CE-D8-08, none approved, dated or active
+{ const n8 = (await run(`select count(*)::int n, count(*) filter (where status='draft_for_approval')::int d, count(*) filter (where status='active' or approved_by is not null or effective_from is not null)::int a from t3a_lsa_registry_record where package_id='T3A-D8-LSA-CONTENT-001'`))[0];
+  rec("LSA-D8", "D8 content is loaded as 30 records, every one a draft with no approval and no effective date, none active", n8.n === 30 && n8.d === 30 && n8.a === 0, n8);
+  const by8 = Object.fromEntries((await run(`select registry, count(*)::int n from t3a_lsa_registry_record where package_id='T3A-D8-LSA-CONTENT-001' group by 1 order by 1`)).map((r) => [r.registry, r.n]));
+  rec("LSA-D8", "by registry: 2 families, 2 direction rules, 1 sufficiency rule, 14 entries, 1 history rule, 1 dimension rule, 7 dimension entries, 2 state mappings", JSON.stringify(by8) === JSON.stringify({ dimension_entries: 7, dimension_rules: 1, direction_rules: 2, entries: 14, families: 2, history_rules: 1, state_mapping: 2, sufficiency_rules: 1 }), by8);
+  rec("LSA-D8", "the CE-D8-06 and CE-D8-08 propositions are the only ones carried", (await run(`select distinct body->>'proposition_id' p from t3a_lsa_registry_record where registry='families' and package_id='T3A-D8-LSA-CONTENT-001' order by 1`)).map((r) => r.p).join() === "REK-D8-006,REK-D8-008");
+  const recs8 = await run(`select registry, body from t3a_lsa_registry_record where package_id='T3A-D8-LSA-CONTENT-001' and registry <> 'state_mapping'`);
+  const reg8 = {}; for (const r of recs8) (reg8[r.registry] ||= []).push({ ...r.body, status: "active", effective_from: "2027-01-01" });
+  let loadErr8 = null; try { loadRegistries(reg8); } catch (e) { loadErr8 = e.message; }
+  rec("LSA-D8", "the stored D8 records pass the registry load checks when treated as active (no overlap, states declared, no cycle, no absence state in a direction rule, required lines present)", loadErr8 === null, loadErr8); }
+
 // guards
 const before = await refusedN("lsa_not_activated");
 const act = await c.query(`insert into t3a_lsa_registry_record(registry, record_key, version, status, approved_by, approved_at, effective_from, body) values ('entries','X-ACTIVE',1,'active','someone',now(),'2027-01-01','{}'::jsonb)`).then(() => "ok").catch((e) => e.message);

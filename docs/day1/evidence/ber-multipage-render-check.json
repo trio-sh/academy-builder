@@ -1,6 +1,6 @@
 {
- "passed": 13,
- "total": 13,
+ "passed": 16,
+ "total": 16,
  "failed": [],
  "results": [
   {
@@ -88,6 +88,34 @@
    "label": "the contents list D4 as represented and thirteen dimensions as not represented",
    "pass": true,
    "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "a D8 only report renders three pages: cover, one dimension page, controls; it is not refused for its count",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "render-1",
+   "label": "the contents list D8 as represented and thirteen dimensions as not represented",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "every page of the D8 only report is 612 by 792 points, states Page n of 3, carries the demonstration footer and no block passes the content box",
+   "pass": true,
+   "detail": [
+    [],
+    [
+     365
+    ],
+    []
+   ]
   },
   {
    "id": "render-refuse",

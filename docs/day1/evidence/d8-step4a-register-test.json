@@ -1,0 +1,153 @@
+{
+ "passed": 21,
+ "total": 21,
+ "failed": [],
+ "results": [
+  {
+   "id": "D8-load",
+   "label": "D8 loads 16 questions, 16 capture sets, 44 capture lines, 7 branch rules, 44 statements, 8 numbered resolution rules, 13 templates, 34 sources",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "the six source numbers the package does not carry (S1-010, S2-008, S2-010, S4-007 retired; S3-009 and S3-010 never existed) are not registered",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "every branch rule has its parent, child and serving answers derived on load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "no D8 version is approved, no source is active, none holds an approval record",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "D1 and D2 content are untouched by the D8 load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "the placeholder grammar is data: D2 has 5 rows, D8 has 7",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-load",
+   "label": "nine conduct elements: CE-D8-01 to CE-D8-07 each hold a parent and a child question, CE-D8-08 and CE-D8-09 one question each",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "the register has one row per question and answer pair (44) with the structural fields populated",
+   "pass": true,
+   "detail": 44
+  },
+  {
+   "id": "D-05",
+   "label": "the five semantic fields are empty on every row; nothing in this build wrote one",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "every one of the 16 questions carries calibration_ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a structurally complete row is not mistaken for a ready one: statement_mapping populated, semantic fields empty, ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a dimension with no register (D2) is not subject to the rule",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-58",
+   "label": "with both drafting rows the next failing precondition is question_definition_incomplete",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-58",
+   "label": "a source whose served question has an empty definition cannot enter the production approval path; the refusal is logged",
+   "pass": true,
+   "detail": {
+    "detail": "a served question has empty semantic definition fields: Q-D8-01",
+    "reason": "question_definition_incomplete",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-58",
+   "label": "once every served question is complete the same source queues (Q-D8-08 is NOT SERVED on it and is not counted)",
+   "pass": true,
+   "detail": {
+    "outcome": "queued",
+    "source_version_id": "d001902a-033a-4d86-8dec-0e60b43f73e6"
+   }
+  },
+  {
+   "id": "D8-58",
+   "label": "clearing the definition closes the path again",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-60",
+   "label": "the real D8 sources hold no approval and the first failing precondition is named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-50",
+   "label": "a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D8-T-d5556f80-2 names Q-D8-99",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-50",
+   "label": "a table whose rows all name real questions loads",
+   "pass": true,
+   "detail": {
+    "rows": 1,
+    "outcome": "loaded"
+   }
+  },
+  {
+   "id": "D8-50",
+   "label": "a suppress row naming a statement that does not exist is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D8-T-d5556f80-1s suppresses unknown ST-D8-999",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-50",
+   "label": "the loader is the service route only",
+   "pass": true,
+   "detail": {
+    "msg": "permission denied for function t3a_load_resolution_rules"
+   }
+  }
+ ]
+}
