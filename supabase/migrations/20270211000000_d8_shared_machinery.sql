@@ -2,8 +2,8 @@
 -- 5.7 the Stage form at every Stage, 5.10 no recurrence from a record status entry, Directive D-07 for D8, tests D8-04, D8-17, D8-55, D8-61, D8-64, D8-67, D8-68, D8-69).
 --
 -- Additive only. Nothing here changes what D1 to D4 do: every new rule is data keyed by dimension, and a dimension with no row behaves as before.
---   1. t3a_dimension_rule: the rules a dimension turns on (D4 and D8: the single page route is closed; D8: the entry language gate, record status entries never recur,
---      the source state boundary, source truth withheld from surfaces, a served question needs its list).
+--   1. t3a_dimension_rule: the rules a dimension turns on (D8: the entry language gate, the source state boundary, source truth withheld from surfaces, a served question needs its list).
+--      Record status entries never recur (D5 test D5-17 / D8 5.10) and the single page route closed (Directive D-07) are rows of the canonical registers (see below), not rules here.
 --   2. The Stage form (performed act verbs) can hold verbs that apply at every Stage for a dimension (t3a_stage_form_verb_dimension). The shared verbs still apply at Stage 1.
 --   3. The entry language gate: a composed entry whose subject is the participant's state, or that carries a word of another dimension, refuses before it is written
 --      (`state_observation`, `cross_dimension_assertion`). The prohibited output scan reads the same patterns.
@@ -12,14 +12,16 @@
 --   5. Source truth withheld (D8-68): who_knows and decision_origin are retained for source truth in a service only table and are removed from the body that every
 --      screen and every response reads. The package digest on the source is unchanged.
 --   6. A served question whose list is absent or empty on its source refuses `BOUND_FAMILY_ABSENT_OR_EMPTY` (Section 5.5: a source with an empty list cannot carry that element).
---   7. The single page route is closed by rule for D4 and D8 (it was written into the render gate for D4 alone).
--- The compose, the stage form check, the prohibited output check and the render gate are changed by patching their live definitions at a named anchor, so that a change
--- made to the same function by another build layers instead of being overwritten. A patch that finds no anchor raises, so it can never pass silently.
+--   7. The single page route is closed for D8: a row of t3a_multipage_only_dimension (the register D5 created); the render gate that reads it is in 20270230000000.
+-- RECONCILIATION (CR-290 to CR-299): D5, D8 and D9 were built side by side and each changed the same shared functions. This file no longer patches or re-creates any function that another
+-- dimension also changes (t3a_stage_form_check, t3a_dimension_compose, t3a_prohibited_output_check, t3a_report_render_gate). Those four are created once, as the union of D4, D5, D8 and D9,
+-- in migration 20270230000000_shared_functions_d5_d8_d9.sql. This file keeps D8's own tables, data and non shared functions (the entry language gate, the source boundary guard, the source truth store),
+-- and D8's rows in the canonical registers: t3a_multipage_only_dimension (D5) and t3a_recurrence_excluded_entry_type (D5).
 
 -- ===== 1. the rule table =====
 create table if not exists public.t3a_dimension_rule (
   dimension_id text not null check (dimension_id ~ '^D[0-9]{1,2}$'),
-  rule_code text not null check (rule_code in ('single_page_route_closed', 'entry_language_gate', 'record_status_never_recurs', 'source_state_boundary', 'withhold_source_truth', 'served_question_needs_list')),
+  rule_code text not null check (rule_code in ('entry_language_gate', 'source_state_boundary', 'withhold_source_truth', 'served_question_needs_list')),
   note text,
   created_at timestamptz not null default now(),
   primary key (dimension_id, rule_code)
@@ -32,10 +34,7 @@ drop trigger if exists t3a_append_only on public.t3a_dimension_rule;
 create trigger t3a_append_only before update or delete on public.t3a_dimension_rule for each row execute function public.t3a_deny_mutation();
 
 insert into public.t3a_dimension_rule (dimension_id, rule_code, note) values
-  ('D4', 'single_page_route_closed', 'D4 Directive D-07: a report that carries D4 renders through the multi page renderer only (moved here from the render gate, behaviour unchanged)'),
-  ('D8', 'single_page_route_closed', 'D8 Directive D-07: every D8 report renders through the multi page renderer; a route to the single page renderer refuses format_mismatch (D8-25, D8-67)'),
   ('D8', 'entry_language_gate', 'D8 Section 5.7: a composed entry whose subject is the participant''s state refuses state_observation; a word of another dimension refuses cross_dimension_assertion'),
-  ('D8', 'record_status_never_recurs', 'D8 Section 5.10 and test D8-17: an entry that describes the record carries no conduct toward recurrence; no D8 entry carries recurrence_blocker'),
   ('D8', 'source_state_boundary', 'D8 Sections 3.2, 5.2 and 5.5: a source sheet field or a list item naming the participant''s state refuses the source at load (D8-69)'),
   ('D8', 'withhold_source_truth', 'D8 Section 5.5 and test D8-68: who_knows and decision_origin are retained for source truth and never rendered or shown'),
   ('D8', 'served_question_needs_list', 'D8 Section 5.5 and tests D8-04, D8-54: a field a question needs that is empty on a source means the source cannot carry that element')
@@ -52,29 +51,6 @@ comment on table public.t3a_stage_form_verb_dimension is 'Verbs a composed entry
 alter table public.t3a_stage_form_verb_dimension enable row level security;
 revoke all on public.t3a_stage_form_verb_dimension from anon, authenticated;
 grant select on public.t3a_stage_form_verb_dimension to service_role;
-
-do $m$
-declare v_def text; v_new text;
-  v_anchor text := $a$  if regexp_replace(upper(p_stage), '^S', '') <> '1' then return jsonb_build_object('outcome', 'ok'); end if;$a$;
-  v_add text := $r$  -- D8 and any dimension that records statements only: these verbs are refused at every Stage
-  if p_dimension is not null then
-    for x in select * from jsonb_array_elements(coalesce(p_statements, '[]'::jsonb)) loop
-      for v in select d.verb from public.t3a_stage_form_verb_dimension d where d.dimension_id = p_dimension loop
-        if (x ->> 'text') ~* ('\m' || v || '\M') then
-          return jsonb_build_object('outcome', 'violation', 'statement_key', x ->> 'statement_key', 'verb', v);
-        end if;
-      end loop;
-    end loop;
-  end if;
-$r$;
-begin
-  v_def := pg_get_functiondef('public.t3a_stage_form_check(text,jsonb,text)'::regprocedure);
-  if position('t3a_stage_form_verb_dimension' in v_def) = 0 then
-    if position(v_anchor in v_def) = 0 then raise exception 'D8 machinery: t3a_stage_form_check has not the expected first line'; end if;
-    v_new := replace(v_def, v_anchor, v_add || v_anchor);
-    execute v_new;
-  end if;
-end $m$;
 
 -- ===== 3. the entry language gate =====
 create table if not exists public.t3a_entry_language_rule (
@@ -112,79 +88,6 @@ begin
 end $fn$;
 revoke all on function public.t3a_entry_language_gate(text, jsonb) from public, anon, authenticated;
 grant execute on function public.t3a_entry_language_gate(text, jsonb) to service_role;
-
--- the prohibited output scan reads the same patterns, and names a state word as state_observation
-do $m$
-declare v_def text; v_new text;
-  a1 text := $a$case when w.reason = 'cross_dimension_assertion' then 'cross_dimension_assertion' else 'retired_or_prohibited_vocabulary' end$a$;
-  a2 text := $a$  -- blank rows must not read as an unmet count$a$;
-  r2 text := $r$  -- a sentence whose subject is the participant's state (D8 Section 5.7)
-  for w in select pattern as word, null::text as reason from public.t3a_entry_language_rule where dimension_id = p_dimension and rule_code = 'state_observation' loop
-    if t ~* w.word then f := f || jsonb_build_object('rule', 'state_observation', 'detail', 'the participant''s state is the subject'); end if;
-  end loop;
-$r$;
-begin
-  v_def := pg_get_functiondef('public.t3a_prohibited_output_check(text,text)'::regprocedure);
-  if position('t3a_entry_language_rule' in v_def) = 0 then
-    if position(a1 in v_def) = 0 or position(a2 in v_def) = 0 then raise exception 'D8 machinery: t3a_prohibited_output_check has not the expected lines'; end if;
-    v_new := replace(v_def, a1, $r$case when w.reason in ('cross_dimension_assertion', 'state_observation') then w.reason else 'retired_or_prohibited_vocabulary' end$r$);
-    v_new := replace(v_new, a2, r2 || a2);
-    execute v_new;
-  end if;
-end $m$;
-
--- ===== 4. compose: the gate, record status entries never recur, a served question needs its list, the Stage named in the refusal =====
-do $m$
-declare v_def text; v_new text;
-  a_list text := $a$  ans := coalesce(p_answers, '{}'::jsonb);
-$a$;
-  r_list text := $r$  -- D8 Section 5.5: a served question whose list is absent or empty on this source cannot be served (nothing is composed, nothing is written)
-  if exists (select 1 from public.t3a_dimension_rule dr where dr.dimension_id = dim and dr.rule_code = 'served_question_needs_list') then
-    for q in select m.question_code as cq, m.source_bound_family as bf from public.t3a_d1_question_capture_map m where m.dimension_id = dim and m.source_bound_family is not null loop
-      select b.parent_question into pn from public.t3a_d1_branch_rule b where b.dimension_id = dim and b.child_question = q.cq;
-      if pn is not null and coalesce(app ->> pn, 'NOT SERVED') <> 'NOT SERVED' and (jsonb_typeof(v.body -> 'source_sheet' -> q.bf) is distinct from 'array' or jsonb_array_length(v.body -> 'source_sheet' -> q.bf) = 0) then
-        return public.t3a_capture_refuse('composition.commit', 'BOUND_FAMILY_ABSENT_OR_EMPTY', p_participant::text, pn || ' is served but ' || q.bf || ' is absent or empty on this source');
-      end if;
-    end loop;
-  end if;
-$r$;
-  a_sf text := $a$  if p_stage = '1' then conds := conds || '["stage_1_only"]'::jsonb; end if;$a$;
-  r_sf text := $r$  sf := public.t3a_entry_language_gate(dim, res -> 'statements');
-  if sf ->> 'outcome' = 'violation' then
-    perform public.t3a_capture_refuse('composition.commit', sf ->> 'reason', p_participant::text, sf ->> 'detail');
-    return jsonb_build_object('outcome', 'refused', 'reason', sf ->> 'reason', 'detail', sf ->> 'detail');
-  end if;
-$r$;
-  a_rb text := $a$'recurrence_blocker', coalesce((select l.recurrence_blocker from public.t3a_d1_statement_library l where l.dimension_id = dim and l.statement_key = s ->> 'statement_key' limit 1), false));$a$;
-  r_rb text := $r$'recurrence_blocker', (coalesce((select l.recurrence_blocker from public.t3a_d1_statement_library l where l.dimension_id = dim and l.statement_key = s ->> 'statement_key' limit 1), false)
-              or (s ->> 'entry_type' = 'record_status' and exists (select 1 from public.t3a_dimension_rule dr where dr.dimension_id = dim and dr.rule_code = 'record_status_never_recurs'))));$r$;
-  a_msg text := $a$uses the performed act verb ' || (sf ->> 'verb') || ' at Stage 1'$a$;
-  r_msg text := $r$uses the performed act verb ' || (sf ->> 'verb') || ' at Stage ' || p_stage$r$;
-begin
-  v_def := pg_get_functiondef('public.t3a_dimension_compose(uuid,uuid,text,jsonb,jsonb,jsonb,uuid,boolean)'::regprocedure);
-  if position('t3a_entry_language_gate' in v_def) = 0 then
-    if position(a_list in v_def) = 0 or position(a_sf in v_def) = 0 or position(a_rb in v_def) = 0 or position(a_msg in v_def) = 0 then raise exception 'D8 machinery: t3a_dimension_compose has not the expected lines'; end if;
-    v_new := replace(v_def, a_list, r_list || a_list);
-    v_new := replace(v_new, a_msg, r_msg);
-    v_new := replace(v_new, a_sf, r_sf || a_sf);
-    v_new := replace(v_new, a_rb, r_rb);
-    execute v_new;
-  end if;
-end $m$;
-
--- ===== 5. the render gate: the single page route is closed by rule =====
-do $m$
-declare v_def text; v_new text;
-  a text := $a$if p_form = 'one_page' and 'D4' = any (coalesce(b.represented_dimension_ids, array[b.dimension_id::text])) then$a$;
-begin
-  v_def := pg_get_functiondef('public.t3a_report_render_gate(uuid,text)'::regprocedure);
-  if position('t3a_dimension_rule' in v_def) = 0 then
-    if position(a in v_def) = 0 then raise exception 'D8 machinery: t3a_report_render_gate has not the expected D4 line'; end if;
-    v_new := replace(v_def, a, $r$if p_form = 'one_page' and exists (select 1 from public.t3a_dimension_rule dr where dr.rule_code = 'single_page_route_closed' and dr.dimension_id = any (coalesce(b.represented_dimension_ids, array[b.dimension_id::text]))) then$r$);
-    v_new := replace(v_new, $a$'a D4 report renders through the multi page renderer; the single page route is closed'$a$, $r$'a report that carries D4 or D8 renders through the multi page renderer; the single page route is closed'$r$);
-    execute v_new;
-  end if;
-end $m$;
 
 -- ===== 6. the source state boundary and the withheld source truth =====
 create table if not exists public.t3a_dimension_source_field (
@@ -315,4 +218,12 @@ insert into public.t3a_entry_language_rule (dimension_id, rule_code, pattern, no
   ('D8', 'state_observation', '\m(the )?participant\s+(was|were|is|seemed|appeared|looked|felt|remained|sounded|showed|stayed|became|got|grew|kept|continued without|did not (seem|appear|look|sound|show))\M', 'a sentence whose subject is the participant and whose predicate is a state'),
   ('D8', 'state_observation', '\m(no (visible |apparent |obvious )?(sign|signs|reaction|distress|difficulty|change)|without (apparent |visible |any )?(difficulty|distress|reaction)|visibly|apparently|seemingly|appeared to|seemed to|in stride)\M', 'a sentence asserting the absence or presence of a reaction'),
   ('D8', 'state_observation', '\m(untroubled|unbothered|unflustered|at ease|on edge|shaken|visibly affected)\M', 'a state described directly')
+on conflict do nothing;
+
+-- D8 rows in the canonical registers created by 20270201 (D5): Directive D-07 for D8 (D8-25, D8-67) and 'no D8 entry toward recurrence from a record status entry' (Section 5.10, D8-17).
+insert into public.t3a_multipage_only_dimension(dimension_id, directive) values
+  ('D8', 'D8 Directive D-07: every D8 report renders through the multi page renderer; a route to the single page renderer refuses format_mismatch (D8-25, D8-67)')
+on conflict do nothing;
+insert into public.t3a_recurrence_excluded_entry_type(dimension_id, entry_type, reason) values
+  ('D8', 'record_status', 'D8 Section 5.10 and test D8-17: an entry that describes the record carries no conduct toward recurrence; no D8 entry carries recurrence_blocker')
 on conflict do nothing;

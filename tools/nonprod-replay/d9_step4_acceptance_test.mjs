@@ -282,12 +282,12 @@ const SEALKEY = "synthetic-test-key-" + randomUUID(); await run(`select set_conf
 for (const row of await run(`select composed_statement_id i from t3a_dimension_composed_statement where participant_id in ('${Q}','${Q2}') and composed_statement_id not in (select composed_statement_id from t3a_commit_seal)`)) await run(`select t3a_seal_composed('${row.i}', false)`);
 await run(`insert into t3a_d1_participant_review_action(ber_report_id, participant_id, action) values ('${rep6}','${Q2}','reviewed_no_correction')`);
 const vs6 = (await run(`select encode(extensions.digest('{}'::jsonb::text, 'sha256'), 'hex') h`))[0].h;
-for (const i of [...Array.from({ length: 23 }, (_, k) => k + 1), 34, 35]) await run(`insert into t3a_dimension_review_result(ber_report_id, dimension_id, item_no, outcome, reviewer_id, version_set_hash) values ('${rep6}','D9',${i},'pass','${RV}','${vs6}')`);
+for (const i of [...Array.from({ length: 23 }, (_, k) => k + 1), 36, 37]) await run(`insert into t3a_dimension_review_result(ber_report_id, dimension_id, item_no, outcome, reviewer_id, version_set_hash) values ('${rep6}','D9',${i},'pass','${RV}','${vs6}')`);
 const g6 = (await run(`select t3a_report_issuance_gate('${rep6}','${RV}','${IS}') g`))[0].g;
 const before6 = (await run(`select count(*)::int n from t3a_d1_report_issuance where ber_report_id='${rep6}'`))[0].n;
 const ins6 = await c.query(`insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, state, version_set_at_issuance, rendered_body_hash) values ('${rep6}','${Q2}','D9','${IS}','issued','{}'::jsonb,'${H}')`).then(() => "ok").catch(e => e.message);
 const after6 = (await run(`select count(*)::int n from t3a_d1_report_issuance where ber_report_id='${rep6}'`))[0].n;
-pass("D9-PP-06", "a D9 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written); the 25 items are the 23 platform items and D9 items 34 and 35", g6.permitted === true && after6 === before6 + 1, { gate: g6.blockers?.map(b => b.code), insert: ins6, rows: [before6, after6] });
+pass("D9-PP-06", "a D9 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written); the 25 items are the 23 platform items and D9 items 36 and 37", g6.permitted === true && after6 === before6 + 1, { gate: g6.blockers?.map(b => b.code), insert: ins6, rows: [before6, after6] });
 prior("D9-PP-07", "a successful correction: a new composed statement supersedes, the original is retained", "step3h", "successful correction produces a new");
 // PP-08: grant employer availability on a report carrying D9, read the pool state, withdraw; the evidence record is untouched
 const PPU = await mkU("pp8", "candidate"); await run(`update profiles set first_name='Pat', last_name='Pool' where id='${PPU}'`);

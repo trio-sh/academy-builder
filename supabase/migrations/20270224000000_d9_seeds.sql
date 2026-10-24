@@ -29,11 +29,15 @@ insert into public.t3a_rce_prohibited_vocabulary (dimension_id, word, version, r
   select 'D9', word, 'PV-D9-4.2', 'D9 Section 4.2 retired vocabulary, closed list' from public.t3a_rce_prohibited_vocabulary where dimension_id = 'D2' and version = 'PV-D2-4.2'
   on conflict do nothing;
 
-alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
-alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and 35);
+-- the ceiling is the larger of what the table already holds and this dimension's last item, so a dimension built beside this one is never shut out
+do $c$ declare m int; begin
+  select greatest(coalesce(max(item_no), 0), 37) into m from public.t3a_dimension_review_item;
+  alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
+  execute format('alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and %s)', m);
+end $c$;
 insert into public.t3a_dimension_review_item (item_no, dimension_id, requirement, display_no) values
-  (34, 'D9', 'D9 specific: no rendered D9 entry describes the participant''s capacity to learn, their knowledge or their speed, or the absence of any of these, and no element of the report presents a stated change as preferred to a kept approach. The check runs against the list at Section 5.7a on rendered output.', 24),
-  (35, 'D9', 'D9 specific: no element of the report is computed across dimensions, no rendered D9 entry names a third party, and practice_origin is not rendered.', 25)
+  (36, 'D9', 'D9 specific: no rendered D9 entry describes the participant''s capacity to learn, their knowledge or their speed, or the absence of any of these, and no element of the report presents a stated change as preferred to a kept approach. The check runs against the list at Section 5.7a on rendered output.', 24),
+  (37, 'D9', 'D9 specific: no element of the report is computed across dimensions, no rendered D9 entry names a third party, and practice_origin is not rendered.', 25)
 on conflict do nothing;
 
 update public.t3a_rce_prohibited_vocabulary set reason = 'cross_dimension_assertion' where dimension_id = 'D9' and version = 'PV-D9-1.0' and word in ('owned', 'caused', 'blamed', 'prioritized', 'verified', 'proposed', 'agreed', 'disclosed', 'recovered', 'resumed', 'persuaded');

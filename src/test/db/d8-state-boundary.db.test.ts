@@ -163,7 +163,7 @@ describe("D8-17 an entry that describes the record carries no conduct toward rec
     expect(conduct.clause_instances.every((x: any) => x.recurrence_blocker === false)).toBe(true);
   });
   it("other dimensions are untouched: a D4 record status entry is marked only where its library says so", async () => {
-    expect((await run(c, `select count(*)::int n from t3a_dimension_rule where rule_code='record_status_never_recurs' and dimension_id <> 'D8'`))[0].n).toBe(0);
+    expect((await run(c, `select count(*)::int n from t3a_recurrence_excluded_entry_type where dimension_id in ('D1','D2','D3','D4')`))[0].n).toBe(0);
   });
 });
 

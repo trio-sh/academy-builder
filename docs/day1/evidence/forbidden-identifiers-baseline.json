@@ -9,16 +9,32 @@
   "api/",
   "tools/",
   "supabase/migrations/20261101000000_day1_field_registry.sql",
-  "supabase/migrations/20261100000000_close_open_access_policies.sql"
+  "supabase/migrations/20261100000000_close_open_access_policies.sql",
+  "supabase/migrations/20261127000000_day1_live_writers_canonical.sql",
+  "supabase/migrations/20261205000000_d2_content_registry.sql",
+  "supabase/migrations/20261210000000_step3_evidence_state.sql",
+  "supabase/migrations/20261218000000_d3_shared_machinery.sql",
+  "supabase/migrations/20261219000000_d3_content_registry.sql",
+  "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql",
+  "supabase/migrations/20261223000000_d4_content_registry.sql",
+  "supabase/migrations/20261224000000_d4_demonstration_fixtures.sql",
+  "supabase/migrations/20270201000000_d5_shared_machinery.sql",
+  "supabase/migrations/20270230000000_shared_functions_d5_d8_d9.sql",
+  "supabase/migrations/20270212000000_d8_content_registry.sql",
+  "supabase/migrations/20270213000000_d8_demonstration_fixtures.sql",
+  "supabase/migrations/20270222000000_d9_content_registry.sql",
+  "supabase/migrations/20270223000000_d9_demonstration_fixtures.sql",
+  "src/lib/berMultipage/fix-multipage.json",
+  "supabase/migrations/20270101000000_consent_notice_v1_2.sql"
  ],
- "total_hits": 1939,
+ "total_hits": 1936,
  "by_rule": {
   "contains validate": 87,
-  "rating or rank or percentile": 105,
-  "tier": 323,
   "score": 804,
   "behavioral_score": 114,
+  "rating or rank or percentile": 104,
   "endorsement": 342,
+  "tier": 321,
   "skill_passport": 97,
   "observation_level": 28,
   "ordinal_anchor": 7,
@@ -33,10 +49,6 @@
   },
   "pnpm-lock.yaml": {
    "contains validate": 10
-  },
-  ".claude/settings.local.json": {
-   "rating or rank or percentile": 2,
-   "tier": 1
   },
   "src/components/Chatbot.tsx": {
    "contains validate": 3
@@ -228,8 +240,7 @@
    "rating or rank or percentile": 1
   },
   "src/pages/dashboard/employer/AvailableReports.tsx": {
-   "tier": 1,
-   "rating or rank or percentile": 1
+   "rating or rank or percentile": 2
   },
   "src/pages/dashboard/employer/EmployerFeedback.tsx": {
    "contains validate": 2

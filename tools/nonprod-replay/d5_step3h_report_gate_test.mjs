@@ -95,7 +95,7 @@ rec("D5-67", "a report with no D5 content is not affected by the D5 rule: one di
   await run(`update t3a_d1_ber_report set specimen_render_flag = false where ber_report_id='${only5}'`);
   rec("D5-67", "the same D5 only report that is not a specimen is refused as well (every issued report renders through the multi page renderer)", (await run(`select t3a_report_render_gate('${only5}','one_page') r`))[0].r.reason === "format_mismatch", null);
   const reg = await run(`select dimension_id from t3a_multipage_only_dimension order by 1`);
-  rec("D5-67", "the multi page only rule is data: D4 and D5 are listed, the single page route is closed for a report carrying either", reg.map(x => x.dimension_id).join() === "D4,D5", reg); }
+  rec("D5-67", "the multi page only rule is data: D4, D5, D8 and D9 are listed (one register, CR-290), the single page route is closed for a report carrying any of them", reg.map(x => x.dimension_id).join() === "D4,D5,D8,D9", reg); }
 // amendment by supersession
 const srcV = (await run(`select v.content_version_id v from t3a_d1_content_version v join t3a_content_object o using (content_object_id) where o.identifier='SRC-D5-S2-001'`))[0].v;
 const J = (o) => `'${JSON.stringify(o).replace(/'/g, "''")}'::jsonb`;

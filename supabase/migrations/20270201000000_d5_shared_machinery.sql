@@ -4,6 +4,7 @@
 -- 1. The Stage 1 form check can bar a question at more than one Stage (D5 bars the route questions at Stage 1 and at Stage 3). The default is Stage 1, which is what D4 relies on.
 -- 2. Compose is re-created from the D4 text with one change: the stage_form_violation detail names the Stage the statement was composed at (it said Stage 1 in every case).
 -- 3. The single page route is closed for a dimension named in t3a_multipage_only_dimension (D4, now D5), by data rather than by a name written into the function (Directive D-07).
+--    RECONCILIATION (CR-290): this table (dimension_id, directive) is the ONE canonical register; D8 and D9 insert their own rows into it (D9 had created a different shape, reason; D8 used a rule code).
 -- 4. The counterpart boundary: a source of a dimension that registers a counterpart rule is refused at load when a bound family item has the counterpart as the subject of a verb (counterpart_as_subject);
 --    the counterpart role and position are moved out of the readable source body into a sequestered table that only the source registry reads (D5-68); a Recorded Conduct Entry or a rendered sentence with
 --    the counterpart as its subject is refused and logged.
@@ -36,10 +37,15 @@ grant execute on function public.t3a_stage_form_check(text, jsonb, text) to serv
 -- ===== 2. composition (the D4 text; the refusal detail names the Stage, and a record status entry of a registered dimension never counts toward recurrence) =====
 -- D5 test D5-17: an entry that describes the record carries no conduct toward recurrence. D5 5.7 also says that no D5 entry carries the library flag recurrence_blocker, so the flag is not set on any
 -- entry; the clause instance of a record status entry carries recurrence_blocker true instead, which the evidence state reads as it reads any blocker (recurrence_blocker_statement).
-create table if not exists public.t3a_record_status_no_recurrence (dimension_id text primary key check (dimension_id ~ '^D[0-9]{1,2}$'), directive text not null);
-alter table public.t3a_record_status_no_recurrence enable row level security;
-revoke all on public.t3a_record_status_no_recurrence from anon, authenticated;
-insert into public.t3a_record_status_no_recurrence(dimension_id, directive) values ('D5', 'D5 test D5-17: a record status entry carries no conduct toward recurrence') on conflict do nothing;
+-- RECONCILIATION (CR-290): this register is the ONE canonical register of entry types that carry no conduct toward recurrence, for D5, D8 and D9. D5 created its own table for the record status case
+-- (t3a_record_status_no_recurrence); D8 wrote a rule code (record_status_never_recurs) and D9 wrote this register. D5 now creates the D9 shaped register (it is the more general: any of three entry types) and
+-- D5, D8 and D9 each insert their own row. The composition reads only this register.
+create table if not exists public.t3a_recurrence_excluded_entry_type (dimension_id text not null check (dimension_id ~ '^D[0-9]{1,2}$'), entry_type text not null check (entry_type in ('conduct_bearing', 'record_status', 'artifact_comparison')), reason text not null, primary key (dimension_id, entry_type));
+alter table public.t3a_recurrence_excluded_entry_type enable row level security;
+revoke all on public.t3a_recurrence_excluded_entry_type from anon, authenticated;
+drop trigger if exists t3a_append_only on public.t3a_recurrence_excluded_entry_type;
+create trigger t3a_append_only before update or delete on public.t3a_recurrence_excluded_entry_type for each row execute function public.t3a_deny_mutation();
+insert into public.t3a_recurrence_excluded_entry_type(dimension_id, entry_type, reason) values ('D5', 'record_status', 'D5 test D5-17: a record status entry carries no conduct toward recurrence') on conflict do nothing;
 
 create or replace function public.t3a_dimension_compose(p_participant uuid, p_source_version uuid, p_stage text, p_answers jsonb, p_missing jsonb default '{}'::jsonb,
   p_items jsonb default '{}'::jsonb, p_observation_ref uuid default gen_random_uuid(), p_test_mode boolean default false)
@@ -167,8 +173,8 @@ begin
     clauses := clauses || jsonb_build_object('conduct_element', el, 'question_code', s ->> 'question_code', 'state_code', s ->> 'statement_key', 'entry_type', s ->> 'entry_type', 'clause_text', s ->> 'text');
     ci := ci || jsonb_build_object('observation_id', p_observation_ref, 'conduct_element_id', el,
             'recurrence_equivalence_key_id', 'REK-' || dim || '-' || lpad(regexp_replace(el, '^.*-', ''), 3, '0'), 'state_code', s ->> 'statement_key',
-            'recurrence_blocker', coalesce((select l.recurrence_blocker or (l.entry_type = 'record_status' and exists (select 1 from public.t3a_record_status_no_recurrence rsn where rsn.dimension_id = dim))
-                                       from public.t3a_d1_statement_library l where l.dimension_id = dim and l.statement_key = s ->> 'statement_key' limit 1), false));
+            'recurrence_blocker', coalesce((select l.recurrence_blocker from public.t3a_d1_statement_library l where l.dimension_id = dim and l.statement_key = s ->> 'statement_key' limit 1), false)
+              or exists (select 1 from public.t3a_recurrence_excluded_entry_type x where x.dimension_id = dim and x.entry_type = s ->> 'entry_type'));
   end loop;
   if not p_test_mode then
     if public.t3a_commit_seal_key() is null then return public.t3a_capture_refuse('composition.commit', 'commit_seal_key_unloaded', p_participant::text, 'the commit is signed by the server and the signing key is not loaded'); end if;
@@ -190,6 +196,8 @@ create table if not exists public.t3a_multipage_only_dimension (
 );
 alter table public.t3a_multipage_only_dimension enable row level security;
 revoke all on public.t3a_multipage_only_dimension from anon, authenticated;
+drop trigger if exists t3a_append_only on public.t3a_multipage_only_dimension;
+create trigger t3a_append_only before update or delete on public.t3a_multipage_only_dimension for each row execute function public.t3a_deny_mutation();
 insert into public.t3a_multipage_only_dimension(dimension_id, directive) values
   ('D4', 'Directive D-07 of the D4 Execution Edition'), ('D5', 'Directive D-07 of the D5 Execution Edition')
 on conflict do nothing;

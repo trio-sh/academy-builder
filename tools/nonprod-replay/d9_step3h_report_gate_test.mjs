@@ -29,10 +29,10 @@ await run(`insert into t3a_d1_participant_review_action(ber_report_id, participa
 g = await gate(); rec("D9-83", "an explicit reviewed-with-no-correction record completes the participant review", !has(g, "participant_review_incomplete"), g.blockers.map(b => b.code));
 const record = async (dim, items, outcome, hash = vsHash, rv = RV) => { for (const i of items) await run(`insert into t3a_dimension_review_result(ber_report_id, dimension_id, item_no, outcome, reviewer_id, version_set_hash) values ('${rep}','${dim}',${i},'${outcome}','${rv}','${hash}')`); };
 const range = (a, b) => Array.from({ length: b - a + 1 }, (_, k) => a + k);
-await record("D1", range(1, 23), "pass"); await record("D9", [...range(1, 23), 34], "pass"); await record("D9", [35], "fail");
+await record("D1", range(1, 23), "pass"); await record("D9", [...range(1, 23), 36], "pass"); await record("D9", [37], "fail");
 g = await gate(); const cl = g.blockers.filter(b => b.code === "checklist_incomplete_or_failed");
 rec("D9-98", "one failed D9 item in a two-dimension report blocks issuance although D1 passed", cl.length === 1 && cl[0].dimension_id === "D9" && cl[0].items_passed === 24, cl);
-await new Promise(r => setTimeout(r, 20)); await record("D9", [35], "pass"); g = await gate();
+await new Promise(r => setTimeout(r, 20)); await record("D9", [37], "pass"); g = await gate();
 rec("D9-90", "recording a later pass for that item clears it (results are append only; the latest counts)", !has(g, "checklist_incomplete_or_failed"), g.blockers.map(b => b.code));
 const upd = await tryq(`update t3a_dimension_review_result set outcome='pass'`); rec("D9-89", "a recorded result cannot be edited", /append|NO_UPDATE|T3A_/i.test(upd.msg), upd.msg.slice(0, 80));
 // version set exactness
