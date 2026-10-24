@@ -1,0 +1,399 @@
+{
+ "passed": 43,
+ "total": 43,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-SA-resolve",
+   "label": "T01: documented_progression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_progression",
+    "included": 2
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T02: documented_regression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_regression"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T03: different_no_direction",
+   "pass": true,
+   "detail": {
+    "finding_code": "different_no_direction"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T04: consistent_recorded_conduct",
+   "pass": true,
+   "detail": {
+    "finding_code": "consistent_recorded_conduct"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T05: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T06: different_no_direction",
+   "pass": true,
+   "detail": {
+    "finding_code": "different_no_direction"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T07: documented_progression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_progression",
+    "included": 3
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T08: mixed_trajectory",
+   "pass": true,
+   "detail": {
+    "finding_code": "mixed_trajectory"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T09: comparison_not_established",
+   "pass": true,
+   "detail": {
+    "finding_code": "comparison_not_established"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T10: comparison_not_established",
+   "pass": true,
+   "detail": {
+    "finding_code": "comparison_not_established"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T11: documented_progression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_progression"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T12: documented_regression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_regression"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T13: LSA-R01",
+   "pass": true,
+   "detail": {
+    "refusal": "LSA-R01"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T15: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T16: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T17: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T18: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T19: documented_progression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_progression",
+    "retake_after_redirect_or_pause": true
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T20: mixed_trajectory",
+   "pass": true,
+   "detail": {
+    "finding_code": "mixed_trajectory",
+    "included": 3
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T21: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T22: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T23: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T24: documented_progression",
+   "pass": true,
+   "detail": {
+    "finding_code": "documented_progression",
+    "included": 2
+   }
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "T25: insufficient_evidence",
+   "pass": true,
+   "detail": {
+    "finding_code": "insufficient_evidence"
+   }
+  },
+  {
+   "id": "D9-SA-dimension",
+   "label": "DD1 both D9 elements progressed: dimension_progression",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_progression",
+    "entry_id": "DE-D9-05",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "D9-SA-dimension",
+   "label": "DD2 one element only compared: dimension_pattern_only_coverage",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "entry_id": "DE-D9-02",
+    "coverage": 1
+   }
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "LD1 forward cycle in the continuation states is rejected as specified",
+   "pass": true,
+   "detail": "contradictory transition"
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "LD2 absence state in a direction is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 absence state used in a direction rule"
+  },
+  {
+   "id": "D9-SA-resolve",
+   "label": "the trial carries exactly 24 resolution cases, 2 dimension cases and 2 load tests",
+   "pass": true,
+   "detail": [
+    24,
+    2,
+    2
+   ]
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "D9 Session Archive content is loaded as 30 records, every one a draft with no approval and no effective date, none active",
+   "pass": true,
+   "detail": {
+    "n": 30,
+    "d": 30,
+    "a": 0
+   }
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "by registry: 2 families, 2 direction rules, 1 sufficiency rule, 14 entries, 1 history rule, 1 dimension rule, 7 dimension entries, 2 state mappings",
+   "pass": true,
+   "detail": {
+    "dimension_entries": 7,
+    "dimension_rules": 1,
+    "direction_rules": 2,
+    "entries": 14,
+    "families": 2,
+    "history_rules": 1,
+    "state_mapping": 2,
+    "sufficiency_rules": 1
+   }
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "the stored records are the package's records, key for key",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "only CE-D9-07 and CE-D9-08 are carried: the propositions of the families are REK-D9-007 and REK-D9-008",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "the stored D9 records pass the registry load checks when treated as active",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-SA-load",
+   "label": "the state mapping is Table 15.1: C7 A1 to A4 map to WA_WORK_AND_POINT, WA_WORK_NO_POINT, WA_NONE_NAMED, WA_NONE and C8 A1 to A3 to RA_WITH_PLACE, RA_NO_PLACE, RA_NONE",
+   "pass": true,
+   "detail": {
+    "REK-D9-007": {
+     "C7 A1": "WA_WORK_AND_POINT",
+     "C7 A2": "WA_WORK_NO_POINT",
+     "C7 A3": "WA_NONE_NAMED",
+     "C7 A4": "WA_NONE"
+    },
+    "REK-D9-008": {
+     "C8 A1": "RA_WITH_PLACE",
+     "C8 A2": "RA_NO_PLACE",
+     "C8 A3": "RA_NONE"
+    }
+   }
+  },
+  {
+   "id": "D9-SA-flag",
+   "label": "the activation flag is off and an active D9 record is refused while it is off",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-71",
+   "label": "neither REK-D9-002 nor REK-D9-003 appears in any record of the D9 package: no family, no direction rule, no sufficiency rule, no entry, no state mapping",
+   "pass": true,
+   "detail": [
+    "REK-D9-007",
+    "REK-D9-008"
+   ]
+  },
+  {
+   "id": "D9-71",
+   "label": "the only direction rules are DR-D9-007 and DR-D9-008, each for a family of CE-D9-07 or CE-D9-08",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-71",
+   "label": "a request for REK-D9-002 over ST-D9-006 > ST-D9-008 > ST-D9-006 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+   "pass": true,
+   "detail": {
+    "case_id": "D71",
+    "considered": 3,
+    "refusal": "LSA-R04"
+   }
+  },
+  {
+   "id": "D9-71",
+   "label": "a request for REK-D9-003 over ST-D9-014 > ST-D9-011 > ST-D9-014 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+   "pass": true,
+   "detail": {
+    "case_id": "D71",
+    "considered": 3,
+    "refusal": "LSA-R04"
+   }
+  },
+  {
+   "id": "D9-71",
+   "label": "a request for REK-D9-002 over ST-D9-008 > ST-D9-006 > ST-D9-006 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+   "pass": true,
+   "detail": {
+    "case_id": "D71",
+    "considered": 3,
+    "refusal": "LSA-R04"
+   }
+  },
+  {
+   "id": "D9-71",
+   "label": "a request for REK-D9-003 over ST-D9-011 > ST-D9-014 > ST-D9-011 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+   "pass": true,
+   "detail": {
+    "case_id": "D71",
+    "considered": 3,
+    "refusal": "LSA-R04"
+   }
+  },
+  {
+   "id": "D9-71",
+   "label": "control: the same request for REK-D9-007, which does have a family and a direction rule, is resolved by the module (not refused as unconfigured), so the refusals above come from the missing rule and not from the harness",
+   "pass": true,
+   "detail": {
+    "case_id": "D71c",
+    "considered": 3,
+    "finding_code": "comparison_not_established",
+    "entry_id": "E-D9-007-comparison_not_established",
+    "included": 1,
+    "sequence": [
+     {
+      "date": "2027-02-01",
+      "state_code": "WA_NONE",
+      "observation_id": "D71-REK-D9-007-0"
+     }
+    ],
+    "exclusions": [
+     {
+      "date": "2027-03-01",
+      "code": "EX08"
+     },
+     {
+      "date": "2027-04-01",
+      "code": "EX08"
+     }
+    ],
+    "observer_count": 1,
+    "retake_after_redirect_or_pause": false
+   }
+  }
+ ]
+}

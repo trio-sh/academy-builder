@@ -1,0 +1,30 @@
+{
+ "purpose": "rollback rehearsal: five D9 migrations applied to a copy of the pre-D9 baseline, four rollback scripts run, compared with the baseline",
+ "log": [
+  "0",
+  "0",
+  "0",
+  "0",
+  "0",
+  "rollback_step7b_d9_session_archive_content errors: 0",
+  "rollback_step5c_d9_seeds errors: 0",
+  "rollback_step5b_d9_content errors: 0",
+  "rollback_step5a_d9_shared_machinery errors: 0",
+  "function definitions differing from baseline:",
+  "tables differing:",
+  "t3a_d1_statement_library base=220 after_rollback=220",
+  "t3a_content_object base=177 after_rollback=177",
+  "t3a_d1_question_object base=61 after_rollback=61",
+  "t3a_dimension_placeholder base=19 after_rollback=19",
+  "t3a_rce_prohibited_vocabulary base=334 after_rollback=334",
+  "t3a_lsa_registry_record base=30 after_rollback=30",
+  "t3a_dimension_review_item base=29 after_rollback=29",
+  "t3a_question_definition base=102 after_rollback=102",
+  "t3a_resolution_refusal_rule base=49 after_rollback=49",
+  "t3a_d1_specification_cooldown base=12 after_rollback=12",
+  "t3a_interaction_pattern_family base=21 after_rollback=21",
+  "CHECK (((item_no >= 1) AND (item_no <= 29)))",
+  "CHECK (((item_no >= 1) AND (item_no <= 29)))"
+ ],
+ "result": "zero errors; no function definition, table, row count or review-item constraint differs from the baseline"
+}

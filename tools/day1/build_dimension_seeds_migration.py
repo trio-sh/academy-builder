@@ -10,6 +10,7 @@ import argparse, json
 ap = argparse.ArgumentParser()
 ap.add_argument("dim"); ap.add_argument("pkg"); ap.add_argument("out")
 ap.add_argument("--item-base", type=int, required=True)
+ap.add_argument("--req24", default=None); ap.add_argument("--req25", default=None)  # the dimension's own checklist wording, when its edition states one (D9); the default is the D2 to D4 wording
 ap.add_argument("--blockers", default=""); ap.add_argument("--cross", default=""); ap.add_argument("--stage1-barred", default="")
 a = ap.parse_args()
 dim = a.dim
@@ -43,8 +44,8 @@ insert into public.t3a_rce_prohibited_vocabulary (dimension_id, word, version, r
 alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
 alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and {n2});
 insert into public.t3a_dimension_review_item (item_no, dimension_id, requirement, display_no) values
-  ({n1}, {lit(dim)}, {lit(dim + ' specific: no rendered ' + dim + ' sentence uses a verb of purpose or disposition (checked against the Section 3.2 prohibited-verb list on rendered output).')}, 24),
-  ({n2}, {lit(dim)}, {lit(dim + ' specific: no element of the report is computed across dimensions, and no rendered ' + dim + ' sentence names a third party.')}, 25)
+  ({n1}, {lit(dim)}, {lit(a.req24 or (dim + ' specific: no rendered ' + dim + ' sentence uses a verb of purpose or disposition (checked against the Section 3.2 prohibited-verb list on rendered output).'))}, 24),
+  ({n2}, {lit(dim)}, {lit(a.req25 or (dim + ' specific: no element of the report is computed across dimensions, and no rendered ' + dim + ' sentence names a third party.'))}, 25)
 on conflict do nothing;
 """
 if blk:

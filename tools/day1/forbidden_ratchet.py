@@ -27,6 +27,8 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             "supabase/migrations/20261218000000_d3_shared_machinery.sql",
             "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql",
             "supabase/migrations/20261223000000_d4_content_registry.sql", "supabase/migrations/20261224000000_d4_demonstration_fixtures.sql",
+            # the D9 content load and the D9 demonstration fixtures carry authored source text as data (CR-082 pattern): scenario prose such as a rating or a scoring template inside a workplace situation, which D9 Section 13 leaves out of scope
+            "supabase/migrations/20270222000000_d9_content_registry.sql", "supabase/migrations/20270223000000_d9_demonstration_fixtures.sql",
             # the frozen multi page specimen carries controlled text T-COVERAGE-001 verbatim ("not a score, a rating, a ranking or an endorsement"), which states what the report is not (CR-162)
             "src/lib/berMultipage/fix-multipage.json",
             # carries Section 2 of the Participant Consent and Privacy Notice v1.2 word for word as authored text (CR-181); the notice says what the report is not

@@ -68,7 +68,7 @@ def parse(part):
 stmts = []
 for p in parts:
     n, ident, title, hdr, blocks, sheet, app, script, quotes, reveals = parse(p)
-    assert len(app) == {"D2": 15, "D3": 16, "D4": 15}[DIM], (ident, len(app))
+    assert len(app) == {"D2": 15, "D3": 16, "D4": 15, "D9": 16}[DIM], (ident, len(app))
     assert hdr["Identifier"] == ident and hdr["demonstration"] == "true"
     stage_code = "S" + hdr["Stage"]
     body = {"source_identifier": ident, "title": title, "stage": int(hdr["Stage"]), "stage_code": stage_code, "demonstration": True, "serving_eligible": False,

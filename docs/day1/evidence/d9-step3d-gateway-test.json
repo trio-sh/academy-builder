@@ -1,0 +1,300 @@
+{
+ "passed": 34,
+ "total": 34,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-regs",
+   "label": "the loaded D9 sources hold no approval and cannot be approved: first failing precondition is named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-27",
+   "label": "the table backstop refuses an approval of a loaded D9 source",
+   "pass": true,
+   "detail": "SOURCE_APPROVAL_PRECONDITION: drafting_test_incomplete"
+  },
+  {
+   "id": "D9-27",
+   "label": "a D9 source with a null situation class cannot be approved",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-02",
+   "label": "a source whose class is written 'SC-D9-5 with SC-D9-7' is not refused as an unknown class: the first named class governs",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-02",
+   "label": "the first named class must be one of the seven: 'SC-D9-99 with SC-D9-1' is refused as unknown and the second class does not rescue it",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-02",
+   "label": "a class outside the seven, written alone, is refused as unknown",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-02",
+   "label": "the governing class is a pure function of the text: first named, trimmed; empty and null give null",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "with no author recorded the drafting test write is refused (fails closed) and logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "a reviewer who is a member of the author list is refused and logged",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "one populated row is not enough",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-01",
+   "label": "an empty outcome is refused",
+   "pass": true,
+   "detail": "new row for relation \"t3a_source_drafting_test\" violates check constraint \"t3a_s"
+  },
+  {
+   "id": "D-01",
+   "label": "with both rows the next precondition is the submission",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-02",
+   "label": "a Stage 3 source with no rights record cannot enter the approval queue (logged, before approval review)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D-02",
+   "label": "the refusal is the named code rights_route_absent",
+   "pass": true,
+   "detail": {
+    "detail": "a Stage 3 source with no rights record cannot enter the approval queue",
+    "reason": "rights_route_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D-02",
+   "label": "with a rights record the source can be submitted",
+   "pass": true,
+   "detail": {
+    "outcome": "queued",
+    "source_version_id": "59a6628a-76e8-44a9-b0ac-7ea0655ddb4e"
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "queued, the next precondition is the name clearance (the sheet's own claim is not clearance)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-27",
+   "label": "with every precondition met none fails",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-26",
+   "label": "an unapproved version is unreachable",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-26",
+   "label": "a source cannot serve at another Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S1",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-26",
+   "label": "only an exact approved, active, eligible version serves (synthetic approval)",
+   "pass": true,
+   "detail": {
+    "outcome": "servable",
+    "source_version_id": "b051229e-d4bd-4e1f-b622-66fa16ba49c1"
+   }
+  },
+  {
+   "id": "D-03",
+   "label": "Stage 4 entry refuses and logs s4_not_activated while the value is unloaded",
+   "pass": true,
+   "detail": {
+    "detail": "Stage 4 entry is disabled behind s4_activation_state, which is not loaded",
+    "reason": "s4_not_activated",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "a participant with no history is not excluded",
+   "pass": true,
+   "detail": {
+    "reasons": [],
+    "excluded": false,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-01"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "the exact version already met excludes",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "source_version_met",
+     "pattern_family_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-01"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "the same situation pattern family in D9 excludes a different version, and a same dimension retake is not a form reuse",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "pattern_family_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-01"
+   }
+  },
+  {
+   "id": "D9-30",
+   "label": "a source written 'SC-D9-1 with SC-D9-7' is excluded for a participant who met SC-D9-1: the first named class governs the pattern family (IPF-D9-01)",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "pattern_family_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-01"
+   }
+  },
+  {
+   "id": "D9-30",
+   "label": "a source written 'SC-D9-7 with SC-D9-1' is not excluded by SC-D9-1: its governing class is SC-D9-7 (IPF-D9-07)",
+   "pass": true,
+   "detail": {
+    "reasons": [],
+    "excluded": false,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-07"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "a different pattern in the same form and dimension meets neither exclusion (CORR-007 CR-14: the form exclusion is for another dimension; a retake in the same dimension is not a reuse)",
+   "pass": true,
+   "detail": {
+    "reasons": [],
+    "excluded": false,
+    "administration_form_id": "FORM-S1-SEQUENTIAL-REVEAL",
+    "interaction_pattern_family_id": "IPF-D9-02"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "having sat the Stage 2 seven-beat form under D1 excludes the D9 Stage 2 form (the form crosses)",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "administration_form_met"
+    ],
+    "excluded": true,
+    "administration_form_id": "FORM-S2-SEVEN-BEAT",
+    "interaction_pattern_family_id": "IPF-D9-03"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "a cross-dimension pattern comparison refuses and logs while the mapping table is empty",
+   "pass": true,
+   "detail": {
+    "detail": "no approved mapping row; pattern identifiers of different dimensions are not interchangeable",
+    "reason": "cross_dimension_mapping_absent",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-28",
+   "label": "the mapping table is empty",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-28",
+   "label": "the serving gate applies the exposure exclusion",
+   "pass": true,
+   "detail": {
+    "detail": "[\"source_version_met\", \"pattern_family_met\"]",
+    "reason": "prior_exposure_exclusion",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-29",
+   "label": "three D9 Stage 2 attempts, then a D1 Stage 2 entry is permitted (independent counters)",
+   "pass": true,
+   "detail": [
+    {
+     "permitted": true,
+     "counted_in_window": 1
+    },
+    [
+     {
+      "attempt_no": 1
+     }
+    ]
+   ]
+  },
+  {
+   "id": "D9-24",
+   "label": "a fourth D9 Stage 2 attempt is refused (cap of three per Stage per dimension)",
+   "pass": true,
+   "detail": {
+    "permitted": false,
+    "refusal_code": "ATTEMPT_CAP_REACHED",
+    "counted_in_window": 3,
+    "earliest_eligible_at": "2026-11-27T15:36:57.089185+00:00"
+   }
+  },
+  {
+   "id": "D9-24",
+   "label": "D9 carries its own cooldown ladder (seven and fourteen days)",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

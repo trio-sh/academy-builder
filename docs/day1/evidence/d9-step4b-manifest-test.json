@@ -1,0 +1,420 @@
+{
+ "passed": 21,
+ "total": 21,
+ "failed": [],
+ "manifest": {
+  "counts": {
+   "conduct_elements": 9,
+   "situation_classes": 7,
+   "question_objects": 16,
+   "capture_sets": 16,
+   "capture_lines": 44,
+   "branch_rules": 7,
+   "recorded_conduct_entries": 44,
+   "resolution_rules": 8,
+   "recurrence_keys": 9,
+   "templates": 13,
+   "sources": 35,
+   "demonstration_fixtures": 4,
+   "source_bound_families": 7,
+   "consuming_controls": 7,
+   "placeholders": 7,
+   "pattern_families": 7,
+   "prohibited_words_section_5_7a": 88,
+   "retired_words_section_4_2": 39,
+   "question_definition_rows": 44,
+   "review_items": 2,
+   "session_archive_records": 30
+  },
+  "question_definition": {
+   "rows": 44,
+   "calibration_ready": {
+    "Q-D9-01": false,
+    "Q-D9-01b": false,
+    "Q-D9-02": false,
+    "Q-D9-02b": false,
+    "Q-D9-03": false,
+    "Q-D9-03b": false,
+    "Q-D9-04": false,
+    "Q-D9-04b": false,
+    "Q-D9-05": false,
+    "Q-D9-05b": false,
+    "Q-D9-06": false,
+    "Q-D9-06b": false,
+    "Q-D9-07": false,
+    "Q-D9-07b": false,
+    "Q-D9-08": false,
+    "Q-D9-09": false
+   }
+  },
+  "sources_by_stage": {
+   "S1": {
+    "count": 10,
+    "statuses": {
+     "drafting/not_loaded": 10
+    }
+   },
+   "S2": {
+    "count": 8,
+    "statuses": {
+     "drafting/not_loaded": 8
+    }
+   },
+   "S3": {
+    "count": 7,
+    "statuses": {
+     "drafting/not_loaded": 7
+    }
+   },
+   "S4": {
+    "count": 10,
+    "statuses": {
+     "drafting/not_loaded": 10
+    }
+   }
+  },
+  "source_sheet_completeness": {
+   "sources": 35,
+   "complete": 35,
+   "incomplete": []
+  },
+  "drafting_tests": {
+   "sources": {
+    "demo": false,
+    "srcs": 35,
+    "rows": 0
+   },
+   "fixtures": {
+    "demo": true,
+    "srcs": 4,
+    "rows": 8
+   }
+  },
+  "rights_records": 0,
+  "approval_records": 0,
+  "hashes": {
+   "sources_with_a_64_hex_digest": 35,
+   "version": [
+    "v1.1",
+    "v2.1"
+   ],
+   "package": "T3A-D9-EXEC-001 v1.1",
+   "package_digest_of_the_edition": "8884ba5ae132"
+  }
+ },
+ "results": [
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count conduct_elements = 9: the registry holds 9",
+   "pass": true,
+   "detail": 9
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count situation_classes = 7: the registry holds 7",
+   "pass": true,
+   "detail": 7
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count question_objects = 16: the registry holds 16",
+   "pass": true,
+   "detail": 16
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count capture_sets = 16: the registry holds 16",
+   "pass": true,
+   "detail": 16
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count branch_rules = 7: the registry holds 7",
+   "pass": true,
+   "detail": 7
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count recorded_conduct_entries = 44: the registry holds 44",
+   "pass": true,
+   "detail": 44
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count resolution_rules = 8: the registry holds 8",
+   "pass": true,
+   "detail": 8
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count recurrence_keys = 9: the registry holds 9",
+   "pass": true,
+   "detail": 9
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count templates = 13: the registry holds 13",
+   "pass": true,
+   "detail": 13
+  },
+  {
+   "id": "D9-manifest",
+   "label": "Section 0.9 count sources = 35: the registry holds 35",
+   "pass": true,
+   "detail": 35
+  },
+  {
+   "id": "D9-manifest",
+   "label": "the registry also reconciles on the counts the register tables imply: 44 capture lines (one per answer), 7 source-bound families each with one consuming control, 7 placeholders, 7 pattern families, 88 prohibited and 39 retired words, 44 question definition rows, 2 D9 checklist items, 30 Session Archive records, 4 fixtures",
+   "pass": true,
+   "detail": {
+    "conduct_elements": 9,
+    "situation_classes": 7,
+    "question_objects": 16,
+    "capture_sets": 16,
+    "capture_lines": 44,
+    "branch_rules": 7,
+    "recorded_conduct_entries": 44,
+    "resolution_rules": 8,
+    "recurrence_keys": 9,
+    "templates": 13,
+    "sources": 35,
+    "demonstration_fixtures": 4,
+    "source_bound_families": 7,
+    "consuming_controls": 7,
+    "placeholders": 7,
+    "pattern_families": 7,
+    "prohibited_words_section_5_7a": 88,
+    "retired_words_section_4_2": 39,
+    "question_definition_rows": 44,
+    "review_items": 2,
+    "session_archive_records": 30
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "every entry sits on a real question and answer, every answer line has exactly its entry, and every placeholder is in the grammar",
+   "pass": true,
+   "detail": {
+    "orphan": 0,
+    "unmapped": 0,
+    "badVars": 0
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "the question definition register has 44 rows and all 16 questions read calibration_ready false",
+   "pass": true,
+   "detail": {
+    "Q-D9-01": false,
+    "Q-D9-01b": false,
+    "Q-D9-02": false,
+    "Q-D9-02b": false,
+    "Q-D9-03": false,
+    "Q-D9-03b": false,
+    "Q-D9-04": false,
+    "Q-D9-04b": false,
+    "Q-D9-05": false,
+    "Q-D9-05b": false,
+    "Q-D9-06": false,
+    "Q-D9-06b": false,
+    "Q-D9-07": false,
+    "Q-D9-07b": false,
+    "Q-D9-08": false,
+    "Q-D9-09": false
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "35 sources: 10 at Stage 1, 8 at Stage 2, 7 at Stage 3 and 10 at Stage 4, every one drafting and not loaded for service, none approved, serving_eligible false on every sheet",
+   "pass": true,
+   "detail": {
+    "S1": {
+     "count": 10,
+     "statuses": {
+      "drafting/not_loaded": 10
+     }
+    },
+    "S2": {
+     "count": 8,
+     "statuses": {
+      "drafting/not_loaded": 8
+     }
+    },
+    "S3": {
+     "count": 7,
+     "statuses": {
+      "drafting/not_loaded": 7
+     }
+    },
+    "S4": {
+     "count": 10,
+     "statuses": {
+      "drafting/not_loaded": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "every sheet carries the D9 fields of its Stages (all 20, and 18 at Stage 3 where the account test fields do not apply), every one of the seven lists is non-empty with an identifier and text on each item (every source records a ground for keeping the approach), and the observation mode label is the Stage's",
+   "pass": true,
+   "detail": {
+    "sources": 35,
+    "complete": 35,
+    "incomplete": []
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "every source's applicability table has the sixteen questions, and Q-D9-09 is NOT SERVED on the seven Stage 3 sources and on no other source",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-manifest",
+   "label": "source arithmetic: the number named in each basis line equals the number of items on the list it describes, on all 35 sources",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-manifest",
+   "label": "source truth: every indication and every ground is mapped, its quoted text can be read in the participant facing source, and the mapped text is the sheet's text, on all 35 sources",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-manifest",
+   "label": "the seven Stage 3 sources hold no account test point (the asynchronous form puts nothing back)",
+   "pass": true,
+   "detail": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "id": "D9-manifest",
+   "label": "drafting test status: the 35 sources hold no drafting test row (D-01: both empty), the 4 fixtures hold two each (the demonstration reviewer); Stage 3 rights records: none (D-02); approval records: none",
+   "pass": true,
+   "detail": {
+    "counts": {
+     "conduct_elements": 9,
+     "situation_classes": 7,
+     "question_objects": 16,
+     "capture_sets": 16,
+     "capture_lines": 44,
+     "branch_rules": 7,
+     "recorded_conduct_entries": 44,
+     "resolution_rules": 8,
+     "recurrence_keys": 9,
+     "templates": 13,
+     "sources": 35,
+     "demonstration_fixtures": 4,
+     "source_bound_families": 7,
+     "consuming_controls": 7,
+     "placeholders": 7,
+     "pattern_families": 7,
+     "prohibited_words_section_5_7a": 88,
+     "retired_words_section_4_2": 39,
+     "question_definition_rows": 44,
+     "review_items": 2,
+     "session_archive_records": 30
+    },
+    "question_definition": {
+     "rows": 44,
+     "calibration_ready": {
+      "Q-D9-01": false,
+      "Q-D9-01b": false,
+      "Q-D9-02": false,
+      "Q-D9-02b": false,
+      "Q-D9-03": false,
+      "Q-D9-03b": false,
+      "Q-D9-04": false,
+      "Q-D9-04b": false,
+      "Q-D9-05": false,
+      "Q-D9-05b": false,
+      "Q-D9-06": false,
+      "Q-D9-06b": false,
+      "Q-D9-07": false,
+      "Q-D9-07b": false,
+      "Q-D9-08": false,
+      "Q-D9-09": false
+     }
+    },
+    "sources_by_stage": {
+     "S1": {
+      "count": 10,
+      "statuses": {
+       "drafting/not_loaded": 10
+      }
+     },
+     "S2": {
+      "count": 8,
+      "statuses": {
+       "drafting/not_loaded": 8
+      }
+     },
+     "S3": {
+      "count": 7,
+      "statuses": {
+       "drafting/not_loaded": 7
+      }
+     },
+     "S4": {
+      "count": 10,
+      "statuses": {
+       "drafting/not_loaded": 10
+      }
+     }
+    },
+    "source_sheet_completeness": {
+     "sources": 35,
+     "complete": 35,
+     "incomplete": []
+    },
+    "drafting_tests": {
+     "sources": {
+      "demo": false,
+      "srcs": 35,
+      "rows": 0
+     },
+     "fixtures": {
+      "demo": true,
+      "srcs": 4,
+      "rows": 8
+     }
+    },
+    "rights_records": 0,
+    "approval_records": 0,
+    "hashes": {
+     "sources_with_a_64_hex_digest": 35,
+     "version": [
+      "v1.1",
+      "v2.1"
+     ],
+     "package": "T3A-D9-EXEC-001 v1.1",
+     "package_digest_of_the_edition": "8884ba5ae132"
+    }
+   }
+  },
+  {
+   "id": "D9-manifest",
+   "label": "the loaded hashes: all 35 sources carry the 64 hexadecimal digest of the package, and the loaded versions are v1.1 (sources) and v2.1 (fixtures)",
+   "pass": true,
+   "detail": {
+    "sources_with_a_64_hex_digest": 35,
+    "version": [
+     "v1.1",
+     "v2.1"
+    ],
+    "package": "T3A-D9-EXEC-001 v1.1",
+    "package_digest_of_the_edition": "8884ba5ae132"
+   }
+  }
+ ]
+}

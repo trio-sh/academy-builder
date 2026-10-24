@@ -1,0 +1,364 @@
+{
+ "passed": 36,
+ "total": 36,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-89",
+   "label": "the checklist has 25 items: 23 for every dimension, two D9 specific",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-87",
+   "label": "with no recorded participant outcome the report is blocked, silence is not completion",
+   "pass": true,
+   "detail": [
+    "participant_review_incomplete",
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-98",
+   "label": "no override is available",
+   "pass": true,
+   "detail": false
+  },
+  {
+   "id": "D9-90",
+   "label": "the checklist is required for each dimension present: both report as incomplete",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D1",
+     "items_passed": 0,
+     "items_required": 23
+    },
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D9",
+     "items_passed": 0,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D9-13",
+   "label": "an unloaded evidence currency value blocks issuance",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-83",
+   "label": "an explicit reviewed-with-no-correction record completes the participant review",
+   "pass": true,
+   "detail": [
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-98",
+   "label": "one failed D9 item in a two-dimension report blocks issuance although D1 passed",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D9",
+     "items_passed": 24,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D9-90",
+   "label": "recording a later pass for that item clears it (results are append only; the latest counts)",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-89",
+   "label": "a recorded result cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D9-91",
+   "label": "a review recorded against another version set blocks issuance",
+   "pass": true,
+   "detail": [
+    "review_not_for_this_version_set",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-91",
+   "label": "the review for the exact version set clears it",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-86",
+   "label": "a correction against a D9 record blocks the report; the D9 record is in reconsideration and the D1 record is not",
+   "pass": true,
+   "detail": {
+    "open": true,
+    "cases": [
+     {
+      "case": "0da6f6ac-d053-4de7-afb7-92f74eaf5104",
+      "kind": "correction"
+     }
+    ],
+    "records_under_reconsideration": [
+     {
+      "assignment": "f5437dfb-577f-4825-b2bc-1d04019b4631",
+      "dimension_id": "D9",
+      "observation_record_id": "2a25a517-525d-46a3-ba5e-d35621501b1a"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-17",
+   "label": "an actor who observed a record of the report is not an eligible reviewer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-10",
+   "label": "the reviewer cannot be the issuer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "issuer_not_eligible",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D9-18",
+   "label": "before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers"
+   ]
+  },
+  {
+   "id": "D9-18",
+   "label": "two observers but no approved cross context relationship is still below the floor (one context)",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_absent",
+    "commit_seal_absent"
+   ]
+  },
+  {
+   "id": "D9-65",
+   "label": "composed statements with no seal block issuance as commit_seal_absent",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_absent",
+    "commit_seal_absent"
+   ]
+  },
+  {
+   "id": "D9-65",
+   "label": "under a different key the seals read as invalid and block issuance",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_invalid",
+    "commit_seal_invalid"
+   ]
+  },
+  {
+   "id": "D9-65",
+   "label": "sealed statements verify under the loaded key and no seal blocker remains",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor"
+   ]
+  },
+  {
+   "id": "D9-91",
+   "label": "with every precondition met the gate permits (issuing itself stays an explicit human act)",
+   "pass": true,
+   "detail": {
+    "blockers": [
+     {
+      "code": "issuer_not_eligible",
+      "detail": "reviewer_cannot_issue"
+     }
+    ],
+    "permitted": false,
+    "override_available": false
+   }
+  },
+  {
+   "id": "D9-91",
+   "label": "a distinct uninvolved reviewer and issuer pass",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible"
+   ]
+  },
+  {
+   "id": "D9-98",
+   "label": "the table backstop refuses an issuance of this report while a blocker remains (the row is not written and the refusal is logged)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D9-67",
+   "label": "a single page render of a report that carries D9 refuses format_mismatch and logs it",
+   "pass": true,
+   "detail": {
+    "detail": "a D9 report renders through the multi page renderer; the single page route is closed",
+    "reason": "format_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-67",
+   "label": "the multi-page form is renderable",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-67",
+   "label": "a report with no D9 content is not affected by the D9 rule: one dimension renders on one page",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-67",
+   "label": "a D9 only report routed to the single page renderer refuses format_mismatch and logs it; the multi page renderer takes it with one dimension block (three pages are the renderer's own result, checked in the browser run)",
+   "pass": true,
+   "detail": [
+    "format_mismatch",
+    {
+     "form": "multi_page",
+     "outcome": "renderable",
+     "dimension_blocks": 1
+    }
+   ]
+  },
+  {
+   "id": "D9-67",
+   "label": "a D9 only SPECIMEN routed to the single page renderer refuses too: Directive D-07 builds no route from a D9 report to the single page renderer",
+   "pass": true,
+   "detail": {
+    "detail": "a D9 report renders through the multi page renderer; the single page route is closed",
+    "reason": "format_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-67",
+   "label": "the register of multi page only dimensions holds D4 and D9, and a D1 only specimen is still renderable on one page",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-25",
+   "label": "a two-dimension report with D9 renders through the multi page renderer: the single page route refuses format_mismatch and the multi page route is renderable with two dimension blocks",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-88",
+   "label": "the original composed statement exists",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D9-88",
+   "label": "amendment needs a case whose outcome is amended (this one was upheld)",
+   "pass": true,
+   "detail": {
+    "detail": "amendment needs a correction case for this participant whose outcome is amended",
+    "reason": "no_amended_case",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-88",
+   "label": "a successful correction produces a NEW statement that supersedes the old",
+   "pass": true,
+   "detail": {
+    "outcome": "amended",
+    "supersedes": "89e3c328-b10f-4ed5-82d7-ab217dac6a5a",
+    "composed_statement_id": "9ebb0b07-731b-4562-b2da-20e28c1b8196"
+   }
+  },
+  {
+   "id": "D9-88",
+   "label": "the original remains in the full record, unedited",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-88",
+   "label": "only the new statement is in the current set",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D9-88",
+   "label": "a statement can be superseded once",
+   "pass": true,
+   "detail": {
+    "detail": "a later statement already replaces this one",
+    "reason": "already_superseded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D9-88",
+   "label": "no in-place edit is possible",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  }
+ ]
+}
