@@ -31,6 +31,10 @@ rec("render-7", "no block is rendered for an unrepresented dimension (the strip 
 await p.close(); p = await open("/print/ber-multi/specimen?only=D4"); r = await probe(p);
 rec("render-1", "a D4 only report renders three pages: cover, one dimension page, controls; it is not refused for its count", r.pages.length === 3 && r.pages[1].blocks.length === 1 && r.pages[1].blocks[0].d === "D4" && !r.refused, r.pages.map(x => `${x.kind}:${x.blocks.length}`));
 rec("render-1", "the contents list D4 as represented and thirteen dimensions as not represented", (r.pages[0].text.match(/Not represented/g) || []).length === 13, null);
+await p.close(); p = await open("/print/ber-multi/specimen?only=D8"); r = await probe(p);
+rec("render-1", "a D8 only report renders three pages: cover, one dimension page, controls; it is not refused for its count", r.pages.length === 3 && r.pages[1].blocks.length === 1 && r.pages[1].blocks[0].d === "D8" && !r.refused, r.pages.map(x => `${x.kind}:${x.blocks.length}`));
+rec("render-1", "the contents list D8 as represented and thirteen dimensions as not represented", (r.pages[0].text.match(/Not represented/g) || []).length === 13, null);
+rec("render-1", "every page of the D8 only report is 612 by 792 points, states Page n of 3, carries the demonstration footer and no block passes the content box", r.pages.every(x => x.w === PX && x.h === PY && x.text.includes(`Page ${x.n} of 3`) && x.text.includes("LAYOUT SPECIMEN — NOT AN ISSUED REPORT") && x.blocks.every(y => y.bottom <= 744 * ptpx + 1 && y.right <= 576 * ptpx + 1)), r.pages.map(x => x.blocks.map(y => y.bottom)));
 // a refusal draws nothing
 await p.close(); p = await open("/print/ber-multi/BER-REAL-1"); r = await probe(p);
 rec("render-refuse", "a real report identifier with no signed in participant produces no page: the server route refuses and the screen shows the refusal", r.pages.length === 0 && !!r.refused, r.refused);
