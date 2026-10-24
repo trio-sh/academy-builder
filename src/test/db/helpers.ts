@@ -44,10 +44,14 @@ export async function run(c: pg.Client, sql: string) {
 /** A synthetic participant with a verified email. */
 export async function mkParticipant(c: pg.Client, tag: string, role = "candidate", opts: { consent?: boolean } = {}): Promise<string> {
   const u = randomUUID();
-  await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','${tag}-${RUN}@t.local',now())`);
-  await c.query(`insert into profiles(id,email,role) values ('${u}','${tag}-${RUN}@t.local','${role}')`);
-  // With the consent gate on, every fixture participant has consented on every dimension, as a real one must before Stage entry or capture.
-  if (opts.consent !== false && process.env.T3A_ENFORCE_ALSO?.split(",").includes("gate")) for (const d of ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9"]) await grantConsent(c, u, d);
+  // In the consent-gate run every account is given consent on creation (vitest.db.enforced.setup.ts); `consent: false` makes one that has none.
+  // Session level, not transaction level: callers may be inside their own transaction.
+  const none = opts.consent === false;
+  if (none) await c.query("select set_config('t3a.no_autoconsent', 'on', false)");
+  try {
+    await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','${tag}-${RUN}@t.local',now())`);
+    await c.query(`insert into profiles(id,email,role) values ('${u}','${tag}-${RUN}@t.local','${role}')`);
+  } finally { if (none) await c.query("select set_config('t3a.no_autoconsent', '', false)"); }
   return u;
 }
 
