@@ -32,6 +32,7 @@ rec("C-state", "administration_conditions capture state filled by the trigger", 
 // DT-11
 const a1 = await run(`insert into t3a_mentor_assignment(mentor_id, participant_id, stage_instance_id, assignment_method, prior_allocation_count) values ('${P}','${P}','${sinst.i}','system_allocated',0) returning created_at`).catch(e => [{ err: e.message }]);
 await new Promise(r => setTimeout(r, 1500));
+await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${sinst.i}','${P}','D1','${P}',now())`);
 const si2 = await si("D1", "S2");
 const e2 = await run(entry(`'${GW}'`, si2.i || randomUUID()).replace("'D1','S1'", "'D1','S2'") + " returning entered_at").catch(e => [{ err: e.message }]);
 rec("DT-11", "allocate a mentor, wait, enter the Stage: entry time is the entry action, later than the allocation", a1[0].created_at && e2[0].entered_at && new Date(e2[0].entered_at) - new Date(a1[0].created_at) >= 1000, { alloc: a1[0], entry: e2[0] });

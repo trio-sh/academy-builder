@@ -69,6 +69,11 @@ rec("D-03", "Stage 4 entry refuses and logs s4_not_activated while the value is 
 const GW = (await run(`insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${P}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
 let attemptNo = 0;
 const si = async (v) => { const st = (await run(`select body->>'stage_code' s, o.dimension_id d from t3a_d1_content_version cv join t3a_content_object o using (content_object_id) where cv.content_version_id='${v}'`))[0]; attemptNo++;
+  // with the sequence switch on, a Stage 2 entry needs a Stage 1 confirmed on that dimension: the fixture gives it one
+  if (st.s === "S2" && !(await run(`select 1 from t3a_d1_s1_confirmation where participant_id='${P}' and dimension_id='${st.d}'`)).length) {
+    const s1i = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, completed_at) values ('${P}','S1','${st.d}',${1000 + attemptNo},now()) returning stage_instance_id i`))[0].i;
+    await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${s1i}','${P}','${st.d}','${P}',now())`);
+  }
   const inst = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${P}','${st.s}','${st.d}',${attemptNo},'scheduled') returning stage_instance_id i`))[0].i;
   return run(`insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id, entry_authority_actor_id, stage_entry_hold_expires_at) values ('${P}','${st.d}','${st.s}','${GW}','${inst}','x','1.0','{}','{${st.d}}','{}','${v}', gen_random_uuid(), now() + interval '1 hour')`); };
 const ex0 = (await run(`select t3a_prior_exposure('${P}','${s1.v}') r`))[0].r; rec("D3-28", "a participant with no history is not excluded", ex0.excluded === false, ex0);

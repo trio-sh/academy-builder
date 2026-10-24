@@ -13,7 +13,7 @@ async function fx(sql: string) {
 }
 /** A participant with `rows` committed, composed statements (so the conduct table has rows), and an issued report. */
 async function issued(rows: string[] = []) {
-  const p = await mkParticipant(c, `cr25-p-${randomUUID().slice(0, 6)}`);
+  const p = await mkParticipant(c, `cr25-p-${randomUUID().slice(0, 6)}`, "candidate", { consent: false });
   for (const [i, text] of rows.entries()) {
     const o = randomUUID();
     await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${o}','${p}','D1','S${(i % 4) + 1}', true, now())`);

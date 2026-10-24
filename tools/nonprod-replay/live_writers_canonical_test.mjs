@@ -30,6 +30,9 @@ await run(`insert into t3a_determination_question(dimension_id, question_set_ver
 await run(`insert into t3a_statement_library(dimension_id, question_set_version, answer_key, statement_body, approved_at, approved_by) values ('D1','a-${RUN}','${JSON.stringify(ans)}','stmt', now(), '${A}')`);
 const sinst = async (stage, n) => (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${P}','${stage}','D1',${n},'scheduled') returning stage_instance_id i`))[0].i;
 const s2 = await sinst("S2", 1), s1 = await sinst("S1", 2);
+// with the sequence switch on a Stage 2 entry needs a Stage 1 confirmed on that dimension: the fixture gives the participant one
+const s1fix = (await run(`insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, completed_at) values ('${P}','S1','D1',900,now()) returning stage_instance_id i`))[0].i;
+await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${s1fix}','${P}','D1','${P}',now())`);
 const T0 = (await run(`select clock_timestamp() t`))[0].t.toISOString();
 const evCount = async (name) => (await run(`select count(*)::int n from t3a_event_log where event_name='${name}' and event_processing_state='accepted' and ingested_at >= '${T0}'`))[0].n;
 // ---------- switch OFF: behaviour unchanged

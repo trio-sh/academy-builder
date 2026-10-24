@@ -2,7 +2,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import type pg from "pg";
-import { RUN, asRole, asService, connect, mkParticipant, run } from "./helpers";
+import { RUN, asRole, asService, connect, mkParticipant, run, confirmStage1, grantConsent } from "./helpers";
 
 let c: pg.Client;
 const DIM = "D1";
@@ -14,6 +14,8 @@ const elig = async (p: string, stage: string) => (await asService(c, `select t3a
 const entryId = (p: string, stage: string, authenticated: boolean, svcFail = false) => asService(c, `select t3a_cr04_entry_identity('${p}','${DIM}','${stage}', ${authenticated}, ${svcFail}) r`);
 const refused = async (code: string) => (await run(c, `select count(*)::int n from t3a_capture_refusal where reason_code='${code}'`))[0].n;
 async function session(participant: string, stage: string) {
+  await grantConsent(c, participant, DIM);
+  if (stage === "S2") await confirmStage1(c, participant, DIM);
   const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${participant}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${participant}','${stage}','${DIM}',1,'scheduled') returning stage_instance_id i`))[0].i;
   const entry = (await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values ('${participant}','${DIM}','${stage}','${gw}','${inst}','x','1.0','{}','{${DIM}}','{}', gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid()) returning stage_entry_event_id e`))[0].e;
@@ -138,6 +140,9 @@ describe("CR-04 declarations, the join link and a mentor's concern", () => {
 describe("CR-05 a progression challenge pauses nothing", () => {
   async function decided(daysAgo: number, decision = "redirect") {
     const p = await mkParticipant(c, `cr05-p-${++seq}`); const rec = await mkParticipant(c, `cr05-rec-${seq}`, "mentor");
+    // with the sequence switch on, a progression decision needs a committed observation behind it (CR-18): the fixture gives it one
+    await c.query("begin"); await c.query("set local session_replication_role = replica");
+    await c.query(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${p}','${DIM}','S1', true, now())`); await c.query("commit");
     const id = (await run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at, created_at, decision_scope) values ('${p}','${DIM}','${decision}','${rec}','${rec}', now() - interval '${daysAgo} days', now() - interval '${daysAgo} days', '{}'::jsonb) returning progression_decision_id i`))[0].i;
     return { p, rec, id };
   }

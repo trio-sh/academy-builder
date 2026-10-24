@@ -72,7 +72,7 @@ describe("CR-26 every ineligibility looks the same", () => {
     // an eligibility hold
     { const p = await person(); const who = await mkParticipant(c, `cr26-h-${++seq}`, "admin"); await run(c, `insert into t3a_eligibility_hold_event(participant_id, event, acted_by) values ('${p}','set','${who}')`); out.hold = { p, response: await request(p) }; }
     // no permission
-    { const p = await mkParticipant(c, `cr26-np-${++seq}`); out.permission = { p, response: await request(p) }; }
+    { const p = await mkParticipant(c, `cr26-np-${++seq}`, "candidate", { consent: false }); out.permission = { p, response: await request(p) }; }
     // an attempt already running
     { const p = await person(); await asService(c, `select t3a_attempt_begin('${p}','${DIM}','${STAGE}','cr26-r-${RUN}-${++seq}', now()) r`); out.active = { p, response: await request(p) }; }
     // rehearsal exposure: every source already met, however the participant came to meet it
