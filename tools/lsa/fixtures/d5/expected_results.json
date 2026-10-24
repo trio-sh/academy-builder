@@ -1,0 +1,79 @@
+{
+ "T01": {
+  "finding_code": "documented_progression",
+  "included": 2
+ },
+ "T02": {
+  "finding_code": "documented_regression"
+ },
+ "T03": {
+  "finding_code": "different_no_direction"
+ },
+ "T04": {
+  "finding_code": "consistent_recorded_conduct"
+ },
+ "T05": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T06": {
+  "finding_code": "different_no_direction"
+ },
+ "T07": {
+  "finding_code": "documented_progression",
+  "included": 3
+ },
+ "T08": {
+  "finding_code": "mixed_trajectory"
+ },
+ "T09": {
+  "finding_code": "comparison_not_established"
+ },
+ "T10": {
+  "finding_code": "comparison_not_established"
+ },
+ "T11": {
+  "finding_code": "documented_progression"
+ },
+ "T12": {
+  "finding_code": "documented_regression"
+ },
+ "T13": {
+  "refusal": "LSA-R01"
+ },
+ "T15": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T16": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T17": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T18": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T19": {
+  "finding_code": "documented_progression",
+  "retake_after_redirect_or_pause": true
+ },
+ "T20": {
+  "finding_code": "mixed_trajectory",
+  "included": 3
+ },
+ "T21": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T22": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T23": {
+  "finding_code": "insufficient_evidence"
+ },
+ "T24": {
+  "finding_code": "documented_progression",
+  "included": 2
+ },
+ "T25": {
+  "finding_code": "insufficient_evidence"
+ }
+}

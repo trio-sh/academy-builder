@@ -1,0 +1,193 @@
+{
+ "passed": 30,
+ "total": 30,
+ "failed": [],
+ "results": [
+  {
+   "id": "resolve",
+   "label": "T01: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T02: documented_regression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T03: different_no_direction",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T04: consistent_recorded_conduct",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T05: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T06: different_no_direction",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T07: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T08: mixed_trajectory",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T09: comparison_not_established",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T10: comparison_not_established",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T11: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T12: documented_regression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T13: LSA-R01",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T15: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T16: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T17: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T18: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T19: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T20: mixed_trajectory",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T21: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T22: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T23: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T24: documented_progression",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "resolve",
+   "label": "T25: insufficient_evidence",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "load",
+   "label": "LD1 forward cycle in the continuation states is rejected as specified",
+   "pass": true,
+   "detail": "contradictory transition"
+  },
+  {
+   "id": "load",
+   "label": "LD2 absence state in a direction is rejected as specified",
+   "pass": true,
+   "detail": "LSA-R12 absence state used in a direction rule"
+  },
+  {
+   "id": "dimension",
+   "label": "DD1 both D5 elements progressed: dimension_progression",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_progression",
+    "entry_id": "DE-D5-05",
+    "coverage": 2
+   }
+  },
+  {
+   "id": "dimension",
+   "label": "DD2 one element only compared: dimension_pattern_only_coverage",
+   "pass": true,
+   "detail": {
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "entry_id": "DE-D5-02",
+    "coverage": 1
+   }
+  },
+  {
+   "id": "calendar",
+   "label": "calendar month subtraction clamps to the last valid day",
+   "pass": true
+  },
+  {
+   "id": "code",
+   "label": "2,000 verification codes are unique, 4-4-4, Crockford alphabet",
+   "pass": true
+  }
+ ]
+}

@@ -1,0 +1,227 @@
+REFUSED R01 AS-60    serving_eligible true on a source before approval
+REFUSED R02 LG-05    circular branch rules
+REFUSED R03 AS-12    Stage 2 enquiry point names a beat that does not exist
+REFUSED R04 AS-12    Stage 1 enquiry point names a reveal that does not exist
+REFUSED R05 LG-14    a template kind outside the closed list
+REFUSED R06 L-KEY    a second row for an existing question
+REFUSED R07 LG-07    a whole-session set finalized before the session ends
+REFUSED R08 L.6      a review closure the reviewer did not verify
+REFUSED R09 AS-58    a reference copy relabeled and rewritten
+REFUSED R10 AS-56    an impact part with no real finding or control
+REFUSED R11 AS-56    an impact assessment that permits recording
+REFUSED R12 L-SCHEMA a hidden extra cell on a library row
+REFUSED R13 L-KEY    a duplicate library key with different text
+REFUSED R14 L-SCHEMA an extra pipe carrying prohibited text
+REFUSED R15 AS-62    a mentor direction that leads the participant
+REFUSED R16 AS-62    a mentor direction that scores the participant
+REFUSED R17 LG-11    a resolution rule no reachable state satisfies
+REFUSED R18 AS-60    serving_eligible true on the Stage 2 source
+REFUSED R19 AS-09    a Stage 1 note smuggled in as a source field
+REFUSED R20 LG-08    an entry that predicts future conduct
+REFUSED R21 L-KEY    a conflicting duplicate of Q-D0-02
+REFUSED R22 LG-07    a served set whose question is not served on the source
+REFUSED R23 AS-18    a capture set defined twice
+REFUSED R24 LG-11    a resolution pattern with trailing text
+REFUSED R25 LG-11    an unanswered served question resolved to NONE
+REFUSED R26 L.6      a mentor brief changed after review
+REFUSED R27 AS-56    an impact assessment in which role players are observed and graded
+REFUSED R28 AS-54    Stage 1 participant text describing generated replies
+REFUSED R29 AS-57    a template carrying a Stage 1 administration note
+REFUSED R30 AS-12    Stage 1 reveals removed while the sheet still points at them
+REFUSED R31 AS-06    a Stage 3 source without its participant pack
+REFUSED R32 AS-63    co-participant positions removed
+REFUSED R33 AS-61    a name clearance still pending
+REFUSED R34 LG-08    an entry that names a personality trait
+REFUSED R35 AS-09    an unknown field carrying an instruction
+REFUSED R36 AS-58    a reference copy rewritten with a recomputed digest
+REFUSED R36b AS-58    a reference copy rewritten and its digest recomputed to match
+REFUSED R37 AS-58    a required platform reference copy removed
+REFUSED S01 LG-08    an entry asserting a disposition
+REFUSED S02 LG-08    an entry comparing the participant with others
+REFUSED S03 AS-31    a material item rewritten while its map row stays unchanged
+REFUSED S04 AS-67    a yes or no field carrying another value
+REFUSED S05 AS-67    an AI use value outside its list
+REFUSED S06 AS-67    a negative submission window
+REFUSED S07 AS-62    a direction that rewrites a recorded first occurrence
+REFUSED S08 LG-11    a rule composing an entry for an answer its pattern does not state
+REFUSED S09 LG-14    a template that adds a trait
+REFUSED S10 AS-39    a count term stated twice with different values
+REFUSED S11 AS-21    a capture line repeated inside its set
+REFUSED S12 AS-28    applicability prose that contradicts the branch rule
+REFUSED S13 AS-14    an ASK beat with no spoken words
+REFUSED S14 AS-14    a reveal with an undefined role
+REFUSED S15 LG-08    an entry typed as a participant status
+REFUSED S16 AS-28    an applicability row for a question that does not exist
+REFUSED S17 AS-23    a whole-session line reclassified as content
+REFUSED S18 AS-62    spoken words that hand the participant the answer
+REFUSED S19 AS-67    a zero minimum window
+REFUSED S20 AS-67    a required field left blank
+REFUSED S21 AS-65    a real company named in participant text
+REFUSED S22 AS-34    an instruction that depends on a document the build does not hold
+REFUSED S23 AS-54    Stage 1 described under an alias as a neural service
+REFUSED S24 AS-54    Stage 1 described as a generative inference service
+REFUSED S25 AS-62    an instruction to score and rank participants
+REFUSED S26 AS-67    a window written in a character that is not a digit
+REFUSED S27 AS-10    text hidden after the empty list marker
+REFUSED S28 AS-66    a hidden comment in a mentor brief
+REFUSED S29 AS-66    an invisible character inside an entry
+REFUSED S30 AS-12    an enquiry point that is not a question
+REFUSED S31 AS-12    an enquiry point that names the account test reveal
+REFUSED S-M02 LG-08    prediction entry
+REFUSED S-M04 AS-62    coaching direction
+REFUSED S-M06 AS-12    nonexistent enquiry
+REFUSED S-M07 AS-12    nonexistent account test
+REFUSED S-M12 AS-18    update after final
+REFUSED S-M16 AS-59    duplicate question row
+REFUSED S-M17 AS-39    duplicate entry row
+REFUSED S-M18 L-SCHEMA bad table header
+REFUSED S-M19 L-SCHEMA extra entry cell
+REFUSED S-M20 LG-11    impossible resolution
+REFUSED S-M21 LG-11    false UNSERVED resolution
+REFUSED S-M32 LG-14    template unbalanced brace
+REFUSED S-M33 AS-67    empty material
+REFUSED S-M34 AS-10    empty disguise
+REFUSED S-M46 AS-09    unknown source field
+REFUSED S-M49 L-SCHEMA pipe truncates template
+REFUSED S-M53 LG-16    numbering not from001
+REFUSED S-M58 AS-66    prefix commented tables
+REFUSED S-N01 AS-18    undefined capture
+REFUSED S-N02 AS-19    unknown qualifier
+REFUSED S-N03 AS-09    missing required field
+REFUSED S-N04 AS-55    bad window
+REFUSED S-N06 LG-08    forbidden entry
+REFUSED S32 LG-05    a branch child that is its own parent
+REFUSED S33 LG-05    a child served on the parent's whole-session line
+REFUSED S34 LG-09    an entry given a parent that is not its branch parent
+REFUSED A01 LG-07    a child capture offered before its parent can hold an answer
+REFUSED A02 AS-31    a material map row pointing at the wrong location
+REFUSED A03 AS-31    a material map quote reduced to one word
+REFUSED A34 AS-31    a material map row pointing at a reveal that does not exist
+REFUSED A07 AS-22    the classification header with its columns reversed
+REFUSED A37 AS-22    a conflicting classification row for C2
+REFUSED A08 B.1      Section 5.22 instructing the beats in reverse order
+REFUSED A14 LG-11    an unanswered child suppressed instead of refused
+REFUSED A23 AS-15    a ROUND whose direction skips the round
+REFUSED A24 AS-56    an impact control that keeps role player observations in a log
+REFUSED A31 AS-56    an impact finding that sends the record to every panel member
+REFUSED A25 AS-31    a stated standard with no source
+REFUSED A27 AS-65    a company named at the start of a pre-brief
+REFUSED A28 AS-65    a company named at the start of a spoken line
+REFUSED A29 AS-54    a Stage 1 reveal selected by what the participant wrote
+REFUSED A32 AS-62    a direction that reassures the participant toward an answer
+REFUSED A33 AS-12    an account test that dismisses instead of asking
+REFUSED A36 AS-58    a counterfeit platform copy, manifest and baseline, signed by the wrong key
+REFUSED A38 LG-08    an entry that adds an employment judgment
+REFUSED A40 AS-64    a pack document reduced to one character
+REFUSED A41 AS-64    instructions whose deadline contradicts the window field
+REFUSED A43 LG-08    a quotation in an entry that the proposition does not record
+REFUSED N13 L.6      a judgment question answered Yes and the source still submitted
+REFUSED N14 L.6      a source with no row in the review question record
+REFUSED N01 LG-17    the same scenario under a second identifier
+REFUSED N02 AS-31    a material item quoted from text the participant never sees
+REFUSED N03 AS-31    a material item with no map row
+REFUSED N04 AS-61    a clearance with no stated basis
+REFUSED N05 B.1      a required section removed
+REFUSED N06 LG-18    an entry without an approved proposition
+REFUSED N07 L.6      the reviewer is the author
+REFUSED N08 LG-07    a set bound again after it closed
+REFUSED N09 LG-16    the source register disagrees with the source
+REFUSED N10 AS-64    a Stage 3 source with no submission instructions
+REFUSED N11 AS-58    a platform dependency missing from the inventory
+REFUSED N12 LG-08    a capture line carrying a judgment
+REFUSED V01 AS-04    wrapped value
+REFUSED V02 AS-05    list identifiers out of sequence
+REFUSED V03 AS-06    a required block renamed
+REFUSED V04 AS-09    a mandatory field removed
+REFUSED V05 AS-15    Stage 4 B2 not ROUND
+REFUSED V06 AS-16    six beats
+REFUSED V07 AS-17    a capture label spoken aloud
+REFUSED V08 AS-18    an unknown capture label
+REFUSED V09 AS-19    an unknown qualifier
+REFUSED V10 AS-28    an applicability row missing
+REFUSED V11 AS-52    British spelling
+REFUSED V12 AS-53    a retired term
+REFUSED V13 AS-09    a model field on a source
+REFUSED V14 AS-54    Stage 1 described as artificial intelligence
+REFUSED V15 AS-55    a window inverted
+REFUSED V16 AS-55    a window outside its bank window
+REFUSED V17 AS-56    an impact part missing
+REFUSED V18 AS-56    an impact assessment not completed
+REFUSED V19 AS-57    a dimension Stage 1 note template
+REFUSED V20 AS-59    two questions share a capture set
+REFUSED T01 AS-39    asserted count wrong
+REFUSED T02 LG-02    an unknown element
+REFUSED T03 LG-05    a branch child marked DIRECT
+REFUSED T04 LG-05    CONDITIONAL with no rule
+REFUSED T05 LG-06    a served source-bound question with an empty field
+REFUSED T06 LG-07    update before the set is bound
+REFUSED T07 LG-07    a bound set whose question is not served
+REFUSED T08 LG-07    a served question never bound
+REFUSED T09 LG-08    a prohibited term in an entry
+REFUSED T10 LG-08    an entry ending with a full stop
+REFUSED T11 LG-09    an answer with no entry
+REFUSED T12 LG-09    two entries with the same text
+REFUSED T13 LG-11    an outcome outside the closed list
+REFUSED T14 LG-12    coverage claimed where nothing serves
+REFUSED T15 LG-13    an element without a key
+REFUSED T16 LG-14    a template variable outside the list
+REFUSED T17 LG-15    a cross context pairing stated on one side
+REFUSED T18 LG-10    a question served by no source
+REFUSED T19 AS-34    a callback phrase
+REFUSED T20 AS-02    a section cited that does not exist
+REFUSED T21 L.6      an adversarial finding left open
+REFUSED T22 L.4      an entry too long to render inside the approved envelope
+REFUSED F01 AS-69    the source sheet declaration header altered
+REFUSED F02 AS-69    a platform core field redeclared by the dimension
+REFUSED F03 AS-69    a declared field type outside the closed list
+REFUSED F04 AS-09    a field carried by the sources but no longer declared
+REFUSED F05 AS-09    a field declared for Stage 4 only but carried at every Stage
+REFUSED F06 AS-67    a value outside the field's declared set
+REFUSED F07 AS-12    a point field naming two reveals
+REFUSED F08 AS-68    a bound set bound to a field that is not declared
+REFUSED F09 AS-68    a bound set that offers no listed selection
+REFUSED F10 AS-68    the register answer type disagrees with the binding
+REFUSED F11 AS-68    a combined selection in a set that takes exactly one
+REFUSED F12 AS-68    a bound line with no selection form
+REFUSED F13 LG-19    an artifact comparison with no Stage restriction
+REFUSED F14 LG-19    an artifact comparison served at a live Stage
+REFUSED F15 LG-19    an artifact comparison whose subject is the participant
+REFUSED F16 LG-08    a conduct entry that leaves its subject to the frame
+REFUSED F17 LG-08    a not observed entry written as an absence in the participant
+REFUSED F18 LG-08    a modal verb outside reported speech
+REFUSED F19 LG-08    a modal verb placed before the reported speech it borrows
+REFUSED F20 LG-20    a comparison entry with no declared operator
+REFUSED F21 LG-20    an operator outside the closed list
+REFUSED F22 LG-20    an operator domain that is not a declared field
+REFUSED F23 LG-20    an omission tested over a field that is not a list
+REFUSED F24 LG-21    a placeholder with no declared grammar
+REFUSED F25 LG-21    a declared placeholder that no entry uses
+REFUSED F26 LG-21    a count grammar widened to admit zero
+REFUSED F27 LG-21    a count bound to a question that is not a bound set
+REFUSED F28 LG-21    a count placed in an entry not reached from a listed selection
+REFUSED F30 LG-22    a count that composes "1 material items"
+REFUSED F31 LG-09    a Stage condition written out of order
+REFUSED F32 LG-08    a comparative against something other than the situation's record
+REFUSED F33 LG-21    a label bound to a field that is not a label
+REFUSED F34 AS-67    a label value that carries a clause
+REFUSED F35 LG-22    a label value that carries a judgment
+REFUSED F37 AS-06    a retired identifier used as a source heading
+REFUSED F38 LG-21    a count bound to a mark no selection form offers
+REFUSED F39 LG-11    a resolution pattern naming two Stages
+REFUSED F40 LG-11    a resolution pattern at a Stage where its question is never served
+REFUSED F36 LG-08    a modal verb inside reported speech that the dimension itself prohibits
+REFUSED G01 LG-23    the package names the concealed product
+REFUSED G02 AS-70    one source carries comparability and the others do not
+REFUSED G03 LG-24    a source names a comparison family with no content package bound
+ACCEPTED P04 a sports score named in ordinary scenario text
+ACCEPTED P05 a brief asking which bid ranks first on cost
+ACCEPTED P06 an entry quoting the participant's own words, recorded in its proposition
+ACCEPTED P01 the fixture unchanged
+ACCEPTED P02 the word "final" in ordinary speech
+ACCEPTED P03 a bank window the sources respect
+ACCEPTED P10 a resolution rule confined to one Stage
+ACCEPTED P07 a modal verb inside reported speech
+ACCEPTED P08 a label placeholder resolved from a declared label field on every source
+ACCEPTED P09 a comparative against the situation's own record, with its operator declared
+
+215 of 215 faults refused by their named rule; 10 of 10 positive cases accepted

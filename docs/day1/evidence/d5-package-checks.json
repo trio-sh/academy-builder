@@ -1,0 +1,138 @@
+{
+ "package": "T3A-D5-Observation-Pathway-Handover-19Oct2026 (Execution Edition v2.0, Developer Handoff Candidate), run on 23 and 24 October 2026 in a copy of 01_Hans_Build_Folder_TRIAL; nothing in the package was changed",
+ "environment": {
+  "python": "3.11.17 (the clean environment record of the package used 3.12.3)",
+  "pip_packages": {
+   "playwright": "1.56.0",
+   "segno": "1.6.6",
+   "python-barcode": "0.16.1",
+   "zxing-cpp": "3.1.1",
+   "pillow": "12.1.1",
+   "reportlab": "4.4.10",
+   "cryptography": "46.0.6"
+  },
+  "browser": "Chromium 141.0.7390.37 (the build the pinned playwright 1.56.0 expects, from /opt/pw-browsers; `python3 -m playwright install chromium` was not needed)",
+  "poppler-utils": "24.02.0-1ubuntu9.9 (pdftotext, pdfinfo)",
+  "fonts-liberation": "1:2.1.5-3",
+  "os": "Linux, Ubuntu 24.04 class container"
+ },
+ "summary": {
+  "run": 10,
+  "met": 10,
+  "not_run_as_written": [
+   "3.1.11"
+  ],
+  "failed": []
+ },
+ "checks": {
+  "3.1.1": {
+   "check": "validator",
+   "command": "python3 03_SOP_002_Tools/validate_dimension.py 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Execution-Edition-v2_0-DEVELOPER-HANDOFF-CANDIDATE.md",
+   "pass_condition": "PASS, zero errors",
+   "exit_code": 0,
+   "seconds": 0.7,
+   "met": true,
+   "result": "PASS, zero errors",
+   "output_tail": "PASS \u2014 zero errors. Form checks pass; run the Part L completion tests before issue.\n"
+  },
+  "3.1.2": {
+   "check": "reference tool (Part L)",
+   "command": "python3 03_SOP_002_Tools/t3a_pathway_reference.py 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Execution-Edition-v2_0-DEVELOPER-HANDOFF-CANDIDATE.md --out my_golden --platform-manifest 02_Platform_Manifest/T3A-D5-Observation-Pathway-Platform-Manifest.json --trusted-public-key 02_Platform_Manifest/SAMPLE_TEST_ONLY_D5_public.pem --ber-dir 04_Behavioral_Evidence_Report_Multipage --companion-dir 01_D5_Observation_Pathway",
+   "pass_condition": "L.1, L.2, L.4, L.5 and L.7 PASS; L.3 and L.6 read FAIL in this trial folder only because the founder's review is open (expected trial result)",
+   "exit_code": 1,
+   "seconds": 18.5,
+   "met": true,
+   "result": "L.1 PASS, L.2 PASS, L.3 FAIL (46 propositions pending), L.4 PASS, L.5 PASS, L.6 FAIL (365 review questions pending), L.7 PASS; exit code 1 is the tool's NOT COMPLETE line, the expected trial result",
+   "output_tail": "\"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-003: RQ-07 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-003: RQ-08 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-003: RQ-09 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-003: RQ-10 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-01 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-02 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-03 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-04 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-05 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-06 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-07 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n   L.6 [L.6] SRC-D5-S1-004: RQ-08 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue\n"
+  },
+  "3.1.3": {
+   "check": "golden compare",
+   "command": "python3 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Compare-Golden.py 01_D5_Observation_Pathway/golden my_golden",
+   "pass_condition": "IDENTICAL: JSON and Markdown byte for byte, PDFs by their text",
+   "exit_code": 0,
+   "seconds": 1.6,
+   "met": true,
+   "result": "IDENTICAL: 98 files (PDFs by text)",
+   "output_tail": "IDENTICAL: 98 files (PDFs by text)\n"
+  },
+  "3.1.4": {
+   "check": "build package verifier",
+   "command": "python3 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Verify-Build-Package.py 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Build-Package-v2_0.json 02_Platform_Manifest/T3A-D5-Observation-Pathway-Platform-Manifest.json 01_D5_Observation_Pathway/golden --ee 01_D5_Observation_Pathway/T3A-D5-Observation-Pathway-Execution-Edition-v2_0-DEVELOPER-HANDOFF-CANDIDATE.md --key 02_Platform_Manifest/SAMPLE_TEST_ONLY_D5_public.pem",
+   "pass_condition": "VERIFIED, including the file on disk and the manifest signature",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "met": true,
+   "result": "VERIFIED (sections reproduce the Execution Edition 01f03f12e324; file on disk; manifest signature verified against the trusted key; 15 platform copies; golden digests)",
+   "output_tail": "PASS: sections reproduce the Execution Edition 01f03f12e324\nPASS: the Execution Edition on disk is the file this package was derived from\nPASS: manifest signature verified against the trusted key\nPASS: all 15 platform copies match the manifest\nPASS: golden output digests match\nVERIFIED\n"
+  },
+  "3.1.5": {
+   "check": "joint trial (admission, eleven attacks)",
+   "command": "python3 06_Joint_Trial/make_d5_trial.py",
+   "pass_condition": "ADMISSION PASS: eleven attacks refused, each with its expected code, and the store refuses the duplicate key at write",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "met": true,
+   "result": "ADMISSION PASS: eleven attacks refused (V15 V16 V17 V18 V21 V22 V23 V24 V25 V26 V27); the store refuses a duplicate observation key at write: True",
+   "output_tail": "55 candidates; 54 ledger entries; 44 admitted; 11 refused at admission; 24 cases\n  refused V15 OD034 ADM-04 statement is not the D5 entry the committed captures carry\n  refused V16 OD036 ADM-03 served instance does not match the approved source\n  refused V17 OD038 ADM-04 statement is not the D5 entry the committed captures carry\n  refused V18 OD040 ADM-02 source version not approved in this package\n  refused V21 OD042 ADM-06 no committed observation in the ledger\n  refused V22 OD044 ADM-08 state is not the state the committed captures carry\n  refused V23 OD046 ADM-09 dimension, element, proposition, statement or source binding does not hold\n  refused V24 OD048 ADM-10 replayed: this participant, observation and proposition was already admitted\n  refused V25 OD050 ADM-07 ledger entry fails its commit seal\n  refused V26 OD052 ADM-07 ledger entry fails its commit seal\n  refused V27 OD054 ADM-12 observation identifier not unique in the ledger: no record is read\nstore refuses a duplicate observation key at write: True\nADMISSION PASS: every attack refused with its expected code\n"
+  },
+  "3.1.6": {
+   "check": "session archive reference",
+   "command": "python3 05_Session_Archive/lsa_reference/lsa_reference.py 06_Joint_Trial/lsa_d5",
+   "pass_condition": "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests: failures 0",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "met": true,
+   "result": "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0",
+   "output_tail": "pass T01 documented_progression\npass T02 documented_regression\npass T03 different_no_direction\npass T04 consistent_recorded_conduct\npass T05 insufficient_evidence\npass T06 different_no_direction\npass T07 documented_progression\npass T08 mixed_trajectory\npass T09 comparison_not_established\npass T10 comparison_not_established\npass T11 documented_progression\npass T12 documented_regression\npass T13 LSA-R01\npass T15 insufficient_evidence\npass T16 insufficient_evidence\npass T17 insufficient_evidence\npass T18 insufficient_evidence\npass T19 documented_progression\npass T20 mixed_trajectory\npass T21 insufficient_evidence\npass T22 insufficient_evidence\npass T23 insufficient_evidence\npass T24 documented_progression\npass T25 insufficient_evidence\npass load LD1 forward cycle in the continuation states contradictory transition\npass load LD2 absence state in a direction LSA-R12 absence state used in a directio\npass DD1 both D5 elements progressed dimension_progression \npass DD2 one element only compared dimension_pattern_only_coverage \npass calendar month subtraction\npass verification code format and uniqueness\n\n24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0\n"
+  },
+  "3.1.7": {
+   "check": "same event test",
+   "command": "python3 06_Joint_Trial/same_event_test.py",
+   "pass_condition": "RESULT PASS on every line",
+   "exit_code": 0,
+   "seconds": 3.0,
+   "met": true,
+   "result": "RESULT PASS; QR and barcode decode (never skipped) PASS; no overflow; no unresolved variable; all tamper lines PASS; isolation lines PASS",
+   "output_tail": "report renders a D5 only report: PASS: 3 pages\npdftotext and pdfinfo are installed (poppler-utils); without them no text check can pass: PASS\nreport shows the entry word for word: PASS\nevery committed observation admitted: PASS: 6 admitted, 0 refused\nnext step for a continuing difference: progression: PASS: documented_progression\nagreement and recording stated: progression: PASS: documented_progression\nSession Archive report renders with no overflow: PASS: pages 3 no overflow [1056, 1056, 1056]\nQR and barcode decode (never skipped): PASS: decode test: QR and barcode decode to the verification address and report identifier\nSession Archive report carries no unresolved variable: PASS\nSession Archive report names both D5 elements and their direction: PASS\nrendered report shows exactly the resolved observations: PASS: 4 dated boxes\nboth products cite only committed observations, correctly: PASS\nthe report observation is in the Session Archive sequence with identical references: PASS\ntamper: report statement changed: PASS\ntamper: report cites another participant: PASS\ntamper: Session Archive source hash changed: PASS\ntamper: ledger altered after commit: PASS\ntamper: altered ledger refused at admission: PASS\ntamper: altered ledger with its hash recomputed is still refused (D5-65): PASS\na second record under a committed observation key is refused and neither is read (D5-66): PASS\na Session Archive fault leaves the report unchanged: PASS\na report fault leaves the Session Archive unchanged: PASS: report refused: entry_not_approved: ST-D5-NOT-IN-LIBRARY\nRESULT PASS\n"
+  },
+  "3.1.8": {
+   "check": "session archive render reference",
+   "command": "cd 05_Session_Archive/lsa_render_reference && python3 build_reference_btr.py --check && python3 build_reference_btr.py --set=stress --check",
+   "pass_condition": "Both manifests match; identity, isolation and duplicate key checks pass",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "met": true,
+   "result": "both manifests match expected_manifest.json; identity, isolation and duplicate key checks pass (default and stress sets)",
+   "output_tail": "manifest matches expected_manifest.json\nidentity binding holds with another participant listed first\nanother participant reusing a session identifier changes nothing\na duplicate participant, session and proposition key refuses\nmanifest matches expected_manifest.json\nidentity binding holds with another participant listed first\nanother participant reusing a session identifier changes nothing\na duplicate participant, session and proposition key refuses\n"
+  },
+  "3.1.9": {
+   "check": "independent hardening tests",
+   "command": "cd 05_Session_Archive && python3 independent_hardening_tests.py .",
+   "pass_condition": "4 passed",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "met": true,
+   "result": "4 independent hardening tests passed",
+   "output_tail": "PASS participant-proposition-scoped clause lookup; unrelated participant data cannot enter BTR\nPASS duplicate participant/session/proposition key refuses\nPASS observation after snapshot excluded from report\nPASS observation committed after snapshot excluded from report\n4 independent hardening tests passed\n"
+  },
+  "3.1.10": {
+   "check": "regression",
+   "command": "cd 03_SOP_002_Tools && python3 -u run_regression.py sample_D0.md platform_manifest_D0.json SAMPLE_TEST_ONLY_public.pem --ber-dir ../04_Behavioral_Evidence_Report_Multipage > regression_log.txt; echo $?",
+   "pass_condition": "215 of 215 faults refused; 10 of 10 positive cases accepted; exit code 0",
+   "exit_code": 0,
+   "seconds": 190.7,
+   "met": true,
+   "result": "215 of 215 faults refused by their named rule; 10 of 10 positive cases accepted; exit code 0 (about three minutes here)",
+   "output_tail": "0\n"
+  },
+  "3.1.11": {
+   "check": "shared folders 03, 04 and 05 against the D2, D3 and D4 folders",
+   "command": "find 03_SOP_002_Tools 04_Behavioral_Evidence_Report_Multipage 05_Session_Archive -type f ! -path '*/__pycache__/*' -print0 | sort -z | xargs -0 sha256sum > shared.sha256, then diff against the same list of the D2, D3 and D4 folders",
+   "pass_condition": "Identical, except the two files of T3A-SHARED-CORR-001",
+   "exit_code": 0,
+   "met": null,
+   "result": "NOT RUN as a diff: this environment holds only the D5 folder, no D2, D3 or D4 folder, so there is nothing to diff against. What was done: the 49 file list was produced (sha256 of the list: 2765a0ea9adf468e87adbb6363a261526580e2f890c97689a4fe583c821ecfd6, recorded in d5-shared-folders.sha256), and the two files of T3A-SHARED-CORR-001 were checked against the SHA-256 the correction note gives for this folder (both match: True). The handover note states folders 03, 04 and 05 are byte identical to the D4 folder; that statement is the package's, not verified here. To close it, run the same command in a folder that holds the D4 package and diff against docs/day1/evidence/d5-shared-folders.sha256.",
+   "output_tail": ""
+  }
+ }
+}

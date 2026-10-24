@@ -1,0 +1,50 @@
+{
+ "what": "The four D5 rollback scripts applied in order (Session Archive content, seeds, content and fixtures, shared machinery) to a freshly built throwaway database that holds the D5 migrations and no test data.",
+ "order": [
+  "rollback_step5d_d5_session_archive_content.sql",
+  "rollback_step5c_d5_seeds.sql",
+  "rollback_step5b_d5_content.sql",
+  "rollback_step5a_d5_shared_machinery.sql"
+ ],
+ "result": {
+  "t3a_dimension_compose": "restored byte for byte (prosrc compared with the pre-D5 database)",
+  "t3a_stage_form_check": "restored byte for byte",
+  "t3a_report_render_gate": "restored byte for byte",
+  "t3a_prohibited_output_check": "restored byte for byte",
+  "d5_rows_left": {
+   "content_objects": 0,
+   "statements": 0,
+   "questions": 0,
+   "session_archive_records": 0,
+   "placeholders": 0,
+   "review_items": 0
+  },
+  "d5_tables_and_functions_left": [],
+  "stage_codes_column": "removed",
+  "d4_intact": {
+   "statements": 47,
+   "stage_form_questions": 2,
+   "session_archive_records": 30
+  }
+ },
+ "raw_output": [
+  "== rollback verification",
+  "== rollback_step5d_d5_session_archive_content.sql",
+  "== rollback_step5c_d5_seeds.sql",
+  "== rollback_step5b_d5_content.sql",
+  "== rollback_step5a_d5_shared_machinery.sql",
+  "t3a_dimension_compose: restored byte for byte",
+  "t3a_stage_form_check: restored byte for byte",
+  "t3a_report_render_gate: restored byte for byte",
+  "t3a_prohibited_output_check: restored byte for byte",
+  "d5 content rows left:",
+  "0|0|0|0|0|0",
+  "d5 objects left:",
+  "",
+  "",
+  "dimension_id question_code reason ",
+  "D4 intact:",
+  "47|2|30"
+ ],
+ "limits": "Valid while no D5 content has been approved or used. The refusal log keeps the rows written when five sources were refused at load (append only). A rollback on a database that holds test data needs those rows removed first."
+}

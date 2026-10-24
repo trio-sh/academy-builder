@@ -1,0 +1,453 @@
+{
+ "passed": 50,
+ "total": 50,
+ "failed": [],
+ "results": [
+  {
+   "id": "D5-69",
+   "label": "a source whose items name no counterpart as a subject loads",
+   "pass": true,
+   "detail": {
+    "n": 1,
+    "v": "08a0fd7f-f766-4553-9197-82743498f2b1",
+    "id": "SRC-D5-N-clean-1-ac530851"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of designated_positions with the counterpart as its subject (\"the colleague declined the first weekend\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "designated_positions:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of designated_enquiries with the counterpart as its subject (\"the colleague answers what the rota requires\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "designated_enquiries:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of shared_items with the counterpart as its subject (\"the colleague holds the rota template\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "shared_items:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of available_options with the counterpart as its subject (\"the colleague takes the first weekends\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "available_options:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of available_routes with the counterpart as its subject (\"the colleague receives a note\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "available_routes:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "an item of agreement_contents with the counterpart as its subject (\"the colleagues settle the split\") refuses the source at load and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "loaded": 0,
+    "detail": "agreement_contents:X1:colleague"
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"the colleague declined\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"the colleague who sets the rota moves\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"the other side agrees and the colleague signs\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"when the colleague replies the participant sends it\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"because the colleague is away\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"the colleagues are asked to settle it\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a subject form is refused: \"the colleague's agreement is recorded and the colleague files it\"",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"ask the colleague to restore it\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"the participant asks the colleague what the rota requires\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"what the colleague needs by Friday\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"the colleague's note on the rota\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"both weekends offered to the colleague\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"alternating months, put to the colleague\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the counterpart as the object of the participant's act, or as a possessor, is not refused: \"send the colleague a note listing what has been done\"",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "a third party that is not the counterpart (an authority that decides) as the subject of an option is not refused",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "the same item is refused when that third party is this source's counterpart",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-69",
+   "label": "a D4 source with the same wording loads: the counterpart rule belongs to the dimensions that register it",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-69",
+   "label": "of the 33 D5 sources of the package, 28 load and exactly five are refused at load: SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010",
+   "pass": true,
+   "detail": {
+    "total": 33,
+    "notLoaded": [
+     "SRC-D5-S2-009",
+     "SRC-D5-S3-001",
+     "SRC-D5-S3-007",
+     "SRC-D5-S4-004",
+     "SRC-D5-S4-010"
+    ]
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "each of the five is refused for exactly one item, named in the log (S2-009 DP2 'the two managers are asked to settle it before the board'; S3-001 AO4 'both leads take the decision to the vice-president jointly'; S3-007 AO4 'the people function asked to advise on the arrangement'; S4-004 AO4 'the chair takes the decision'; S4-010 AO4 'the lead decides')",
+   "pass": true,
+   "detail": {
+    "SRC-D5-S2-009": "designated_positions:DP2:manager",
+    "SRC-D5-S3-001": "available_options:AO4:lead",
+    "SRC-D5-S3-007": "available_options:AO4:people function",
+    "SRC-D5-S4-004": "available_options:AO4:chair",
+    "SRC-D5-S4-010": "available_options:AO4:lead"
+   }
+  },
+  {
+   "id": "D5-sensitive",
+   "label": "SRC-D5-S3-004 carries sensitivity_flag SENSITIVE_CONTENT (decision 0.6.22); SRC-D5-S3-007 is among the five refused, so its flag has no loaded row to sit on",
+   "pass": true,
+   "detail": [
+    {
+     "identifier": "SRC-D5-S3-004",
+     "f": "SENSITIVE_CONTENT"
+    }
+   ]
+  },
+  {
+   "id": "D5-69",
+   "label": "an entry whose subject is a counterpart role label is refused at load and logged",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-69",
+   "label": "an entry in which the counterpart is only the object of the participant's act is not refused (the detector finds no subject)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-69",
+   "label": "none of the 46 loaded D5 entries has a counterpart term as the subject of a verb (scanned against the terms of the 28 loaded sources and the generic role nouns)",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-64",
+   "label": "the rendered output scan refuses a sentence whose subject is a counterpart role label and logs counterpart_as_subject",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "team"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "the scan is the service route only",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-68",
+   "label": "no readable D5 source body (28 sources and 4 demonstration fixtures, and every synthetic source this file loaded) carries counterpart_role or counterpart_position, as a field or in the sheet text",
+   "pass": true,
+   "detail": {
+    "bodies": 54,
+    "packageBodies": 32,
+    "inBody": []
+   }
+  },
+  {
+   "id": "D5-68",
+   "label": "the two fields, and the sheet notes that carry their names as a label, are kept in the sequestered table: a role for every loaded source",
+   "pass": true,
+   "detail": [
+    {
+     "field": "counterpart_position",
+     "n": 33
+    },
+    {
+     "field": "counterpart_role",
+     "n": 41
+    },
+    {
+     "field": "source_note#note",
+     "n": 9
+    }
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "the source registry reads them: the registry function returns the role label of SRC-D5-S2-001 for the service route",
+   "pass": true,
+   "detail": {
+    "counterpart_role": "The colleague named in the announcement.",
+    "source_note#note": "counterpart_position: No intent is established and no question may recover one."
+   }
+  },
+  {
+   "id": "D5-68",
+   "label": "anon cannot read the sequestered table or call the registry function",
+   "pass": true,
+   "detail": [
+    "permission denied for table t3a_source_sequestered_field",
+    "permission denied for function t3a_source_counterpart"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "authenticated cannot read the sequestered table or call the registry function",
+   "pass": true,
+   "detail": [
+    "permission denied for table t3a_source_sequestered_field",
+    "permission denied for function t3a_source_counterpart"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "a mentor (an authenticated caller) reading the source registry directly finds neither field in any D5 body",
+   "pass": true,
+   "detail": {
+    "n": 0
+   }
+  },
+  {
+   "id": "D5-68",
+   "label": "the Mentor Cockpit reference card renders for all 32 loaded D5 sources (an authenticated caller) and carries neither counterpart field, name or value",
+   "pass": true,
+   "detail": {
+    "cardCount": 32,
+    "cardBad": [],
+    "valueLeak": []
+   }
+  },
+  {
+   "id": "D5-68",
+   "label": "the card has the six sections of instruction 039: scripted questions, positions, enquiries, shared items, options routes and contents, flags",
+   "pass": true,
+   "detail": [
+    "flags",
+    "title",
+    "rendered",
+    "sheet_note",
+    "stage_code",
+    "shared_items",
+    "operational_state",
+    "source_identifier",
+    "scripted_questions",
+    "designated_enquiries",
+    "designated_positions",
+    "options_routes_contents",
+    "scripted_questions_note"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "the card carries no expected response, strong answer, red flag, preference or order key",
+   "pass": true,
+   "detail": [
+    "flags",
+    "recording_route",
+    "persistence_point",
+    "authority_relation",
+    "exchange_test_point",
+    "difference_established",
+    "title",
+    "rendered",
+    "sheet_note",
+    "stage_code",
+    "shared_items",
+    "0",
+    "id",
+    "text",
+    "1",
+    "id",
+    "text",
+    "2",
+    "id",
+    "text",
+    "operational_state",
+    "source_identifier",
+    "scripted_questions",
+    "0",
+    "beat",
+    "question_text",
+    "1",
+    "beat",
+    "question_text",
+    "2"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "a Stage 1 card reads its scripted questions from the reveals; the opening reveal is not a question",
+   "pass": true,
+   "detail": [
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "a Stage 3 card carries no live script and says so",
+   "pass": true,
+   "detail": "STAGE_CARRIES_NO_LIVE_SCRIPT"
+  },
+  {
+   "id": "D5-68",
+   "label": "a source that is not a D5 source, and one that is refused, return no card",
+   "pass": true,
+   "detail": {
+    "rendered": false,
+    "refusal_code": "SOURCE_CARRIES_NO_LOADED_VERSION"
+   }
+  },
+  {
+   "id": "D5-68",
+   "label": "no database routine names either field: the registry rule table and the sequestered table are the only places that do",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-68",
+   "label": "the field names are data in the D5 counterpart rule",
+   "pass": true,
+   "detail": [
+    {
+     "role_field": "counterpart_role",
+     "position_field": "counterpart_position"
+    }
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "no screen, report builder, export or API handler in the application source (src, api, public) names counterpart_role or counterpart_position",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-68",
+   "label": "the multi page report fixture and its manifest carry neither field",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-68",
+   "label": "the four D5 demonstration fixtures keep their sheet text with the two fields lifted out and every other field intact (the prose still names difference_established, authority_relation, recording_route, persistence_point, exchange_test_point and the lists)",
+   "pass": true,
+   "detail": [
+    "DEMO-D5-S1-001",
+    "DEMO-D5-S2-001",
+    "DEMO-D5-S3-001",
+    "DEMO-D5-S4-001"
+   ]
+  },
+  {
+   "id": "D5-68",
+   "label": "the fixtures' role labels are retained for source truth in the sequestered table",
+   "pass": true,
+   "detail": 4
+  }
+ ]
+}
