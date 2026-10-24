@@ -55,3 +55,5 @@ Steps 0 and 2 are done. Step 3 (D2): 3a readers dimension aware and 3b content l
 
 
 Steps 5 to 7 (21 October 2026): D4 on the shared machinery (applied, not servable); multi page BER renderer for the specimen with refusal controls and browser checks; Session Archive resolver port, dormant registries and flags, D4 content as drafts; Stage 4 start through the server's entry; return report (`RETURN-REPORT.md`). Acceptance D2 74/74, D3 78/78, D4 84/84. What is left needs people: see the last column of `conflict-register.md`.
+
+D5 (24 October 2026, branch `claude/build-d5`, sandbox only, not merged and not applied): shared machinery, content (28 of the 33 sources load, five refused by the counterpart rule), fixtures, seeds and Session Archive drafts as migrations 20270201 to 20270205 with rollback scripts; 444 step checks; acceptance D5 83 of 87 PASS and 4 NOT RUN (screens); package checks 10 of 11 (3.1.11 needs the D4 folder). See `conflict-register.md` CR-230 to CR-249 and `d5-acceptance-results.md`.

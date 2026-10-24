@@ -23,7 +23,7 @@ rec("LSA-flag", "the flag reader is not executable by anon or authenticated", (a
 
 const n = (await run(`select count(*)::int n, count(*) filter (where status='draft_for_approval')::int d, count(*) filter (where status='active' or approved_by is not null or effective_from is not null)::int a from t3a_lsa_registry_record where package_id='T3A-D4-LSA-CONTENT-001'`))[0];
 rec("LSA-D4", "D4 content is loaded as 30 records, every one a draft with no approval and no effective date, none active", n.n === 30 && n.d === 30 && n.a === 0, n);
-const byReg = Object.fromEntries((await run(`select registry, count(*)::int n from t3a_lsa_registry_record where package_id='T3A-D4-LSA-CONTENT-001' group by 1`)).map((r) => [r.registry, r.n]));
+const byReg = Object.fromEntries((await run(`select registry, count(*)::int n from t3a_lsa_registry_record where package_id='T3A-D4-LSA-CONTENT-001' group by 1 order by 1`)).map((r) => [r.registry, r.n]));
 rec("LSA-D4", "by registry: 2 families, 2 direction rules, 1 sufficiency rule, 14 entries, 1 history rule, 1 dimension rule, 7 dimension entries, 2 state mappings", JSON.stringify(byReg) === JSON.stringify({ dimension_entries: 7, dimension_rules: 1, direction_rules: 2, entries: 14, families: 2, history_rules: 1, state_mapping: 2, sufficiency_rules: 1 }), byReg);
 rec("LSA-D4", "the CE-D4-05 and CE-D4-08 propositions are the only ones carried", (await run(`select distinct body->>'proposition_id' p from t3a_lsa_registry_record where registry='families' and package_id='T3A-D4-LSA-CONTENT-001' order by 1`)).map((r) => r.p).join() === "REK-D4-005,REK-D4-008");
 

@@ -3,6 +3,7 @@
 
   python3 tools/day1/build_dimension_seeds_migration.py D4 <Build-Package.json> <out.sql> --item-base 28 --blockers ST-D4-010,ST-D4-015 \
       --cross owned,caused,blamed,prioritized,"sequenced the work",checked,verified,escalated --stage1-barred Q-D4-07,Q-D4-07b
+  (D5: --stage1-barred Q-D5-06,Q-D5-06b --barred-stages 1,3 --barred-reason "..."; the barred stage list needs the stage_codes column of migration 20270201000000)
 
 Emits: interaction pattern families from the situation classes, the platform cooldown ladder, the closed retired list, the dimension specific checklist items, the recurrence blockers,
 the words that belong to other dimensions, the stage form barred questions, and the structural rows of the question definition register (the five semantic fields stay empty)."""
@@ -10,6 +11,8 @@ import argparse, json
 ap = argparse.ArgumentParser()
 ap.add_argument("dim"); ap.add_argument("pkg"); ap.add_argument("out")
 ap.add_argument("--item-base", type=int, required=True)
+ap.add_argument("--barred-stages", default="", help="Stage numbers (comma list) at which the barred questions are barred; empty keeps the Stage 1 default of earlier dimensions")
+ap.add_argument("--barred-reason", default="a written response cannot evidence it at Stage 1")
 ap.add_argument("--blockers", default=""); ap.add_argument("--cross", default=""); ap.add_argument("--stage1-barred", default="")
 a = ap.parse_args()
 dim = a.dim
@@ -51,8 +54,11 @@ if blk:
     out += f"\nupdate public.t3a_d1_statement_library set recurrence_blocker = true where dimension_id = {lit(dim)} and statement_key in ({', '.join(lit(x) for x in blk)});\n"
 if cross:
     out += f"\nupdate public.t3a_rce_prohibited_vocabulary set reason = 'cross_dimension_assertion' where dimension_id = {lit(dim)} and version = {lit('PV-' + dim + '-1.0')} and word in ({', '.join(lit(x) for x in cross)});\n"
-if barred:
+if barred and not a.barred_stages:
     out += f"\ninsert into public.t3a_stage_form_question(dimension_id, question_code, reason) values\n" + ",\n".join(f"  ({lit(dim)},{lit(q)},'a written response cannot evidence it at Stage 1')" for q in barred) + "\non conflict do nothing;\n"
+elif barred:
+    stg = "array[" + ",".join(lit(x) for x in a.barred_stages.split(",")) + "]::text[]"
+    out += f"\ninsert into public.t3a_stage_form_question(dimension_id, question_code, reason, stage_codes) values\n" + ",\n".join(f"  ({lit(dim)},{lit(q)},{lit(a.barred_reason)},{stg})" for q in barred) + "\non conflict do nothing;\n"
 out += f"""
 insert into public.t3a_question_definition(dimension_id, question_id, answer_id, exact_stem, stage_applicability, required_or_conditional, missing_state_route, child_branch_rule, statement_mapping)
 select m.dimension_id, m.question_code, 'A' || l.line_order, cs.title,

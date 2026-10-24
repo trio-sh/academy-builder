@@ -1,0 +1,878 @@
+{
+ "package_id": "T3A-D5-LSA-CONTENT-001",
+ "dimension_id": "D5",
+ "version": "1.0",
+ "status": "Draft for founder approval; loads as inactive records",
+ "state_mapping": {
+  "REK-D5-007": {
+   "C7 A1": "AG_WITH_RECORDING",
+   "C7 A2": "AG_NO_RECORDING",
+   "C7 A3": "AG_NONE",
+   "C7 A4": "AG_NONE_REACHED"
+  },
+  "REK-D5-008": {
+   "C8 A1": "CN_STEP_AND_PARTY",
+   "C8 A2": "CN_NO_PARTY",
+   "C8 A3": "CN_TO_AUTHORITY",
+   "C8 A4": "CN_NONE"
+  }
+ },
+ "registries": {
+  "families": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "family_id": "FAM-D5-REK007",
+    "proposition_id": "REK-D5-007",
+    "conduct_element_id": "CE-D5-07",
+    "members": [
+     {
+      "source_version_id": "SRC-D5-S2-001@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-002@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-003@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-004@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-007@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-008@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-009@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-010@2.0",
+      "approved_by": null,
+      "approved_at": null
+     }
+    ],
+    "administration_profile": {
+     "observation_mode": "structured_live_session",
+     "assistance_declaration": "none"
+    },
+    "states": [
+     "AG_NO_RECORDING",
+     "AG_WITH_RECORDING",
+     "AG_NONE_REACHED"
+    ],
+    "absence_states": [
+     "AG_NONE"
+    ]
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "family_id": "FAM-D5-REK008",
+    "proposition_id": "REK-D5-008",
+    "conduct_element_id": "CE-D5-08",
+    "members": [
+     {
+      "source_version_id": "SRC-D5-S2-001@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-002@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-003@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-004@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-007@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-008@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-009@2.0",
+      "approved_by": null,
+      "approved_at": null
+     },
+     {
+      "source_version_id": "SRC-D5-S2-010@2.0",
+      "approved_by": null,
+      "approved_at": null
+     }
+    ],
+    "administration_profile": {
+     "observation_mode": "structured_live_session",
+     "assistance_declaration": "none"
+    },
+    "states": [
+     "CN_NO_PARTY",
+     "CN_STEP_AND_PARTY",
+     "CN_TO_AUTHORITY"
+    ],
+    "absence_states": [
+     "CN_NONE"
+    ]
+   }
+  ],
+  "direction_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DR-D5-007",
+    "family_id": "FAM-D5-REK007",
+    "family_version": 1,
+    "transitions": [
+     {
+      "from_state": "AG_NO_RECORDING",
+      "to_state": "AG_WITH_RECORDING",
+      "direction": "forward"
+     },
+     {
+      "from_state": "AG_WITH_RECORDING",
+      "to_state": "AG_NO_RECORDING",
+      "direction": "backward"
+     }
+    ],
+    "justification_ref": "J-D5-007, held by the founder",
+    "forward_label": "toward stating how an agreement is recorded",
+    "backward_label": "away from stating how an agreement is recorded"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DR-D5-008",
+    "family_id": "FAM-D5-REK008",
+    "family_version": 1,
+    "transitions": [
+     {
+      "from_state": "CN_NO_PARTY",
+      "to_state": "CN_STEP_AND_PARTY",
+      "direction": "forward"
+     },
+     {
+      "from_state": "CN_STEP_AND_PARTY",
+      "to_state": "CN_NO_PARTY",
+      "direction": "backward"
+     }
+    ],
+    "justification_ref": "J-D5-008, held by the founder",
+    "forward_label": "toward stating who a next step goes to",
+    "backward_label": "away from stating who a next step goes to"
+   }
+  ],
+  "sufficiency_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "SR-D5",
+    "applies_to": "D5",
+    "min_eligible": 2,
+    "min_comparable": 2,
+    "min_after_first": 1,
+    "require_completed_cooldown": true
+   }
+  ],
+  "entries": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-insufficient_evidence",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "insufficient_evidence",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "Too few comparable observations were recorded in this period for a comparison.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-comparison_not_established",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "comparison_not_established",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-consistent_recorded_conduct",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "consistent_recorded_conduct",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "Each included observation recorded the same response.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-different_no_direction",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "different_no_direction",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "The included observations recorded different responses. No direction is set between these responses.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-documented_progression",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "documented_progression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "Across the included observations, the recorded conduct moved toward stating how an agreement is recorded, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated, toward stating how an agreement is recorded"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-documented_regression",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "documented_regression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "Across the included observations, the recorded conduct moved away from stating how an agreement is recorded, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated, away from stating how an agreement is recorded"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-007-mixed_trajectory",
+    "proposition_id": "REK-D5-007",
+    "finding_code": "mixed_trajectory",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating an agreement and how it is recorded",
+    "element_short": "Agreement and recording stated",
+    "wording": "Across the included observations, the recorded conduct moved in both directions.",
+    "display_label": null,
+    "state_labels": {
+     "AG_NO_RECORDING": {
+      "full": "Stated an agreement with no statement about recording it",
+      "short": "no recording stated"
+     },
+     "AG_WITH_RECORDING": {
+      "full": "Stated an agreement and how it is recorded",
+      "short": "recording stated"
+     },
+     "AG_NONE_REACHED": {
+      "full": "Stated that no agreement had been reached",
+      "short": "none reached"
+     },
+     "AG_NONE": {
+      "full": "No agreement stated",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "agreement and recording stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-insufficient_evidence",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "insufficient_evidence",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "Too few comparable observations were recorded in this period for a comparison.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-comparison_not_established",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "comparison_not_established",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-consistent_recorded_conduct",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "consistent_recorded_conduct",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "Each included observation recorded the same response.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-different_no_direction",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "different_no_direction",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "The included observations recorded different responses. No direction is set between these responses.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-documented_progression",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "documented_progression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "Across the included observations, the recorded conduct moved toward stating who a next step goes to, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference, toward stating who a next step goes to"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-documented_regression",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "documented_regression",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "Across the included observations, the recorded conduct moved away from stating who a next step goes to, and no later observation moved the other way.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference, away from stating who a next step goes to"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "E-D5-008-mixed_trajectory",
+    "proposition_id": "REK-D5-008",
+    "finding_code": "mixed_trajectory",
+    "sequence_pattern": "ANY",
+    "element_title": "Stating what happens if a difference continues",
+    "element_short": "Next step for a continuing difference",
+    "wording": "Across the included observations, the recorded conduct moved in both directions.",
+    "display_label": null,
+    "state_labels": {
+     "CN_NO_PARTY": {
+      "full": "Stated a next step without its recipient",
+      "short": "no party named"
+     },
+     "CN_STEP_AND_PARTY": {
+      "full": "Stated a next step and its recipient",
+      "short": "step and party"
+     },
+     "CN_TO_AUTHORITY": {
+      "full": "Stated that the difference goes to an authority",
+      "short": "to an authority"
+     },
+     "CN_NONE": {
+      "full": "Nothing stated about the difference continuing",
+      "short": "none observed"
+     }
+    },
+    "comparison_basis_line": "",
+    "work_process_line": "Ending a discussion where a difference with another party is still open",
+    "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+    "summary_clause": "next step for a continuing difference"
+   }
+  ],
+  "history_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "HR-D5",
+    "applies_to": "D5",
+    "max_age_months": 36
+   }
+  ],
+  "dimension_rules": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "rule_id": "DMR-D5",
+    "dimension_id": "D5",
+    "min_elements": 2,
+    "min_directional_elements": 2
+   }
+  ],
+  "dimension_entries": [
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-01",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_insufficient",
+    "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+    "display_label": "Dimension not summarized"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-02",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_pattern_only_coverage",
+    "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+    "display_label": "Dimension direction not stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-03",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_pattern_only_direction",
+    "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+    "display_label": "Dimension direction not stated"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-04",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_consistent",
+    "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+    "display_label": "Consistent conduct across compared elements"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-05",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_progression",
+    "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+    "display_label": "Progression in compared conduct"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-06",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_regression",
+    "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+    "display_label": "Regression in compared conduct"
+   },
+   {
+    "status": "draft_for_approval",
+    "version": 1,
+    "effective_from": null,
+    "effective_to": null,
+    "approved_by": null,
+    "approved_at": null,
+    "entry_id": "DE-D5-07",
+    "dimension_id": "D5",
+    "dimension_finding_code": "dimension_mixed",
+    "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+    "display_label": "Mixed across compared conduct"
+   }
+  ]
+ }
+}
