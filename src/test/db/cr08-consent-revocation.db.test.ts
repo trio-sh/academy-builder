@@ -81,7 +81,7 @@ describe("CR-08 each consequential act checks the permission", () => {
     await consent(other.p, "withdrawn");
     expect((await act(w.p, "serve")).outcome).toBe("allowed");
     expect((await act(w.p, "serve")).outcome).toBe("allowed");
-    const noConsent = await mkParticipant(c, `cr08-none-${RUN}`);
+    const noConsent = await mkParticipant(c, `cr08-none-${RUN}`, "candidate", { consent: false });
     expect((await act(noConsent, "serve")).reason).toBe("PERMISSION_NOT_IN_EFFECT");
     expect((await asService(c, `select t3a_cr08_act('${w.p}','${DIM}','${STAGE}','teleport', null) r`)).r.reason).toBe("ACT_NOT_IN_CONTROLLED_SET");
   });
@@ -192,13 +192,16 @@ describe("CR-08 queued work and the immutable record", () => {
 
 describe("CR-08 the real commit, behind the consent switch (off)", () => {
   const setGate = (on: boolean) => run(c, `update t3a_consent_config set enforce_gate = ${on}`);
+  let gatePrev = false;
+  beforeAll(async () => { gatePrev = (await run(c, `select enforce_gate g from t3a_consent_config`))[0].g; });
+  afterAll(async () => { await setGate(gatePrev); });   // whatever the run set is put back
   async function pending() {
     const p = await mkParticipant(c, `cr08-g-${++seq}`); await consent(p, "granted"); const rec = randomUUID();
     await run(c, `insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code) values ('${rec}','${p}','${DIM}','${STAGE}')`);
     return { p, rec };
   }
   it("with the switch off nothing is gated (the default)", async () => {
-    expect((await run(c, `select enforce_gate g from t3a_consent_config`))[0].g).toBe(false);
+    await setGate(false);
     const w = await pending(); await consent(w.p, "withdrawn");
     await run(c, `update t3a_observation_record set is_committed = true, committed_at = now() where observation_record_id='${w.rec}'`);
     expect((await run(c, `select is_committed from t3a_observation_record where observation_record_id='${w.rec}'`))[0].is_committed).toBe(true);
@@ -217,7 +220,7 @@ describe("CR-08 the real commit, behind the consent switch (off)", () => {
       // a revocation that comes after the commit leaves it committed and excludes the output
       await consent(ok.p, "withdrawn");
       expect((await run(c, `select is_committed from t3a_observation_record where observation_record_id='${ok.rec}'`))[0].is_committed).toBe(true);
-    } finally { await setGate(false); }
+    } finally { await setGate(gatePrev); }
   });
   it("D1 is left to its own consent tables", async () => {
     await setGate(true);

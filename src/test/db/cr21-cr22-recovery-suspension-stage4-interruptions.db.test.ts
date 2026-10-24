@@ -125,10 +125,11 @@ describe("CR-21 a shared Stage 3 submission and withdrawn permission", () => {
     const rec = async (dim: string) => { const id = randomUUID(); await fx(`insert into t3a_observation_record(observation_record_id, participant_id, dimension_id, stage_code) values ('${id}','${p}','${dim}','S3')`); return id; };
     const r2 = await rec("D2"); const r3 = await rec("D3");
     await consent(p, "D3", "withdrawn");                                                          // the permission for D3 goes before the commit
+    const gatePrev = (await run(c, `select enforce_gate g from t3a_consent_config`))[0].g;
     await run(c, `update t3a_consent_config set enforce_gate = true`);
     try {
       await run(c, `update t3a_observation_record set is_committed = true, committed_at = now() where observation_record_id in ('${r2}','${r3}')`);
-    } finally { await run(c, `update t3a_consent_config set enforce_gate = false`); }
+    } finally { await run(c, `update t3a_consent_config set enforce_gate = ${gatePrev}`); }
     const st = await run(c, `select dimension_id, is_committed from t3a_observation_record where participant_id='${p}' order by dimension_id`);
     expect(st).toEqual([{ dimension_id: "D2", is_committed: true }, { dimension_id: "D3", is_committed: false }]);
     expect((await run(c, `select dimension_id, reason from t3a_cr08_quarantine where participant_id='${p}'`))).toEqual([{ dimension_id: "D3", reason: "consent_revoked_before_commit" }]);
