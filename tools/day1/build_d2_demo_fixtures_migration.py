@@ -55,6 +55,10 @@ def parse(part):
         mm = re.match(r"- ([a-z_0-9]+): ?(.*)$", l)
         if mm: key = mm.group(1); sheet[key] = mm.group(2).strip()
         elif l.strip().startswith("-") and key: sheet[key] = (sheet[key] + "; " if sheet[key] else "") + l.strip().lstrip("- ").strip()
+    # D8 edition: the sheet is one paragraph of "`field`: value" runs; each field becomes a key, so the loader can check and withhold fields by name
+    if not sheet and re.search(r"`[a-z_0-9]+`: ", sheet_src):
+        parts_ = re.split(r"`([a-z_0-9]+)`: ", sheet_src.strip())
+        sheet = {parts_[i]: parts_[i + 1].strip() for i in range(1, len(parts_) - 1, 2)}
     # a row may name two questions ("Q-D3-06a and Q-D3-06b"); each question gets its own entry carrying the same state and basis
     app_src = blocks.get("Question applicability") or next(v for v in blocks.values() if "| Question | State | Basis |" in v)
     app_lines = [l for l in app_src.split("\n") if l.strip().startswith("|")]
@@ -68,7 +72,7 @@ def parse(part):
 stmts = []
 for p in parts:
     n, ident, title, hdr, blocks, sheet, app, script, quotes, reveals = parse(p)
-    assert len(app) == {"D2": 15, "D3": 16, "D4": 15}[DIM], (ident, len(app))
+    assert len(app) == {"D2": 15, "D3": 16, "D4": 15, "D8": 16}[DIM], (ident, len(app))
     assert hdr["Identifier"] == ident and hdr["demonstration"] == "true"
     stage_code = "S" + hdr["Stage"]
     body = {"source_identifier": ident, "title": title, "stage": int(hdr["Stage"]), "stage_code": stage_code, "demonstration": True, "serving_eligible": False,

@@ -40,8 +40,12 @@ insert into public.t3a_rce_prohibited_vocabulary (dimension_id, word, version, r
   select {lit(dim)}, word, {lit('PV-' + dim + '-4.2')}, {lit(dim + ' Section 4.2 retired vocabulary, closed list')} from public.t3a_rce_prohibited_vocabulary where dimension_id = 'D2' and version = 'PV-D2-4.2'
   on conflict do nothing;
 
-alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
-alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and {n2});
+-- the ceiling is the larger of what the table already holds and this dimension's last item, so a dimension built beside this one is never shut out
+do $c$ declare m int; begin
+  select greatest(coalesce(max(item_no), 0), {n2}) into m from public.t3a_dimension_review_item;
+  alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
+  execute format('alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and %s)', m);
+end $c$;
 insert into public.t3a_dimension_review_item (item_no, dimension_id, requirement, display_no) values
   ({n1}, {lit(dim)}, {lit(dim + ' specific: no rendered ' + dim + ' sentence uses a verb of purpose or disposition (checked against the Section 3.2 prohibited-verb list on rendered output).')}, 24),
   ({n2}, {lit(dim)}, {lit(dim + ' specific: no element of the report is computed across dimensions, and no rendered ' + dim + ' sentence names a third party.')}, 25)
