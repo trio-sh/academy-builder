@@ -46,7 +46,16 @@ def run_step(name, switches):
     state = psql(STATE).split("|")
     keys = ["canonical_writers", "ingest_mode", "enforce_required", "enforce_sequence", "enforce_gate", "lsa_activation"]
     st = dict(zip(keys, state))
-    db = sh("npm run test:db 2>&1")
+    # the required-fields, sequence and gate switches are turned on for the database suite by its enforced runner (vitest.db.enforced.setup.ts), which also sets what the
+    # fixtures need to work with them on; the two event switches are already on in the database built above. The defaults test reads what is on from T3A_REHEARSAL_ON.
+    on = [n for n, _ in switches]
+    env = dict(os.environ, T3A_REHEARSAL_ON=",".join(on))
+    also = [n for n in ("enforce_sequence", "enforce_gate") if n in on]
+    if "enforce_required" in on:
+        env["T3A_ENFORCE_ALSO"] = ",".join(x.replace("enforce_", "") for x in also)
+        db = sh("npm run test:db:enforced 2>&1", env=env)
+    else:
+        db = sh("npm run test:db 2>&1", env=env)
     unit = sh("npm test 2>&1")
     failing = sorted(set(re.findall(r"^\s*×\s+(.+?)(?:\s+\d+ms)?$", db.stdout, re.M)))
     return {"step": name, "switches_on": [n for n, _ in switches], "state_after_turning_on": st, "database_suite": counts(db.stdout), "unit_suite": counts(unit.stdout), "failing_database_tests": failing[:40]}
