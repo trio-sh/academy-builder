@@ -1540,18 +1540,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "c265871d-3ad4-4537-9d78-c10097452fde"
+       "recipient_release_id": "450bb516-00bd-4fee-b64b-c700d93b00ff"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-24T15:24:47.494885+00:00"
+       "made_available_at": "2026-10-24T21:07:38.411023+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "c265871d-3ad4-4537-9d78-c10097452fde"
+       "recipient_release_id": "450bb516-00bd-4fee-b64b-c700d93b00ff"
       },
       "after": {
        "w": true,
@@ -1605,8 +1605,8 @@
        }
       ],
       "issued": [
-       1,
-       1
+       4,
+       4
       ]
      }
     }

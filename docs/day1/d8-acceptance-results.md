@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 24 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d8-acceptance-run.json`. The run re-reads the labelled results of the D8 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**86 of 87 identifiers PASS, 1 FAIL, 0 NOT RUN.** The identifiers that FAIL are named exceptions; each states why.
+**86 of 87 identifiers PASS, 1 FAIL, 0 NOT RUN.**
 
 | Test | Result | How | Check |
 |---|---|---|---|

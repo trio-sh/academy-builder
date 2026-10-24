@@ -1481,7 +1481,7 @@
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "d5-step3h-report-gate-test.json: the multi page only rule is data: D4 and D5 are listed, the single page route is closed for a report carrying either"
+      "d5-step3h-report-gate-test.json: the multi page only rule is data: D4, D5, D8 and D9 are listed (one register, CR-290), the single page route is closed for a report carrying any of them"
      ]
     },
     {
@@ -1783,18 +1783,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "087de204-0937-43a6-b14b-174fad813f22"
+       "recipient_release_id": "d41afd5e-8e70-4c08-afb3-01c00856d760"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-24T15:45:03.136282+00:00"
+       "made_available_at": "2026-10-24T21:07:33.525687+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "087de204-0937-43a6-b14b-174fad813f22"
+       "recipient_release_id": "d41afd5e-8e70-4c08-afb3-01c00856d760"
       },
       "after": {
        "w": true,
@@ -1847,8 +1847,8 @@
       "s3": "Q-D5-06,Q-D5-06b,Q-D5-09",
       "s24": "",
       "issued": [
-       1,
-       1
+       3,
+       3
       ]
      }
     }

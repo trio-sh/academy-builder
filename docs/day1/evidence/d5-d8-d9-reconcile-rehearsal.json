@@ -1,0 +1,16 @@
+{
+ "what": "Reconciliation of D5, D8 and D9 on the shared functions (migration 20270230000000_shared_functions_d5_d8_d9.sql, CR-290 to CR-298). Throwaway Postgres 16 only; nothing was applied to the live project.",
+ "build": { "files_from_20270201_with_errors": 0, "build_errors": "15 older files at or below 20261086, identical to a build of every migration up to 20270133" },
+ "rollback_rehearsal": {
+  "order": ["rollback_step5z_reconcile_d5_d8_d9", "rollback_step7b_d9_session_archive_content", "rollback_step5c_d9_seeds", "rollback_step5b_d9_content", "rollback_step5a_d9_shared_machinery", "rollback_step11e_d8_session_archive_content", "rollback_step11d_d8_content_flags", "rollback_step11c_d8_seeds", "rollback_step11b_d8_content", "rollback_step11a_d8_shared_machinery", "rollback_step5d_d5_session_archive_content", "rollback_step5c_d5_seeds", "rollback_step5b_d5_content", "rollback_step5a_d5_shared_machinery"],
+  "errors": 0,
+  "result": "pg_dump -s of the database after the rollbacks equals pg_dump -s of a build up to 20270133 (the live baseline), apart from the dump's own random restrict token"
+ },
+ "test_the_test": {
+  "method": "one block removed from the new migration at a time on the throwaway database, tests run, migration restored",
+  "removed": ["D5 counterpart rule in the prohibited output check", "D5 Stage 3 question bar", "D8 entry language gate in compose", "D8 served question needs its list", "D8 state patterns in the prohibited output check", "D8 verb list", "D9 entry subject and word check in compose", "D9 verb list", "D9 row of the multi page register read", "recurrence register read"],
+  "result": "dimensions-coexist.db.test.ts failed in every case; the dimension's own test also failed for D5 counterpart (d5_step3c, 5 checks), D8 gate (d8-state-boundary, 2), D8 list (d8-state-boundary, 1), D9 subject check (d9_step3e, 3), D9 multi page (d9_step3h, 2)"
+ },
+ "suites": { "test:db": "40 files, 508 tests passed", "test:db:enforced": "40 files, 508 tests passed", "npm test": "26 files, 517 tests passed" },
+ "acceptance": { "D5": "83 of 87 PASS, 4 NOT RUN", "D8": "86 of 87 PASS, D8-64 the accepted known failure (CR-252)", "D9": "88 of 89 PASS, D9-71 NOT RUN", "D3": "78 of 78", "D4": "84 of 84" }
+}

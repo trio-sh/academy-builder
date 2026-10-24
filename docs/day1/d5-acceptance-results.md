@@ -2,7 +2,7 @@
 
 Run against the throwaway database on 24 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d5-acceptance-run.json`. The run re-reads the labelled results of the D5 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**83 of 87 identifiers PASS, 0 FAIL, 4 NOT RUN.** The identifiers not run need the report renderer or a screen; each states why.
+**83 of 87 identifiers PASS, 0 FAIL, 4 NOT RUN.** Each identifier not run states why.
 
 | Test | Result | How | Check |
 |---|---|---|---|

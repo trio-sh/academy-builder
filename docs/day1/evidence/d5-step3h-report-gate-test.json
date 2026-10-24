@@ -128,15 +128,15 @@
     "open": true,
     "cases": [
      {
-      "case": "d931e9aa-dc69-4f67-8f18-be1f55f48616",
+      "case": "e2eaa1f9-fe14-4ea4-8824-fabbcca0b33a",
       "kind": "correction"
      }
     ],
     "records_under_reconsideration": [
      {
-      "assignment": "38768d47-6369-4d34-84f4-9e8b9293ed73",
+      "assignment": "4b9f4054-38c3-4a9c-9af0-fa43a403907a",
       "dimension_id": "D5",
-      "observation_record_id": "62e13194-9623-4a03-8f19-d4a39c30244e"
+      "observation_record_id": "9ae0cd18-9c24-4fe7-911e-b73b431f9d3e"
      }
     ]
    }
@@ -296,7 +296,7 @@
   },
   {
    "id": "D5-67",
-   "label": "the multi page only rule is data: D4 and D5 are listed, the single page route is closed for a report carrying either",
+   "label": "the multi page only rule is data: D4, D5, D8 and D9 are listed (one register, CR-290), the single page route is closed for a report carrying any of them",
    "pass": true,
    "detail": [
     {
@@ -304,6 +304,12 @@
     },
     {
      "dimension_id": "D5"
+    },
+    {
+     "dimension_id": "D8"
+    },
+    {
+     "dimension_id": "D9"
     }
    ]
   },
@@ -329,8 +335,8 @@
    "pass": true,
    "detail": {
     "outcome": "amended",
-    "supersedes": "801e998f-4fb5-49cb-8a52-5d20fd667864",
-    "composed_statement_id": "3a4a2560-45fa-4dd0-8f00-2769a7b1de30"
+    "supersedes": "9b8dd251-7124-44ec-861d-0500a0355606",
+    "composed_statement_id": "a55313b5-5224-478d-b87c-f224f902966b"
    }
   },
   {

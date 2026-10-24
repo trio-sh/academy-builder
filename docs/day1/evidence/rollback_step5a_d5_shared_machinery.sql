@@ -1,5 +1,6 @@
 -- Rollback of 20270201000000_d5_shared_machinery.sql: restores the four re-created functions as they were in production before the step (the D4 text of the Stage form check and of composition, the CR-10 text of the render gate, the D3 text of the prohibited output check)
--- and removes what the step added. Run after the D5 Session Archive content, seeds and content rollbacks. Valid while no D5 source has been approved or used.
+-- and removes what the step added, including the two canonical registers D8 and D9 also write to (t3a_multipage_only_dimension, t3a_recurrence_excluded_entry_type): run it last, after the D8 and D9 rollbacks and
+-- rollback_step5z_reconcile_d5_d8_d9.sql. Run after the D5 Session Archive content, seeds and content rollbacks. Valid while no D5 source has been approved or used.
 drop trigger if exists t3a_1_counterpart_load_guard_trg on public.t3a_d1_content_version;
 drop trigger if exists t3a_1_counterpart_entry_guard_trg on public.t3a_d1_statement_library;
 drop function if exists public.t3a_counterpart_load_guard();
@@ -12,7 +13,7 @@ drop function if exists public.t3a_counterpart_subject_hit(text[], text);
 drop function if exists public.t3a_counterpart_terms(text);
 drop table if exists public.t3a_source_sequestered_field;
 drop table if exists public.t3a_dimension_counterpart_rule;
-drop table if exists public.t3a_record_status_no_recurrence;
+drop table if exists public.t3a_recurrence_excluded_entry_type;
 create or replace function public.t3a_stage_form_check(p_stage text, p_statements jsonb, p_dimension text default null) returns jsonb language plpgsql stable security definer set search_path = public as $fn$
 declare x jsonb; v text;
 begin

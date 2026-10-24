@@ -1160,7 +1160,8 @@
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "the demonstration footer is on every page and no issued claim is made"
+      "the demonstration footer is on every page and no issued claim is made",
+      "every page of the D8 only report is 612 by 792 points, states Page n of 3, carries the demonstration footer and no block passes the content box"
      ]
     }
    ]
@@ -1508,7 +1509,7 @@
    "status": "PASS",
    "entries": [
     {
-     "label": "a D9 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written); the 25 items are the 23 platform items and D9 items 34 and 35",
+     "label": "a D9 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written); the 25 items are the 23 platform items and D9 items 36 and 37",
      "status": "PASS",
      "how": "run",
      "detail": {
@@ -1547,18 +1548,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "f836cdb5-9ffb-44f2-8dad-4c76483fcffa"
+       "recipient_release_id": "8cfa0d29-6048-4524-9e55-bf8052b5aff4"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-24T15:37:06.000099+00:00"
+       "made_available_at": "2026-10-24T21:07:45.777783+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "f836cdb5-9ffb-44f2-8dad-4c76483fcffa"
+       "recipient_release_id": "8cfa0d29-6048-4524-9e55-bf8052b5aff4"
       },
       "after": {
        "w": true,
@@ -1617,8 +1618,8 @@
       ],
       "s3": "Q-D9-09",
       "issued": [
-       1,
-       1
+       5,
+       5
       ]
      }
     }

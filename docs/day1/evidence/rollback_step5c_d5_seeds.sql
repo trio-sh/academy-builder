@@ -4,7 +4,10 @@ delete from public.t3a_stage_form_question where dimension_id = 'D5';
 update public.t3a_d1_statement_library set recurrence_blocker = false where dimension_id = 'D5';
 delete from public.t3a_dimension_review_item where dimension_id = 'D5';
 alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
-alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (((item_no >= 1) AND (item_no <= 29)));
+do $c$ declare m int; begin
+  select greatest(coalesce(max(item_no), 0), 29) into m from public.t3a_dimension_review_item;
+  execute format('alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and %s)', m);
+end $c$;
 delete from public.t3a_rce_prohibited_vocabulary where dimension_id = 'D5';
 delete from public.t3a_d1_specification_cooldown where dimension_id = 'D5';
 delete from public.t3a_interaction_pattern_family where dimension_id = 'D5';
