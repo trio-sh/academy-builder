@@ -1,0 +1,329 @@
+{
+ "passed": 32,
+ "total": 32,
+ "failed": [],
+ "results": [
+  {
+   "id": "D8-89",
+   "label": "the checklist has 25 items: 23 for every dimension, two D8 specific",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-87",
+   "label": "with no recorded participant outcome the report is blocked, silence is not completion",
+   "pass": true,
+   "detail": [
+    "participant_review_incomplete",
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-98",
+   "label": "no override is available",
+   "pass": true,
+   "detail": false
+  },
+  {
+   "id": "D8-90",
+   "label": "the checklist is required for each dimension present: both report as incomplete",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D1",
+     "items_passed": 0,
+     "items_required": 23
+    },
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D8",
+     "items_passed": 0,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D8-13",
+   "label": "an unloaded evidence currency value blocks issuance",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-83",
+   "label": "an explicit reviewed-with-no-correction record completes the participant review",
+   "pass": true,
+   "detail": [
+    "checklist_incomplete_or_failed",
+    "checklist_incomplete_or_failed",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-98",
+   "label": "one failed D8 item in a two-dimension report blocks issuance although D1 passed",
+   "pass": true,
+   "detail": [
+    {
+     "code": "checklist_incomplete_or_failed",
+     "dimension_id": "D8",
+     "items_passed": 24,
+     "items_required": 25
+    }
+   ]
+  },
+  {
+   "id": "D8-90",
+   "label": "recording a later pass for that item clears it (results are append only; the latest counts)",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-89",
+   "label": "a recorded result cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D8-91",
+   "label": "a review recorded against another version set blocks issuance",
+   "pass": true,
+   "detail": [
+    "review_not_for_this_version_set",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-91",
+   "label": "the review for the exact version set clears it",
+   "pass": true,
+   "detail": [
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-86",
+   "label": "a correction against a D8 record blocks the report; the D8 record is in reconsideration and the D1 record is not",
+   "pass": true,
+   "detail": {
+    "open": true,
+    "cases": [
+     {
+      "case": "b769df27-55d9-4b1f-af48-32863b73784a",
+      "kind": "correction"
+     }
+    ],
+    "records_under_reconsideration": [
+     {
+      "assignment": "efe97cf3-0657-4c98-b21d-87b33f5a5388",
+      "dimension_id": "D8",
+      "observation_record_id": "d3dd9abc-46f2-4a00-9d63-95fc5d763076"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-17",
+   "label": "an actor who observed a record of the report is not an eligible reviewer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-10",
+   "label": "the reviewer cannot be the issuer",
+   "pass": true,
+   "detail": [
+    "correction_open",
+    "reviewer_not_eligible",
+    "issuer_not_eligible",
+    "evidence_currency_unloaded",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers",
+    "consent_absent"
+   ]
+  },
+  {
+   "id": "D8-18",
+   "label": "before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "fewer_than_two_authorized_observers"
+   ]
+  },
+  {
+   "id": "D8-18",
+   "label": "two observers but no approved cross context relationship is still below the floor (one context)",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_absent",
+    "commit_seal_absent"
+   ]
+  },
+  {
+   "id": "D8-65",
+   "label": "composed statements with no seal block issuance as commit_seal_absent",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_absent",
+    "commit_seal_absent"
+   ]
+  },
+  {
+   "id": "D8-65",
+   "label": "under a different key the seals read as invalid and block issuance",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor",
+    "commit_seal_invalid",
+    "commit_seal_invalid"
+   ]
+  },
+  {
+   "id": "D8-65",
+   "label": "sealed statements verify under the loaded key and no seal blocker remains",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible",
+    "below_issuance_floor"
+   ]
+  },
+  {
+   "id": "D8-91",
+   "label": "with every precondition met the gate permits (issuing itself stays an explicit human act)",
+   "pass": true,
+   "detail": {
+    "blockers": [
+     {
+      "code": "issuer_not_eligible",
+      "detail": "reviewer_cannot_issue"
+     }
+    ],
+    "permitted": false,
+    "override_available": false
+   }
+  },
+  {
+   "id": "D8-91",
+   "label": "a distinct uninvolved reviewer and issuer pass",
+   "pass": true,
+   "detail": [
+    "issuer_not_eligible"
+   ]
+  },
+  {
+   "id": "D8-98",
+   "label": "the table backstop refuses an issuance of this report while a blocker remains (the row is not written and the refusal is logged)",
+   "pass": true,
+   "detail": "ok"
+  },
+  {
+   "id": "D8-67",
+   "label": "a single page render of a report that carries D8 refuses format_mismatch and logs it",
+   "pass": true,
+   "detail": {
+    "detail": "a report that carries D4 or D8 renders through the multi page renderer; the single page route is closed",
+    "reason": "format_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-67",
+   "label": "the multi-page form is renderable",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-67",
+   "label": "a report with no D8 content is not affected by the D8 rule: one dimension renders on one page",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-88",
+   "label": "the original composed statement exists",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D8-88",
+   "label": "amendment needs a case whose outcome is amended (this one was upheld)",
+   "pass": true,
+   "detail": {
+    "detail": "amendment needs a correction case for this participant whose outcome is amended",
+    "reason": "no_amended_case",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-88",
+   "label": "a successful correction produces a NEW statement that supersedes the old",
+   "pass": true,
+   "detail": {
+    "outcome": "amended",
+    "supersedes": "0e0fbf1e-ee78-42ac-93d5-245de246ca8b",
+    "composed_statement_id": "ef5a7151-d242-49f3-9617-c2cc009bbba0"
+   }
+  },
+  {
+   "id": "D8-88",
+   "label": "the original remains in the full record, unedited",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D8-88",
+   "label": "only the new statement is in the current set",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D8-88",
+   "label": "a statement can be superseded once",
+   "pass": true,
+   "detail": {
+    "detail": "a later statement already replaces this one",
+    "reason": "already_superseded",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-88",
+   "label": "no in-place edit is possible",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  }
+ ]
+}

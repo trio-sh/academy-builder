@@ -14,6 +14,7 @@ Rule from every package: do not stop on a decision. Apply the stated default, lo
 | 3 | D2 pathway: content load from the JSON build package, then the 11 instruction packages, then tests D2-01 to D2-57 and PP-01 to PP-10 | Step 2 | Not started |
 | 4 | D3 pathway on the same code. Only content and its decisions differ | Step 3 | Built, tested and applied to production not servable (PR #345); D4 followed on the same machinery (Step 5) |
 | 5 | D4 pathway. Reconcile the stated inconsistencies first (below), build unaffected parts in parallel | Step 3 | Not started |
+| 5a | D8 pathway (Resilience and Recovery, build folder v2.1) on the same machinery. Migrations 20270211 to 20270216, scripts `d8_step*`, rollbacks `rollback_step11*` | Step 5 | Built and tested on the throwaway database (86 of 87 identifiers PASS, one named exception D8-64, CR-252); branch claude/build-d8; not applied to production, every D8 source not servable (CR-250 to CR-268) |
 | 6 | Multi page BER, beside (not replacing) the single page face. Same fonts and colour theme | Step 2 | Not started |
 | 7 | Behavioral Trajectory Report (Session Archive, code `lsa`): capture structures, resolver, admission boundary, tab, all dormant | Step 1 | Not started |
 | 8 | Return report: ERD, data dictionary as built, acceptance results with evidence, conflict register | All | Not started |
