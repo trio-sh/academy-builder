@@ -4,6 +4,8 @@ import ws from "ws"; import { HttpsProxyAgent } from "https-proxy-agent"; import
 const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
 neonConfig.webSocketConstructor = class extends ws { constructor(u, p) { super(u, p, { agent }); } };
 const c = new Client({ connectionString: fs.readFileSync(new URL("./conn.txt", import.meta.url), "utf8").trim() }); await c.connect();
+// this script tests consent states of accounts that start with none; the consent-gate run would otherwise give every new account consent (vitest.db.enforced.setup.ts)
+await c.query("select set_config('t3a.no_autoconsent', 'on', false)");
 await c.query("set search_path to public, extensions");
 const A = randomUUID(), B = randomUUID(), RUN = A.slice(0, 8);
 const run = async (sql, p = []) => (await c.query(sql, p)).rows;
@@ -49,9 +51,10 @@ const hist = await run(`select consent_status from t3a_consent_record where acco
 rec("DT-07", "withdrawal deletes nothing: earlier grant still readable, supersession row written", hist.map(h => h.consent_status).join() === "granted,withdrawn" && (await run(`select count(*)::int n from t3a_consent_supersession s join t3a_consent_record r using (consent_id) where r.account_id='${A}'`))[0].n === 1, hist);
 const ob = await as(null, null, `insert into t3a_observation(participant_id, dimension_id, stage_code, served_instance_id, captured_at, capture_delay_seconds, observer_role, observer_authorization_snapshot_ref, s1_human_confirmation_actor_id, s1_human_confirmation_at, s3_submission_provenance, data_source, record_snapshot_hash, evidence_currency_expires_at, session_serving_state, session_admin_state, question_serving_state, branch_trigger_ref, observation_authorization_ref, observer_calibration_version, observer_independence_state, reviewer_independence_state) values ('${A}','D1','S1', gen_random_uuid(), now(), 0, 'primary_observer', gen_random_uuid(), gen_random_uuid(), now(), '{}'::jsonb, 'observed', repeat('c',64), now() + interval '1 year', 'served', 'normal', 'direct', gen_random_uuid(), gen_random_uuid(), '1.0', 'independent', 'independent')`);
 rec("DT-07", "new capture refuses after withdrawal", /CONSENT_REQUIRED/.test(ob.msg), ob.msg.slice(0, 120));
-await run(`update t3a_consent_config set enforce_gate = ${globalThis._prev_enforce_gate}`);
+await run(`update t3a_consent_config set enforce_gate = false`);   // the check below is the switch-off behaviour, whatever the run started with
 const off = await as(null, null, `insert into t3a_observation(participant_id, dimension_id, stage_code, served_instance_id, captured_at, capture_delay_seconds, observer_role, observer_authorization_snapshot_ref, s1_human_confirmation_actor_id, s1_human_confirmation_at, s3_submission_provenance, data_source, record_snapshot_hash, evidence_currency_expires_at, session_serving_state, session_admin_state, question_serving_state, branch_trigger_ref, observation_authorization_ref, observer_calibration_version, observer_independence_state, reviewer_independence_state) values ('${A}','D1','S1', gen_random_uuid(), now(), 0, 'primary_observer', gen_random_uuid(), gen_random_uuid(), now(), '{}'::jsonb, 'observed', repeat('c',64), now() + interval '1 year', 'served', 'normal', 'direct', gen_random_uuid(), gen_random_uuid(), '1.0', 'independent', 'independent')`, false);
 rec("B-gate-off", "with the switch off the gate does not refuse (live screens unchanged)", !/CONSENT_REQUIRED/.test(off.msg), off.msg.slice(0, 100));
+await run(`update t3a_consent_config set enforce_gate = ${globalThis._prev_enforce_gate}`);
 // DT-08
 for (const t of ["followup_contact", "aggregate_regional", "research_participation"]) {
   const x = await as("authenticated", A, rc(A, t, "granted", null, null));

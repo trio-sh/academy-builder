@@ -65,6 +65,8 @@ jobs:
           NO_COLOR: "1"
           FORCE_COLOR: "0"
           T3A_BUILD_LOG: /tmp/t3a_build_enforced.log
+          # the sandbox state: every database switch the sandbox turns on (CR-31), so the whole suite is proved with them on
+          T3A_ENFORCE_ALSO: sequence,gate
         run: |
           set -o pipefail
           psql -h localhost -U postgres -c "drop database t3a" -c "create database t3a owner neondb_owner"
