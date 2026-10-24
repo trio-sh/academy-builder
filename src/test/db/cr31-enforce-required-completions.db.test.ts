@@ -6,7 +6,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import type pg from "pg";
-import { connect, mkParticipant, RUN, run } from "./helpers";
+import { confirmStage1, connect, grantConsent, mkParticipant, RUN, run } from "./helpers";
 
 let c: pg.Client; let before = false; let ttl: number | null = null;
 beforeAll(async () => {
@@ -30,17 +30,17 @@ const entry = (p: string, gw: string, inst: string, stage: string, extra = "") =
 describe("CR-31 the entry routes' inserts are completed", () => {
   it("T1: the gateway opens with the notification time, and a Stage 1 entry gets a session, its mode and a hold time", async () => {
     await on(); const p = await mkParticipant(c, `c31-a-${RUN}`);
-    const g = await gateway(p); expect(g.n).not.toBeNull();
+    const g = await gateway(p); expect(g.n).not.toBeNull(); await grantConsent(c, p, "D1");
     const e = (await run(c, entry(p, g.g, await instance(p, "S1"), "S1")))[0];
     expect(e.session_id).not.toBeNull(); expect(e.observation_mode).toBe("s1_deterministic_engine"); expect(e.stage_entry_hold_expires_at).not.toBeNull();
     expect(e.entry_authority_actor_id).toBeNull();
   });
   it("T2: with no hold time configured nothing is invented: the entry refuses by name", async () => {
-    await on(null); const p = await mkParticipant(c, `c31-b-${RUN}`); const g = await gateway(p);
+    await on(null); const p = await mkParticipant(c, `c31-b-${RUN}`); const g = await gateway(p); await grantConsent(c, p, "D1");
     expect(await refuses(entry(p, g.g, await instance(p, "S1"), "S1"))).toMatch(/T3A_REQUIRED_FIELD_MISSING: stage_entry_hold_expires_at/);
   });
   it("T3: a Stage 2 entry still needs an authority actor; a caller who is not a mentor gets none", async () => {
-    await on(); const p = await mkParticipant(c, `c31-c-${RUN}`); const g = await gateway(p); const inst = await instance(p, "S2");
+    await on(); const p = await mkParticipant(c, `c31-c-${RUN}`); const g = await gateway(p); await grantConsent(c, p, "D1"); await confirmStage1(c, p, "D1"); const inst = await instance(p, "S2");
     expect(await refuses(entry(p, g.g, inst, "S2"))).toMatch(/entry_authority_actor_id is required to enter S2/);
     const m = await mkParticipant(c, `c31-cm-${RUN}`, "mentor");
     expect((await run(c, entry(p, g.g, inst, "S2", `entry_authority_actor_id=${"'" + m + "'"}`)))[0].entry_authority_actor_id).toBe(m);
@@ -68,6 +68,9 @@ describe("CR-31 the attempt, involvement and progression records are completed",
   });
   it("T7: a corrected progression decision carries the dimension it applies to", async () => {
     await on(); const p = await mkParticipant(c, `c31-g-${RUN}`); const m = await mkParticipant(c, `c31-gm-${RUN}`, "mentor");
+    // with the sequence switch on a progression decision needs a committed observation behind it (CR-18)
+    await c.query("begin"); await c.query("set local session_replication_role = replica");
+    await c.query(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, is_committed, committed_at) values ('${p}','D1','S1', true, now())`); await c.query("commit");
     const d = (await run(c, `insert into t3a_d1_progression_decision(participant_id, dimension_id, decision, recorded_by, decided_by, decided_at) values ('${p}','D1','proceed','${m}','${m}', now()) returning decision_scope s`))[0];
     expect(d.s).toEqual({ dimension: "D1" });
   });

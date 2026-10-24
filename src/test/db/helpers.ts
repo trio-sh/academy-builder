@@ -42,10 +42,12 @@ export async function run(c: pg.Client, sql: string) {
 }
 
 /** A synthetic participant with a verified email. */
-export async function mkParticipant(c: pg.Client, tag: string, role = "candidate"): Promise<string> {
+export async function mkParticipant(c: pg.Client, tag: string, role = "candidate", opts: { consent?: boolean } = {}): Promise<string> {
   const u = randomUUID();
   await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','${tag}-${RUN}@t.local',now())`);
   await c.query(`insert into profiles(id,email,role) values ('${u}','${tag}-${RUN}@t.local','${role}')`);
+  // With the consent gate on, every fixture participant has consented on every dimension, as a real one must before Stage entry or capture.
+  if (opts.consent !== false && process.env.T3A_ENFORCE_ALSO?.split(",").includes("gate")) for (const d of ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9"]) await grantConsent(c, u, d);
   return u;
 }
 
@@ -81,10 +83,28 @@ export async function mkApprovedSource(
   return { version: v.v, object: v.o, identifier, key: `${identifier}@${versionNo.replace(/^v/, "")}` };
 }
 
+/** With the consent gate on, entering a Stage needs the participant's own consent for that dimension (never inherited): this records it, once. */
+export async function grantConsent(c: pg.Client, participant: string, dimension: string): Promise<void> {
+  for (const t of ["scenario_logging", "mentor_observation"]) {
+    if ((await run(c, `select public.t3a_consent_current('${participant}','${t}','${dimension}',null) v`))[0].v === "granted") continue;
+    const r = await asService(c, `select t3a_record_consent('${participant}','${t}','granted','${dimension}',null,'1.0','${"d".repeat(64)}','checkbox','en-CA','observation') r`);
+    if (r.r?.outcome !== "recorded") throw new Error("consent fixture: " + JSON.stringify(r));
+  }
+}
+
+/** With the sequence switch on, a Stage 2 entry needs a Stage 1 confirmed on that dimension: this gives the participant one (and does nothing when they have it). */
+export async function confirmStage1(c: pg.Client, participant: string, dimension: string): Promise<void> {
+  if ((await run(c, `select 1 from t3a_d1_s1_confirmation where participant_id='${participant}' and dimension_id='${dimension}'`)).length) return;
+  const si = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, completed_at) values ('${participant}','S1','${dimension}',900 + (select count(*) from t3a_stage_instance where participant_id='${participant}'),now()) returning stage_instance_id i`))[0].i;
+  await run(c, `insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${si}','${participant}','${dimension}','${participant}',now())`);
+}
+
 /** The participant has met this source: a Stage entry event on it. */
-export async function meet(c: pg.Client, participant: string, sourceVersion: string): Promise<void> {
+export async function meet(c: pg.Client, participant: string, sourceVersion: string, opts: { confirmStage1?: boolean } = {}): Promise<void> {
   const st = (await run(c, `select body->>'stage_code' s, o.dimension_id d from t3a_d1_content_version cv join t3a_content_object o using (content_object_id) where cv.content_version_id='${sourceVersion}'`))[0];
   const gw = (await run(c, `insert into t3a_observation_path_gateway(participant_id, session_identity_method, observation_consent_version, assistance_rules_version, coaching_terminated_at, observation_notification_timestamp) values ('${participant}','account_authentication','1.0','1.0',now(), now()) returning observation_path_gateway_id g`))[0].g;
+  await grantConsent(c, participant, st.d);
+  if (st.s === "S2" && opts.confirmStage1 !== false) await confirmStage1(c, participant, st.d);
   const no = (await run(c, `select coalesce(max(attempt_no),0)+1 n from t3a_stage_instance where participant_id='${participant}' and stage_code='${st.s}' and dimension_id='${st.d}'`))[0].n;
   const inst = (await run(c, `insert into t3a_stage_instance(participant_id, stage_code, dimension_id, attempt_no, state) values ('${participant}','${st.s}','${st.d}',${no},'scheduled') returning stage_instance_id i`))[0].i;
   await run(c, `insert into t3a_stage_entry_event(participant_id, dimension_id, stage_code, observation_path_gateway_id, stage_instance_id, session_identity, assistance_rules_version, administration_conditions, dimensions_in_play, administration_conditions_snapshot, source_version_id, session_id, observation_mode, stage_entry_hold_expires_at, entry_authority_actor_id) values ('${participant}','${st.d}','${st.s}','${gw}','${inst}','x','1.0','{}','{${st.d}}','{}','${sourceVersion}', gen_random_uuid(), 's1_deterministic_engine', now() + interval '1 hour', gen_random_uuid())`);

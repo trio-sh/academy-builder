@@ -162,10 +162,11 @@ describe("CR-01 Stage 2 entry needs Stage 1 confirmed, not delivered", () => {
     const reviewer = await mkParticipant(c, "cr01-rev");
     const s2 = await mkApprovedSource(c, { dimension: "D2", stage: "S2", situationClass: "SC-D2-3", reviewer });
     const withConfirmation = await stage1World("l"); const without = await mkParticipant(c, "cr01-noconf");
+    const prevSeq = (await run(c, `select enforce_sequence s from t3a_capture_config`))[0].s;
     await run(c, `update t3a_capture_config set enforce_sequence = true`);
     try {
-      await expect(meet(c, without, s2.version)).rejects.toThrow(/S1_NOT_CONFIRMED/);
+      await expect(meet(c, without, s2.version, { confirmStage1: false })).rejects.toThrow(/S1_NOT_CONFIRMED/);
       await expect(meet(c, withConfirmation.participant, s2.version)).resolves.toBeUndefined();
-    } finally { await run(c, `update t3a_capture_config set enforce_sequence = false`); }
+    } finally { await run(c, `update t3a_capture_config set enforce_sequence = ${prevSeq}`); }
   });
 });
