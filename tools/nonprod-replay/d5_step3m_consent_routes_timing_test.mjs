@@ -12,7 +12,8 @@ const RUN = randomUUID().slice(0, 8);
 const asRole = async (role, sub, sql) => { await c.query("begin"); let msg = "ok", rows = []; try { await c.query(`set local role ${role}`); await c.query(`select set_config('request.jwt.claims', '${JSON.stringify(sub ? { role, sub } : { role })}', true)`); await c.query(`select set_config('request.jwt.claim.sub', '${sub || ""}', true)`); rows = (await c.query(sql)).rows; } catch (e) { msg = e.message; } await c.query(msg === "ok" ? "commit" : "rollback"); return { msg, rows, r: rows[0]?.r }; };
 const svc = (sql) => asRole("service_role", null, sql);
 const as = (u, sql) => asRole("authenticated", u, sql);
-const mkU = async (tag, role) => { const u = randomUUID(); await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','m${tag}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role) values ('${u}','m${tag}-${RUN}@t.local','${role}')`); return u; };
+// candidates start with no consent whatever the run (the consent-gate run otherwise gives every new account consent: vitest.db.enforced.setup.ts); the script records what it needs
+const mkU = async (tag, role) => { const u = randomUUID(); await c.query("select set_config('t3a.no_autoconsent', 'on', false)"); try { await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','m${tag}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role) values ('${u}','m${tag}-${RUN}@t.local','${role}')`); } finally { await c.query("select set_config('t3a.no_autoconsent', '', false)"); } return u; };
 const refused = async (code) => (await run(`select count(*)::int n from t3a_capture_refusal where reason_code='${code}'`))[0].n;
 const H = "a".repeat(64);
 const grant = (acc, type, dim) => svc(`select t3a_record_consent('${acc}','${type}','granted','${dim}',null,'1.0','${H}','checkbox','en-CA','observation') r`);
@@ -125,6 +126,7 @@ r = await as(M, `select t3a_decision_point_pause('${SQ2}') r`); rec("D5-57", "a 
 
 // ---- timing comparability excluded from comparison and recurrence
 const OBSER = await mkU("ob", "mentor");
+for (const t of ["scenario_logging", "mentor_observation"]) await grant(P2, t, "D5");   // a committed observation needs the participant's consent when the gate is on
 const obs = (await run(`insert into t3a_observation_record(participant_id, dimension_id, stage_code, observer_id, is_committed) values ('${P2}','D5','S2','${OBSER}',true) returning observation_record_id i`))[0].i;
 r = await as(P2, `select t3a_record_timing_comparability('${obs}', true, false) r`); rec("D5-40", "only the observer records the administration condition", r.r?.reason === "only_the_observer_records", r.r || r.msg);
 r = await as(OBSER, `select t3a_record_timing_comparability('${obs}', true, false) r`); rec("D5-40", "an accommodation that changed the response channel marks the observation timing_not_comparable", r.r?.timing_not_comparable === true, r.r || r.msg);
