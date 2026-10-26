@@ -1,0 +1,37 @@
+{
+ "what": "Live apply of migration 20270234 (D8 conditions template reworded, CR-304)",
+ "when": "2026-10-26",
+ "authority": "CR-219",
+ "tests_before": "PR 404 CI green; database 510/510 default and with all three database switches on; unit 517/517; the new test fails with the rollback applied",
+ "files": [
+  {
+   "file": "20270234000000_d8_conditions_template_reworded.sql",
+   "sha256": "7f9b40e6080c39a82b219c143079af6f2f4195ebc686a70384bcab5e1c897f53",
+   "ok": true,
+   "error": null,
+   "seconds": 0.95
+  }
+ ],
+ "result": [
+  {
+   "id": "L-D8-COMP-001",
+   "retired": true,
+   "passes": "false",
+   "current_row": "L-D8-COMP-002"
+  },
+  {
+   "id": "L-D8-COMP-002",
+   "retired": false,
+   "passes": "true",
+   "current_row": "L-D8-COMP-002"
+  }
+ ],
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false
+ },
+ "rollback": "docs/day1/evidence/rollback_20270234_d8_conditions_template_reworded.sql"
+}
