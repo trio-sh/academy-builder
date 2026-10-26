@@ -128,15 +128,15 @@
     "open": true,
     "cases": [
      {
-      "case": "b769df27-55d9-4b1f-af48-32863b73784a",
+      "case": "794b9cf2-5e3d-474d-b6f9-c68c502359db",
       "kind": "correction"
      }
     ],
     "records_under_reconsideration": [
      {
-      "assignment": "efe97cf3-0657-4c98-b21d-87b33f5a5388",
+      "assignment": "95ba7af2-fce5-4a16-8020-3d7ec7ebe003",
       "dimension_id": "D8",
-      "observation_record_id": "d3dd9abc-46f2-4a00-9d63-95fc5d763076"
+      "observation_record_id": "7059ea1d-f4c4-4964-a22c-062dc3ae854b"
      }
     ]
    }
@@ -254,7 +254,7 @@
    "label": "a single page render of a report that carries D8 refuses format_mismatch and logs it",
    "pass": true,
    "detail": {
-    "detail": "a report that carries D4 or D8 renders through the multi page renderer; the single page route is closed",
+    "detail": "a D8 report renders through the multi page renderer; the single page route is closed",
     "reason": "format_mismatch",
     "outcome": "refused"
    }
@@ -293,8 +293,8 @@
    "pass": true,
    "detail": {
     "outcome": "amended",
-    "supersedes": "0e0fbf1e-ee78-42ac-93d5-245de246ca8b",
-    "composed_statement_id": "ef5a7151-d242-49f3-9617-c2cc009bbba0"
+    "supersedes": "8f76de1f-f1ca-40ce-a32d-782f964ef60c",
+    "composed_statement_id": "c637b72b-aefa-456b-a96c-db8038cd5445"
    }
   },
   {

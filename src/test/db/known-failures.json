@@ -8,14 +8,6 @@
     "failed": 2,
     "why": "same as step3h_report_gate_test.mjs for D3"
   },
-  "d8_step3c_resolution_test.mjs": {
-    "failed": 1,
-    "why": "D8-64 on templates (CR-252): L-D8-COMP-001 as the package gives it (Section 5.12) reads 'were affected by a recorded technical event', and 'affected' is on the Section 5.7a list that the same package says no rendered output may carry. The template is loaded as written because this build does not decide wording; the founder decides whether to reword the template or to scope the list. Until then the template scan reports it and D8-64 stays FAIL in the D8 acceptance run"
-  },
-  "d8_step4_acceptance_test.mjs": {
-    "failed": 1,
-    "why": "D8-64 (CR-252): the acceptance run carries the template scan result of d8_step3c_resolution_test.mjs as the FAIL it is. 86 of 87 identifiers PASS; this is the one named exception"
-  },
   "domain_g_test.mjs": {
     "failed": 1,
     "why": "G-release: the named recipient release route is closed (NAMED_RECIPIENT_RELEASE_RETIRED, release model step); the test still expects a hash check on it. Superseded when CORR-007 CR-09 rebuilds direct release"

@@ -1,18 +1,7 @@
 {
- "passed": 42,
+ "passed": 43,
  "total": 43,
- "failed": [
-  {
-   "id": "D8-64",
-   "label": "every D8 template passes the prohibited-output check",
-   "pass": false,
-   "detail": [
-    {
-     "language_template_id": "L-D8-COMP-001"
-    }
-   ]
-  }
- ],
+ "failed": [],
  "results": [
   {
    "id": "D8-cov",
@@ -264,7 +253,7 @@
    "id": "D8-res",
    "label": "a refusal on the logged route persists in the refusal log",
    "pass": true,
-   "detail": 1
+   "detail": 3
   },
   {
    "id": "D8-64",
@@ -470,12 +459,8 @@
   {
    "id": "D8-64",
    "label": "every D8 template passes the prohibited-output check",
-   "pass": false,
-   "detail": [
-    {
-     "language_template_id": "L-D8-COMP-001"
-    }
-   ]
+   "pass": true,
+   "detail": []
   }
  ]
 }
