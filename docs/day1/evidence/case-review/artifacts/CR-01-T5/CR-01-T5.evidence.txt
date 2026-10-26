@@ -1,6 +1,6 @@
 case CR-01-T5
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-01
 what is run: Commit the same Stage 2 observation a second time
 expected: Refused; the first commit and its lock stand
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 14ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 342ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 364ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 377ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D2: pass
-    [default] passed 15ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 469ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 27ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 364ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D3: pass
-    [default] passed 22ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 296ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 23ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 293ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D4: pass
-    [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 303ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 18ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 347ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D5: pass
-    [default] passed 15ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 424ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 14ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 388ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D8: pass
-    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 292ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 331ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
 D9: pass
-    [default] passed 21ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 366ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 20ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 282ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands

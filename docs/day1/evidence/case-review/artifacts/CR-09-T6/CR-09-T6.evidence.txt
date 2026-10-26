@@ -1,6 +1,6 @@
 case CR-09-T6
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-09
 what is run: Redeem the token from a different address, or redeem a second report with it
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 102ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [default] passed 18ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 87ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
 D2: pass
-    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 74ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 79ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
 D3: pass
     [default] passed 13ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 82ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-D4: pass
-    [default] passed 14ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 84ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-D5: pass
-    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 104ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-D8: pass
-    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
     [sandbox] passed 68ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+D4: pass
+    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 129ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+D5: pass
+    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 102ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+D8: pass
+    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 71ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
 D9: pass
-    [default] passed 14ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
-    [sandbox] passed 80ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused
+    [sandbox] passed 70ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T6: a different address, or a second report, is refused

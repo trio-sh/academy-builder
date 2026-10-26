@@ -1,10 +1,10 @@
 case CR-20-T3
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:20.273Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:59.728Z
 observed 4 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-artifact artifacts/CR-20-T3/CR-20-T3.evidence.txt 9a40523ec20edca514924337c1d4a51682afc0c582261a213abff1d00697536c
+artifact artifacts/CR-20-T3/CR-20-T3.evidence.txt b4d526f43ffccf4eb505582696121453a1d3e780129a98b2da1ce9e16181f549

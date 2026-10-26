@@ -1,6 +1,6 @@
 case CR-10-T1
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-10
 what is run: Route a report to the single page renderer
 expected: Refused with format_mismatch
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 25ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 325ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 17ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 248ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D2: pass
-    [default] passed 33ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 240ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 23ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 232ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D3: pass
-    [default] passed 27ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 234ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 29ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 242ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D4: pass
-    [default] passed 26ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 272ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 24ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 258ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D5: pass
-    [default] passed 23ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 245ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 25ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 232ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D8: pass
-    [default] passed 23ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 257ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 21ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 235ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
 D9: pass
-    [default] passed 26ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
-    [sandbox] passed 299ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [default] passed 28ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable
+    [sandbox] passed 320ms :: cr06-cr10-cr27.db.test.ts :: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one dimension or several; the multi page form is renderable

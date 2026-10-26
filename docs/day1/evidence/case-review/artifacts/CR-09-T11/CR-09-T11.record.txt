@@ -1,10 +1,10 @@
 case CR-09-T11
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:19.443Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:58.969Z
 observed 1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this be
-artifact artifacts/CR-09-T11/CR-09-T11.evidence.txt edb8abba66a817685b45a5d4fb6b45b2474540699b2861170de17f65e6cbae67
+artifact artifacts/CR-09-T11/CR-09-T11.evidence.txt 057e3ffc72bd0b80c1bedc9e981e28b1ba9fb499c5bb2df53250499c01282412

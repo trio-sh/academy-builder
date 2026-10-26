@@ -1,6 +1,6 @@
 case CR-28-T4
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-28
 what is run: Request a demonstration face for a real participant
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 18ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 181ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [default] passed 16ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 131ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
 D2: pass
-    [default] passed 27ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 217ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [default] passed 18ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 229ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
 D3: pass
-    [default] passed 21ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 163ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [default] passed 22ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 231ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
 D4: pass
     [default] passed 18ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 163ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 190ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
 D5: pass
-    [default] passed 25ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 180ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-D8: pass
     [default] passed 18ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 161ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 173ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+D8: pass
+    [default] passed 17ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 176ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
 D9: pass
     [default] passed 18ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
-    [sandbox] passed 216ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant
+    [sandbox] passed 124ms :: cr28-claim-package-selection.db.test.ts :: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outside the service, and anyone but the participant

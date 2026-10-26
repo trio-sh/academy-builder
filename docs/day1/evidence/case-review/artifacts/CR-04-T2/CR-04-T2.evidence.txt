@@ -1,6 +1,6 @@
 case CR-04-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-04
 what is run: Participant cannot authenticate
 expected: Entry refuses; no attempt; rescheduling cooldown
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 18ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 97ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D2: pass
-    [default] passed 15ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 66ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D3: pass
-    [default] passed 15ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 72ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D4: pass
-    [default] passed 16ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 70ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D5: pass
-    [default] passed 23ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 51ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D8: pass
     [default] passed 17ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-    [sandbox] passed 76ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
-D9: pass
+    [sandbox] passed 70ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D2: pass
+    [default] passed 20ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+    [sandbox] passed 64ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D3: pass
+    [default] passed 23ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+    [sandbox] passed 67ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D4: pass
     [default] passed 18ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+    [sandbox] passed 67ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D5: pass
+    [default] passed 16ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+    [sandbox] passed 66ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D8: pass
+    [default] passed 15ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+    [sandbox] passed 70ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
+D9: pass
+    [default] passed 16ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies
     [sandbox] passed 66ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies

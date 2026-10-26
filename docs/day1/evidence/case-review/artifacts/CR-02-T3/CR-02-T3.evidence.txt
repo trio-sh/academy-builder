@@ -1,6 +1,6 @@
 case CR-02-T3
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-02
 what is run: Stage 2: mentor A, then B, then A, where A received Stage 1 after the first commit
 expected: The third attempt refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 180ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [default] passed 14ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 167ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
 D2: pass
     [default] passed 18ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 172ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 264ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
 D3: pass
-    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 177ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [default] passed 24ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 181ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
 D4: pass
-    [default] passed 18ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 156ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [default] passed 22ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 155ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
 D5: pass
-    [default] passed 21ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 220ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [default] passed 13ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 173ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
 D8: pass
-    [default] passed 13ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-    [sandbox] passed 210ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-D9: pass
-    [default] passed 13ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
     [sandbox] passed 166ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+D9: pass
+    [default] passed 18ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
+    [sandbox] passed 168ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused

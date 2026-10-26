@@ -1,6 +1,6 @@
 case CR-12-T8
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-12
 what is run: A runtime change to a cap, window or cooldown value; an override of any of them
 expected: Refused; logged
@@ -12,14 +12,14 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [default] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
     [sandbox] passed 3ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
 D2: pass
-    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [default] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
     [sandbox] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
@@ -27,36 +27,36 @@ D2: pass
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
 D3: pass
     [default] passed 3ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
     [sandbox] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [sandbox] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
 D4: pass
-    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [default] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-    [sandbox] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
-    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-D5: pass
-    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
-    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-    [sandbox] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [sandbox] passed 6ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [sandbox] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-D8: pass
-    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
-    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-    [sandbox] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
-    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
-    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
-D9: pass
+D5: pass
     [default] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [default] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
+    [sandbox] passed 6ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
+D8: pass
+    [default] passed 4ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
     [sandbox] passed 3ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [sandbox] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
+D9: pass
+    [default] passed 3ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
+    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
+    [default] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule
+    [sandbox] passed 5ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged
     [sandbox] passed 2ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: update t3a_attempt_rule set rule_value='4' where rule_key='cap'
     [sandbox] passed 1ms :: cr12-window.db.test.ts :: CR-12 T8: rule values cannot change at runtime > the rule rows cannot be edited or deleted: delete from t3a_attempt_rule

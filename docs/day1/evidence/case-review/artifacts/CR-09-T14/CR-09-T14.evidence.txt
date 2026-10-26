@@ -1,6 +1,6 @@
 case CR-09-T14
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-09
 what is run: Search, sort or filter the Available Reports surface on a dimension, a Stage, an evidence state or observed conduct
 expected: No such control exists and the API refuses the parameter
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 47ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 26ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 177ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 160ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-D2: pass
-    [default] passed 34ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 29ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 161ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 138ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-D3: pass
-    [default] passed 49ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 139ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 132ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-D4: pass
-    [default] passed 36ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 148ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 140ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-D5: pass
-    [default] passed 35ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 142ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 135ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-D8: pass
-    [default] passed 48ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 31ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
     [default] passed 24ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 143ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 137ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 168ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 159ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+D2: pass
+    [default] passed 33ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 151ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 134ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+D3: pass
+    [default] passed 51ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 119ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 106ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+D4: pass
+    [default] passed 28ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 184ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 158ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+D5: pass
+    [default] passed 33ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 27ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 197ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 149ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+D8: pass
+    [default] passed 45ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 102ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 164ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 140ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
 D9: pass
-    [default] passed 42ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [default] passed 25ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
-    [sandbox] passed 170ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
-    [sandbox] passed 168ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [default] passed 40ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [default] passed 27ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on
+    [sandbox] passed 146ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter
+    [sandbox] passed 170ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T14: a report appears once at its latest version, and only while on

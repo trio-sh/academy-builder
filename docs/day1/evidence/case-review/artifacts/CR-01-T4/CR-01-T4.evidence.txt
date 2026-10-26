@@ -1,6 +1,6 @@
 case CR-01-T4
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-01
 what is run: Read the participant's Stage 1 content before the Stage 2 commit as another mentor, an administrator, through the API and through an export
 expected: Each refused and logged
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 28ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 409ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 407ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-D2: pass
-    [default] passed 25ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 21ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
     [sandbox] passed 322ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 372ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 390ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+D2: pass
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [default] passed 31ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 336ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 374ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
 D3: pass
     [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 25ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 341ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 402ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 280ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 275ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
 D4: pass
-    [default] passed 23ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 19ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 332ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 291ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 298ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 340ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
 D5: pass
     [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 373ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 347ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 25ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 319ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 344ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
 D8: pass
-    [default] passed 25ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 27ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 305ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 312ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 23ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [default] passed 21ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 348ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 282ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
 D9: pass
-    [default] passed 30ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [default] passed 22ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
-    [sandbox] passed 281ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
-    [sandbox] passed 311ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [default] passed 33ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do
+    [sandbox] passed 221ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named
+    [sandbox] passed 229ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T4: an administrator reading the tables directly gets no Stage 1 rows; the confirmer and the participant do

@@ -1,10 +1,10 @@
 case CR-02-T3
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:19.450Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:58.993Z
 observed 1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused
-artifact artifacts/CR-02-T3/CR-02-T3.evidence.txt 45016cb17ca91431338fb700bcd78b7cd4953123367471dd70a948089a11b9e3
+artifact artifacts/CR-02-T3/CR-02-T3.evidence.txt c8338b6ac727abbf821e688f0c657f1fcc63a2b9263e537023cc0180a61904e6

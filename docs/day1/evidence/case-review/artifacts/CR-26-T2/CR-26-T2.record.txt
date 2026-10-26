@@ -1,10 +1,10 @@
 case CR-26-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr26-eligibility-entry.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:21.125Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:51:00.470Z
 observed 2 mapped test(s) in cr26-eligibility-entry.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-artifact artifacts/CR-26-T2/CR-26-T2.evidence.txt 8c3cdb5d05627254d464497ff29e1735064f848989673f67edeb081bd17505a4
+artifact artifacts/CR-26-T2/CR-26-T2.evidence.txt 3d15766a849e86263262cc2c476b35f91d2e903596346170392de5cd7e11663a

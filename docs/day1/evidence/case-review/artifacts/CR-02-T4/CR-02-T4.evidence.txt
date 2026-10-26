@@ -1,6 +1,6 @@
 case CR-02-T4
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-02
 what is run: Stage 3: mentor A, then B, then A, no stricter exclusion applying
 expected: Admitted if every other check passes
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 14ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 211ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 171ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D2: pass
-    [default] passed 21ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 176ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 155ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D3: pass
-    [default] passed 17ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 178ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 22ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 186ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D4: pass
     [default] passed 19ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 163ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 182ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D5: pass
-    [default] passed 22ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 179ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 17ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 158ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D8: pass
-    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 163ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 159ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
 D9: pass
-    [default] passed 22ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
-    [sandbox] passed 189ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [default] passed 19ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies
+    [sandbox] passed 174ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies

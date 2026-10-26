@@ -1,6 +1,6 @@
 case CR-09-T4
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-09
 what is run: Turn general availability off; the employer tries again
 expected: Refused immediately
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 18ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 134ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-D2: pass
-    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 126ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-D3: pass
-    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 153ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-D4: pass
-    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 201ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-D5: pass
-    [default] passed 26ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 161ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-D8: pass
     [default] passed 25ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
     [sandbox] passed 133ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+D2: pass
+    [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 135ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+D3: pass
+    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 95ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+D4: pass
+    [default] passed 18ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 199ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+D5: pass
+    [default] passed 25ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 208ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+D8: pass
+    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 147ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
 D9: pass
-    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
-    [sandbox] passed 125ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once
+    [sandbox] passed 142ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T4: turning it off ends employer access at once

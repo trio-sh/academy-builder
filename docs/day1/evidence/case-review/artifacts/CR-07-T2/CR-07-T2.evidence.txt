@@ -1,6 +1,6 @@
 case CR-07-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-07
 what is run: A dispute that the session was validly administered, upheld
 expected: Observation withdrawn; attempt reclassified as administration failure; a new source offered
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 82ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 377ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 88ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 303ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D2: pass
-    [default] passed 111ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 286ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 105ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 326ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D3: pass
-    [default] passed 85ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 356ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 97ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 341ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D4: pass
-    [default] passed 109ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 314ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 105ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 345ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D5: pass
-    [default] passed 107ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 324ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 109ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 335ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D8: pass
-    [default] passed 116ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 290ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 119ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 317ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
 D9: pass
-    [default] passed 126ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
-    [sandbox] passed 332ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [default] passed 124ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered
+    [sandbox] passed 327ms :: cr07-disputed-clauses.db.test.ts :: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a new source is offered

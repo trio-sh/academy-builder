@@ -1,6 +1,6 @@
 case CR-15-T1
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-15
 what is run: A pilot session with consent and two observers
 expected: Two independent capture sets; neither visible to the other before both lock
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 38ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 249ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [default] passed 34ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 320ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
 D2: pass
-    [default] passed 31ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 268ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [default] passed 34ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 234ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
 D3: pass
-    [default] passed 50ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 174ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [default] passed 33ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 213ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
 D4: pass
-    [default] passed 29ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 292ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-D5: pass
-    [default] passed 39ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 247ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-D8: pass
-    [default] passed 43ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 224ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-D9: pass
     [default] passed 38ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
-    [sandbox] passed 291ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 254ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+D5: pass
+    [default] passed 33ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 231ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+D8: pass
+    [default] passed 35ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 228ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+D9: pass
+    [default] passed 40ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock
+    [sandbox] passed 252ms :: cr15-second-observer.db.test.ts :: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock

@@ -1,6 +1,6 @@
 case CR-14-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-14
 what is run: The same, with an approved review covering the form, source version and participant scope, unexpired
 expected: Admitted
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 20ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 81ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [default] passed 22ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [sandbox] passed 78ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
 D2: pass
-    [default] passed 19ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 92ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-D3: pass
-    [default] passed 31ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 79ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-D4: pass
-    [default] passed 19ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 101ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-D5: pass
     [default] passed 25ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 89ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-D8: pass
+    [sandbox] passed 126ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+D3: pass
     [default] passed 23ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
-    [sandbox] passed 53ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [sandbox] passed 121ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+D4: pass
+    [default] passed 22ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [sandbox] passed 71ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+D5: pass
+    [default] passed 19ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [sandbox] passed 71ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+D8: pass
+    [default] passed 27ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [sandbox] passed 90ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
 D9: pass
-    [default] passed 24ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
+    [default] passed 18ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion
     [sandbox] passed 76ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion

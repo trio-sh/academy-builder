@@ -1,10 +1,10 @@
 case CR-17-T9
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:19.271Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:58.834Z
 observed 2 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
-artifact artifacts/CR-17-T9/CR-17-T9.evidence.txt f9d4f7a0b1140042671943ce534e9178de06617201ab331fcfc56fcfd9740ae7
+artifact artifacts/CR-17-T9/CR-17-T9.evidence.txt 9da73b0e8db185f3b5355d1266009803b09193b0c69af6ac4428a974c7c1fde7

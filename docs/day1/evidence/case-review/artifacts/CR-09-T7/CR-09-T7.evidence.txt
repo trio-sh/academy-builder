@@ -1,6 +1,6 @@
 case CR-09-T7
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-09
 what is run: Revoke the direct release, then redeem
 expected: The revoked state and no content
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 82ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 98ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D2: pass
-    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 65ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 67ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D3: pass
     [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 78ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 55ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D4: pass
-    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 82ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 106ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D5: pass
-    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 95ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 67ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D8: pass
-    [default] passed 11ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 66ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 63ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
 D9: pass
-    [default] passed 12ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
-    [sandbox] passed 75ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
+    [sandbox] passed 73ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content
