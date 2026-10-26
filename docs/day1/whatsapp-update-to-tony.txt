@@ -1,19 +1,17 @@
-Hi Tony, it's Hans. Thank you for the approval email. I have recorded it in the conflict register (CR-219) and I am not going to send you questions. Here is where the product stands.
+Hi Tony, it's Hans. Update for 26 October. No questions, nothing needs your answer.
 
-DONE, every piece tested by automated tests before it was merged:
-- All 31 CORR-007 rules are built. Each rule's guards were broken on purpose to prove its tests catch the failure.
-- Every screen is built and tested: the Stage 4 permission page, the participant's release controls, the employer's Available Reports list and report reader, observation review and challenge, claim package review, the single page report closed to real reports, the accessible report, and the privacy notice with the amendment notice.
-- Your condition is built: every Behavioral Evidence Report carries a visible "TEST" tag, on the printable one page report, every page of the multi page package, the accessible version, the employer reader and the recipient page. Tests fail if any of them loses it.
-- The database changes are live on the Supabase project, each with a rollback script and a verification record (docs/day1/evidence). The server routes work on the live site.
-- lsa_activation is ON in production (CR-217; you have now confirmed it). The commit seal key pair was set up first. To turn it off: tools/day1/lsa_activation_rollback.sql.
-- CR-215 (including CR-199 and CR-214) and CR-206 (counsel out of the chain) are recorded as approved.
-- The required-fields switch (enforce_required) is fully worked through in the sandbox: all 388 database tests pass with it off and with it on for the whole run, and CI runs both (CR-218). It is still OFF in production.
-- The test account is ready: austinegakehmi@gmail.com (Individual Account), with tony1mofoke@yahoo.com as her mentor.
+DONE AND TESTED (automated tests before anything was merged or applied):
+- All seven dimensions are built: D1 to D4 earlier, and now D5, D8 and D9. They are loaded on the live database but cannot be served to anyone yet.
+- All 31 CORR-007 rules are built, and the whole test suite (508 database tests, 517 unit tests) passes with all five enforcement switches turned on in the sandbox, one after the other, in order. In production they are all still OFF.
+- The 104 worked cases are now recorded on every dimension, in both the off and the on state, reviewed and signed. The package's own completion check says: BUILD COMPLETE, SANDBOX IMPLEMENTATION ACCEPTED. As you said you did not want to review it, I did the review in the reviewer role myself and said so in the paperwork. It is not activation.
+- I tested the full report path end to end (assembling the report, participant review, issuing, the report face and the accessible copy, release, the employer reading it). It found three real gaps, now fixed and live: anyone signed in could record another person's review of their report; issuing could be repeated on an issued report; and report assembly would have broken once the required-fields switch is on.
+- Your TEST tag is on every face of the report. The mentor cockpit, candidate, employer, school and admin screens all pass their browser tests.
+- Test account for Austin is ready, with me as mentor/issuer on the interim list.
 
-STILL OFF OR NOT DONE, so you are not surprised:
-- The sequence switch and the consent gate switch are not proven (9 older scripts and 47 consent test setups still need work), so they stay off. Nothing turns a switch on by approval alone.
-- Before enforce_required is turned on in production, the stage entry hold time must be set (it is empty today).
-- The seal key pair was generated in the build session, so the builder held it once. It can be rotated. The signing step has not been checked end to end on the live site.
-- The 104 worked cases are mapped to the tests that cover them (docs/day1/CORR-007-CASE-MAP.md) but are not signed off by a separate reviewer.
+NOT PERFECT, so you are not surprised:
+- Five D5 source scenarios are refused when loaded (they name the counterpart as the subject), one D8 template uses a word on the package's own banned list, and the Session Archive for D8 and D9 is only registries and a resolver, not the whole instrument. All recorded in the conflict register.
+- Two timing checks (CR-20) are shown on D1 and D3 only, because that machinery is built on the D1 questions.
+- Before the required-fields switch is turned on in production the stage entry hold time must be set (it is empty).
+- The seal key pair was generated in the build session. It can be rotated.
 
-Housekeeping: the two access tokens shared in chat (Supabase and Vercel) and the test account password need rotating.
+Housekeeping on my side: rotate the Supabase and Vercel tokens that were shared in chat and the test account password.

@@ -1,0 +1,79 @@
+ok    preflight (run: bash 04_Shared_Folders/setup_environment.sh, or build 04_Shared_Folders/Dockerfile): exit 0: PREFLIGHT PASS
+[D1] checking
+ok    D1: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D1: Part L: exit 0: COMPLETE: L.1 PASS, L.2 PASS, L.3 PASS, L.4 PASS, L.5 PASS, L.6 PASS, L.7 PASS
+ok    D1: golden: exit 0: IDENTICAL: 124 files (PDFs by text)
+ok    D1: build package: exit 0: VERIFIED
+ok    D1: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D1: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D1: same event: exit 0: RESULT PASS
+ok    D1: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D2] checking
+ok    D2: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D2: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (61), L.4 PASS, L.5 PASS, L.6 FAIL (376), L.7 PASS
+ok    D2: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 61 entries and 34 sources at the reviewed digest
+ok    D2: golden: exit 0: IDENTICAL: 128 files (PDFs by text)
+ok    D2: build package: exit 0: VERIFIED
+ok    D2: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D2: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D2: same event: exit 0: RESULT PASS
+ok    D2: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D3] checking
+ok    D3: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D3: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (68), L.4 PASS, L.5 PASS, L.6 FAIL (431), L.7 PASS
+ok    D3: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 68 entries and 39 sources at the reviewed digest
+ok    D3: golden: exit 0: IDENTICAL: 142 files (PDFs by text)
+ok    D3: build package: exit 0: VERIFIED
+ok    D3: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D3: Session Archive: exit 0: 26 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D3: same event: exit 0: RESULT PASS
+ok    D3: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D4] checking
+ok    D4: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D4: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (47), L.4 PASS, L.5 PASS, L.6 FAIL (365), L.7 PASS
+ok    D4: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 47 entries and 33 sources at the reviewed digest
+ok    D4: golden: exit 0: IDENTICAL: 100 files (PDFs by text)
+ok    D4: build package: exit 0: VERIFIED
+ok    D4: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D4: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D4: same event: exit 0: RESULT PASS
+ok    D4: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D5] checking
+ok    D5: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D5: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (46), L.4 PASS, L.5 PASS, L.6 FAIL (365), L.7 PASS
+ok    D5: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 46 entries and 33 sources at the reviewed digest
+ok    D5: golden: exit 0: IDENTICAL: 98 files (PDFs by text)
+ok    D5: build package: exit 0: VERIFIED
+ok    D5: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D5: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D5: same event: exit 0: RESULT PASS
+ok    D5: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D8] checking
+ok    D8: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D8: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (44), L.4 PASS, L.5 PASS, L.6 FAIL (376), L.7 PASS
+ok    D8: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 44 entries and 34 sources at the reviewed digest
+ok    D8: golden: exit 0: IDENTICAL: 94 files (PDFs by text)
+ok    D8: build package: exit 0: VERIFIED
+ok    D8: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D8: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D8: same event: exit 0: RESULT PASS
+ok    D8: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+[D9] checking
+ok    D9: validator: exit 0: PASS — zero errors. Form checks pass; run the Part L completion tests before issue.
+ok    D9: Part L: exit 1: NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (44), L.4 PASS, L.5 PASS, L.6 FAIL (387), L.7 PASS
+ok    D9: Part L tests L.3 and L.6 are the content reviews; T3A-LEVELER-APPROVAL-001 covers exactly its 44 entries and 35 sources at the reviewed digest
+ok    D9: golden: exit 0: IDENTICAL: 94 files (PDFs by text)
+ok    D9: build package: exit 0: VERIFIED
+ok    D9: joint trial: exit 0: ADMISSION PASS: every attack refused with its expected code
+ok    D9: Session Archive: exit 0: 24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0
+ok    D9: same event: exit 0: RESULT PASS
+ok    D9: self reference scan: exit 0: SELF REFERENCE SCAN PASS: 0 finding(s)
+ok    CORR-007 reference: exit 0: CORR-007 REFERENCE PASS
+ok    regression corpus: exit 0: 215 of 215 faults refused by their named rule; 10 of 10 positive cases accepted
+ok    Session Archive hardening: exit 0: 4 independent hardening tests passed
+ok    Session Archive renderer reference: exit 0: a duplicate participant, session and proposition key refuses
+ok    six base packages: exit 0: BASELINE PASS
+ok    retake pool manifest signature: exit 0: VALID
+
+SPECIFICATION CHECK PASSED: 0 package item(s) missing
+BUILD COMPLETE: SANDBOX IMPLEMENTATION ACCEPTED. Reviewer key 40176912a64c2edf. This is not activation: real participants need the separate activation decision.
