@@ -171,10 +171,8 @@ test.describe("Employer Flows - Available Reports", () => {
       timeout: 15000,
     });
     await expect(
-      page.getByText(
-        /Participants control visibility and can withdraw it at any time\./
-      ).first()
-    ).toBeVisible();
+      page.getByTestId("ar-note")
+    ).toContainText(/Each participant chose to make the full report available\. The list has no search, sort or filter\./);
   });
 
   // The refusal, stated on the face of the surface. Read as a pair with the
@@ -185,14 +183,12 @@ test.describe("Employer Flows - Available Reports", () => {
     await page.goto(`${BASE}/reports`);
     await page.waitForLoadState("networkidle");
 
-    await expect(
-      page.getByRole("heading", { name: "This organization cannot enter the pool" })
-    ).toBeVisible({ timeout: 15000 });
-    await expect(
-      page.getByText(
-        /Reports become readable once The 3rd Academy has recorded an approval for your organization\. Nothing about any participant is returned before then\./
-      )
-    ).toBeVisible();
+    await expect(page.getByTestId("ar-refused")).toContainText(
+      /The list is not available to this organization yet\. It opens when The 3rd Academy has approved the organization\./,
+      { timeout: 15000 },
+    );
+    // nothing about any participant is rendered behind the notice
+    await expect(page.getByTestId("ar-item")).toHaveCount(0);
 
     // No filter panel and no search box: there is nothing to filter.
     await expect(page.locator("select")).toHaveCount(0);
