@@ -9,8 +9,8 @@
    "pass": true,
    "detail": {
     "n": 1,
-    "v": "08a0fd7f-f766-4553-9197-82743498f2b1",
-    "id": "SRC-D5-N-clean-1-ac530851"
+    "v": "7993a1d9-b788-49d0-b3cf-6151fd03352d",
+    "id": "SRC-D5-N-clean-1-1dbb95c9"
    }
   },
   {
@@ -171,22 +171,16 @@
   },
   {
    "id": "D5-69",
-   "label": "of the 33 D5 sources of the package, 28 load and exactly five are refused at load: SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010",
+   "label": "of the 33 D5 sources of the package all 33 load: 28 at migration 20270202 and the five it refused (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) at migration 20270240 with one item each reworded; none is left without a version",
    "pass": true,
    "detail": {
     "total": 33,
-    "notLoaded": [
-     "SRC-D5-S2-009",
-     "SRC-D5-S3-001",
-     "SRC-D5-S3-007",
-     "SRC-D5-S4-004",
-     "SRC-D5-S4-010"
-    ]
+    "notLoaded": []
    }
   },
   {
    "id": "D5-69",
-   "label": "each of the five is refused for exactly one item, named in the log (S2-009 DP2 'the two managers are asked to settle it before the board'; S3-001 AO4 'both leads take the decision to the vice-president jointly'; S3-007 AO4 'the people function asked to advise on the arrangement'; S4-004 AO4 'the chair takes the decision'; S4-010 AO4 'the lead decides')",
+   "label": "the refusal log still records, from the first load, that each of the five was refused for exactly one item, named in the log (S2-009 DP2 'the two managers are asked to settle it before the board'; S3-001 AO4 'both leads take the decision to the vice-president jointly'; S3-007 AO4 'the people function asked to advise on the arrangement'; S4-004 AO4 'the chair takes the decision'; S4-010 AO4 'the lead decides')",
    "pass": true,
    "detail": {
     "SRC-D5-S2-009": "designated_positions:DP2:manager",
@@ -198,11 +192,15 @@
   },
   {
    "id": "D5-sensitive",
-   "label": "SRC-D5-S3-004 carries sensitivity_flag SENSITIVE_CONTENT (decision 0.6.22); SRC-D5-S3-007 is among the five refused, so its flag has no loaded row to sit on",
+   "label": "SRC-D5-S3-004 and SRC-D5-S3-007 both carry sensitivity_flag SENSITIVE_CONTENT (decision 0.6.22); S3-007 is one of the five loaded at migration 20270240, so the second flag now has its row",
    "pass": true,
    "detail": [
     {
      "identifier": "SRC-D5-S3-004",
+     "f": "SENSITIVE_CONTENT"
+    },
+    {
+     "identifier": "SRC-D5-S3-007",
      "f": "SENSITIVE_CONTENT"
     }
    ]
@@ -247,11 +245,11 @@
   },
   {
    "id": "D5-68",
-   "label": "no readable D5 source body (28 sources and 4 demonstration fixtures, and every synthetic source this file loaded) carries counterpart_role or counterpart_position, as a field or in the sheet text",
+   "label": "no readable D5 source body (33 sources and 4 demonstration fixtures, and every synthetic source this file loaded) carries counterpart_role or counterpart_position, as a field or in the sheet text",
    "pass": true,
    "detail": {
-    "bodies": 54,
-    "packageBodies": 32,
+    "bodies": 69,
+    "packageBodies": 37,
     "inBody": []
    }
   },
@@ -262,15 +260,15 @@
    "detail": [
     {
      "field": "counterpart_position",
-     "n": 33
+     "n": 47
     },
     {
      "field": "counterpart_role",
-     "n": 41
+     "n": 55
     },
     {
      "field": "source_note#note",
-     "n": 9
+     "n": 11
     }
    ]
   },
@@ -311,10 +309,10 @@
   },
   {
    "id": "D5-68",
-   "label": "the Mentor Cockpit reference card renders for all 32 loaded D5 sources (an authenticated caller) and carries neither counterpart field, name or value",
+   "label": "the Mentor Cockpit reference card renders for all 37 loaded D5 sources (33 sources and 4 fixtures, an authenticated caller) and carries neither counterpart field, name or value",
    "pass": true,
    "detail": {
-    "cardCount": 32,
+    "cardCount": 37,
     "cardBad": [],
     "valueLeak": []
    }
@@ -396,11 +394,11 @@
   },
   {
    "id": "D5-68",
-   "label": "a source that is not a D5 source, and one that is refused, return no card",
+   "label": "a source that is not a D5 source, and one that is refused at load, return no card; SRC-D5-S4-004, refused at the first load and loaded since, now renders one",
    "pass": true,
    "detail": {
-    "rendered": false,
-    "refusal_code": "SOURCE_CARRIES_NO_LOADED_VERSION"
+    "notD5": "SOURCE_NOT_FOUND",
+    "refused": "SOURCE_CARRIES_NO_LOADED_VERSION"
    }
   },
   {

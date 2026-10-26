@@ -54,7 +54,7 @@
    "pass": true,
    "detail": {
     "outcome": "servable",
-    "source_version_id": "15e6695b-f68f-47cb-9a20-8216808e9dee"
+    "source_version_id": "b8f32b8f-2553-4f73-b503-bd4b60d2fbc9"
    }
   },
   {
@@ -156,10 +156,10 @@
   },
   {
    "id": "D5-55",
-   "label": "all loaded D5 sources pass the integrity check (parsed items equal the source sheet); 28 of the 33 load, the other five were refused at load by the counterpart rule (D5-69) and so were never checked",
+   "label": "all 33 loaded D5 sources pass the integrity check (parsed items equal the source sheet); 28 loaded with migration 20270202 and the other five, refused there by the counterpart rule (D5-69, still in the refusal log), loaded with migration 20270240 after one item of each was reworded (CR-310 to CR-315)",
    "pass": true,
    "detail": {
-    "loaded": 28,
+    "loaded": 33,
     "bad": [],
     "refusedAtLoad": [
      "SRC-D5-S2-009",

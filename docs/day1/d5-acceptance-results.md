@@ -1,6 +1,6 @@
 # D5 acceptance results (Section 11)
 
-Run against the throwaway database on 24 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d5-acceptance-run.json`. The run re-reads the labelled results of the D5 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
+Run against the throwaway database on 26 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d5-acceptance-run.json`. The run re-reads the labelled results of the D5 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
 **83 of 87 identifiers PASS, 0 FAIL, 4 NOT RUN.** Each identifier not run states why.
 
@@ -97,7 +97,7 @@ Run against the throwaway database on 24 October 2026, under the Section 11 iden
 | D5-51 | PASS | evidence | the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, in the availability and status block, with the absolute date) |
 | D5-52 | PASS | evidence | any contact initiation from an employer surface is refused and logged contact_permission_absent |
 |  | NOT RUN | surface | no contact element renders on any employer surface — browser against the application; not run here. Closest real evidence: the route refuses a contact initiation attempt and logs contact_permission_absent, and the contact permission object is a closed socket with no value (D5-52 entries above, PASS). The employer screens were not scanned for a contact element: EmployerDashboard.tsx carries the employer's own contact details and employerDesk.ts a contactAvailable flag, so a text scan would not decide it |
-| D5-53 | PASS | run | every loaded source carries the clearance status from its own sheet (28 of the 33 load; the other five were refused at load by D5-69), and none serves while the clearance is pending |
+| D5-53 | PASS | run | every loaded source carries the clearance status from its own sheet (all 33 load; the five that D5-69 refused at the first load were loaded with one item each reworded, CR-310 to CR-315), and none serves while the clearance is pending |
 | D5-54 | PASS | run | a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders |
 | D5-55 | PASS | evidence | a bound-family item taking only its first physical line is refused at load: bound_item_integrity_failed |
 | D5-56 | PASS | evidence | a Stage 2 or Stage 4 beat determination on a source with no loaded mentor_action_sequence is refused: beat_sequence_absent |
@@ -136,7 +136,7 @@ Run against the throwaway database on 24 October 2026, under the Section 11 iden
 |  | PASS | evidence | the subject forms are refused and the counterpart as an object or a possessor is not |
 |  | PASS | evidence | the counterpart as the object of the participant's act, or as a possessor, is not refused |
 |  | PASS | evidence | the rule is per source and per dimension |
-|  | PASS | evidence | of the 33 D5 sources of the package, 28 load and five are refused at load, each for one named item |
+|  | PASS | evidence | of the 33 D5 sources of the package all 33 load (28 at the first load, the five the rule refused after one item each was reworded) and the refusal log keeps each of the five refusals, each for one named item |
 |  | PASS | evidence | an entry whose subject is a counterpart role label is refused at load and logged |
 | D5-cov | PASS | evidence | 11.3 the coverage test, run first: every reachable answer pattern resolves to statements or a designed refusal, none to two statements and none to nothing |
 | D5-PP-01 | PASS | evidence | two D5 observations with an approved row, agreeing: the multiple context frame is available |
@@ -158,7 +158,7 @@ Run against the throwaway database on 24 October 2026, under the Section 11 iden
 
 ## Notes on the D5 run
 
-- 28 of the 33 D5 sources load. Five (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) are refused at load by the counterpart rule of Section 5.2 because one bound family item has the counterpart role label as the subject of a verb (conflict register CR-232). The counts of D5-53, D5-55 and D5-69 are therefore for 28 sources; the five are named and logged, not skipped.
+- All 33 D5 sources load. Five of them (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) were refused by the counterpart rule of Section 5.2 at the first load (migration 20270202) because one bound family item of each had the counterpart role label as the subject of a verb (conflict register CR-232); each refusal is still in the log. One item of each was reworded under Tony Mofoke's written delegation of 23 October 2026 (CR-310 to CR-315) and the five load with migration 20270240 through the same guard, which runs and passes. The counts of D5-53, D5-55 and D5-69 are for 33 sources; the five have a new source_version_hash because their text differs from the package by the reworded words (CR-315).
 - Four identifiers end NOT RUN, each only in its screen clause: D5-35 (participant correction screen), D5-39 (Mentor Cockpit at 1280 by 800 in a browser), D5-52 (no contact element on any employer screen) and D5-68 (the Mentor Cockpit in D5 mode, which this repository does not have; its screens are D1 only, as for D2 to D4). The route behind each is tested and passes; the entries say which evidence is the closest real one.
 - D5-62, D5-67, D5-51, D5-37, D5-25 and part of D5-26, D5-27, D5-64 and D5-68 read a real browser render of the repository's frozen multi page specimen reduced to its D5 claim package (docs/day1/evidence/d5-ber-multipage-render-check.json). That fixture holds a generic illustrative D5 entry, not the D5 library, so it proves the page layout, the three page count and the refusals, not D5 wording; the D5 wording is scanned in the database (D5-27, D5-64).
 - D5-65 and D5-66 also read the package's own reference checks (docs/day1/evidence/d5-package-checks.json, check 3.1.5: the eleven admission attacks, including the record altered after commit with its hash recomputed and the second record under a committed key). Check 3.1.11 (byte identity of the shared folders against the D2 to D4 folders) could not be run here; see CR-240.
