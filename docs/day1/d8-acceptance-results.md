@@ -1,8 +1,8 @@
 # D8 acceptance results (Section 11)
 
-Run against the throwaway database on 24 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d8-acceptance-run.json`. The run re-reads the labelled results of the D8 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
+Run against the throwaway database on 26 October 2026, under the Section 11 identifiers only. Evidence file: `evidence/d8-acceptance-run.json`. The run re-reads the labelled results of the D8 step files (it fails if a result is absent or failing) and runs the remaining checks itself. Every approval, clearance, consent and account in it is synthetic and exists on the throwaway database only.
 
-**86 of 87 identifiers PASS, 1 FAIL, 0 NOT RUN.**
+**87 of 87 identifiers PASS, 0 FAIL, 0 NOT RUN.**
 
 | Test | Result | How | Check |
 |---|---|---|---|
@@ -93,7 +93,7 @@ Run against the throwaway database on 24 October 2026, under the Section 11 iden
 |  | PASS | run | all 63 words of Section 5.7a are on the D8 list and each one fails the scan when it appears in a rendered sentence |
 |  | PASS | evidence | a composed entry whose subject is the participant's state refuses and logs state_observation; a word of another dimension refuses cross_dimension_assertion |
 |  | PASS | evidence | sentences whose subject is the participant's state, and sentences asserting the absence of a reaction, are refused (seven of seven) |
-|  | FAIL | evidence | every D8 template passes the prohibited-output scan — EXCEPTION CR-252: L-D8-COMP-001 (Section 5.12) reads 'The conditions of this observation were affected by a recorded technical event.' and 'affected' is on the Section 5.7a list. The template is loaded as written because this build does not decide wording; the scan flags it; the founder decides |
+|  | PASS | evidence | every D8 template in use passes the prohibited-output scan (L-D8-COMP-001 was retired for L-D8-COMP-002, CR-304) |
 | D8-65 | PASS | evidence | an altered committed observation with a recomputed hash is refused: commit_seal_invalid (the seal is a server side signature) |
 |  | PASS | evidence | under another key the seal reads as invalid, and an unloaded key refuses |
 | D8-66 | PASS | evidence | a second observation record under an identifier already committed is refused; the first record stands |

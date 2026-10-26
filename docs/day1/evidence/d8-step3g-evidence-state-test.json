@@ -240,7 +240,7 @@
    "id": "D8-73",
    "label": "a frame refused is logged",
    "pass": true,
-   "detail": 0
+   "detail": 1
   },
   {
    "id": "D8-70",

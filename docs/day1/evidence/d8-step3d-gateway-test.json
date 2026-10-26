@@ -73,7 +73,7 @@
    "pass": true,
    "detail": {
     "outcome": "queued",
-    "source_version_id": "02b2d258-4843-4bf7-b67d-93456424eb8d"
+    "source_version_id": "5de10f8c-2152-4095-b7e7-b2883bc92533"
    }
   },
   {
@@ -114,7 +114,7 @@
    "pass": true,
    "detail": {
     "outcome": "servable",
-    "source_version_id": "2a6310ef-ecf9-457d-a3bf-9ffc159bbb07"
+    "source_version_id": "6eaec087-1ad2-4fc8-b076-059688d63a30"
    }
   },
   {
@@ -239,7 +239,7 @@
     "permitted": false,
     "refusal_code": "ATTEMPT_CAP_REACHED",
     "counted_in_window": 3,
-    "earliest_eligible_at": "2026-11-27T15:24:42.405886+00:00"
+    "earliest_eligible_at": "2026-11-29T20:05:32.758562+00:00"
    }
   },
   {
@@ -341,7 +341,7 @@
    "pass": true,
    "detail": {
     "select count(*) from t3a_source_truth_field": "denied",
-    "select t3a_source_truth('ccd2cd30-4ba0-4a92-9838-823a3e02db92')": "denied"
+    "select t3a_source_truth('587ced59-800e-49c0-9eb1-fa19004c96a4')": "denied"
    }
   },
   {

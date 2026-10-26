@@ -1,0 +1,31 @@
+{
+ "what": "Stage entry hold time set on the live deployment",
+ "when": "2026-10-26",
+ "authority": "CR-219, CR-306",
+ "before": [
+  {
+   "t": null
+  }
+ ],
+ "after": [
+  {
+   "t": 1800
+  }
+ ],
+ "switches_before": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false
+ },
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false
+ },
+ "script": "tools/day1/stage_entry_hold_ttl_set.sql",
+ "rollback": "docs/day1/evidence/stage_entry_hold_ttl_rollback.sql"
+}
