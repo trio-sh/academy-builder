@@ -1,0 +1,401 @@
+{
+ "what": "Live apply of migrations 20270133 (stage entry derive first) and 20270201 to 20270230 (D5, D8, D9 and the reconciled shared functions) to the live Supabase project",
+ "when": "2026-10-26",
+ "authority": "CR-219 (founder's written delegation of 23 October 2026)",
+ "tests_before_apply": {
+  "ci_pr_398": "unit and database jobs green; database suite 508/508 with required, sequence and gate switches on; npm test 517/517"
+ },
+ "rollback": {
+  "script": "docs/day1/evidence/live-apply-20270133-20270230-rollback.sql",
+  "rehearsal": "applied the same files to a throwaway copy of the live baseline, ran the rollback, compared catalog and data hashes with the copy before: identical except 5 append-only rows in t3a_capture_refusal that the D5 counterpart refusals logged during the load (an audit log that is never deleted)"
+ },
+ "files": [
+  {
+   "file": "20270133000000_stage_entry_derive_first.sql",
+   "sha256": "d7427980eb5e98ae80a18df1b8fa32ce50a865173343046c06de0586ecb923f7",
+   "ok": true,
+   "error": null,
+   "seconds": 0.32
+  },
+  {
+   "file": "20270201000000_d5_shared_machinery.sql",
+   "sha256": "032519674560c371a1f23e5b2fd2fa5a1b0e018d23ecbe23ff6400ed211ff877",
+   "ok": true,
+   "error": null,
+   "seconds": 1.74
+  },
+  {
+   "file": "20270202000000_d5_content_registry.sql",
+   "sha256": "1d7c02c69160ade80c85db82aa997f0198c37478d79e8e1cc7d84c1a6fea3b7d",
+   "ok": true,
+   "error": null,
+   "seconds": 1.09
+  },
+  {
+   "file": "20270203000000_d5_demonstration_fixtures.sql",
+   "sha256": "62e7cc32b210d62b52b0011de27a2cc81e0c88ee742a5092d60c3b65ecafd770",
+   "ok": true,
+   "error": null,
+   "seconds": 0.52
+  },
+  {
+   "file": "20270204000000_d5_seeds.sql",
+   "sha256": "f4f5d18f04bee9f029f283bf30a65406d5064480467153e14c391fde8b66618b",
+   "ok": true,
+   "error": null,
+   "seconds": 0.44
+  },
+  {
+   "file": "20270205000000_d5_session_archive_content.sql",
+   "sha256": "c7c9e788cfa6d03e7274d71b3911ac9f2b63878752b7a10b71bade7b26492c69",
+   "ok": true,
+   "error": null,
+   "seconds": 0.32
+  },
+  {
+   "file": "20270211000000_d8_shared_machinery.sql",
+   "sha256": "fb58a944bca18239b3fc0e96f55f7186e314659a1cf3562301054432cf65c99d",
+   "ok": true,
+   "error": null,
+   "seconds": 0.42
+  },
+  {
+   "file": "20270212000000_d8_content_registry.sql",
+   "sha256": "e5b76f59c5228c818cbf98eb4e2ddcf1f0dcf891b8a496328246731b5bc4ba60",
+   "ok": true,
+   "error": null,
+   "seconds": 1.06
+  },
+  {
+   "file": "20270213000000_d8_demonstration_fixtures.sql",
+   "sha256": "5d800b2639d01e451ae718ed22824458a551acdaba082a93dc9ed544d178042d",
+   "ok": true,
+   "error": null,
+   "seconds": 0.39
+  },
+  {
+   "file": "20270214000000_d8_seeds.sql",
+   "sha256": "77fc309950d6bd31b8cb0a82733e50ec937a3ff742245760b02db09075fbe1b2",
+   "ok": true,
+   "error": null,
+   "seconds": 0.32
+  },
+  {
+   "file": "20270215000000_d8_content_flags.sql",
+   "sha256": "d9625945155c61db11e3f704a2b7b3d0edf9464183713090960dda5208764df2",
+   "ok": true,
+   "error": null,
+   "seconds": 0.28
+  },
+  {
+   "file": "20270216000000_d8_session_archive_content.sql",
+   "sha256": "97cc58145f17bdc5991d4f7d61587d3caef523b19cf6f3db5fe58d5bc50c130e",
+   "ok": true,
+   "error": null,
+   "seconds": 0.32
+  },
+  {
+   "file": "20270221000000_d9_shared_machinery.sql",
+   "sha256": "26495f746525b96eaa9ee7d145e97b156d79ec0b44c29a7f3ed25baded3879cf",
+   "ok": true,
+   "error": null,
+   "seconds": 0.47
+  },
+  {
+   "file": "20270222000000_d9_content_registry.sql",
+   "sha256": "c8d22363397eb435bbd536cee1e5260f89d537233fc12b72cde6916d600a31c8",
+   "ok": true,
+   "error": null,
+   "seconds": 0.94
+  },
+  {
+   "file": "20270223000000_d9_demonstration_fixtures.sql",
+   "sha256": "2fe56b35998c4b19ed3033e67cc67b5382fb08a67d53470f98d6d3d310c72549",
+   "ok": true,
+   "error": null,
+   "seconds": 0.51
+  },
+  {
+   "file": "20270224000000_d9_seeds.sql",
+   "sha256": "7910e64b90277c237ddb4536d7025dccbe5235d58a9cca58d7c65cf7c1d879c3",
+   "ok": true,
+   "error": null,
+   "seconds": 0.32
+  },
+  {
+   "file": "20270225000000_d9_session_archive_content.sql",
+   "sha256": "3e5b322aa31654d6b0ef16312c364f41c1f40de576bfa2236cb3eef8b866bd20",
+   "ok": true,
+   "error": null,
+   "seconds": 0.35
+  },
+  {
+   "file": "20270230000000_shared_functions_d5_d8_d9.sql",
+   "sha256": "0e973952a03ebda4b593e121fbd0174be19bb8940092befbdb4929c0177a9619",
+   "ok": true,
+   "error": null,
+   "seconds": 0.28
+  }
+ ],
+ "live_pre_unchanged_since_first_snapshot": true,
+ "catalog_change_compared_with_rehearsal": {
+  "functions": {
+   "added_live": 19,
+   "added_local": 19,
+   "same_added_set": true,
+   "changed_live": 6,
+   "changed_local": 6,
+   "same_changed_set": true
+  },
+  "tables": {
+   "added_live": 15,
+   "added_local": 15,
+   "same_added_set": true,
+   "changed_live": 0,
+   "changed_local": 0,
+   "same_changed_set": true
+  },
+  "columns": {
+   "added_live": 48,
+   "added_local": 48,
+   "same_added_set": true,
+   "changed_live": 0,
+   "changed_local": 0,
+   "same_changed_set": true
+  },
+  "triggers": {
+   "added_live": 16,
+   "added_local": 16,
+   "same_added_set": true,
+   "changed_live": 0,
+   "changed_local": 0,
+   "same_changed_set": true
+  },
+  "indexes": {
+   "added_live": 15,
+   "added_local": 15,
+   "same_added_set": true,
+   "changed_live": 0,
+   "changed_local": 0,
+   "same_changed_set": true
+  },
+  "constraints": {
+   "added_live": 34,
+   "added_local": 34,
+   "same_added_set": true,
+   "changed_live": 1,
+   "changed_local": 1,
+   "same_changed_set": true
+  },
+  "policies": {
+   "added_live": 0,
+   "added_local": 0,
+   "same_added_set": true,
+   "changed_live": 0,
+   "changed_local": 0,
+   "same_changed_set": true
+  }
+ },
+ "data_rows_added": {
+  "t3a_capacity_term": {
+   "rows_added_live": 7,
+   "rows_added_local_rehearsal": 7,
+   "equal": true
+  },
+  "t3a_capture_refusal": {
+   "rows_added_live": 5,
+   "rows_added_local_rehearsal": 5,
+   "equal": true
+  },
+  "t3a_content_object": {
+   "rows_added_live": 123,
+   "rows_added_local_rehearsal": 123,
+   "equal": true
+  },
+  "t3a_d1_branch_rule": {
+   "rows_added_live": 21,
+   "rows_added_local_rehearsal": 21,
+   "equal": true
+  },
+  "t3a_d1_capture_line": {
+   "rows_added_live": 134,
+   "rows_added_local_rehearsal": 134,
+   "equal": true
+  },
+  "t3a_d1_capture_set": {
+   "rows_added_live": 48,
+   "rows_added_local_rehearsal": 48,
+   "equal": true
+  },
+  "t3a_d1_condition_precedence": {
+   "rows_added_live": 24,
+   "rows_added_local_rehearsal": 24,
+   "equal": true
+  },
+  "t3a_d1_content_load_event": {
+   "rows_added_live": 106,
+   "rows_added_local_rehearsal": 106,
+   "equal": true
+  },
+  "t3a_d1_content_version": {
+   "rows_added_live": 118,
+   "rows_added_local_rehearsal": 118,
+   "equal": true
+  },
+  "t3a_d1_language_template": {
+   "rows_added_live": 39,
+   "rows_added_local_rehearsal": 39,
+   "equal": true
+  },
+  "t3a_d1_question_capture_map": {
+   "rows_added_live": 48,
+   "rows_added_local_rehearsal": 48,
+   "equal": true
+  },
+  "t3a_d1_question_object": {
+   "rows_added_live": 48,
+   "rows_added_local_rehearsal": 48,
+   "equal": true
+  },
+  "t3a_d1_specification_cooldown": {
+   "rows_added_live": 9,
+   "rows_added_local_rehearsal": 9,
+   "equal": true
+  },
+  "t3a_d1_statement_library": {
+   "rows_added_live": 134,
+   "rows_added_local_rehearsal": 134,
+   "equal": true
+  },
+  "t3a_dimension_counterpart_rule": {
+   "rows_added_live": 1,
+   "rows_added_local_rehearsal": 1,
+   "equal": true
+  },
+  "t3a_dimension_placeholder": {
+   "rows_added_live": 21,
+   "rows_added_local_rehearsal": 21,
+   "equal": true
+  },
+  "t3a_dimension_review_item": {
+   "rows_added_live": 6,
+   "rows_added_local_rehearsal": 6,
+   "equal": true
+  },
+  "t3a_dimension_rule": {
+   "rows_added_live": 4,
+   "rows_added_local_rehearsal": 4,
+   "equal": true
+  },
+  "t3a_dimension_source_field": {
+   "rows_added_live": 40,
+   "rows_added_local_rehearsal": 40,
+   "equal": true
+  },
+  "t3a_dimension_withheld_field": {
+   "rows_added_live": 2,
+   "rows_added_local_rehearsal": 2,
+   "equal": true
+  },
+  "t3a_entry_language_rule": {
+   "rows_added_live": 8,
+   "rows_added_local_rehearsal": 8,
+   "equal": true
+  },
+  "t3a_entry_subject_lead": {
+   "rows_added_live": 3,
+   "rows_added_local_rehearsal": 3,
+   "equal": true
+  },
+  "t3a_interaction_pattern_family": {
+   "rows_added_live": 21,
+   "rows_added_local_rehearsal": 21,
+   "equal": true
+  },
+  "t3a_lsa_registry_record": {
+   "rows_added_live": 90,
+   "rows_added_local_rehearsal": 90,
+   "equal": true
+  },
+  "t3a_multipage_only_dimension": {
+   "rows_added_live": 4,
+   "rows_added_local_rehearsal": 4,
+   "equal": true
+  },
+  "t3a_never_rendered_field": {
+   "rows_added_live": 1,
+   "rows_added_local_rehearsal": 1,
+   "equal": true
+  },
+  "t3a_question_definition": {
+   "rows_added_live": 134,
+   "rows_added_local_rehearsal": 134,
+   "equal": true
+  },
+  "t3a_rce_prohibited_vocabulary": {
+   "rows_added_live": 232,
+   "rows_added_local_rehearsal": 232,
+   "equal": true
+  },
+  "t3a_recurrence_excluded_entry_type": {
+   "rows_added_live": 3,
+   "rows_added_local_rehearsal": 3,
+   "equal": true
+  },
+  "t3a_resolution_refusal_rule": {
+   "rows_added_live": 26,
+   "rows_added_local_rehearsal": 26,
+   "equal": true
+  },
+  "t3a_source_authorship": {
+   "rows_added_live": 12,
+   "rows_added_local_rehearsal": 12,
+   "equal": true
+  },
+  "t3a_source_drafting_test": {
+   "rows_added_live": 24,
+   "rows_added_local_rehearsal": 24,
+   "equal": true
+  },
+  "t3a_source_sequestered_field": {
+   "rows_added_live": 65,
+   "rows_added_local_rehearsal": 65,
+   "equal": true
+  },
+  "t3a_source_sheet_field": {
+   "rows_added_live": 37,
+   "rows_added_local_rehearsal": 37,
+   "equal": true
+  },
+  "t3a_source_truth_field": {
+   "rows_added_live": 76,
+   "rows_added_local_rehearsal": 76,
+   "equal": true
+  },
+  "t3a_stage_form_dimension_verb": {
+   "rows_added_live": 12,
+   "rows_added_local_rehearsal": 12,
+   "equal": true
+  },
+  "t3a_stage_form_question": {
+   "rows_added_live": 2,
+   "rows_added_local_rehearsal": 2,
+   "equal": true
+  },
+  "t3a_stage_form_verb_dimension": {
+   "rows_added_live": 10,
+   "rows_added_local_rehearsal": 10,
+   "equal": true
+  }
+ },
+ "state_after": {
+  "canonical_writers": "off",
+  "ingest_mode": "legacy_tolerant",
+  "enforce_required": false,
+  "enforce_sequence": false,
+  "enforce_gate": false,
+  "lsa_activation": "on (CR-217, unchanged)",
+  "d5_d8_d9_sources": "loaded as not_loaded / drafting: not servable",
+  "stage_entry_derive_trigger": "t3a_00_stage_entry_event_derive_trg"
+ }
+}
