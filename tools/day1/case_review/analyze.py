@@ -44,6 +44,9 @@ def map_case(case, base):
         own = re.match(r'cr0*%d[-.]' % nn, fn) or any(nn in k and fn.startswith(v) for k, v in MULTI.items())
         if not own: continue
         title = full.split(' > ')[-1]
+        # a file that holds several rules (cr04-cr05, cr06-cr10-cr27, ...) names the rule in the describe title: a test under another rule's describe is not this case's
+        named = {int(x) for x in re.findall(r'CR-0*(\d+)', ' > '.join(full.split(' > ')[:-1]))}
+        if named and nn not in named: continue
         if re.search(r'CR-0*%d[- ]T%d\b' % (nn, m), full) or re.match(r'T%d\b[:,\s+]' % m, title) or (re.match(r'T\d+(?:\s*,\s*T?\d+|\s*\+\s*T?\d+)+[:\s]', title) and m in nums(title.split(':')[0])):
             out.append((fn, ix, full))
     return out
