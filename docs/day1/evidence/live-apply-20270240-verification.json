@@ -1,0 +1,60 @@
+{
+ "what": "Live apply of migration 20270240 (the five reworded D5 sources, CR-310 to CR-315)",
+ "when": "2026-10-26",
+ "authority": "CR-219",
+ "tests_before": "PR 405 CI green; database 544/544 default and with all three database switches on; unit 517/517",
+ "files": [
+  {
+   "file": "20270240000000_d5_five_sources_reworded.sql",
+   "sha256": "469964f044ee06e0f8665a53147ff78b0a4dbee614dc239e26a9aedb8c2bd70a",
+   "ok": true,
+   "error": null,
+   "seconds": 0.88
+  }
+ ],
+ "rows_added": {
+  "t3a_d1_content_version": 5,
+  "t3a_d1_content_load_event": 5,
+  "t3a_source_sequestered_field": 12
+ },
+ "d5_sources_with_a_version_after": [
+  {
+   "n": 37
+  }
+ ],
+ "the_five": [
+  {
+   "identifier": "SRC-D5-S2-009",
+   "operational_state": "not_loaded",
+   "approval_status": "drafting"
+  },
+  {
+   "identifier": "SRC-D5-S3-001",
+   "operational_state": "not_loaded",
+   "approval_status": "drafting"
+  },
+  {
+   "identifier": "SRC-D5-S3-007",
+   "operational_state": "not_loaded",
+   "approval_status": "drafting"
+  },
+  {
+   "identifier": "SRC-D5-S4-004",
+   "operational_state": "not_loaded",
+   "approval_status": "drafting"
+  },
+  {
+   "identifier": "SRC-D5-S4-010",
+   "operational_state": "not_loaded",
+   "approval_status": "drafting"
+  }
+ ],
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false
+ },
+ "rollback": "docs/day1/evidence/rollback_20270240_d5_five_sources.sql"
+}
