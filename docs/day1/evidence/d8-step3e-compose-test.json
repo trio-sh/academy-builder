@@ -23,7 +23,7 @@
    "pass": true,
    "detail": {
     "state_code": "ST-D8-001",
-    "observation_id": "1326ba91-ae64-451c-a315-8059f0110562",
+    "observation_id": "d8ec66bc-bfa0-4939-985a-ffe42e5ee12f",
     "conduct_element_id": "CE-D8-01",
     "recurrence_blocker": false,
     "recurrence_equivalence_key_id": "REK-D8-001"
@@ -319,7 +319,7 @@
    "pass": true,
    "detail": {
     "state_code": "ST-D8-003",
-    "observation_id": "0868c30e-2c6c-4814-846c-40781fab30d9",
+    "observation_id": "235dc377-ff5c-49cb-8378-27abdcb31f5c",
     "conduct_element_id": "CE-D8-01",
     "recurrence_blocker": true,
     "recurrence_equivalence_key_id": "REK-D8-001"

@@ -2,7 +2,7 @@
  "identifiers_required": 87,
  "identifiers_reported": 87,
  "notes": [
-  "28 of the 33 D5 sources load. Five (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) are refused at load by the counterpart rule of Section 5.2 because one bound family item has the counterpart role label as the subject of a verb (conflict register CR-232). The counts of D5-53, D5-55 and D5-69 are therefore for 28 sources; the five are named and logged, not skipped.",
+  "All 33 D5 sources load. Five of them (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) were refused by the counterpart rule of Section 5.2 at the first load (migration 20270202) because one bound family item of each had the counterpart role label as the subject of a verb (conflict register CR-232); each refusal is still in the log. One item of each was reworded under Tony Mofoke's written delegation of 23 October 2026 (CR-310 to CR-315) and the five load with migration 20270240 through the same guard, which runs and passes. The counts of D5-53, D5-55 and D5-69 are for 33 sources; the five have a new source_version_hash because their text differs from the package by the reworded words (CR-315).",
   "Four identifiers end NOT RUN, each only in its screen clause: D5-35 (participant correction screen), D5-39 (Mentor Cockpit at 1280 by 800 in a browser), D5-52 (no contact element on any employer screen) and D5-68 (the Mentor Cockpit in D5 mode, which this repository does not have; its screens are D1 only, as for D2 to D4). The route behind each is tested and passes; the entries say which evidence is the closest real one.",
   "D5-62, D5-67, D5-51, D5-37, D5-25 and part of D5-26, D5-27, D5-64 and D5-68 read a real browser render of the repository's frozen multi page specimen reduced to its D5 claim package (docs/day1/evidence/d5-ber-multipage-render-check.json). That fixture holds a generic illustrative D5 entry, not the D5 library, so it proves the page layout, the three page count and the refusals, not D5 wording; the D5 wording is scanned in the database (D5-27, D5-64).",
   "D5-65 and D5-66 also read the package's own reference checks (docs/day1/evidence/d5-package-checks.json, check 3.1.5: the eleven admission attacks, including the record altered after commit with its hash recomputed and the second record under a committed key). Check 3.1.11 (byte identity of the shared folders against the D2 to D4 folders) could not be run here; see CR-240.",
@@ -148,7 +148,7 @@
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "d5-step4a-register-test.json: at Stage 1 (8 sources) and Stage 3 (5 sources) Q-D5-06 and Q-D5-06b are NOT SERVED on every loaded source and its route list is empty (a written response or a submission proposes a route, it does not use one)"
+      "d5-step4a-register-test.json: at Stage 1 (8 sources) and Stage 3 (7 sources) Q-D5-06 and Q-D5-06b are NOT SERVED on every loaded source and its route list is empty (a written response or a submission proposes a route, it does not use one)"
      ]
     },
     {
@@ -1204,11 +1204,11 @@
    "status": "PASS",
    "entries": [
     {
-     "label": "every loaded source carries the clearance status from its own sheet (28 of the 33 load; the other five were refused at load by D5-69), and none serves while the clearance is pending",
+     "label": "every loaded source carries the clearance status from its own sheet (all 33 load; the five that D5-69 refused at the first load were loaded with one item each reworded, CR-310 to CR-315), and none serves while the clearance is pending",
      "status": "PASS",
      "how": "run",
      "detail": {
-      "loaded": 28,
+      "loaded": 33,
       "values": [
        "CLEARED"
       ],
@@ -1513,7 +1513,7 @@
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "d5-step3n-counterpart-boundary-test.json: no readable D5 source body (28 sources and 4 demonstration fixtures, and every synthetic source this file loaded) carries counterpart_role or counterpart_position, as a field or in the sheet text"
+      "d5-step3n-counterpart-boundary-test.json: no readable D5 source body (33 sources and 4 demonstration fixtures, and every synthetic source this file loaded) carries counterpart_role or counterpart_position, as a field or in the sheet text"
      ]
     },
     {
@@ -1530,7 +1530,7 @@
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "d5-step3n-counterpart-boundary-test.json: the Mentor Cockpit reference card renders for all 32 loaded D5 sources (an authenticated caller) and carries neither counterpart field, name or value"
+      "d5-step3n-counterpart-boundary-test.json: the Mentor Cockpit reference card renders for all 37 loaded D5 sources (33 sources and 4 fixtures, an authenticated caller) and carries neither counterpart field, name or value"
      ]
     },
     {
@@ -1635,11 +1635,11 @@
      ]
     },
     {
-     "label": "of the 33 D5 sources of the package, 28 load and five are refused at load, each for one named item",
+     "label": "of the 33 D5 sources of the package all 33 load (28 at the first load, the five the rule refused after one item each was reworded) and the refusal log keeps each of the five refusals, each for one named item",
      "status": "PASS",
      "how": "evidence",
      "detail": [
-      "d5-step3n-counterpart-boundary-test.json: of the 33 D5 sources of the package, 28 load and exactly five are refused at load: SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010"
+      "d5-step3n-counterpart-boundary-test.json: of the 33 D5 sources of the package all 33 load: 28 at migration 20270202 and the five it refused (SRC-D5-S2-009, S3-001, S3-007, S4-004, S4-010) at migration 20270240 with one item each reworded; none is left without a version"
      ]
     },
     {
@@ -1783,18 +1783,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "d41afd5e-8e70-4c08-afb3-01c00856d760"
+       "recipient_release_id": "41ccdcaa-b027-4fc5-8ffc-034ce661a1cd"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-24T21:07:33.525687+00:00"
+       "made_available_at": "2026-10-26T20:08:29.809641+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "d41afd5e-8e70-4c08-afb3-01c00856d760"
+       "recipient_release_id": "41ccdcaa-b027-4fc5-8ffc-034ce661a1cd"
       },
       "after": {
        "w": true,
@@ -1847,8 +1847,8 @@
       "s3": "Q-D5-06,Q-D5-06b,Q-D5-09",
       "s24": "",
       "issued": [
-       3,
-       3
+       1,
+       1
       ]
      }
     }

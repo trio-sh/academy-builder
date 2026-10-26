@@ -97,7 +97,7 @@
    "pass": true,
    "detail": {
     "outcome": "queued",
-    "source_version_id": "d001902a-033a-4d86-8dec-0e60b43f73e6"
+    "source_version_id": "dd1468b6-7074-476d-89af-55730c3ab7ef"
    }
   },
   {
@@ -117,7 +117,7 @@
    "label": "a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either",
    "pass": true,
    "detail": {
-    "detail": "the whole table is refused: RR-D8-T-d5556f80-2 names Q-D8-99",
+    "detail": "the whole table is refused: RR-D8-T-8c416578-2 names Q-D8-99",
     "reason": "resolution_table_refused",
     "outcome": "refused"
    }
@@ -136,7 +136,7 @@
    "label": "a suppress row naming a statement that does not exist is refused",
    "pass": true,
    "detail": {
-    "detail": "the whole table is refused: RR-D8-T-d5556f80-1s suppresses unknown ST-D8-999",
+    "detail": "the whole table is refused: RR-D8-T-8c416578-1s suppresses unknown ST-D8-999",
     "reason": "resolution_table_refused",
     "outcome": "refused"
    }

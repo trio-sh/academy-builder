@@ -2,67 +2,10 @@
  "identifiers_required": 87,
  "identifiers_reported": 87,
  "missing": [],
- "pass": 86,
- "fail": 1,
+ "pass": 87,
+ "fail": 0,
  "not_run": 0,
- "failed": [
-  {
-   "id": "D8-64",
-   "status": "FAIL",
-   "entries": [
-    {
-     "label": "every Section 5.7a word fails the scan (manner words, the arc words, the state words, sampled), and none of the 44 entries carries a word of the list or has the participant's state as its subject",
-     "status": "PASS",
-     "how": "run",
-     "detail": {
-      "unflagged_words": [],
-      "statements_failing_scan": 0,
-      "statements_failing_gate": 0
-     }
-    },
-    {
-     "label": "all 63 words of Section 5.7a are on the D8 list and each one fails the scan when it appears in a rendered sentence",
-     "status": "PASS",
-     "how": "run",
-     "detail": {
-      "words": 63,
-      "unflagged": []
-     }
-    },
-    {
-     "label": "a composed entry whose subject is the participant's state refuses and logs state_observation; a word of another dimension refuses cross_dimension_assertion",
-     "status": "PASS",
-     "how": "evidence",
-     "detail": [
-      "d8-step3e-compose-test.json: a composed entry matching a state_observation pattern refuses and logs state_observation, and nothing is written (pattern added for the test, then removed)"
-     ]
-    },
-    {
-     "label": "sentences whose subject is the participant's state, and sentences asserting the absence of a reaction, are refused (seven of seven)",
-     "status": "PASS",
-     "how": "evidence",
-     "detail": [
-      "d8-step3e-compose-test.json: sentences whose subject is the participant's state, and sentences asserting the absence of a reaction, are all refused by the gate (seven of seven)"
-     ]
-    },
-    {
-     "label": "every D8 template passes the prohibited-output scan",
-     "status": "FAIL",
-     "how": "evidence",
-     "detail": {
-      "reason": "EXCEPTION CR-252: L-D8-COMP-001 (Section 5.12) reads 'The conditions of this observation were affected by a recorded technical event.' and 'affected' is on the Section 5.7a list. The template is loaded as written because this build does not decide wording; the scan flags it; the founder decides",
-      "results": [
-       {
-        "f": "d8-step3c-resolution-test.json",
-        "label": "every D8 template passes the prohibited-output check",
-        "ok": false
-       }
-      ]
-     }
-    }
-   ]
-  }
- ],
+ "failed": [],
  "results": [
   {
    "id": "D8-01",
@@ -1206,7 +1149,7 @@
   },
   {
    "id": "D8-64",
-   "status": "FAIL",
+   "status": "PASS",
    "entries": [
     {
      "label": "every Section 5.7a word fails the scan (manner words, the arc words, the state words, sampled), and none of the 44 entries carries a word of the list or has the participant's state as its subject",
@@ -1244,19 +1187,12 @@
      ]
     },
     {
-     "label": "every D8 template passes the prohibited-output scan",
-     "status": "FAIL",
+     "label": "every D8 template in use passes the prohibited-output scan (L-D8-COMP-001 was retired for L-D8-COMP-002, CR-304)",
+     "status": "PASS",
      "how": "evidence",
-     "detail": {
-      "reason": "EXCEPTION CR-252: L-D8-COMP-001 (Section 5.12) reads 'The conditions of this observation were affected by a recorded technical event.' and 'affected' is on the Section 5.7a list. The template is loaded as written because this build does not decide wording; the scan flags it; the founder decides",
-      "results": [
-       {
-        "f": "d8-step3c-resolution-test.json",
-        "label": "every D8 template passes the prohibited-output check",
-        "ok": false
-       }
-      ]
-     }
+     "detail": [
+      "d8-step3c-resolution-test.json: every D8 template passes the prohibited-output check"
+     ]
     }
    ]
   },
@@ -1540,18 +1476,18 @@
      "detail": {
       "make": {
        "outcome": "available",
-       "recipient_release_id": "450bb516-00bd-4fee-b64b-c700d93b00ff"
+       "recipient_release_id": "0f32c57f-8842-4473-b4b5-ef93b3bb5e53"
       },
       "state": {
        "available": true,
        "withdrawn_at": null,
        "report_status": "issued",
        "correction_open": false,
-       "made_available_at": "2026-10-24T21:07:38.411023+00:00"
+       "made_available_at": "2026-10-26T20:05:36.713697+00:00"
       },
       "withdraw": {
        "outcome": "withdrawn",
-       "recipient_release_id": "450bb516-00bd-4fee-b64b-c700d93b00ff"
+       "recipient_release_id": "0f32c57f-8842-4473-b4b5-ef93b3bb5e53"
       },
       "after": {
        "w": true,
@@ -1605,8 +1541,8 @@
        }
       ],
       "issued": [
-       4,
-       4
+       2,
+       2
       ]
      }
     }

@@ -58,7 +58,7 @@ The earlier finding was that turning `enforce_required` on stopped 222 of 364 da
 - All 388 database tests pass with the switch off (`npm run test:db`) and 388 pass with it on from the start to the end of the run (`npm run test:db:enforced`, which also sets the stage entry hold time, a setting that must be in place before the switch is turned on in production). The CI database job now runs both.
 - One older fact the first run hid: the older scripts that turn the switch on for one check turned it off again at the end, so the rest of the run was never under it. They now put it back to what it was.
 - Not done: `enforce_sequence` and `enforce_gate`. With `enforce_sequence` also on, 9 older scripts fail because they enter Stage 2 with no Stage 1 confirmation on record (the new rule refusing correctly; their fixtures need the confirmation), and the database tests written for the rule pass. With `enforce_gate` also on, 47 more tests fail on consent fixtures. These two are not proven and stay off. `canonical_writers` and strict event ingest were not rerun with this change.
-- Before the switch is ever turned on in production: `stage_entry_hold_ttl` must be set (it is empty on the live project).
+- `stage_entry_hold_ttl` was empty on the live project; it was set to 1800 seconds on 26 October (CR-306). Nothing was turned on.
 
 - Applied to the live project on 23 October: migration 20270131 (record `evidence/live-apply-20270131-verification.json`, rollback `evidence/live-apply-20270131-rollback.sql`). After it `enforce_required` still reads false on live and `lsa_activation` is on; the 11 new triggers do nothing while the switch is off.
 
