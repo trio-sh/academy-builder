@@ -1,0 +1,58 @@
+{
+ "what": "Live apply of migrations 20270231 to 20270233 (the three gaps the end to end report flow test found)",
+ "when": "2026-10-26",
+ "authority": "CR-219",
+ "tests_before_apply": "PR 401 CI green: database suite 509/509 (default and with required, sequence and gate on), unit 517/517; each fix seen failing before and passing after; rollbacks applied on a throwaway copy make the flow test fail again",
+ "pre_apply_data_check_on_live": {
+  "review rows naming a different participant than the report": 0,
+  "reports with more than one issuance": 0
+ },
+ "files": [
+  {
+   "file": "20270231000000_review_action_belongs_to_report.sql",
+   "sha256": "459ef42706ff2ad44f64a40e6f1553186f2134159f2cf1b10d5ea60218caafc3",
+   "ok": true,
+   "error": null,
+   "seconds": 0.36
+  },
+  {
+   "file": "20270232000000_issue_only_a_report_ready_to_issue.sql",
+   "sha256": "88997afeae42f96d6127d23ed81221d6fb182a7f27db0aab4cb4f6087ad5a630",
+   "ok": true,
+   "error": null,
+   "seconds": 0.35
+  },
+  {
+   "file": "20270233000000_assemble_route_fills_required_fields.sql",
+   "sha256": "80163489e6db06e235b11a28d59c3e0b6d7a16cc503b19b686b1571559ac9319",
+   "ok": true,
+   "error": null,
+   "seconds": 0.3
+  }
+ ],
+ "catalog_change": [
+  "t3a_d1_assemble_ber_for changed",
+  "t3a_d1_issue_report changed",
+  "t3a_review_action_owns_report added",
+  "trigger t3a_1_review_action_owns_report_trg added",
+  "policy t3a_d1_participant_review_action_insert_own changed"
+ ],
+ "checks_after": {
+  "issue_guard": true,
+  "assemble_fills": true,
+  "review_guard": 1
+ },
+ "switch_state_after": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false,
+  "lsa": true
+ },
+ "rollback": [
+  "docs/day1/evidence/rollback_20270233_assemble_route_fills_required_fields.sql",
+  "docs/day1/evidence/rollback_20270232_issue_only_a_report_ready_to_issue.sql",
+  "docs/day1/evidence/rollback_20270231_review_action_belongs_to_report.sql"
+ ]
+}
