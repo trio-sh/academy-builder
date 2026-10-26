@@ -77,32 +77,32 @@
     "outcome": "visible",
     "selections": [
      {
-      "reviewer_id": "73150c31-0467-471a-a72b-3d6aef52a6aa",
+      "reviewer_id": "93cb7018-4607-4099-8bd3-6e539350b7cd",
       "decision_body": {
        "units": [
         {
          "answer": "A1",
-         "unit_id": "116dda6f-df16-4deb-9ab0-5702a4070f87-0",
+         "unit_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff-0",
          "question_code": "Q-D8-01",
-         "source_version_id": "116dda6f-df16-4deb-9ab0-5702a4070f87"
+         "source_version_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff"
         },
         {
          "answer": "A1",
-         "unit_id": "116dda6f-df16-4deb-9ab0-5702a4070f87-1",
+         "unit_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff-1",
          "question_code": "Q-D8-01",
-         "source_version_id": "116dda6f-df16-4deb-9ab0-5702a4070f87"
+         "source_version_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff"
         },
         {
          "answer": "A2",
-         "unit_id": "116dda6f-df16-4deb-9ab0-5702a4070f87-2",
+         "unit_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff-2",
          "question_code": "Q-D8-01",
-         "source_version_id": "116dda6f-df16-4deb-9ab0-5702a4070f87"
+         "source_version_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff"
         },
         {
          "answer": "A1",
-         "unit_id": "1f5b0621-4eab-4636-b9f3-fb839667651d-0",
+         "unit_id": "e12be35f-e794-4049-9d05-3317c6bf9327-0",
          "question_code": "Q-D8-01",
-         "source_version_id": "1f5b0621-4eab-4636-b9f3-fb839667651d"
+         "source_version_id": "e12be35f-e794-4049-9d05-3317c6bf9327"
         }
        ]
       }
@@ -129,7 +129,7 @@
     "units": 3,
     "status": "CALCULATED",
     "question_code": "Q-D8-01",
-    "source_version_id": "116dda6f-df16-4deb-9ab0-5702a4070f87",
+    "source_version_id": "dfb4686b-ad99-4711-ad48-f6c522b525ff",
     "question_agreement_units": 2,
     "statement_concordance_units": 2
    }
@@ -143,7 +143,7 @@
     "status": "NOT_CALCULATED",
     "minimum": 3,
     "question_code": "Q-D8-01",
-    "source_version_id": "1f5b0621-4eab-4636-b9f3-fb839667651d",
+    "source_version_id": "e12be35f-e794-4049-9d05-3317c6bf9327",
     "question_remains_uncleared_for_this_source": true
    }
   },
@@ -166,8 +166,8 @@
    "label": "the clearance route refuses with the approved minimum unloaded",
    "pass": true,
    "detail": {
-    "detail": "the approved per-source minimum is not loaded",
-    "reason": "clearance_parameters_unloaded",
+    "detail": "at least one question is not calculated for at least one source",
+    "reason": "questions_uncleared",
     "outcome": "refused"
    }
   },
@@ -223,7 +223,7 @@
    "pass": true,
    "detail": {
     "outcome": "stopped",
-    "pilot_stop_id": "237a5720-7508-48ab-af0a-b53d8e16cd7e"
+    "pilot_stop_id": "bc158514-0a64-42bc-aaa8-81101f978997"
    }
   },
   {

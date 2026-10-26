@@ -64,7 +64,7 @@ const badSt = await run(`select statement_key from t3a_d1_statement_library wher
 rec("D8-64", "every D8 Recorded Conduct Entry passes the entry language gate (no state as subject, no word of another dimension)", badSt.length === 0, badSt.slice(0, 5));
 const badVerb = await run(`select l.statement_key, d.verb from t3a_d1_statement_library l join t3a_stage_form_verb_dimension d on d.dimension_id='D8' where l.dimension_id='D8' and l.statement_body ~* ('\\m' || d.verb || '\\M')`);
 rec("D8-61", "no D8 entry carries a performed act verb at any Stage", badVerb.length === 0, badVerb.slice(0, 5));
-const tpl = await run(`select language_template_id from t3a_d1_language_template where dimension_id='D8' and (t3a_prohibited_output_check('D8', template_body) ->> 'passed')::boolean is not true`);
+const tpl = await run(`select language_template_id from t3a_d1_language_template where dimension_id='D8' and not retired and (t3a_prohibited_output_check('D8', template_body) ->> 'passed')::boolean is not true`);
 rec("D8-64", "every D8 template passes the prohibited-output check", tpl.length === 0, tpl);
 console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
 await c.end(); process.exit(0);

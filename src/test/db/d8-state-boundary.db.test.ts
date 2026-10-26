@@ -210,4 +210,14 @@ describe("D8-04 and D8-54 a served question needs its list", () => {
     expect(rows).toHaveLength(8);
     for (const r of rows) expect(await compose(r.v, 3, ANS, ITEMS), r.identifier).toMatchObject({ reason: "answer_for_question_not_served" });
   });
+
+  it("D8-64 (CR-304): every D8 template in use passes the D8 scan; the conditions template says 'changed' and the one with 'affected' is retired and no longer a precedence target", async () => {
+    const bad = await run(c, `select language_template_id from t3a_d1_language_template where dimension_id='D8' and not retired and (t3a_prohibited_output_check('D8', template_body) ->> 'passed')::boolean is not true`);
+    expect(bad).toEqual([]);
+    const cur = (await run(c, `select t.language_template_id id, t.template_body b from t3a_d1_condition_precedence p join t3a_d1_language_template t on t.language_template_id = p.language_template_id where p.dimension_id='D8' and p.condition_code='conditions_compromised'`));
+    expect(cur).toEqual([{ id: "L-D8-COMP-002", b: "The conditions of this observation were changed by a recorded technical event." }]);
+    expect((await run(c, `select retired r from t3a_d1_language_template where language_template_id='L-D8-COMP-001'`))[0].r).toBe(true);
+    // the scan itself is not loosened: the old sentence is still refused for D8
+    expect((await run(c, `select (t3a_prohibited_output_check('D8', 'The conditions of this observation were affected by a recorded technical event.') ->> 'passed')::boolean p`))[0].p).toBe(false);
+  });
 });
