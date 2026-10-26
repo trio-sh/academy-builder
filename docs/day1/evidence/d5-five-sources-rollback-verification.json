@@ -1,0 +1,12 @@
+{
+ "what": "docs/day1/evidence/rollback_20270240_d5_five_sources.sql applied to a copy of a freshly built throwaway database that holds migration 20270240000000_d5_five_sources_reworded.sql (CR-310 to CR-315). Nothing was applied to the live project.",
+ "when": "2026-10-26",
+ "before_rollback": { "d5_source_versions": 33, "d5_source_objects": 33, "d5_load_events": 36, "sequestered_fields_all_dimensions": 77, "counterpart_as_subject_refusals_logged": 5 },
+ "rollback_output": ["BEGIN", "DO", "ALTER TABLE", "DELETE 12 (sequestered fields)", "ALTER TABLE", "DELETE 5 (load events)", "DELETE 5 (content versions)", "COMMIT"],
+ "after_rollback": { "d5_source_versions": 28, "d5_source_objects": 33, "d5_load_events": 31, "sequestered_fields_all_dimensions": 65, "counterpart_as_subject_refusals_logged": 5 },
+ "the_other_28_source_bodies": "md5 over their bodies identical before the rollback, after it and after the migration was applied again (1f013b4408e394e86c65c9de3d217067)",
+ "objects_left_without_a_version": ["SRC-D5-S2-009", "SRC-D5-S3-001", "SRC-D5-S3-007", "SRC-D5-S4-004", "SRC-D5-S4-010"],
+ "second_run_of_the_rollback": "no-op, exit 0",
+ "migration_applied_again_after_rollback": { "d5_source_versions": 33, "d5_load_events": 36, "sequestered_fields_all_dimensions": 77, "other_28_md5": "1f013b4408e394e86c65c9de3d217067" },
+ "not_touched": "the refusal log rows of the first load (history), the five content objects, every function, trigger, rule and guard"
+}
