@@ -24,8 +24,17 @@ async function world(o: { stage?: "S2" | "S4"; enquiry?: string; beats?: string[
 }
 const timing = (entry: string, q = "Q-D1-02") => run(c, `select t3a_d1_timing_determination_permitted('${entry}','${q}') r`).then((r) => r[0].r);
 
-beforeAll(async () => { c = await connect(); await retireFixtureSources(c); reviewer = await mkParticipant(c, `cr20-rev-${RUN}`); });
-afterAll(async () => { await c.end(); });
+// The timing dependent determinations are registered data (t3a_timing_reference_field). D1 has Q-D1-02 registered by the migration, so for D1 this adds nothing.
+// A dimension without a timing dependent determination of its own has this fixture register one (synthetic), which is what shows the rule applies to that dimension.
+// Only what the fixture added is taken out again, so no other test file sees it.
+let registered: string[] = [];
+beforeAll(async () => {
+  c = await connect(); await retireFixtureSources(c); reviewer = await mkParticipant(c, `cr20-rev-${RUN}`);
+  registered = (await fx(`insert into t3a_timing_reference_field(question_code, dimension_id, source_sheet_field, note) values ('Q-D1-02', 'D1', 'enquiry_point', 'CR-20 fixture') on conflict (question_code) do nothing returning question_code`)).map((r) => r.question_code);
+});
+afterAll(async () => { for (const q of registered) await fx(`delete from t3a_timing_reference_field where question_code = '${q}'`); await c.end(); });
+/** The line of the dimension's own set C2 that is its whole session line (D1: line 4; other dimensions differ, so it is read, not assumed). */
+const wholeLine = async () => (await run(c, `select line_order from t3a_d1_capture_line where dimension_id = 'D1' and capture_set_code = 'C2' and is_whole_session_answer`))[0].line_order as number;
 
 describe("CR-20-T1 each timing refusal returns its own code", () => {
   it("a reference that is not stated as a beat", async () => {
@@ -62,16 +71,16 @@ describe("CR-20-T2 a whole session line before the close beat, and a final beat 
 
   it("the whole session line (FC-02) is refused before the close beat and after it, accepted at the close beat", async () => {
     const w = await world({ beats: ["B1", "B2", "B3", "B4", "B5"], bindings: [["B2", "C2", null], ["B4", "C2", "final"]] });
-    await expect(sel(w, 4, "B2")).rejects.toThrow(/WHOLE_SESSION_ANSWER_BEFORE_CLOSE/);
+    await expect(sel(w, await wholeLine(), "B2")).rejects.toThrow(/WHOLE_SESSION_ANSWER_BEFORE_CLOSE/);
     expect(await count(w.entry)).toBe(0);
     await expect(sel(w, 1, "B5")).rejects.toThrow(/DETERMINATION_CLOSED/);
-    await sel(w, 4, "B4");
+    await sel(w, await wholeLine(), "B4");
     expect(await count(w.entry)).toBe(1);
   });
   it("a set with no final beat offers its whole session line only at commit", async () => {
     const w = await world({ beats: ["B1", "B2", "B3"], bindings: [["B2", "C2", null]] });
-    await expect(sel(w, 4, "B2")).rejects.toThrow(/WHOLE_SESSION_ANSWER_BEFORE_CLOSE/);
-    await sel(w, 4, "__COMMIT__");
+    await expect(sel(w, await wholeLine(), "B2")).rejects.toThrow(/WHOLE_SESSION_ANSWER_BEFORE_CLOSE/);
+    await sel(w, await wholeLine(), "__COMMIT__");
     expect(await count(w.entry)).toBe(1);
   });
   it("a line that is not a line of the set is refused", async () => {
@@ -82,7 +91,7 @@ describe("CR-20-T2 a whole session line before the close beat, and a final beat 
     const w = await world({ beats: ["B1", "B2", "B3", "B4"], bindings: [["B2", "C2", null], ["B4", "C2", "final"]] });
     expect(await advance(w.entry, "B2")).toMatchObject({ permitted: true });                                  // not the closing beat
     expect(await advance(w.entry, "B4")).toMatchObject({ permitted: false, refusal: "DETERMINATION_UNANSWERED_AT_CLOSING_BEAT", sets: "C2", beat_code: "B4" });
-    await sel(w, 4, "B4");
+    await sel(w, await wholeLine(), "B4");
     expect(await advance(w.entry, "B4")).toMatchObject({ permitted: true });
   });
 });
