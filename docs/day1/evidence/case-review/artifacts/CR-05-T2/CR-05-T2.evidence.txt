@@ -1,6 +1,6 @@
 case CR-05-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-05
 what is run: The challenge succeeds
 expected: The decision is corrected as of its original date; eligibility changes from the correction date; nothing is erased
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 14ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 129ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D2: pass
-    [default] passed 33ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 166ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D3: pass
-    [default] passed 20ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 117ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D4: pass
-    [default] passed 21ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 175ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D5: pass
-    [default] passed 23ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 130ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D8: pass
-    [default] passed 20ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 117ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-D9: pass
     [default] passed 19ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
-    [sandbox] passed 128ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 157ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D2: pass
+    [default] passed 24ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 162ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D3: pass
+    [default] passed 21ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 172ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D4: pass
+    [default] passed 27ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 129ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D5: pass
+    [default] passed 20ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 118ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D8: pass
+    [default] passed 19ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 134ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+D9: pass
+    [default] passed 22ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased
+    [sandbox] passed 152ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the correction date, nothing is erased

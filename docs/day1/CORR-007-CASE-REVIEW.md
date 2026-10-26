@@ -2,7 +2,7 @@
 
 Reviewer: Claude, in the reviewer role. Builder: the same Claude model in the builder role (session `session_01HsSQ1TEzdCLan4rGpsqE4A`). **No other person or system reviewed this.** Dr Tony Mofoke's written approval of 23 October 2026 (CR-219) delegated the build, the tests and their review to the session and said he expects no review of his own; section 5.1 of the package, which asks for a reviewer who is not the one who ran the cases, is met here by role, as the founder allowed, and by nothing more. The key that signs the results is the reviewer role's own (public key `docs/day1/evidence/case-review/reviewer_public.pem`, fingerprint `40176912a64c2edf`); anyone who wants a human or independent review can re-run everything below and sign their own copy.
 
-Build recorded: `T3A-LEVELER-SANDBOX-e8a82dc-20261026`, code commit `e8a82dcb744f` (main at PR 401, migrations to 20270233). Results folder: `docs/day1/evidence/case-review/` (`platform_results.json`, its signature, 104 evidence files).
+Build recorded: `T3A-LEVELER-SANDBOX-3cecc7e-20261026`, code commit `3cecc7e44fa1` (main at PRs 405 and 406, migrations to 20270250). Results folder: `docs/day1/evidence/case-review/` (`platform_results.json`, its signature, 104 evidence files).
 
 ## What was run
 
@@ -10,7 +10,7 @@ The rule tests of CR-01 to CR-32 were run **once per dimension** (D1, D2, D3, D4
 
 Each test file has a primary dimension (the one it declares or names most). For another dimension the run swaps it with the primary everywhere in the file, so the same assertions run on synthetic fixtures of that dimension (sources, mentors, clearances, reports). That proves the platform rule works for that dimension's records; it does not prove anything about a dimension's authored content, which has its own acceptance runs (D2 to D9).
 
-Results (default state / sandbox state, whole database suite per dimension, every test, not only the case tests): D1 509 pass 0 fail in both; D2 502 / 502 (7 fail); D3 503 (6); D4 499 (10); D5 499 (10); D8 497 (12); D9 497 (12). The failures are tests that belong to one dimension's own content (named in the limits below), not case tests, except CR-20-T1 and CR-20-T2. The unit suite ran 517/517 and the switch log (all five on, in order, the whole suite after each: 508/508 and 517/517) is `docs/day1/evidence/switch-rehearsal.json`.
+Results (default state / sandbox state, whole database suite per dimension, every test, not only the case tests): D1 552 pass 0 fail in both; D2 551 (1 fail) in both; D3 550 (2) / 549 (3); D4 549 (3) in both; D5 547 (5) in both; D8 547 (5) in both; D9 547 (5) in both. The failures are tests that belong to one dimension's own content (named in the limits below), not case tests. The one extra failure in the sandbox D3 run, `step0_release_test.mjs` check "a withdrawn report leaves the pool" (a legacy script, mapped to no case), did not reproduce: the same file passed 99/99 when re-run alone in the same state and dimension, and it passed in all other runs, so it is recorded here as a timing flake and not hidden. The unit suite ran 517/517 and the switch log (all five on, in order, the whole suite after each) is `docs/day1/evidence/switch-rehearsal.json`.
 
 ## What I checked as reviewer
 
@@ -22,7 +22,7 @@ Results (default state / sandbox state, whole database suite per dimension, ever
 
 ## Limits, stated as they are
 
-- **CR-20-T1 and CR-20-T2 are shown on D1 only (T2 also on D3).** The timing and capture-line refusals (the reference-beat codes, the whole-session line, the final beat) are built on the D1 question codes (`Q-D1-02`, `Q-D1-07`, `Q-D1-08a`) and the D1 capture sets; the other dimensions have no timing-dependent determination for them to refuse, so the same fixtures answer "permitted". The matrix asks for the rule on every dimension and CR-20-T3 (attestations) is shown on all seven, so the gate's coverage rule is met, but T1 and T2 are **not** shown on D2, D4, D5, D8, D9 (nor T1 on D3). Whether the other dimensions should carry that machinery is a decision for the evidence author; it is recorded here and not hidden.
+- **CR-20 is shown on all seven dimensions, with one honest limit.** The timing machinery is now driven by a registry (`t3a_timing_reference_field`, migration 20270250) instead of the D1 question codes. D1 and D3 use their authored questions; for D2, D4, D5, D8 and D9 the tests register a synthetic question in the registry, because no dimension other than D1 and D3 has an authored question that carries a timing reference (CR-330 to CR-332). So CR-20-T1 and T2 prove the mechanism refuses correctly on every dimension; they do not prove an authored question for D2, D4, D5, D8 or D9, because none exists yet. If the evidence author later authors one, it is registered in one row and the same tests cover it.
 - **CR-16 is a D9 rule** (D1 to D8 read NOT_APPLICABLE in the matrix); its evidence is the D9 list test, unswapped.
 - **CR-31-T2.** "All off" is shown for the five enforcement switches in a database built from the migrations and in the live project (checked 26 October: canonical writers off, ingest legacy_tolerant, required, sequence and gate false). `lsa_activation` is **on** in the live project by the founder's decision (CR-217); the package text predates that decision.
 - **Dimension tests that only hold for their own dimension** and fail on others by design, so are not case tests: the D1 consent-table test in cr08, the per-dimension list tests in cr16, the interim issuance and seal-key production-default tests (cr32 T2, cr29), the single-page-route test for D4 in cr06.
@@ -30,4 +30,4 @@ Results (default state / sandbox state, whole database suite per dimension, ever
 
 ## Verdict
 
-All 104 cases are recorded with PASS: 101 on all seven dimensions, CR-16-T1 on D9 (its only dimension), CR-20-T1 on D1, CR-20-T2 on D1 and D3, with the CR-20 limit above. Every rule is shown on every dimension it applies to. I accept the platform evidence on these terms and sign `platform_results.json`.
+All 104 cases are recorded with PASS: 103 on all seven dimensions and CR-16-T1 on D9 (its only dimension), with the CR-20 limit above. Every rule is shown on every dimension it applies to. I accept the platform evidence on these terms and sign `platform_results.json`.

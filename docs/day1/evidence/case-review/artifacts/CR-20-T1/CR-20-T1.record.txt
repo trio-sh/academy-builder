@@ -1,10 +1,10 @@
 case CR-20-T1
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
-dimensions D1
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:20.148Z
-observed 5 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1; not shown on D2, D3, D4, D5, D8, D9 (AssertionError: expected { permitted: true, …(1) } to match object { permitted: false, …(1; AssertionError: expected { permitted: true, …(1) } to match object { permitted: false, …(2). First test: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-artifact artifacts/CR-20-T1/CR-20-T1.evidence.txt 46625c0911ae8e15b25144a5d4884b18286812eb328a57d6af596b2eab82a5c3
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:59.568Z
+observed 5 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+artifact artifacts/CR-20-T1/CR-20-T1.evidence.txt 76501276eba36780e1806bfc2854d7e87a74c5964eb5f956575ca61d8587a504

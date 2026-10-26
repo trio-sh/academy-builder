@@ -1,6 +1,6 @@
 case CR-04-T3
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-04
 what is run: Identity service unavailable
 expected: Entry refuses; technical failure; no wait
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 14ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 65ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [default] passed 17ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 62ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D2: pass
     [default] passed 12ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 62ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 67ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D3: pass
-    [default] passed 10ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 90ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [default] passed 14ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 63ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D4: pass
-    [default] passed 11ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 84ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [default] passed 14ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 64ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D5: pass
-    [default] passed 15ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 57ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [default] passed 11ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 61ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D8: pass
     [default] passed 12ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 71ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 67ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
 D9: pass
     [default] passed 16ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
-    [sandbox] passed 60ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait
+    [sandbox] passed 74ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait

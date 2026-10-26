@@ -1,6 +1,6 @@
 case CR-17-T8
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-17
 what is run: A first attempt when the first_attempt pool holds no unmet source
 expected: Served from the next retake pool holding one; reason first_attempt_pool_exhausted; the source's own pool recorded
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 53ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 108ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-D2: pass
-    [default] passed 58ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 106ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-D3: pass
-    [default] passed 54ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 89ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-D4: pass
-    [default] passed 38ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 101ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-D5: pass
-    [default] passed 44ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [default] passed 50ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
     [sandbox] passed 99ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+D2: pass
+    [default] passed 54ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 97ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+D3: pass
+    [default] passed 42ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 108ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+D4: pass
+    [default] passed 36ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 123ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+D5: pass
+    [default] passed 45ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
 D8: pass
-    [default] passed 49ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 93ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [default] passed 42ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 103ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
 D9: pass
-    [default] passed 39ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
-    [sandbox] passed 106ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [default] passed 45ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded
+    [sandbox] passed 109ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool is recorded

@@ -65,3 +65,7 @@ The earlier finding was that turning `enforce_required` on stopped 222 of 364 da
 ## Update 26 October: all five switches pass the full suite in the sandbox
 
 `tools/day1/switch_rehearsal.py` re-run on main at PR 401: a fresh database for every step, switches on cumulatively in the stated order (`canonical_writers`, strict ingest, `enforce_required`, `enforce_sequence`, `enforce_gate`), and after each step the full database suite (508 tests) and unit suite (517) pass with 0 failures (`evidence/switch-rehearsal.json`). The sequence and gate closure: a Stage 2 entry fixture gets a Stage 1 confirmation; every fixture account gets consent on creation in the gate run, and the scripts that test consent absence keep bare accounts; the stage entry event derives its participant first (migration 20270133, applied to the live project). The CI database job runs the suite with all three database switches on. In production all five are still OFF (checked on the live project on 26 October); `lsa_activation` is on by CR-217.
+
+## 26 October 2026: final evidence run
+
+The case matrices were re-run on main 3cecc7e (migrations to 20270250) in both states, default (all off) and sandbox (all five on), on every dimension, and the 104 cases re-recorded and re-signed (`docs/day1/evidence/case-review/`). Unit suite 517/517. All five switches are still OFF on the live project; `lsa_activation` stays on by CR-217; stage entry hold time is set (1800).

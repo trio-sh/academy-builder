@@ -1,6 +1,6 @@
 case CR-17-T6
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-17
 what is run: An unmet source of an unmet family exists only in a pool earlier than the matching one
 expected: That source is served; the family fallback is not used
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 48ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 106ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-D2: pass
-    [default] passed 55ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 92ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-D3: pass
-    [default] passed 41ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 115ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-D4: pass
-    [default] passed 37ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 149ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-D5: pass
-    [default] passed 47ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 106ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-D8: pass
     [default] passed 42ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 91ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 114ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+D2: pass
+    [default] passed 44ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 118ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+D3: pass
+    [default] passed 48ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 99ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+D4: pass
+    [default] passed 33ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 127ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+D5: pass
+    [default] passed 37ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 81ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+D8: pass
+    [default] passed 49ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 95ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
 D9: pass
-    [default] passed 36ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
-    [sandbox] passed 97ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [default] passed 51ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used
+    [sandbox] passed 89ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is not used

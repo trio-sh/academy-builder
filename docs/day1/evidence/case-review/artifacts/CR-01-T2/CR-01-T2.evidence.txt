@@ -1,6 +1,6 @@
 case CR-01-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-01
 what is run: The same request after the commit
 expected: Complete, read only
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 25ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 324ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 21ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 486ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D2: pass
-    [default] passed 23ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 305ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 39ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 322ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D3: pass
-    [default] passed 28ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 289ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 31ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 302ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D4: pass
-    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 328ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 28ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 301ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D5: pass
-    [default] passed 27ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 369ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 398ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D8: pass
-    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 374ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 28ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 303ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
 D9: pass
-    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
-    [sandbox] passed 370ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [default] passed 30ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only
+    [sandbox] passed 381ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only

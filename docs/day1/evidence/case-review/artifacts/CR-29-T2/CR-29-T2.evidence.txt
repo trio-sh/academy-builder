@@ -1,6 +1,6 @@
 case CR-29-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-29
 what is run: Rotate the key, then verify a seal made before rotation and one made after
 expected: Both verify, each under its own key version
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 59ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 99ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 274ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 247ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 58ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 120ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 239ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 259ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D2: pass
-    [default] passed 52ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 93ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 235ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 274ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 60ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 109ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 227ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 283ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D3: pass
-    [default] passed 54ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 88ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 223ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 333ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 122ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 114ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 246ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 258ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D4: pass
-    [default] passed 69ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 125ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 251ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 246ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 41ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 92ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 205ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 323ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D5: pass
-    [default] passed 53ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 96ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 167ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 207ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 47ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 109ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 251ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 278ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D8: pass
-    [default] passed 56ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 108ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 228ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 242ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 42ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 109ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 239ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 279ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
 D9: pass
-    [default] passed 59ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [default] passed 117ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
-    [sandbox] passed 199ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
-    [sandbox] passed 257ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [default] passed 46ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [default] passed 116ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version
+    [sandbox] passed 192ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version
+    [sandbox] passed 208ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T2: a seal made before the rotation (k1) and one made after both verify, each under its own version

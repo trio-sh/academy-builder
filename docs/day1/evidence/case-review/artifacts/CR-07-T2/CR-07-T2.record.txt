@@ -1,10 +1,10 @@
 case CR-07-T2
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr07-disputed-clauses.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T18:33:19.250Z
-ended 2026-10-26T18:33:19.709Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T20:50:58.812Z
+ended 2026-10-26T20:50:59.203Z
 observed 1 mapped test(s) in cr07-disputed-clauses.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a
-artifact artifacts/CR-07-T2/CR-07-T2.evidence.txt db4795bc4891f20b6aec492a668a61b7e64b3fe204c61bcc4425b6f830781724
+artifact artifacts/CR-07-T2/CR-07-T2.evidence.txt 19a7e066c630b1c69663441c6f8a815eaa460ea61feb6b023a4576d04a3accc1

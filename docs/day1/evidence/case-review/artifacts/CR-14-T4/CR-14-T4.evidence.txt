@@ -1,6 +1,6 @@
 case CR-14-T4
-build T3A-LEVELER-SANDBOX-e8a82dc-20261026
-commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+build T3A-LEVELER-SANDBOX-3cecc7e-20261026
+commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
 rule CR-14
 what is run: A review covering the form and scope but in draft, or approved by its own author
 expected: Refused
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 72ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 419ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-D2: pass
-    [default] passed 93ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 446ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-D3: pass
-    [default] passed 112ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 7ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 271ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 7ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-D4: pass
-    [default] passed 79ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 379ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-D5: pass
-    [default] passed 104ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 289ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-D8: pass
     [default] passed 82ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
     [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 215ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 328ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+D2: pass
+    [default] passed 68ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 393ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+D3: pass
+    [default] passed 100ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 360ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+D4: pass
+    [default] passed 81ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 3ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 355ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+D5: pass
+    [default] passed 77ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 301ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+D8: pass
+    [default] passed 83ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 301ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
     [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
 D9: pass
-    [default] passed 83ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [default] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
-    [sandbox] passed 435ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
-    [sandbox] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [default] passed 98ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [default] passed 4ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
+    [sandbox] passed 361ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing
+    [sandbox] passed 5ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T4: a review approved by its own author is refused, by the route and by the table
