@@ -1,0 +1,5 @@
+Rollback verification for 20270250000000_timing_reference_field_registry.sql, run on a throwaway copy (schema-only dumps, restrict tokens removed).
+after the migration: table exists: 3 seeded rows; lines changed vs before: 72
+after the rollback: lines differing from the schema before the migration: 0
+table gone: t
+reference_field volatility (i = immutable): i, reference_beat: i
