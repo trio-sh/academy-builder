@@ -1,0 +1,3330 @@
+{
+ "participants": [
+  {
+   "participant_id": "V01",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V02",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V03",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V04",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V05",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V06",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V07",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V08",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V09",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V10",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V11",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V12",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V13",
+   "lsa_consent_state": "never_asked"
+  },
+  {
+   "participant_id": "V15",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V16",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V17",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V18",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V19",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V20",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V21",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V22",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V23",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V24",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V25",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V26",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V27",
+   "lsa_consent_state": "granted"
+  }
+ ],
+ "observations": [
+  {
+   "observation_id": "OD001",
+   "participant_id": "V01",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "c54693da42a23d8a2e648c163b7f231706a497ede5722dd4cd08bc3bd81bfa72"
+  },
+  {
+   "observation_id": "OD002",
+   "participant_id": "V01",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "1e26c2998f339b761992f474fecb6e4751d3654abad7608c0c8dc31728f1139b"
+  },
+  {
+   "observation_id": "OD003",
+   "participant_id": "V02",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "b98b8bd38a9793646e11996a2b3a3e34e32665015ad1993c1f85ffad1464a82c"
+  },
+  {
+   "observation_id": "OD004",
+   "participant_id": "V02",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-004@2.0",
+   "served_instance_hash": "2d659387a27063edcec5f1da303678cfc7b11cf244443ba6bb3a44b9a6f389bf",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "7d45d7ca275e7ef94c94627d41f44a06d24eacb4c334a66fc6fe473b5e077b1e"
+  },
+  {
+   "observation_id": "OD005",
+   "participant_id": "V03",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_NONE",
+   "statement_id": "ST-D5-034",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "440d6fd53502e7392a61155064edcc3e88dac593093aa53f1b828272db674fbc"
+  },
+  {
+   "observation_id": "OD006",
+   "participant_id": "V03",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_WITH_RECORDING",
+   "statement_id": "ST-D5-032",
+   "source_version_id": "SRC-D5-S2-004@2.0",
+   "served_instance_hash": "2d659387a27063edcec5f1da303678cfc7b11cf244443ba6bb3a44b9a6f389bf",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "4a296424a281477fb4b0cec707ed09ab38bbd6e947541ba9dc8acd2c33a390d3"
+  },
+  {
+   "observation_id": "OD007",
+   "participant_id": "V04",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-004@2.0",
+   "served_instance_hash": "2d659387a27063edcec5f1da303678cfc7b11cf244443ba6bb3a44b9a6f389bf",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "d1fd9f9c6d6b32ba04dde98391a203d95215f3b2abe44eda05b7e3eaa7c0b913"
+  },
+  {
+   "observation_id": "OD008",
+   "participant_id": "V04",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-010@2.0",
+   "served_instance_hash": "3bfa9bf0566abfa4907c0d69a5e9b22428858a242bdf1937ca23d3f428807c7a",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-04",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Divided work not arriving from one side",
+   "commit_hash": "bd450fdbacdc72596ead1575876f49c4b4c00fae82c0c6775e0f783ee9ecc018"
+  },
+  {
+   "observation_id": "OD009",
+   "participant_id": "V05",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "6696c094d700a33ac761ffb31bc76bfe7bc1caa5403b718b189d6c5643c94b20"
+  },
+  {
+   "observation_id": "OD010",
+   "participant_id": "V06",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NONE",
+   "statement_id": "ST-D5-042",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "a87b423f66a7292ca240cdf2600404ea826325adf3c4fff03dc47ab3ec92d13c"
+  },
+  {
+   "observation_id": "OD011",
+   "participant_id": "V06",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-004@2.0",
+   "served_instance_hash": "2d659387a27063edcec5f1da303678cfc7b11cf244443ba6bb3a44b9a6f389bf",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "0ae67719bc8b3e5ca48a9813ad24c331187b073c954864f49b2269f2b2950461"
+  },
+  {
+   "observation_id": "OD012",
+   "participant_id": "V07",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_NO_RECORDING",
+   "statement_id": "ST-D5-033",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "3e29fef2dcd664fdc743f45e3038273e57b77dcacdcd084cf3fde96e8c217df1"
+  },
+  {
+   "observation_id": "OD013",
+   "participant_id": "V07",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_NO_RECORDING",
+   "statement_id": "ST-D5-033",
+   "source_version_id": "SRC-D5-S2-003@2.0",
+   "served_instance_hash": "20752ad47643b01ba846e295534a0013a4a43bb15c45e48f0482f2194c8dc846",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Two parties holding different positions on a decision both must work under",
+   "commit_hash": "345e2ac0a4661c491c15bad40626aa3b582185739b79d204632acad77b78d8e4"
+  },
+  {
+   "observation_id": "OD014",
+   "participant_id": "V07",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_WITH_RECORDING",
+   "statement_id": "ST-D5-032",
+   "source_version_id": "SRC-D5-S2-007@2.0",
+   "served_instance_hash": "07f6a9739210f1532f9e17ad464429a2849370d22b0be01510d1feee3bd90b31",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A resource claimed by two parties that cannot serve both",
+   "commit_hash": "3301f0f6a945218483b9d2c64e0256368fc5a7d09baaeb3b54825916a40426d7"
+  },
+  {
+   "observation_id": "OD015",
+   "participant_id": "V08",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_WITH_RECORDING",
+   "statement_id": "ST-D5-032",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "20986cb943c01491cfcf8b97bf068754ee4bc1317c71c5da06d3c9caa06d0259"
+  },
+  {
+   "observation_id": "OD016",
+   "participant_id": "V08",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_NO_RECORDING",
+   "statement_id": "ST-D5-033",
+   "source_version_id": "SRC-D5-S2-003@2.0",
+   "served_instance_hash": "20752ad47643b01ba846e295534a0013a4a43bb15c45e48f0482f2194c8dc846",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Two parties holding different positions on a decision both must work under",
+   "commit_hash": "f68638a172d6c18c03b4359876d0960b762edde5c09da0ae7712f8bad162c0fb"
+  },
+  {
+   "observation_id": "OD017",
+   "participant_id": "V08",
+   "proposition_id": "REK-D5-007",
+   "conduct_element_id": "CE-D5-07",
+   "dimension_id": "D5",
+   "state_code": "AG_WITH_RECORDING",
+   "statement_id": "ST-D5-032",
+   "source_version_id": "SRC-D5-S2-007@2.0",
+   "served_instance_hash": "07f6a9739210f1532f9e17ad464429a2849370d22b0be01510d1feee3bd90b31",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A resource claimed by two parties that cannot serve both",
+   "commit_hash": "152b409c4ece3c4e1c509a9653c1a6593c3d0f6d5aa6d25d2ab9134dc6092635"
+  },
+  {
+   "observation_id": "OD018",
+   "participant_id": "V09",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "3cd9a6425d0cf10d8369c44b40a15f6fbddb75f6638b436b00bd9dc929029b88"
+  },
+  {
+   "observation_id": "OD019",
+   "participant_id": "V09",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S3-001@2.0",
+   "served_instance_hash": "a7893d8f3524f9f220c1052bfd225da2cd4e910c596f5d3897f1d544de0e0bc4",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "work_sample",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D5-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Work sample",
+   "situation_class_label": "Two parties holding different positions on a decision both must work under",
+   "commit_hash": "d2484a684b810e5ab9f9487b338f655fd2853bdc4ead1ee2652cd0d673b525e1"
+  },
+  {
+   "observation_id": "OD020",
+   "participant_id": "V10",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "cc382f0bb94f38ab94463292e564b57259e80c1b1bc10e9c710e5d132fe9c967"
+  },
+  {
+   "observation_id": "OD021",
+   "participant_id": "V10",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S4-001@2.0",
+   "served_instance_hash": "21a886abf0584c9534ee581a096a03454bc907662f9888003a6d583f663926fb",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "group_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Group session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "37ffe58d2eb9e35332fb85a3d0c0f3409630e7c6aed10686d975b5582a34c28f"
+  },
+  {
+   "observation_id": "OD022",
+   "participant_id": "V11",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "719cbb6c144acf7ad08ada9c95d22e8f2738c3eca93e7b65834762b3e7cdf11c"
+  },
+  {
+   "observation_id": "OD023",
+   "participant_id": "V11",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "0ba4500eff119450a9ad557d41a2826e8ac4d98dac01aadc2acb799f839f84cb"
+  },
+  {
+   "observation_id": "OX024",
+   "participant_id": "V12",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "020ce65d24fd210caf0476c0ce07028b0171dfc2041595394bcdface0fa94e9e"
+  },
+  {
+   "observation_id": "OX025",
+   "participant_id": "V12",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "8b079200d7e8ee6f19c495e140c952a0fa0f5a60908ae2311eb57f308a9e9d5e"
+  },
+  {
+   "observation_id": "OD026",
+   "participant_id": "V13",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "8853b67fdc698719b976c02de8f33284001d93c15d229c694b0e15cd9696fdfb"
+  },
+  {
+   "observation_id": "OD027",
+   "participant_id": "V13",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "41c9cf4ca9bbcca31b9cbd41e6725a95c51650c2b214ca9d8c39177cfdfb6ef4"
+  },
+  {
+   "observation_id": "OD028",
+   "participant_id": "V19",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "dad883ec58ef894c51cfed7f0c60e32406920f9a4d9a625da1eac7aab2ddc954"
+  },
+  {
+   "observation_id": "OD029",
+   "participant_id": "V19",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "retake_after_redirect",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "f1602ce18aaa15a918b5a1767ae627b67e24bbf92c34981cccead64d9c656930"
+  },
+  {
+   "observation_id": "OD030",
+   "participant_id": "V20",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "2e48d825e5ed2d670acb1c7b4660db1fc804eaa42af684617ad911fa27a255be"
+  },
+  {
+   "observation_id": "OD031",
+   "participant_id": "V20",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "445962ca72dff6eecd57c935ea2679c96ec0c63c80a6889a3e1c01efdf6805e5"
+  },
+  {
+   "observation_id": "OD032",
+   "participant_id": "V20",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-004@2.0",
+   "served_instance_hash": "2d659387a27063edcec5f1da303678cfc7b11cf244443ba6bb3a44b9a6f389bf",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A working relationship to be formed where none exists",
+   "commit_hash": "7dafb3d02a1bdb4a0e3562b87d9fd54eb6fe38649fa1b8d4892cfdb77a01aaf2"
+  },
+  {
+   "observation_id": "OD033",
+   "participant_id": "V15",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "fd6747612413857745c600f2ea72549c67b3f5783280ac19bfe31accbb007c2e"
+  },
+  {
+   "observation_id": "OD035",
+   "participant_id": "V16",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "7b8e1fee5b2e74323cf5be13a9b5953e1bf6d42cdd87dbc40e900eb62f0e9258"
+  },
+  {
+   "observation_id": "OD037",
+   "participant_id": "V17",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "254ccee89249886e33064e8bdddb62da47f0e74b49f07fe707c0eaeaf5c4539e"
+  },
+  {
+   "observation_id": "OD039",
+   "participant_id": "V18",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "d60e03f59c0789d91c55bfedb3f79d046fd4b4c4bdbfd243bee81685c13e708f"
+  },
+  {
+   "observation_id": "OD041",
+   "participant_id": "V21",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "7be559b80574b0a9085f362a503a03a1bedcc4f8ecf06c7832450466c060b2b2"
+  },
+  {
+   "observation_id": "OD043",
+   "participant_id": "V22",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "246ea89c357181f5952675acbc5f84d55abe2352a422bca50887d14e7200db49"
+  },
+  {
+   "observation_id": "OD045",
+   "participant_id": "V23",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "0314f0a89946ab25300e3f7dc793d4adf8fed17b055bc1183c8d09a89e8db93f"
+  },
+  {
+   "observation_id": "OD047",
+   "participant_id": "V24",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "612449fc8646b7f4607098a33a02b679dcb5c4ceb7759d7a4a344db0f2b042d4"
+  },
+  {
+   "observation_id": "OD048",
+   "participant_id": "V24",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_STEP_AND_PARTY",
+   "statement_id": "ST-D5-039",
+   "source_version_id": "SRC-D5-S2-002@2.0",
+   "served_instance_hash": "d35789634d85b8911cc52bfb90e6094cb91bd0d3a91f24e80c05e68e0e538666",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-05",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Something needed from a party over whom there is no authority",
+   "commit_hash": "ce69f40e7c682d4989d6b69f2c266d97fd68a8c4b04138c18fd4a9bea92e0b4e"
+  },
+  {
+   "observation_id": "OD049",
+   "participant_id": "V25",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "d501bbd648bb3392742c71f91d74c024f9c52c02512f0326eacce8fd75a1a98e"
+  },
+  {
+   "observation_id": "OD051",
+   "participant_id": "V26",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "8f83268dd34ae43a548fe783a5d21aba813540f14d258e452ed47b3e6b1ce5c1"
+  },
+  {
+   "observation_id": "OD053",
+   "participant_id": "V27",
+   "proposition_id": "REK-D5-008",
+   "conduct_element_id": "CE-D5-08",
+   "dimension_id": "D5",
+   "state_code": "CN_NO_PARTY",
+   "statement_id": "ST-D5-040",
+   "source_version_id": "SRC-D5-S2-001@2.0",
+   "served_instance_hash": "b8138729d89f37711ac75764bfc7c379aad15efce31e83bf748762a6ccccd6c9",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D5-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A contribution presented as another party's",
+   "commit_hash": "4e12e47279597db5804259c840782c917c23518402905e8b1d56cd43ee59d5a2"
+  }
+ ],
+ "cases": [
+  {
+   "case_id": "T01",
+   "participant_id": "V01",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T02",
+   "participant_id": "V02",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T03",
+   "participant_id": "V03",
+   "proposition_id": "REK-D5-007",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T04",
+   "participant_id": "V04",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T05",
+   "participant_id": "V05",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T06",
+   "participant_id": "V06",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T07",
+   "participant_id": "V07",
+   "proposition_id": "REK-D5-007",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T08",
+   "participant_id": "V08",
+   "proposition_id": "REK-D5-007",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T09",
+   "participant_id": "V09",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T10",
+   "participant_id": "V10",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T11",
+   "participant_id": "V11",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T12",
+   "participant_id": "V12",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T13",
+   "participant_id": "V13",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T15",
+   "participant_id": "V15",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T16",
+   "participant_id": "V16",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T17",
+   "participant_id": "V17",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T18",
+   "participant_id": "V18",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T19",
+   "participant_id": "V19",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T20",
+   "participant_id": "V20",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T21",
+   "participant_id": "V21",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T22",
+   "participant_id": "V22",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T23",
+   "participant_id": "V23",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T24",
+   "participant_id": "V24",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T25",
+   "participant_id": "V25",
+   "proposition_id": "REK-D5-008",
+   "dimension_id": "D5",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  }
+ ],
+ "load_tests": [
+  {
+   "id": "LD1 forward cycle in the continuation states",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D5-REK007",
+      "proposition_id": "REK-D5-007",
+      "conduct_element_id": "CE-D5-07",
+      "members": [
+       {
+        "source_version_id": "SRC-D5-S2-001@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-002@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-003@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-004@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-007@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-008@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-009@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-010@2.0",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "AG_NO_RECORDING",
+       "AG_WITH_RECORDING",
+       "AG_NONE_REACHED"
+      ],
+      "absence_states": [
+       "AG_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D5-REK008",
+      "proposition_id": "REK-D5-008",
+      "conduct_element_id": "CE-D5-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D5-S2-001@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-002@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-003@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-004@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-007@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-008@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-009@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-010@2.0",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "CN_NO_PARTY",
+       "CN_STEP_AND_PARTY",
+       "CN_TO_AUTHORITY"
+      ],
+      "absence_states": [
+       "CN_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D5-007",
+      "family_id": "FAM-D5-REK007",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "AG_NO_RECORDING",
+        "to_state": "AG_WITH_RECORDING",
+        "direction": "forward"
+       },
+       {
+        "from_state": "AG_WITH_RECORDING",
+        "to_state": "AG_NO_RECORDING",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D5-007, held by the founder",
+      "forward_label": "toward stating how an agreement is recorded",
+      "backward_label": "away from stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D5-008",
+      "family_id": "FAM-D5-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "CN_NO_PARTY",
+        "to_state": "CN_STEP_AND_PARTY",
+        "direction": "forward"
+       },
+       {
+        "from_state": "CN_STEP_AND_PARTY",
+        "to_state": "CN_NO_PARTY",
+        "direction": "backward"
+       },
+       {
+        "from_state": "CN_STEP_AND_PARTY",
+        "to_state": "CN_NO_PARTY",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D5-008, held by the founder",
+      "forward_label": "toward stating who a next step goes to",
+      "backward_label": "away from stating who a next step goes to"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D5",
+      "applies_to": "D5",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-insufficient_evidence",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-comparison_not_established",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-consistent_recorded_conduct",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-different_no_direction",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-documented_progression",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating how an agreement is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated, toward stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-documented_regression",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating how an agreement is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated, away from stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-mixed_trajectory",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-insufficient_evidence",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-comparison_not_established",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-different_no_direction",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-documented_progression",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved toward stating who a next step goes to, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference, toward stating who a next step goes to"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-documented_regression",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved away from stating who a next step goes to, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference, away from stating who a next step goes to"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-mixed_trajectory",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D5",
+      "applies_to": "D5",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D5",
+      "dimension_id": "D5",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-01",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-02",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-03",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-04",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-05",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-06",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-07",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  },
+  {
+   "id": "LD2 absence state in a direction",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D5-REK007",
+      "proposition_id": "REK-D5-007",
+      "conduct_element_id": "CE-D5-07",
+      "members": [
+       {
+        "source_version_id": "SRC-D5-S2-001@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-002@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-003@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-004@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-007@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-008@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-009@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-010@2.0",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "AG_NO_RECORDING",
+       "AG_WITH_RECORDING",
+       "AG_NONE_REACHED"
+      ],
+      "absence_states": [
+       "AG_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D5-REK008",
+      "proposition_id": "REK-D5-008",
+      "conduct_element_id": "CE-D5-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D5-S2-001@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-002@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-003@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-004@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-007@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-008@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-009@2.0",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D5-S2-010@2.0",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "CN_NO_PARTY",
+       "CN_STEP_AND_PARTY",
+       "CN_TO_AUTHORITY"
+      ],
+      "absence_states": [
+       "CN_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D5-007",
+      "family_id": "FAM-D5-REK007",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "AG_NO_RECORDING",
+        "to_state": "AG_WITH_RECORDING",
+        "direction": "forward"
+       },
+       {
+        "from_state": "AG_WITH_RECORDING",
+        "to_state": "AG_NO_RECORDING",
+        "direction": "backward"
+       },
+       {
+        "from_state": "AG_NONE",
+        "to_state": "AG_NO_RECORDING",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D5-007, held by the founder",
+      "forward_label": "toward stating how an agreement is recorded",
+      "backward_label": "away from stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D5-008",
+      "family_id": "FAM-D5-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "CN_NO_PARTY",
+        "to_state": "CN_STEP_AND_PARTY",
+        "direction": "forward"
+       },
+       {
+        "from_state": "CN_STEP_AND_PARTY",
+        "to_state": "CN_NO_PARTY",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D5-008, held by the founder",
+      "forward_label": "toward stating who a next step goes to",
+      "backward_label": "away from stating who a next step goes to"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D5",
+      "applies_to": "D5",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-insufficient_evidence",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-comparison_not_established",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-consistent_recorded_conduct",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-different_no_direction",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-documented_progression",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating how an agreement is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated, toward stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-documented_regression",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating how an agreement is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated, away from stating how an agreement is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-007-mixed_trajectory",
+      "proposition_id": "REK-D5-007",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating an agreement and how it is recorded",
+      "element_short": "Agreement and recording stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "AG_NO_RECORDING": {
+        "full": "Stated an agreement with no statement about recording it",
+        "short": "no recording stated"
+       },
+       "AG_WITH_RECORDING": {
+        "full": "Stated an agreement and how it is recorded",
+        "short": "recording stated"
+       },
+       "AG_NONE_REACHED": {
+        "full": "Stated that no agreement had been reached",
+        "short": "none reached"
+       },
+       "AG_NONE": {
+        "full": "No agreement stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Closing a discussion with a colleague or another team where something has been settled between you",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "agreement and recording stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-insufficient_evidence",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-comparison_not_established",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-different_no_direction",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-documented_progression",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved toward stating who a next step goes to, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference, toward stating who a next step goes to"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-documented_regression",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved away from stating who a next step goes to, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference, away from stating who a next step goes to"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D5-008-mixed_trajectory",
+      "proposition_id": "REK-D5-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating what happens if a difference continues",
+      "element_short": "Next step for a continuing difference",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "CN_NO_PARTY": {
+        "full": "Stated a next step without its recipient",
+        "short": "no party named"
+       },
+       "CN_STEP_AND_PARTY": {
+        "full": "Stated a next step and its recipient",
+        "short": "step and party"
+       },
+       "CN_TO_AUTHORITY": {
+        "full": "Stated that the difference goes to an authority",
+        "short": "to an authority"
+       },
+       "CN_NONE": {
+        "full": "Nothing stated about the difference continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Ending a discussion where a difference with another party is still open",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "next step for a continuing difference"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D5",
+      "applies_to": "D5",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D5",
+      "dimension_id": "D5",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-01",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-02",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-03",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-04",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-05",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-06",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D5-07",
+      "dimension_id": "D5",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  }
+ ],
+ "dimension_cases": [
+  {
+   "id": "DD1 both D5 elements progressed",
+   "dimension_id": "D5",
+   "element_results": [
+    [
+     "CE-D5-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D5-07",
+     "documented_progression"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_progression"
+   }
+  },
+  {
+   "id": "DD2 one element only compared",
+   "dimension_id": "D5",
+   "element_results": [
+    [
+     "CE-D5-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D5-07",
+     "insufficient_evidence"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_pattern_only_coverage"
+   }
+  }
+ ]
+}

@@ -1,0 +1,162 @@
+{
+ "package": "T3A-D8-Hans-Build-Folder-v2_1",
+ "run_from": "the package folder (a scratch copy outside the repository)",
+ "date": "2026-10-24",
+ "environment": {
+  "python": "Python 3.11.17",
+  "pip_packages_pinned_and_installed": {
+   "cryptography": "46.0.6",
+   "pillow": "12.1.1",
+   "playwright": "1.56.0",
+   "python-barcode": "0.16.1",
+   "reportlab": "4.4.10",
+   "segno": "1.6.6",
+   "zxing-cpp": "3.1.1"
+  },
+  "chromium_for_python_playwright": "Chromium 141.0.7390.37 (/opt/pw-browsers/chromium-1194), python -m playwright install chromium exit 0",
+  "poppler-utils": "24.02.0-1ubuntu9.9 (pdftotext 24.02.0)",
+  "fonts-liberation": "1:2.1.5-3",
+  "node": "v22.22.0",
+  "postgres_for_the_platform_tests": "16 (throwaway cluster)"
+ },
+ "summary": {
+  "pass": 10,
+  "fail": 0,
+  "not_run": 1,
+  "of": 11
+ },
+ "checks": [
+  {
+   "no": "3.1.1",
+   "command": "python3 03_SOP_002_Tools/validate_dimension.py 01_D8_Observation_Pathway/T3A-D8-Observation-Pathway-Execution-Edition-v2_1-DEVELOPER-HANDOFF-CANDIDATE.md",
+   "pass_condition": "PASS, zero errors",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "PASS — zero errors. Form checks pass; run the Part L completion tests before issue."
+   ]
+  },
+  {
+   "no": "3.1.2",
+   "command": "t3a_pathway_reference.py ... --out my_golden --platform-manifest ... --trusted-public-key ... --ber-dir ... --companion-dir ...",
+   "pass_condition": "L.1, L.2, L.4, L.5 and L.7 PASS. L.3 and L.6 read FAIL in this trial folder only because the founder's review is still open (the expected trial result)",
+   "result": "PASS",
+   "exit_code": 1,
+   "evidence": "NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (44), L.4 PASS, L.5 PASS, L.6 FAIL (376), L.7 PASS",
+   "note": "Exit code 1 is the tool's own code for NOT COMPLETE, which the read me names as the expected trial result (the founder's review of 44 entry propositions and 34 sources with ten questions each is open). It is not a failure of this build and no pending item was treated as approved."
+  },
+  {
+   "no": "3.1.3",
+   "command": "python3 01_D8_Observation_Pathway/T3A-D8-Observation-Pathway-Compare-Golden.py 01_D8_Observation_Pathway/golden my_golden",
+   "pass_condition": "IDENTICAL: JSON and Markdown byte for byte, PDFs by their text",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "IDENTICAL: 94 files (PDFs by text)"
+   ]
+  },
+  {
+   "no": "3.1.4",
+   "command": "python3 01_D8_Observation_Pathway/T3A-D8-Observation-Pathway-Verify-Build-Package.py <package.json> <manifest.json> <golden> --ee <EE> --key SAMPLE_TEST_ONLY_D8_public.pem",
+   "pass_condition": "VERIFIED, including the file on disk and the manifest signature",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "PASS: sections reproduce the Execution Edition cf111be7c495",
+    "PASS: the Execution Edition on disk is the file this package was derived from",
+    "PASS: manifest signature verified against the trusted key",
+    "PASS: all 15 platform copies match the manifest",
+    "PASS: golden output digests match",
+    "VERIFIED"
+   ]
+  },
+  {
+   "no": "3.1.5",
+   "command": "python3 06_Joint_Trial/make_d8_trial.py",
+   "pass_condition": "ADMISSION PASS: eleven attacks refused, each with its expected code, and the store refuses the duplicate key at write",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "  refused V27 OD054 ADM-12 observation identifier not unique in the ledger: no record is read",
+    "store refuses a duplicate observation key at write: True",
+    "ADMISSION PASS: every attack refused with its expected code"
+   ]
+  },
+  {
+   "no": "3.1.6",
+   "command": "python3 05_Session_Archive/lsa_reference/lsa_reference.py 06_Joint_Trial/lsa_d8",
+   "pass_condition": "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests: failures 0",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0"
+   ]
+  },
+  {
+   "no": "3.1.7",
+   "command": "python3 06_Joint_Trial/same_event_test.py",
+   "pass_condition": "RESULT PASS on every line (Table 4.3)",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "a second record under a committed observation key is refused and neither is read (D8-66): PASS",
+    "a Session Archive fault leaves the report unchanged: PASS",
+    "a report fault leaves the Session Archive unchanged: PASS: report refused: entry_not_approved: ST-D8-NOT-IN-LIBRARY",
+    "RESULT PASS"
+   ],
+   "note": "Run in full, Session Archive half included, with the pinned reportlab, segno, python-barcode, zxing-cpp (a real decode of the QR and the barcode), Pillow and the pinned Playwright 1.56.0 with Chromium 141.0.7390.37."
+  },
+  {
+   "no": "3.1.8",
+   "command": "cd 05_Session_Archive/lsa_render_reference && python3 build_reference_btr.py --check && python3 build_reference_btr.py --set=stress --check",
+   "pass_condition": "Both manifests match; identity, isolation and duplicate key checks pass",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "manifest matches expected_manifest.json",
+    "identity binding holds with another participant listed first",
+    "another participant reusing a session identifier changes nothing",
+    "a duplicate participant, session and proposition key refuses",
+    "manifest matches expected_manifest.json",
+    "identity binding holds with another participant listed first",
+    "another participant reusing a session identifier changes nothing",
+    "a duplicate participant, session and proposition key refuses"
+   ]
+  },
+  {
+   "no": "3.1.9",
+   "command": "cd 05_Session_Archive && python3 independent_hardening_tests.py .",
+   "pass_condition": "4 passed",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": [
+    "4 independent hardening tests passed"
+   ]
+  },
+  {
+   "no": "3.1.10",
+   "command": "cd 03_SOP_002_Tools && python3 -u run_regression.py sample_D0.md platform_manifest_D0.json SAMPLE_TEST_ONLY_public.pem --ber-dir ../04_Behavioral_Evidence_Report_Multipage > regression_log.txt; echo $?",
+   "pass_condition": "215 of 215 faults refused; 10 of 10 positive cases accepted; exit code 0",
+   "result": "PASS",
+   "exit_code": 0,
+   "evidence": "215 of 215 faults refused by their named rule; 10 of 10 positive cases accepted",
+   "note": "The full log is docs/day1/evidence/d8-package-regression-log.txt (227 lines)."
+  },
+  {
+   "no": "3.1.11",
+   "command": "find 03_SOP_002_Tools 04_Behavioral_Evidence_Report_Multipage 05_Session_Archive -type f ! -path '*/__pycache__/*' -print0 | sort -z | xargs -0 sha256sum > shared.sha256, then diff against the D2, D3, D4 and D5 folders",
+   "pass_condition": "Identical, except the two files of T3A-SHARED-CORR-001 in a folder that has not yet taken them",
+   "result": "NOT_RUN",
+   "exit_code": null,
+   "evidence": {
+    "files_listed": 49,
+    "the_two_corrected_files_match_T3A-SHARED-CORR-001_table_2.1": true,
+    "sha256_of_the_two": {
+     "04_Behavioral_Evidence_Report_Multipage/README.md": "8dad29f19011f774349efa3960aa3dbf9062e86ecce05d001701795f8dea247a",
+     "05_Session_Archive/T3A-DEV-REQ-LSA-001_Session_Archive_Platform_Request.md": "8510874b95f89545435bd0b15c27cbb6c6e25f88ab141ff7aa17437634ffde40"
+    }
+   },
+   "note": "NOT RUN IN FULL: the D2, D3, D4 and D5 build folders are not held in this environment, so the diff of the lists cannot be made. What was checked: the two files of T3A-SHARED-CORR-001 carry the SHA-256 the note gives for \"after\"; the list of this folder is recorded in docs/day1/evidence/d8-shared.sha256 for the coordinator to diff against the other folders. Per read me 3.1.11 nothing else is built from a folder that differs; this build uses no shared module from this folder other than as checked above (the multi page renderer and the Session Archive are those already in the repository, extended by content only). The platform shared files in the repository (src/lib/berMultipage, tools/lsa) were not replaced."
+  }
+ ]
+}

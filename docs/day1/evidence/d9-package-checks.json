@@ -1,0 +1,268 @@
+{
+ "folder": "T3A-D9-Handover/01_Hans_Build_Folder_TRIAL, copied to a scratch folder and run there (the issued folder was not written to); run in a clean virtual environment holding only requirements-build-folder.txt",
+ "run_on": "24 October 2026",
+ "environment": {
+  "python": "Python 3.11.17",
+  "packages": {
+   "cryptography": "46.0.6",
+   "pillow": "12.1.1",
+   "playwright": "1.56.0",
+   "python-barcode": "0.16.1",
+   "reportlab": "4.4.10",
+   "segno": "1.6.6",
+   "zxing-cpp": "3.1.1"
+  },
+  "chromium": "chromium-1194 (the build Playwright 1.56.0 pins), found at /opt/pw-browsers and used through PLAYWRIGHT_BROWSERS_PATH; no download was needed",
+  "poppler": "pdftotext version 24.02.0",
+  "fonts_liberation": "present (fc-list shows Liberation Sans)"
+ },
+ "checks": [
+  {
+   "no": "3.1.0",
+   "check": "preflight",
+   "command": "python3 preflight_environment.py",
+   "pass_condition": "PREFLIGHT PASS on every line",
+   "exit_code": 0,
+   "seconds": 0.6,
+   "output_tail": [
+    "PASS Pillow==12.1.1",
+    "PASS cryptography==46.0.6",
+    "PASS playwright==1.56.0",
+    "PASS python-barcode==0.16.1",
+    "PASS reportlab==4.4.10",
+    "PASS segno==1.6.6",
+    "PASS zxing-cpp==3.1.1",
+    "PASS pdftotext (poppler-utils)",
+    "PASS pdfinfo (poppler-utils)",
+    "PASS fonts-liberation",
+    "PASS playwright chromium launches",
+    "PREFLIGHT PASS"
+   ]
+  },
+  {
+   "no": "3.1.1",
+   "check": "validator",
+   "command": "python3 03_SOP_002_Tools/validate_dimension.py 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Execution-Edition-v1_1-DEVELOPER-HANDOFF-CANDIDATE.md",
+   "pass_condition": "PASS, zero errors",
+   "exit_code": 0,
+   "seconds": 0.9,
+   "output_tail": [
+    "PASS \u2014 zero errors. Form checks pass; run the Part L completion tests before issue."
+   ]
+  },
+  {
+   "no": "3.1.2",
+   "check": "Part L reference tool",
+   "command": "python3 03_SOP_002_Tools/t3a_pathway_reference.py 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Execution-Edition-v1_1-DEVELOPER-HANDOFF-CANDIDATE.md --out my_golden --platform-manifest 02_Platform_Manifest/T3A-D9-Observation-Pathway-Platform-Manifest.json --trusted-public-key 02_Platform_Manifest/SAMPLE_TEST_ONLY_D9_public.pem --ber-dir 04_Behavioral_Evidence_Report_Multipage --companion-dir 01_D9_Observation_Pathway",
+   "pass_condition": "L.1, L.2, L.4, L.5 and L.7 PASS; L.3 and L.6 FAIL only because the founder review is open",
+   "exit_code": 1,
+   "seconds": 17.9,
+   "output_tail": [
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-03 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue",
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-04 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue",
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-05 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue",
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-06 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue",
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-07 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue",
+    "   L.6 [L.6] SRC-D9-S1-004: RQ-08 is answered \"Pending\"; every judgment question must be answered No, meaning nothing was found, before issue"
+   ],
+   "exit_code_note": "exit 1 is the expected trial result: L.3 and L.6 read FAIL only because the founder review is open (read me 1.0.1 and Table 3.1 row 3.1.2)",
+   "summary_lines": [
+    "NOT COMPLETE: L.1 PASS, L.2 PASS, L.3 FAIL (44), L.4 PASS, L.5 PASS, L.6 FAIL (387), L.7 PASS"
+   ],
+   "l3_l6_findings": {
+    "L.3": 40,
+    "L.6": 40,
+    "L.1_L.2_L.4_L.5_L.7_findings": 0
+   }
+  },
+  {
+   "no": "3.1.3",
+   "check": "golden compare",
+   "command": "python3 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Compare-Golden.py 01_D9_Observation_Pathway/golden my_golden",
+   "pass_condition": "IDENTICAL",
+   "exit_code": 0,
+   "seconds": 1.7,
+   "output_tail": [
+    "IDENTICAL: 94 files (PDFs by text)"
+   ]
+  },
+  {
+   "no": "3.1.4",
+   "check": "build package verifier",
+   "command": "python3 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Verify-Build-Package.py 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Build-Package-v1_1.json 02_Platform_Manifest/T3A-D9-Observation-Pathway-Platform-Manifest.json 01_D9_Observation_Pathway/golden --ee 01_D9_Observation_Pathway/T3A-D9-Observation-Pathway-Execution-Edition-v1_1-DEVELOPER-HANDOFF-CANDIDATE.md --key 02_Platform_Manifest/SAMPLE_TEST_ONLY_D9_public.pem",
+   "pass_condition": "VERIFIED",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "output_tail": [
+    "PASS: sections reproduce the Execution Edition 8884ba5ae132",
+    "PASS: the Execution Edition on disk is the file this package was derived from",
+    "PASS: manifest signature verified against the trusted key",
+    "PASS: all 15 platform copies match the manifest",
+    "PASS: golden output digests match",
+    "VERIFIED"
+   ]
+  },
+  {
+   "no": "3.1.5",
+   "check": "joint trial (admission)",
+   "command": "python3 06_Joint_Trial/make_d9_trial.py",
+   "pass_condition": "ADMISSION PASS: eleven attacks refused",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "output_tail": [
+    "55 candidates; 54 ledger entries; 44 admitted; 11 refused at admission; 24 cases",
+    "  refused V15 OD034 ADM-04 statement is not the D9 entry the committed captures carry",
+    "  refused V16 OD036 ADM-03 served instance does not match the approved source",
+    "  refused V17 OD038 ADM-04 statement is not the D9 entry the committed captures carry",
+    "  refused V18 OD040 ADM-02 source version not approved in this package",
+    "  refused V21 OD042 ADM-06 no committed observation in the ledger",
+    "  refused V22 OD044 ADM-08 state is not the state the committed captures carry",
+    "  refused V23 OD046 ADM-09 dimension, element, proposition, statement or source binding does not hold",
+    "  refused V24 OD048 ADM-10 replayed: this participant, observation and proposition was already admitted",
+    "  refused V25 OD050 ADM-07 ledger entry fails its commit seal",
+    "  refused V26 OD052 ADM-07 ledger entry fails its commit seal",
+    "  refused V27 OD054 ADM-12 observation identifier not unique in the ledger: no record is read",
+    "store refuses a duplicate observation key at write: True",
+    "ADMISSION PASS: every attack refused with its expected code"
+   ]
+  },
+  {
+   "no": "3.1.6",
+   "check": "session archive reference",
+   "command": "python3 05_Session_Archive/lsa_reference/lsa_reference.py 06_Joint_Trial/lsa_d9",
+   "pass_condition": "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests: failures 0",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "output_tail": [
+    "pass T20 mixed_trajectory",
+    "pass T21 insufficient_evidence",
+    "pass T22 insufficient_evidence",
+    "pass T23 insufficient_evidence",
+    "pass T24 documented_progression",
+    "pass T25 insufficient_evidence",
+    "pass load LD1 forward cycle in the continuation states contradictory transition",
+    "pass load LD2 absence state in a direction LSA-R12 absence state used in a directio",
+    "pass DD1 both D9 elements progressed dimension_progression ",
+    "pass DD2 one element only compared dimension_pattern_only_coverage ",
+    "pass calendar month subtraction",
+    "pass verification code format and uniqueness",
+    "",
+    "24 resolution cases, 2 dimension cases, 2 load tests, 2 code tests; failures: 0"
+   ]
+  },
+  {
+   "no": "3.1.7",
+   "check": "same event test",
+   "command": "python3 06_Joint_Trial/same_event_test.py",
+   "pass_condition": "RESULT PASS on every line",
+   "exit_code": 0,
+   "seconds": 2.9,
+   "output_tail": [
+    "Session Archive report names both D9 elements and their direction: PASS",
+    "rendered report shows exactly the resolved observations: PASS: 4 dated boxes",
+    "both products cite only committed observations, correctly: PASS",
+    "the report observation is in the Session Archive sequence with identical references: PASS",
+    "tamper: report statement changed: PASS",
+    "tamper: report cites another participant: PASS",
+    "tamper: Session Archive source hash changed: PASS",
+    "tamper: ledger altered after commit: PASS",
+    "tamper: altered ledger refused at admission: PASS",
+    "tamper: altered ledger with its hash recomputed is still refused (D9-65): PASS",
+    "a second record under a committed observation key is refused and neither is read (D9-66): PASS",
+    "a Session Archive fault leaves the report unchanged: PASS",
+    "a report fault leaves the Session Archive unchanged: PASS: report refused: entry_not_approved: ST-D9-NOT-IN-LIBRARY",
+    "RESULT PASS"
+   ]
+  },
+  {
+   "no": "3.1.8a",
+   "check": "session archive render reference",
+   "command": "python3 build_reference_btr.py --check",
+   "pass_condition": "manifest matches",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "output_tail": [
+    "manifest matches expected_manifest.json",
+    "identity binding holds with another participant listed first",
+    "another participant reusing a session identifier changes nothing",
+    "a duplicate participant, session and proposition key refuses"
+   ]
+  },
+  {
+   "no": "3.1.8b",
+   "check": "session archive render reference, stress set",
+   "command": "python3 build_reference_btr.py --set=stress --check",
+   "pass_condition": "manifest matches",
+   "exit_code": 0,
+   "seconds": 0.0,
+   "output_tail": [
+    "manifest matches expected_manifest.json",
+    "identity binding holds with another participant listed first",
+    "another participant reusing a session identifier changes nothing",
+    "a duplicate participant, session and proposition key refuses"
+   ]
+  },
+  {
+   "no": "3.1.9",
+   "check": "independent hardening tests",
+   "command": "python3 independent_hardening_tests.py .",
+   "pass_condition": "4 passed",
+   "exit_code": 0,
+   "seconds": 0.1,
+   "output_tail": [
+    "PASS participant-proposition-scoped clause lookup; unrelated participant data cannot enter BTR",
+    "PASS duplicate participant/session/proposition key refuses",
+    "PASS observation after snapshot excluded from report",
+    "PASS observation committed after snapshot excluded from report",
+    "4 independent hardening tests passed"
+   ]
+  },
+  {
+   "no": "3.1.10",
+   "check": "regression corpus",
+   "command": "cd 03_SOP_002_Tools && python3 -u run_regression.py sample_D0.md platform_manifest_D0.json SAMPLE_TEST_ONLY_public.pem --ber-dir ../04_Behavioral_Evidence_Report_Multipage > regression_log.txt; echo $?",
+   "pass_condition": "215 of 215 faults refused; 10 of 10 positive cases accepted; exit code 0",
+   "exit_code": 0,
+   "seconds": 183,
+   "output_tail": [
+    "ACCEPTED P08 a label placeholder resolved from a declared label field on every source",
+    "ACCEPTED P09 a comparative against the situation's own record, with its operator declared",
+    "",
+    "215 of 215 faults refused by their named rule; 10 of 10 positive cases accepted"
+   ],
+   "full_log_lines": 227
+  },
+  {
+   "no": "3.1.11",
+   "check": "shared folders 03, 04 and 05 identical to the other dimension folders",
+   "command": "find 03_SOP_002_Tools 04_Behavioral_Evidence_Report_Multipage 05_Session_Archive -type f ! -path \"*/__pycache__/*\" | sort | xargs sha256sum",
+   "pass_condition": "Identical, except the two files of T3A-SHARED-CORR-001 in a folder that has not yet taken them",
+   "exit_code": null,
+   "result": "NOT RUN against another folder: the D2, D3, D4, D5 and D8 folders are not held in this environment, so there is nothing to diff against. What was checked instead: (a) the two files of T3A-SHARED-CORR-001 carry the digests the correction states for the corrected folder; (b) the digest list of the issued shared files is recorded (49 files); (c) the checks ran in a copy of the folder and the issued shared files are unchanged in it (49 of 49 files before the checks wrote their own outputs)",
+   "shared_corr_001_files": {
+    "04_Behavioral_Evidence_Report_Multipage/README.md": {
+     "expected_after_correction": "8dad29f19011f774349efa3960aa3dbf9062e86ecce05d001701795f8dea247a",
+     "found": "8dad29f19011f774349efa3960aa3dbf9062e86ecce05d001701795f8dea247a",
+     "match": true
+    },
+    "05_Session_Archive/T3A-DEV-REQ-LSA-001_Session_Archive_Platform_Request.md": {
+     "expected_after_correction": "8510874b95f89545435bd0b15c27cbb6c6e25f88ab141ff7aa17437634ffde40",
+     "found": "8510874b95f89545435bd0b15c27cbb6c6e25f88ab141ff7aa17437634ffde40",
+     "match": true
+    }
+   },
+   "shared_files_listed": 49,
+   "shared_sha256_file": "docs/day1/evidence/d9-shared-folders.sha256"
+  }
+ ],
+ "summary": {
+  "run": 13,
+  "exit_zero": 11,
+  "expected_nonzero": [
+   "3.1.2 (L.3 and L.6 open for the founder review, as the read me states)"
+  ],
+  "not_run": [
+   "3.1.11 (no other dimension folder is held)"
+  ]
+ }
+}

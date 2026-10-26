@@ -1,6 +1,6 @@
 {
- "passed": 13,
- "total": 13,
+ "passed": 19,
+ "total": 19,
  "failed": [],
  "results": [
   {
@@ -88,6 +88,77 @@
    "label": "the contents list D4 as represented and thirteen dimensions as not represented",
    "pass": true,
    "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "a D9 only report renders three pages: cover, one dimension page, controls; it is not refused for its count",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "render-1",
+   "label": "the contents list D9 as represented and thirteen dimensions as not represented",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "the D9 claim package block is styled exactly as the D4 entry block: the same classes, size, weight, colour, rule and face, no marker, icon or colour of its own; and its text carries no word of the D9 list and no joining but, however, although or instead",
+   "pass": true,
+   "detail": {
+    "d9": {
+     "cls": "mp-serif",
+     "size": "13.3333px",
+     "weight": "700",
+     "color": "rgb(26, 26, 26)",
+     "rule": "3px solid rgb(27, 58, 92)",
+     "family": "\"Liberation Serif\", Georgia, \"Times New Roman\", serif",
+     "style": "normal",
+     "text": "The participant repeated the revised instruction back and asked which part to do differently."
+    },
+    "d4": {
+     "cls": "mp-serif",
+     "size": "13.3333px",
+     "weight": "700",
+     "color": "rgb(26, 26, 26)",
+     "rule": "3px solid rgb(27, 58, 92)",
+     "family": "\"Liberation Serif\", Georgia, \"Times New Roman\", serif",
+     "style": "normal",
+     "text": "The participant restated the question that had been asked before answering it."
+    }
+   }
+  },
+  {
+   "id": "render-1",
+   "label": "a D8 only report renders three pages: cover, one dimension page, controls; it is not refused for its count",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "render-1",
+   "label": "the contents list D8 as represented and thirteen dimensions as not represented",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "render-1",
+   "label": "every page of the D8 only report is 612 by 792 points, states Page n of 3, carries the demonstration footer and no block passes the content box",
+   "pass": true,
+   "detail": [
+    [],
+    [
+     365
+    ],
+    []
+   ]
   },
   {
    "id": "render-refuse",

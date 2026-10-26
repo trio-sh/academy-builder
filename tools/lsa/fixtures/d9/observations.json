@@ -1,0 +1,3272 @@
+{
+ "participants": [
+  {
+   "participant_id": "V01",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V02",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V03",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V04",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V05",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V06",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V07",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V08",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V09",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V10",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V11",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V12",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V13",
+   "lsa_consent_state": "never_asked"
+  },
+  {
+   "participant_id": "V15",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V16",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V17",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V18",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V19",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V20",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V21",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V22",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V23",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V24",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V25",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V26",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V27",
+   "lsa_consent_state": "granted"
+  }
+ ],
+ "observations": [
+  {
+   "observation_id": "OD001",
+   "participant_id": "V01",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "259ccab88962688ab91cd874fffb7dbd0b87ef0fee999b21695d2a5204ad94e7"
+  },
+  {
+   "observation_id": "OD002",
+   "participant_id": "V01",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "fc1a4b376ff77a3d284992189609fb261728840624662f23676000dcd5c01ef1"
+  },
+  {
+   "observation_id": "OD003",
+   "participant_id": "V02",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "877af488da8118eee2fd6f760a44e363abface3b72308de92b01982d3c5ed46c"
+  },
+  {
+   "observation_id": "OD004",
+   "participant_id": "V02",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-005@1.1",
+   "served_instance_hash": "6eaeeb0778bb4772366ae4be26873c8d4b8438dcf4e067029d37d437a2bd9388",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Knowledge the work depends on, undocumented or held only by others",
+   "commit_hash": "a0cfb143725e499e8471e80257a17a57af419d58ab8e02f635e6421fb5328d07"
+  },
+  {
+   "observation_id": "OD005",
+   "participant_id": "V03",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_NONE",
+   "statement_id": "ST-D9-035",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "5007da0d2be2446f4740ff3e432d4bdfd868e14129812b81d7fdb593829f79cb"
+  },
+  {
+   "observation_id": "OD006",
+   "participant_id": "V03",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_AND_POINT",
+   "statement_id": "ST-D9-032",
+   "source_version_id": "SRC-D9-S2-007@1.1",
+   "served_instance_hash": "76432ca418533d7e495d41e467beee6a029770f6db9bbc5773f38534b6605457",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A rule or procedure not used before, now required for the work",
+   "commit_hash": "1bdde67d2b4c46339e8be88ba188d51d2f55bc431116e05f0c951bf70a9fc711"
+  },
+  {
+   "observation_id": "OD007",
+   "participant_id": "V04",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-005@1.1",
+   "served_instance_hash": "6eaeeb0778bb4772366ae4be26873c8d4b8438dcf4e067029d37d437a2bd9388",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Knowledge the work depends on, undocumented or held only by others",
+   "commit_hash": "59a10d0b5b78b3bd379e5848ddb789621a45613abcba790c5c80946c43184edc"
+  },
+  {
+   "observation_id": "OD008",
+   "participant_id": "V04",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-006@1.1",
+   "served_instance_hash": "4712660ca868cb845702eebc1b6b79ba86f9a68f72cbd0dc2d3ec8f2d96cf644",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Feedback on the participant's work, given by more than one party",
+   "commit_hash": "a6b99bbf482dc07fb7dea944fb1cd55670dded977e8780b15dacd003838ce6fb"
+  },
+  {
+   "observation_id": "OD009",
+   "participant_id": "V05",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "a963d9bdf03b2deeabf4df44442dcf8b7bee4ef37f68c8c09b7440dc40766aa3"
+  },
+  {
+   "observation_id": "OD010",
+   "participant_id": "V06",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NONE",
+   "statement_id": "ST-D9-040",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "68337ee69734851e68529ad7b7885f02fb6c7395fbd956e70b6111870af15cc7"
+  },
+  {
+   "observation_id": "OD011",
+   "participant_id": "V06",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-005@1.1",
+   "served_instance_hash": "6eaeeb0778bb4772366ae4be26873c8d4b8438dcf4e067029d37d437a2bd9388",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Knowledge the work depends on, undocumented or held only by others",
+   "commit_hash": "6952ebf45d83cd89ad4db4ac7200f061e5b97e4e741becce9de1e7789fae94f3"
+  },
+  {
+   "observation_id": "OD012",
+   "participant_id": "V07",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_NO_POINT",
+   "statement_id": "ST-D9-033",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "1978287533e8a42b8f1f75e98c11fe77c762cd41d0391fe6214a34c3a97195a1"
+  },
+  {
+   "observation_id": "OD013",
+   "participant_id": "V07",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_NO_POINT",
+   "statement_id": "ST-D9-033",
+   "source_version_id": "SRC-D9-S2-006@1.1",
+   "served_instance_hash": "4712660ca868cb845702eebc1b6b79ba86f9a68f72cbd0dc2d3ec8f2d96cf644",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Feedback on the participant's work, given by more than one party",
+   "commit_hash": "dc93796348466370f2de12add0b78cabcfb05594c2eb2e29319e51ce48ba3838"
+  },
+  {
+   "observation_id": "OD014",
+   "participant_id": "V07",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_AND_POINT",
+   "statement_id": "ST-D9-032",
+   "source_version_id": "SRC-D9-S2-008@1.1",
+   "served_instance_hash": "ece753068254cb71b5b3e4e409c8546dd315ce7ed19847a89ed97fcfbe47d24e",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A result showing the current approach is not producing what the work needs",
+   "commit_hash": "d47a5eed437c6d599f17a66bafbed9384c76423471bcabf9dd6034b6365b100d"
+  },
+  {
+   "observation_id": "OD015",
+   "participant_id": "V08",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_AND_POINT",
+   "statement_id": "ST-D9-032",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "16a39fbb29973c47abbf2eaf518a7ad166fe812295003216184b4666b25b99e2"
+  },
+  {
+   "observation_id": "OD016",
+   "participant_id": "V08",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_NO_POINT",
+   "statement_id": "ST-D9-033",
+   "source_version_id": "SRC-D9-S2-006@1.1",
+   "served_instance_hash": "4712660ca868cb845702eebc1b6b79ba86f9a68f72cbd0dc2d3ec8f2d96cf644",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Feedback on the participant's work, given by more than one party",
+   "commit_hash": "1846e166da0c5bd09abc443247e63fd0d5a36c074d37129f87c841f706608c8a"
+  },
+  {
+   "observation_id": "OD017",
+   "participant_id": "V08",
+   "proposition_id": "REK-D9-007",
+   "conduct_element_id": "CE-D9-07",
+   "dimension_id": "D9",
+   "state_code": "WA_WORK_AND_POINT",
+   "statement_id": "ST-D9-032",
+   "source_version_id": "SRC-D9-S2-008@1.1",
+   "served_instance_hash": "ece753068254cb71b5b3e4e409c8546dd315ce7ed19847a89ed97fcfbe47d24e",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A result showing the current approach is not producing what the work needs",
+   "commit_hash": "cfc9f1e1827f6ced403bae54e604143a64f337222ee69445a81ffc579e29e394"
+  },
+  {
+   "observation_id": "OD018",
+   "participant_id": "V09",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "454d1b2ed61f903147633a6bf63da4b7ab6417d127b928c7497262f953fc3342"
+  },
+  {
+   "observation_id": "OD019",
+   "participant_id": "V09",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S3-001@1.1",
+   "served_instance_hash": "7039fbd343692cde565b1fcb8fed49adab5a7e28d53e649568ad5beb32293c31",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "work_sample",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D9-04",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Work sample",
+   "situation_class_label": "Work outside the work the participant has done before",
+   "commit_hash": "bcf16d41f8c05051ced98cda0305443340326adaa9044a4afbd4eabd1f925a0c"
+  },
+  {
+   "observation_id": "OD020",
+   "participant_id": "V10",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "b486c61e1d788c9f6c379f652fb60ecb29e0d4ec58b4ab6b86dcd1e3aaa34345"
+  },
+  {
+   "observation_id": "OD021",
+   "participant_id": "V10",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S4-001@1.1",
+   "served_instance_hash": "e3b9769878943365a8030977e5ed3d23ae1f52ad3d2e7b7177fc290af1a2d9cd",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "group_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Group session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "69dbcbb02ea82dadc01cca12e313cf553063080407d3fdad944556a66ec21b83"
+  },
+  {
+   "observation_id": "OD022",
+   "participant_id": "V11",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "a426802291008bfdd7cc62e88679baed8e273bf50cba731a0fa40804c98e40ef"
+  },
+  {
+   "observation_id": "OD023",
+   "participant_id": "V11",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "6ab654dc6e9a68c38fac1d3c46e2a5af7d6a95d2b48501bdaa14b7af5daee47d"
+  },
+  {
+   "observation_id": "OX024",
+   "participant_id": "V12",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "1c6d252e0e94b13936e5d19f9d15e3d20741b6cc934016749694539296bdc5d5"
+  },
+  {
+   "observation_id": "OX025",
+   "participant_id": "V12",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "0bba157f70a231c43772e6da4639880aa314caba7559c17f6c92a56948957194"
+  },
+  {
+   "observation_id": "OD026",
+   "participant_id": "V13",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "9dcac704f9ac28c861cb249d652130819894906f46b248b808a0a7f8b48acb46"
+  },
+  {
+   "observation_id": "OD027",
+   "participant_id": "V13",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "4bce63274ead288b2d96bd9d92c70b7a6a265adf01c164f25f228782d5cb243d"
+  },
+  {
+   "observation_id": "OD028",
+   "participant_id": "V19",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "264e8e594a8a1d291861a0f7b112c4338d20649027a81f724c4cd441716e7735"
+  },
+  {
+   "observation_id": "OD029",
+   "participant_id": "V19",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "retake_after_redirect",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "a31275ecff32a1616b3259b8af3e15c43e31b7e5028a878401bfa23c82d5d19d"
+  },
+  {
+   "observation_id": "OD030",
+   "participant_id": "V20",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "bd644da87ae0878808e46a0ab864660a5a9312dbae96c7facfb0c3823aa525b7"
+  },
+  {
+   "observation_id": "OD031",
+   "participant_id": "V20",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "e08b2d0e124db6510891ee6bd15e7d48393b1a05715ffaa7ca0bcea2369210ea"
+  },
+  {
+   "observation_id": "OD032",
+   "participant_id": "V20",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-005@1.1",
+   "served_instance_hash": "6eaeeb0778bb4772366ae4be26873c8d4b8438dcf4e067029d37d437a2bd9388",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Knowledge the work depends on, undocumented or held only by others",
+   "commit_hash": "13dfe444a514a1423b94f93f8ea414db76044c8f44f928f40afa83c4f1e2e7ed"
+  },
+  {
+   "observation_id": "OD033",
+   "participant_id": "V15",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "a480d34d60352b11af6af326d5a71cc957a34af717219bbf79e00a67eccb88c6"
+  },
+  {
+   "observation_id": "OD035",
+   "participant_id": "V16",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "4dba187c4ce128c7fc46ee99bea9c04ef85f86d90bf2df772807577a8f30d299"
+  },
+  {
+   "observation_id": "OD037",
+   "participant_id": "V17",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "5582b123fd6aa45ec81155232d65f5fbcb10cd0fd7012c716cba45a4e3775753"
+  },
+  {
+   "observation_id": "OD039",
+   "participant_id": "V18",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "3fd3c8b2f2978efc9b0a3cc873a54076c50f45720b112225b2136f3e6b8cfd42"
+  },
+  {
+   "observation_id": "OD041",
+   "participant_id": "V21",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "29e5c458bd88680b6a52a21583af51a3356e11dafb7f862e296bc79854d1c60f"
+  },
+  {
+   "observation_id": "OD043",
+   "participant_id": "V22",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "53b65f3ec9a415778a3291495d8b646222e56567f28e6e1125782a2630965079"
+  },
+  {
+   "observation_id": "OD045",
+   "participant_id": "V23",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "6ec9fa5c94efe814e83dc8a2eb62300c7b8505c621adbbda9b867b767a760897"
+  },
+  {
+   "observation_id": "OD047",
+   "participant_id": "V24",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "bba98411ddbf4b2de3c252fd11bcd7760cc159de41733e596ce19f9ed07c50bd"
+  },
+  {
+   "observation_id": "OD048",
+   "participant_id": "V24",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_WITH_PLACE",
+   "statement_id": "ST-D9-038",
+   "source_version_id": "SRC-D9-S2-002@1.1",
+   "served_instance_hash": "173721be43fa1a2a2b30368381b904f05d0fa15183ceff8e327ad92df6a531fe",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An approach already used, challenged, with grounds both to keep and to change it",
+   "commit_hash": "edbd9936cec6606d321aaa886bfe021ed4dc179958a2c51b561a1b09523a9a6a"
+  },
+  {
+   "observation_id": "OD049",
+   "participant_id": "V25",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "aebe6627b7a74c14d540259947f121e183d8c9f56eeab4e6ad751c54832a2e9f"
+  },
+  {
+   "observation_id": "OD051",
+   "participant_id": "V26",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "ea91f6b47a8a1ea14b1fae757a3badf18c4e196aeb97d9e64b9f317f05b9ea51"
+  },
+  {
+   "observation_id": "OD053",
+   "participant_id": "V27",
+   "proposition_id": "REK-D9-008",
+   "conduct_element_id": "CE-D9-08",
+   "dimension_id": "D9",
+   "state_code": "RA_NO_PLACE",
+   "statement_id": "ST-D9-039",
+   "source_version_id": "SRC-D9-S2-001@1.1",
+   "served_instance_hash": "f201b323db150360313c7ee6bda24e95663b42be73cfad96027f72d783fa05db",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D9-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A tool or system not used before, now required for the work",
+   "commit_hash": "76d7625186c113d25f7e247e822069f4477e5f198ebf34a80ab2a38b7ca6d577"
+  }
+ ],
+ "cases": [
+  {
+   "case_id": "T01",
+   "participant_id": "V01",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T02",
+   "participant_id": "V02",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T03",
+   "participant_id": "V03",
+   "proposition_id": "REK-D9-007",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T04",
+   "participant_id": "V04",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T05",
+   "participant_id": "V05",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T06",
+   "participant_id": "V06",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T07",
+   "participant_id": "V07",
+   "proposition_id": "REK-D9-007",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T08",
+   "participant_id": "V08",
+   "proposition_id": "REK-D9-007",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T09",
+   "participant_id": "V09",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T10",
+   "participant_id": "V10",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T11",
+   "participant_id": "V11",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T12",
+   "participant_id": "V12",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T13",
+   "participant_id": "V13",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T15",
+   "participant_id": "V15",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T16",
+   "participant_id": "V16",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T17",
+   "participant_id": "V17",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T18",
+   "participant_id": "V18",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T19",
+   "participant_id": "V19",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T20",
+   "participant_id": "V20",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T21",
+   "participant_id": "V21",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T22",
+   "participant_id": "V22",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T23",
+   "participant_id": "V23",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T24",
+   "participant_id": "V24",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T25",
+   "participant_id": "V25",
+   "proposition_id": "REK-D9-008",
+   "dimension_id": "D9",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  }
+ ],
+ "load_tests": [
+  {
+   "id": "LD1 forward cycle in the continuation states",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D9-REK007",
+      "proposition_id": "REK-D9-007",
+      "conduct_element_id": "CE-D9-07",
+      "members": [
+       {
+        "source_version_id": "SRC-D9-S2-001@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-002@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-003@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-005@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-006@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-007@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-008@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-009@1.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "WA_WORK_NO_POINT",
+       "WA_WORK_AND_POINT",
+       "WA_NONE_NAMED"
+      ],
+      "absence_states": [
+       "WA_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D9-REK008",
+      "proposition_id": "REK-D9-008",
+      "conduct_element_id": "CE-D9-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D9-S2-001@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-002@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-003@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-005@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-006@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-007@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-008@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-009@1.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "RA_NO_PLACE",
+       "RA_WITH_PLACE"
+      ],
+      "absence_states": [
+       "RA_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D9-007",
+      "family_id": "FAM-D9-REK007",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "WA_WORK_NO_POINT",
+        "to_state": "WA_WORK_AND_POINT",
+        "direction": "forward"
+       },
+       {
+        "from_state": "WA_WORK_AND_POINT",
+        "to_state": "WA_WORK_NO_POINT",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D9-007, held by the founder",
+      "forward_label": "toward stating when the approach applies to named work",
+      "backward_label": "away from stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D9-008",
+      "family_id": "FAM-D9-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "RA_NO_PLACE",
+        "to_state": "RA_WITH_PLACE",
+        "direction": "forward"
+       },
+       {
+        "from_state": "RA_WITH_PLACE",
+        "to_state": "RA_NO_PLACE",
+        "direction": "backward"
+       },
+       {
+        "from_state": "RA_WITH_PLACE",
+        "to_state": "RA_NO_PLACE",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D9-008, held by the founder",
+      "forward_label": "toward stating where the approach is recorded",
+      "backward_label": "away from stating where the approach is recorded"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D9",
+      "applies_to": "D9",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-insufficient_evidence",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-comparison_not_established",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-consistent_recorded_conduct",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-different_no_direction",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-documented_progression",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating when the approach applies to named work, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated, toward stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-documented_regression",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating when the approach applies to named work, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated, away from stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-mixed_trajectory",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-insufficient_evidence",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-comparison_not_established",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-different_no_direction",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-documented_progression",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating where the approach is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated, toward stating where the approach is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-documented_regression",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating where the approach is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated, away from stating where the approach is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-mixed_trajectory",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D9",
+      "applies_to": "D9",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D9",
+      "dimension_id": "D9",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-01",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-02",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-03",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-04",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-05",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-06",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-07",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  },
+  {
+   "id": "LD2 absence state in a direction",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D9-REK007",
+      "proposition_id": "REK-D9-007",
+      "conduct_element_id": "CE-D9-07",
+      "members": [
+       {
+        "source_version_id": "SRC-D9-S2-001@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-002@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-003@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-005@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-006@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-007@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-008@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-009@1.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "WA_WORK_NO_POINT",
+       "WA_WORK_AND_POINT",
+       "WA_NONE_NAMED"
+      ],
+      "absence_states": [
+       "WA_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D9-REK008",
+      "proposition_id": "REK-D9-008",
+      "conduct_element_id": "CE-D9-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D9-S2-001@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-002@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-003@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-005@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-006@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-007@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-008@1.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D9-S2-009@1.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "RA_NO_PLACE",
+       "RA_WITH_PLACE"
+      ],
+      "absence_states": [
+       "RA_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D9-007",
+      "family_id": "FAM-D9-REK007",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "WA_WORK_NO_POINT",
+        "to_state": "WA_WORK_AND_POINT",
+        "direction": "forward"
+       },
+       {
+        "from_state": "WA_WORK_AND_POINT",
+        "to_state": "WA_WORK_NO_POINT",
+        "direction": "backward"
+       },
+       {
+        "from_state": "WA_NONE",
+        "to_state": "WA_WORK_NO_POINT",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D9-007, held by the founder",
+      "forward_label": "toward stating when the approach applies to named work",
+      "backward_label": "away from stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D9-008",
+      "family_id": "FAM-D9-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "RA_NO_PLACE",
+        "to_state": "RA_WITH_PLACE",
+        "direction": "forward"
+       },
+       {
+        "from_state": "RA_WITH_PLACE",
+        "to_state": "RA_NO_PLACE",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D9-008, held by the founder",
+      "forward_label": "toward stating where the approach is recorded",
+      "backward_label": "away from stating where the approach is recorded"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D9",
+      "applies_to": "D9",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-insufficient_evidence",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-comparison_not_established",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-consistent_recorded_conduct",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-different_no_direction",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-documented_progression",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating when the approach applies to named work, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated, toward stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-documented_regression",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating when the approach applies to named work, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated, away from stating when the approach applies to named work"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-007-mixed_trajectory",
+      "proposition_id": "REK-D9-007",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work ahead an approach applies to and from when",
+      "element_short": "Work ahead and its point stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "WA_WORK_NO_POINT": {
+        "full": "Named work ahead the stated approach applies to with no point at which it applies",
+        "short": "no point named"
+       },
+       "WA_WORK_AND_POINT": {
+        "full": "Named work ahead the stated approach applies to and when it applies",
+        "short": "work and point"
+       },
+       "WA_NONE_NAMED": {
+        "full": "Stated that the approach applies to work ahead and named none",
+        "short": "none named"
+       },
+       "WA_NONE": {
+        "full": "Nothing stated about work ahead",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Carrying what a situation showed into the next piece of work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work ahead and its point stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-insufficient_evidence",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-comparison_not_established",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-different_no_direction",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-documented_progression",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating where the approach is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated, toward stating where the approach is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-documented_regression",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating where the approach is recorded, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated, away from stating where the approach is recorded"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D9-008-mixed_trajectory",
+      "proposition_id": "REK-D9-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that an approach is recorded and where",
+      "element_short": "Record of the approach and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "RA_NO_PLACE": {
+        "full": "Stated that the approach is to be recorded with no place for it",
+        "short": "no place named"
+       },
+       "RA_WITH_PLACE": {
+        "full": "Stated that the approach is to be recorded and where",
+        "short": "record and place"
+       },
+       "RA_NONE": {
+        "full": "No record of the approach stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down about how the work is done",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record of the approach and its place stated"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D9",
+      "applies_to": "D9",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D9",
+      "dimension_id": "D9",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-01",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-02",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-03",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-04",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-05",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-06",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D9-07",
+      "dimension_id": "D9",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  }
+ ],
+ "dimension_cases": [
+  {
+   "id": "DD1 both D9 elements progressed",
+   "dimension_id": "D9",
+   "element_results": [
+    [
+     "CE-D9-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D9-07",
+     "documented_progression"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_progression"
+   }
+  },
+  {
+   "id": "DD2 one element only compared",
+   "dimension_id": "D9",
+   "element_results": [
+    [
+     "CE-D9-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D9-07",
+     "insufficient_evidence"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_pattern_only_coverage"
+   }
+  }
+ ]
+}

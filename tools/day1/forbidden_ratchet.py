@@ -27,6 +27,14 @@ EXCLUDES = ["dist/", "docs/", "e2e/", "public/", "scripts/", "api/", "tools/",
             "supabase/migrations/20261218000000_d3_shared_machinery.sql",
             "supabase/migrations/20261219000000_d3_content_registry.sql", "supabase/migrations/20261220000000_d3_demonstration_fixtures.sql",
             "supabase/migrations/20261223000000_d4_content_registry.sql", "supabase/migrations/20261224000000_d4_demonstration_fixtures.sql",
+            # the D5 shared machinery re-emits the prohibited-output scan with the counterpart rule added (its rule names are the detection vocabulary, as in the D3 file); the D5 content load, fixtures and seeds are clean without an exclusion
+            "supabase/migrations/20270201000000_d5_shared_machinery.sql",
+            # the reconciled shared functions (CR-290) re-emit the prohibited-output scan (D3 text, D5 counterpart rule, D8 state rule), whose rule names are the detection vocabulary, exactly as the D3 and D5 files do
+            "supabase/migrations/20270230000000_shared_functions_d5_d8_d9.sql",
+            # the D8 content load and the D8 demonstration fixtures carry authored source text as data ("shortlisted", "tier-2", a rating inside scenario prose), as the D2 to D4 loads do (CR-082 pattern)
+            "supabase/migrations/20270212000000_d8_content_registry.sql", "supabase/migrations/20270213000000_d8_demonstration_fixtures.sql",
+            # the D9 content load and the D9 demonstration fixtures carry authored source text as data (CR-082 pattern): scenario prose such as a rating or a scoring template inside a workplace situation, which D9 Section 13 leaves out of scope
+            "supabase/migrations/20270222000000_d9_content_registry.sql", "supabase/migrations/20270223000000_d9_demonstration_fixtures.sql",
             # the frozen multi page specimen carries controlled text T-COVERAGE-001 verbatim ("not a score, a rating, a ranking or an endorsement"), which states what the report is not (CR-162)
             "src/lib/berMultipage/fix-multipage.json",
             # carries Section 2 of the Participant Consent and Privacy Notice v1.2 word for word as authored text (CR-181); the notice says what the report is not

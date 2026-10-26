@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Step 3l: seed the four D2 demonstration fixtures (Section 10.1 to 10.4 of the D2 Execution Edition) as content, exactly as written.
 
-  python3 tools/day1/build_d2_demo_fixtures_migration.py <Execution-Edition.md> <out.sql> [D2|D3]
+  python3 tools/day1/build_d2_demo_fixtures_migration.py <Execution-Edition.md> <out.sql> [D2|D3|D4|D5]
 
 Each fixture is loaded as a source object that is NOT servable: drafting, not_loaded, serving_eligible false, demonstration true, and no approval record. The two drafting-test rows are seeded
 with the demonstration reviewer identity (the only case the instrument allows) against a demonstration author identity. No name clearance record and no rights record is created: the sheet's
@@ -55,10 +55,18 @@ def parse(part):
         mm = re.match(r"- ([a-z_0-9]+): ?(.*)$", l)
         if mm: key = mm.group(1); sheet[key] = mm.group(2).strip()
         elif l.strip().startswith("-") and key: sheet[key] = (sheet[key] + "; " if sheet[key] else "") + l.strip().lstrip("- ").strip()
+    # D8 edition: the sheet is one paragraph of "`field`: value" runs; each field becomes a key, so the loader can check and withhold fields by name
+    if not sheet and re.search(r"`[a-z_0-9]+`: ", sheet_src):
+        parts_ = re.split(r"`([a-z_0-9]+)`: ", sheet_src.strip())
+        sheet = {parts_[i]: parts_[i + 1].strip() for i in range(1, len(parts_) - 1, 2)}
     # a row may name two questions ("Q-D3-06a and Q-D3-06b"); each question gets its own entry carrying the same state and basis
     app_src = blocks.get("Question applicability") or next(v for v in blocks.values() if "| Question | State | Basis |" in v)
     app_lines = [l for l in app_src.split("\n") if l.strip().startswith("|")]
-    app = [{"question": q.strip(), "state": r[1], "basis": r[2]} for r in table(app_lines)[1:] for q in r[0].split(" and ")]
+    def expand(q):
+        # a row may name a range ("Q-D5-01 to Q-D5-05" or "Q-D5-01b to Q-D5-05b"); each question in it gets its own entry
+        m = re.fullmatch(r"(Q-D\d-)(\d\d)(b?) to \1(\d\d)\3", q.strip())
+        return [f"{m.group(1)}{n:02d}{m.group(3)}" for n in range(int(m.group(2)), int(m.group(4)) + 1)] if m else [q.strip()]
+    app = [{"question": q, "state": r[1], "basis": r[2]} for r in table(app_lines)[1:] for part in r[0].split(" and ") for q in expand(part)]
     if not sheet: sheet = {"source_sheet_text": "\n".join(l for l in sheet_src.split("\n") if not l.strip().startswith("|")).strip()}
     script = [{"beat": r[0], "type": r[1], "verbatim_text": r[2], "capture": r[3] if len(r) > 3 else None} for r in table(blocks["Script"].split("\n"))[1:]] if "Script" in blocks and any(l.strip().startswith("|") for l in blocks["Script"].split("\n")) else None
     quotes = {k: "\n".join(x.lstrip("> ").rstrip() if x.startswith(">") else x for x in v.split("\n") if x.startswith(">")).replace("\n\n", "\n").strip() for k, v in blocks.items() if ">" in v}
@@ -68,7 +76,7 @@ def parse(part):
 stmts = []
 for p in parts:
     n, ident, title, hdr, blocks, sheet, app, script, quotes, reveals = parse(p)
-    assert len(app) == {"D2": 15, "D3": 16, "D4": 15}[DIM], (ident, len(app))
+    assert len(app) == {"D2": 15, "D3": 16, "D4": 15, "D5": 16, "D8": 16, "D9": 16}[DIM], (ident, len(app))
     assert hdr["Identifier"] == ident and hdr["demonstration"] == "true"
     stage_code = "S" + hdr["Stage"]
     body = {"source_identifier": ident, "title": title, "stage": int(hdr["Stage"]), "stage_code": stage_code, "demonstration": True, "serving_eligible": False,

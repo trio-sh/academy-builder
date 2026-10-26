@@ -1,0 +1,481 @@
+{
+ "passed": 42,
+ "total": 43,
+ "failed": [
+  {
+   "id": "D8-64",
+   "label": "every D8 template passes the prohibited-output check",
+   "pass": false,
+   "detail": [
+    {
+     "language_template_id": "L-D8-COMP-001"
+    }
+   ]
+  }
+ ],
+ "results": [
+  {
+   "id": "D8-cov",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 220,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D8-cov",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D8-cov",
+   "label": "coverage covers the nine question groups at all four Stages",
+   "pass": true,
+   "detail": 36
+  },
+  {
+   "id": "D8-res",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant stated a containment action from those the situation made available",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D8-01",
+      "statement_key": "ST-D8-001"
+     },
+     {
+      "text": "the participant stated 2 of the containment actions the situation made available and a containment action it did not make available",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A2",
+      "question_code": "Q-D8-01b",
+      "statement_key": "ST-D8-005"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D8-01",
+    "Q-D8-01b"
+   ]
+  },
+  {
+   "id": "D8-res",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the participant stated 2 of the actions on the condition the situation made available"
+  },
+  {
+   "id": "D8-res",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01 A3 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "a D4 question in a D8 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 is not a D8 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "a D1 question in a D8 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D1-01 is not a D8 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-02b follows Q-D8-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D8-09"
+   ]
+  },
+  {
+   "id": "D8-res",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "not_yet_observed is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D8-01 missing:not_yet_observed",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-res",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D8-004 stated_containment_count",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-06",
+   "label": "Q-D8-07 A3 resolves to ST-D8-034 alone",
+   "pass": true,
+   "detail": [
+    "ST-D8-034"
+   ]
+  },
+  {
+   "id": "D8-04",
+   "label": "a Stage 1 recurrence answer resolves: every D8 element is served at Stage 1 (each entry records what was stated)",
+   "pass": true,
+   "detail": "resolved"
+  },
+  {
+   "id": "D8-04",
+   "label": "a Stage 1 account test answer resolves (Q-D8-09 is served at Stages 1, 2 and 4)",
+   "pass": true,
+   "detail": [
+    "ST-D8-041"
+   ]
+  },
+  {
+   "id": "D8-RR",
+   "label": "RR-D8-01: a listed containment action stated while the child identifies none refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D8-01",
+    "detail": "The parent records a listed containment action stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-RR",
+   "label": "RR-D8-07: work named as continuing with no point stated, and no item selected, refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D8-07",
+    "detail": "The parent records work named as continuing and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-RR",
+   "label": "RR-D8-08: a listed measure stated while the child identifies none refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D8-08",
+    "detail": "The parent records a listed measure stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D8-49",
+   "label": "Q-D8-01b and Q-D8-03b both resolve: one act serving two purposes is two facts, neither suppressed as a duplicate",
+   "pass": true,
+   "detail": [
+    "ST-D8-001",
+    "ST-D8-004",
+    "ST-D8-011",
+    "ST-D8-014"
+   ]
+  },
+  {
+   "id": "D8-RR",
+   "label": "Q-D8-01 A3 with Q-D8-03 A1 is permitted: an action on the condition without a containment action",
+   "pass": true,
+   "detail": "resolved"
+  },
+  {
+   "id": "D8-RR",
+   "label": "D8 has eight numbered refusal rules and no suppress rule",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D8-res",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D8-64",
+   "label": "a clean statement passes",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a manner word fails (calmly)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "state_observation",
+      "detail": "calmly"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "the arc fails: recovered",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "state_observation",
+      "detail": "recovered"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a closed-list evaluative phrase fails (strong response)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "strong response"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "owned"
+     },
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "verified"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a sentence whose subject is the participant's state fails as state_observation",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "state_observation",
+      "detail": "unaffected"
+     },
+     {
+      "rule": "state_observation",
+      "detail": "the participant's state is the subject"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a sentence asserting the absence of a reaction fails as state_observation",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "state_observation",
+      "detail": "affected"
+     },
+     {
+      "rule": "state_observation",
+      "detail": "the participant's state is the subject"
+     },
+     {
+      "rule": "state_observation",
+      "detail": "the participant's state is the subject"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "a state described directly fails (untroubled)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "state_observation",
+      "detail": "the participant's state is the subject"
+     },
+     {
+      "rule": "state_observation",
+      "detail": "the participant's state is the subject"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-61",
+   "label": "a performed act verb fails the scan (took)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "took"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-63",
+   "label": "stars fail",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_glyph",
+      "detail": "dot, bar, star, marker or traffic-light glyph"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-63",
+   "label": "a flag wording is rejected (red flag)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "red flag"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-63",
+   "label": "a retired term fails (candidate)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "candidate"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D8-64",
+   "label": "every D8 Recorded Conduct Entry passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D8-64",
+   "label": "every D8 Recorded Conduct Entry passes the entry language gate (no state as subject, no word of another dimension)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D8-61",
+   "label": "no D8 entry carries a performed act verb at any Stage",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D8-64",
+   "label": "every D8 template passes the prohibited-output check",
+   "pass": false,
+   "detail": [
+    {
+     "language_template_id": "L-D8-COMP-001"
+    }
+   ]
+  }
+ ]
+}

@@ -3,6 +3,7 @@
 
   python3 tools/day1/build_dimension_seeds_migration.py D4 <Build-Package.json> <out.sql> --item-base 28 --blockers ST-D4-010,ST-D4-015 \
       --cross owned,caused,blamed,prioritized,"sequenced the work",checked,verified,escalated --stage1-barred Q-D4-07,Q-D4-07b
+  (D5: --stage1-barred Q-D5-06,Q-D5-06b --barred-stages 1,3 --barred-reason "..."; the barred stage list needs the stage_codes column of migration 20270201000000)
 
 Emits: interaction pattern families from the situation classes, the platform cooldown ladder, the closed retired list, the dimension specific checklist items, the recurrence blockers,
 the words that belong to other dimensions, the stage form barred questions, and the structural rows of the question definition register (the five semantic fields stay empty)."""
@@ -10,6 +11,9 @@ import argparse, json
 ap = argparse.ArgumentParser()
 ap.add_argument("dim"); ap.add_argument("pkg"); ap.add_argument("out")
 ap.add_argument("--item-base", type=int, required=True)
+ap.add_argument("--barred-stages", default="", help="Stage numbers (comma list) at which the barred questions are barred; empty keeps the Stage 1 default of earlier dimensions")
+ap.add_argument("--barred-reason", default="a written response cannot evidence it at Stage 1")
+ap.add_argument("--req24", default=None); ap.add_argument("--req25", default=None)  # the dimension's own checklist wording, when its edition states one (D9); the default is the D2 to D4 wording
 ap.add_argument("--blockers", default=""); ap.add_argument("--cross", default=""); ap.add_argument("--stage1-barred", default="")
 a = ap.parse_args()
 dim = a.dim
@@ -40,19 +44,26 @@ insert into public.t3a_rce_prohibited_vocabulary (dimension_id, word, version, r
   select {lit(dim)}, word, {lit('PV-' + dim + '-4.2')}, {lit(dim + ' Section 4.2 retired vocabulary, closed list')} from public.t3a_rce_prohibited_vocabulary where dimension_id = 'D2' and version = 'PV-D2-4.2'
   on conflict do nothing;
 
-alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
-alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and {n2});
+-- the ceiling is the larger of what the table already holds and this dimension's last item, so a dimension built beside this one is never shut out
+do $c$ declare m int; begin
+  select greatest(coalesce(max(item_no), 0), {n2}) into m from public.t3a_dimension_review_item;
+  alter table public.t3a_dimension_review_item drop constraint if exists t3a_dimension_review_item_item_no_check;
+  execute format('alter table public.t3a_dimension_review_item add constraint t3a_dimension_review_item_item_no_check check (item_no between 1 and %s)', m);
+end $c$;
 insert into public.t3a_dimension_review_item (item_no, dimension_id, requirement, display_no) values
-  ({n1}, {lit(dim)}, {lit(dim + ' specific: no rendered ' + dim + ' sentence uses a verb of purpose or disposition (checked against the Section 3.2 prohibited-verb list on rendered output).')}, 24),
-  ({n2}, {lit(dim)}, {lit(dim + ' specific: no element of the report is computed across dimensions, and no rendered ' + dim + ' sentence names a third party.')}, 25)
+  ({n1}, {lit(dim)}, {lit(a.req24 or (dim + ' specific: no rendered ' + dim + ' sentence uses a verb of purpose or disposition (checked against the Section 3.2 prohibited-verb list on rendered output).'))}, 24),
+  ({n2}, {lit(dim)}, {lit(a.req25 or (dim + ' specific: no element of the report is computed across dimensions, and no rendered ' + dim + ' sentence names a third party.'))}, 25)
 on conflict do nothing;
 """
 if blk:
     out += f"\nupdate public.t3a_d1_statement_library set recurrence_blocker = true where dimension_id = {lit(dim)} and statement_key in ({', '.join(lit(x) for x in blk)});\n"
 if cross:
     out += f"\nupdate public.t3a_rce_prohibited_vocabulary set reason = 'cross_dimension_assertion' where dimension_id = {lit(dim)} and version = {lit('PV-' + dim + '-1.0')} and word in ({', '.join(lit(x) for x in cross)});\n"
-if barred:
+if barred and not a.barred_stages:
     out += f"\ninsert into public.t3a_stage_form_question(dimension_id, question_code, reason) values\n" + ",\n".join(f"  ({lit(dim)},{lit(q)},'a written response cannot evidence it at Stage 1')" for q in barred) + "\non conflict do nothing;\n"
+elif barred:
+    stg = "array[" + ",".join(lit(x) for x in a.barred_stages.split(",")) + "]::text[]"
+    out += f"\ninsert into public.t3a_stage_form_question(dimension_id, question_code, reason, stage_codes) values\n" + ",\n".join(f"  ({lit(dim)},{lit(q)},{lit(a.barred_reason)},{stg})" for q in barred) + "\non conflict do nothing;\n"
 out += f"""
 insert into public.t3a_question_definition(dimension_id, question_id, answer_id, exact_stem, stage_applicability, required_or_conditional, missing_state_route, child_branch_rule, statement_mapping)
 select m.dimension_id, m.question_code, 'A' || l.line_order, cs.title,

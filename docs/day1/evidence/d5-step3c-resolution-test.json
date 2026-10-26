@@ -1,0 +1,767 @@
+{
+ "passed": 63,
+ "total": 63,
+ "failed": [],
+ "results": [
+  {
+   "id": "D5-cov",
+   "label": "coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)",
+   "pass": true,
+   "detail": {
+    "patterns": 1984,
+    "gaps": 0
+   }
+  },
+  {
+   "id": "D5-cov",
+   "label": "coverage: no pattern resolves to two statements",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D5-res",
+   "label": "same inputs, same output",
+   "pass": true,
+   "detail": {
+    "outcome": "resolved",
+    "statements": [
+     {
+      "text": "the participant stated as their own a position the situation set out",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A1",
+      "question_code": "Q-D5-01",
+      "statement_key": "ST-D5-001"
+     },
+     {
+      "text": "the participant stated as their own 1 of the positions the situation set out and a position it did not set out",
+      "entry_type": "conduct_bearing",
+      "answer_code": "A2",
+      "question_code": "Q-D5-01b",
+      "statement_key": "ST-D5-005"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "statements come back in the fixed question order",
+   "pass": true,
+   "detail": [
+    "Q-D5-01",
+    "Q-D5-01b"
+   ]
+  },
+  {
+   "id": "D5-res",
+   "label": "a count placeholder is filled from the bound value, never typed",
+   "pass": true,
+   "detail": "the participant asked 2 of the questions the situation set out"
+  },
+  {
+   "id": "D5-res",
+   "label": "an unmapped pattern refuses and nothing is substituted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-01 A9 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "free text in place of an answer code refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-01",
+    "reason": "free_text_or_unknown_value",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "production mode resolves nothing while no statement is approved (fail closed)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-01 A3 stage 2",
+    "reason": "no_approved_statement",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "test mode is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "unapproved statements resolve in the test environment through the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "a D4 question in a D5 resolution refuses as a dimension isolation violation",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D4-01 is not a D5 question",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "an answer on a child whose parent did not serve it refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b follows Q-D5-02 A1",
+    "reason": "child_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "a posted missing state composes nothing and does not block the rest",
+   "pass": true,
+   "detail": [
+    "Q-D5-09"
+   ]
+  },
+  {
+   "id": "D5-res",
+   "label": "not_applicable is never posted",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-01 missing:not_applicable",
+    "reason": "missing_state_not_postable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "a count outside the grammar refuses",
+   "pass": true,
+   "detail": {
+    "detail": "ST-D5-009 asked_question_count",
+    "reason": "bound_variable_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-06",
+   "label": "Q-D5-07 A3 resolves to ST-D5-034 alone; the unserved child contributes no negative sentence",
+   "pass": true,
+   "detail": [
+    "ST-D5-034"
+   ]
+  },
+  {
+   "id": "D5-61",
+   "label": "a route use entry (Q-D5-06) at Stage 1 and at Stage 3 is barred by the Stage form check; at Stage 2 and Stage 4 it is not",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-61",
+   "label": "so is the bound route question Q-D5-06b, and an element served at Stage 1 and 3 (Q-D5-04) is not barred",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-RR",
+   "label": "Q-D5-04 A3 with Q-D5-05 A1 is permitted: a change to the participant's own position may be stated without proposing anything",
+   "pass": true,
+   "detail": [
+    "ST-D5-018",
+    "ST-D5-021",
+    "ST-D5-025"
+   ]
+  },
+  {
+   "id": "D5-RR",
+   "label": "RR-D5-01: a designated position stated with Q-D5-01b unanswered refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D5-01",
+    "detail": "The parent records a designated position stated and the child identifies none",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-RR",
+   "label": "RR-D5-09: an agreement and its recording stated where nothing was proposed and no change was stated refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D5-09",
+    "detail": "An agreement is recorded as stated where nothing was proposed and no change was stated; one of the three determinations is wrong and the service must not choose",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-RR",
+   "label": "RR-D5-10: an agreement stated with no statement about recording, where nothing was proposed and no change was stated, refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D5-10",
+    "detail": "An agreement is recorded as stated where nothing was proposed and no change was stated; one of the three determinations is wrong and the service must not choose",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-RR",
+   "label": "RR-D5-08: an agreement stated with Q-D5-07b unanswered refuses",
+   "pass": true,
+   "detail": {
+    "rule": "RR-D5-08",
+    "detail": "The parent records an agreement stated and the child identifies none of its contents",
+    "reason": "resolution_rule",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-res",
+   "label": "a refusal on the logged route persists in the refusal log",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-64",
+   "label": "a clean statement passes",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D5-69",
+   "label": "a counterpart role label as the object of the participant's act is not refused (only the subject of a verb is)",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a manner word fails (calmly)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "calmly"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a manner word fails (politely)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "politely"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a manner word fails (warmly)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "warmly"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a manner word fails (defensively)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "defensively"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (resolved)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "resolved"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (settled)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "settled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (conceded)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "conceded"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (persuaded)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "persuaded"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (reconciled)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "reconciled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (repaired)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "repaired"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (built rapport)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "built rapport"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "an outcome verb fails (brought round)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "brought round"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (collaborative)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "collaborative"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (difficult)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "difficult"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (rigid)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "rigid"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (flexible)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "flexible"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (team player)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "team player"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (will)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "will"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (would)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "would"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (always)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "always"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (never)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "never"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a trait, modal or prediction word fails (likely)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "likely"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a sentence whose subject is a counterpart role label fails as counterpart_as_subject: the colleague declined the proposal",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "colleague"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a sentence whose subject is a counterpart role label fails as counterpart_as_subject: The other team refused",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "team"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a sentence whose subject is a counterpart role label fails as counterpart_as_subject: the manager would not move",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "would"
+     },
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "manager"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a sentence whose subject is a counterpart role label fails as counterpart_as_subject: the participant stated a position and the lead decides",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "lead"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a sentence whose subject is a counterpart role label fails as counterpart_as_subject: the participant stated a position, the chair takes the decision",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "counterpart_as_subject",
+      "detail": "chair"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a closed-list evaluative phrase fails (strong response)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "strong response"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (owned)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "owned"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (caused)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "caused"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (blamed)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "blamed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (prioritized)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "prioritized"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (verified)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "verified"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-63",
+   "label": "stars fail",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_glyph",
+      "detail": "dot, bar, star, marker or traffic-light glyph"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-63",
+   "label": "a flag wording is rejected (red flag)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "red flag"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-63",
+   "label": "a retired term fails (candidate)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "candidate"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D5-64",
+   "label": "every D5 Recorded Conduct Entry passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-64",
+   "label": "every D5 template passes the prohibited-output check",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}

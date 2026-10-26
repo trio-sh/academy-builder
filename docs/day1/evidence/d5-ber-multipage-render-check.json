@@ -1,0 +1,99 @@
+{
+ "passed": 13,
+ "total": 13,
+ "failed": [],
+ "results": [
+  {
+   "id": "D5-67",
+   "label": "a D5 only report renders three pages through the multi page renderer: cover, one dimension page holding the D5 block, controls; it is not refused",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:1",
+    "controls:0"
+   ]
+  },
+  {
+   "id": "D5-67",
+   "label": "the contents list D5 as represented and thirteen dimensions as not represented",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-25",
+   "label": "every page is 612 by 792 points, no block passes the content box (x 576, y 744), nothing overflows, and every page states Page n of 3",
+   "pass": true,
+   "detail": [
+    [],
+    [
+     371
+    ],
+    []
+   ]
+  },
+  {
+   "id": "D5-51",
+   "label": "the evidence currency statement appears visibly on the controls page (the availability and status block), with the absolute date",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-62",
+   "label": "the specimen face renders in full: cover, D5 block, controls with the unrepresented strip, permitted use and disclosure limits; the specimen footer is on every page and no issued claim is made",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-43",
+   "label": "no named-recipient, release-token, passcode or released-to-your-organization construction appears on any page of the D5 only report",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-68",
+   "label": "neither counterpart_role nor counterpart_position, nor a counterpart label, appears on any page of the D5 only report",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-27",
+   "label": "no word of the Section 5.7a list (outcome, trait, manner, modal, prediction and cross dimension words) appears in the rendered D5 block",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-64",
+   "label": "no rendered D5 sentence has a counterpart role label as the subject of a verb",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-26",
+   "label": "no overall, composite, average, profile or score element appears on any page",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-37",
+   "label": "a D5 only report with the permitted-use text unloaded refuses controlled_text_absent and draws no page; the block is never omitted",
+   "pass": true,
+   "detail": "REPORT NOT PRODUCED\ncontrolled_text_absent\n\nT-USE-001\n\nNo page is produced for a manifest the Standard refuses."
+  },
+  {
+   "id": "D5-67",
+   "label": "a manifest with no D5 claim package (or any represented dimension) refuses claim_package_absent and draws no page",
+   "pass": true,
+   "detail": "REPORT NOT PRODUCED\nclaim_package_absent\n\nno represented dimension\n\nNo page is produced for a manifest the Standard refuses."
+  },
+  {
+   "id": "D5-25",
+   "label": "a two dimension report (D1 and D5) renders through the multi page renderer as three pages, one dimension page holding both blocks",
+   "pass": true,
+   "detail": [
+    "cover:0",
+    "dimensions:2",
+    "controls:0"
+   ]
+  }
+ ]
+}

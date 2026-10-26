@@ -1,0 +1,194 @@
+{
+ "passed": 25,
+ "total": 25,
+ "failed": [],
+ "results": [
+  {
+   "id": "D5-load",
+   "label": "D5 loads 16 questions, 16 capture sets, 46 capture lines, 7 branch rules, 46 statements, 10 numbered resolution rules, 13 templates, 33 source objects",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "the identifiers the package retires or never issued (S1-007, S1-009, S2-005, S2-006, S3-008) are not registered",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "every branch rule has its parent, child and serving answers derived on load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "no D5 version is approved, no source is active, none holds an approval record",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "D1 and D2 content are untouched by the D5 load",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "the placeholder grammar is data: D2 has 5 rows, D5 has 7",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-load",
+   "label": "one conduct element per question group (Q-D5-06 and Q-D5-06b alone carry CE-D5-06)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "the register has one row per question and answer pair (46) with the structural fields populated",
+   "pass": true,
+   "detail": 46
+  },
+  {
+   "id": "D-05",
+   "label": "the five semantic fields are empty on every row; nothing in this build wrote one",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "every one of the 16 questions carries calibration_ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a structurally complete row is not mistaken for a ready one: statement_mapping populated, semantic fields empty, ready false",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D-05",
+   "label": "a dimension with no register (D2) is not subject to the rule",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-04",
+   "label": "at Stage 1 (8 sources) and Stage 3 (5 sources) Q-D5-06 and Q-D5-06b are NOT SERVED on every loaded source and its route list is empty (a written response or a submission proposes a route, it does not use one)",
+   "pass": true,
+   "detail": [
+    "SRC-D5-S1-001:NOT SERVED",
+    "SRC-D5-S1-002:NOT SERVED",
+    "SRC-D5-S1-003:NOT SERVED"
+   ]
+  },
+  {
+   "id": "D5-04",
+   "label": "at Stage 2 (7 sources) and Stage 4 (8 sources) Q-D5-06 is served and Q-D5-06b follows it, and the only selectable route is the session itself (one route on each list)",
+   "pass": true,
+   "detail": [
+    "this session with the director",
+    "this session",
+    "this session with the remaining team",
+    "this session",
+    "this session",
+    "this session",
+    "this session"
+   ]
+  },
+  {
+   "id": "D5-56",
+   "label": "Q-D5-09 is served exactly where the source carries an exchange test point (Stages 1, 2 and 4) and is NOT SERVED at Stage 3, where the asynchronous form has none",
+   "pass": true,
+   "detail": [
+    "S1:R6:DIRECT",
+    "S2:B6:DIRECT",
+    "S3:null:NOT SERVED",
+    "S4:B6:DIRECT"
+   ]
+  },
+  {
+   "id": "D5-04",
+   "label": "every other element is served at every Stage on every loaded source (CE-D5-01 to 05, 07 and 08 and their children)",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-58",
+   "label": "with both drafting rows the next failing precondition is question_definition_incomplete",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-58",
+   "label": "a source whose served question has an empty definition cannot enter the production approval path; the refusal is logged",
+   "pass": true,
+   "detail": {
+    "detail": "a served question has empty semantic definition fields: Q-D5-01",
+    "reason": "question_definition_incomplete",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-58",
+   "label": "once every served question is complete the same source queues (Q-D5-08 is NOT SERVED on it and is not counted)",
+   "pass": true,
+   "detail": {
+    "outcome": "queued",
+    "source_version_id": "2d5dac7e-0547-422b-9ac2-4c58b54f06ec"
+   }
+  },
+  {
+   "id": "D5-58",
+   "label": "clearing the definition closes the path again",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-60",
+   "label": "the real D5 sources hold no approval and the first failing precondition is named",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-50",
+   "label": "a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D5-T-d2ff3f93-2 names Q-D5-99",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-50",
+   "label": "a table whose rows all name real questions loads",
+   "pass": true,
+   "detail": {
+    "rows": 1,
+    "outcome": "loaded"
+   }
+  },
+  {
+   "id": "D5-50",
+   "label": "a suppress row naming a statement that does not exist is refused",
+   "pass": true,
+   "detail": {
+    "detail": "the whole table is refused: RR-D5-T-d2ff3f93-1s suppresses unknown ST-D5-999",
+    "reason": "resolution_table_refused",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-50",
+   "label": "the loader is the service route only",
+   "pass": true,
+   "detail": {
+    "msg": "permission denied for function t3a_load_resolution_rules"
+   }
+  }
+ ]
+}

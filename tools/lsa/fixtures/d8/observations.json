@@ -1,0 +1,3272 @@
+{
+ "participants": [
+  {
+   "participant_id": "V01",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V02",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V03",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V04",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V05",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V06",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V07",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V08",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V09",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V10",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V11",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V12",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V13",
+   "lsa_consent_state": "never_asked"
+  },
+  {
+   "participant_id": "V15",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V16",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V17",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V18",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V19",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V20",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V21",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V22",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V23",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V24",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V25",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V26",
+   "lsa_consent_state": "granted"
+  },
+  {
+   "participant_id": "V27",
+   "lsa_consent_state": "granted"
+  }
+ ],
+ "observations": [
+  {
+   "observation_id": "OD001",
+   "participant_id": "V01",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "594ff7f79d50069c73dea3c6f14108a87e0efec39ce3c01d5cc240c1a97d7a95"
+  },
+  {
+   "observation_id": "OD002",
+   "participant_id": "V01",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "885cce987973b3a7a6dc107bfba8293f140ac891980487b25ee7b123f2574b8e"
+  },
+  {
+   "observation_id": "OD003",
+   "participant_id": "V02",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "6a944fdb7a3d2ef1e83f20e95c7267251bd1aad573b33bdd24addde2b538be4e"
+  },
+  {
+   "observation_id": "OD004",
+   "participant_id": "V02",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-004@2.1",
+   "served_instance_hash": "64ca9ed50b1d392e7365151b6e07574ee53aa4443ddbe4d1c328e10b81a42c06",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Work that must continue with its people, tools or resources reduced",
+   "commit_hash": "06d9b4d56f4bb1c47cb9b3a1ef46b79ea731c053b6427c8f263136ec862ae41d"
+  },
+  {
+   "observation_id": "OD005",
+   "participant_id": "V03",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_NONE",
+   "statement_id": "ST-D8-029",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "dbe047c474c2ddfc87b3d99db38a31fd0cd642c61faaae652bc7601ff1a54d0c"
+  },
+  {
+   "observation_id": "OD006",
+   "participant_id": "V03",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_AND_POINT",
+   "statement_id": "ST-D8-026",
+   "source_version_id": "SRC-D8-S2-004@2.1",
+   "served_instance_hash": "64ca9ed50b1d392e7365151b6e07574ee53aa4443ddbe4d1c328e10b81a42c06",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Work that must continue with its people, tools or resources reduced",
+   "commit_hash": "03c65777ff2e602129505def5fdea0be31ef1f482a83d68021d26bcc456eba12"
+  },
+  {
+   "observation_id": "OD007",
+   "participant_id": "V04",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-004@2.1",
+   "served_instance_hash": "64ca9ed50b1d392e7365151b6e07574ee53aa4443ddbe4d1c328e10b81a42c06",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Work that must continue with its people, tools or resources reduced",
+   "commit_hash": "ec4809276309a15db73b6ac6faa17b24f494f9625996d4cebe8fa36732a896dc"
+  },
+  {
+   "observation_id": "OD008",
+   "participant_id": "V04",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-009@2.1",
+   "served_instance_hash": "571093ef8efb1c458d71aa42aa841449240f5793e2260947b979772694f51920",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A failure or violation formally recorded against work the participant holds",
+   "commit_hash": "481c86f7e39623daafbebce12edb5a7998f2231fbb384dbbabd61977ca73eeb6"
+  },
+  {
+   "observation_id": "OD009",
+   "participant_id": "V05",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "16830cf98e21e8f917a677dfeabeabdad298e3be082e00e0049af73a36314a65"
+  },
+  {
+   "observation_id": "OD010",
+   "participant_id": "V06",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NONE",
+   "statement_id": "ST-D8-040",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "ab7be3e1b985fe8c9d574b1098e4e40bd3343992d61d732208b5551fa7532db0"
+  },
+  {
+   "observation_id": "OD011",
+   "participant_id": "V06",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-004@2.1",
+   "served_instance_hash": "64ca9ed50b1d392e7365151b6e07574ee53aa4443ddbe4d1c328e10b81a42c06",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Work that must continue with its people, tools or resources reduced",
+   "commit_hash": "a34590578c3a36042e7c21a0003c3e1614644bc284efb7d233dbfcb6637b0ce3"
+  },
+  {
+   "observation_id": "OD012",
+   "participant_id": "V07",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_NO_POINT",
+   "statement_id": "ST-D8-027",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "2214471d101c0cb446121130cd5f463c83e16235b98a86963561a204d0263176"
+  },
+  {
+   "observation_id": "OD013",
+   "participant_id": "V07",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_NO_POINT",
+   "statement_id": "ST-D8-027",
+   "source_version_id": "SRC-D8-S2-005@2.1",
+   "served_instance_hash": "0bf8d4803f693d9a823cfd22c5a3c3a821e2fe9c8ef14e8151ab335104d86908",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An error by the participant that has become known beyond them",
+   "commit_hash": "f39cf240523ec9c7bd5eda22392029980fc73944f779c9b7e9e65dc7563782f2"
+  },
+  {
+   "observation_id": "OD014",
+   "participant_id": "V07",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_AND_POINT",
+   "statement_id": "ST-D8-026",
+   "source_version_id": "SRC-D8-S2-007@2.1",
+   "served_instance_hash": "758d33e9a10b43ba3f49d54abf400e5d6f9216210714cbb076d7f49f5448cdf2",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-04",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A condition that has disrupted the work before, producing the same disruption again",
+   "commit_hash": "d00251627c9bbeabc05d457d3c41ebd0e6c98ff2aab741a393615476c61fcdad"
+  },
+  {
+   "observation_id": "OD015",
+   "participant_id": "V08",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_AND_POINT",
+   "statement_id": "ST-D8-026",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "2a08d481a4124f221bc55ed4de802ae7b43100f7ac50c7857affa72937b06d12"
+  },
+  {
+   "observation_id": "OD016",
+   "participant_id": "V08",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_NO_POINT",
+   "statement_id": "ST-D8-027",
+   "source_version_id": "SRC-D8-S2-005@2.1",
+   "served_instance_hash": "0bf8d4803f693d9a823cfd22c5a3c3a821e2fe9c8ef14e8151ab335104d86908",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-01",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An error by the participant that has become known beyond them",
+   "commit_hash": "18cc328bd661fc791c7141aaf38141c0eb812bdaa0441d689e9903e4ddca34ad"
+  },
+  {
+   "observation_id": "OD017",
+   "participant_id": "V08",
+   "proposition_id": "REK-D8-006",
+   "conduct_element_id": "CE-D8-06",
+   "dimension_id": "D8",
+   "state_code": "CT_WORK_AND_POINT",
+   "statement_id": "ST-D8-026",
+   "source_version_id": "SRC-D8-S2-007@2.1",
+   "served_instance_hash": "758d33e9a10b43ba3f49d54abf400e5d6f9216210714cbb076d7f49f5448cdf2",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-04",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "A condition that has disrupted the work before, producing the same disruption again",
+   "commit_hash": "f2e8a8a354fdbf041727fba5270808e3c30e6a8b3afb0c074f14efeaca18d942"
+  },
+  {
+   "observation_id": "OD018",
+   "participant_id": "V09",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "659317cf3c8354d3a7542142f04d2ea0b54eb070a90dfe5cd53e14e683ac0954"
+  },
+  {
+   "observation_id": "OD019",
+   "participant_id": "V09",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S3-001@2.1",
+   "served_instance_hash": "22d3d0eb8d8254c37e2d09b422e3da1444df741b26879ecfdc7c554dd0982291",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "work_sample",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D8-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Work sample",
+   "situation_class_label": "A failure or violation formally recorded against work the participant holds",
+   "commit_hash": "1946a04fd43243c70098f9bfd4572070abfb1c5f0c3bb03b8be923173145d476"
+  },
+  {
+   "observation_id": "OD020",
+   "participant_id": "V10",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "745487d28bfd43de783740abead8791f49737720a6cda7340572f1b73c37f40a"
+  },
+  {
+   "observation_id": "OD021",
+   "participant_id": "V10",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S4-001@2.1",
+   "served_instance_hash": "f0a25b6fca7b6bfb16ee3c8727a5c2a8fb7ae9f74f0d4b19cfb0ecafa017418a",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "group_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "not_eligible",
+   "interaction_pattern_family_id": "IPF-D8-03",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Group session",
+   "situation_class_label": "A failure or violation formally recorded against work the participant holds",
+   "commit_hash": "8e7ef1a6c82a52f5149a69a81979ed2046db4a40478e8f54b42b8bfa8387abd8"
+  },
+  {
+   "observation_id": "OD022",
+   "participant_id": "V11",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "2389b3b7e4256ffb741d60f40df001de33dc624f642961069159fce5784a9f0f"
+  },
+  {
+   "observation_id": "OD023",
+   "participant_id": "V11",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "bbb69db83e9ee7862c0021fcc4910fd5cf30bb789aa2ce8ed0ce7aaa8f2e2edf"
+  },
+  {
+   "observation_id": "OX024",
+   "participant_id": "V12",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "874eca4a6060628bb672fbc6d5817d91348c2c33a4e2f5250a39cd70bddf1d51"
+  },
+  {
+   "observation_id": "OX025",
+   "participant_id": "V12",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "c2896d41cf99a307f8e689b4832740d4729d40bcae7b9750c2f54b5f367f717e"
+  },
+  {
+   "observation_id": "OD026",
+   "participant_id": "V13",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "2309e9151b78720749a484aa54fb29c304428857152c782ca1b47db097dc8217"
+  },
+  {
+   "observation_id": "OD027",
+   "participant_id": "V13",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "bbef4164a3cfc6772766a542a6c8a51ed436603cef1c42e48dfc9ce4f8763a8c"
+  },
+  {
+   "observation_id": "OD028",
+   "participant_id": "V19",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "1c505e1986d7417685ea154eded2d43b078d5d1b38c8871930f79df6f126bb85"
+  },
+  {
+   "observation_id": "OD029",
+   "participant_id": "V19",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "retake_after_redirect",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "ab184cc28e0acef7e3dad613428e02ec389eac3ad9f89c6db8d4673337881f0b"
+  },
+  {
+   "observation_id": "OD030",
+   "participant_id": "V20",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "391da1cb1e24a14a8ca22ccf4a5db119869157a7ec86134edfc6df5e08fa8b36"
+  },
+  {
+   "observation_id": "OD031",
+   "participant_id": "V20",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "ce56c8c776a336b8b1359b2fab7af6f558b1df6eba831ebbe2d64c4ccc8d736f"
+  },
+  {
+   "observation_id": "OD032",
+   "participant_id": "V20",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-004@2.1",
+   "served_instance_hash": "64ca9ed50b1d392e7365151b6e07574ee53aa4443ddbe4d1c328e10b81a42c06",
+   "observed_at": "2027-06-01",
+   "committed_at": "2027-06-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-06",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-06-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Work that must continue with its people, tools or resources reduced",
+   "commit_hash": "d6476585e7492549552f54f5e6ddb10fd44312a1c88db721a128950c4f8ff26e"
+  },
+  {
+   "observation_id": "OD033",
+   "participant_id": "V15",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "a46a6b0a6c047ed1d148819d739b2124a7d29ed69c233c194a7cb7b9a2d76b08"
+  },
+  {
+   "observation_id": "OD035",
+   "participant_id": "V16",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "960a7f182b224ad774bbff10f85c567e21c23f58606b006dcd5342cd11625386"
+  },
+  {
+   "observation_id": "OD037",
+   "participant_id": "V17",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "a5a24b7b1ab34e2a757b6796cf24c533f37afe05ff9e830acbcfc6a11d321fd7"
+  },
+  {
+   "observation_id": "OD039",
+   "participant_id": "V18",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "5816e71e4fc657b43dcc50a52da3af1839d161612c32517c4de004b1ae66e932"
+  },
+  {
+   "observation_id": "OD041",
+   "participant_id": "V21",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "e5f5eab3ff74f17bd7706e580195d2227fabc6afdc4d3e564145349fb1a78e2f"
+  },
+  {
+   "observation_id": "OD043",
+   "participant_id": "V22",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "e5fa47abdb7611e4c9ac5de3497dd1ac3f4064d28b1ba39c9f9a2decd31dbee5"
+  },
+  {
+   "observation_id": "OD045",
+   "participant_id": "V23",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "88e9e3953fc05b9719671944cf3689135bd5c697bb4797ede597f6c38a50b747"
+  },
+  {
+   "observation_id": "OD047",
+   "participant_id": "V24",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "9a1457bb5ccc0e6d9699a7a1e02f7d8caca7350d0e6c69e627c8c771a0d39992"
+  },
+  {
+   "observation_id": "OD048",
+   "participant_id": "V24",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_WITH_PLACE",
+   "statement_id": "ST-D8-038",
+   "source_version_id": "SRC-D8-S2-002@2.1",
+   "served_instance_hash": "6d6d7de295607a61ab200d39d7664558c3ad43b318a09944c071b504984bc6af",
+   "observed_at": "2027-04-01",
+   "committed_at": "2027-04-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-07",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-04-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "An attribution about the participant made in front of others",
+   "commit_hash": "c679a7edd6a2ca1b212b0ce97d8288d15a6c9737d73aef39968d2da37baa71be"
+  },
+  {
+   "observation_id": "OD049",
+   "participant_id": "V25",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "e70a397dc11a2ca4a56b3801f8b5ca805003d899b2cb97e44f2ed2435be80472"
+  },
+  {
+   "observation_id": "OD051",
+   "participant_id": "V26",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "c9f67e3b977a5174cf1154ce8937c12f34a45d9fedf608a03bff01a40075ccb9"
+  },
+  {
+   "observation_id": "OD053",
+   "participant_id": "V27",
+   "proposition_id": "REK-D8-008",
+   "conduct_element_id": "CE-D8-08",
+   "dimension_id": "D8",
+   "state_code": "RC_NO_PLACE",
+   "statement_id": "ST-D8-039",
+   "source_version_id": "SRC-D8-S2-001@2.1",
+   "served_instance_hash": "9bcf21dd892ff7794b0ee57906d3ff28a257d684f195fb6a4231fc82ccbcccfa",
+   "observed_at": "2027-02-01",
+   "committed_at": "2027-02-01T10:00",
+   "in_currency": true,
+   "administration": {
+    "observation_mode": "structured_live_session",
+    "assistance_declaration": "none"
+   },
+   "longitudinal_use_status": "eligible",
+   "interaction_pattern_family_id": "IPF-D8-02",
+   "observer_ids": [
+    "M1"
+   ],
+   "cooldown_completed_at": "2027-02-01",
+   "attempt_reason": "first",
+   "observation_mode_label": "Structured live session",
+   "situation_class_label": "Sustained work ended or withdrawn by a decision outside the participant's control",
+   "commit_hash": "929ce473550ebf2c10b587c99241e4403fae03f1c46695265aee7a0ed79a17b4"
+  }
+ ],
+ "cases": [
+  {
+   "case_id": "T01",
+   "participant_id": "V01",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T02",
+   "participant_id": "V02",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T03",
+   "participant_id": "V03",
+   "proposition_id": "REK-D8-006",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T04",
+   "participant_id": "V04",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T05",
+   "participant_id": "V05",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T06",
+   "participant_id": "V06",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T07",
+   "participant_id": "V07",
+   "proposition_id": "REK-D8-006",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T08",
+   "participant_id": "V08",
+   "proposition_id": "REK-D8-006",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T09",
+   "participant_id": "V09",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T10",
+   "participant_id": "V10",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T11",
+   "participant_id": "V11",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T12",
+   "participant_id": "V12",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T13",
+   "participant_id": "V13",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T15",
+   "participant_id": "V15",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T16",
+   "participant_id": "V16",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T17",
+   "participant_id": "V17",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T18",
+   "participant_id": "V18",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T19",
+   "participant_id": "V19",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T20",
+   "participant_id": "V20",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T21",
+   "participant_id": "V21",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T22",
+   "participant_id": "V22",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T23",
+   "participant_id": "V23",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T24",
+   "participant_id": "V24",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  },
+  {
+   "case_id": "T25",
+   "participant_id": "V25",
+   "proposition_id": "REK-D8-008",
+   "dimension_id": "D8",
+   "period_start": "2027-01-01",
+   "period_end": "2027-12-31",
+   "snapshot_date": "2027-12-31"
+  }
+ ],
+ "load_tests": [
+  {
+   "id": "LD1 forward cycle in the continuation states",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D8-REK006",
+      "proposition_id": "REK-D8-006",
+      "conduct_element_id": "CE-D8-06",
+      "members": [
+       {
+        "source_version_id": "SRC-D8-S2-001@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-002@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-003@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-004@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-005@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-006@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-007@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-009@2.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "CT_WORK_NO_POINT",
+       "CT_WORK_AND_POINT",
+       "CT_NONE_NAMED"
+      ],
+      "absence_states": [
+       "CT_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D8-REK008",
+      "proposition_id": "REK-D8-008",
+      "conduct_element_id": "CE-D8-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D8-S2-001@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-002@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-003@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-004@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-005@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-006@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-007@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-009@2.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "RC_NO_PLACE",
+       "RC_WITH_PLACE"
+      ],
+      "absence_states": [
+       "RC_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D8-006",
+      "family_id": "FAM-D8-REK006",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "CT_WORK_NO_POINT",
+        "to_state": "CT_WORK_AND_POINT",
+        "direction": "forward"
+       },
+       {
+        "from_state": "CT_WORK_AND_POINT",
+        "to_state": "CT_WORK_NO_POINT",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D8-006, held by the founder",
+      "forward_label": "toward stating when named work resumes",
+      "backward_label": "away from stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D8-008",
+      "family_id": "FAM-D8-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "RC_NO_PLACE",
+        "to_state": "RC_WITH_PLACE",
+        "direction": "forward"
+       },
+       {
+        "from_state": "RC_WITH_PLACE",
+        "to_state": "RC_NO_PLACE",
+        "direction": "backward"
+       },
+       {
+        "from_state": "RC_WITH_PLACE",
+        "to_state": "RC_NO_PLACE",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D8-008, held by the founder",
+      "forward_label": "toward stating where a record is made",
+      "backward_label": "away from stating where a record is made"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D8",
+      "applies_to": "D8",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-insufficient_evidence",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-comparison_not_established",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-consistent_recorded_conduct",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-different_no_direction",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-documented_progression",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating when named work resumes, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated, toward stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-documented_regression",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating when named work resumes, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated, away from stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-mixed_trajectory",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-insufficient_evidence",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-comparison_not_established",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-different_no_direction",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-documented_progression",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating where a record is made, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated, toward stating where a record is made"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-documented_regression",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating where a record is made, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated, away from stating where a record is made"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-mixed_trajectory",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D8",
+      "applies_to": "D8",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D8",
+      "dimension_id": "D8",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-01",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-02",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-03",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-04",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-05",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-06",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-07",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  },
+  {
+   "id": "LD2 absence state in a direction",
+   "registries": {
+    "families": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D8-REK006",
+      "proposition_id": "REK-D8-006",
+      "conduct_element_id": "CE-D8-06",
+      "members": [
+       {
+        "source_version_id": "SRC-D8-S2-001@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-002@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-003@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-004@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-005@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-006@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-007@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-009@2.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "CT_WORK_NO_POINT",
+       "CT_WORK_AND_POINT",
+       "CT_NONE_NAMED"
+      ],
+      "absence_states": [
+       "CT_NONE"
+      ]
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "family_id": "FAM-D8-REK008",
+      "proposition_id": "REK-D8-008",
+      "conduct_element_id": "CE-D8-08",
+      "members": [
+       {
+        "source_version_id": "SRC-D8-S2-001@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-002@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-003@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-004@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-005@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-006@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-007@2.1",
+        "approved_by": null,
+        "approved_at": null
+       },
+       {
+        "source_version_id": "SRC-D8-S2-009@2.1",
+        "approved_by": null,
+        "approved_at": null
+       }
+      ],
+      "administration_profile": {
+       "observation_mode": "structured_live_session",
+       "assistance_declaration": "none"
+      },
+      "states": [
+       "RC_NO_PLACE",
+       "RC_WITH_PLACE"
+      ],
+      "absence_states": [
+       "RC_NONE"
+      ]
+     }
+    ],
+    "direction_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D8-006",
+      "family_id": "FAM-D8-REK006",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "CT_WORK_NO_POINT",
+        "to_state": "CT_WORK_AND_POINT",
+        "direction": "forward"
+       },
+       {
+        "from_state": "CT_WORK_AND_POINT",
+        "to_state": "CT_WORK_NO_POINT",
+        "direction": "backward"
+       },
+       {
+        "from_state": "CT_NONE",
+        "to_state": "CT_WORK_NO_POINT",
+        "direction": "forward"
+       }
+      ],
+      "justification_ref": "J-D8-006, held by the founder",
+      "forward_label": "toward stating when named work resumes",
+      "backward_label": "away from stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DR-D8-008",
+      "family_id": "FAM-D8-REK008",
+      "family_version": 1,
+      "transitions": [
+       {
+        "from_state": "RC_NO_PLACE",
+        "to_state": "RC_WITH_PLACE",
+        "direction": "forward"
+       },
+       {
+        "from_state": "RC_WITH_PLACE",
+        "to_state": "RC_NO_PLACE",
+        "direction": "backward"
+       }
+      ],
+      "justification_ref": "J-D8-008, held by the founder",
+      "forward_label": "toward stating where a record is made",
+      "backward_label": "away from stating where a record is made"
+     }
+    ],
+    "sufficiency_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "SR-D8",
+      "applies_to": "D8",
+      "min_eligible": 2,
+      "min_comparable": 2,
+      "min_after_first": 1,
+      "require_completed_cooldown": true
+     }
+    ],
+    "entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-insufficient_evidence",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-comparison_not_established",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-consistent_recorded_conduct",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-different_no_direction",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-documented_progression",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating when named work resumes, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated, toward stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-documented_regression",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating when named work resumes, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated, away from stating when named work resumes"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-006-mixed_trajectory",
+      "proposition_id": "REK-D8-006",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating which work continues and when it resumes",
+      "element_short": "Work continuing and its resumption stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "CT_WORK_NO_POINT": {
+        "full": "Named work that is to continue with no point at which it resumes",
+        "short": "no resumption point"
+       },
+       "CT_WORK_AND_POINT": {
+        "full": "Named work that is to continue and when it resumes",
+        "short": "work and resumption point"
+       },
+       "CT_NONE_NAMED": {
+        "full": "Stated that work is to continue and named none",
+        "short": "none named"
+       },
+       "CT_NONE": {
+        "full": "Nothing stated about work continuing",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Picking work back up after something has gone wrong with it",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "work continuing and its resumption stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-insufficient_evidence",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "insufficient_evidence",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Too few comparable observations were recorded in this period for a comparison.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-comparison_not_established",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "comparison_not_established",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "The observations recorded in this period were not comparable with one another, so no comparison is stated.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-consistent_recorded_conduct",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "consistent_recorded_conduct",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Each included observation recorded the same response.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-different_no_direction",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "different_no_direction",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "The included observations recorded different responses. No direction is set between these responses.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-documented_progression",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "documented_progression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved toward stating where a record is made, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated, toward stating where a record is made"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-documented_regression",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "documented_regression",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved away from stating where a record is made, and no later observation moved the other way.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "Compared only across situations approved as offering the same opportunity, under the same administration.",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated, away from stating where a record is made"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "E-D8-008-mixed_trajectory",
+      "proposition_id": "REK-D8-008",
+      "finding_code": "mixed_trajectory",
+      "sequence_pattern": "ANY",
+      "element_title": "Stating that a record is made and where",
+      "element_short": "Record and its place stated",
+      "wording": "Across the included observations, the recorded conduct moved in both directions.",
+      "display_label": null,
+      "state_labels": {
+       "RC_NO_PLACE": {
+        "full": "Stated that a record is to be made with no place for it",
+        "short": "no place named"
+       },
+       "RC_WITH_PLACE": {
+        "full": "Stated that a record is to be made and where",
+        "short": "record and place"
+       },
+       "RC_NONE": {
+        "full": "No record stated",
+        "short": "none observed"
+       }
+      },
+      "comparison_basis_line": "",
+      "work_process_line": "Deciding what is written down after something has gone wrong at work",
+      "local_limit_line": "Recorded in workplace situations of this dimension only. It is not a judgment of the person's character.",
+      "summary_clause": "record and its place stated"
+     }
+    ],
+    "history_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "HR-D8",
+      "applies_to": "D8",
+      "max_age_months": 36
+     }
+    ],
+    "dimension_rules": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "rule_id": "DMR-D8",
+      "dimension_id": "D8",
+      "min_elements": 2,
+      "min_directional_elements": 2
+     }
+    ],
+    "dimension_entries": [
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-01",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_insufficient",
+      "wording": "Within {dimension_name}, no conduct element had enough comparable observations in this period to be compared.",
+      "display_label": "Dimension not summarized"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-02",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_pattern_only_coverage",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements were compared to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-03",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_pattern_only_direction",
+      "wording": "Within {dimension_name}, {element_clauses}. Too few conduct elements moved in the same direction to state a direction for the dimension.",
+      "display_label": "Dimension direction not stated"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-04",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_consistent",
+      "wording": "Within {dimension_name}, the same recorded conduct held across comparable observations: {element_clauses}.",
+      "display_label": "Consistent conduct across compared elements"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-05",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_progression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Progression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-06",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_regression",
+      "wording": "Within {dimension_name}, {element_clauses}. No element with a direction set moved the other way.",
+      "display_label": "Regression in compared conduct"
+     },
+     {
+      "status": "active",
+      "version": 1,
+      "effective_from": "2027-01-01",
+      "effective_to": null,
+      "approved_by": "trial fixture only",
+      "approved_at": "2027-01-01",
+      "entry_id": "DE-D8-07",
+      "dimension_id": "D8",
+      "dimension_finding_code": "dimension_mixed",
+      "wording": "Within {dimension_name}, {element_clauses}. The compared elements did not all move the same way, so no single direction is stated for the dimension.",
+      "display_label": "Mixed across compared conduct"
+     }
+    ]
+   }
+  }
+ ],
+ "dimension_cases": [
+  {
+   "id": "DD1 both D8 elements progressed",
+   "dimension_id": "D8",
+   "element_results": [
+    [
+     "CE-D8-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D8-06",
+     "documented_progression"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_progression"
+   }
+  },
+  {
+   "id": "DD2 one element only compared",
+   "dimension_id": "D8",
+   "element_results": [
+    [
+     "CE-D8-08",
+     "documented_progression"
+    ],
+    [
+     "CE-D8-06",
+     "insufficient_evidence"
+    ]
+   ],
+   "expected": {
+    "dimension_finding_code": "dimension_pattern_only_coverage"
+   }
+  }
+ ]
+}

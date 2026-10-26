@@ -14,9 +14,11 @@ Rule from every package: do not stop on a decision. Apply the stated default, lo
 | 3 | D2 pathway: content load from the JSON build package, then the 11 instruction packages, then tests D2-01 to D2-57 and PP-01 to PP-10 | Step 2 | Not started |
 | 4 | D3 pathway on the same code. Only content and its decisions differ | Step 3 | Built, tested and applied to production not servable (PR #345); D4 followed on the same machinery (Step 5) |
 | 5 | D4 pathway. Reconcile the stated inconsistencies first (below), build unaffected parts in parallel | Step 3 | Not started |
+| 5a | D8 pathway (Resilience and Recovery, build folder v2.1) on the same machinery. Migrations 20270211 to 20270216, scripts `d8_step*`, rollbacks `rollback_step11*` | Step 5 | Built and tested on the throwaway database (86 of 87 identifiers PASS, one named exception D8-64, CR-252); branch claude/build-d8; not applied to production, every D8 source not servable (CR-250 to CR-268) |
 | 6 | Multi page BER, beside (not replacing) the single page face. Same fonts and colour theme | Step 2 | Not started |
 | 7 | Behavioral Trajectory Report (Session Archive, code `lsa`): capture structures, resolver, admission boundary, tab, all dormant | Step 1 | Not started |
 | 8 | Return report: ERD, data dictionary as built, acceptance results with evidence, conflict register | All | Not started |
+| 9 | D9 (Learning Agility) pathway on the same machinery, from the D9 handover (T3A-D9-EXEC-001 v1.1): five migrations 20270221 to 20270225, the `d9_` test scripts, `d9-acceptance-results.md` | Steps 3 to 5 and 7 | Built and tested on the throwaway database on branch `claude/build-d9` (24 Oct 2026): 88 of 89 acceptance identifiers PASS, 1 NOT RUN (D9-71 request log, CR-285), package checks run (CR-287), CR-270 to CR-289; not applied to any live project, nothing approved or served |
 
 ## Day 1 detail (Step 1)
 
@@ -55,3 +57,5 @@ Steps 0 and 2 are done. Step 3 (D2): 3a readers dimension aware and 3b content l
 
 
 Steps 5 to 7 (21 October 2026): D4 on the shared machinery (applied, not servable); multi page BER renderer for the specimen with refusal controls and browser checks; Session Archive resolver port, dormant registries and flags, D4 content as drafts; Stage 4 start through the server's entry; return report (`RETURN-REPORT.md`). Acceptance D2 74/74, D3 78/78, D4 84/84. What is left needs people: see the last column of `conflict-register.md`.
+
+D5 (24 October 2026, branch `claude/build-d5`, sandbox only, not merged and not applied): shared machinery, content (28 of the 33 sources load, five refused by the counterpart rule), fixtures, seeds and Session Archive drafts as migrations 20270201 to 20270205 with rollback scripts; 444 step checks; acceptance D5 83 of 87 PASS and 4 NOT RUN (screens); package checks 10 of 11 (3.1.11 needs the D4 folder). See `conflict-register.md` CR-230 to CR-249 and `d5-acceptance-results.md`.

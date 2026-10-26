@@ -1,0 +1,551 @@
+{
+ "passed": 61,
+ "total": 61,
+ "failed": [],
+ "results": [
+  {
+   "id": "D5-composed",
+   "label": "a complete valid Stage 2 pattern composes one statement (sixteen served questions)",
+   "pass": true,
+   "detail": 16
+  },
+  {
+   "id": "D5-composed",
+   "label": "counts come from the selected items, never typed",
+   "pass": true,
+   "detail": [
+    "the participant named 2 of the shared items the situation set out"
+   ]
+  },
+  {
+   "id": "D5-composed",
+   "label": "clause instance carries the dimension scoped key and the statement id",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D5-001",
+    "observation_id": "5163056a-c9eb-4e6b-a16e-080aac41bf03",
+    "conduct_element_id": "CE-D5-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D5-001"
+   }
+  },
+  {
+   "id": "D5-24",
+   "label": "one immutable composed statement is stored",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-24",
+   "label": "editing a composed statement after commit refuses",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D5-04",
+   "label": "Q-D5-06 is NOT SERVED on the Stage 1 source: an answer refuses and nothing is written",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "Q-D5-06b is NOT SERVED at Stage 1 as well",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06b",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "Q-D5-06 is NOT SERVED on the Stage 3 source: an answer refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "Q-D5-06b is NOT SERVED at Stage 3 as well",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06b",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "Q-D5-09 is NOT SERVED at Stage 3 (CE-D5-09 is not in the launch design there): an answer refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-09",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "a missing state on a NOT SERVED question refuses too: no row of any kind",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06",
+    "reason": "answer_for_question_not_served",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-04",
+   "label": "the Stage 3 pattern without the three NOT SERVED questions composes thirteen clauses",
+   "pass": true,
+   "detail": 13
+  },
+  {
+   "id": "D5-05",
+   "label": "Q-D5-02 A1 with no item selected at Q-D5-02b refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-05",
+   "label": "Q-D5-02 A1 with Q-D5-02b not submitted at all refuses the same way",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b: a listed answer needs at least one item",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-05",
+   "label": "an answer that does not serve the child leaves the child unreached; sending its items refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b follows Q-D5-02",
+    "reason": "child_not_reached",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-06",
+   "label": "Q-D5-07 A3 (no agreement stated) composes ST-D5-034 alone for that element, with no child",
+   "pass": true,
+   "detail": [
+    "ST-D5-001",
+    "ST-D5-004",
+    "ST-D5-006",
+    "ST-D5-009",
+    "ST-D5-011",
+    "ST-D5-014",
+    "ST-D5-016",
+    "ST-D5-019",
+    "ST-D5-021",
+    "ST-D5-025",
+    "ST-D5-027",
+    "ST-D5-030",
+    "ST-D5-034",
+    "ST-D5-039",
+    "ST-D5-043"
+   ]
+  },
+  {
+   "id": "D5-09",
+   "label": "a served question left unanswered with no missing state refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-09",
+    "reason": "served_question_unanswered",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-09",
+   "label": "not_captured is a controlled code but not committable",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-09 missing:not_captured",
+    "reason": "missing_state_not_committable",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-09",
+   "label": "declined is committable and composes nothing for that question",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D5-10",
+   "label": "not_applicable is refused as a missing state",
+   "pass": true,
+   "detail": "missing_state_not_postable"
+  },
+  {
+   "id": "D5-10",
+   "label": "not_yet_observed is refused as a missing state",
+   "pass": true,
+   "detail": "missing_state_not_postable"
+  },
+  {
+   "id": "D5-07",
+   "label": "an item not on this source version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b item not on designated_enquiries of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-07",
+   "label": "AO5 exists on no source: an item that is on no version's list refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-04b item not on available_options of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-07",
+   "label": "a route on no version's list refuses (the only route of this source is AR1)",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-06b item not on available_routes of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-08",
+   "label": "an item of the D1 kind (a material item) refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-02b item not on designated_enquiries of this source version",
+    "reason": "bound_item_not_on_source",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-07",
+   "label": "the same item twice refuses",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-03b",
+    "reason": "item_selected_twice",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-49",
+   "label": "the same option selected at Q-D5-04b and Q-D5-05b composes both as separate determinations; neither is suppressed",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D5-49",
+   "label": "several shared options at both questions compose both, each with its own count",
+   "pass": true,
+   "detail": [
+    "the participant proposed 2 of the options the situation made available",
+    "the participant stated a change to their own position to 2 of the options the situation made available"
+   ]
+  },
+  {
+   "id": "D5-49",
+   "label": "a change stated without a proposal composes (Q-D5-04 A3 with Q-D5-05 A1 is permitted)",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D5-composed",
+   "label": "Q-D5-07b A2 (an agreement holding only a content outside the list) takes no items and composes ST-D5-037",
+   "pass": true,
+   "detail": [
+    "ST-D5-001",
+    "ST-D5-004",
+    "ST-D5-006",
+    "ST-D5-009",
+    "ST-D5-011",
+    "ST-D5-014",
+    "ST-D5-016",
+    "ST-D5-019",
+    "ST-D5-021",
+    "ST-D5-025",
+    "ST-D5-027",
+    "ST-D5-030",
+    "ST-D5-032",
+    "ST-D5-037",
+    "ST-D5-039",
+    "ST-D5-043"
+   ]
+  },
+  {
+   "id": "D5-composed",
+   "label": "Q-D5-07b A2 with items selected refuses: the answer takes none",
+   "pass": true,
+   "detail": {
+    "detail": "Q-D5-07b: this answer takes no items",
+    "reason": "selection_does_not_match_answer",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-17",
+   "label": "no D5 entry carries the library flag recurrence_blocker (D5 5.7)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D5-17",
+   "label": "a record status entry (ST-D5-003) composes and its clause instance is a recurrence blocker, never equivalent to another",
+   "pass": true,
+   "detail": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "id": "D5-17",
+   "label": "a conduct bearing entry (ST-D5-001) is not a blocker and is equivalent to the same entry in another observation",
+   "pass": true,
+   "detail": {
+    "state_code": "ST-D5-001",
+    "observation_id": "5163056a-c9eb-4e6b-a16e-080aac41bf03",
+    "conduct_element_id": "CE-D5-01",
+    "recurrence_blocker": false,
+    "recurrence_equivalence_key_id": "REK-D5-001"
+   }
+  },
+  {
+   "id": "D5-17",
+   "label": "the D4 blockers are unchanged by the D5 rule (ST-D4-010 and ST-D4-015 only)",
+   "pass": true,
+   "detail": [
+    "ST-D4-010",
+    "ST-D4-015"
+   ]
+  },
+  {
+   "id": "D5-12",
+   "label": "two D5 clause instances with the same key and state are equivalent",
+   "pass": true,
+   "detail": {
+    "outcome": "compared",
+    "equivalent": true
+   }
+  },
+  {
+   "id": "D5-12",
+   "label": "a D5 clause instance against a D4 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-12",
+   "label": "a D5 clause instance against a D1 clause instance refuses",
+   "pass": true,
+   "detail": {
+    "detail": "keys are dimension scoped and there is no cross-dimension equivalence",
+    "reason": "dimension_isolation_violation",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-61",
+   "label": "a Stage 1 pattern composes, carrying the stage_1_only limitation",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D5-61",
+   "label": "Stage 1 form has no route use: Q-D5-06 is not even served",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-61",
+   "label": "a performed-act verb at Stage 1 refuses and logs stage_form_violation (verb added for the test, then removed)",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D5-61",
+   "label": "the refusal detail names the Stage the statement was composed at",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D5-61",
+   "label": "a Stage 1 statement carrying a route use entry refuses and logs stage_form_violation",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D5-61",
+   "label": "a Stage 3 statement carrying a route use entry refuses and logs stage_form_violation",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D5-61",
+   "label": "a Stage 3 record status route entry (ST-D5-029) is a route entry too and refuses",
+   "pass": true,
+   "detail": "stage_form_violation"
+  },
+  {
+   "id": "D5-61",
+   "label": "the Stage 3 refusal detail names Stage 3",
+   "pass": true,
+   "detail": [
+    "ST-D5-029 uses the performed act verb an entry for a question barred at Stage 3 (Q-D5-06) at Stage 3",
+    "ST-D5-027 uses the performed act verb an entry for a question barred at Stage 3 (Q-D5-06) at Stage 3",
+    "ST-D5-027 uses the performed act verb an entry for a question barred at Stage 1 (Q-D5-06) at Stage 1"
+   ]
+  },
+  {
+   "id": "D5-61",
+   "label": "the same route entries compose at Stage 2",
+   "pass": true,
+   "detail": "composed"
+  },
+  {
+   "id": "D5-01",
+   "label": "test composition is the service route only",
+   "pass": true,
+   "detail": {
+    "detail": "test composition is the service route only",
+    "reason": "TEST_MODE_IS_SERVICE_ONLY",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-01",
+   "label": "production composition refuses on this unapproved source",
+   "pass": true,
+   "detail": {
+    "detail": "only an exact approved version serves",
+    "reason": "source_not_approved",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-composed",
+   "label": "a source composes only at its own Stage",
+   "pass": true,
+   "detail": {
+    "detail": "the source belongs to Stage S2",
+    "reason": "source_stage_mismatch",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-65",
+   "label": "with the signing key not loaded the seal refuses as commit_seal_key_unloaded",
+   "pass": true,
+   "detail": "COMMIT_SEAL_KEY_UNLOADED"
+  },
+  {
+   "id": "D5-65",
+   "label": "with the key loaded the seal is written",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "D5-65",
+   "label": "exactly one seal row exists for the composed statement",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "D5-65",
+   "label": "a seal cannot be edited",
+   "pass": true,
+   "detail": "T3A_APPEND_ONLY: updates and deletes are refused; write a superseding record"
+  },
+  {
+   "id": "D5-65",
+   "label": "a sealed statement verifies under the server key",
+   "pass": true,
+   "detail": {
+    "valid": true,
+    "key_version": "k1"
+   }
+  },
+  {
+   "id": "D5-65",
+   "label": "under any other key the seal reads as invalid (commit_seal_invalid)",
+   "pass": true,
+   "detail": {
+    "valid": false,
+    "reason": "commit_seal_invalid"
+   }
+  },
+  {
+   "id": "D5-65",
+   "label": "an altered committed record with its content hash recomputed is refused: the recomputed hash differs from the sealed one and the seal does not verify without the key",
+   "pass": true,
+   "detail": {
+    "vAlt": {
+     "valid": false,
+     "reason": "commit_seal_invalid"
+    },
+    "recomputed_differs": true
+   }
+  },
+  {
+   "id": "D5-65",
+   "label": "submitting the altered record again refuses and logs commit_seal_invalid",
+   "pass": true,
+   "detail": {
+    "detail": "the commit record does not carry a valid server seal",
+    "reason": "commit_seal_invalid",
+    "outcome": "refused"
+   }
+  },
+  {
+   "id": "D5-66",
+   "label": "a second original commit under the same observation identifier is refused by the store; the first record stands",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_dimension_composed_original_uq\""
+   }
+  },
+  {
+   "id": "D5-66",
+   "label": "a second original seal under the same identifier is refused as well",
+   "pass": true,
+   "detail": {
+    "msg": "duplicate key value violates unique constraint \"t3a_commit_seal_pkey\""
+   }
+  },
+  {
+   "id": "D5-66",
+   "label": "the production commit path checks the seal register for the identifier before it writes (observation_id_not_unique)",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

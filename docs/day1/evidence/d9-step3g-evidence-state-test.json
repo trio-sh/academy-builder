@@ -1,0 +1,454 @@
+{
+ "passed": 37,
+ "total": 37,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-66",
+   "label": "no observation: not observed (FR-0)",
+   "pass": true,
+   "detail": {
+    "frame": "FR-D9-0",
+    "state": "not_observed",
+    "blocked": [],
+    "conditions": [],
+    "recurrence": [],
+    "dimension_id": "D9",
+    "observations": 0
+   }
+  },
+  {
+   "id": "D9-75",
+   "label": "one observation: observed once (FR-1), no recurrence wording available",
+   "pass": true,
+   "detail": {
+    "frame": "FR-D9-1",
+    "state": "observed_once",
+    "blocked": [],
+    "conditions": [
+     "single_observer"
+    ],
+    "recurrence": [
+     {
+      "reasons": [
+       "fewer_than_three_qualifying_observations",
+       "fewer_than_three_distinct_stages",
+       "fewer_than_three_contexts",
+       "fewer_than_two_authorized_observers",
+       "recurrence_configuration_not_locked"
+      ],
+      "available": false,
+      "recurrence_equivalence_key_id": "REK-D9-001"
+     }
+    ],
+    "dimension_id": "D9",
+    "observations": 1
+   }
+  },
+  {
+   "id": "D9-78",
+   "label": "two observations with no approved cross-context relationship: no multi-context frame, the reason is given",
+   "pass": true,
+   "detail": [
+    {
+     "frame": "multiple_contexts",
+     "reason": "no_approved_cross_context_relationship"
+    }
+   ]
+  },
+  {
+   "id": "D9-76",
+   "label": "two observations with different statements are held side by side with the divergence condition",
+   "pass": true,
+   "detail": [
+    "multiple_observers",
+    "mixed_or_divergent"
+   ]
+  },
+  {
+   "id": "D9-72",
+   "label": "the third state is breadth: two related contexts with different statements still reach it",
+   "pass": true,
+   "detail": {
+    "frame": "FR-D9-2",
+    "state": "observed_multiple_contexts",
+    "blocked": [],
+    "conditions": [
+     "multiple_observers",
+     "mixed_or_divergent"
+    ],
+    "recurrence": [
+     {
+      "reasons": [
+       "material_contradiction_in_current_set"
+      ],
+      "available": false,
+      "recurrence_equivalence_key_id": "REK-D9-001"
+     }
+    ],
+    "dimension_id": "D9",
+    "observations": 2
+   }
+  },
+  {
+   "id": "D9-67",
+   "label": "the state is derived and never stored: no state column on the observation or the composed statement",
+   "pass": true,
+   "detail": null
+  },
+  {
+   "id": "D9-77",
+   "label": "three matching keys but differing state codes: no fourth-state frame (a key does not assert the same conduct)",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "material_contradiction_in_current_set"
+    ],
+    "available": false,
+    "recurrence_equivalence_key_id": "REK-D9-001"
+   }
+  },
+  {
+   "id": "D9-84",
+   "label": "a successful correction supersedes by a new composed statement; the old one stays in the record and leaves the current set",
+   "pass": true,
+   "detail": 3
+  },
+  {
+   "id": "D9-73",
+   "label": "three Stages, three related contexts, two observers, same key and code, but the recurrence configuration is not locked: frame unavailable",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "recurrence_configuration_not_locked"
+    ],
+    "available": false,
+    "recurrence_equivalence_key_id": "REK-D9-001"
+   }
+  },
+  {
+   "id": "D9-73",
+   "label": "with the configuration locked the clause recurs across Stages (FR-3), for that clause",
+   "pass": true,
+   "detail": {
+    "frame": "FR-D9-3",
+    "state": "recurring_across_stages",
+    "blocked": [],
+    "conditions": [
+     "multiple_observers"
+    ],
+    "recurrence": [
+     {
+      "available": true,
+      "state_code": "ST-D9-001",
+      "recurrence_equivalence_key_id": "REK-D9-001"
+     }
+    ],
+    "dimension_id": "D9",
+    "observations": 3
+   }
+  },
+  {
+   "id": "D9-74",
+   "label": "no cherry-picking: a fourth current observation that contradicts blocks the frame although three match",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "material_contradiction_in_current_set"
+    ],
+    "available": false,
+    "recurrence_equivalence_key_id": "REK-D9-001"
+   }
+  },
+  {
+   "id": "D9-84",
+   "label": "a withdrawn statement is retained and excluded from current composition: the frame returns",
+   "pass": true,
+   "detail": "recurring_across_stages"
+  },
+  {
+   "id": "D9-17",
+   "label": "the platform composes the account test absence entry ST-D9-044 as a recurrence blocker on REK-D9-009, with the library flag still false",
+   "pass": true,
+   "detail": [
+    {
+     "state_code": "ST-D9-044",
+     "observation_id": "d2439791-62a4-4ee8-b190-d7b416e9c889",
+     "conduct_element_id": "CE-D9-09",
+     "recurrence_blocker": true,
+     "recurrence_equivalence_key_id": "REK-D9-009"
+    }
+   ]
+  },
+  {
+   "id": "D9-17",
+   "label": "a record_status entry (ST-D9-044) recorded in three contexts at three Stages by two observers never satisfies the recurring frame: an entry describing the record carries no conduct toward recurrence",
+   "pass": true,
+   "detail": {
+    "reasons": [
+     "recurrence_blocker_statement"
+    ],
+    "available": false,
+    "recurrence_equivalence_key_id": "REK-D9-009"
+   }
+  },
+  {
+   "id": "D9-5.11a",
+   "label": "a Stage 1 confirmer does not substitute for observer diversity: breadth is refused with one mentor-observed observer",
+   "pass": true,
+   "detail": {
+    "frame": "FR-D9-1",
+    "state": "observed_once",
+    "blocked": [
+     {
+      "frame": "multiple_contexts",
+      "reason": "stage_or_observer_diversity_absent"
+     }
+    ],
+    "conditions": [
+     "single_observer"
+    ],
+    "recurrence": [
+     {
+      "reasons": [
+       "fewer_than_three_qualifying_observations",
+       "fewer_than_three_distinct_stages",
+       "fewer_than_three_contexts",
+       "fewer_than_two_authorized_observers"
+      ],
+      "available": false,
+      "recurrence_equivalence_key_id": "REK-D9-001"
+     }
+    ],
+    "dimension_id": "D9",
+    "observations": 2
+   }
+  },
+  {
+   "id": "D9-PP-10",
+   "label": "two D1 and two D4 observations leave the D9 state unchanged, and each other dimension has its own state (D8 is built in parallel and is not in this branch; D1 and D4 stand in for it)",
+   "pass": true,
+   "detail": "recurring_across_stages"
+  },
+  {
+   "id": "D9-11",
+   "label": "D1 and D4 observations in the participant's record are never read by a D9 evidence state: it counts D9 records only",
+   "pass": true,
+   "detail": 3
+  },
+  {
+   "id": "D9-71",
+   "label": "conditions come in the fixed precedence, the limitation first",
+   "pass": true,
+   "detail": [
+    "conditions_compromised",
+    "stage_1_only",
+    "single_observer"
+   ]
+  },
+  {
+   "id": "D9-73",
+   "label": "a frame refused is logged",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "D9-70",
+   "label": "a clean statement passes",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D9-79",
+   "label": "a visual element in the layout capacity fails the render",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "visual_element_in_layout",
+      "detail": "svg, canvas, meter or progress element"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "stars fail",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_glyph",
+      "detail": "dot, bar, star, marker or traffic-light glyph"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "a traffic light fails",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_element",
+      "detail": "class or text names a rating visual"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "a progress bar fails",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "score_like_element",
+      "detail": "class or text names a rating visual"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "colour signalling quality fails",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "colour_signals_quality",
+      "detail": "red, green or amber colour value"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-100",
+   "label": "an overall or composite element fails",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_aggregate",
+      "detail": "overall, composite, average, count or profile wording"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "a closed-list evaluative phrase fails (strong response)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "strong response"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-27",
+   "label": "a word that belongs to another dimension fails as cross_dimension_assertion (owned, verified)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "owned"
+     },
+     {
+      "rule": "cross_dimension_assertion",
+      "detail": "verified"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-16",
+   "label": "a retired term fails (candidate)",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "retired_or_prohibited_vocabulary",
+      "detail": "candidate"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "the participant photo is the one permitted image",
+   "pass": true,
+   "detail": {
+    "passed": true,
+    "findings": []
+   }
+  },
+  {
+   "id": "D9-70",
+   "label": "a blank row cannot read as an unmet count",
+   "pass": true,
+   "detail": {
+    "passed": false,
+    "findings": [
+     {
+      "rule": "unmet_count",
+      "detail": "a count of what is not met"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D9-16",
+   "label": "all 44 D9 Recorded Conduct Entries pass the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-16",
+   "label": "all 13 D9 templates pass the prohibited-output check",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-PP-03",
+   "label": "L-D9-REC-001 is loaded word for word: 'The same recorded conduct was observed in {context_labels}. Each observation renders against its own context.'",
+   "pass": true,
+   "detail": "The same recorded conduct was observed in {context_labels}. Each observation renders against its own context."
+  },
+  {
+   "id": "D9-PP-02",
+   "label": "L-D9-DIV-001 is loaded word for word and states that neither observation is presented in preference to the other",
+   "pass": true,
+   "detail": "The observations that follow differ. Each is recorded against its own context and neither is presented in preference to the other."
+  },
+  {
+   "id": "D9-70",
+   "label": "no template mentions a change or a kept approach: the frames and conditions are the same for both",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "id": "D9-70",
+   "label": "the eight conditions of the precedence register are the same eight for every D9 entry and none is keyed to a question or a conduct element",
+   "pass": true,
+   "detail": null
+  }
+ ]
+}

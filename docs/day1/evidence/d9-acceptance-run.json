@@ -1,0 +1,1667 @@
+{
+ "identifiers_required": 89,
+ "identifiers_reported": 89,
+ "missing": [],
+ "pass": 88,
+ "fail": 0,
+ "not_run": 1,
+ "failed": [],
+ "results": [
+  {
+   "id": "D9-01",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an unapproved D9 source is unreachable from the serving gate and from production composition",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "source_not_approved",
+      "source_not_approved"
+     ]
+    },
+    {
+     "label": "and from assignment of a Stage 3 source",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3j-stage3-stage4-test.json: an unapproved Stage 3 source cannot be assigned"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-02",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D9 source with a null situation class cannot be approved (D9-02 names d8_situation_class, a slip for d9_situation_class: the check is on d9_situation_class)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: a D9 source with a null situation class cannot be approved"
+     ]
+    },
+    {
+     "label": "and a source written 'code with code' is read by its first named class",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: a source whose class is written 'SC-D9-5 with SC-D9-7' is not refused as an unknown class: the first named class governs",
+      "d9-step3d-gateway-test.json: a source written 'SC-D9-1 with SC-D9-7' is excluded for a participant who met SC-D9-1: the first named class governs the pattern family (IPF-D9-01)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-03",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 2 entry with no confirmed Stage 1: s1_confirmation_absent, record absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: closed but no confirmation: record absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-03a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 instance still open: s1_instance_not_closed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: a Stage 1 instance that is not closed refuses with its own sub-reason"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-03b",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "confirmation by an actor other than the assigned mentor: wrong actor, not treated as absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: a confirmation by someone other than the assigned mentor fails the gate as a wrong-actor control failure, distinct from absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-03c",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 observation uncommitted: s1_observation_not_committed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: assigned mentor confirmed, nothing committed: s1_observation_not_committed"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-03d",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no progression, or a progression that blocks: s1_progression_absent_or_blocks",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: committed, no progression: s1_progression_absent_or_blocks"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-04",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D9-09 at Stage 3 is unavailable (an answer and a missing state both refuse) and Q-D9-06 or Q-D9-06b on a source whose trial_steps is empty is unavailable; no row is written for either",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "answer_for_question_not_served",
+      "answer_for_question_not_served",
+      "answer_for_question_not_served",
+      "answer_for_question_not_served",
+      "composed",
+      0
+     ]
+    },
+    {
+     "label": "and the Stage 3 pattern composes with no clause at all for Q-D9-09",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: Stage 3: a complete pattern composes fifteen clauses and nothing at all for Q-D9-09 (no row, no null, no not observed sentence)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-05",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D9-01 A1 with Q-D9-01b nothing selected is refused: the parent asserts a listed indication was named and the child identifies none",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D9-01b: a listed answer needs at least one item",
+      "reason": "selection_does_not_match_answer",
+      "outcome": "refused"
+     }
+    },
+    {
+     "label": "the same for each of the seven pairs, and the resolution rules RR-D9-01 to RR-D9-08 refuse their patterns",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: RR-D9-08: the parent records a listed answer and the child identifies none: refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-06",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D9-03 A3 resolves to ST-D9-013 alone; the unserved child contributes no negative sentence",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "ST-D9-013"
+     ]
+    },
+    {
+     "label": "and composition writes no child clause",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: Q-D9-03 A3 (a ground named that the situation does not set out is A2; A3 is no ground named) resolves to ST-D9-013 alone, with no child clause"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-07",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound item from another source version (NW3 is on other D9 sources, not on this version) is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D9-07b item not on next_work of this source version",
+      "reason": "bound_item_not_on_source",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-08",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound item from a D1 source is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D9-02b item not on approach_changes of this source version",
+      "reason": "bound_item_not_on_source",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-09",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a served question unanswered with no missing state code is refused",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D9-09",
+      "reason": "served_question_unanswered",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-10",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "not_applicable and not_yet_observed cannot be posted as missing states",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "missing_state_not_postable",
+      "missing_state_not_postable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-11",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D1 input to a D9 computation is refused as a dimension isolation violation, and D1 observations never enter the D9 observation set",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "dimension_isolation_violation",
+      "source_stage_mismatch"
+     ]
+    },
+    {
+     "label": "and a D9 evidence state counts D9 records only",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: D1 and D4 observations in the participant's record are never read by a D9 evidence state: it counts D9 records only"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-12",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D9 clause instance against a D1 clause instance is refused (shown against D3 and D4 clause instances: the key namespace of a dimension is its own)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: a D9 clause instance against a D3 clause instance refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-13",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "FR-D9-2 with no approved cross-context row is refused; the side by side condition still shows",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: two observations with no approved cross-context relationship: no multi-context frame, the reason is given"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-14",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "three matching keys with differing state codes: no recurrence frame; the multiple context frame with divergence instead",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: three matching keys but differing state codes: no fourth-state frame (a key does not assert the same conduct)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-15",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a material contradiction in the full set blocks the recurrence frame although three match",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: no cherry-picking: a fourth current observation that contradicts blocks the frame although three match"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-16",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "recurrence configuration unloaded: refused regardless of the data",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: three Stages, three related contexts, two observers, same key and code, but the recurrence configuration is not locked: frame unavailable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-17",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a record_status entry (ST-D9-044) in three contexts never satisfies the recurring frame",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: a record_status entry (ST-D9-044) recorded in three contexts at three Stages by two observers never satisfies the recurring frame: an entry describing the record carries no conduct toward recurrence"
+     ]
+    },
+    {
+     "label": "and the platform composes every record_status entry as a recurrence blocker, with the library flag false for all 44 entries",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: nothing stated at all composes nine record status entries; each clause instance carries its key and is a recurrence blocker (an entry describing the record carries no conduct toward recurrence), never equivalent to another"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-18",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D9 row below the floor (one context) cannot be issued: named blocker below_issuance_floor",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: before the floor is met the gate names below_issuance_floor and fewer_than_two_authorized_observers"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-19",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "one authorized observer across the mentor-observed Stages is refused (fewer_than_two_authorized_observers), and the state does not reach the multiple context frame on one observer",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "participant_review_incomplete",
+      "checklist_incomplete_or_failed",
+      "checklist_incomplete_or_failed",
+      "below_issuance_floor",
+      "fewer_than_two_authorized_observers",
+      "commit_seal_absent",
+      "commit_seal_absent",
+      "consent_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-20",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the observer of the D1 record of a two-dimension report cannot be its evidence reviewer",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: an actor who observed the D1 record of a two-dimension report may not evidence-review it"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-21",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the reviewer cannot be the issuer",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: the reviewer cannot be the issuer"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-22",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no participant response to the pre-issue review notice: issuance blocks; no timeout",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: with no recorded participant outcome the report is blocked, silence is not completion"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-23",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a correction against a D9 sentence blocks the report; the D9 record is in reconsideration and D1 is untouched",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: a correction against a D9 record blocks the report; the D9 record is in reconsideration and the D1 record is not"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-24",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an in-place edit of a composed statement is refused; supersession only",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: editing a composed statement after commit refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-25",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a two-dimension specimen on one page fails and logs layout_overflow; the multi page form renders it without expanding or compressing the single page",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      "layout_overflow",
+      "renderable"
+     ]
+    },
+    {
+     "label": "a two-dimension report with D9 renders through the multi page renderer; the single page route refuses format_mismatch and the multi page route is renderable with two dimension blocks",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: a two-dimension report with D9 renders through the multi page renderer: the single page route refuses format_mismatch and the multi page route is renderable with two dimension blocks"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "CR-10",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a report that is not a specimen routed to the single page renderer is refused format_mismatch",
+     "status": "PASS",
+     "how": "run",
+     "detail": "format_mismatch"
+    }
+   ]
+  },
+  {
+   "id": "D9-26",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no overall, composite, average or profile element: such an element fails the scan, and none of the 44 statements carries one",
+     "status": "PASS",
+     "how": "run",
+     "detail": [
+      false,
+      0
+     ]
+    },
+    {
+     "label": "and none of the 13 templates, nor the report's own controlled structure, carries one",
+     "status": "PASS",
+     "how": "run",
+     "detail": []
+    }
+   ]
+  },
+  {
+   "id": "D9-27",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no Section 3.2 word (the 11 verbs another dimension owns, the performed acts, the learning and capacity words and the modals), in rendered D9 output",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: the Section 3.2 word \"learned\" fails the scan"
+     ]
+    },
+    {
+     "label": "a word that belongs to another dimension fails as cross_dimension_assertion, at the scan and at composition",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: the word \"owned\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"caused\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"blamed\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"prioritized\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"verified\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"proposed\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"agreed\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"disclosed\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"recovered\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"resumed\", which another dimension owns, fails as cross_dimension_assertion",
+      "d9-step3c-resolution-test.json: the word \"persuaded\", which another dimension owns, fails as cross_dimension_assertion"
+     ]
+    },
+    {
+     "label": "and a composed entry carrying such a word refuses at composition",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: a composed entry that carries a word belonging to another dimension refuses and logs cross_dimension_assertion (word added for the test, then removed)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-28",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no named third party in any D9 statement or template (outputs name controlled roles, never people), and every one of the 35 sources states that it names no real person or organization",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "statements": 0,
+      "templates": 0,
+      "sources_without_the_statement": 0
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-29",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D9 mentor cannot be authorized from a D1 calibration record",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3i-calibration-pilot-test.json: a D1 clearance confers nothing: D9 authorization with no D9 clearance is refused and logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-30",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a participant who met the same D9 interaction pattern family is excluded",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: the same situation pattern family in D9 excludes a different version, and a same dimension retake is not a form reuse"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-30a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the Stage 2 seven-beat form met under D1 excludes the D9 Stage 2 form without any mapping",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: having sat the Stage 2 seven-beat form under D1 excludes the D9 Stage 2 form (the form crosses)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-30b",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a cross-dimension pattern exclusion with the mapping table empty: refused and logged cross_dimension_mapping_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: a cross dimension pattern comparison with the mapping table empty refuses and logs cross_dimension_mapping_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-31",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "D9 Stage entry with only D1 mentor_observation consent: refused and logged consent_not_inherited",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: D9 Stage entry with only D1 mentor_observation recorded refuses and logs consent_not_inherited"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-32",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "issuing a report that holds a D9 record on D1 consent alone: refused and logged consent_not_inherited",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: an issuance written for that report is skipped and the refusal is logged (not a raised error that rolls the log back)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-33",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "pool availability needs employer_share for every dimension in the report",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: with employer_share granted for D1 only, availability of a D1+D9 report refuses and logs"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-34",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an unloaded evidence currency value blocks issuance (checklist item 13)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: an unloaded evidence currency value blocks issuance"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-35",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the correction commitment text does not render while the response time is unloaded: the route returns nothing to render and no default value appears; loaded, it returns the value as loaded (rolled back)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "unloaded": {
+       "reason": "correction_response_time_unloaded",
+       "rendered": false
+      },
+      "loaded": {
+       "value": "synthetic test value",
+       "rendered": true,
+       "acknowledge_business_days": 5,
+       "decision_target_business_days": 20
+      },
+      "anon": {
+       "reason": "correction_response_time_unloaded",
+       "rendered": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-36",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "each Section 12.1 timing value unloaded in turn: the route fails closed and no duration defaults",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: verification_link_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d9-step3m-consent-routes-timing-test.json: verification_resend_cooldown unloaded: the route fails closed, logs, and supplies no duration",
+      "d9-step3m-consent-routes-timing-test.json: mentor_invitation_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d9-step3m-consent-routes-timing-test.json: pool_session_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d9-step3m-consent-routes-timing-test.json: verification_reference_ttl unloaded: the route fails closed, logs, and supplies no duration",
+      "d9-step3m-consent-routes-timing-test.json: stage_entry_hold_ttl unloaded: the route fails closed, logs, and supplies no duration"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-37",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a report with the permitted-use text unloaded: the render refuses and the block is never omitted",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "a report with the permitted-use text unloaded refuses controlled_text_absent and draws no page; the block is never omitted"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-38",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a Stage 3 artifact with no tooling declaration is refused and logged",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3j-stage3-stage4-test.json: a missing tooling declaration refuses under AI_USE_DECLARATION_REQUIRED and the refusal persists"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-39",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the Mentor Cockpit below 1280 by 800 refuses capture (the route returns the refusal; the screen draws it in place of the six regions and does not reflow; the browser at 1280 by 800 is not run here); 1280 by 800 permits; a phone refuses",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "a": "VIEWPORT_BELOW_SUPPORTED_MINIMUM",
+      "b": "VIEWPORT_BELOW_SUPPORTED_MINIMUM",
+      "ok": true,
+      "phone": "STAGE_2_LIVE_CAPTURE_NOT_AVAILABLE_ON_A_PHONE"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-40",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an observation under an accommodation that changed the response channel or the pause window is timing_not_comparable and excluded",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: an accommodation that changed the response channel marks the observation timing_not_comparable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-41",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 4 entry with no group participation record is refused",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3j-stage3-stage4-test.json: one missing permission among four still refuses"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-42",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "capture or read of followup_contact or aggregate_regional is refused and logged disabled_consent_route",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: capture and read of followup_contact and aggregate_regional refuse and log disabled_consent_route"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-43",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no named-recipient, release-token, passcode or released-to-your-organization construction in any output; such a construction fails the scan",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "statements": 0,
+      "scan": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-44",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a source with either drafting-test row empty cannot be approved: drafting_test_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: the table backstop refuses an approval of a loaded D9 source"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-45",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a drafting-test reviewer equal to the source author is refused",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: a reviewer who is a member of the author list is refused and logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-46",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a Stage 3 source with no rights record is refused at submission, rights_route_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3d-gateway-test.json: the refusal is the named code rights_route_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-47",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 4 entry with s4_activation_state unloaded: s4_not_activated, the attempt recorded with its result",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3j-stage3-stage4-test.json: entry refuses with s4_not_activated and the attempt is recorded with its result"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-48",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no second release model, no bypass of s4_activation_state, and no override reaching a real Stage 4 entry (database routines and application source scanned)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "startFns": [],
+      "actRefs": [],
+      "poolModes": [],
+      "tokenCreators": [],
+      "srcHits": [],
+      "files_scanned": 195
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-48a",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a superseded release route invoked directly is refused and logged superseded_route_invoked with caller and route",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: each superseded release route logs superseded_route_invoked with the caller and the route name"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-49",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Q-D9-02 A1 and Q-D9-03 A1 in one observation: both compose as separate clauses and render side by side; neither is suppressed, subordinated or worded as the conclusion",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: Q-D9-02 A1 and Q-D9-03 A1 in one observation: BOTH compose as separate clauses (ST-D9-006, ST-D9-009 and ST-D9-011, ST-D9-015); neither is suppressed, subordinated or worded as the conclusion"
+     ]
+    },
+    {
+     "label": "and the same two answers resolve to the same four entries whatever order they arrive in; a participant who states neither composes no adverse clause",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: Q-D9-02 A3 with Q-D9-03 A4 is permitted: a participant may state neither, and no adverse clause composes"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-50",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a resolution table with one row naming a question absent from the question objects is refused whole and logged; the loader does not skip the row",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step4a-register-test.json: a table with one row naming a question that is not in the question objects is refused whole and logged; the good row is not loaded either"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-58",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a source whose served question has an empty definition cannot enter the production approval path: question_definition_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step4a-register-test.json: a source whose served question has an empty definition cannot enter the production approval path; the refusal is logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-59",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a calibration run on a question with an empty definition does not open: question_definition_incomplete",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3i-calibration-pilot-test.json: a calibration run on a question with an empty definition does not open; the refusal is logged question_definition_incomplete",
+      "d9-step3i-calibration-pilot-test.json: a calibration run that names no question does not open either",
+      "d9-step3i-calibration-pilot-test.json: locking B does not open the view for A"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-60",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the demonstration fixtures and the full acceptance suite run with every question definition empty: the refusal sits on production approval and calibration only",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step4a-register-test.json: every one of the 16 questions carries calibration_ready false"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-61",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a performed act word in a composed D9 entry refuses and logs stage_form_violation at Stages 1, 2, 3 and 4 (each of the twelve words checked at every Stage)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: composing a D9 entry that carries a registered verb refuses and logs stage_form_violation at Stages 1, 2, 3 and 4, naming the Stage (verb added for the test, then removed)"
+     ]
+    },
+    {
+     "label": "the twelve words are registered for D9 at every Stage and for no other dimension",
+     "status": "PASS",
+     "how": "run",
+     "detail": null
+    },
+    {
+     "label": "a Stage 1 pattern composes with the stage_1_only limitation (every element is carried at Stage 1)",
+     "status": "PASS",
+     "how": "run",
+     "detail": null
+    }
+   ]
+  },
+  {
+   "id": "D9-51",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the evidence currency statement appears visibly in a rendered report (the multi page report shows it on the controls page, with the evidence currency date)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "the controls page carries the unrepresented strip, the evidence note, permitted use and the currency date visibly"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-52",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "any contact initiation from an employer surface is refused and logged contact_permission_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: a contact initiation attempt refuses and logs contact_permission_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-53",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "every loaded source carries the clearance status from its own sheet, and a D9 source whose sheet says PENDING keeps that value (never defaulted) and does not serve",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "values": [
+       "CLEARED"
+      ],
+      "pending_copy": "PENDING",
+      "gate": "source_not_approved",
+      "first_failing_precondition": "drafting_test_incomplete"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-54",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a consuming control whose bound family is empty refuses and logs BOUND_FAMILY_ABSENT_OR_EMPTY; no empty slot renders",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "detail": "Q-D9-07b needs next_work",
+      "reason": "BOUND_FAMILY_ABSENT_OR_EMPTY",
+      "outcome": "refused"
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-55",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a bound-family item taking only its first physical line is refused at load: bound_item_integrity_failed",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: loading that source REFUSES and logs bound_item_integrity_failed"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-56",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a timing determination with no loaded mentor_action_sequence is refused: beat_sequence_absent",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: a timing determination on a source with no loaded sequence refuses and logs beat_sequence_absent"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-57",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "b2_pause_seconds is read from the beat marked is_decision_point, not from a hard-coded B2",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: the pause is read from the beat marked as the decision point (B3 here), not a hard coded B2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-62",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the specimen face renders in full with the specimen watermark on every page (the persistence refusal for a demonstration is tested at D9-PP-09 in the database run)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "the demonstration footer is on every page and no issued claim is made",
+      "every page of the D8 only report is 612 by 792 points, states Page n of 3, carries the demonstration footer and no block passes the content box"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-63",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "no flag, override or test mode lifts an approval, calibration or activation refusal: every test mode parameter is service route only (checked in the routine, in the routine it delegates to, or by the grant), and no bypass routine exists",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "testModeFns": [],
+      "overrideFns": [],
+      "srcHits": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-64",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "all 88 words of Section 5.7a fail the scan, every statement (44), template (13) and the clauses composed at all four Stages carry none of them and have a statement as their subject, and the nine record status entries that record an absence describe a statement not observed, never a capacity",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "unflagged_words": [],
+      "statements": 0,
+      "templates": 0,
+      "composed_clauses_flagged": [],
+      "record_status_entries": 9
+     }
+    },
+    {
+     "label": "and a sentence whose subject is the participant's capacity, knowledge or state refuses as capacity_observation, at the check and at composition",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: a composed entry whose subject is not a statement of the participant refuses and logs capacity_observation (the subject registry is narrowed for the test, then restored)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-65",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "an altered committed observation with a recomputed hash is refused: commit_seal_invalid (the seal is a server side signature)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: a committed record whose captures were altered, with the hash recomputed, is refused on resubmission as commit_seal_invalid and the refusal is logged"
+     ]
+    },
+    {
+     "label": "the seal key is never in the database: an unloaded key refuses",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: with the signing key not loaded the seal refuses as commit_seal_key_unloaded"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-66",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a second observation record under an identifier already committed is refused; the first record stands",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3e-compose-test.json: a second original commit under the same observation identifier is refused by the store; the first record stands"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-67",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a single page route for a D9 report refuses format_mismatch and logs it",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: a D9 only report routed to the single page renderer refuses format_mismatch and logs it; the multi page renderer takes it with one dimension block (three pages are the renderer's own result, checked in the browser run)"
+     ]
+    },
+    {
+     "label": "also for a D9 only specimen (no route from a D9 report to the single page renderer)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: a D9 only SPECIMEN routed to the single page renderer refuses too: Directive D-07 builds no route from a D9 report to the single page renderer"
+     ]
+    },
+    {
+     "label": "a D9 only report renders as three pages through the multi page renderer",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "a D9 only report renders three pages: cover, one dimension page, controls; it is not refused for its count"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-68",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "practice_origin appears nowhere: the display route strips it, the reference card of all 39 sources never carries it, no statement, template, capture line or question stem holds it",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: the Mentor Cockpit reference card of every D9 source (35) and fixture (4) carries neither the field name nor any practice_origin text, for a signed in mentor and for an anonymous caller"
+     ]
+    },
+    {
+     "label": "and the display body of every source has no practice_origin key and no text of it",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: the display body of every D9 source (35) and fixture (4) has no practice_origin key and no practice_origin text"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-69",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a sheet field for a response, capacity, knowledge, state or speed, or a list item naming ability, age, origin, language or education, is refused at load and logged capacity_observation",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3m-consent-routes-timing-test.json: a source sheet that adds the field participant_response is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a source sheet that adds the field participant_capacity is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a source sheet that adds the field participant_knowledge is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a source sheet that adds the field participant_state is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a source sheet that adds the field learning_speed is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's ability is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's age is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's origin is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's language is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's education is refused at load, nothing is stored, and capacity_observation is logged",
+      "d9-step3m-consent-routes-timing-test.json: a list item naming the participant's health is refused at load, nothing is stored, and capacity_observation is logged"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-70",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a claim package for a stated change (a participant who stated a change and nothing about keeping) and one for a kept approach (the reverse) come out of the same builder with the same keys, the same entry type, the same evidence state frame, the same disposition, the same context shape and no differences or dependencies attached to either; they differ only in the entry identifier and text",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "change": [
+       "ST-D9-006",
+       "the participant stated a change to the approach from those the situation made available"
+      ],
+      "keep": [
+       "ST-D9-011",
+       "the participant stated that all or part of the current approach is to be kept and named a ground the situation set out"
+      ],
+      "composed": [
+       [
+        "composed",
+        "composed"
+       ],
+       [
+        "composed",
+        "composed"
+       ]
+      ]
+     }
+    },
+    {
+     "label": "the multi page renderer's own source (layout, view and styles) has no branch, class or style keyed to a D9 entry, question, element or to a change or a kept approach: the frame, labels, order markers, type and colour of a claim package depend on its evidence state and entry type only",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "files_scanned": 2,
+      "hits": []
+     }
+    },
+    {
+     "label": "no entry and no template joins a change and a kept approach with but, however, although or instead, and the frames carry no mention of either",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: no entry and no template joins a change and a kept approach with but, however, although or instead"
+     ]
+    },
+    {
+     "label": "and the eight conditions are the same for every entry",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: the eight conditions of the precedence register are the same eight for every D9 entry and none is keyed to a question or a conduct element"
+     ]
+    },
+    {
+     "label": "the browser render of a D9 only report shows no per-entry styling: the claim package block carries the dimension, never a change or a kept marker",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "the D9 claim package block is styled exactly as the D4 entry block: the same classes, size, weight, colour, rule and face, no marker, icon or colour of its own; and its text carries no word of the D9 list and no joining but, however, although or instead"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-71",
+   "status": "NOT_RUN",
+   "entries": [
+    {
+     "label": "neither REK-D9-002 nor REK-D9-003 has a family, a direction rule, an entry or a state mapping in the D9 content package, and a request for either yields no direction, progression or regression finding (the module is dormant: the request is refused LSA-R04 and no request log route exists to write to)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-lsa-resolver-test.json: neither REK-D9-002 nor REK-D9-003 appears in any record of the D9 package: no family, no direction rule, no sufficiency rule, no entry, no state mapping"
+     ]
+    },
+    {
+     "label": "each of the four requests over differing sequences",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-lsa-resolver-test.json: a request for REK-D9-002 over ST-D9-006 > ST-D9-008 > ST-D9-006 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+      "d9-lsa-resolver-test.json: a request for REK-D9-003 over ST-D9-014 > ST-D9-011 > ST-D9-014 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+      "d9-lsa-resolver-test.json: a request for REK-D9-002 over ST-D9-008 > ST-D9-006 > ST-D9-006 yields no direction, progression, regression or trajectory finding (result: LSA-R04)",
+      "d9-lsa-resolver-test.json: a request for REK-D9-003 over ST-D9-011 > ST-D9-014 > ST-D9-011 yields no direction, progression, regression or trajectory finding (result: LSA-R04)"
+     ]
+    },
+    {
+     "label": "the Session Archive request is logged: the dormant module has no request route and so no request log (activation stays off); the refusal code is returned by the resolver and nothing else is written",
+     "status": "NOT_RUN",
+     "how": "surface",
+     "detail": "no request route exists in the dormant module"
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-01",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "two D9 observations with an approved row, agreeing: the multiple context frame is available",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: the third state is breadth: two related contexts with different statements still reach it"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-02",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "two D9 observations, approved row, diverging: held side by side with the divergence condition, neither preferred (L-D9-DIV-001)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: two observations with different statements are held side by side with the divergence condition"
+     ]
+    },
+    {
+     "label": "and the divergence template states that neither is presented in preference to the other",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: L-D9-DIV-001 is loaded word for word and states that neither observation is presented in preference to the other"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-03",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "three observations, three Stages, same key and state code, no contradiction, configuration locked: the recurring frame for that clause (L-D9-REC-001)",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: with the configuration locked the clause recurs across Stages (FR-3), for that clause"
+     ]
+    },
+    {
+     "label": "and the recurrence template is loaded word for word",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: L-D9-REC-001 is loaded word for word: 'The same recorded conduct was observed in {context_labels}. Each observation renders against its own context.'"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-04",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 1 end to end in the fixed order: confirmation, commit, progression; Stage 2 then permits",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3f-stage1-auth-test.json: proceed permits Stage 2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-05",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "Stage 2 with the seven beats: a complete timing record, the decision point read from the beat marked as one, and the determinations commit (D9 holds no timing question: the timing route is applied only if the register has one)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "timing_question": null,
+      "decision_point": "B2",
+      "composed": "composed",
+      "clauses": 16
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-06",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a D9 report with a distinct uninvolved reviewer and issuer, the floor met, consent and review recorded, issues (the issuance row is written); the 25 items are the 23 platform items and D9 items 36 and 37",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "gate": [],
+      "insert": "ok",
+      "rows": [
+       0,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-07",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "a successful correction: a new composed statement supersedes, the original is retained",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3h-report-gate-test.json: a successful correction produces a NEW statement that supersedes the old"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-08",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "availability granted on a report carrying D9 (employer_share for both dimensions), the pool state reads available (an approved organization reading the entry is the employer surface and is not run here), the pool entry holds no dimension, stage or conduct field, the participant withdraws, the entry leaves the pool, and the evidence record is untouched (and the status-only verification still returns the issued status before and after the withdrawal)",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "make": {
+       "outcome": "available",
+       "recipient_release_id": "8cfa0d29-6048-4524-9e55-bf8052b5aff4"
+      },
+      "state": {
+       "available": true,
+       "withdrawn_at": null,
+       "report_status": "issued",
+       "correction_open": false,
+       "made_available_at": "2026-10-24T21:07:45.777783+00:00"
+      },
+      "withdraw": {
+       "outcome": "withdrawn",
+       "recipient_release_id": "8cfa0d29-6048-4524-9e55-bf8052b5aff4"
+      },
+      "after": {
+       "w": true,
+       "cs": 0
+      },
+      "verification": [
+       {
+        "status": "issued"
+       },
+       {
+        "status": "issued"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-09",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "the four demonstration fixtures are seeded as written (sixteen questions each; Q-D9-09 alone is NOT SERVED at Stage 3 and nothing is NOT SERVED at Stages 1, 2 and 4); the eligibility check is reachable on a demonstration report and no issued report is created",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "fixtures": [
+       {
+        "id": "DEMO-D9-S1-001",
+        "stage": 1,
+        "qs": 16,
+        "served": 16,
+        "pattern": "IPF-D9-01"
+       },
+       {
+        "id": "DEMO-D9-S2-001",
+        "stage": 2,
+        "qs": 16,
+        "served": 16,
+        "pattern": "IPF-D9-07"
+       },
+       {
+        "id": "DEMO-D9-S3-001",
+        "stage": 3,
+        "qs": 16,
+        "served": 15,
+        "pattern": "IPF-D9-02"
+       },
+       {
+        "id": "DEMO-D9-S4-001",
+        "stage": 4,
+        "qs": 16,
+        "served": 16,
+        "pattern": "IPF-D9-03"
+       }
+      ],
+      "s3": "Q-D9-09",
+      "issued": [
+       5,
+       5
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "D9-PP-10",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "one participant with D1 and D4 observations (D8 is built in parallel and is not in this branch): the D9 state is unchanged by the other dimensions' records",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3g-evidence-state-test.json: two D1 and two D4 observations leave the D9 state unchanged, and each other dimension has its own state (D8 is built in parallel and is not in this branch; D1 and D4 stand in for it)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "11.3",
+   "status": "PASS",
+   "entries": [
+    {
+     "label": "every reachable D9 answer pattern (all four Stages) resolves to ONE statement set or ONE designed refusal: no pattern resolves to two statements and none resolves to nothing without a refusal",
+     "status": "PASS",
+     "how": "run",
+     "detail": {
+      "patterns": 220,
+      "gaps": 0,
+      "ambiguous": 0
+     }
+    },
+    {
+     "label": "and the same coverage is asserted in the resolution step",
+     "status": "PASS",
+     "how": "evidence",
+     "detail": [
+      "d9-step3c-resolution-test.json: coverage: every reachable answer pattern resolves to statements or a designed refusal (no gaps)"
+     ]
+    }
+   ]
+  }
+ ]
+}
