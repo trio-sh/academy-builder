@@ -1,0 +1,32 @@
+case CR-09-T2
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-09
+what is run: Turn general availability on; an approved employer opens the report
+expected: The full current issued report renders; the read is in the participant's access record
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 24ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 132ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D2: pass
+    [default] passed 32ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 128ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D3: pass
+    [default] passed 35ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 134ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D4: pass
+    [default] passed 29ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 165ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D5: pass
+    [default] passed 33ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 143ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D8: pass
+    [default] passed 36ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 127ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+D9: pass
+    [default] passed 42ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record
+    [sandbox] passed 138ms :: cr09-release-routes.db.test.ts :: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record

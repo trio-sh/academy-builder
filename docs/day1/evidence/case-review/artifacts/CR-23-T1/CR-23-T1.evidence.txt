@@ -1,0 +1,32 @@
+case CR-23-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-23
+what is run: Request the recurrence frame where one context is Stage 1 and no row declares the act types compatible
+expected: Refused for that clause
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 69ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 217ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D2: pass
+    [default] passed 72ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 282ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D3: pass
+    [default] passed 66ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 284ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D4: pass
+    [default] passed 100ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 350ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D5: pass
+    [default] passed 83ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 281ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D8: pass
+    [default] passed 78ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 350ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+D9: pass
+    [default] passed 78ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause
+    [sandbox] passed 209ms :: cr23-cr24-evidence-state.db.test.ts :: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related contexts and no row declares the act types compatible: the frame is refused for that clause

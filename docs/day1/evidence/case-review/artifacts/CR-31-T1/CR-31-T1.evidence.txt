@@ -1,0 +1,49 @@
+case CR-31-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-31
+what is run: Inspect the sandbox switch log
+expected: Five switches on, in the stated order, each with a full test run after it; lsa_activation off
+mapping: manual; modes counted: sandbox
+mapped tests:
+  - cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+  - cr31-switch-log.test.ts (unit) :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+  - cr31-switch-log.test.ts (unit) :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+  - cr31-switch-log.test.ts (unit) :: CR-31 the sandbox switch log > lsa_activation is off at every step
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [sandbox] passed 7ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D2: pass
+    [sandbox] passed 5ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D3: pass
+    [sandbox] passed 5ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D4: pass
+    [sandbox] passed 6ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D5: pass
+    [sandbox] passed 4ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D8: pass
+    [sandbox] passed 5ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step
+D9: pass
+    [sandbox] passed 4ms :: cr31-production-defaults.db.test.ts :: CR-31 switch defaults > every switch reads off and lsa_activation reads off
+    [unit] passed 2ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > starts with every switch off, then turns the five on in the stated order, one at a time
+    [unit] passed 1ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > runs the full database and unit suites after every step
+    [unit] passed 0ms :: cr31-switch-log.test.ts :: CR-31 the sandbox switch log > lsa_activation is off at every step

@@ -1,0 +1,32 @@
+case CR-13-T3
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-13
+what is run: One person as both reviewer and issuer after Gate G2
+expected: Refused until the Calibration Manual adopts D.88
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 27ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 291ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D2: pass
+    [default] passed 42ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 291ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D3: pass
+    [default] passed 38ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 296ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D4: pass
+    [default] passed 33ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 354ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D5: pass
+    [default] passed 44ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 291ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D8: pass
+    [default] passed 39ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 233ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+D9: pass
+    [default] passed 46ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account
+    [sandbox] passed 375ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account

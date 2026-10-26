@@ -1,0 +1,32 @@
+case CR-03-T2
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-03
+what is run: A session stopped for a co-participant's welfare
+expected: An administration interruption for the observed participant; no attempt counted
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 7ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 76ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D2: pass
+    [default] passed 7ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 88ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D3: pass
+    [default] passed 12ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 78ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D4: pass
+    [default] passed 14ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 64ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D5: pass
+    [default] passed 11ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 60ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D8: pass
+    [default] passed 14ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 71ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+D9: pass
+    [default] passed 10ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted
+    [sandbox] passed 74ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; no attempt counted

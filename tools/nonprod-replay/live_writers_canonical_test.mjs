@@ -16,6 +16,7 @@ const P = randomUUID(), M = randomUUID(), A = randomUUID(), RUN = P.slice(0, 8),
 for (const [u, e, r] of [[P, "p", "candidate"], [M, "m", "mentor"], [A, "a", "admin"]]) { await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${u}','cw${e}-${RUN}@t.local',now())`); await c.query(`insert into profiles(id,email,role) values ('${u}','cw${e}-${RUN}@t.local','${r}')`); }
 await run(`insert into t3a_role_grant(user_id, spec_role) values ('${M}','mentor'), ('${A}','admin')`);
 const setEvt = (k, v) => run(`update t3a_event_config set value='${v}' where key='${k}'`);
+const _prevEvt = Object.fromEntries((await run(`select key, value from t3a_event_config where key in ('ingest_mode','canonical_writers')`)).map(r => [r.key, r.value]));   // restored at the end: a switch rehearsal runs with these on
 await setEvt("ingest_mode", "legacy_tolerant"); await setEvt("canonical_writers", "off");
 // reset the three settings left by an earlier run (the configuration table is append only, so its guard is lifted for the clean-up only)
 await run(`alter table t3a_configuration_value disable trigger t3a_append_only`); await run(`delete from t3a_configuration_value where configuration_key in ('attempt_rules_version','response_time_committed_version')`); await run(`alter table t3a_configuration_value enable trigger t3a_append_only`);
@@ -94,6 +95,6 @@ await run(`alter table t3a_statement_library enable trigger t3a_statement_librar
 const q = await run(`select count(*)::int n from t3a_event_log where event_processing_state <> 'accepted' and ingested_at >= '${T0}'`); rec("CR-069", "no event from any writer was quarantined or rejected", q[0].n === 0, q[0].n);
 const chain = await run(`select count(*)::int n from t3a_event_chain_findings()`); rec("CR-069", "the hash chain verifies after all nine writers have run", chain[0].n === 0, chain[0].n);
 const direct = await as("authenticated", P, `insert into t3a_event_log(event_name, event_category, actor_type, actor_id, payload, integrity_hash) values ('x','SYSTEM','SYSTEM',gen_random_uuid(),'{}','x')`, false); rec("CR-024", "strict mode: a direct insert into the event log is refused", direct.msg !== "ok", direct.msg.slice(0, 100));
-await setEvt("ingest_mode", "legacy_tolerant"); await setEvt("canonical_writers", "off");
+await setEvt("ingest_mode", _prevEvt.ingest_mode); await setEvt("canonical_writers", _prevEvt.canonical_writers);
 console.log(JSON.stringify({ passed: R.filter(r => r.pass).length, total: R.length, failed: R.filter(r => !r.pass), results: R }, null, 1));
 await c.end(); process.exit(0);

@@ -61,3 +61,7 @@ The earlier finding was that turning `enforce_required` on stopped 222 of 364 da
 - Before the switch is ever turned on in production: `stage_entry_hold_ttl` must be set (it is empty on the live project).
 
 - Applied to the live project on 23 October: migration 20270131 (record `evidence/live-apply-20270131-verification.json`, rollback `evidence/live-apply-20270131-rollback.sql`). After it `enforce_required` still reads false on live and `lsa_activation` is on; the 11 new triggers do nothing while the switch is off.
+
+## Update 26 October: all five switches pass the full suite in the sandbox
+
+`tools/day1/switch_rehearsal.py` re-run on main at PR 401: a fresh database for every step, switches on cumulatively in the stated order (`canonical_writers`, strict ingest, `enforce_required`, `enforce_sequence`, `enforce_gate`), and after each step the full database suite (508 tests) and unit suite (517) pass with 0 failures (`evidence/switch-rehearsal.json`). The sequence and gate closure: a Stage 2 entry fixture gets a Stage 1 confirmation; every fixture account gets consent on creation in the gate run, and the scripts that test consent absence keep bare accounts; the stage entry event derives its participant first (migration 20270133, applied to the live project). The CI database job runs the suite with all three database switches on. In production all five are still OFF (checked on the live project on 26 October); `lsa_activation` is on by CR-217.

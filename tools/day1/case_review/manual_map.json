@@ -1,0 +1,45 @@
+{
+ "CR-12-T10": [
+  [
+   "cr12-routes.db.test.ts",
+   "a refused early callback does not reserve its identifier"
+  ]
+ ],
+ "CR-31-T1": {
+  "tests": [
+   [
+    "cr31-production-defaults.db.test.ts",
+    "every switch reads off"
+   ]
+  ],
+  "unit": [
+   [
+    "cr31-switch-log.test.ts",
+    ""
+   ]
+  ],
+  "modes": [
+   "sandbox"
+  ]
+ },
+ "CR-31-T2": {
+  "tests": [
+   [
+    "cr31-production-defaults.db.test.ts",
+    "every switch reads off"
+   ]
+  ],
+  "modes": [
+   "default"
+  ]
+ },
+ "CR-16-T1": {
+  "tests": [
+   [
+    "cr16-per-dimension-prohibited-vocabulary.db.test.ts",
+    "CR-16-T1 a D9 entry"
+   ]
+  ],
+  "native": "D9"
+ }
+}

@@ -13,6 +13,8 @@ describe("CR-31 switch defaults", () => {
       (select enforce_required from public.t3a_capture_config) er, (select enforce_sequence from public.t3a_capture_config) es, (select enforce_gate from public.t3a_consent_config) eg, public.t3a_lsa_flag('lsa_activation') lsa`))[0];
     // the enforced run (npm run test:db:enforced) turns the required-fields switch on for itself, and the later two when T3A_ENFORCE_ALSO names them; the others are off in it
     const also = (process.env.T3A_ENFORCE_ALSO ?? "").split(",");
-    expect(r).toEqual({ cw: "off", im: "legacy_tolerant", er: process.env.T3A_ENFORCED_RUN === "1", es: also.includes("sequence"), eg: also.includes("gate"), lsa: false });
+    // the switch rehearsal (tools/day1/switch_rehearsal.py) turns the two event switches on in the database before the suite and names them in T3A_REHEARSAL_ON
+    const rehearsed = (process.env.T3A_REHEARSAL_ON ?? "").split(",");
+    expect(r).toEqual({ cw: rehearsed.includes("canonical_writers") ? "on" : "off", im: rehearsed.includes("strict_event_ingest") ? "strict" : "legacy_tolerant", er: process.env.T3A_ENFORCED_RUN === "1", es: also.includes("sequence"), eg: also.includes("gate"), lsa: false });
   });
 });

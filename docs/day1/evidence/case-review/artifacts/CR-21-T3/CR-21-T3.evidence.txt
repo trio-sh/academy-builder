@@ -1,0 +1,32 @@
+case CR-21-T3
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-21
+what is run: Withdraw one dimension of a shared Stage 3 submission
+expected: That record refuses; the other stands
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 48ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 167ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D2: pass
+    [default] passed 42ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 130ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D3: pass
+    [default] passed 39ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 171ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D4: pass
+    [default] passed 47ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 282ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D5: pass
+    [default] passed 42ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 132ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D8: pass
+    [default] passed 51ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 127ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+D9: pass
+    [default] passed 49ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands
+    [sandbox] passed 121ms :: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts :: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other stands

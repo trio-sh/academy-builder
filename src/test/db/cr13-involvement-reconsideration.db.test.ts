@@ -18,6 +18,12 @@ const link = (canonical: string, account: string) => asService(c, `select t3a_cr
 async function report(participant: string, dims = ["D1"]) {
   const id = randomUUID();
   await run(c, `insert into t3a_d1_ber_report(ber_report_id, participant_id, dimension_id, represented_dimension_ids, issued_at, ber_standard_version, ber_version, permitted_use_version, observer_multiplicity_statement_code, source_link, ber_status, report_type, preview_state, report_preview_digest, report_content_digest, verification_code, specimen_render_flag) values ('${id}','${participant}','${dims[0]}', array[${dims.map((d) => `'${d}'`).join(",")}]::text[], null, '1.0', '1.0', '1.0', 'M5', '{}'::jsonb, 'assembling', 'ber', 'current', repeat('a',64), repeat('b',64), 'V-' || gen_random_uuid()::text, false)`);
+  // The issuance gate checks every dimension other than D1 against its review checklist; this is a report whose review is complete, so the CR-13 checks are the ones that decide.
+  for (const d of dims.filter((x) => x !== "D1")) {
+    const reviewerOfList = await mkParticipant(c, `cr13-rl-${randomUUID().slice(0, 6)}`, "mentor");
+    for (const item of (await run(c, `select t3a_review_items_for('${d}') a`))[0].a as number[])
+      await fx(`insert into t3a_dimension_review_result(ber_report_id, dimension_id, item_no, outcome, reviewer_id, version_set_hash) values ('${id}','${d}',${item},'pass','${reviewerOfList}','${HASH}')`);
+  }
   return id;
 }
 async function observed(participant: string, observer: string, dim = "D1", stage = "S2") {
@@ -91,7 +97,14 @@ describe("CR-13 review and issue stay with two different people", () => {
     const other = await person("t3o");
     expect((await actorGate(other, rep, "issue")).r.outcome).toBe("eligible");
     // the table triggers hold the same line when the issuance row is written
-    await expect(c.query(`insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, rendered_body_hash) values ('${rep}','${p}','D1','${x2}','${HASH}')`)).rejects.toThrow(/REVIEWER_IS_ISSUER/);
+    const issueAs2 = `insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, rendered_body_hash) values ('${rep}','${p}','D1','${x2}','${HASH}')`;
+    if (Number("D1".slice(1)) === 1) await expect(c.query(issueAs2)).rejects.toThrow(/REVIEWER_IS_ISSUER/);
+    else {
+      // a report that carries a dimension other than D1 goes through the issuance gate first (t3a_0_issuance_gate_backstop_trg): the same person is refused there, by the gate's own blocker, and no row is written
+      const n = await refused("issuer_not_eligible");
+      expect((await c.query(issueAs2)).rowCount).toBe(0);
+      expect(await refused("issuer_not_eligible")).toBeGreaterThan(n);
+    }
     const rep2 = await report(p);
     await fx(`insert into t3a_d1_report_issuance(ber_report_id, participant_id, dimension_id, issued_by, rendered_body_hash) values ('${rep2}','${p}','D1','${x}','${HASH}')`);
     await expect(c.query(`insert into t3a_evidence_review(ber_report_id, reviewer_id, version_set_hash, review_checklist_results) values ('${rep2}','${x2}','${HASH}','{}'::jsonb)`)).rejects.toThrow(/REVIEWER_IS_ISSUER/);

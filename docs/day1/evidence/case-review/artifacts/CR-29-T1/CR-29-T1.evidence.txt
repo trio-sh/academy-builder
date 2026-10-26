@@ -1,0 +1,47 @@
+case CR-29-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-29
+what is run: As a database administrator, attempt to obtain the signing key or produce a valid seal
+expected: Not possible
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+  - cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 38ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 100ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 140ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 212ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D2: pass
+    [default] passed 40ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 102ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 116ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 188ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D3: pass
+    [default] passed 33ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 117ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 124ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 240ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D4: pass
+    [default] passed 42ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 123ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 107ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 223ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D5: pass
+    [default] passed 40ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 106ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 116ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 145ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D8: pass
+    [default] passed 47ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 130ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 121ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 186ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+D9: pass
+    [default] passed 39ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [default] passed 126ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores
+    [sandbox] passed 141ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal
+    [sandbox] passed 176ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T1: nobody in the database can read a signing key or make a valid seal: the private key is not stored, a forged signature is refused, and only the service stores

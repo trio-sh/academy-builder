@@ -1,0 +1,3348 @@
+{
+ "build": {
+  "build_id": "T3A-LEVELER-SANDBOX-e8a82dc-20261026",
+  "code_commit": "e8a82dcb744fef03a22fe8c4d144320d89ab4a62",
+  "platform_version": "main at PR 401 (migrations to 20270233)",
+  "executed_by": "Claude, builder role (session_01HsSQ1TEzdCLan4rGpsqE4A)",
+  "reviewed_by": "Claude, reviewer role (founder delegation CR-219, 23 Oct 2026)",
+  "synthetic": false
+ },
+ "cases": {
+  "CR-01-T1": {
+   "rule": "CR-01",
+   "what_is_run": "As the Stage 2 mentor, request Stage 1 content before the Stage 2 commit",
+   "expected": "Refused; logged",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.627Z",
+   "observed": "1 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-01-T1/CR-01-T1.record.txt",
+     "sha256": "55e564d07eda0ca6bd9b8c2a85728e679124d93c21ee83310f3d83324ab29932"
+    },
+    {
+     "path": "artifacts/CR-01-T1/CR-01-T1.evidence.txt",
+     "sha256": "5bd97bb723fd266e59f2f8a9153ea01a55d596eb5905bdba0b66c89af4ecbda7"
+    }
+   ]
+  },
+  "CR-01-T2": {
+   "rule": "CR-01",
+   "what_is_run": "The same request after the commit",
+   "expected": "Complete, read only",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.599Z",
+   "observed": "1 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 the Stage 2 commit and after > T2: after the commit the Stage 2 mentor reads the responses, determinations and confirmation in full, read only",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-01-T2/CR-01-T2.record.txt",
+     "sha256": "b2d31f7fd8998f1670d4e16013616a6aecc87973a69094746ae7d94d59f166a5"
+    },
+    {
+     "path": "artifacts/CR-01-T2/CR-01-T2.evidence.txt",
+     "sha256": "e93e26b33014b40437e99b399f6a2489a1454b4bb829438efd79cb4964e42721"
+    }
+   ]
+  },
+  "CR-01-T3": {
+   "rule": "CR-01",
+   "what_is_run": "Edit a Stage 2 determination after the commit outside the correction route",
+   "expected": "Refused; the correction route creates a new linked record and keeps the original",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.613Z",
+   "observed": "2 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-01-T3/CR-01-T3.record.txt",
+     "sha256": "e6b6d8ea4032c84b9d89680776297116cd2ddb0f07f4ae455b50054717edb439"
+    },
+    {
+     "path": "artifacts/CR-01-T3/CR-01-T3.evidence.txt",
+     "sha256": "a5ad0cbecf7e8ef9f255841c6a95b7d30b1b4efe6ac5dfc6e207db7bbdd0b315"
+    }
+   ]
+  },
+  "CR-01-T4": {
+   "rule": "CR-01",
+   "what_is_run": "Read the participant's Stage 1 content before the Stage 2 commit as another mentor, an administrator, through the API and through an export",
+   "expected": "Each refused and logged",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:20.123Z",
+   "observed": "2 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 before the Stage 2 commit: the mask > T4: another mentor, an administrator, the API and an export are each refused and logged, with the route named",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-01-T4/CR-01-T4.record.txt",
+     "sha256": "a032cf83a135c42416e627f604840e797db1a49b5ecc2025c77fbf8cb3fed9b3"
+    },
+    {
+     "path": "artifacts/CR-01-T4/CR-01-T4.evidence.txt",
+     "sha256": "f4074a398736519eb152e28cbc72edcd9a83c5d51a2edd8d37070bd50f8dc4d4"
+    }
+   ]
+  },
+  "CR-01-T5": {
+   "rule": "CR-01",
+   "what_is_run": "Commit the same Stage 2 observation a second time",
+   "expected": "Refused; the first commit and its lock stand",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.606Z",
+   "observed": "1 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-01-T5/CR-01-T5.record.txt",
+     "sha256": "d37beb565fc778529a44a73776730a0aaaab0a37253ff438e7e98461cd3c2338"
+    },
+    {
+     "path": "artifacts/CR-01-T5/CR-01-T5.evidence.txt",
+     "sha256": "659b4696cb18926fa2f6e684cbcb8c45847993d64ed5aa79d842c1d60b503694"
+    }
+   ]
+  },
+  "CR-02-T1": {
+   "rule": "CR-02",
+   "what_is_run": "Mentor A then A at any Stage",
+   "expected": "The second attempt refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.701Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 rotation at every Stage > T1: the same mentor twice in a row at any Stage is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T1/CR-02-T1.record.txt",
+     "sha256": "ef633393dd482718a4b1aba537fb9bd5ab94662bf9e38ffd7cccd430f76daf9b"
+    },
+    {
+     "path": "artifacts/CR-02-T1/CR-02-T1.evidence.txt",
+     "sha256": "624f0c391d5bde78c1d5960dcdd795b0962f44d89d8b9f036cc0082febcc7a88"
+    }
+   ]
+  },
+  "CR-02-T2": {
+   "rule": "CR-02",
+   "what_is_run": "Mentor A then B, all other conditions met",
+   "expected": "Admitted",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.443Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 rotation at every Stage > T2: mentor A then B is admitted",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T2/CR-02-T2.record.txt",
+     "sha256": "9caab25e410f6f0d66d934742d154ae5815d3b3c707490c61fc37aa7e9900431"
+    },
+    {
+     "path": "artifacts/CR-02-T2/CR-02-T2.evidence.txt",
+     "sha256": "d674b03f961abab9d6a3311722a805fa746ff3cdfce1e2f15ead111f1c0a47e8"
+    }
+   ]
+  },
+  "CR-02-T3": {
+   "rule": "CR-02",
+   "what_is_run": "Stage 2: mentor A, then B, then A, where A received Stage 1 after the first commit",
+   "expected": "The third attempt refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.450Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 prior Stage 1 access at Stage 2 > T3: Stage 2 with A, then B, then A, where A received Stage 1 after the first commit: the third attempt is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T3/CR-02-T3.record.txt",
+     "sha256": "0d5a673a31abe1c811e6aeb432dbdfbb342ac265ba98216b4e1d32205cda2bbb"
+    },
+    {
+     "path": "artifacts/CR-02-T3/CR-02-T3.evidence.txt",
+     "sha256": "45016cb17ca91431338fb700bcd78b7cd4953123367471dd70a948089a11b9e3"
+    }
+   ]
+  },
+  "CR-02-T4": {
+   "rule": "CR-02",
+   "what_is_run": "Stage 3: mentor A, then B, then A, no stricter exclusion applying",
+   "expected": "Admitted if every other check passes",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.475Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 rotation at every Stage > T4: at Stage 3, A then B then A is admitted when no stricter exclusion applies",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T4/CR-02-T4.record.txt",
+     "sha256": "4a7dc59c4963fb824367a4656dbd97baaa03866d379bd7f0285ce4f6ac84de4e"
+    },
+    {
+     "path": "artifacts/CR-02-T4/CR-02-T4.evidence.txt",
+     "sha256": "aed2d9e9b3f82af8690195c1738f72c8fd5f2f6852eeefa783034b58b0b753ab"
+    }
+   ]
+  },
+  "CR-02-T5": {
+   "rule": "CR-02",
+   "what_is_run": "A Stage 1 confirmer proposed as the same participant's Stage 2 observer on the same dimension",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.492Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T5/CR-02-T5.record.txt",
+     "sha256": "b442838c568af7a90a3bfa1b561d15c6a68750c26c59325a84b138da04827234"
+    },
+    {
+     "path": "artifacts/CR-02-T5/CR-02-T5.evidence.txt",
+     "sha256": "a535a5fcdc55f99c9c40aa79c8b52b1fee08eb19131efd4e35ef6e1b6265b061"
+    }
+   ]
+  },
+  "CR-02-T6": {
+   "rule": "CR-02",
+   "what_is_run": "A Stage 4 repeat attempt with an earlier group composition",
+   "expected": "Refused by the planner",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.505Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T6/CR-02-T6.record.txt",
+     "sha256": "05550d5278e75d6d9a0fbaa8235e036073bfc59afa8e957744857d799c71acb9"
+    },
+    {
+     "path": "artifacts/CR-02-T6/CR-02-T6.evidence.txt",
+     "sha256": "6c067731c4751aa983b9e873d7c593765fa4ae033b17041cc13596d610f957a8"
+    }
+   ]
+  },
+  "CR-02-T7": {
+   "rule": "CR-02",
+   "what_is_run": "A Stage 4 attempt with no composition record",
+   "expected": "Refused before entry",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr02-mentor-rotation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.419Z",
+   "observed": "1 mapped test(s) in cr02-mentor-rotation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-02 Stage 4 composition > T7: a Stage 4 attempt with no composition record is refused before entry",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-02-T7/CR-02-T7.record.txt",
+     "sha256": "31849752de472b701a41a91e5b253376bf26f31cbef4391661da51284350fcd6"
+    },
+    {
+     "path": "artifacts/CR-02-T7/CR-02-T7.evidence.txt",
+     "sha256": "73cd4c59d6efe96d0496c38760cb80c1fe27d4948822227ae9b467c67ee0d9d5"
+    }
+   ]
+  },
+  "CR-03-T1": {
+   "rule": "CR-03",
+   "what_is_run": "A welfare stop before and after observation begins, by the participant and by the mentor, at each Stage",
+   "expected": "No counted attempt, no wait, no finding; safety handling and quarantine apply",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr03-welfare-stop.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:21.380Z",
+   "observed": "2 mapped test(s) in cr03-welfare-stop.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no w",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-03-T1/CR-03-T1.record.txt",
+     "sha256": "58d3a12f2f16797ea1db21eeef8afc7e62bee1c1d5c1bc6742a7a44a6dc7b9f7"
+    },
+    {
+     "path": "artifacts/CR-03-T1/CR-03-T1.evidence.txt",
+     "sha256": "d8fa92b2dad9750b957a2cc3cc1ede950e0103314d9230c6b2839559ff876bd1"
+    }
+   ]
+  },
+  "CR-03-T2": {
+   "rule": "CR-03",
+   "what_is_run": "A session stopped for a co-participant's welfare",
+   "expected": "An administration interruption for the observed participant; no attempt counted",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr03-welfare-stop.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.333Z",
+   "observed": "1 mapped test(s) in cr03-welfare-stop.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-03 the welfare stop consumes nothing > T2: a session stopped for a co-participant's welfare is an administration interruption for the observed participant; n",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-03-T2/CR-03-T2.record.txt",
+     "sha256": "14df8526f8f16eaa7ed70e79359b71a8530e556dd7a3422fd2c9873b563ae796"
+    },
+    {
+     "path": "artifacts/CR-03-T2/CR-03-T2.evidence.txt",
+     "sha256": "58a489f26664c85ca1ecff2e9e5a7c118acd7a795d2b12f9f43ba21569ce2a95"
+    }
+   ]
+  },
+  "CR-03-T3": {
+   "rule": "CR-03",
+   "what_is_run": "The safety route sets and lifts an eligibility hold after a welfare stop",
+   "expected": "No commit, no progression decision, no cooldown created",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr03-welfare-stop.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.348Z",
+   "observed": "1 mapped test(s) in cr03-welfare-stop.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-03-T3/CR-03-T3.record.txt",
+     "sha256": "f94155341c93a3d207eee5c6e3f0058d46a71fb8d134072151f1ba83273600c0"
+    },
+    {
+     "path": "artifacts/CR-03-T3/CR-03-T3.evidence.txt",
+     "sha256": "d9683bd57eaefe68e05dbc1d46b1d908869617d8fb8f0551b1756b44fe4b687d"
+    }
+   ]
+  },
+  "CR-04-T1": {
+   "rule": "CR-04",
+   "what_is_run": "Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation",
+   "expected": "Admitted",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.713Z",
+   "observed": "1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-04-T1/CR-04-T1.record.txt",
+     "sha256": "8d60988ceb95ef4e1764493f6750a779624563cb0286e535c4f5d802faa1d4d3"
+    },
+    {
+     "path": "artifacts/CR-04-T1/CR-04-T1.evidence.txt",
+     "sha256": "a3926b7224158a68876671d0e54bf39ed789502e3dc753cfa88f7caf32ccf6f9"
+    }
+   ]
+  },
+  "CR-04-T2": {
+   "rule": "CR-04",
+   "what_is_run": "Participant cannot authenticate",
+   "expected": "Entry refuses; no attempt; rescheduling cooldown",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.365Z",
+   "observed": "1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-04 identity at entry rests on the account > T2: a participant who cannot authenticate: entry refuses, no attempt is consumed, the rescheduling wait applies",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-04-T2/CR-04-T2.record.txt",
+     "sha256": "dbe409146508adf678d31f991ea199b9d7e425cdd1bf74f9cfb8250d99715c5c"
+    },
+    {
+     "path": "artifacts/CR-04-T2/CR-04-T2.evidence.txt",
+     "sha256": "1c8f42a9d53e4190197c8d79894c77afee1634d517feb2a772ddecf719af9cff"
+    }
+   ]
+  },
+  "CR-04-T3": {
+   "rule": "CR-04",
+   "what_is_run": "Identity service unavailable",
+   "expected": "Entry refuses; technical failure; no wait",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.329Z",
+   "observed": "1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-04 identity at entry rests on the account > T3: the identity service is unavailable: entry refuses, a technical failure, no wait",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-04-T3/CR-04-T3.record.txt",
+     "sha256": "f0df2639a95a893b619c304b420f3e20e4f985ee3f692b4c937e7be94327c3e4"
+    },
+    {
+     "path": "artifacts/CR-04-T3/CR-04-T3.evidence.txt",
+     "sha256": "ad1580effe9fceaab4e8c0d314f6f6f70bf2f567a9371a7a6b90c06cbfb343c3"
+    }
+   ]
+  },
+  "CR-05-T1": {
+   "rule": "CR-05",
+   "what_is_run": "Re enter while a progression challenge is open",
+   "expected": "Admitted if otherwise eligible; the attempt is counted; the participant was told before entry",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.534Z",
+   "observed": "1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was ",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-05-T1/CR-05-T1.record.txt",
+     "sha256": "c601d421eef35c70312a1b77cc6e1eae4fde5f9f33da16ababa85e1f3fac84fb"
+    },
+    {
+     "path": "artifacts/CR-05-T1/CR-05-T1.evidence.txt",
+     "sha256": "2b400c8168c23cd04da6c6fadb19b9183b2e2c14df863bdcbd09ff7c8635aef7"
+    }
+   ]
+  },
+  "CR-05-T2": {
+   "rule": "CR-05",
+   "what_is_run": "The challenge succeeds",
+   "expected": "The decision is corrected as of its original date; eligibility changes from the correction date; nothing is erased",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.393Z",
+   "observed": "1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the c",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-05-T2/CR-05-T2.record.txt",
+     "sha256": "c353d678af88eece7909ccb85e6dc90aafc39e890b93a5d9d2d2e01b6d263288"
+    },
+    {
+     "path": "artifacts/CR-05-T2/CR-05-T2.evidence.txt",
+     "sha256": "7b9057fa87bafbf030d55eb3ebd0b8b5f9824ca03ae921d1012eb8729c72243d"
+    }
+   ]
+  },
+  "CR-06-T1": {
+   "rule": "CR-06",
+   "what_is_run": "A participant opens a committed observation that no report contains",
+   "expected": "Readable; the challenge route is available",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.414Z",
+   "observed": "1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-06 a participant reads and challenges any committed observation > T1: an observation that no report contains is readable by its participant and the challenge",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-06-T1/CR-06-T1.record.txt",
+     "sha256": "93a80a4696699ff84bf37904c97376d360b984630309509ce73f065ddec7f638"
+    },
+    {
+     "path": "artifacts/CR-06-T1/CR-06-T1.evidence.txt",
+     "sha256": "9d46e9bc61c2e4ce067ebe089a211dd80fd254b2795794221070a9af805f165f"
+    }
+   ]
+  },
+  "CR-06-T2": {
+   "rule": "CR-06",
+   "what_is_run": "Raise a correction; then unload the REC-03 values and raise another",
+   "expected": "The commitment renders with 5 and 20 business days; with the values unloaded the render refuses",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.381Z",
+   "observed": "1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-06 a participant reads and challenges any committed observation > T2: raising a correction renders the commitment word for word with 5 and 20; with the value",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-06-T2/CR-06-T2.record.txt",
+     "sha256": "f28a0684e19311acd3def0d965b552e2355f57ad09ed001f17cecb4e5cd67cf5"
+    },
+    {
+     "path": "artifacts/CR-06-T2/CR-06-T2.evidence.txt",
+     "sha256": "2c7ec37b91d90a87a2f064dc3f0eb7b50b072548040c3273ddbd9f0984d0beb6"
+    }
+   ]
+  },
+  "CR-07-T1": {
+   "rule": "CR-07",
+   "what_is_run": "A clause whose disputed conduct cannot be established",
+   "expected": "Withdrawn from composition; the rest of the observation stands; nothing added",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr07-disputed-clauses.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.714Z",
+   "observed": "1 mapped test(s) in cr07-disputed-clauses.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-07-T1/CR-07-T1.record.txt",
+     "sha256": "238e625c59ec76c608fe9fb3134592bbc7e3fcfc8d19423900d80e2f99fb5962"
+    },
+    {
+     "path": "artifacts/CR-07-T1/CR-07-T1.evidence.txt",
+     "sha256": "5d3f1944e43e49e8dbdce2cf7d274d7271bdfe4695be567b2b0771eacc9c27ed"
+    }
+   ]
+  },
+  "CR-07-T2": {
+   "rule": "CR-07",
+   "what_is_run": "A dispute that the session was validly administered, upheld",
+   "expected": "Observation withdrawn; attempt reclassified as administration failure; a new source offered",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr07-disputed-clauses.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.709Z",
+   "observed": "1 mapped test(s) in cr07-disputed-clauses.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-07 the session was not validly administered > T2: upheld: the observation is withdrawn, the attempt becomes an administration failure counting nothing, and a",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-07-T2/CR-07-T2.record.txt",
+     "sha256": "70dcf04fa94972ee2dba63954b5852ea993ae2d8bf2efa4de0fa3216a0d3dc59"
+    },
+    {
+     "path": "artifacts/CR-07-T2/CR-07-T2.evidence.txt",
+     "sha256": "db4795bc4891f20b6aec492a668a61b7e64b3fe204c61bcc4425b6f830781724"
+    }
+   ]
+  },
+  "CR-08-T1": {
+   "rule": "CR-08",
+   "what_is_run": "Revoke during serve, submit, capture, confirm, commit, review and release, in both orders around the commit point",
+   "expected": "Revocation first: the act refuses, nothing counts. Commit first: the commit stands and its output is excluded",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr08-consent-revocation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:21.652Z",
+   "observed": "9 mapped test(s) in cr08-consent-revocation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-08-T1/CR-08-T1.record.txt",
+     "sha256": "38628387e8fbe0c99dd212002676d5b361b31a0bd2ee5e080f34b7f89af729c5"
+    },
+    {
+     "path": "artifacts/CR-08-T1/CR-08-T1.evidence.txt",
+     "sha256": "1c07c8da6f38e84438fdfcfa971fd2df597b70715df96205c1d76a9be4f9bf63"
+    }
+   ]
+  },
+  "CR-08-T2": {
+   "rule": "CR-08",
+   "what_is_run": "A revocation and a commit with identical clock times",
+   "expected": "Ordered by the transaction sequence; exactly one of the two outcomes, never both and never neither",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr08-consent-revocation.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.605Z",
+   "observed": "2 mapped test(s) in cr08-consent-revocation.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-08 the transaction sequence decides, not the clock > T2: a revocation and a commit with identical clock times: the sequence orders them, revocation first ref",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-08-T2/CR-08-T2.record.txt",
+     "sha256": "bbc7a5dbffcf87ec5c337ba8484fe922e32396d8a2b365ae9bee2cd8ef8bd392"
+    },
+    {
+     "path": "artifacts/CR-08-T2/CR-08-T2.evidence.txt",
+     "sha256": "a34eda32cf1377122fece342d3388461ee7daf06dbbff429bd154a0734c89637"
+    }
+   ]
+  },
+  "CR-09-T1": {
+   "rule": "CR-09",
+   "what_is_run": "Issue a report and touch neither control",
+   "expected": "No employer and no recipient can read it",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.451Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 1: general availability > T1: issuing a report and touching neither control lets nobody read it",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T1/CR-09-T1.record.txt",
+     "sha256": "d9585c8c3ce3365ecc76681be774c06ea2377895a33c194171920df7560d8fc8"
+    },
+    {
+     "path": "artifacts/CR-09-T1/CR-09-T1.evidence.txt",
+     "sha256": "8486287b957fcc9f0a7a75abd7d57df1af5da6ffe4e9ba77142b031d7ce92e5c"
+    }
+   ]
+  },
+  "CR-09-T2": {
+   "rule": "CR-09",
+   "what_is_run": "Turn general availability on; an approved employer opens the report",
+   "expected": "The full current issued report renders; the read is in the participant's access record",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.406Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 1: general availability > T2: with general availability on, an approved employer reads the full current report and the read is in the access record",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T2/CR-09-T2.record.txt",
+     "sha256": "b62a2cf2f3d85ffdc35aea9b3e75e9de42a6e5dcb58955e1867af61c9e637231"
+    },
+    {
+     "path": "artifacts/CR-09-T2/CR-09-T2.evidence.txt",
+     "sha256": "7fae2890bb40febd07f42c36c686263f94a91be1cc4881ca6b4b72c7c069e22b"
+    }
+   ]
+  },
+  "CR-09-T3": {
+   "rule": "CR-09",
+   "what_is_run": "The same, by an employer not approved, or whose approval is suspended",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.555Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 1: general availability > T3: an employer who is not approved, or whose approval is withdrawn, is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T3/CR-09-T3.record.txt",
+     "sha256": "0e15a1e680d55f7ca7641cf41e9fe1c16ac639a4af52ac69cf5b2906377fe207"
+    },
+    {
+     "path": "artifacts/CR-09-T3/CR-09-T3.evidence.txt",
+     "sha256": "c7a028e2ab1661c392753149b25256a354933d20a0aff7950a4f1d4f978d43c1"
+    }
+   ]
+  },
+  "CR-09-T4": {
+   "rule": "CR-09",
+   "what_is_run": "Turn general availability off; the employer tries again",
+   "expected": "Refused immediately",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.402Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 1: general availability > T4: turning it off ends employer access at once",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T4/CR-09-T4.record.txt",
+     "sha256": "70a1541670f4c532bd88d254afac15212e80fb989253b2e61157b26f0ca0c845"
+    },
+    {
+     "path": "artifacts/CR-09-T4/CR-09-T4.evidence.txt",
+     "sha256": "499f0cb33e0d17a884d29279f7a93b30118cdd0a7ed36661f0f9bb5b6aa3c6ab"
+    }
+   ]
+  },
+  "CR-09-T5": {
+   "rule": "CR-09",
+   "what_is_run": "Direct release to a named recipient with no T3X account; the recipient redeems with the named address",
+   "expected": "The report face at the released version renders; no account is created",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.402Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 2: direct release > T5: a named recipient with no account redeems with the named address; the face renders at the released version; no account is cr",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T5/CR-09-T5.record.txt",
+     "sha256": "a02158d4b13ab6003af982405b8347c7b53662cc3a1fa423892dfe6f10544521"
+    },
+    {
+     "path": "artifacts/CR-09-T5/CR-09-T5.evidence.txt",
+     "sha256": "62cc3bce5f44385216d304430f717f499aa725fb50eec4baacda9beb7a5760df"
+    }
+   ]
+  },
+  "CR-09-T6": {
+   "rule": "CR-09",
+   "what_is_run": "Redeem the token from a different address, or redeem a second report with it",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.367Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 2: direct release > T6: a different address, or a second report, is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T6/CR-09-T6.record.txt",
+     "sha256": "a7ad94836f7a144f2032aa717798c8c1796ee2c2583b1d543415b79c78c7bf40"
+    },
+    {
+     "path": "artifacts/CR-09-T6/CR-09-T6.evidence.txt",
+     "sha256": "b226c363ad0341069180ddfd5eb3ad9d223bce17be7b4e4aebc1ac9d119f7c81"
+    }
+   ]
+  },
+  "CR-09-T7": {
+   "rule": "CR-09",
+   "what_is_run": "Revoke the direct release, then redeem",
+   "expected": "The revoked state and no content",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.343Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 2: direct release > T7: after revocation the redemption returns the revoked state and no content",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T7/CR-09-T7.record.txt",
+     "sha256": "0e508e4e950524563d319d2f2654289896a686b85540ef772c65ae78d90e9e48"
+    },
+    {
+     "path": "artifacts/CR-09-T7/CR-09-T7.evidence.txt",
+     "sha256": "884e16e3640e4e4b1326eb69b63fb8b3b83627b516629cb77dcc54a44dfab249"
+    }
+   ]
+  },
+  "CR-09-T8": {
+   "rule": "CR-09",
+   "what_is_run": "Let a token expire, then redeem",
+   "expected": "The expired state and no content",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.339Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T8/CR-09-T8.record.txt",
+     "sha256": "f500167cdf99f53274cbe0e2d8c6b3b26f5fda5ae4ff7c5628543741d942c8fa"
+    },
+    {
+     "path": "artifacts/CR-09-T8/CR-09-T8.evidence.txt",
+     "sha256": "da0c674ac70f576eb84f12fb327f682b047b9d024afbaa9ad269cb2aeaedad75"
+    }
+   ]
+  },
+  "CR-09-T9": {
+   "rule": "CR-09",
+   "what_is_run": "Amend the report after a direct release",
+   "expected": "The recipient sees the superseded state, never the new version, until a new release",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.458Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T9/CR-09-T9.record.txt",
+     "sha256": "813640fd67585ad8ac3c89771deae58c746ec2ecf07f5ab2b1eaee3fb1cfd99a"
+    },
+    {
+     "path": "artifacts/CR-09-T9/CR-09-T9.evidence.txt",
+     "sha256": "a5b842f051f79f5e2001681d56d558089450376030ec95d9487d5bfc2cffcceb"
+    }
+   ]
+  },
+  "CR-09-T10": {
+   "rule": "CR-09",
+   "what_is_run": "Turn general availability off while a direct release is active",
+   "expected": "The direct release still redeems",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.350Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T10/CR-09-T10.record.txt",
+     "sha256": "6c5838454926f0030c1b8a4e673a601817b08a69244b625918f6ec873db542b5"
+    },
+    {
+     "path": "artifacts/CR-09-T10/CR-09-T10.evidence.txt",
+     "sha256": "b15b0ab81b2047cf34218cc5313d6eba50165c53cd2efda0c05bc8e8201aa09c"
+    }
+   ]
+  },
+  "CR-09-T11": {
+   "rule": "CR-09",
+   "what_is_run": "Revoke a direct release while general availability is on",
+   "expected": "The employer can still read through the pool, and the interface stated this before the revocation",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.443Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this be",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T11/CR-09-T11.record.txt",
+     "sha256": "143928d75a8f208528acda1134d78cc611248599a132421bd63006a1ae249c3c"
+    },
+    {
+     "path": "artifacts/CR-09-T11/CR-09-T11.evidence.txt",
+     "sha256": "edb8abba66a817685b45a5d4fb6b45b2474540699b2861170de17f65e6cbae67"
+    }
+   ]
+  },
+  "CR-09-T12": {
+   "rule": "CR-09",
+   "what_is_run": "From either route, attempt to contact the participant",
+   "expected": "No contact element renders; contact permission is a separate grant",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.448Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T12/CR-09-T12.record.txt",
+     "sha256": "a571364e64c75e9656911ccce51a8f310df7b784f6609850e392c2e0a0bb0baa"
+    },
+    {
+     "path": "artifacts/CR-09-T12/CR-09-T12.evidence.txt",
+     "sha256": "81c5842d6be09c12cb4f9a4851e0c127ac37b0311d1f53a714aedbfeeca09ebc"
+    }
+   ]
+  },
+  "CR-09-T13": {
+   "rule": "CR-09",
+   "what_is_run": "Verify a report by its verification identifier",
+   "expected": "Status only; never content",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.362Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T13/CR-09-T13.record.txt",
+     "sha256": "0dc4899ad5fd294935970ac675d2bede07700e0821dd0ebc5f6f9fea00d48052"
+    },
+    {
+     "path": "artifacts/CR-09-T13/CR-09-T13.evidence.txt",
+     "sha256": "39c327960e11520ddfa3a3e630b692bde12adab57e7684904cd1e1563031ab95"
+    }
+   ]
+  },
+  "CR-09-T14": {
+   "rule": "CR-09",
+   "what_is_run": "Search, sort or filter the Available Reports surface on a dimension, a Stage, an evidence state or observed conduct",
+   "expected": "No such control exists and the API refuses the parameter",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.660Z",
+   "observed": "2 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 what neither route gives > T14: the Available Reports surface has no search, sort or filter, and the API refuses the parameter",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T14/CR-09-T14.record.txt",
+     "sha256": "4460b13d49e731f317ea88c8bc6db9fb1cb34237307d81de6876cede987c94a1"
+    },
+    {
+     "path": "artifacts/CR-09-T14/CR-09-T14.evidence.txt",
+     "sha256": "8ca16098fe65aeedbfed679bee1f1814bde64e53b873746809a36aeaa4b9b220"
+    }
+   ]
+  },
+  "CR-09-T15": {
+   "rule": "CR-09",
+   "what_is_run": "Scan every output for \"released to your organization\"",
+   "expected": "None present",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.274Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 what neither route gives > T15: no output or function carries \"released to your organization\"",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T15/CR-09-T15.record.txt",
+     "sha256": "8ca049a2462343a6d4a887d019c4e484fd6d0058f1b3f5df6185ad2a1fd584b9"
+    },
+    {
+     "path": "artifacts/CR-09-T15/CR-09-T15.evidence.txt",
+     "sha256": "ac577bb78d3c61aa09ee9d985ca845acc94cb5e1de59289ccc90581f7f27ef0f"
+    }
+   ]
+  },
+  "CR-09-T17": {
+   "rule": "CR-09",
+   "what_is_run": "Turn general availability on without the current employer warning having been shown",
+   "expected": "Refused; with the warning shown, it turns on and the warning version is recorded",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.340Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 route 1: general availability > T17: it will not turn on unless the current employer warning was shown, and the version is recorded",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T17/CR-09-T17.record.txt",
+     "sha256": "2510180a57f1d898108fdab50b71d23c05b9cec5563a193296439c20e422b519"
+    },
+    {
+     "path": "artifacts/CR-09-T17/CR-09-T17.evidence.txt",
+     "sha256": "be11b32385a94f19e0a2cde50f2ce640f918694941866cca064c6bfdfc07dafc"
+    }
+   ]
+  },
+  "CR-09-T16": {
+   "rule": "CR-09",
+   "what_is_run": "Amend a report while general availability is on and a direct release is active",
+   "expected": "Approved employers read the new version, the participant is notified, and the direct release returns the superseded state",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.458Z",
+   "observed": "1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-09-T16/CR-09-T16.record.txt",
+     "sha256": "0182c06058808752ae44cbcb2438ed8f55f1318d3e27f96461babd677f8fb439"
+    },
+    {
+     "path": "artifacts/CR-09-T16/CR-09-T16.evidence.txt",
+     "sha256": "41f2afc287c5ba0e7c674ccc515e21e6bfce648b51e6f3b9f8662da19f2a9d52"
+    }
+   ]
+  },
+  "CR-10-T1": {
+   "rule": "CR-10",
+   "what_is_run": "Route a report to the single page renderer",
+   "expected": "Refused with format_mismatch",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.600Z",
+   "observed": "1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-10 every issued report renders through the multi page renderer > T1: routing a report to the single page renderer is refused with format_mismatch, for one di",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-10-T1/CR-10-T1.record.txt",
+     "sha256": "9e777d749a992abaf614b39de5740a908985349622c85017c4e5ff6605bf02dc"
+    },
+    {
+     "path": "artifacts/CR-10-T1/CR-10-T1.evidence.txt",
+     "sha256": "704f09e6541fd04a802117e7ca8258b339181617d236fd81ea98b5a916d57751"
+    }
+   ]
+  },
+  "CR-11-T1": {
+   "rule": "CR-11",
+   "what_is_run": "Fail one dimension item of a two dimension report",
+   "expected": "Issuance blocks; no override",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr11-checklist-two-lists.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.998Z",
+   "observed": "3 mapped test(s) in cr11-checklist-two-lists.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carr",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-11-T1/CR-11-T1.record.txt",
+     "sha256": "63c92326168ba84f5754cc345e0eb231b0734cf0165aa25fb0604c1a9d541f93"
+    },
+    {
+     "path": "artifacts/CR-11-T1/CR-11-T1.evidence.txt",
+     "sha256": "1dcf5efd55a78000a9d7d5ff791242fb32b3b511328d9b9ecec289c776e7e582"
+    }
+   ]
+  },
+  "CR-12-T1": {
+   "rule": "CR-12",
+   "what_is_run": "Counted attempts committed 11 January, 1 May, 1 June and 11 July; a start requested on 18 July",
+   "expected": "Refused ATTEMPT_CAP_REACHED with the earliest eligible instant of 1 November",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.432Z",
+   "observed": "1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T1/CR-12-T1.record.txt",
+     "sha256": "4e0128a0d213316343b0679c21eb3c4051fe44522a836d116a0038ed38facb4f"
+    },
+    {
+     "path": "artifacts/CR-12-T1/CR-12-T1.evidence.txt",
+     "sha256": "b72c8b25eb4c9289e1b72c690388cfc60f1f641339766c4fa14c17966cb02463"
+    }
+   ]
+  },
+  "CR-12-T2": {
+   "rule": "CR-12",
+   "what_is_run": "Counted attempts 11 January, 1 February, 15 March, 19 July; starts requested 5 August and 26 August",
+   "expected": "5 August refused by the 21 day cooldown; 26 August admitted with three counted attempts in its trailing six months",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.376Z",
+   "observed": "1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T2/CR-12-T2.record.txt",
+     "sha256": "ee22715ab1d8fbcb7dd58279d45c654fc5f8dc8f89a8a93494fcb80fb76aeb24"
+    },
+    {
+     "path": "artifacts/CR-12-T2/CR-12-T2.evidence.txt",
+     "sha256": "313d13977abbb6cc56fd6752fa45b25e9cd51b1aed8c0ccb0598ed9f5f9f2346"
+    }
+   ]
+  },
+  "CR-12-T3": {
+   "rule": "CR-12",
+   "what_is_run": "A commit at 14:00 on 31 August with two other counted attempts; requests at 13:59 and 14:00 on 28 February; a participant who changes display time zone",
+   "expected": "Refused at 13:59 and admitted at 14:00 on 28 February by the stored exclusion_expiry_at; eligibility unchanged by display zone",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.342Z",
+   "observed": "1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T3/CR-12-T3.record.txt",
+     "sha256": "86a4ac943827393a97b0d3824f35a39f6bf74f0288015d8f3d89073d982f6786"
+    },
+    {
+     "path": "artifacts/CR-12-T3/CR-12-T3.evidence.txt",
+     "sha256": "d0b97540fa7e5fe8705dcba0013475ee5a744a7a6fb6d7823ecd7d0dc4b9bf1b"
+    }
+   ]
+  },
+  "CR-12-T4": {
+   "rule": "CR-12",
+   "what_is_run": "Two start requests at once; then the same request repeated with its idempotency key",
+   "expected": "One active attempt; the second refused ATTEMPT_ACTIVE; the repeat returns the existing attempt",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.581Z",
+   "observed": "3 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T4/CR-12-T4.record.txt",
+     "sha256": "228b3d83b8e2c56e6c791eb0723f728145b492a15448cee83c9654793252aabf"
+    },
+    {
+     "path": "artifacts/CR-12-T4/CR-12-T4.evidence.txt",
+     "sha256": "076d2e7872bb361afa549ba6e2a234dbfffc21f360da31982c6ee937e32faa49"
+    }
+   ]
+  },
+  "CR-12-T5": {
+   "rule": "CR-12",
+   "what_is_run": "The same completion callback delivered twice, and two callbacks racing",
+   "expected": "Counted once; one cooldown; one attempt number",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.468Z",
+   "observed": "2 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T5: a completion callback counts once > delivered twice",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T5/CR-12-T5.record.txt",
+     "sha256": "72d4b85549f2087d4f80e44d754463783475c9e0e4a1267e00dfa88b8cb44c94"
+    },
+    {
+     "path": "artifacts/CR-12-T5/CR-12-T5.evidence.txt",
+     "sha256": "2dcde9a86f0795ea23e857b6d435e9d01f1e151484cf352d2fccaded20e4a2c1"
+    }
+   ]
+  },
+  "CR-12-T6": {
+   "rule": "CR-12",
+   "what_is_run": "An ending that matches no defined event",
+   "expected": "Fails closed; counts nothing; blocks a new attempt until classified; logged",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.400Z",
+   "observed": "1 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T6/CR-12-T6.record.txt",
+     "sha256": "b870c579e8bf670d4edabf938c564b787cae97108d68126c61bb5ec7c2a31bdf"
+    },
+    {
+     "path": "artifacts/CR-12-T6/CR-12-T6.evidence.txt",
+     "sha256": "024ebbf9ab8f3fe52c3271e6c5f1e2b02ccaa459be0093c1c5f2bf1f0b42d6d6"
+    }
+   ]
+  },
+  "CR-12-T7": {
+   "rule": "CR-12",
+   "what_is_run": "Reclassify a counted completion as an administration failure",
+   "expected": "Original kept and superseded; count and cooldowns recalculated; issued attempt numbers unchanged, gap visible",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.406Z",
+   "observed": "1 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T7: reclassifying a counted completion > keeps the original, supersedes it, keeps the number, recalculates the count, leaves a visible gap",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T7/CR-12-T7.record.txt",
+     "sha256": "6dfcc2ffa720259f042101b1f6a6a59c1b5243b620771885f379cf7e7e227b3b"
+    },
+    {
+     "path": "artifacts/CR-12-T7/CR-12-T7.evidence.txt",
+     "sha256": "117fabc74b0f31a8fb8e14ca92cc3e365e50caba0522f85944ab9e52ca7d4d83"
+    }
+   ]
+  },
+  "CR-12-T8": {
+   "rule": "CR-12",
+   "what_is_run": "A runtime change to a cap, window or cooldown value; an override of any of them",
+   "expected": "Refused; logged",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.262Z",
+   "observed": "3 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T8: rule values cannot change at runtime > a change of the cap is refused and logged",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T8/CR-12-T8.record.txt",
+     "sha256": "10b8ad8aca270f65dee824ef587e07278bacdb301c6dac63d89b8afca8981e92"
+    },
+    {
+     "path": "artifacts/CR-12-T8/CR-12-T8.evidence.txt",
+     "sha256": "e963b1a4d54550b4729bc7d2822d09aa483d12e98b104f7f62adae912c118e18"
+    }
+   ]
+  },
+  "CR-12-T9": {
+   "rule": "CR-12",
+   "what_is_run": "A completion callback with no active attempt",
+   "expected": "Refused; no attempt and no count are created",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.472Z",
+   "observed": "2 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T9/CR-12-T9.record.txt",
+     "sha256": "c6c7ae1f4cb72eea184b8a3e711cce6b2f72d206edb97b45d971658a7d0f2801"
+    },
+    {
+     "path": "artifacts/CR-12-T9/CR-12-T9.evidence.txt",
+     "sha256": "7b5cd9df61966de0ce9afcbf1dd44f521ab632ab0254539d35f028dc095822da"
+    }
+   ]
+  },
+  "CR-12-T10": {
+   "rule": "CR-12",
+   "what_is_run": "A refused early callback, then a valid callback with the same identifier after the attempt starts",
+   "expected": "The valid callback counts once",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.376Z",
+   "observed": "1 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T10/CR-12-T10.record.txt",
+     "sha256": "43e1890ac75d790646ca83408bb0cf2554bfa6c1677010a0f0f0edb199a4464c"
+    },
+    {
+     "path": "artifacts/CR-12-T10/CR-12-T10.evidence.txt",
+     "sha256": "355079dc96d9e595f9a026fe23312527579ba3a388c33ef03fe53af4c54baa8f"
+    }
+   ]
+  },
+  "CR-12-T11": {
+   "rule": "CR-12",
+   "what_is_run": "Times carrying offsets, including across a daylight saving change",
+   "expected": "Converted to the same UTC instants; cooldowns and the window computed from them",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.318Z",
+   "observed": "1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-12-T11/CR-12-T11.record.txt",
+     "sha256": "878ec0b68dd269c7ab8c592ad65502ced823468b24304048efe2c8c5d161e8f4"
+    },
+    {
+     "path": "artifacts/CR-12-T11/CR-12-T11.evidence.txt",
+     "sha256": "2419770086274ad381e404a7b0f83f2cf206757177073e37b335a8928515e832"
+    }
+   ]
+  },
+  "CR-13-T1": {
+   "rule": "CR-13",
+   "what_is_run": "Assign as reviewer a person who observed one record of a report, through an amended observation version",
+   "expected": "Refused; the graph finds the earlier version",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr13-involvement-reconsideration.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.610Z",
+   "observed": "1 mapped test(s) in cr13-involvement-reconsideration.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-13 involvement across versions and accounts > T1: a person who observed one record of the report, through an earlier version, is refused as reviewer",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-13-T1/CR-13-T1.record.txt",
+     "sha256": "00384109dc4a806411132eba4aa9ace2df9d5353558804f156c701637e8dc518"
+    },
+    {
+     "path": "artifacts/CR-13-T1/CR-13-T1.evidence.txt",
+     "sha256": "5dc7f1aa49f7b6df2383b39e162582b3dcacfc78fc978de474db13ea63ec8893"
+    }
+   ]
+  },
+  "CR-13-T2": {
+   "rule": "CR-13",
+   "what_is_run": "Assign as reviewer a person through a second account of the same canonical identity",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr13-involvement-reconsideration.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.497Z",
+   "observed": "1 mapped test(s) in cr13-involvement-reconsideration.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-13 involvement across versions and accounts > T2: a person through a second account of the same canonical identity is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-13-T2/CR-13-T2.record.txt",
+     "sha256": "6dc886280e889141bfa219e0742842e3f8f14e62b08f46ce680b79f0cd15f305"
+    },
+    {
+     "path": "artifacts/CR-13-T2/CR-13-T2.evidence.txt",
+     "sha256": "2b699acf45f27e6e28b69fa4f0f75b6a9d211d2f84f890731ad4c0499866a9ef"
+    }
+   ]
+  },
+  "CR-13-T3": {
+   "rule": "CR-13",
+   "what_is_run": "One person as both reviewer and issuer after Gate G2",
+   "expected": "Refused until the Calibration Manual adopts D.88",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr13-involvement-reconsideration.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.568Z",
+   "observed": "1 mapped test(s) in cr13-involvement-reconsideration.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-13 review and issue stay with two different people > T3: one person as both reviewer and issuer is refused, also through a second account",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-13-T3/CR-13-T3.record.txt",
+     "sha256": "9b173ec85d77fa226aa60d0e65315766cedd95a23c107a525a4faec76d61ff05"
+    },
+    {
+     "path": "artifacts/CR-13-T3/CR-13-T3.evidence.txt",
+     "sha256": "6ec3b21bbb8138f98350983386a3b12cce3726013816fef7916e830487e5942c"
+    }
+   ]
+  },
+  "CR-13-T4": {
+   "rule": "CR-13",
+   "what_is_run": "A reconsideration decided with no independent check",
+   "expected": "Not final; the case stays open",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr13-involvement-reconsideration.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.655Z",
+   "observed": "1 mapped test(s) in cr13-involvement-reconsideration.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-13-T4/CR-13-T4.record.txt",
+     "sha256": "0b51dc662985ed075324ce1f6fa0fbe911cf68e39d4d4c5693bd3d277bc28d60"
+    },
+    {
+     "path": "artifacts/CR-13-T4/CR-13-T4.evidence.txt",
+     "sha256": "b1e554d77857ede2462e3bdd0f92c89af24c76a874e04db77d45ff16f16dbf52"
+    }
+   ]
+  },
+  "CR-13-T5": {
+   "rule": "CR-13",
+   "what_is_run": "A person observes through account X; account X is later linked to the person's canonical identity; the person is then proposed as reviewer through account Y",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr13-involvement-reconsideration.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.519Z",
+   "observed": "1 mapped test(s) in cr13-involvement-reconsideration.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-13-T5/CR-13-T5.record.txt",
+     "sha256": "93f9be8400141de56d4377b3a79cc07ae0dcdc78f1318369e1a90530d64d2f9e"
+    },
+    {
+     "path": "artifacts/CR-13-T5/CR-13-T5.evidence.txt",
+     "sha256": "fe9547a110a1a4a150a64c1bb0ae4cc4d1183c9ccfcd86f4bfc5ecf48d529323"
+    }
+   ]
+  },
+  "CR-14-T1": {
+   "rule": "CR-14",
+   "what_is_run": "A participant who met the seven beat form under another dimension, no review loaded",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr14-design-review.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.373Z",
+   "observed": "1 mapped test(s) in cr14-design-review.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-14-T1/CR-14-T1.record.txt",
+     "sha256": "ff5cd973b6175ccb93994a1712fd4c888f91c3e5bbf123d0922aa7755bb8f298"
+    },
+    {
+     "path": "artifacts/CR-14-T1/CR-14-T1.evidence.txt",
+     "sha256": "ebb1db05cc0f0e41c82af76c154c193bdf601c7b71b2fb25871f14c7bfc7f896"
+    }
+   ]
+  },
+  "CR-14-T2": {
+   "rule": "CR-14",
+   "what_is_run": "The same, with an approved review covering the form, source version and participant scope, unexpired",
+   "expected": "Admitted",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr14-design-review.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.351Z",
+   "observed": "1 mapped test(s) in cr14-design-review.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-14: the approved source design review > T2: an approved, unexpired review covering the form, source and participant lifts the exclusion",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-14-T2/CR-14-T2.record.txt",
+     "sha256": "37a75d837690b3030dfaab9a586a74f832d03e6bfdf7d0bec0e986a7c24f190b"
+    },
+    {
+     "path": "artifacts/CR-14-T2/CR-14-T2.evidence.txt",
+     "sha256": "383ed4f49017abd2a17717a734fc4fc25c0ec7b8bec23be8b9dfd28972bb4750"
+    }
+   ]
+  },
+  "CR-14-T3": {
+   "rule": "CR-14",
+   "what_is_run": "A review that names the participant's already met situation",
+   "expected": "Cannot waive it; refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr14-design-review.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.392Z",
+   "observed": "1 mapped test(s) in cr14-design-review.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-14-T3/CR-14-T3.record.txt",
+     "sha256": "28308d738e11aa02bb8a54ee77b85d565ed4070d996799e0880f317f3d5b8ffd"
+    },
+    {
+     "path": "artifacts/CR-14-T3/CR-14-T3.evidence.txt",
+     "sha256": "62c22308bc83811dce53f51672922035f7975ff053b3c67ae7c10a66e338335a"
+    }
+   ]
+  },
+  "CR-14-T4": {
+   "rule": "CR-14",
+   "what_is_run": "A review covering the form and scope but in draft, or approved by its own author",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr14-design-review.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.750Z",
+   "observed": "2 mapped test(s) in cr14-design-review.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-14: the approved source design review > T4: a draft, a rejected, a withdrawn and an expired review lift nothing",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-14-T4/CR-14-T4.record.txt",
+     "sha256": "06395abef17de82ba913670a3764c542a11ede6d7c8baccf19e0e61dd3ef0b09"
+    },
+    {
+     "path": "artifacts/CR-14-T4/CR-14-T4.evidence.txt",
+     "sha256": "e62ec6eec828df40f696d26ecf171a1c3b6c543d8ba6f1398d44bc6098bfb627"
+    }
+   ]
+  },
+  "CR-15-T1": {
+   "rule": "CR-15",
+   "what_is_run": "A pilot session with consent and two observers",
+   "expected": "Two independent capture sets; neither visible to the other before both lock",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr15-second-observer.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.537Z",
+   "observed": "1 mapped test(s) in cr15-second-observer.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-15 independent captures > T1: two independent capture sets; neither is visible to the other before both lock",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-15-T1/CR-15-T1.record.txt",
+     "sha256": "a931286b189ae949b02ef2983bdcc3df8749d3784f7502be588287d7d03f3c65"
+    },
+    {
+     "path": "artifacts/CR-15-T1/CR-15-T1.evidence.txt",
+     "sha256": "9e6871cee82cd742ca3fc88bd34b365eb4d4a9ce081603203924ec20689ea74f"
+    }
+   ]
+  },
+  "CR-15-T2": {
+   "rule": "CR-15",
+   "what_is_run": "A second observer without consent",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr15-second-observer.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.577Z",
+   "observed": "1 mapped test(s) in cr15-second-observer.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-15-T2/CR-15-T2.record.txt",
+     "sha256": "f31b7c494263c6cae395810d824e2ac6fe5b9a9d6460ca527eeaddffe5368ec8"
+    },
+    {
+     "path": "artifacts/CR-15-T2/CR-15-T2.evidence.txt",
+     "sha256": "df90ea85dcafdea6f73ab709bf02af9cf0cb07c28c9a129b3c31860dca39bb3c"
+    }
+   ]
+  },
+  "CR-16-T1": {
+   "rule": "CR-16",
+   "what_is_run": "Render a D9 entry carrying a word on the D9 list",
+   "expected": "Refused by the renderer",
+   "dimensions": [
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr16-per-dimension-prohibited-vocabulary.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:20.892Z",
+   "observed": "3 mapped test(s) in cr16-per-dimension-prohibited-vocabulary.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D9. First test: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > the D9 list of Section 5.7a is loaded from the package: 88 words, and a D9 entry",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-16-T1/CR-16-T1.record.txt",
+     "sha256": "efe67c853517e2adf0bf6bf6739851b5a0ddb44e716f8a66829af493b9046739"
+    },
+    {
+     "path": "artifacts/CR-16-T1/CR-16-T1.evidence.txt",
+     "sha256": "fbe7c5a6d6e84ee78048e34bafb57ccd2e60500abfc8ad77a830c343a710ff56"
+    }
+   ]
+  },
+  "CR-17-T1": {
+   "rule": "CR-17",
+   "what_is_run": "First attempt on a Stage",
+   "expected": "Served from first_attempt",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.351Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 selection > T1: a first attempt is served from first_attempt",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T1/CR-17-T1.record.txt",
+     "sha256": "51d53baf73fc4f2938a5e5f5dcc2b8daab116eb9b4089547342b64064f4585bb"
+    },
+    {
+     "path": "artifacts/CR-17-T1/CR-17-T1.evidence.txt",
+     "sha256": "d684ad28a1522a9f50ad7f83a5f57b7ce04d648f3dc50982398d848b85b8ce2f"
+    }
+   ]
+  },
+  "CR-17-T2": {
+   "rule": "CR-17",
+   "what_is_run": "Second attempt, retake_1 holds an unseen source in a new pattern family",
+   "expected": "Served from retake_1",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.379Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 selection > T2: a second attempt is served from retake_1, from an unmet family",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T2/CR-17-T2.record.txt",
+     "sha256": "735beab35aed1e4c5e0bede07873ff0016e26888183d58018aacfd1ae3b99533"
+    },
+    {
+     "path": "artifacts/CR-17-T2/CR-17-T2.evidence.txt",
+     "sha256": "3fa8991dffc125a86e6bf5b71259e2de44377e9eb1595dbc0b62ef7c13c9616f"
+    }
+   ]
+  },
+  "CR-17-T3": {
+   "rule": "CR-17",
+   "what_is_run": "Second attempt, retake_1 empty",
+   "expected": "Served from retake_2; comparison as its family allows",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.394Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 selection > T3: a second attempt with retake_1 exhausted is served from retake_2",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T3/CR-17-T3.record.txt",
+     "sha256": "c3fbbcea0f9c697e1696178542e995414ce2b8709b67f7ccd98dd42caba81ed2"
+    },
+    {
+     "path": "artifacts/CR-17-T3/CR-17-T3.evidence.txt",
+     "sha256": "45ecdcf1352e497c5816ab4137b97d64ed2b44d6831a7827c78359089d06dbe0"
+    }
+   ]
+  },
+  "CR-17-T4": {
+   "rule": "CR-17",
+   "what_is_run": "No pool holds a source that is both unmet and of an unmet family",
+   "expected": "Served on an unmet source from a met family; reason family_exposure_fallback; comparison not_eligible; never refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.425Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 borrowing, the family fallback and unavailable > T4: no source is both unmet and of an unmet family: an unmet source of a met family is served, not compar",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T4/CR-17-T4.record.txt",
+     "sha256": "3c180f22c75e8d7358684ae94d1f29b4f9b00d805f6252852f3ab8424f5a2839"
+    },
+    {
+     "path": "artifacts/CR-17-T4/CR-17-T4.evidence.txt",
+     "sha256": "f584c38148796021880a7a719d19f8bf7b76a8fd961f03cfcce612ef383d726a"
+    }
+   ]
+  },
+  "CR-17-T6": {
+   "rule": "CR-17",
+   "what_is_run": "An unmet source of an unmet family exists only in a pool earlier than the matching one",
+   "expected": "That source is served; the family fallback is not used",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.404Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 borrowing, the family fallback and unavailable > T6: an unmet source of an unmet family in a pool earlier than the matching one is served; the fallback is",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T6/CR-17-T6.record.txt",
+     "sha256": "6e57859b4fa46f1fa346876d982117dd3d5ea5400fb15f17ece089208071e81c"
+    },
+    {
+     "path": "artifacts/CR-17-T6/CR-17-T6.evidence.txt",
+     "sha256": "93b037d34b27af7ac18d552b9b74431f4ccec458ad352910af2d8a0538e22063"
+    }
+   ]
+  },
+  "CR-17-T7": {
+   "rule": "CR-17",
+   "what_is_run": "Every approved source has been met",
+   "expected": "Refused with RETAKE_SOURCE_UNAVAILABLE and logged; a met source is never served again",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.528Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T7/CR-17-T7.record.txt",
+     "sha256": "8d8919262ea2a34302043d02e97ceaa4d0cece000b91e0b8483aad65e0c0b3da"
+    },
+    {
+     "path": "artifacts/CR-17-T7/CR-17-T7.evidence.txt",
+     "sha256": "39f49d5e18a94aaa2e71710a1a4bfc262d610fa63b8995605c1cfec89b5925ff"
+    }
+   ]
+  },
+  "CR-17-T8": {
+   "rule": "CR-17",
+   "what_is_run": "A first attempt when the first_attempt pool holds no unmet source",
+   "expected": "Served from the next retake pool holding one; reason first_attempt_pool_exhausted; the source's own pool recorded",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.411Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T8/CR-17-T8.record.txt",
+     "sha256": "c9869eecfb2a608f7a2043629ed5bae973833c323699f885ea0ca78e65ad6d32"
+    },
+    {
+     "path": "artifacts/CR-17-T8/CR-17-T8.evidence.txt",
+     "sha256": "6e29e61b80ff04b267497c6c4571c3ec5e4131b76a42e05c50fcbfc2ba8ef511"
+    }
+   ]
+  },
+  "CR-17-T9": {
+   "rule": "CR-17",
+   "what_is_run": "Load a source missing from the pool map, or with a pool value outside the four",
+   "expected": "Refused with RETAKE_POOL_MISSING_OR_INVALID",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.271Z",
+   "observed": "2 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T9/CR-17-T9.record.txt",
+     "sha256": "699f1eec8e3cca79d906069be1a7c73f7fa8a3968ad73b1ccb2cd058e22b0800"
+    },
+    {
+     "path": "artifacts/CR-17-T9/CR-17-T9.evidence.txt",
+     "sha256": "f9d4f7a0b1140042671943ce534e9178de06617201ab331fcfc56fcfd9740ae7"
+    }
+   ]
+  },
+  "CR-17-T5": {
+   "rule": "CR-17",
+   "what_is_run": "Inspect the selection log after a selection that excluded sources",
+   "expected": "Only the selected source, policy receipt and seed",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.402Z",
+   "observed": "1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 selection > T5: the selection log keeps only the selected source, the policy receipt and the seed",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-17-T5/CR-17-T5.record.txt",
+     "sha256": "018a5c977af6f57160dabd776c350c879f47bdb2ec931ff59e758b4ef484562f"
+    },
+    {
+     "path": "artifacts/CR-17-T5/CR-17-T5.evidence.txt",
+     "sha256": "1e1cbafd52506b783243df2b4f659b1e3666f8c1dd82c071d92178935c0fb56e"
+    }
+   ]
+  },
+  "CR-18-T1": {
+   "rule": "CR-18",
+   "what_is_run": "Record a progression decision before commit",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr18-cr19-progression-after-commit-mentor-context.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.548Z",
+   "observed": "1 mapped test(s) in cr18-cr19-progression-after-commit-mentor-context.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-18-T1/CR-18-T1.record.txt",
+     "sha256": "b6fcd5f667ec9f4390e8703bd9bc8f2e40bdc5a4e1902b9bc357ded449974ee6"
+    },
+    {
+     "path": "artifacts/CR-18-T1/CR-18-T1.evidence.txt",
+     "sha256": "f7ee15633a2ce15d1ab9d1c4e039e2bb55d3b1352e434bb12bfa1bc1c532d804"
+    }
+   ]
+  },
+  "CR-18-T2": {
+   "rule": "CR-18",
+   "what_is_run": "A combined commit and progression request",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr18-cr19-progression-after-commit-mentor-context.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.365Z",
+   "observed": "1 mapped test(s) in cr18-cr19-progression-after-commit-mentor-context.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-18-T2/CR-18-T2.record.txt",
+     "sha256": "f3d4bff1a183917f6205c4cefcc7371e79ff110cbabb75162fd323cc6650ff40"
+    },
+    {
+     "path": "artifacts/CR-18-T2/CR-18-T2.evidence.txt",
+     "sha256": "33f22de7d4108be1acd57c02a2993e0a0a054d6633af243ff5069fe4122c2c3e"
+    }
+   ]
+  },
+  "CR-19-T1": {
+   "rule": "CR-19",
+   "what_is_run": "Open the mentor view of a session",
+   "expected": "Minimum observation context only; no intake profile field",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr18-cr19-progression-after-commit-mentor-context.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.485Z",
+   "observed": "1 mapped test(s) in cr18-cr19-progression-after-commit-mentor-context.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-19-T1/CR-19-T1.record.txt",
+     "sha256": "c337cc7ffb0c3e1ca5e63fd9e02fdb230f7cdf01449d7cb03664307833ff8b5a"
+    },
+    {
+     "path": "artifacts/CR-19-T1/CR-19-T1.evidence.txt",
+     "sha256": "682344f727395b401a7115e156da6da83ba6ad4c232af0eb34c9494a28c22850"
+    }
+   ]
+  },
+  "CR-20-T1": {
+   "rule": "CR-20",
+   "what_is_run": "Each timing refusal in turn",
+   "expected": "Its own code",
+   "dimensions": [
+    "D1"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:20.148Z",
+   "observed": "5 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1; not shown on D2, D3, D4, D5, D8, D9 (AssertionError: expected { permitted: true, …(1) } to match object { permitted: false, …(1; AssertionError: expected { permitted: true, …(1) } to match object { permitted: false, …(2). First test: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-20-T1/CR-20-T1.record.txt",
+     "sha256": "9cbbdacd534cd72519426558f51790bbef18a914df4ada811a87a51ba4d64178"
+    },
+    {
+     "path": "artifacts/CR-20-T1/CR-20-T1.evidence.txt",
+     "sha256": "46625c0911ae8e15b25144a5d4884b18286812eb328a57d6af596b2eab82a5c3"
+    }
+   ]
+  },
+  "CR-20-T2": {
+   "rule": "CR-20",
+   "what_is_run": "A whole session line before the close beat; a final beat passed unanswered",
+   "expected": "Both refused",
+   "dimensions": [
+    "D1",
+    "D3"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.999Z",
+   "observed": "4 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D3; not shown on D2, D4, D5, D8, D9 (AssertionError: expected [Function] to throw error matching /WHOLE_SESSION_ANSWER_BEFORE_C; Error: promise resolved \"Result{ command: 'INSERT', …(9) }\" instead of rejecting     at _A; error: CAPTURE_LINE_NOT_IN_SET: line 4 is not a line of C2     at /home/user/academy-build). First test: CR-20-T2 a whole session line before the close beat, and a final beat passed unanswered > the whole session line (FC-02) is refused before the close beat and af",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-20-T2/CR-20-T2.record.txt",
+     "sha256": "8adb97ebce23375e6f6a44b45ff8f4c36f1d2d0575290c0e110f73ae468c900a"
+    },
+    {
+     "path": "artifacts/CR-20-T2/CR-20-T2.evidence.txt",
+     "sha256": "d76c1f5c3382541b42cc9251c82e4635c1f095e5ab1ddbc65ef00bbbc4434ae0"
+    }
+   ]
+  },
+  "CR-20-T3": {
+   "rule": "CR-20",
+   "what_is_run": "Capture with an attestation missing",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:20.273Z",
+   "observed": "4 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-20-T3/CR-20-T3.record.txt",
+     "sha256": "f0a136a537a05b283007ebbe16e9404ee11a057c878fae354f1034ffc36c22f1"
+    },
+    {
+     "path": "artifacts/CR-20-T3/CR-20-T3.evidence.txt",
+     "sha256": "9a40523ec20edca514924337c1d4a51682afc0c582261a213abff1d00697536c"
+    }
+   ]
+  },
+  "CR-21-T1": {
+   "rule": "CR-21",
+   "what_is_run": "Restart mid capture and mid commit",
+   "expected": "No duplicate; no silent advance",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.717Z",
+   "observed": "2 mapped test(s) in cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-21 a restart creates no duplicate and advances nothing silently > T1: a restart in the middle of commit: the same key gives the same answer, a new key after ",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-21-T1/CR-21-T1.record.txt",
+     "sha256": "92636e5961a037a1927302566b63544855aac8394e677f575a3e530d40c3e5b6"
+    },
+    {
+     "path": "artifacts/CR-21-T1/CR-21-T1.evidence.txt",
+     "sha256": "50214734f92e0cafb65ca372370ed1766e96a99c12f3963dfd8756e6b948ad26"
+    }
+   ]
+  },
+  "CR-21-T2": {
+   "rule": "CR-21",
+   "what_is_run": "Suspend a circulated source",
+   "expected": "Impact review lists every instance and report",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.708Z",
+   "observed": "1 mapped test(s) in cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-21 suspending a source opens an impact review > T2: every served instance, every observation and every report is listed; nothing is cancelled",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-21-T2/CR-21-T2.record.txt",
+     "sha256": "4c407b768985023bced091c4629740b930b69f9acd3bd57ae3aa9aaf0cfe7674"
+    },
+    {
+     "path": "artifacts/CR-21-T2/CR-21-T2.evidence.txt",
+     "sha256": "94341e5bccdba3cb6c64bdc27287d598795e3779a505d90c19ee783f0119900f"
+    }
+   ]
+  },
+  "CR-21-T3": {
+   "rule": "CR-21",
+   "what_is_run": "Withdraw one dimension of a shared Stage 3 submission",
+   "expected": "That record refuses; the other stands",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.465Z",
+   "observed": "1 mapped test(s) in cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-21 a shared Stage 3 submission and withdrawn permission > T3: withdrawing permission for one of two dimensions refuses that dimension's record; the other sta",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-21-T3/CR-21-T3.record.txt",
+     "sha256": "795af3b597a57cb5c407104a177316a080314f38a125a54f147c1faa2a6411d3"
+    },
+    {
+     "path": "artifacts/CR-21-T3/CR-21-T3.evidence.txt",
+     "sha256": "36b34784fec9659fac8457269cad307b1a90e29546f26ee885ece9b4c1abde80"
+    }
+   ]
+  },
+  "CR-22-T1": {
+   "rule": "CR-22",
+   "what_is_run": "Each Stage 4 interruption in turn",
+   "expected": "The stated attempt effect, and no finding about anyone",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:23.231Z",
+   "observed": "11 mapped test(s) in cr21-cr22-recovery-suspension-stage4-interruptions.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-22 Stage 4 interruptions > T1: 'observed participant withdraws (chose…'",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-22-T1/CR-22-T1.record.txt",
+     "sha256": "eaa6ca7bee13592bdac3ec6a9bc7394c290bed2e6b0d01de580704ea534c9925"
+    },
+    {
+     "path": "artifacts/CR-22-T1/CR-22-T1.evidence.txt",
+     "sha256": "30d58c4bec58bf25157ae90f0fa417f99ad26a8c994dfaf592f0e11e46385f58"
+    }
+   ]
+  },
+  "CR-23-T1": {
+   "rule": "CR-23",
+   "what_is_run": "Request the recurrence frame where one context is Stage 1 and no row declares the act types compatible",
+   "expected": "Refused for that clause",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr23-cr24-evidence-state.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.536Z",
+   "observed": "1 mapped test(s) in cr23-cr24-evidence-state.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-23 a Stage 1 observation counts toward recurrence only where the approved row declares the act types compatible > T1: Stage 1 is one of three related context",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-23-T1/CR-23-T1.record.txt",
+     "sha256": "a1c91359374f79e5c173c339f9342366e2fd0de13496227407bae9563e272303"
+    },
+    {
+     "path": "artifacts/CR-23-T1/CR-23-T1.evidence.txt",
+     "sha256": "5478fa1e35d4153eb4df2c3968c1dabb502e902d583c2246931fa01fcff36e90"
+    }
+   ]
+  },
+  "CR-24-T1": {
+   "rule": "CR-24",
+   "what_is_run": "Two valid Stage 2 observations by different observers with no approved cross context relationship",
+   "expected": "Second state; both render separately under single event language",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr23-cr24-evidence-state.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.591Z",
+   "observed": "1 mapped test(s) in cr23-cr24-evidence-state.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context r",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-24-T1/CR-24-T1.record.txt",
+     "sha256": "db9b6dd3ec0661ade1f01cbf2265add36b7178bf846f04240556e6553135a324"
+    },
+    {
+     "path": "artifacts/CR-24-T1/CR-24-T1.evidence.txt",
+     "sha256": "ee76cd910189a39086a2b4d180640872c3a2a944d8acf95e706a7946066bb56b"
+    }
+   ]
+  },
+  "CR-25-T1": {
+   "rule": "CR-25",
+   "what_is_run": "Issue a report",
+   "expected": "A tagged accessible equivalent exists with identical content",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr25-accessible-copy.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.417Z",
+   "observed": "1 mapped test(s) in cr25-accessible-copy.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-25 the accessible equivalent > T1: an issued report has a tagged accessible equivalent with identical content",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-25-T1/CR-25-T1.record.txt",
+     "sha256": "1df5da870bb2ff46d01522f2ec5c133ded111d02c1331760d5c1849399c35241"
+    },
+    {
+     "path": "artifacts/CR-25-T1/CR-25-T1.evidence.txt",
+     "sha256": "bd1991f1d9cc7422f64cfdef754c85518e6eee5e17f302d8fe99019d5dd63395"
+    }
+   ]
+  },
+  "CR-26-T1": {
+   "rule": "CR-26",
+   "what_is_run": "Request eligibility with no Stage entry event",
+   "expected": "Success creates one entry event and one reservation",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr26-eligibility-entry.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.411Z",
+   "observed": "1 mapped test(s) in cr26-eligibility-entry.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-26 a successful eligibility request > T1: creates exactly one Stage entry event and one reservation, and a repeat of the same request creates nothing more",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-26-T1/CR-26-T1.record.txt",
+     "sha256": "b4be2e3b8c7ffa5d8ee4ad3fedca2af2b2071602b007e26696aafc6260ec5cb1"
+    },
+    {
+     "path": "artifacts/CR-26-T1/CR-26-T1.evidence.txt",
+     "sha256": "55ff450f972e76a64a47090861b158803264037234fa938d0a5dfa74fbcc0110"
+    }
+   ]
+  },
+  "CR-26-T2": {
+   "rule": "CR-26",
+   "what_is_run": "A source request outside an allocation event",
+   "expected": "Refused, indistinguishable from other ineligibility",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr26-eligibility-entry.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:21.125Z",
+   "observed": "2 mapped test(s) in cr26-eligibility-entry.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-26-T2/CR-26-T2.record.txt",
+     "sha256": "b204d1545d1e5565dc3cefd619767f50e282bcf0636083a7dcd63591dcb9403a"
+    },
+    {
+     "path": "artifacts/CR-26-T2/CR-26-T2.evidence.txt",
+     "sha256": "8c3cdb5d05627254d464497ff29e1735064f848989673f67edeb081bd17505a4"
+    }
+   ]
+  },
+  "CR-27-T1": {
+   "rule": "CR-27",
+   "what_is_run": "Render the evidence note on a report with a Stage 1 observation",
+   "expected": "Version 2 text, word for word; the phrase \"an AI system\" appears nowhere in the output",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.468Z",
+   "observed": "1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears no",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-27-T1/CR-27-T1.record.txt",
+     "sha256": "5ef298823c0906835e2cfc1aef5bf340c8a590e30cbb3972cca4d0f3fbb6066e"
+    },
+    {
+     "path": "artifacts/CR-27-T1/CR-27-T1.evidence.txt",
+     "sha256": "ec1c741adfaa7ede775021fc2a3ddf442ca551f13a422c6a20dc6c157136d591"
+    }
+   ]
+  },
+  "CR-28-T1": {
+   "rule": "CR-28",
+   "what_is_run": "Compose a report for a dimension with a recurrence clause and three single observation clauses",
+   "expected": "The recurrence clause is selected; the rule version is recorded",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr28-claim-package-selection.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:20.978Z",
+   "observed": "1 mapped test(s) in cr28-claim-package-selection.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in ",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-28-T1/CR-28-T1.record.txt",
+     "sha256": "3d4987561882ac91b9862403e37a42c1d17ab6c72bc27975e462e6d36fe57e8b"
+    },
+    {
+     "path": "artifacts/CR-28-T1/CR-28-T1.evidence.txt",
+     "sha256": "8939167dd139a6f8d9c1d1eef879de2a310aaeeae55c89929e1e11ac2d5b84ba"
+    }
+   ]
+  },
+  "CR-28-T2": {
+   "rule": "CR-28",
+   "what_is_run": "Compose for a dimension with no recurrence clause and two composed statements",
+   "expected": "The earliest conduct bearing clause of the latest statement is selected",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr28-claim-package-selection.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:21.756Z",
+   "observed": "1 mapped test(s) in cr28-claim-package-selection.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-28 the selection rule > T2: no recurrence clause and two composed statements: the earliest conduct bearing clause of the latest statement is selected, whatev",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-28-T2/CR-28-T2.record.txt",
+     "sha256": "14c3610e6077d51aba399269ef8aae8ff52e928cdb16514333448fac6e7d5960"
+    },
+    {
+     "path": "artifacts/CR-28-T2/CR-28-T2.evidence.txt",
+     "sha256": "44ac5b7d12ffcfd2b40e5c71d5c9c375c531d7dd8daddab7d084e50e95ce96c5"
+    }
+   ]
+  },
+  "CR-28-T3": {
+   "rule": "CR-28",
+   "what_is_run": "Open the participant review before issue",
+   "expected": "The selected entry for each dimension is shown, and every other entry is visible in the record",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr28-claim-package-selection.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:21.686Z",
+   "observed": "1 mapped test(s) in cr28-claim-package-selection.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-28-T3/CR-28-T3.record.txt",
+     "sha256": "b7f9318780fa64955ad679c6679a2b757591efebb58572ba66e8eb44de48047a"
+    },
+    {
+     "path": "artifacts/CR-28-T3/CR-28-T3.evidence.txt",
+     "sha256": "9fb06c03a1758db7b502e1638aaa4af22cc594a52b017de5ed06dea130960faa"
+    }
+   ]
+  },
+  "CR-28-T4": {
+   "rule": "CR-28",
+   "what_is_run": "Request a demonstration face for a real participant",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr28-claim-package-selection.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.449Z",
+   "observed": "1 mapped test(s) in cr28-claim-package-selection.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-28-T4 a demonstration face of a real participant is never produced > the claim package route refuses a report that is not issued, a specimen, test mode outsi",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-28-T4/CR-28-T4.record.txt",
+     "sha256": "61ac49ffd7e34b49ad6af6804242662149eab7d066daab05c8bfdac5230c5c26"
+    },
+    {
+     "path": "artifacts/CR-28-T4/CR-28-T4.evidence.txt",
+     "sha256": "dbb6be2e8da0a1ec9084077648bba9d6e693c5a5c6ad2c1c4c28d066a2ab7643"
+    }
+   ]
+  },
+  "CR-29-T1": {
+   "rule": "CR-29",
+   "what_is_run": "As a database administrator, attempt to obtain the signing key or produce a valid seal",
+   "expected": "Not possible",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.740Z",
+   "observed": "2 mapped test(s) in cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-29 the commit seal key > T1: a participant, a mentor or any signed-in role cannot read the signing key or make a seal",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-29-T1/CR-29-T1.record.txt",
+     "sha256": "eb3deec15294ba2702ded6d657e139dbdb900af5b23afd336f23e756ea28df11"
+    },
+    {
+     "path": "artifacts/CR-29-T1/CR-29-T1.evidence.txt",
+     "sha256": "75b6d43e671d978bf841b540e85f143c4673ad34e6b13f67babf8084f48d2c87"
+    }
+   ]
+  },
+  "CR-29-T2": {
+   "rule": "CR-29",
+   "what_is_run": "Rotate the key, then verify a seal made before rotation and one made after",
+   "expected": "Both verify, each under its own key version",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.929Z",
+   "observed": "2 mapped test(s) in cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-29 the commit seal key > T2: rotate the key; a seal made before and one made after both verify, each under its own key version",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-29-T2/CR-29-T2.record.txt",
+     "sha256": "fe15c9f1a735820a3116dde3d3f3500cf48df9c3c6c54b9640c3aac2cc41b135"
+    },
+    {
+     "path": "artifacts/CR-29-T2/CR-29-T2.evidence.txt",
+     "sha256": "beb4732155970886a191862eb49c70d776c58ae9cf8b062a46f16c258d8f7d25"
+    }
+   ]
+  },
+  "CR-29-T3": {
+   "rule": "CR-29",
+   "what_is_run": "Attempt activation with the shared Vault key still in use",
+   "expected": "Refused",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.275Z",
+   "observed": "2 mapped test(s) in cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-29-T3/CR-29-T3.record.txt",
+     "sha256": "c2bacf337a37dd59f80090f9f037bdd0bb89778f4a2680d7edb0e6172bff7230"
+    },
+    {
+     "path": "artifacts/CR-29-T3/CR-29-T3.evidence.txt",
+     "sha256": "319524dc024e289f5dd64f14b6839a17691113a02468b6afabb3f2f81b77db7f"
+    }
+   ]
+  },
+  "CR-30-T1": {
+   "rule": "CR-30",
+   "what_is_run": "Reach Stage 4 entry while s4_activation_state is not activated",
+   "expected": "Refused with s4_not_activated",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr30-stage4-permission.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.299Z",
+   "observed": "1 mapped test(s) in cr30-stage4-permission.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-30-T1/CR-30-T1.record.txt",
+     "sha256": "5a5d1e85aa4bc2968cf946348a953b1efcd85de71a70f527fa046821f8bde1bc"
+    },
+    {
+     "path": "artifacts/CR-30-T1/CR-30-T1.evidence.txt",
+     "sha256": "93e9d7468c23eb0a54df6b4e2d77b37a120508e0e1a52f90710cbb3339ae67f1"
+    }
+   ]
+  },
+  "CR-30-T2": {
+   "rule": "CR-30",
+   "what_is_run": "In a sandbox copy with Stage 4 activated, answer Yes, then No",
+   "expected": "Yes records the Stage 4 grant with the text version and fingerprint; No records nothing adverse and offers no session",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr30-stage4-permission.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.435Z",
+   "observed": "1 mapped test(s) in cr30-stage4-permission.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers n",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-30-T2/CR-30-T2.record.txt",
+     "sha256": "a7351f4a491e68fb214138918ee62de25e04a32b4fc6938a9cf94d971f4d9e61"
+    },
+    {
+     "path": "artifacts/CR-30-T2/CR-30-T2.evidence.txt",
+     "sha256": "bde2b3ed5d237b933da1c419dc2a63ebe3d47d1799bf182ac50ec4d386a2e4a9"
+    }
+   ]
+  },
+  "CR-31-T1": {
+   "rule": "CR-31",
+   "what_is_run": "Inspect the sandbox switch log",
+   "expected": "Five switches on, in the stated order, each with a full test run after it; lsa_activation off",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr31-production-defaults.db.test.ts, cr31-switch-log.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:44:39.374Z",
+   "ended_at": "2026-10-26T18:44:39.384Z",
+   "observed": "4 mapped test(s) in cr31-production-defaults.db.test.ts, cr31-switch-log.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-31 switch defaults > every switch reads off and lsa_activation reads off",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-31-T1/CR-31-T1.record.txt",
+     "sha256": "aa43391b8346fee8d5efc07e59031160597ceb13e82b51a1f7175d5429a79a4f"
+    },
+    {
+     "path": "artifacts/CR-31-T1/CR-31-T1.evidence.txt",
+     "sha256": "0f89e4b1a7fb059a94bcdd5df692680eb21ee3221f2172eb170e504bc488b14e"
+    }
+   ]
+  },
+  "CR-31-T2": {
+   "rule": "CR-31",
+   "what_is_run": "Inspect the production switches",
+   "expected": "All off",
+   "dimensions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D8",
+    "D9"
+   ],
+   "command": "bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr31-production-defaults.db.test.ts",
+   "fixture": "synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts",
+   "started_at": "2026-10-26T18:33:19.250Z",
+   "ended_at": "2026-10-26T18:33:19.254Z",
+   "observed": "1 mapped test(s) in cr31-production-defaults.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-31 switch defaults > every switch reads off and lsa_activation reads off",
+   "outcome": "PASS",
+   "artifacts": [
+    {
+     "path": "artifacts/CR-31-T2/CR-31-T2.record.txt",
+     "sha256": "d7d134fd56f86d77b458180fffad7085acde75695d9a082fc0e734873ebf5e5b"
+    },
+    {
+     "path": "artifacts/CR-31-T2/CR-31-T2.evidence.txt",
+     "sha256": "77413315821759850c163fa458d5adc469413a82a42dd1e9f289e37bf672621f"
+    }
+   ]
+  }
+ },
+ "matrix": {
+  "D1": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D2": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D3": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D4": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D5": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D8": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "NOT_APPLICABLE: the rule is specific to D9",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  },
+  "D9": {
+   "CR-01": "APPLIES",
+   "CR-02": "APPLIES",
+   "CR-03": "APPLIES",
+   "CR-04": "APPLIES",
+   "CR-05": "APPLIES",
+   "CR-06": "APPLIES",
+   "CR-07": "APPLIES",
+   "CR-08": "APPLIES",
+   "CR-09": "APPLIES",
+   "CR-10": "APPLIES",
+   "CR-11": "APPLIES",
+   "CR-12": "APPLIES",
+   "CR-13": "APPLIES",
+   "CR-14": "APPLIES",
+   "CR-15": "APPLIES",
+   "CR-16": "APPLIES",
+   "CR-17": "APPLIES",
+   "CR-18": "APPLIES",
+   "CR-19": "APPLIES",
+   "CR-20": "APPLIES",
+   "CR-21": "APPLIES",
+   "CR-22": "APPLIES",
+   "CR-23": "APPLIES",
+   "CR-24": "APPLIES",
+   "CR-25": "APPLIES",
+   "CR-26": "APPLIES",
+   "CR-27": "APPLIES",
+   "CR-28": "APPLIES",
+   "CR-29": "APPLIES",
+   "CR-30": "APPLIES",
+   "CR-31": "APPLIES"
+  }
+ }
+}

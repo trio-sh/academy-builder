@@ -11,6 +11,7 @@ const uuid = () => crypto.randomUUID();
 await c.query("set search_path to public, extensions");
 await c.query("grant anon, authenticated, service_role to neondb_owner").catch(() => {});
 await c.query("truncate public.t3a_event_log, public.t3a_event_idempotency, public.t3a_event_rejection, public.t3a_quality_event");
+const _prevIngest = (await c.query("select value from public.t3a_event_config where key='ingest_mode'")).rows[0].value;   // restored at the end: a switch rehearsal runs with it strict
 await c.query("update public.t3a_event_config set value='legacy_tolerant' where key='ingest_mode'");
 const ing = async (o) => (await q("select public.t3a_ingest_event($1,$2,$3,$4,$5,$6,$7::jsonb,$8,$9,$10,$11,$12,$13,$14) r",
   [o.name, o.actor_type ?? "SYSTEM_SERVICE", o.actor_ref ?? "svc_platform", o.role ?? "system_service", o.rtype ?? "test_resource", o.rid ?? uuid(), JSON.stringify(o.payload),
@@ -132,7 +133,7 @@ add("E17", "legacy writers still work: the old name resolves to the canonical ev
   lg.length === 2 && lg[0].event_name === "observation.committed" && lg[0].s === "accepted" && lg[0].h !== "legacy-hash" && lg[0].n === 1 && lg[1].event_name === "weird_legacy_event" && lg[1].s === "quarantined", JSON.stringify(lg));
 await c.query("update public.t3a_event_config set value='strict' where key='ingest_mode'");
 let sm = ""; try { await c.query(ins, ["observation_committed", "OBSERVATION", lid, lid, uuid()]); sm = "allowed"; } catch (e) { sm = e.message; }
-await c.query("update public.t3a_event_config set value='legacy_tolerant' where key='ingest_mode'");
+await c.query("update public.t3a_event_config set value=$1 where key='ingest_mode'", [_prevIngest]);
 add("E18", "strict mode refuses direct inserts into the log", /T3A_EVENT_DIRECT_INSERT_REFUSED/.test(sm), sm.slice(0, 90));
 const acc = [];
 for (const role of ["anon", "authenticated"]) { await c.query("begin"); let m = "allowed"; try { await c.query(`set local role ${role}`); await c.query("select public.t3a_ingest_event('x','SYSTEM_SERVICE','a','b','t',gen_random_uuid(),'{}','k')"); } catch (e) { m = e.message; } await c.query("rollback"); acc.push(/permission denied/.test(m)); }

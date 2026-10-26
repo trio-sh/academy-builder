@@ -1,0 +1,32 @@
+case CR-12-T11
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-12
+what is run: Times carrying offsets, including across a daylight saving change
+expected: Converted to the same UTC instants; cooldowns and the window computed from them
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 6ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 62ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D2: pass
+    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 76ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D3: pass
+    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 68ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D4: pass
+    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 70ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D5: pass
+    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 79ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D8: pass
+    [default] passed 6ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 65ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+D9: pass
+    [default] passed 5ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
+    [sandbox] passed 62ms :: cr12-window.db.test.ts :: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows

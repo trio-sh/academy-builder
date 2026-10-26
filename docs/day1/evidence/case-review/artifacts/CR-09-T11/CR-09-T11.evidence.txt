@@ -1,0 +1,32 @@
+case CR-09-T11
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-09
+what is run: Revoke a direct release while general availability is on
+expected: The employer can still read through the pool, and the interface stated this before the revocation
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 172ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D2: pass
+    [default] passed 24ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 145ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D3: pass
+    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 172ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D4: pass
+    [default] passed 24ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 176ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D5: pass
+    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 155ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D8: pass
+    [default] passed 20ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 131ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+D9: pass
+    [default] passed 31ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 200ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used

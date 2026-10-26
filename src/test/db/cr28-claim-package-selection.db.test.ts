@@ -76,8 +76,9 @@ describe("CR-28 the selection rule", () => {
     const rep = await ber(p, ["D2", "D3"]); const other = await mkParticipant(c, `cr28-o-${seq}-${RUN}`);
     const rv = (await as(p, `select t3a_cr28_review('${rep}') r`)).r;
     expect(rv).toMatchObject({ outcome: "review", rule_version: "1.0", issued_rule_version: null });
-    expect(rv.dimensions.map((d: any) => [d.dimension_id, d.selected.k])).toEqual([["D2", "REK-REC"], ["D3", "REK-D3"]]);
-    expect(rv.dimensions[0].other_entries.length).toBeGreaterThanOrEqual(3);
+    // order-free: the case review runs this on other dimensions, where the two sort the other way
+    expect(rv.dimensions.map((d: any) => [d.dimension_id, d.selected.k]).sort()).toEqual([["D2", "REK-REC"], ["D3", "REK-D3"]].sort());
+    expect(rv.dimensions.find((d: any) => d.selected.k === "REK-REC").other_entries.length).toBeGreaterThanOrEqual(3);
     expect((await as(other, `select t3a_cr28_review('${rep}') r`)).r).toEqual({ outcome: "refused", reason: "REPORT_NOT_AVAILABLE" });
     expect((await as(p, `select t3a_cr28_select_entry('${p}','D2',false)`)).msg).toMatch(/permission denied/i);
   });
