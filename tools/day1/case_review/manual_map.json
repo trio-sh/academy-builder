@@ -4,5 +4,33 @@
    "cr12-routes.db.test.ts",
    "a refused early callback does not reserve its identifier"
   ]
- ]
+ ],
+ "CR-31-T1": {
+  "tests": [
+   [
+    "cr31-production-defaults.db.test.ts",
+    "every switch reads off"
+   ]
+  ],
+  "unit": [
+   [
+    "cr31-switch-log.test.ts",
+    ""
+   ]
+  ],
+  "modes": [
+   "sandbox"
+  ]
+ },
+ "CR-31-T2": {
+  "tests": [
+   [
+    "cr31-production-defaults.db.test.ts",
+    "every switch reads off"
+   ]
+  ],
+  "modes": [
+   "default"
+  ]
+ }
 }
