@@ -1,0 +1,10 @@
+case CR-20-T2
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+dimensions D1,D3
+command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr20-timing-and-capture-refusals.db.test.ts
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T18:33:19.250Z
+ended 2026-10-26T18:33:19.999Z
+observed 4 mapped test(s) in cr20-timing-and-capture-refusals.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D3; not shown on D2, D4, D5, D8, D9 (AssertionError: expected [Function] to throw error matching /WHOLE_SESSION_ANSWER_BEFORE_C; Error: promise resolved "Result{ command: 'INSERT', …(9) }" instead of rejecting     at _A; error: CAPTURE_LINE_NOT_IN_SET: line 4 is not a line of C2     at /home/user/academy-build). First test: CR-20-T2 a whole session line before the close beat, and a final beat passed unanswered > the whole session line (FC-02) is refused before the close beat and af
+artifact artifacts/CR-20-T2/CR-20-T2.evidence.txt d76c1f5c3382541b42cc9251c82e4635c1f095e5ab1ddbc65ef00bbbc4434ae0

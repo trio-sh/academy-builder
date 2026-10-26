@@ -1,0 +1,32 @@
+case CR-30-T2
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-30
+what is run: In a sandbox copy with Stage 4 activated, answer Yes, then No
+expected: Yes records the Stage 4 grant with the text version and fingerprint; No records nothing adverse and offers no session
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 36ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 149ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D2: pass
+    [default] passed 38ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 121ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D3: pass
+    [default] passed 46ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 117ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D4: pass
+    [default] passed 43ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 120ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D5: pass
+    [default] passed 41ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 136ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D8: pass
+    [default] passed 46ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 107ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+D9: pass
+    [default] passed 48ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session
+    [sandbox] passed 103ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T2: with Stage 4 activated, Yes records the Stage 4 grant with the text version and hash; No records nothing adverse and offers no session

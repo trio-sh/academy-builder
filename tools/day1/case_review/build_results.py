@@ -27,7 +27,7 @@ def main():
         dims = row['dims']; ok = [d for d, s in dims.items() if s == 'pass']
         if not row['tests']:
             unrecorded.append(case); continue
-        base_ok = 'D1' in ok
+        base_ok = row.get('baseline', 'D1') in ok
         lines = [f'case {case}', f'build {a.build_id}', f'commit {a.commit}', f"rule {c['rule']}", f"what is run: {c['what_is_run']}", f"expected: {c['expected']}",
                  f"mapping: {row['how']}; modes counted: {', '.join(row['modes'])}", 'mapped tests:'] + [f'  - {t}' for t in row['tests']] + ['', 'results by dimension (a dimension is recorded as run only where every line reads passed):']
         starts, total_ms = [], 0
@@ -35,11 +35,11 @@ def main():
             lines.append(f'{d}: {dims[d]}')
             for x in det:
                 lines.append(f"    [{x['mode']}] {x['status']} {x['ms']}ms :: {x['file']} :: {x['name']}" + (f" :: {x['msg'][:200]!r}" if x['status'] != 'passed' and x['msg'] else ''))
-                if x['start'] and d == 'D1': starts.append(x['start']); total_ms += x['ms'] or 0
+                if x['start'] and d == row.get('baseline', 'D1'): starts.append(x['start']); total_ms += x['ms'] or 0
         art = os.path.join(tmp, f'{case}.evidence.txt'); open(art, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
         t0 = min(starts) if starts else int(datetime.datetime.now().timestamp() * 1000)
         files = sorted({t.split(' :: ')[0].replace(' (unit)', '') for t in row['tests']})
-        failed = [d for d in dims if dims[d] != 'pass']
+        failed = [d for d in dims if dims[d] not in ('pass', 'not applicable')]
         n = len(row['tests'])
         obs = (f"{n} mapped test(s) in {', '.join(files)} ran on a throwaway Postgres 16 built from the migrations: " + (f"passed on {', '.join(ok)}" if ok else 'passed on no dimension')
                + (f"; not shown on {', '.join(failed)} (" + '; '.join(sorted({(x['msg'] or x['status'])[:90].replace('\n', ' ') for d in failed for x in row['detail'][d] if x['status'] != 'passed'}))[:300] + ')' if failed else '')

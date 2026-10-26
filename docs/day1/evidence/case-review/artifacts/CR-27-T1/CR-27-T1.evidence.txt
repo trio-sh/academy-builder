@@ -1,0 +1,32 @@
+case CR-27-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-27
+what is run: Render the evidence note on a report with a Stage 1 observation
+expected: Version 2 text, word for word; the phrase "an AI system" appears nowhere in the output
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 30ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 188ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D2: pass
+    [default] passed 35ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 103ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D3: pass
+    [default] passed 37ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 122ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D4: pass
+    [default] passed 37ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 169ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D5: pass
+    [default] passed 36ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 143ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D8: pass
+    [default] passed 29ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 133ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+D9: pass
+    [default] passed 31ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it
+    [sandbox] passed 137ms :: cr06-cr10-cr27.db.test.ts :: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears nowhere in it

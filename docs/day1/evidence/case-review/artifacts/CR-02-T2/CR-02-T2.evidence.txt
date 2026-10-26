@@ -1,0 +1,32 @@
+case CR-02-T2
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-02
+what is run: Mentor A then B, all other conditions met
+expected: Admitted
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 12ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 181ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D2: pass
+    [default] passed 21ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 213ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D3: pass
+    [default] passed 17ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 142ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D4: pass
+    [default] passed 17ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 187ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D5: pass
+    [default] passed 16ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 183ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D8: pass
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 176ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+D9: pass
+    [default] passed 14ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted
+    [sandbox] passed 168ms :: cr02-mentor-rotation.db.test.ts :: CR-02 rotation at every Stage > T2: mentor A then B is admitted

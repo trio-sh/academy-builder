@@ -1,0 +1,32 @@
+case CR-03-T3
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-03
+what is run: The safety route sets and lifts an eligibility hold after a welfare stop
+expected: No commit, no progression decision, no cooldown created
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 18ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 80ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D2: pass
+    [default] passed 19ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 107ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D3: pass
+    [default] passed 21ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 77ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D4: pass
+    [default] passed 26ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 69ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D5: pass
+    [default] passed 29ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 92ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D8: pass
+    [default] passed 23ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 101ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+D9: pass
+    [default] passed 21ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown
+    [sandbox] passed 77ms :: cr03-welfare-stop.db.test.ts :: CR-03 the eligibility hold > T3: the safety route sets and lifts a hold: no commit, no progression decision, no cooldown

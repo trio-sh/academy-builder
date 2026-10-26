@@ -1,0 +1,32 @@
+case CR-02-T5
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-02
+what is run: A Stage 1 confirmer proposed as the same participant's Stage 2 observer on the same dimension
+expected: Refused
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 23ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 219ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D2: pass
+    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 213ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D3: pass
+    [default] passed 18ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 211ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D4: pass
+    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 231ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D5: pass
+    [default] passed 26ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 294ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D8: pass
+    [default] passed 21ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 246ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+D9: pass
+    [default] passed 17ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension
+    [sandbox] passed 248ms :: cr02-mentor-rotation.db.test.ts :: CR-02 prior Stage 1 access at Stage 2 > T5: a Stage 1 confirmer is never proposed as the same participant's Stage 2 observer on the same dimension

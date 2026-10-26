@@ -1,0 +1,32 @@
+case CR-07-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-07
+what is run: A clause whose disputed conduct cannot be established
+expected: Withdrawn from composition; the rest of the observation stands; nothing added
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 119ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 345ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D2: pass
+    [default] passed 92ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 245ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D3: pass
+    [default] passed 98ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 292ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D4: pass
+    [default] passed 113ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 385ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D5: pass
+    [default] passed 110ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 285ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D8: pass
+    [default] passed 105ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 346ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+D9: pass
+    [default] passed 122ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added
+    [sandbox] passed 313ms :: cr07-disputed-clauses.db.test.ts :: CR-07 a clause that cannot be established > T1: the disputed clause is withdrawn from composition; the rest of the observation stands; nothing is added

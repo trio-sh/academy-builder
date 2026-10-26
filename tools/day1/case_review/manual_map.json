@@ -32,5 +32,14 @@
   "modes": [
    "default"
   ]
+ },
+ "CR-16-T1": {
+  "tests": [
+   [
+    "cr16-per-dimension-prohibited-vocabulary.db.test.ts",
+    "CR-16-T1 a D9 entry"
+   ]
+  ],
+  "native": "D9"
  }
 }

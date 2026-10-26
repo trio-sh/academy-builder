@@ -1,0 +1,26 @@
+case CR-16-T1
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-16
+what is run: Render a D9 entry carrying a word on the D9 list
+expected: Refused by the renderer
+mapping: manual; modes counted: default, sandbox
+mapped tests:
+  - cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > the D9 list of Section 5.7a is loaded from the package: 88 words, and a D9 entry carrying one is refused; a clean entry renders
+  - cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > D9 words are not D2 words: each dimension has its own list
+  - cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > a dimension with no list loaded refuses to render; once its list is loaded a clean entry renders and a listed word is refused
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: not applicable
+D2: not applicable
+D3: not applicable
+D4: not applicable
+D5: not applicable
+D8: not applicable
+D9: pass
+    [default] passed 97ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > the D9 list of Section 5.7a is loaded from the package: 88 words, and a D9 entry carrying one is refused; a clean entry renders
+    [default] passed 27ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > D9 words are not D2 words: each dimension has its own list
+    [default] passed 56ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > a dimension with no list loaded refuses to render; once its list is loaded a clean entry renders and a listed word is refused
+    [sandbox] passed 782ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > the D9 list of Section 5.7a is loaded from the package: 88 words, and a D9 entry carrying one is refused; a clean entry renders
+    [sandbox] passed 182ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > D9 words are not D2 words: each dimension has its own list
+    [sandbox] passed 498ms :: cr16-per-dimension-prohibited-vocabulary.db.test.ts :: CR-16-T1 a D9 entry carrying a word on the D9 list is refused by the renderer > a dimension with no list loaded refuses to render; once its list is loaded a clean entry renders and a listed word is refused

@@ -1,0 +1,47 @@
+case CR-29-T3
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-29
+what is run: Attempt activation with the shared Vault key still in use
+expected: Refused
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+  - cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 7ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 5ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 7ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 6ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D2: pass
+    [default] passed 5ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 5ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 5ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 5ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D3: pass
+    [default] passed 6ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 8ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 5ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 7ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D4: pass
+    [default] passed 6ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 8ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 4ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 6ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D5: pass
+    [default] passed 7ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 6ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 4ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 5ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D8: pass
+    [default] passed 7ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 7ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 4ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 4ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+D9: pass
+    [default] passed 7ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [default] passed 9ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current
+    [sandbox] passed 4ms :: cr29-commit-seal-key.db.test.ts :: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
+    [sandbox] passed 5ms :: cr29-key-pair-seal.db.test.ts :: CR-29 the key pair seal > T3: activation is refused while the shared key is current and allowed when the key pair is current

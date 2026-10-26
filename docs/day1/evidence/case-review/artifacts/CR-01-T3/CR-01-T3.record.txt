@@ -1,0 +1,10 @@
+case CR-01-T3
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+dimensions D1,D2,D3,D4,D5,D8,D9
+command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr01-sequential-unmasking.db.test.ts
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit e8a82dcb744f; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-26T18:33:19.250Z
+ended 2026-10-26T18:33:19.613Z
+observed 2 mapped test(s) in cr01-sequential-unmasking.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+artifact artifacts/CR-01-T3/CR-01-T3.evidence.txt a5ad0cbecf7e8ef9f255841c6a95b7d30b1b4efe6ac5dfc6e207db7bbdd0b315

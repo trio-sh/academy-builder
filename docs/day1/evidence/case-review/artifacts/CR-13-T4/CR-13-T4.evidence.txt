@@ -1,0 +1,32 @@
+case CR-13-T4
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-13
+what is run: A reconsideration decided with no independent check
+expected: Not final; the case stays open
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 30ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 375ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D2: pass
+    [default] passed 21ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 345ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D3: pass
+    [default] passed 46ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 285ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D4: pass
+    [default] passed 18ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 288ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D5: pass
+    [default] passed 27ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 367ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D8: pass
+    [default] passed 26ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 269ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+D9: pass
+    [default] passed 36ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open
+    [sandbox] passed 323ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 reconsideration is two acts by two people > T4: a decision with no independent check is not final and the case stays open

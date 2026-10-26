@@ -1,0 +1,47 @@
+case CR-17-T9
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-17
+what is run: Load a source missing from the pool map, or with a pool value outside the four
+expected: Refused with RETAKE_POOL_MISSING_OR_INVALID
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+  - cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 4ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 7ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D2: pass
+    [default] passed 6ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 4ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 2ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D3: pass
+    [default] passed 6ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 6ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 8ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D4: pass
+    [default] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D5: pass
+    [default] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 7ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 4ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D8: pass
+    [default] passed 7ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 7ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 4ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+D9: pass
+    [default] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [default] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load
+    [sandbox] passed 5ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a value outside the four pools refuses and nothing is loaded
+    [sandbox] passed 3ms :: cr17-retake-pools.db.test.ts :: CR-17 pool maps > T9: a source missing from the loaded map does not load

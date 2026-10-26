@@ -1,0 +1,32 @@
+case CR-09-T8
+build T3A-LEVELER-SANDBOX-e8a82dc-20261026
+commit e8a82dcb744fef03a22fe8c4d144320d89ab4a62
+rule CR-09
+what is run: Let a token expire, then redeem
+expected: The expired state and no content
+mapping: title; modes counted: default, sandbox
+mapped tests:
+  - cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+
+results by dimension (a dimension is recorded as run only where every line reads passed):
+D1: pass
+    [default] passed 8ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 81ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D2: pass
+    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 65ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D3: pass
+    [default] passed 8ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 85ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D4: pass
+    [default] passed 8ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 106ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D5: pass
+    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 91ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D8: pass
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 62ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+D9: pass
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
+    [sandbox] passed 80ms :: cr09-release-routes.db.test.ts :: CR-09 route 2: direct release > T8: after expiry the redemption returns the expired state and no content
