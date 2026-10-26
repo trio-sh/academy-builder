@@ -1,0 +1,46 @@
+{
+ "what": "Live apply of migration 20270250 (timing reference registry, CR-330 to CR-332)",
+ "when": "2026-10-26",
+ "authority": "CR-219",
+ "tests_before": "PR 406 CI green; database 552/552 default and with all three database switches on; unit 517/517; CR-20 13/13 on all seven dimensions in two states",
+ "files": [
+  {
+   "file": "20270250000000_timing_reference_field_registry.sql",
+   "sha256": "1c6e071d8d648f925a33bec7b0e9bf33b78f2c971cde2c8848aa6c1b2c3ca5a4",
+   "ok": true,
+   "error": null,
+   "seconds": 0.6
+  }
+ ],
+ "registry_rows": [
+  {
+   "question_code": "Q-D1-02",
+   "dimension_id": "D1",
+   "source_sheet_field": "enquiry_point"
+  },
+  {
+   "question_code": "Q-D1-07",
+   "dimension_id": "D1",
+   "source_sheet_field": "account_test_point"
+  },
+  {
+   "question_code": "Q-D1-08a",
+   "dimension_id": "D1",
+   "source_sheet_field": "bearing_interest"
+  }
+ ],
+ "reference_field_checks": {
+  "a": "enquiry_point",
+  "b": "account_test_point",
+  "c": "bearing_interest",
+  "d_unregistered": null
+ },
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant",
+  "er": false,
+  "es": false,
+  "eg": false
+ },
+ "rollback": "docs/day1/evidence/rollback_20270250_timing_reference_field_registry.sql"
+}
