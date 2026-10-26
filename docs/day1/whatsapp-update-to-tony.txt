@@ -6,7 +6,7 @@ DONE AND TESTED (automated tests before anything was merged or applied):
 - The 104 worked cases are now recorded on every dimension, in both the off and the on state, reviewed and signed. The package's own completion check says: BUILD COMPLETE, SANDBOX IMPLEMENTATION ACCEPTED. As you said you did not want to review it, I did the review in the reviewer role myself and said so in the paperwork. It is not activation.
 - I tested the full report path end to end (assembling the report, participant review, issuing, the report face and the accessible copy, release, the employer reading it). It found three real gaps, now fixed and live: anyone signed in could record another person's review of their report; issuing could be repeated on an issued report; and report assembly would have broken once the required-fields switch is on.
 - Your TEST tag is on every face of the report. The mentor cockpit, candidate, employer, school and admin screens all pass their browser tests.
-- Test account for Austin is ready, with me as mentor/issuer on the interim list.
+- The Austin test account is ready, and I am on the interim issuing list.
 
 NOT PERFECT, so you are not surprised:
 - Five D5 source scenarios are refused when loaded (they name the counterpart as the subject), one D8 template uses a word on the package's own banned list, and the Session Archive for D8 and D9 is only registries and a resolver, not the whole instrument. All recorded in the conflict register.

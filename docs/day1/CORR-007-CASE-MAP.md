@@ -1,6 +1,6 @@
 # CORR-007 worked cases mapped to automated tests
 
-104 cases: 83 labelled, 21 by rule (a reviewer confirms), 0 with no test. This is a map, not a signed result: it marks nothing PASS.
+*Superseded on 26 October 2026 by the recorded and signed results in `evidence/case-review/` and `CORR-007-CASE-REVIEW.md` (100 cases map by test title, 4 by hand). The table below is the first map (83 labelled, 21 by rule) and marks nothing PASS.*
 
 | Case | Mapping | Test file | Test title |
 |---|---|---|---|
